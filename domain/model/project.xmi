@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:net.sourceforge.jbizmo.model.boundary="http:///net/sourceforge/jbizmo/model/boundary.ecore" xmlns:net.sourceforge.jbizmo.model.client="http:///net/sourceforge/jbizmo/model/client.ecore" xmlns:net.sourceforge.jbizmo.model.dto="http:///net/sourceforge/jbizmo/model/dto.ecore" xmlns:net.sourceforge.jbizmo.model.java="http:///net/sourceforge/jbizmo/model/java.ecore" xmlns:net.sourceforge.jbizmo.model.project="http:///net/sourceforge/jbizmo/model/project.ecore" xmlns:net.sourceforge.jbizmo.model.repository="http:///net/sourceforge/jbizmo/model/repository.ecore" xmlns:net.sourceforge.jbizmo.model.testing="http:///net/sourceforge/jbizmo/model/testing.ecore" xmlns:net.sourceforge.net.model.domain="http:///net/sourceforge/jbizmo/model/domain.ecore">
+  <net.sourceforge.jbizmo.model.project:Project name="QDW" code="qdw" clientPlatform="JSF_PRIMEFACES" repositoryNamespace="/2" dTONamespace="/3" boundaryNamespace="/1" formGroups="/6" persistenceProvider="ECLIPSELINK" validationType="STANDARD" boundaryMode="true" exchangeNamespace="/4" xmlNamespace="http://www.kontron.com/qdw/xml" mappingStrategy="ON_DEMAND" xmlNamespacePrefix="pre" protectManualChanges="true">
+    <roles name="ADMINISTRATOR" adminRole="true"/>
+    <roles name="READONLY" readonlyRole="true"/>
+    <persistenceUnitProperties value="NULL" name="eclipselink.id-validation"/>
+    <persistenceUnitProperties value="false" name="eclipselink.cache.shared.default"/>
+    <dataSource name="QdwDS" connectionURL="jdbc:mysql://localhost:3306/qdw" userName="sa" password="sa" driverName="com.mysql.cj.jdbc.Driver">
+      <driverList>D:\lib\mysql-connector-j-8.3.0.jar</driverList>
+    </dataSource>
+    <rootNamespace name="com.kontron.qdw" project="/0"/>
+    <domainNamespace xsi:type="net.sourceforge.net.model.domain:DomainNamespace" name="domain" parent="/0/@rootNamespace" project="/0">
+      <childNamespaces href="package-base.xmi#/"/>
+    </domainNamespace>
+    <clientNamespace name="ui" parent="/0/@rootNamespace" project="/0"/>
+    <supportedStandardNamespaces name="java.util" javaTypes="/0/@allSupportedTypes.14 /0/@allSupportedTypes.15 /0/@allSupportedTypes.18 /0/@allSupportedTypes.21" project="/0"/>
+    <supportedStandardNamespaces name="java.math" javaTypes="/0/@allSupportedTypes.11" project="/0"/>
+    <supportedStandardNamespaces name="java.time" javaTypes="/0/@allSupportedTypes.16 /0/@allSupportedTypes.17" project="/0"/>
+    <database schemaName="" catalogName="qdw" identifierRegEx="[A-Za-z][A-Za-z0-9_]*" identifierStyle="LOWERCASE" maxIdentifierLength="64" hibernateDialect="org.hibernate.dialect.MySQLDialect" eclipseLinkTargetDBName="MySQL" reservedWords="ACCESSIBLE ADD ALL ALTER ANALYZE AND AS ASC ASENSITIVE BEFORE BETWEEN BIGINT BINARY BLOB BOTH BY CALL CASCADE CASE CHANGE CHAR CHARACTER CHECK COLLATE COLUMN CONDITION CONSTRAINT CONTINUE CONVERT CREATE CROSS CURRENT_DATE CURRENT_TIME CURRENT_TIMESTAMP CURRENT_USER CURSOR DATABASE DATABASES DAY_HOUR DAY_MICROSECOND DAY_MINUTE DAY_SECOND DEC DECIMAL DECLARE DEFAULT DELAYED DELETE DESC DESCRIBE DETERMINISTIC DISTINCT DISTINCTROW DIV DOUBLE DROP DUAL EACH ELSE ELSEIF ENCLOSED ESCAPED EXISTS EXIT EXPLAIN FALSE FETCH FLOAT FLOAT4 FLOAT8 FOR FORCE FOREIGN FROM FULLTEXT GRANT GROUP HAVING HIGH_PRIORITY HOUR_MICROSECOND HOUR_MINUTE HOUR_SECOND IF IGNORE IN INDEX INFILE INNER INOUT INSENSITIVE INSERT INT INT1 INT2 INT3 INT4 INT8 INTEGER INTERVAL INTO IS ITERATE JOIN KEY KEYS KILL LEADING LEAVE LEFT LIKE LIMIT LINEAR LINES LOAD LOCALTIME LOCALTIMESTAMP LOCK LONG LONGBLOB LONGTEXT LOOP LOW_PRIORITY MASTER_SSL_VERIFY_SERVER_CERT MATCH MAXVALUE MEDIUMBLOB MEDIUMINT MEDIUMTEXT MIDDLEINT MINUTE_MICROSECOND MINUTE_SECOND MOD MODIFIES NATURAL NOT NO_WRITE_TO_BINLOG NULL NUMERIC ON OPTIMIZE OPTION OPTIONALLY OR ORDER OUT OUTER OUTFILE PRECISION PRIMARY PROCEDURE PURGE RANGE READ READS READ_WRITE REAL REFERENCES REGEXP RELEASE RENAME REPEAT REPLACE REQUIRE RESIGNAL RESTRICT RETURN REVOKE RIGHT RLIKE SCHEMA SCHEMAS SECOND_MICROSECOND SELECT SENSITIVE SEPARATOR SET SHOW SIGNAL SMALLINT SPATIAL SPECIFIC SQL SQLEXCEPTION SQLSTATE SQLWARNING SQL_BIG_RESULT SQL_CALC_FOUND_ROWS SQL_SMALL_RESULT SSL STARTING STRAIGHT_JOIN TABLE TERMINATED THEN TINYBLOB TINYINT TINYTEXT TO TRAILING TRIGGER TRUE UNDO UNION UNIQUE UNLOCK UNSIGNED UPDATE USAGE USE USING UTC_DATE UTC_TIME UTC_TIMESTAMP VALUES VARBINARY VARCHAR VARCHARACTER VARYING WHEN WHERE WHILE WITH WRITE XOR YEAR_MONT ZEROFILL GENERAL IGNORE_SERVER_IDS MASTER_HEARTBEAT_PERIOD MAXVALUE RESIGNAL SIGNAL SLOW" supportsIdentityColumn="true">
+      <databaseTables href="package-base.xmi#//@domainObjects.0/@databaseTable"/>
+      <databaseTables href="package-base.xmi#//@domainObjects.1/@databaseTable"/>
+      <databaseTables href="package-base.xmi#//@domainObjects.2/@databaseTable"/>
+      <databaseTables href="package-base.xmi#//@domainObjects.1/@associations.0/@table"/>
+      <allSupportedColumnTypes javaTypes="/0/@allSupportedTypes.1 /0/@allSupportedTypes.6" name="INTEGER" omitSizeInformation="true"/>
+      <allSupportedColumnTypes javaTypes="/0/@allSupportedTypes.2 /0/@allSupportedTypes.7" name="BIGINT" omitSizeInformation="true"/>
+      <allSupportedColumnTypes javaTypes="/0/@allSupportedTypes.3 /0/@allSupportedTypes.8" name="DOUBLE" omitSizeInformation="true"/>
+      <allSupportedColumnTypes javaTypes="/0/@allSupportedTypes.16 /0/@allSupportedTypes.14 /0/@allSupportedTypes.15" name="DATE" omitSizeInformation="true"/>
+      <allSupportedColumnTypes javaTypes="/0/@allSupportedTypes.12 /0/@allSupportedTypes.21" name="VARCHAR"/>
+      <allSupportedColumnTypes javaTypes="/0/@allSupportedTypes.12 /0/@allSupportedTypes.13 /0/@allSupportedTypes.21" name="CHAR"/>
+      <allSupportedColumnTypes javaTypes="/0/@allSupportedTypes.19 /0/@allSupportedTypes.20 /0/@allSupportedTypes.21" name="BLOB" omitSizeInformation="true"/>
+      <allSupportedColumnTypes javaTypes="/0/@allSupportedTypes.11" name="DECIMAL" omitSizeInformation="true"/>
+      <allSupportedColumnTypes javaTypes="/0/@allSupportedTypes.19 /0/@allSupportedTypes.20" name="TINYBLOB" omitSizeInformation="true"/>
+      <allSupportedColumnTypes javaTypes="/0/@allSupportedTypes.19 /0/@allSupportedTypes.20" name="MEDIUMBLOB" omitSizeInformation="true"/>
+      <allSupportedColumnTypes javaTypes="/0/@allSupportedTypes.19 /0/@allSupportedTypes.20" name="LONGBLOB" omitSizeInformation="true"/>
+      <allSupportedColumnTypes javaTypes="/0/@allSupportedTypes.4 /0/@allSupportedTypes.9" name="BOOLEAN" omitSizeInformation="true"/>
+      <allSupportedColumnTypes javaTypes="/0/@allSupportedTypes.4 /0/@allSupportedTypes.9" name="BOOL" omitSizeInformation="true"/>
+      <allSupportedColumnTypes javaTypes="/0/@allSupportedTypes.5 /0/@allSupportedTypes.10" name="FLOAT" omitSizeInformation="true"/>
+      <allSupportedColumnTypes javaTypes="/0/@allSupportedTypes.17 /0/@allSupportedTypes.14 /0/@allSupportedTypes.15" name="DATETIME" omitSizeInformation="true"/>
+      <allSupportedColumnTypes javaTypes="/0/@allSupportedTypes.4 /0/@allSupportedTypes.9" name="TINYINT" omitSizeInformation="true"/>
+      <allSupportedColumnTypes javaTypes="/0/@allSupportedTypes.12 /0/@allSupportedTypes.21" name="TEXT" omitSizeInformation="true"/>
+      <allSupportedColumnTypes javaTypes="/0/@allSupportedTypes.12 /0/@allSupportedTypes.21" name="TINYTEXT" omitSizeInformation="true"/>
+      <allSupportedColumnTypes javaTypes="/0/@allSupportedTypes.12 /0/@allSupportedTypes.21" name="MEDIUMTEXT" omitSizeInformation="true"/>
+      <allSupportedColumnTypes javaTypes="/0/@allSupportedTypes.12 /0/@allSupportedTypes.21" name="LONGTEXT" omitSizeInformation="true"/>
+      <allSupportedColumnTypes javaTypes="/0/@allSupportedTypes.4 /0/@allSupportedTypes.9" name="BIT" omitSizeInformation="true"/>
+      <allSupportedColumnTypes javaTypes="/0/@allSupportedTypes.1 /0/@allSupportedTypes.6" name="SMALLINT" omitSizeInformation="true"/>
+      <allSupportedColumnTypes javaTypes="/0/@allSupportedTypes.1 /0/@allSupportedTypes.6" name="INT" omitSizeInformation="true"/>
+      <allSupportedColumnTypes javaTypes="/0/@allSupportedTypes.19 /0/@allSupportedTypes.20 /0/@allSupportedTypes.21" name="BINARY"/>
+      <allSupportedColumnTypes javaTypes="/0/@allSupportedTypes.19 /0/@allSupportedTypes.20 /0/@allSupportedTypes.21" name="VARBINARY"/>
+      <allSupportedColumnTypes javaTypes="/0/@allSupportedTypes.1 /0/@allSupportedTypes.6" name="MEDIUMINT" omitSizeInformation="true"/>
+    </database>
+    <allSupportedTypes name="void" primitive="true"/>
+    <allSupportedTypes name="int" mappable="true" primitive="true"/>
+    <allSupportedTypes name="long" mappable="true" primitive="true"/>
+    <allSupportedTypes name="double" mappable="true" primitive="true"/>
+    <allSupportedTypes name="boolean" mappable="true" primitive="true"/>
+    <allSupportedTypes name="float" mappable="true" primitive="true"/>
+    <allSupportedTypes name="Integer" mappable="true"/>
+    <allSupportedTypes name="Long" mappable="true"/>
+    <allSupportedTypes name="Double" mappable="true"/>
+    <allSupportedTypes name="Boolean" mappable="true"/>
+    <allSupportedTypes name="Float" mappable="true"/>
+    <allSupportedTypes name="BigDecimal" mappable="true" namespace="/0/@supportedStandardNamespaces.1"/>
+    <allSupportedTypes name="String" mappable="true"/>
+    <allSupportedTypes name="char" mappable="true" primitive="true"/>
+    <allSupportedTypes name="Date" mappable="true" namespace="/0/@supportedStandardNamespaces.0"/>
+    <allSupportedTypes name="GregorianCalendar" mappable="true" namespace="/0/@supportedStandardNamespaces.0"/>
+    <allSupportedTypes name="LocalDate" mappable="true" namespace="/0/@supportedStandardNamespaces.2"/>
+    <allSupportedTypes name="LocalDateTime" mappable="true" namespace="/0/@supportedStandardNamespaces.2"/>
+    <allSupportedTypes name="HashMap" namespace="/0/@supportedStandardNamespaces.0"/>
+    <allSupportedTypes name="byte[]" mappable="true"/>
+    <allSupportedTypes name="Byte[]" mappable="true"/>
+    <allSupportedTypes name="UUID" mappable="true" namespace="/0/@supportedStandardNamespaces.0"/>
+    <buildConfiguration name="qdw" type="MASTER"/>
+    <buildConfiguration name="qdw-domain"/>
+    <buildConfiguration name="qdw-dto" type="DTO"/>
+    <buildConfiguration name="qdw-shared" type="SHARED"/>
+    <buildConfiguration name="qdw-data-exchange" type="DATA_EXCHANGE"/>
+    <buildConfiguration name="qdw-repository" type="REPOSITORY"/>
+    <buildConfiguration name="qdw-boundary" type="BOUNDARY"/>
+    <buildConfiguration name="qdw-service" type="SERVICE"/>
+    <buildConfiguration name="qdw-gui" type="GUI"/>
+    <buildConfiguration name="qdw-selenium-test" type="SELENIUM_TEST"/>
+    <testModules xsi:type="net.sourceforge.jbizmo.model.testing:SeleniumTestModule" namespace="/5" testCaseSuffix="Test" driver="FIREFOX" driverPath="D:\lib\selenium-firefox-driver-4.19.1.jar" maximizeWindow="true" implicitWaitTime="1" pageLoadTime="5"/>
+  </net.sourceforge.jbizmo.model.project:Project>
+  <net.sourceforge.jbizmo.model.java:Namespace name="boundary" parent="/0/@rootNamespace" childNamespaces="/7" project="/0"/>
+  <net.sourceforge.jbizmo.model.java:Namespace name="repository" parent="/0/@rootNamespace" childNamespaces="/10" project="/0"/>
+  <net.sourceforge.jbizmo.model.java:Namespace name="dto" parent="/0/@rootNamespace" childNamespaces="/8" project="/0"/>
+  <net.sourceforge.jbizmo.model.java:Namespace name="exchange" parent="/0/@rootNamespace" childNamespaces="/9" project="/0"/>
+  <net.sourceforge.jbizmo.model.java:Namespace name="ui.test" parent="/0/@rootNamespace" project="/0"/>
+  <net.sourceforge.jbizmo.model.client:FormGroup name="Master data" groupOrder="1" roles="/0/@roles.0" project="/0"/>
+  <net.sourceforge.jbizmo.model.java:Namespace name="base" parent="/1" javaTypes="/13 /14" project="/0"/>
+  <net.sourceforge.jbizmo.model.java:Namespace name="base" parent="/3" javaTypes="/15 /16" project="/0"/>
+  <net.sourceforge.jbizmo.model.java:Namespace name="base" parent="/4" project="/0"/>
+  <net.sourceforge.jbizmo.model.java:Namespace name="base" parent="/2" javaTypes="/11 /12" project="/0"/>
+  <net.sourceforge.jbizmo.model.repository:Repository name="UserRepository" comment="Create, read, update and delete services for user objects." namespace="/10">
+    <domainObject href="package-base.xmi#//@domainObjects.1"/>
+    <repositoryMethods name="findById" javaType="/11" transactionType="REQUIRED" methodType="FIND_BY_ID">
+      <returnType href="package-base.xmi#//@domainObjects.1"/>
+      <methodParameters name="id" type="/0/@allSupportedTypes.2"/>
+    </repositoryMethods>
+    <repositoryMethods name="findById" javaType="/11" transactionType="REQUIRED" methodType="FIND_EXISTING">
+      <returnType href="package-base.xmi#//@domainObjects.1"/>
+      <methodParameters name="id" type="/0/@allSupportedTypes.2"/>
+      <methodParameters name="mustExist" type="/0/@allSupportedTypes.4"/>
+    </repositoryMethods>
+    <repositoryMethods name="findById" javaType="/11" transactionType="REQUIRED" methodType="FIND_BY_OBJECT">
+      <returnType href="package-base.xmi#//@domainObjects.1"/>
+      <methodParameters name="user">
+        <type href="package-base.xmi#//@domainObjects.1"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="deleteAll" javaType="/11" returnType="/0/@allSupportedTypes.0" transactionType="REQUIRED" methodType="DELETE_ALL"/>
+    <repositoryMethods name="merge" javaType="/11" transactionType="REQUIRED" methodType="MERGE">
+      <returnType href="package-base.xmi#//@domainObjects.1"/>
+      <methodParameters name="user">
+        <type href="package-base.xmi#//@domainObjects.1"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="persist" javaType="/11" transactionType="REQUIRED" methodType="PERSIST">
+      <returnType href="package-base.xmi#//@domainObjects.1"/>
+      <methodParameters name="user">
+        <type href="package-base.xmi#//@domainObjects.1"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="copy" javaType="/11" transactionType="REQUIRED" methodType="COPY">
+      <returnType href="package-base.xmi#//@domainObjects.1"/>
+      <methodParameters name="sourceObject">
+        <type href="package-base.xmi#//@domainObjects.1"/>
+      </methodParameters>
+      <methodParameters name="targetObject">
+        <type href="package-base.xmi#//@domainObjects.1"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="delete" javaType="/11" returnType="/0/@allSupportedTypes.0" transactionType="REQUIRED" methodType="DELETE">
+      <methodParameters name="id" type="/0/@allSupportedTypes.2"/>
+    </repositoryMethods>
+    <repositoryMethods name="findAll" javaType="/11" returnTypeModifier="List" transactionType="REQUIRED">
+      <returnType href="package-base.xmi#//@domainObjects.1"/>
+    </repositoryMethods>
+    <repositoryMethods name="existsByName" javaType="/11" returnType="/0/@allSupportedTypes.4" transactionType="REQUIRED" methodType="EXISTS_BY_UNIQUE_KEY" hint="NQ_UK_EXISTS_BY_NAME">
+      <methodParameters xsi:type="net.sourceforge.jbizmo.model.repository:RepositoryMethodParameter" name="name" type="/0/@allSupportedTypes.12">
+        <attribute href="package-base.xmi#//@domainObjects.1/@attributes.0"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="existsByIdAndName" javaType="/11" returnType="/0/@allSupportedTypes.4" transactionType="REQUIRED" methodType="EXISTS_BY_UNIQUE_KEY_WITH_ID" hint="NQ_UK_EXISTS_BY_NAME_AND_ID">
+      <methodParameters xsi:type="net.sourceforge.jbizmo.model.repository:RepositoryMethodParameter" name="id" type="/0/@allSupportedTypes.2">
+        <attribute href="package-base.xmi#//@domainObjects.0/@attributes.0"/>
+      </methodParameters>
+      <methodParameters xsi:type="net.sourceforge.jbizmo.model.repository:RepositoryMethodParameter" name="name" type="/0/@allSupportedTypes.12">
+        <attribute href="package-base.xmi#//@domainObjects.1/@attributes.0"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="searchByName" javaType="/11" returnTypeModifier="List" transactionType="REQUIRED" methodType="SEARCH_BY_UNIQUE_KEY" hint="NQ_UK_SEARCH_BY_NAME">
+      <returnType href="package-base.xmi#//@domainObjects.1"/>
+      <methodParameters xsi:type="net.sourceforge.jbizmo.model.repository:RepositoryMethodParameter" name="name" type="/0/@allSupportedTypes.12">
+        <attribute href="package-base.xmi#//@domainObjects.1/@attributes.0"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="findByName" javaType="/11" transactionType="REQUIRED" methodType="FIND_BY_UNIQUE_KEY" hint="NQ_UK_FIND_BY_NAME">
+      <returnType href="package-base.xmi#//@domainObjects.1"/>
+      <methodParameters xsi:type="net.sourceforge.jbizmo.model.repository:RepositoryMethodParameter" name="name" type="/0/@allSupportedTypes.12">
+        <attribute href="package-base.xmi#//@domainObjects.1/@attributes.0"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="existsById" javaType="/11" returnType="/0/@allSupportedTypes.4" transactionType="REQUIRED" methodType="EXISTS_BY_ID">
+      <methodParameters name="id" type="/0/@allSupportedTypes.2"/>
+    </repositoryMethods>
+    <repositoryMethods name="count" javaType="/11" returnType="/0/@allSupportedTypes.7" transactionType="REQUIRED" methodType="COUNT_ALL"/>
+    <repositoryMethods name="search" javaType="/11" returnTypeModifier="List" transactionType="REQUIRED" methodType="SEARCH">
+      <returnType href="package-base.xmi#//@domainObjects.1"/>
+    </repositoryMethods>
+    <repositoryMethods name="count" javaType="/11" returnType="/0/@allSupportedTypes.7" transactionType="REQUIRED" methodType="COUNT"/>
+    <repositoryMethods name="getRoles" javaType="/11" returnTypeModifier="List" transactionType="REQUIRED" methodType="GET_ASSOCIATION" hint="NQ_GET_ROLES">
+      <returnType href="package-base.xmi#//@domainObjects.2"/>
+      <methodParameters xsi:type="net.sourceforge.jbizmo.model.repository:RepositoryMethodParameter" name="id" type="/0/@allSupportedTypes.2">
+        <association xsi:type="net.sourceforge.net.model.domain:ManyToManyAssociation" href="package-base.xmi#//@domainObjects.1/@associations.0"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="removeRoleFromRoles" javaType="/11" returnType="/0/@allSupportedTypes.0" transactionType="REQUIRED" methodType="REMOVE_FROM_ASSOCIATION">
+      <methodParameters name="id" type="/0/@allSupportedTypes.2"/>
+      <methodParameters name="role" hint="roles">
+        <type href="package-base.xmi#//@domainObjects.2"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="addRoleToRoles" javaType="/11" returnType="/0/@allSupportedTypes.0" transactionType="REQUIRED" methodType="ADD_TO_ASSOCIATION">
+      <methodParameters name="id" type="/0/@allSupportedTypes.2"/>
+      <methodParameters name="role" hint="roles">
+        <type href="package-base.xmi#//@domainObjects.2"/>
+      </methodParameters>
+    </repositoryMethods>
+  </net.sourceforge.jbizmo.model.repository:Repository>
+  <net.sourceforge.jbizmo.model.repository:Repository name="RoleRepository" comment="Create, read, update and delete services for role objects." namespace="/10">
+    <domainObject href="package-base.xmi#//@domainObjects.2"/>
+    <repositoryMethods name="findById" javaType="/12" transactionType="REQUIRED" methodType="FIND_BY_ID">
+      <returnType href="package-base.xmi#//@domainObjects.2"/>
+      <methodParameters name="id" type="/0/@allSupportedTypes.2"/>
+    </repositoryMethods>
+    <repositoryMethods name="findById" javaType="/12" transactionType="REQUIRED" methodType="FIND_EXISTING">
+      <returnType href="package-base.xmi#//@domainObjects.2"/>
+      <methodParameters name="id" type="/0/@allSupportedTypes.2"/>
+      <methodParameters name="mustExist" type="/0/@allSupportedTypes.4"/>
+    </repositoryMethods>
+    <repositoryMethods name="findById" javaType="/12" transactionType="REQUIRED" methodType="FIND_BY_OBJECT">
+      <returnType href="package-base.xmi#//@domainObjects.2"/>
+      <methodParameters name="role">
+        <type href="package-base.xmi#//@domainObjects.2"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="deleteAll" javaType="/12" returnType="/0/@allSupportedTypes.0" transactionType="REQUIRED" methodType="DELETE_ALL"/>
+    <repositoryMethods name="merge" javaType="/12" transactionType="REQUIRED" methodType="MERGE">
+      <returnType href="package-base.xmi#//@domainObjects.2"/>
+      <methodParameters name="role">
+        <type href="package-base.xmi#//@domainObjects.2"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="persist" javaType="/12" transactionType="REQUIRED" methodType="PERSIST">
+      <returnType href="package-base.xmi#//@domainObjects.2"/>
+      <methodParameters name="role">
+        <type href="package-base.xmi#//@domainObjects.2"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="copy" javaType="/12" transactionType="REQUIRED" methodType="COPY">
+      <returnType href="package-base.xmi#//@domainObjects.2"/>
+      <methodParameters name="sourceObject">
+        <type href="package-base.xmi#//@domainObjects.2"/>
+      </methodParameters>
+      <methodParameters name="targetObject">
+        <type href="package-base.xmi#//@domainObjects.2"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="delete" javaType="/12" returnType="/0/@allSupportedTypes.0" transactionType="REQUIRED" methodType="DELETE">
+      <methodParameters name="id" type="/0/@allSupportedTypes.2"/>
+    </repositoryMethods>
+    <repositoryMethods name="findAll" javaType="/12" returnTypeModifier="List" transactionType="REQUIRED">
+      <returnType href="package-base.xmi#//@domainObjects.2"/>
+    </repositoryMethods>
+    <repositoryMethods name="existsByName" javaType="/12" returnType="/0/@allSupportedTypes.4" transactionType="REQUIRED" methodType="EXISTS_BY_UNIQUE_KEY" hint="NQ_UK_EXISTS_BY_NAME">
+      <methodParameters xsi:type="net.sourceforge.jbizmo.model.repository:RepositoryMethodParameter" name="name" type="/0/@allSupportedTypes.12">
+        <attribute href="package-base.xmi#//@domainObjects.2/@attributes.0"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="existsByIdAndName" javaType="/12" returnType="/0/@allSupportedTypes.4" transactionType="REQUIRED" methodType="EXISTS_BY_UNIQUE_KEY_WITH_ID" hint="NQ_UK_EXISTS_BY_NAME_AND_ID">
+      <methodParameters xsi:type="net.sourceforge.jbizmo.model.repository:RepositoryMethodParameter" name="id" type="/0/@allSupportedTypes.2">
+        <attribute href="package-base.xmi#//@domainObjects.0/@attributes.0"/>
+      </methodParameters>
+      <methodParameters xsi:type="net.sourceforge.jbizmo.model.repository:RepositoryMethodParameter" name="name" type="/0/@allSupportedTypes.12">
+        <attribute href="package-base.xmi#//@domainObjects.2/@attributes.0"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="searchByName" javaType="/12" returnTypeModifier="List" transactionType="REQUIRED" methodType="SEARCH_BY_UNIQUE_KEY" hint="NQ_UK_SEARCH_BY_NAME">
+      <returnType href="package-base.xmi#//@domainObjects.2"/>
+      <methodParameters xsi:type="net.sourceforge.jbizmo.model.repository:RepositoryMethodParameter" name="name" type="/0/@allSupportedTypes.12">
+        <attribute href="package-base.xmi#//@domainObjects.2/@attributes.0"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="findByName" javaType="/12" transactionType="REQUIRED" methodType="FIND_BY_UNIQUE_KEY" hint="NQ_UK_FIND_BY_NAME">
+      <returnType href="package-base.xmi#//@domainObjects.2"/>
+      <methodParameters xsi:type="net.sourceforge.jbizmo.model.repository:RepositoryMethodParameter" name="name" type="/0/@allSupportedTypes.12">
+        <attribute href="package-base.xmi#//@domainObjects.2/@attributes.0"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="existsById" javaType="/12" returnType="/0/@allSupportedTypes.4" transactionType="REQUIRED" methodType="EXISTS_BY_ID">
+      <methodParameters name="id" type="/0/@allSupportedTypes.2"/>
+    </repositoryMethods>
+    <repositoryMethods name="count" javaType="/12" returnType="/0/@allSupportedTypes.7" transactionType="REQUIRED" methodType="COUNT_ALL"/>
+    <repositoryMethods name="search" javaType="/12" returnTypeModifier="List" transactionType="REQUIRED" methodType="SEARCH">
+      <returnType href="package-base.xmi#//@domainObjects.2"/>
+    </repositoryMethods>
+    <repositoryMethods name="count" javaType="/12" returnType="/0/@allSupportedTypes.7" transactionType="REQUIRED" methodType="COUNT"/>
+  </net.sourceforge.jbizmo.model.repository:Repository>
+  <net.sourceforge.jbizmo.model.boundary:BoundaryBean name="UserBoundaryServiceBean" comment="Boundary service for user objects" namespace="/7" interfaceName="UserBoundaryService" repository="/11">
+    <domainObject href="package-base.xmi#//@domainObjects.1"/>
+    <boundaryMethods name="logOn" comment="Perform user log-on" returnType="/16" methodType="LOG_ON" serviceMethod="/11/@repositoryMethods.12">
+      <methodParameters name="userName" type="/0/@allSupportedTypes.12"/>
+      <methodParameters name="password" type="/0/@allSupportedTypes.12"/>
+    </boundaryMethods>
+    <boundaryMethods name="changePassword" comment="Change password of given user account" returnType="/0/@allSupportedTypes.0" methodType="CHANGE_PASSWORD" serviceMethod="/11/@repositoryMethods.0">
+      <methodParameters name="id" type="/0/@allSupportedTypes.2"/>
+      <methodParameters name="oldPassword" type="/0/@allSupportedTypes.12"/>
+      <methodParameters name="newPassword" type="/0/@allSupportedTypes.12"/>
+      <methodParameters name="confirmedPassword" type="/0/@allSupportedTypes.12"/>
+    </boundaryMethods>
+  </net.sourceforge.jbizmo.model.boundary:BoundaryBean>
+  <net.sourceforge.jbizmo.model.boundary:BoundaryBean name="RoleBoundaryServiceBean" comment="Boundary service for role objects" namespace="/7" interfaceName="RoleBoundaryService" repository="/12">
+    <domainObject href="package-base.xmi#//@domainObjects.2"/>
+  </net.sourceforge.jbizmo.model.boundary:BoundaryBean>
+  <net.sourceforge.jbizmo.model.dto:DTOBean name="RoleListDTO" comment="Data transfer object for role objects" namespace="/8">
+    <domainObject href="package-base.xmi#//@domainObjects.2"/>
+    <attributes name="id" selectToken="a.id">
+      <domainAttribute href="package-base.xmi#//@domainObjects.0/@attributes.0"/>
+    </attributes>
+    <attributes name="name" selectToken="a.name">
+      <domainAttribute href="package-base.xmi#//@domainObjects.2/@attributes.0"/>
+    </attributes>
+  </net.sourceforge.jbizmo.model.dto:DTOBean>
+  <net.sourceforge.jbizmo.model.dto:DTOBean name="ApplicationLogOnDTO" comment="DTO bean for transferring log-on data" namespace="/8" standardConversion="true">
+    <domainObject href="package-base.xmi#//@domainObjects.1"/>
+    <attributes name="roles" referencedDTOBean="/15">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToManyAssociation" href="package-base.xmi#//@domainObjects.1/@associations.0"/>
+    </attributes>
+    <attributes name="name">
+      <domainAttribute href="package-base.xmi#//@domainObjects.1/@attributes.0"/>
+    </attributes>
+    <attributes name="password">
+      <domainAttribute href="package-base.xmi#//@domainObjects.1/@attributes.1"/>
+    </attributes>
+    <attributes name="email">
+      <domainAttribute href="package-base.xmi#//@domainObjects.1/@attributes.2"/>
+    </attributes>
+    <attributes name="active">
+      <domainAttribute href="package-base.xmi#//@domainObjects.1/@attributes.3"/>
+    </attributes>
+    <attributes name="id">
+      <domainAttribute href="package-base.xmi#//@domainObjects.0/@attributes.0"/>
+    </attributes>
+  </net.sourceforge.jbizmo.model.dto:DTOBean>
+</xmi:XMI>

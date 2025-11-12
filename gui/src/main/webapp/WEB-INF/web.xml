@@ -1,0 +1,137 @@
+<?xml version="1.0"?>
+<web-app id="WebApp_ID" version="6.0"
+	xmlns="https://jakarta.ee/xml/ns/jakartaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd">
+
+<filter>
+	<filter-name>Character Encoding Filter</filter-name>
+	<filter-class>net.sourceforge.jbizmo.commons.webclient.primefaces.filter.CharacterEncodingFilter</filter-class>
+</filter>
+<filter-mapping>
+	<filter-name>Character Encoding Filter</filter-name>
+	<servlet-name>Faces Servlet</servlet-name>
+</filter-mapping>
+
+
+
+<context-param>
+	<param-name>jakarta.faces.DEFAULT_SUFFIX</param-name>
+	<param-value>.xhtml</param-value>
+</context-param>
+
+<context-param>
+	<param-name>jakarta.faces.PROJECT_STAGE</param-name>
+	<param-value>Production</param-value>
+</context-param>
+
+<context-param>
+	<param-name>jakarta.faces.STATE_SAVING_METHOD</param-name>
+	<param-value>server</param-value>
+</context-param>
+
+<context-param>
+	<param-name>jakarta.faces.FACELETS_SKIP_COMMENTS</param-name>
+	<param-value>true</param-value>
+</context-param>
+
+<context-param>
+	<param-name>primefaces.THEME</param-name>
+	<param-value>nova-light</param-value>
+</context-param>
+
+
+
+<servlet>
+	<servlet-name>Faces Servlet</servlet-name>
+	<servlet-class>jakarta.faces.webapp.FacesServlet</servlet-class>
+	<load-on-startup>1</load-on-startup>
+</servlet>
+
+<servlet-mapping>
+	<servlet-name>Faces Servlet</servlet-name>
+	<url-pattern>*.jsf</url-pattern>
+</servlet-mapping>
+
+
+
+<error-page>
+	<error-code>403</error-code>
+	<location>/error.jsf</location>
+</error-page>
+<error-page>
+	<error-code>404</error-code>
+	<location>/error.jsf</location>
+</error-page>
+<error-page>
+	<error-code>500</error-code>
+	<location>/error.jsf</location>
+</error-page>
+<error-page>
+	<exception-type>java.lang.Exception</exception-type>
+	<location>/error.jsf</location>
+</error-page>
+
+
+
+<security-role>
+	<role-name>ADMINISTRATOR</role-name>
+</security-role>
+<security-role>
+	<role-name>READONLY</role-name>
+</security-role>
+
+
+
+<security-constraint>
+	<web-resource-collection>
+		<web-resource-name>Restricted areas</web-resource-name>
+		<url-pattern>/dialog/*</url-pattern>
+		<url-pattern>/view/*</url-pattern>
+		<url-pattern>/tree/*</url-pattern>
+		<url-pattern>/lov/*</url-pattern>
+	</web-resource-collection>
+	<auth-constraint>
+		<role-name>ADMINISTRATOR</role-name>
+		<role-name>READONLY</role-name>
+	</auth-constraint>
+	<user-data-constraint>
+		<!-- https erzwingen -->
+		<transport-guarantee>CONFIDENTIAL</transport-guarantee>
+	</user-data-constraint>
+</security-constraint>
+
+<security-constraint>
+	<web-resource-collection>
+		<web-resource-name>Unrestricted areas</web-resource-name>
+		<url-pattern>/PasswordReset.jsf</url-pattern>
+	</web-resource-collection>
+	<user-data-constraint>
+		<!-- https erzwingen -->
+		<transport-guarantee>CONFIDENTIAL</transport-guarantee>
+	</user-data-constraint>
+</security-constraint>
+
+<security-constraint>
+	<web-resource-collection>
+		<web-resource-name>Unrestricted areas</web-resource-name>
+		<url-pattern>/css/*</url-pattern>
+		<url-pattern>/script/*</url-pattern>
+		<url-pattern>/themes/*</url-pattern>
+		<url-pattern>/images/*</url-pattern>
+		<url-pattern>/jakarta.faces.resource/*</url-pattern>
+	</web-resource-collection>
+</security-constraint>
+
+
+
+<session-config>
+	<!-- Abmeldung nach 240 Minuten (4 Std) Untätigkeit -->
+	<session-timeout>240</session-timeout>
+</session-config>
+
+<welcome-file-list>
+	<welcome-file>view/index.jsf</welcome-file>
+</welcome-file-list>
+
+</web-app>

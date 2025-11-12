@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+xmlns:h="jakarta.faces.html"
+xmlns:fn="jakarta.tags.functions"
+xmlns:f="jakarta.faces.core"
+xmlns:p="http://primefaces.org/ui">
+
+<f:view locale="#{userSession.locale}"/>
+<h:head>
+<meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+<meta http-equiv="refresh" content="#{session.maxInactiveInterval};url=#{request.scheme}://#{request.serverName}:#{request.serverPort}#{request.contextPath}"/>
+<link type="text/css" rel="stylesheet" href="#{request.contextPath}/css/default.css"/>
+</h:head>
+
+<body>
+
+	<p:growl id="messages" showDetail="true" life="3000"/>
+	<h:form id="form">
+
+	<p:dialog id="dialog" visible="true" header="#{i18n.login_title}" widgetVar="dlg" modal="true" closable="false">
+		<h:panelGrid columns="2" cellpadding="3">
+
+			<h:outputLabel styleClass="label-field-mandatory" value="#{i18n.login_username} *:"/>
+			<p:inputText id="txtUserName" value="#{userSession.principal.name}" required="true">
+				<f:validateRequired/>
+			</p:inputText>
+
+			<h:outputLabel styleClass="label-field-mandatory" value="#{i18n.login_password} *:"/>
+			<p:password id="txtPassword" feedback="false" required="true" value="#{userSession.principal.password}">
+				<f:validateRequired/>
+			</p:password>
+
+			<h:outputLabel value="#{i18n.login_language} *:" styleClass="label-field-mandatory" for="cboLocale"/>
+			<p:selectOneMenu id="cboLocale" valueChangeListener="#{userSession.onLocaleChanged}" value="#{userSession.localeCode}">
+				<f:selectItems value="#{userSession.supportedLocales}"/>
+			</p:selectOneMenu>
+
+			<p:commandButton id="cmdLogin" value="#{i18n.login_command}" ajax="false" action="#{userSession.login}"/>
+
+		</h:panelGrid>
+	</p:dialog>
+	</h:form>
+</body>
+</html>

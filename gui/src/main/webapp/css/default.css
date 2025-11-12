@@ -1,0 +1,1191 @@
+:root {
+	--page: #efefef;
+	/* blaustichiger: #d6e5f4 */
+	--pageedge: #acc7e3;
+	--panel: #fff;
+	--paneldimmed: #f4f4f4;
+
+	--odd: #eff4fb;
+	--focus: #eff4fb;
+
+	--inputfield: #fff;
+	--text: #333;
+	--textonactive: #fff;
+	--textonactivemarked: #333;
+	--disabled: #dfe7f3;
+	--label: #000;
+	--headerlabel: #4a83b1; /* farblich gehighlighteter Text */
+
+	--active: #4a83b1; /* active bzw. highlight) */
+	--activemarked: #9dbed9; /* active bzw. highlight) */
+	--activeborder: #6fa6d3;
+	--hover: #6fa6d3;
+	--hoverborder: #4a83b1;
+
+	--reportmarkgray: darkgray;
+	--reportmarkpurple: #8040a0;
+	--reportmarkgreen: forestgreen;
+	--reportmarkblue: #4a83b1;
+	--reportmarkred: #d86868;
+	--backgroundmarkgreen: yellowgreen;
+}
+@media (prefers-color-scheme: dark) {
+:root {
+	--page: #444;
+	/* blaustichiger: #384850 */
+	--pageedge: #335b7a;
+	--panel: #555;
+	--paneldimmed: #777;
+
+	--odd: #2B4C66;
+	--focus: #2B4C66;
+
+	--inputfield: #444;
+	--text: #ccc;
+	--textonactive: #eee;
+	--textonactivemarked: #333;
+	--disabled: #2B4C66;
+	--label: #ddd;
+	--headerlabel: #e67022;
+
+	--active: #e67022;
+	--activemarked: #f2b994;
+	--activeborder: #bf5e1d;
+	--hover: #bf5e1d;
+	--hoverborder: #e67022;
+
+	--reportmarkgray: darkgray;
+	--reportmarkpurple: #d9a8f2;
+	--reportmarkgreen: yellowgreen;
+	--reportmarkblue: #569fd9;
+	--reportmarkred: #ff9191;
+	--backgroundmarkgreen: forestgreen;
+}
+}
+
+
+
+body {
+	margin: 0px;
+	padding: 0px;
+	background: var(--page);
+	font-family: var(--font-family);
+	font-size: 14px;
+}
+
+body .ui-dialog .ui-dialog-titlebar,
+body .ui-dialog .ui-dialog-footer {
+    background: var(--paneldimmed);
+	color: var(--text);
+}
+
+body .ui-dialog .ui-dialog-content {
+    background: var(--panel);
+	color: var(--text);
+}
+
+
+body .ui-scrollpanel {
+    background: var(--paneldimmed);
+	color: var(--text);
+}
+
+.navigator-scrollpanel {
+    background: var(--panel) !important;
+}
+
+.ui-widget,.ui-widget .ui-widget {
+	font-size: 100% !important;
+}
+
+.ui-widget-italic {
+	font-style: italic !important;
+}
+
+body.lov {
+	padding: 10px;
+}
+
+.label-grid-header{
+	white-space: nowrap;
+	color: var(--active);
+	font-weight: bold;
+}
+
+.emphasize {
+	color: #8040a0 !important;
+}
+
+
+
+/* Schaltfläche Allgemein */
+.ui-button-text-only .ui-button-text {
+	padding: 0.2rem 0.6rem !important;
+}
+
+.ui-button-text-icon-left .ui-button-text {
+	padding: 0.2rem 0.6rem 0.2rem 1.8rem !important;
+}
+
+/* Schaltfläche allgemein Farbe */
+body .ui-button,
+body .ui-button.ui-state-active {
+	background: var(--active);
+	border: 1px solid var(--activeborder);
+	margin-right: .3rem;
+}
+
+/* Schaltfläche hover Farbe */
+body .ui-button.ui-state-hover {
+	background: var(--hover);
+	border: 1px solid var(--hoverborder);
+}
+
+
+
+/* Menü */
+.template-header .ui-button-menue {
+	padding: 0.2rem 0.1rem 0.2rem 0.1rem !important;
+}
+
+/* Menü Schaltflächen allgemein */
+.template-header .btn-orga {
+	background: #6f869a !important;
+	border: 1px solid #c3d8ec !important;
+}
+
+.template-header .btn-logout,
+.btn-dangerous {
+	background: #d86868 !important;
+	border: 1px solid #eea3a3 !important;
+}
+
+/* Menü Schaltfläche hover */
+.template-header .btn-orga.ui-state-hover {
+	background: #acb8c2 !important;
+	border: 1px solid #97b9d9 !important;
+}
+
+.template-header .btn-logout.ui-state-hover,
+.btn-dangerous.ui-state-hover {
+	background: #eea3a3 !important;
+	border: 1px solid #d86868 !important;
+}
+
+
+.ui-contextmenu {
+	white-space: nowrap !important;
+	width: auto !important;
+}
+
+/* Textfeld in Dropdown-Menü */
+.ui-selectonemenu {
+	width: 10.85rem !important;
+	height: 1.6rem !important;
+}
+
+/* Dropdown Filter in Tabellen-Spalten; ggf. allg. .ui-datatable .ui-selectonemenu */
+.ui-datatable .ui-column-customfilter .ui-selectonemenu {
+    width: 100% !important;
+    min-width: unset !important;
+}
+
+
+body .ui-selectonemenu {
+	background: var(--panel);
+}
+
+body .ui-selectonemenu.ui-state-focus {
+	border-color: var(--activeborder);
+}
+
+/* Text in Textfeld des Dropdown-Menü */
+body .ui-selectonemenu .ui-selectonemenu-label {
+	padding-top: 0.15rem;
+	font-size: unset;
+	color: var(--text);
+    background: var(--inputfield);
+}
+
+body .ui-selectonemenu .ui-selectonemenu-trigger {
+	width: 1.2rem;
+}
+
+/* Text in Aufklappliste des Dropdown-Menü */
+body .ui-selectonemenu-panel .ui-selectonemenu-items .ui-selectonemenu-item {
+	padding: 0.1rem .3rem;
+	color: var(--text);
+    background: var(--inputfield);
+}
+
+body .ui-selectonemenu-panel .ui-selectonemenu-items .ui-selectonemenu-item.ui-state-highlight {
+	background: var(--inputfield);
+	color: var(--text);
+	box-shadow: inset 0 0 0 0.2rem var(--active);
+}
+
+body .ui-selectonemenu-panel .ui-selectonemenu-items .ui-selectonemenu-item.ui-state-hover {
+	background: var(--inputfield);
+	color: var(--text);
+	box-shadow: inset 0 0 0 0.2rem var(--hover);
+}
+
+
+
+/* Menü */
+body .ui-menu .ui-menu-parent .ui-menu-child {
+	white-space: nowrap;
+	width: auto;
+}
+
+body .ui-menu.ui-menubar {
+	color: var(--text);
+	background: var(--panel);
+	padding: 0px;
+	margin: 0 0 0.2rem 0;
+}
+
+body .ui-menu.ui-menubar > .ui-menu-list > .ui-menuitem {
+	padding: 0rem .8rem 0rem 0.0rem;
+}
+
+body .ui-menu .ui-menu-list .ui-menuitem .ui-menuitem-link {
+	padding: .4rem;
+	background: var(--panel);
+}
+
+body .ui-menu .ui-menu-list .ui-menuitem.ui-menuitem-active > .ui-menuitem-link {
+	background: var(--panel);
+	color: var(--text);
+	box-shadow: inset 0 0 0 0.15rem var(--hover);
+}
+
+body .ui-menu .ui-menu-list .ui-menuitem .ui-menuitem-link .ui-menuitem-icon,
+body .ui-menu .ui-menu-list .ui-menuitem .ui-menuitem-link .ui-menuitem-text,
+body .ui-menu.ui-menubar > .ui-menu-list > .ui-menuitem > .ui-menuitem-link .ui-menuitem-icon,
+body .ui-menu.ui-menubar > .ui-menu-list > .ui-menuitem > .ui-menuitem-link .ui-icon-triangle-1-s:last-child,
+body .ui-menu .ui-menu-list .ui-menuitem.ui-menuitem-active > .ui-menuitem-link .ui-menuitem-text,
+body .ui-menu .ui-menu-list .ui-menuitem.ui-menuitem-active > .ui-menuitem-link .ui-menuitem-icon,
+body .ui-menu .ui-menu-list .ui-menuitem.ui-menuitem-active > .ui-menuitem-link .ui-icon {
+	background: unset;
+	color: var(--text);
+	box-shadow: unset;
+}
+
+.menuitem-selectone {
+	box-shadow: unset !important;
+}
+
+.menuitem-selectone .ui-icon-triangle-1-s:last-child {
+	margin-left: unset !important;
+	margin-right: 0.1rem !important
+}
+
+body .ui-selectonemenu.ui-state-hover {
+	box-shadow: unset;
+	border-color: var(--activeborder);
+}
+
+
+
+/* Autocomplete Textfeld */
+.ui-autocomplete-panel {
+	min-width: fit-content !important;
+}
+
+.ui-autocomplete-panel .ui-autocomplete-items .ui-autocomplete-item {
+	white-space: nowrap !important;
+	padding: .15rem .3rem !important;
+}
+
+.ui-autocomplete-panel .ui-autocomplete-items .ui-autocomplete-item.ui-state-highlight {
+	background: var(--active) !important;
+	color: var(--text) !important;
+}
+
+.ui-autocomplete-input-large .ui-autocomplete-input {
+	width: 16.25rem;
+}
+
+
+
+body .ui-paginator {
+	color: var(--text);
+	background: var(--paneldimmed);
+}
+
+body .ui-paginator .ui-paginator-first::before, 
+body .ui-paginator .ui-paginator-prev::before, 
+body .ui-paginator .ui-paginator-next::before, 
+body .ui-paginator .ui-paginator-last::before,
+body .ui-paginator .ui-paginator-first.ui-state-focus,
+body .ui-paginator .ui-paginator-prev.ui-state-focus,
+body .ui-paginator .ui-paginator-next.ui-state-focus,
+body .ui-paginator .ui-paginator-last.ui-state-focus,
+body .ui-paginator .ui-paginator-current,
+body .ui-paginator .ui-paginator-rpp-options,
+body .ui-paginator .ui-paginator-pages .ui-paginator-page {
+	background: unset;
+	color: var(--text);
+	box-shadow: none;
+}
+
+
+body .ui-paginator .ui-paginator-pages .ui-paginator-page.ui-state-active {
+	background: unset;
+	color: var(--text);
+	box-shadow: inset 0 0 0 0.15rem var(--active);
+}
+body .ui-paginator .ui-paginator-first.ui-state-active, 
+body .ui-paginator .ui-paginator-prev.ui-state-active, 
+body .ui-paginator .ui-paginator-next.ui-state-active, 
+body .ui-paginator .ui-paginator-last.ui-state-active
+ {
+	background: unset;
+	color: var(--text);
+	box-shadow: inset 0 0 0 0.15rem var(--active);
+}
+
+
+body .ui-paginator .ui-paginator-pages .ui-paginator-page.ui-state-hover {
+	background: unset;
+	color: var(--text);
+	box-shadow: inset 0 0 0 0.15rem var(--hover);
+}
+body .ui-paginator .ui-paginator-first.ui-state-hover, 
+body .ui-paginator .ui-paginator-prev.ui-state-hover, 
+body .ui-paginator .ui-paginator-next.ui-state-hover, 
+body .ui-paginator .ui-paginator-last.ui-state-hover {
+	background: unset;
+	color: var(--text);
+	box-shadow: inset 0 0 0 0.15rem var(--hover);
+}
+
+
+body .ui-paginator .ui-paginator-current,
+body .ui-paginator .ui-paginator-rpp-options {
+	margin: 0.0rem .3rem 0.3rem 1rem;
+}
+
+
+
+/* Select-one-button */
+.ui-selectonebutton > .ui-button {
+	background: #EEE !important;
+	border: 1px solid #CCC !important;
+	margin-right: 0rem !important;
+}
+
+
+/* Select-one-button aktiviert / selektiert */
+.ui-selectonebutton > .ui-button.ui-state-active {
+	background: #6fa6d3 !important;
+	border: 1px solid #4a83b1 !important;
+}
+
+/* Select-one-button Fokus bei mouse-down oder Tastatur-Navigation*/
+/* Select-one-button hover */
+/* Select-one-button hover bei selektiert */
+.ui-selectonebutton > .ui-button.ui-state-focus,
+.ui-selectonebutton > .ui-button.ui-state-hover,
+.ui-selectonebutton > .ui-button.ui-state-active:hover {
+	background: #C9E5FC !important;
+	border: 1px solid #6fa6d3 !important;
+}
+
+
+/* Select-one-Listbox */
+body .ui-selectonelistbox .ui-selectlistbox-listcontainer .ui-selectlistbox-list .ui-selectlistbox-item.ui-state-highlight {
+	background: unset;
+	color: var(--text);
+	box-shadow: inset 0 0 0 0.2rem var(--active);
+}
+
+body .ui-selectonelistbox .ui-selectlistbox-listcontainer .ui-selectlistbox-list .ui-selectlistbox-item.ui-state-hover {
+	background: unset;
+	color: var(--text);
+	box-shadow: inset 0 0 0 0.15rem var(--hover);
+}
+
+
+
+body .ui-inputfield {
+	padding: .15rem .3rem;
+    background: var(--inputfield);
+	color: var(--text);
+}
+
+body .ui-inputfield.ui-state-focus {
+	border-color: var(--activeborder);
+}
+
+body .ui-inputfield.ui-state-hover {
+	box-shadow: unset;
+	border-color: var(--activeborder);
+}
+
+
+.ui-wideautocomplete .ui-inputfield {
+	width: 20rem !important;
+}
+
+::-moz-selection { /* Code for Firefox */
+	color: var(--textonactive);
+	background: var(--active);
+}
+
+::selection {
+	color: var(--textonactive);
+	background: var(--active);
+}
+
+body .ui-inputfield[readonly] {
+	background: var(--disabled);
+	/* #eff4fb (blasses, leicht schmutziges Blau, so wie alternierende Zeilenmarkierung in Tabellen) 
+	oder #ffffe1 (blasses Gelb, Original aus der App)
+	oder fffecc (satteres Gelb) */
+}
+
+.textfield-warn {
+	white-space: normal;
+	font-weight: bold;
+	color: #AB5252 !important;
+}
+
+
+body .ui-chkbox .ui-chkbox-box {
+	background: var(--inputfield);
+}
+
+body .ui-chkbox .ui-chkbox-box.ui-state-active {
+	background: var(--active);
+	border-color: var(--activeborder);
+}
+
+body .ui-chkbox .ui-chkbox-box.ui-state-hover {
+	border-color: var(--hoverborder);
+}
+
+body .ui-chkbox .ui-chkbox-box.ui-state-active.ui-state-hover {
+	background: var(--hover);
+}
+
+body .ui-chkbox .ui-chkbox-box.ui-state-focus {
+	box-shadow: 0 0 0 .2rem var(--focus);
+}
+
+body .ui-chkbox-box.ui-state-disabled {
+	background: var(--disabled);
+}
+
+.selectall > .ui-chkbox-box {
+	border: 2px solid #333 !important;
+	border-width: 2px !important;
+}
+
+
+
+/* calendar picker */
+.ui-calendar input.hasDatepicker {
+	height: 1.6rem !important;
+	width: 9.25rem !important;
+	/* 9.35 Textfeld + 1.6 Icon = 10.85 gesamt, so wie die Breite des Dropdown-Menüs */
+}
+
+.ui-calendar .ui-button.ui-button-icon-only {
+	width: 1.6rem !important;
+	height: 1.6rem !important;
+	top: .375rem !important;
+	padding: 0.11rem !important;
+	margin-top: -1rem !important;
+}
+
+.ui-calendar .ui-button.ui-button-icon-only .ui-icon-calendar {
+	margin-top: -0.625rem !important;
+}
+
+
+
+body .ui-tabs .ui-tabs-panels .ui-tabs-panel {
+	background: var(--paneldimmed);
+	color: var(--text);
+	padding: .4rem .4rem;
+	margin: 0 0 0.5rem 0;
+}
+
+body .ui-tabs .ui-tabs-nav li.ui-tabs-header,
+body .ui-tabs .ui-tabs-nav li.ui-tabs-header a {
+	padding: .2rem .4rem;
+	background: var(--panel);
+	color: var(--text);
+}
+
+body .ui-tabs .ui-tabs-nav li.ui-tabs-header.ui-state-active,
+body .ui-tabs .ui-tabs-nav li.ui-tabs-header.ui-state-active a {
+	background: var(--active);
+	color: var(--textonactive);
+}
+
+body .ui-tabs .ui-tabs-nav li.ui-tabs-header.ui-state-hover,
+body .ui-tabs .ui-tabs-nav li.ui-tabs-header.ui-state-hover a {
+	background: var(--panel);
+	color: var(--text);
+}
+body .ui-tabs .ui-tabs-nav li.ui-tabs-header.ui-state-hover {
+	box-shadow: inset 0 0 0 0.15rem var(--hover);
+}
+
+body .ui-tabs .ui-tabs-nav li.ui-tabs-header.ui-state-active:hover,
+body .ui-tabs .ui-tabs-nav li.ui-tabs-header.ui-state-active.ui-state-hover,
+body .ui-tabs .ui-tabs-nav li.ui-tabs-header.ui-state-active:hover a,
+body .ui-tabs .ui-tabs-nav li.ui-tabs-header.ui-state-active.ui-state-hover a {
+	background: var(--active);
+	color: var(--textonactive);
+}
+body .ui-tabs .ui-tabs-nav li.ui-tabs-header.ui-state-active:hover,
+body .ui-tabs .ui-tabs-nav li.ui-tabs-header.ui-state-active.ui-state-hover {
+	box-shadow: inset 0 0 0 0.15rem var(--hover);
+}
+
+body .ui-tabs .ui-tabs-nav li.ui-tabs-header.ui-tabs-outline {
+	box-shadow: none;
+}
+
+
+
+/* Tabelle */
+body .ui-datatable .ui-paginator {
+	padding: .1rem .3rem;
+}
+
+
+.viewScrollable .ui-datatable-scrollable-body {
+    /* Wie SizeServiceBean#viewWidth() und #viewHeight(),
+    jedoch muss die Höhe des Paginators und des Headers abgezogen werden.
+    Es werden 282px statt 209px abgezogen, in der Summe also 73px mehr.
+    Die Höhe als max-height, damit bei weniger beanspruchtem Platz kein Leerraum zwischen Tabellenende und Scrollbar entsteht.
+    */
+
+    width: calc(100vw - 310px);
+    max-height: calc(100vh - 282px);
+    height: fit-content;
+    min-height: 32px;
+}
+
+.viewScrollable .ui-datatable-scrollable-header,
+.viewScrollable .ui-paginator.ui-paginator-top {
+	width: calc(100vw - 310px);
+}
+
+
+.orderitemViewScrollable .ui-datatable-scrollable-body {
+    max-height: calc(100vh - 618px);
+}
+
+.prodinfosetPushViewScrollable .ui-datatable-scrollable-body {
+    max-height: calc(100vh - 374px);
+}
+
+.catalogItemViewScrollable .ui-datatable-scrollable-body {
+    max-height: calc(100vh - 315px);
+}
+
+
+.compareViewPanelScrollable .ui-datatable-scrollable-body {
+    width: calc(100vw - 330px);
+    max-height: calc((100vh - 466px)/2);
+    height: fit-content;
+    min-height: 32px;
+}
+
+.compareViewPanelScrollable .ui-datatable-scrollable-header,
+.compareViewPanelScrollable .ui-paginator.ui-paginator-top {
+	width: calc(100vw - 330px);
+}
+
+.tabViewForcompareViewPanel {
+	height: calc(100vh - 233px);
+}
+
+
+/* Zusätzlicher Platz für Überschrift, wenn oben ein TabView ist und Tabelle eine eigene Überschrift bekommt.
+Verwendet in einem Panel, bei dem nur die Tabelle gezeigt wird und sonst keine weiteren Panels (in einer TabView).
+
+Nachteil dieser Lösung: der obere Bereich hat eine fixe Höhe. Ist dort also eine TabView mit Tabs unterschiedlicher 
+Höhe,so entsteht bei kleineren Tabs zusätzlicher Raum zur unteren Tabelle.
+
+Nachteil ScrollPanel: Je nach Verewndung:
+Entweder: Wird die Tabelle stattdessen in ein ScrollPanel gepackt, so wird  die komplette Tabelle, inkl. Menü, Paginator und
+Titelzeile gescrollt und ein Paginator wäre nicht mittig zum angezeigen Bereich, sondern mittig zu gesamt bedarften Bereich.
+Letzteres kann noch akzeptabel sein, wenn die Tabelle in der Breite nicht weit über den sichtbaren Bereich hinaus geht.
+Oder: Die Scrollbar der Tabelle ist unten an der Tabelle und nicht unten am sichtbaren Ausschnitt.
+
+etwa:
+styleClass="viewScrollable headerViewScrollable quoteDetailsViewScrollable"
+ */
+.headerViewScrollable .ui-menu.ui-menubar,
+.headerViewScrollable .ui-datatable-scrollable-header,
+.headerViewScrollable .ui-datatable-scrollable-body {
+    width: calc(100vw - 320px);
+}
+
+.quoteDetailsViewScrollable .ui-datatable-scrollable-body {
+    max-height: calc(100vh - 561px);
+}
+
+.quotedPricesViewScrollable .ui-datatable-scrollable-body {
+    max-height: calc(100vh - 564px);
+}
+
+
+.panelScrollable,
+.panelScrollable .ui-datatable-tablewrapper {
+	overflow: unset;
+}
+
+
+.ui-datatable-scrollable-theadclone {
+	visibility: collapse !important;
+}
+
+body .ui-datatable thead th {
+	background: var(--panel);
+	color: var(--text);
+	padding: .4em .4rem;
+}
+
+body .ui-datatable thead th.ui-sortable-column.ui-state-focus,
+body .ui-datatable thead th.ui-state-focus {
+	box-shadow: none;
+}
+
+body .ui-datatable thead th.ui-state-active {
+    background: var(--active);
+    color: var(--textonactive);
+}
+
+body .ui-datatable thead th.ui-state-hover {
+    background: var(--panel);
+    color: var(--text);
+	box-shadow: inset 0 0 0 0.15rem var(--hover);
+}
+body .ui-datatable thead th.ui-state-active.ui-state-hover {
+    background: var(--active);
+    color: var(--textonactive);
+	box-shadow: inset 0 0 0 0.15rem var(--hover);
+}
+
+
+.headerless.ui-datatable table thead tr {
+	display: none !important;
+}
+
+
+body .ui-datatable .ui-datatable-data > tr > td {
+	padding: .15rem .3rem;
+	white-space: normal;
+}
+
+.thnowrap > .ui-column-title,
+body .ui-datatable-data > tr > .tdnowrap {
+		white-space: nowrap !important;
+}
+
+body .ui-datatable .ui-datatable-data > tr.ui-state-highlight {
+	background: unset;
+	color: var(--text);
+	box-shadow: inset 0 0 0 0.2rem var(--active);
+}
+
+body .ui-datatable .ui-datatable-data > tr.ui-state-hover {
+	background: unset;
+	color: var(--text);
+	box-shadow: inset 0 0 0 0.15rem var(--hover);
+}
+
+.ui-datatable-empty-message {
+	background: var(--panel) !important;
+	color: var(--text) !important;
+}
+
+.ui-datatable-even {
+	background: var(--panel) !important;
+	color: var(--text) !important;
+}
+
+/* alternierende Zeilenfarbe */
+.ui-datatable-odd {
+	background: var(--odd) !important;
+	color: var(--text) !important;
+}
+
+body .ui-panel .ui-panel-content {
+	padding: .4rem .4rem;
+	background: var(--panel);
+	color: var(--text);
+}
+
+body .ui-backgroundpanel .ui-panel-content {
+	padding: unset;
+	border: unset;
+	background: unset;
+}
+
+body .ui-panelgrid .ui-panelgrid-cell {
+	border: 0px;
+	padding: 0.14rem;
+}
+
+
+/* Nodes in Tree allgemein */
+body .ui-tree {
+	padding: .4rem .4rem;
+	background: var(--panel);
+	color: var(--text);
+	margin: 0.2rem 0 0 0;
+}
+
+body .ui-tree .ui-tree-container .ui-treenode {
+	background: var(--panel);
+	padding: 0rem;
+}
+
+body .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content {
+	color: var(--text);
+}
+
+body .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content .ui-treenode-label {
+	color: var(--text);
+	padding: .1rem .1rem;
+}
+
+body .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content a,
+.ui-treenode-content-link {
+	color: var(--text);
+	text-decoration-line: none;
+}
+
+body .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content .ui-treenode-leaf-icon {
+	width: 1rem;
+	height: 1rem;
+}
+
+body .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content .ui-tree-toggler {
+	height: 1rem;
+	line-height: 1rem;
+	margin: 0 0 0 0;
+}
+
+
+
+/***** css für Nodes weichen von GPE supplier ab. NICHT ÄNDERN oder Teile davon VERSCHIEBEN! *****/
+/* Nodes in Tree highlighted */
+body .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content.ui-state-highlight {
+	/* Hintergrundfarbe soll bei Selektion erhalten bleiben; andernfalls wären sämtliche aufgewählten Einträge Blau */ 
+	background: none;
+	box-shadow: inset 0 0 0 0.2rem var(--active);
+}
+
+/* Nodes in Tree hover */
+body .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content.ui-tree-selectable.ui-state-highlight:hover,
+body .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content.ui-tree-selectable:not(.ui-state-highlight):hover,
+body .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content.ui-tree-selectable:hover a,
+body .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content a:hover,
+.ui-treenode-content-link:hover {
+	background: none;
+	box-shadow: inset 0 0 0 0.15rem var(--hover);
+}
+
+/* Im Treenode angezeigter Text darf keine Umrandung erhalten */
+body .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content.ui-tree-selectable:not(.ui-state-highlight):hover .ui-treenode-label,
+body .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content.ui-tree-selectable.ui-state-highlight:hover .ui-treenode-label,
+body .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content.ui-tree-selectable:hover .ui-treenode-label {
+	background: none;
+	box-shadow: none;
+}
+
+/*	Im Treenode angezeigtes pi-icon bleibt Schwarz, wenn selektiert */
+body .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content.ui-state-highlight .ui-tree-toggler,
+body .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content.ui-state-highlight .ui-treenode-icon,
+body .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content.ui-tree-selectable:hover .ui-tree-toggler,
+body .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content.ui-tree-selectable:hover .ui-treenode-icon {
+	color: var(--text);
+}
+
+
+
+/*
+.disabledtext > :not(.ui-state-highlight) > .ui-treenode-label > span {
+	color: darkgray !important;
+}
+*/
+
+
+
+
+/* CommandLink allgemein */
+.ui-commandlink {
+	color: var(--text) !important;
+}
+
+/* CommandLink in highlighted Node in Tree */
+.ui-treenode-content.ui-state-highlight .ui-commandlink {
+	color: var(--textonactive) !important;
+}
+
+
+body .ui-picklist .ui-picklist-list {
+	width: auto !important;
+	min-width: 200px !important;
+    background: var(--inputfield);
+}
+
+.searchdialog-picklist .ui-picklist-list {
+	height:calc(100vh - 361px) !important;
+	width: 320px !important;
+}
+
+body .ui-picklist .ui-picklist-caption {	
+    background: var(--paneldimmed);
+	color: var(--text);
+}
+
+body .ui-picklist .ui-picklist-list .ui-picklist-item {
+	padding: .15rem .3rem !important;
+	color: var(--text);
+}
+
+.ui-picklist .ui-picklist-list .ui-picklist-item.ui-state-highlight {
+	background: var(--active) !important;
+	color: var(--textonactive) !important;
+}
+
+.ui-picklist .ui-picklist-list .ui-picklist-item.ui-state-hover {
+	background: var(--hover) !important;
+	color: var(--text) !important;
+}
+
+
+
+/* File upload */
+.ui-fileupload .ui-fileupload-buttonbar {
+	padding: 0.3rem !important;
+}
+
+.ui-fileupload .ui-fileupload-buttonbar .ui-button.ui-button-text-icon-left .ui-icon {
+	margin-top: -0.6rem !important;
+}
+
+.ui-fileupload-files {
+	margin: -0.8rem !important;
+}
+
+.ui-fileupload .ui-fileupload-content {
+	padding: 0.6rem !important;
+}
+
+body .ui-fileupload .ui-fileupload-content .ui-fileupload-files .ui-fileupload-row > div {
+	padding: 0.4rem;
+	vertical-align: middle;;
+}
+
+.ui-progressbar .ui-progressbar-value {
+	background: var(--active) !important;
+}
+
+
+
+/* Datepicker */
+body .ui-datepicker {
+    background: var(--inputfield);
+	color: var(--text);
+}
+
+body .ui-datepicker .ui-datepicker-group {
+	padding: 0rem;
+}
+
+
+body .ui-datepicker .ui-datepicker-header {
+    background: var(--paneldimmed);
+	color: var(--text);
+}
+
+body .ui-datepicker .ui-datepicker-calendar td,
+body .ui-datepicker .ui-datepicker-calendar td > a {
+	padding: 0rem !important;
+	color: var(--text);
+}
+
+body .ui-datepicker .ui-datepicker-calendar td > a,
+body .ui-datepicker .ui-datepicker-calendar td > span {
+	width: 2rem;
+	height: 2rem;
+	line-height: 2rem;
+}
+
+
+body .ui-datepicker .ui-datepicker-calendar td > a:focus,
+body .ui-datepicker .ui-datepicker-calendar td > span:focus {
+	box-shadow: 0 0 0 .2rem var(--activeborder);
+}
+
+body .ui-datepicker .ui-datepicker-calendar td > a.ui-state-active,
+body .ui-datepicker .ui-datepicker-calendar td > span.ui-state-active {
+	background: var(--active);
+}
+
+body .ui-datepicker .ui-datepicker-calendar td > a:hover {
+    background: var(--hover);
+	color: var(--text);
+}
+
+
+/* Heutiger Tag, inaktiv (ein anderer Tag ist aktiv) */
+body .ui-datepicker .ui-datepicker-calendar td.ui-datepicker-today > a,
+body .ui-datepicker .ui-datepicker-calendar td.ui-datepicker-today > span,
+body .ui-datepicker .ui-datepicker-calendar td.ui-datepicker-current-day > a,
+body .ui-datepicker .ui-datepicker-calendar td.ui-datepicker-current-day > span {
+	background: var(--activemarked);
+	color: var(--textonactive);
+}
+
+/* Heutiger Tag, aktiv */
+body .ui-datepicker .ui-datepicker-calendar td.ui-datepicker-today > a.ui-state-active, 
+body .ui-datepicker .ui-datepicker-calendar td.ui-datepicker-today > span.ui-state-active, 
+body .ui-datepicker .ui-datepicker-calendar td.ui-datepicker-current-day > a.ui-state-active, 
+body .ui-datepicker .ui-datepicker-calendar td.ui-datepicker-current-day > span.ui-state-active {
+	background: var(--activemarked);
+	color: var(--textonactive);
+	border: 1px solid var(--activeborder);
+}
+
+body .ui-datepicker .ui-datepicker-calendar td.ui-datepicker-today > a:hover,
+body .ui-datepicker .ui-datepicker-calendar td.ui-datepicker-current-day > a:hover,
+body .ui-datepicker .ui-datepicker-buttonbar button:not(:disabled):hover {
+	background: var(--hover);
+	border: 1px solid var(--hoverborder);
+}
+
+
+body .ui-datepicker .ui-datepicker-buttonbar {
+	padding: 0rem;
+}
+
+body .ui-datepicker .ui-datepicker-buttonbar button,
+body .ui-datepicker .ui-datepicker-buttonbar button.ui-state-active {
+	background: var(--active);
+	border: 1px solid var(--activeborder);
+}
+
+
+
+.ui-tree-toggler ~ .ui-treenode-label
+{
+	cursor:pointer;
+}
+
+
+html .ui-state-disabled {
+	pointer-events: all;
+}
+
+
+body .pi,
+body .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content .ui-treenode-icon {
+	color: var(--text);
+}
+
+body .ui-widget .ui-icon.pi, .ui-icon.pi {
+	color: var(--textonactive);
+}
+
+
+.template-header {
+	position: fixed;
+	top: 0px;
+	width: 100%;
+	height: 60px;
+	z-index: 1;
+	background-image: -ms-linear-gradient(top, var(--pageedge) 0%, var(--page) 100%);
+	background-image: -moz-linear-gradient(top, var(--pageedge) 0%, var(--page) 100%);
+	background-image: -o-linear-gradient(top, var(--pageedge) 0%, var(--page) 100%);
+	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, var(--pageedge)), color-stop(100, var(--page)));
+	background-image: -webkit-linear-gradient(top, var(--pageedge) 0%, var(--page) 100%);
+	background-image: linear-gradient(to bottom, var(--pageedge) 0%, var(--page) 100%);
+}
+
+.template-main-area {
+	position: absolute;
+	top: 65px;
+	width: 100%;
+}
+
+.template-page-border {
+	display: table-cell;
+	min-width: 10px;
+}
+
+.template-navigator {
+	display: table-cell;
+	vertical-align: top;
+	width: 280px;
+    max-width: 280px;
+    min-width: 280px;
+}
+
+.template-content {
+	display: table-cell;
+	vertical-align: top;
+	width: calc(100vw - 280px - 30px); /* -Navigator -3x border */
+	height: calc(100vh - 105px);
+	padding: 0px 0px 0px 10px;
+	/* Die 10px links ist der Abstand zur "Navigatorleiste". Mit dem Rahmen kommen 10px um alles. */
+	color: var(--text);
+}
+
+.template-singlecontent {
+	display: table-cell;
+	vertical-align: top;
+	width: 100%;
+	padding: 0px 0px 0px 0px;
+	/* Mit dem Rahmen kommen 10px um alles. Da links kein weiteres Panel ist, muss hier 0px stehen. */
+	color: var(--text);
+}
+
+.template-bottom-spacer {
+	display: table;
+	width: 100%;
+	height: 40px;
+}
+
+.template-footer {
+	position: fixed;
+	bottom: 0px;
+	width: 100%;
+	height: 35px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 0 10px;
+
+	color: var(--text);
+	background: linear-gradient(to bottom, var(--page) 0%, var(--pageedge) 100%);
+	font-size: 0.9rem;
+	overflow: hidden;
+}
+
+/* Linker Text bleibt fix */
+.template-footer-text-left {
+	white-space: nowrap;
+	flex-shrink: 0;
+}
+
+/* Der mittlere Bereich nutzt den Restplatz dynamisch */
+.template-footer-text-middle {
+	flex: 1;
+	margin: 0 10px;
+	overflow: hidden;
+	position: relative;
+}
+
+/* Rechter Text bleibt fix */
+.template-footer-text-right {
+	white-space: nowrap;
+	flex-shrink: 0;
+}
+
+/* Der sichtbare Bereich des Tickers */
+.ticker-wrapper {
+	width: 100%;
+	overflow: hidden;
+	white-space: nowrap;
+}
+
+/* Der laufende Text */
+.ticker {
+	display: inline-block;
+	padding-left: 100%;
+	animation: ticker-scroll 15s linear infinite;
+}
+
+@keyframes ticker-scroll {
+	0%   { transform: translateX(0); }
+	100% { transform: translateX(-100%); }
+}
+
+/* (Optional:) Pause beim Hover */
+.ticker-wrapper:hover .ticker {
+	animation-play-state: paused;
+}
+
+
+
+.top-col-left {
+	width: 50px;
+}
+ 
+.top-col-center {
+	width: 10%;
+	white-space: nowrap;
+	font-weight: bold;
+	color: var(--headerlabel);
+}
+
+.top-col-rigth {
+	width: 80%;
+}
+
+
+.label-application-title {
+	font-size: 1.5em !important;
+}
+
+.label-field-mandatory {
+	white-space: nowrap;
+	color: var(--label);
+	font-weight: bold;
+}
+
+.label-field-optional {
+	white-space: nowrap;
+	color: var(--label);
+}
+
+.label-field-value {
+	white-space: nowrap;
+	font-weight: bold;
+	color: var(--label);
+}
+
+.label-field-kursiv {
+	white-space: nowrap;
+	color: var(--label);
+	font-style: italic;
+}
+
+.header-label {
+	font-size: 1.1em;
+	white-space: nowrap;
+	font-weight: bold;
+	color: var(--headerlabel);
+}
+
+.label-form-title {
+	white-space: nowrap;
+	color: var(--headerlabel);
+	font-weight: bold;
+	font-size: 1.4em;
+}
+
+.label-form-part {
+	white-space: nowrap;
+	color: var(--headerlabel);
+	font-weight: bold;
+	font-size: 1.3em;
+}
+
+.lov-scrollpanel {
+	width: 100%;
+	height: 350px;
+}

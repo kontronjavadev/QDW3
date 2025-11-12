@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+
+	<Appenders>
+		<RollingFile name="FILE" fileName="${sys:user.home}/development/test/logs/code_selenium_test.log" filePattern="${sys:user.home}/development/test/logs/code_selenium_test-%i.log">
+			<PatternLayout pattern="%d{dd.MM.yyyy HH:mm:ss,SSS} %-5p %c (%L) - %m%n"/>
+
+			<Policies>
+				<!-- Define the maximum size of a log file -->
+				<SizeBasedTriggeringPolicy size="1 MB"/>
+			</Policies>
+
+			<!-- Define the maximum number of files to be created -->
+			<DefaultRolloverStrategy max="10"/>
+		</RollingFile>
+
+		<Console name="STDOUT" target="SYSTEM_OUT">
+			<PatternLayout pattern="%d{dd.MM.yyyy HH:mm:ss,SSS} %-5p %c (%L) - %m%n"/>
+		</Console>
+	</Appenders>
+
+	<Loggers>
+		<Root level="INFO">
+			<AppenderRef ref="FILE"/>
+			<AppenderRef ref="STDOUT"/>
+		</Root>
+
+		<Logger name="com.kontron.qdw" level="DEBUG"/>
+		<Logger name="net.sourceforge.jbizmo.commons" level="DEBUG"/>
+	</Loggers>
+
+</Configuration>

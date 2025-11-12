@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<net.sourceforge.net.model.domain:DomainNamespace xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:net.sourceforge.net.model.domain="http:///net/sourceforge/jbizmo/model/domain.ecore" name="base" javaTypes="//@domainObjects.0 //@domainObjects.1 //@domainObjects.2">
+  <parent href="project.xmi#/0/@domainNamespace"/>
+  <project href="project.xmi#/0"/>
+  <domainObjects name="AbstractEntityWithId" comment="Domain object for abstract entity with id objects" mappable="true" namespace="/" label="abstract entity with id" namePlural="AbstractEntityWithIds" labelPlural="abstract entity with ids" discriminatorValue="" mappedSuperClass="true" targetInheritances="//@domainObjects.1/@inheritance //@domainObjects.2/@inheritance">
+    <iDGenerator name="ABSTRACTENTITYWITHID_SEQ" generatorType="IDENTITY"/>
+    <attributes name="id" pk="true" label="id" labelPlural="ids" fetchTypeEager="true" column="//@domainObjects.0/@databaseTable/@columns.0">
+      <domainAttributeValidator maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.2"/>
+    </attributes>
+    <attributes name="version" label="version" labelPlural="versions" fetchTypeEager="true" trackVersion="true" column="//@domainObjects.0/@databaseTable/@columns.1">
+      <domainAttributeValidator maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.1"/>
+    </attributes>
+    <attributes name="creationDate" label="creation date" labelPlural="creation dates" fetchTypeEager="true" updatable="false" setDateOnPersist="true" column="//@domainObjects.0/@databaseTable/@columns.2">
+      <domainAttributeValidator maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.17"/>
+    </attributes>
+    <attributes name="lastUpdate" label="last update" labelPlural="last updates" fetchTypeEager="true" setDateOnUpdate="true" column="//@domainObjects.0/@databaseTable/@columns.3">
+      <domainAttributeValidator nullable="true" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.17"/>
+    </attributes>
+    <databaseTable name="abstract_entity_with_id_tab" schemaName="" catalogName="">
+      <database href="project.xmi#/0/@database"/>
+      <columns name="id">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.1"/>
+      </columns>
+      <columns name="version">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.0"/>
+      </columns>
+      <columns name="creation_date">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.14"/>
+      </columns>
+      <columns name="last_update" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.14"/>
+      </columns>
+      <primaryKey name="pk_abstract_entity_with_id_tab" column="//@domainObjects.0/@databaseTable/@columns.0"/>
+    </databaseTable>
+  </domainObjects>
+  <domainObjects name="User" comment="Domain object for user objects" mappable="true" namespace="/" label="user" namePlural="Users" labelPlural="users" discriminatorValue="" parent="//@domainObjects.0" tag="USER">
+    <iDGenerator name="USER_SEQ" generatorType="IDENTITY"/>
+    <inheritance target="//@domainObjects.0"/>
+    <attributes name="name" label="name" labelPlural="names" fetchTypeEager="true" displayAttribute="true" column="//@domainObjects.1/@databaseTable/@columns.0" tag="USER_NAME" removeWhitespaceCharacters="true">
+      <domainAttributeValidator maxLength="50" minLength="1" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <attributes name="password" label="password" labelPlural="passwords" fetchTypeEager="true" column="//@domainObjects.1/@databaseTable/@columns.1" tag="USER_PASSWORD">
+      <domainAttributeValidator maxLength="64" minLength="1" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <attributes name="email" label="email" labelPlural="emails" fetchTypeEager="true" column="//@domainObjects.1/@databaseTable/@columns.2" tag="USER_EMAIL" removeWhitespaceCharacters="true">
+      <domainAttributeValidator maxLength="100" minLength="1" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <attributes name="active" label="active" labelPlural="actives" fetchTypeEager="true" column="//@domainObjects.1/@databaseTable/@columns.3" tag="USER_ACTIVE">
+      <domainAttributeValidator maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.4"/>
+    </attributes>
+    <associations xsi:type="net.sourceforge.net.model.domain:ManyToManyAssociation" name="roles" owner="true" fetchTypeEager="true" target="//@domainObjects.2" tag="USER_ROLE" internalComment="" userComment="">
+      <table name="user_roles_tab" schemaName="" catalogName="">
+        <database href="project.xmi#/0/@database"/>
+        <columns name="user_pk">
+          <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.1"/>
+        </columns>
+        <columns name="role_pk">
+          <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.1"/>
+        </columns>
+        <foreignKeys name="fk_user_roles_user_pk" column="//@domainObjects.1/@associations.0/@table/@columns.0" referencedColumn="//@domainObjects.1/@databaseTable/@columns.4"/>
+        <foreignKeys name="fk_user_roles_role_pk" column="//@domainObjects.1/@associations.0/@table/@columns.1" referencedColumn="//@domainObjects.2/@databaseTable/@columns.0"/>
+        <indexes name="uk_user_roles" unique="true" columns="//@domainObjects.1/@associations.0/@table/@columns.0 //@domainObjects.1/@associations.0/@table/@columns.1"/>
+      </table>
+    </associations>
+    <databaseTable name="user_tab" schemaName="" catalogName="">
+      <database href="project.xmi#/0/@database"/>
+      <columns name="name" length="50">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="password" length="64">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="email" length="100">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="active">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.11"/>
+      </columns>
+      <columns name="id">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.1"/>
+      </columns>
+      <columns name="version">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.0"/>
+      </columns>
+      <columns name="creation_date">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.14"/>
+      </columns>
+      <columns name="last_update" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.14"/>
+      </columns>
+      <primaryKey name="pk_user" column="//@domainObjects.1/@databaseTable/@columns.4"/>
+      <indexes name="uk_user_name" unique="true" columns="//@domainObjects.1/@databaseTable/@columns.0"/>
+    </databaseTable>
+  </domainObjects>
+  <domainObjects name="Role" comment="Domain object for role objects" mappable="true" namespace="/" label="role" namePlural="Roles" labelPlural="roles" discriminatorValue="" parent="//@domainObjects.0" tag="ROLE">
+    <iDGenerator name="ROLE_SEQ" generatorType="IDENTITY"/>
+    <inheritance target="//@domainObjects.0"/>
+    <attributes name="name" label="name" labelPlural="names" fetchTypeEager="true" displayAttribute="true" column="//@domainObjects.2/@databaseTable/@columns.4" tag="ROLE_NAME" removeWhitespaceCharacters="true">
+      <domainAttributeValidator maxLength="50" minLength="1" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <databaseTable name="role_tab" schemaName="" catalogName="">
+      <database href="project.xmi#/0/@database"/>
+      <columns name="id">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.1"/>
+      </columns>
+      <columns name="version">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.0"/>
+      </columns>
+      <columns name="creation_date">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.14"/>
+      </columns>
+      <columns name="last_update" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.14"/>
+      </columns>
+      <columns name="name" length="50">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <primaryKey name="pk_role" column="//@domainObjects.2/@databaseTable/@columns.0"/>
+      <indexes name="uk_role_name" unique="true" columns="//@domainObjects.2/@databaseTable/@columns.4"/>
+    </databaseTable>
+  </domainObjects>
+</net.sourceforge.net.model.domain:DomainNamespace>

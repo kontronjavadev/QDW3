@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="https://jakarta.ee/xml/ns/persistence"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd"
+	version="3.0">
+	<persistence-unit name="_default" >
+		<jta-data-source>java:jboss/datasources/QdwDS</jta-data-source>
+		<class>net.sourceforge.jbizmo.commons.jpa.converter.UUIDByteArrayConverter</class>
+		<class>net.sourceforge.jbizmo.commons.jpa.converter.UUIDStringConverter</class>
+		<properties>
+			<property name="eclipselink.id-validation" value="NULL"/>
+			<property name="eclipselink.cache.shared.default" value="false"/>
+		</properties>
+	</persistence-unit>
+</persistence>
