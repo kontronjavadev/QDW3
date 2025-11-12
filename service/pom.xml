@@ -1,44 +1,64 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>com.kontron.qdw</groupId>
-    <artifactId>qdw</artifactId>
-    <version>1.0.0</version>
-  </parent>
-  <artifactId>qdw-service</artifactId>
-  <dependencies>
-    <dependency>
-      <groupId>jakarta.platform</groupId>
-      <artifactId>jakarta.jakartaee-api</artifactId>
-      <version>10.0.0</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>net.sourceforge.jbizmo</groupId>
-      <artifactId>jbizmo-commons-jakartaee</artifactId>
-      <version>10.0.0</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.kontron.qdw</groupId>
-      <artifactId>qdw-domain</artifactId>
-      <version>${project.version}</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.kontron.qdw</groupId>
-      <artifactId>qdw-repository</artifactId>
-      <version>${project.version}</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.kontron.qdw</groupId>
-      <artifactId>qdw-dto</artifactId>
-      <version>${project.version}</version>
-      <scope>compile</scope>
-    </dependency>
-  </dependencies>
-  <build />
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>com.kontron.qdw</groupId>
+		<artifactId>qdw</artifactId>
+		<version>3.0</version>
+	</parent>
+	<artifactId>qdw-service</artifactId>
+
+	<dependencies>
+        <!-- javaee (application server) -->
+		<dependency>
+			<groupId>jakarta.platform</groupId>
+			<artifactId>jakarta.jakartaee-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+
+
+        <!-- jbizmo -->
+		<dependency>
+			<groupId>net.sourceforge.jbizmo</groupId>
+			<artifactId>jbizmo-commons-jakartaee</artifactId>
+			<version>10.0.0</version>
+			<scope>compile</scope>
+		</dependency>
+
+
+
+        <!-- sister projects -->
+		<dependency>
+			<groupId>com.kontron.qdw</groupId>
+			<artifactId>qdw-domain</artifactId>
+			<version>${project.version}</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.kontron.qdw</groupId>
+			<artifactId>qdw-repository</artifactId>
+			<version>${project.version}</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.kontron.qdw</groupId>
+			<artifactId>qdw-dto</artifactId>
+			<version>${project.version}</version>
+			<scope>compile</scope>
+		</dependency>
+		<!-- 
+		<dependency>
+			<groupId>com.kontron.qdw</groupId>
+			<artifactId>qdw-boundary</artifactId>
+			<version>${project.version}</version>
+			<scope>compile</scope>
+		</dependency>
+		-->
+	</dependencies>
+	<build />
 </project>

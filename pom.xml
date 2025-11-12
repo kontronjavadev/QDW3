@@ -1,25 +1,96 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>com.kontron.qdw</groupId>
-  <artifactId>qdw</artifactId>
-  <version>1.0.0</version>
-  <packaging>pom</packaging>
-  <modules>
-    <module>domain</module>
-    <module>dto</module>
-    <module>shared</module>
-    <module>data-exchange</module>
-    <module>repository</module>
-    <module>boundary</module>
-    <module>service</module>
-    <module>gui</module>
-    <module>selenium-test</module>
-  </modules>
-  <properties>
-    <maven.compiler.target>21</maven.compiler.target>
-    <maven.compiler.source>21</maven.compiler.source>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.kontron.qdw</groupId>
+	<artifactId>qdw</artifactId>
+	<version>3.0</version>
+	<packaging>pom</packaging>
+
+    <name>QDW</name>
+    <organization>
+        <name>Kontron AG</name>
+        <url>https://www.kontron.com</url>
+    </organization>
+
+	<modules>
+		<module>domain</module>
+		<module>dto</module>
+		<module>shared</module>
+		<module>data-exchange</module>
+		<module>repository</module>
+		<module>boundary</module>
+		<module>service</module>
+		<module>gui</module>
+		<module>selenium-test</module>
+	</modules>
+
+	<properties>
+		<maven.compiler.target>21</maven.compiler.target>
+		<maven.compiler.source>21</maven.compiler.source>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- javaee (application server) -->
+            <dependency>
+                <groupId>jakarta.platform</groupId>
+                <artifactId>jakarta.jakartaee-api</artifactId>
+                <version>10.0.0</version>
+                <scope>provided</scope>
+            </dependency>
+
+
+
+            <!-- usual foreign dependencies -->
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>3.18.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-collections4</artifactId>
+                <version>4.5.0</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.kontron</groupId>
+                <artifactId>utils</artifactId>
+                <version>3.2.9</version>
+            </dependency>
+
+
+            <!-- logging, testing -->
+            <!-- 
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-core</artifactId>
+                <version>2.23.1</version>
+            </dependency>
+			-->
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-slf4j2-impl</artifactId>
+                <version>2.23.1</version>
+            </dependency>
+			<dependency>
+				<groupId>org.junit.jupiter</groupId>
+				<artifactId>junit-jupiter</artifactId>
+				<version>5.11.3</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.junit.platform</groupId>
+				<artifactId>junit-platform-suite-engine</artifactId>
+				<version>1.11.3</version>
+				<scope>compile</scope>
+			</dependency>
+        </dependencies>
+    </dependencyManagement>
+
 </project>
