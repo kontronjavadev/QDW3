@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<net.sourceforge.net.model.domain:DomainNamespace xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:net.sourceforge.net.model.domain="http:///net/sourceforge/jbizmo/model/domain.ecore" name="base" javaTypes="//@domainObjects.0 //@domainObjects.1 //@domainObjects.2">
+<net.sourceforge.net.model.domain:DomainNamespace xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:net.sourceforge.net.model.domain="http:///net/sourceforge/jbizmo/model/domain.ecore" name="base" javaTypes="//@domainObjects.0 //@domainObjects.1 //@domainObjects.2 //@domainObjects.3">
   <parent href="project.xmi#/0/@domainNamespace"/>
   <project href="project.xmi#/0"/>
   <domainObjects name="AbstractEntityWithId" comment="Domain object for abstract entity with id objects" mappable="true" namespace="/" label="abstract entity with id" namePlural="AbstractEntityWithIds" labelPlural="abstract entity with ids" discriminatorValue="" mappedSuperClass="true" targetInheritances="//@domainObjects.1/@inheritance //@domainObjects.2/@inheritance">
@@ -126,6 +126,46 @@
       </columns>
       <primaryKey name="pk_role" column="//@domainObjects.2/@databaseTable/@columns.0"/>
       <indexes name="uk_role_name" unique="true" columns="//@domainObjects.2/@databaseTable/@columns.4"/>
+    </databaseTable>
+  </domainObjects>
+  <domainObjects name="SavedQuery" comment="Domain object for saved query objects" mappable="true" namespace="/" label="saved query" namePlural="SavedQueries" labelPlural="saved queries" discriminatorValue="" tag="SAVEDQUERY">
+    <iDGenerator name="SAVEDQUERY_SEQ" generatorType="IDENTITY"/>
+    <attributes name="id" pk="true" label="id" labelPlural="ids" fetchTypeEager="true" column="//@domainObjects.3/@databaseTable/@columns.0">
+      <domainAttributeValidator maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.2"/>
+    </attributes>
+    <attributes name="title" label="title" labelPlural="titles" fetchTypeEager="true" column="//@domainObjects.3/@databaseTable/@columns.1" tag="SAVEDQUERY_TITLE" removeWhitespaceCharacters="true">
+      <domainAttributeValidator maxLength="50" minLength="1" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <attributes name="viewName" label="view name" labelPlural="view names" fetchTypeEager="true" column="//@domainObjects.3/@databaseTable/@columns.2" tag="SAVEDQUERY_VIEW_NAME" removeWhitespaceCharacters="true">
+      <domainAttributeValidator maxLength="100" minLength="1" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <attributes name="dataObj" label="data obj" labelPlural="data objs" column="//@domainObjects.3/@databaseTable/@columns.3" tag="SAVEDQUERY_DATA_OBJ" lob="true">
+      <domainAttributeValidator maxLength="65536" minLength="1" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.19"/>
+    </attributes>
+    <associations xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" name="user" owner="true" fetchTypeEager="true" target="//@domainObjects.1" tag="SAVEDQUERY_OWNER" internalComment="" userComment="" insertable="true" updatable="true" column="//@domainObjects.3/@databaseTable/@columns.4"/>
+    <databaseTable name="saved_query_tab" schemaName="" catalogName="">
+      <database href="project.xmi#/0/@database"/>
+      <columns name="id">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.1"/>
+      </columns>
+      <columns name="title" length="50">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="view_name" length="100">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="data_obj">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.6"/>
+      </columns>
+      <columns name="user">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.1"/>
+      </columns>
+      <primaryKey name="pk_saved_query_tab" column="//@domainObjects.3/@databaseTable/@columns.0"/>
+      <foreignKeys name="fk_saved_query_user" column="//@domainObjects.3/@databaseTable/@columns.4" referencedColumn="//@domainObjects.1/@databaseTable/@columns.4"/>
     </databaseTable>
   </domainObjects>
 </net.sourceforge.net.model.domain:DomainNamespace>

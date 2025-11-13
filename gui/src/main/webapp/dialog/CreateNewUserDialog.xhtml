@@ -1,0 +1,92 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:h="jakarta.faces.html"
+	xmlns:f="jakarta.faces.core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/templates/ui.xhtml">
+
+<f:metadata>
+	<f:viewAction action="#{createNewUserDialog.initView()}"/>
+</f:metadata>
+
+<ui:define name="title">#{createNewUserDialog.formTitle}</ui:define>
+
+<ui:define name="content">
+	<p:dialog header="#{i18n.feedback_dialog_header}" modal="true" widgetVar="msgBox" visible="#{(not empty facesContext.messageList)}">
+		<p:messages id="messages" showDetail="true" showSummary="true"/>
+	</p:dialog>
+
+	<h:panelGrid columns="3">
+		<div class="pi pi-file-edit" style="font-size: 2em"/>
+		<h:outputText id="lblFormTitle" value="&#160;#{createNewUserDialog.formTitle}" styleClass="label-form-title"/>
+		<p:ajaxStatus style="width:16px;height:16px;">
+			<f:facet name="start">
+				<h:graphicImage value="/images/ajaxloading.gif"/>
+			</f:facet>
+
+			<f:facet name="complete">
+				<h:outputText value=""/>
+			</f:facet>
+		</p:ajaxStatus>
+	</h:panelGrid>
+
+	<p:panel>
+	<h:panelGrid columns="1">
+		<h:outputText styleClass="header-label" value="#{i18n.panel_basic_title}"/>
+	</h:panelGrid>
+
+	<h:panelGrid columns="6">
+
+		<h:outputLabel value="#{i18n.lbl_attr_user_name} *:" for="txtName" styleClass="label-field-mandatory"/>
+		<p:inputText id="txtName" value="#{createNewUserDialog.user.name}">
+			<f:validateRequired/>
+			<f:validateLength minimum="1" maximum="50"/>
+		</p:inputText>
+		<p:tooltip for="txtName" value=""/>
+
+		<h:outputLabel value="#{i18n.lbl_attr_user_active} *:" for="chkActive" styleClass="label-field-mandatory"/>
+		<p:selectBooleanCheckbox id="chkActive" value="#{createNewUserDialog.user.active}"/>
+		<p:tooltip for="chkActive" value=""/>
+
+		<h:outputLabel value="#{i18n.lbl_attr_user_email} *:" for="txtEmail" styleClass="label-field-mandatory"/>
+		<p:inputText id="txtEmail" value="#{createNewUserDialog.user.email}">
+			<f:validateRequired/>
+			<f:validateLength minimum="1" maximum="100"/>
+		</p:inputText>
+		<p:tooltip for="txtEmail" value=""/>
+
+		<h:outputLabel value="#{i18n.lbl_attr_user_password} *:" for="txtPassword" styleClass="label-field-mandatory"/>
+		<p:inputText id="txtPassword" value="#{createNewUserDialog.user.password}">
+			<f:validateRequired/>
+			<f:validateLength minimum="1" maximum="64"/>
+		</p:inputText>
+		<p:tooltip for="txtPassword" value=""/>
+
+	</h:panelGrid>
+	</p:panel>
+
+	<p/>
+
+	<p:panel>
+	<h:panelGrid columns="1">
+		<h:outputText styleClass="header-label" value="#{i18n.panel_createnewuserdialog_panroles_title}"/>
+	</h:panelGrid>
+
+	<h:panelGrid columns="3">
+
+		<h:outputLabel value="" for="listRoles"/>
+		<p:pickList id="listRoles" value="#{createNewUserDialog.rolesList}" converter="#{roleListDTOConverter}" addLabel="#{i18n.pick_list_add}" addAllLabel="#{i18n.pick_list_add_all}" removeLabel="#{i18n.pick_list_remove}" removeAllLabel="#{i18n.pick_list_remove_all}" var="listRolesItem" itemValue="#{listRolesItem}" itemLabel="#{listRolesItem.name}"/>
+		<p:tooltip for="listRoles" value=""/>
+
+	</h:panelGrid>
+	</p:panel>
+
+	<p/>
+
+	<h:panelGrid columns="2">
+		<p:commandButton id="cmdSave" action="#{createNewUserDialog.save}" value="#{i18n.command_save}" ajax="false"/>
+		<p:commandButton id="cmdBack" value="#{i18n.command_back}" action="#{userSession.getLastPage}" immediate="true" ajax="false"/>
+	</h:panelGrid>
+
+</ui:define>
+</ui:composition>

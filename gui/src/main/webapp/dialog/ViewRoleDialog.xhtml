@@ -1,0 +1,63 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:h="jakarta.faces.html"
+	xmlns:f="jakarta.faces.core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/templates/ui.xhtml">
+
+<f:metadata>
+	<f:viewAction action="#{viewRoleDialog.initView()}"/>
+	<f:viewParam name="selectedObjectId" value="#{viewRoleDialog.selectedObjectId}"/>
+</f:metadata>
+
+<ui:define name="title">#{viewRoleDialog.formTitle}</ui:define>
+
+<ui:define name="content">
+	<p:dialog header="#{i18n.feedback_dialog_header}" modal="true" widgetVar="msgBox" visible="#{(not empty facesContext.messageList)}">
+		<p:messages id="messages" showDetail="true" showSummary="true"/>
+	</p:dialog>
+
+	<h:panelGrid columns="3">
+		<div class="pi pi-file" style="font-size: 2em"/>
+		<h:outputText id="lblFormTitle" value="&#160;#{viewRoleDialog.formTitle}" styleClass="label-form-title"/>
+		<p:ajaxStatus style="width:16px;height:16px;">
+			<f:facet name="start">
+				<h:graphicImage value="/images/ajaxloading.gif"/>
+			</f:facet>
+
+			<f:facet name="complete">
+				<h:outputText value=""/>
+			</f:facet>
+		</p:ajaxStatus>
+	</h:panelGrid>
+
+	<p:panel>
+	<h:panelGrid columns="1">
+		<h:outputText styleClass="header-label" value="#{i18n.panel_admin_title}"/>
+	</h:panelGrid>
+
+	<h:panelGrid columns="3">
+
+		<h:outputLabel value="#{i18n.lbl_attr_abstractentitywithid_id}:" for="txtId" styleClass="label-field-optional"/>
+		<p:inputText id="txtId" value="#{viewRoleDialog.role.id}" readonly="true">
+		</p:inputText>
+		<p:tooltip for="txtId" value=""/>
+
+		<h:outputLabel value="#{i18n.lbl_attr_role_name}:" for="txtName" styleClass="label-field-optional"/>
+		<p:inputText id="txtName" value="#{viewRoleDialog.role.name}" readonly="true">
+		</p:inputText>
+		<p:tooltip for="txtName" value=""/>
+
+	</h:panelGrid>
+	</p:panel>
+
+	<p/>
+
+	<h:panelGrid columns="1">
+		<p:commandButton id="cmdBack" value="#{i18n.command_back}" action="#{userSession.getLastPage}" immediate="true" ajax="false"/>
+	</h:panelGrid>
+
+	<p:defaultCommand target=":form:cmdBack"/>
+
+</ui:define>
+</ui:composition>

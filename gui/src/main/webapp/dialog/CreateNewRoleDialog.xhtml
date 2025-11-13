@@ -1,0 +1,58 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:h="jakarta.faces.html"
+	xmlns:f="jakarta.faces.core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/templates/ui.xhtml">
+
+<f:metadata>
+	<f:viewAction action="#{createNewRoleDialog.initView()}"/>
+</f:metadata>
+
+<ui:define name="title">#{createNewRoleDialog.formTitle}</ui:define>
+
+<ui:define name="content">
+	<p:dialog header="#{i18n.feedback_dialog_header}" modal="true" widgetVar="msgBox" visible="#{(not empty facesContext.messageList)}">
+		<p:messages id="messages" showDetail="true" showSummary="true"/>
+	</p:dialog>
+
+	<h:panelGrid columns="3">
+		<div class="pi pi-file-edit" style="font-size: 2em"/>
+		<h:outputText id="lblFormTitle" value="&#160;#{createNewRoleDialog.formTitle}" styleClass="label-form-title"/>
+		<p:ajaxStatus style="width:16px;height:16px;">
+			<f:facet name="start">
+				<h:graphicImage value="/images/ajaxloading.gif"/>
+			</f:facet>
+
+			<f:facet name="complete">
+				<h:outputText value=""/>
+			</f:facet>
+		</p:ajaxStatus>
+	</h:panelGrid>
+
+	<p:panel>
+	<h:panelGrid columns="1">
+		<h:outputText styleClass="header-label" value="#{i18n.panel_basic_title}"/>
+	</h:panelGrid>
+
+	<h:panelGrid columns="3">
+
+		<h:outputLabel value="#{i18n.lbl_attr_role_name} *:" for="txtName" styleClass="label-field-mandatory"/>
+		<p:inputText id="txtName" value="#{createNewRoleDialog.role.name}">
+			<f:validateRequired/>
+			<f:validateLength minimum="1" maximum="50"/>
+		</p:inputText>
+		<p:tooltip for="txtName" value=""/>
+
+	</h:panelGrid>
+	</p:panel>
+
+	<p/>
+
+	<h:panelGrid columns="2">
+		<p:commandButton id="cmdSave" action="#{createNewRoleDialog.save}" value="#{i18n.command_save}" ajax="false"/>
+		<p:commandButton id="cmdBack" value="#{i18n.command_back}" action="#{userSession.getLastPage}" immediate="true" ajax="false"/>
+	</h:panelGrid>
+
+</ui:define>
+</ui:composition>
