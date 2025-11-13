@@ -90,10 +90,10 @@
   <net.sourceforge.jbizmo.model.java:Namespace name="exchange" parent="/0/@rootNamespace" childNamespaces="/9" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="ui.test" parent="/0/@rootNamespace" project="/0"/>
   <net.sourceforge.jbizmo.model.client:FormGroup name="Master data" groupOrder="1" roles="/0/@roles.0" project="/0"/>
-  <net.sourceforge.jbizmo.model.java:Namespace name="base" parent="/1" javaTypes="/13 /14" project="/0"/>
+  <net.sourceforge.jbizmo.model.java:Namespace name="base" parent="/1" javaTypes="/14 /13" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="base" parent="/3" javaTypes="/15 /16 /21 /25 /30 /34 /37 /40" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="base" parent="/4" project="/0"/>
-  <net.sourceforge.jbizmo.model.java:Namespace name="base" parent="/2" javaTypes="/11 /12" project="/0"/>
+  <net.sourceforge.jbizmo.model.java:Namespace name="base" parent="/2" javaTypes="/12 /41 /11" project="/0"/>
   <net.sourceforge.jbizmo.model.repository:Repository name="UserRepository" comment="Create, read, update and delete services for user objects." namespace="/10">
     <domainObject href="package-base.xmi#//@domainObjects.1"/>
     <repositoryMethods name="findById" javaType="/11" transactionType="REQUIRED" methodType="FIND_BY_ID">
@@ -356,6 +356,8 @@
   <net.sourceforge.jbizmo.model.client:Form name="UserView" formType="SEARCHABLE_VIEW" formGroup="/17" title="Users view" formPanels="/19" dTO="/21" roles="/0/@roles.0" boundaryMethod="/13/@boundaryMethods.2">
     <actions name="actionDelete" description="Delete selected user" boundaryMethod="/13/@boundaryMethods.4" roles="/0/@roles.0" type="DELETE"/>
     <actions name="actionCopy" description="Create copy of selected user" boundaryMethod="/13/@boundaryMethods.5" roles="/0/@roles.0" type="COPY"/>
+    <actions name="actionCreate" description="Create new user" targetForm="/22" roles="/0/@roles.0"/>
+    <actions name="actionUpdate" description="Edit user" targetForm="/26" roles="/0/@roles.0" type="UPDATE"/>
     <domainObject href="package-base.xmi#//@domainObjects.1"/>
   </net.sourceforge.jbizmo.model.client:Form>
   <net.sourceforge.jbizmo.model.client:FormPanel name="UserPanel" form="/18" formTable="/20" dTO="/21" boundaryMethod="/13/@boundaryMethods.3"/>
@@ -479,6 +481,8 @@
   <net.sourceforge.jbizmo.model.client:Form name="RoleView" formType="SIMPLE_VIEW" formGroup="/17" title="Roles view" formPanels="/32" dTO="/34" roles="/0/@roles.0" boundaryMethod="/14/@boundaryMethods.2">
     <actions name="actionDelete" description="Delete selected role" boundaryMethod="/14/@boundaryMethods.3" roles="/0/@roles.0" type="DELETE"/>
     <actions name="actionCopy" description="Create copy of selected role" boundaryMethod="/14/@boundaryMethods.4" roles="/0/@roles.0" type="COPY"/>
+    <actions name="actionCreate" description="Create new role" targetForm="/35" roles="/0/@roles.0"/>
+    <actions name="actionGet" description="View role" targetForm="/38" roles="/0/@roles.0" type="READ"/>
     <domainObject href="package-base.xmi#//@domainObjects.2"/>
   </net.sourceforge.jbizmo.model.client:Form>
   <net.sourceforge.jbizmo.model.client:FormPanel name="RolePanel" form="/31" formTable="/33" dTO="/34"/>
@@ -537,4 +541,71 @@
       <domainAttribute href="package-base.xmi#//@domainObjects.2/@attributes.0"/>
     </attributes>
   </net.sourceforge.jbizmo.model.dto:DTOBean>
+  <net.sourceforge.jbizmo.model.repository:Repository name="SavedQueryRepository" comment="Create, read, update and delete services for saved query objects." namespace="/10">
+    <domainObject href="package-base.xmi#//@domainObjects.3"/>
+    <repositoryMethods name="findById" javaType="/41" transactionType="REQUIRED" methodType="FIND_BY_ID">
+      <returnType href="package-base.xmi#//@domainObjects.3"/>
+      <methodParameters name="id" type="/0/@allSupportedTypes.2"/>
+    </repositoryMethods>
+    <repositoryMethods name="findById" javaType="/41" transactionType="REQUIRED" methodType="FIND_EXISTING">
+      <returnType href="package-base.xmi#//@domainObjects.3"/>
+      <methodParameters name="id" type="/0/@allSupportedTypes.2"/>
+      <methodParameters name="mustExist" type="/0/@allSupportedTypes.4"/>
+    </repositoryMethods>
+    <repositoryMethods name="findById" javaType="/41" transactionType="REQUIRED" methodType="FIND_BY_OBJECT">
+      <returnType href="package-base.xmi#//@domainObjects.3"/>
+      <methodParameters name="savedQuery">
+        <type href="package-base.xmi#//@domainObjects.3"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="deleteAll" javaType="/41" returnType="/0/@allSupportedTypes.0" transactionType="REQUIRED" methodType="DELETE_ALL"/>
+    <repositoryMethods name="merge" javaType="/41" transactionType="REQUIRED" methodType="MERGE">
+      <returnType href="package-base.xmi#//@domainObjects.3"/>
+      <methodParameters name="savedQuery">
+        <type href="package-base.xmi#//@domainObjects.3"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="persist" javaType="/41" transactionType="REQUIRED" methodType="PERSIST">
+      <returnType href="package-base.xmi#//@domainObjects.3"/>
+      <methodParameters name="savedQuery">
+        <type href="package-base.xmi#//@domainObjects.3"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="copy" javaType="/41" transactionType="REQUIRED" methodType="COPY">
+      <returnType href="package-base.xmi#//@domainObjects.3"/>
+      <methodParameters name="sourceObject">
+        <type href="package-base.xmi#//@domainObjects.3"/>
+      </methodParameters>
+      <methodParameters name="targetObject">
+        <type href="package-base.xmi#//@domainObjects.3"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="delete" javaType="/41" returnType="/0/@allSupportedTypes.0" transactionType="REQUIRED" methodType="DELETE">
+      <methodParameters name="id" type="/0/@allSupportedTypes.2"/>
+    </repositoryMethods>
+    <repositoryMethods name="findAll" javaType="/41" returnTypeModifier="List" transactionType="REQUIRED">
+      <returnType href="package-base.xmi#//@domainObjects.3"/>
+    </repositoryMethods>
+    <repositoryMethods name="existsById" javaType="/41" returnType="/0/@allSupportedTypes.4" transactionType="REQUIRED" methodType="EXISTS_BY_ID">
+      <methodParameters name="id" type="/0/@allSupportedTypes.2"/>
+    </repositoryMethods>
+    <repositoryMethods name="count" javaType="/41" returnType="/0/@allSupportedTypes.7" transactionType="REQUIRED" methodType="COUNT_ALL"/>
+    <repositoryMethods name="search" javaType="/41" returnTypeModifier="List" transactionType="REQUIRED" methodType="SEARCH">
+      <returnType href="package-base.xmi#//@domainObjects.3"/>
+    </repositoryMethods>
+    <repositoryMethods name="count" javaType="/41" returnType="/0/@allSupportedTypes.7" transactionType="REQUIRED" methodType="COUNT"/>
+    <repositoryMethods name="getUser" javaType="/41" transactionType="REQUIRED" methodType="GET_ASSOCIATION" hint="NQ_GET_USER">
+      <returnType href="package-base.xmi#//@domainObjects.1"/>
+      <methodParameters xsi:type="net.sourceforge.jbizmo.model.repository:RepositoryMethodParameter" name="id" type="/0/@allSupportedTypes.2">
+        <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-base.xmi#//@domainObjects.3/@associations.0"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="setUser" javaType="/41" returnType="/0/@allSupportedTypes.0" transactionType="REQUIRED" methodType="CHANGE_PARENT">
+      <methodParameters name="id" type="/0/@allSupportedTypes.2"/>
+      <methodParameters xsi:type="net.sourceforge.jbizmo.model.repository:RepositoryMethodParameter" name="user">
+        <type href="package-base.xmi#//@domainObjects.1"/>
+        <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-base.xmi#//@domainObjects.3/@associations.0"/>
+      </methodParameters>
+    </repositoryMethods>
+  </net.sourceforge.jbizmo.model.repository:Repository>
 </xmi:XMI>

@@ -3,6 +3,7 @@ package com.kontron.qdw.ui.view;
 import com.kontron.qdw.boundary.base.*;
 import org.slf4j.*;
 import java.lang.invoke.*;
+import com.kontron.qdw.ui.dialog.*;
 import static com.kontron.qdw.ui.TranslationKeys.*;
 import net.sourceforge.jbizmo.commons.webclient.primefaces.util.*;
 import com.kontron.qdw.dto.base.*;
@@ -89,7 +90,9 @@ public class RoleView implements Serializable {
      */
     @Generated
     public void onDoubleClick() {
-        // No appropriate form found!
+        logger.debug("Handle double-click event");
+
+        userSession.redirectTo(getCurrentPageURL(), openViewRoleDialog());
     }
 
     /**
@@ -131,6 +134,34 @@ public class RoleView implements Serializable {
 
         fetchRoles();
         return "";
+    }
+
+    /**
+     * Open dialog
+     * @return the navigation target
+     */
+    @Generated
+    public String openCreateNewRoleDialog() {
+        var url = "";
+
+        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR))
+            url = CreateNewRoleDialog.PAGE_INIT_URL;
+
+        return url;
+    }
+
+    /**
+     * Open dialog
+     * @return the navigation target
+     */
+    @Generated
+    public String openViewRoleDialog() {
+        var url = "";
+
+        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR))
+            url = ViewRoleDialog.PAGE_INIT_URL + selectedObject.getId();
+
+        return url;
     }
 
     /**

@@ -5,6 +5,7 @@ import org.slf4j.*;
 import java.lang.invoke.*;
 import org.primefaces.model.DualListModel;
 import net.sourceforge.jbizmo.commons.webclient.primefaces.search.*;
+import com.kontron.qdw.ui.dialog.*;
 import static com.kontron.qdw.ui.TranslationKeys.*;
 import net.sourceforge.jbizmo.commons.webclient.primefaces.util.*;
 import com.kontron.qdw.dto.base.*;
@@ -106,7 +107,9 @@ public class UserView extends AbstractSearchableView implements Serializable {
      */
     @Generated
     public void onDoubleClick() {
-        // No appropriate form found!
+        logger.debug("Handle double-click event");
+
+        userSession.redirectTo(getCurrentPageURL(), openEditUserDialog());
     }
 
     /**
@@ -134,10 +137,13 @@ public class UserView extends AbstractSearchableView implements Serializable {
      */
     @Generated
     public String copy() {
+        var url = "";
+        long newId;
+
         try {
             logger.debug("Create a copy of the selected object with id '{}'", selectedObject.getId());
 
-            userService.copy(selectedObject.getId(), userSession.getPrincipal().getId());
+            newId = userService.copy(selectedObject.getId(), userSession.getPrincipal().getId());
         }
         catch (final Exception e) {
             logger.error("Error while creating a copy of the selected object!", e);
@@ -146,8 +152,39 @@ public class UserView extends AbstractSearchableView implements Serializable {
             return "";
         }
 
-        fetchUsers();
-        return "";
+        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR))
+            url = EditUserDialog.PAGE_INIT_URL + newId;
+
+        userSession.setLastPage(getCurrentPageURL());
+        return url;
+    }
+
+    /**
+     * Open dialog
+     * @return the navigation target
+     */
+    @Generated
+    public String openCreateNewUserDialog() {
+        var url = "";
+
+        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR))
+            url = CreateNewUserDialog.PAGE_INIT_URL;
+
+        return url;
+    }
+
+    /**
+     * Open dialog
+     * @return the navigation target
+     */
+    @Generated
+    public String openEditUserDialog() {
+        var url = "";
+
+        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR))
+            url = EditUserDialog.PAGE_INIT_URL + selectedObject.getId();
+
+        return url;
     }
 
     /**
