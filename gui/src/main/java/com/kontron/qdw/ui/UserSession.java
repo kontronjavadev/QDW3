@@ -49,6 +49,8 @@ public class UserSession implements Serializable {
     @Generated
     public static final String ROLE_READONLY = "READONLY";
     @Generated
+    public static final String ROLE_SUPERUSER = "SUPERUSER";
+    @Generated
     private static final Map<String, Locale> supportedLocales;
     @Generated
     private final transient UserBoundaryService userService;

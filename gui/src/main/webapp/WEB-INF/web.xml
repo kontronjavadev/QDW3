@@ -80,6 +80,9 @@
 <security-role>
 	<role-name>READONLY</role-name>
 </security-role>
+<security-role>
+	<role-name>SUPERUSER</role-name>
+</security-role>
 
 
 
@@ -94,6 +97,7 @@
 	<auth-constraint>
 		<role-name>ADMINISTRATOR</role-name>
 		<role-name>READONLY</role-name>
+		<role-name>SUPERUSER</role-name>
 	</auth-constraint>
 	<user-data-constraint>
 		<!-- https erzwingen -->
