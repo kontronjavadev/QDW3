@@ -9,18 +9,20 @@ import net.sourceforge.jbizmo.commons.annotation.Generated;
 @NamedQuery(name = Customer.NQ_UK_FIND_BY_NAME, query = "select a from Customer a where a.name = :name")
 @NamedQuery(name = Customer.NQ_UK_SEARCH_BY_NAME, query = "select a from Customer a where a.name like :name")
 @NamedQuery(name = Customer.NQ_UK_EXISTS_BY_NAME, query = "select count(a) from Customer a where a.name = :name")
-@NamedQuery(name = Customer.NQ_UK_EXISTS_BY_NAME_AND_ID, query = "select count(a) from Customer a where a.name = :name and a.id <> :id")
-@NamedQuery(name = Customer.NQ_GET_COUNTRY, query = "select b from Customer a join a.country b where a.id = :id")
-@NamedQuery(name = Customer.NQ_GET_VERTICALSECTOR, query = "select b from Customer a join a.verticalSector b where a.id = :id")
+@NamedQuery(name = Customer.NQ_UK_EXISTS_BY_NAME_AND_CODE, query = "select count(a) from Customer a where a.name = :name and a.code <> :code")
+@NamedQuery(name = Customer.NQ_GET_COUNTRY, query = "select b from Customer a join a.country b where a.code = :code")
+@NamedQuery(name = Customer.NQ_GET_VERTICALSECTOR, query = "select b from Customer a join a.verticalSector b where a.code = :code")
 @NamedQuery(name = Customer.NQ_DELETE_ALL, query = "delete from Customer a")
-@NamedQuery(name = Customer.NQ_DELETE, query = "delete from Customer a where a.id = :id")
+@NamedQuery(name = Customer.NQ_DELETE, query = "delete from Customer a where a.code = :code")
 @NamedQuery(name = Customer.NQ_GET_ALL, query = "select a from Customer a")
-@NamedQuery(name = Customer.NQ_FIND, query = "select a from Customer a where a.id = :id")
-@NamedQuery(name = Customer.NQ_CHECK, query = "select count(a) from Customer a where a.id = :id")
+@NamedQuery(name = Customer.NQ_FIND, query = "select a from Customer a where a.code = :code")
+@NamedQuery(name = Customer.NQ_CHECK, query = "select count(a) from Customer a where a.code = :code")
 @NamedQuery(name = Customer.NQ_COUNT, query = "select count(a) from Customer a")
-public class Customer extends AbstractEntityWithId {
+public class Customer extends AbstractFuntionalEntity {
     @Generated
     public static final String NQ_UK_EXISTS_BY_NAME = "Customer.checkByName";
+    @Generated
+    public static final String NQ_UK_EXISTS_BY_NAME_AND_CODE = "Customer.checkByNameAndCode";
     @Generated
     public static final String NQ_UK_FIND_BY_NAME = "Customer.getByName";
     @Generated
@@ -39,8 +41,6 @@ public class Customer extends AbstractEntityWithId {
     public static final String NQ_UK_SEARCH_BY_NAME = "Customer.findByName";
     @Generated
     public static final String NQ_CHECK = "Customer.check";
-    @Generated
-    public static final String NQ_UK_EXISTS_BY_NAME_AND_ID = "Customer.checkByNameAndId";
     @Generated
     public static final String NQ_FIND = "Customer.find";
     @Basic(optional = false)
@@ -72,12 +72,12 @@ public class Customer extends AbstractEntityWithId {
     @Generated
     private boolean internal;
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "country", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "country", referencedColumnName = "code", nullable = false)
     @NotNull(message = "Field \"country\" must not be null!")
     @Generated
     private Country country;
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "vertical_sector", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "vertical_sector", referencedColumnName = "code", nullable = false)
     @NotNull(message = "Field \"verticalSector\" must not be null!")
     @Generated
     private VerticalSector verticalSector;
@@ -91,21 +91,21 @@ public class Customer extends AbstractEntityWithId {
 
     /**
      * Constructor using primary key field
-     * @param id
+     * @param code
      */
     @Generated
-    public Customer(long id) {
-        super(id);
+    public Customer(String code) {
+        super(code);
     }
 
     /**
      * Constructor using primary key field and display attribute
-     * @param id
+     * @param code
      * @param name
      */
     @Generated
-    public Customer(long id, String name) {
-        super(id);
+    public Customer(String code, String name) {
+        super(code);
 
         this.name = name;
     }
@@ -239,7 +239,14 @@ public class Customer extends AbstractEntityWithId {
 
         final var bean = (Customer) obj;
 
-        return getId() == bean.getId();
+        if (getCode() == null) {
+            if (bean.getCode() != null)
+                return false;
+        }
+        else if (!getCode().equals(bean.getCode()))
+            return false;
+
+        return true;
     }
 
     /* (non-Javadoc)
@@ -248,7 +255,11 @@ public class Customer extends AbstractEntityWithId {
     @Generated
     @Override
     public int hashCode() {
-        return (int) (getId() ^ (getId() >>> 32));
+        // Return hash code of current date if primary key field is not yet set!
+        if (getCode() == null)
+            return new java.util.Date().hashCode();
+
+        return getCode().hashCode();
     }
 
 }

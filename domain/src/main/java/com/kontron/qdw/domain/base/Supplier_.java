@@ -4,7 +4,7 @@ import jakarta.persistence.metamodel.*;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
 
 @StaticMetamodel(Supplier.class)
-public class Supplier_ extends AbstractEntityWithId_ {
+public class Supplier_ extends AbstractFuntionalEntity_ {
     @Generated
     public static volatile SingularAttribute<Supplier, String> name;
     @Generated

@@ -3,5 +3,5 @@ package com.kontron.qdw.domain.base;
 import jakarta.persistence.metamodel.*;
 
 @StaticMetamodel(Plant.class)
-public class Plant_ extends AbstractEntityWithId_ {
+public class Plant_ extends AbstractFunctionalActiveEntity_ {
 }

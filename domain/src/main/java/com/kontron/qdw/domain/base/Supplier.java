@@ -9,17 +9,19 @@ import net.sourceforge.jbizmo.commons.annotation.Generated;
 @NamedQuery(name = Supplier.NQ_UK_FIND_BY_NAME, query = "select a from Supplier a where a.name = :name")
 @NamedQuery(name = Supplier.NQ_UK_SEARCH_BY_NAME, query = "select a from Supplier a where a.name like :name")
 @NamedQuery(name = Supplier.NQ_UK_EXISTS_BY_NAME, query = "select count(a) from Supplier a where a.name = :name")
-@NamedQuery(name = Supplier.NQ_UK_EXISTS_BY_NAME_AND_ID, query = "select count(a) from Supplier a where a.name = :name and a.id <> :id")
-@NamedQuery(name = Supplier.NQ_GET_COUNTRY, query = "select b from Supplier a join a.country b where a.id = :id")
+@NamedQuery(name = Supplier.NQ_UK_EXISTS_BY_NAME_AND_CODE, query = "select count(a) from Supplier a where a.name = :name and a.code <> :code")
+@NamedQuery(name = Supplier.NQ_GET_COUNTRY, query = "select b from Supplier a join a.country b where a.code = :code")
 @NamedQuery(name = Supplier.NQ_DELETE_ALL, query = "delete from Supplier a")
-@NamedQuery(name = Supplier.NQ_DELETE, query = "delete from Supplier a where a.id = :id")
+@NamedQuery(name = Supplier.NQ_DELETE, query = "delete from Supplier a where a.code = :code")
 @NamedQuery(name = Supplier.NQ_GET_ALL, query = "select a from Supplier a")
-@NamedQuery(name = Supplier.NQ_FIND, query = "select a from Supplier a where a.id = :id")
-@NamedQuery(name = Supplier.NQ_CHECK, query = "select count(a) from Supplier a where a.id = :id")
+@NamedQuery(name = Supplier.NQ_FIND, query = "select a from Supplier a where a.code = :code")
+@NamedQuery(name = Supplier.NQ_CHECK, query = "select count(a) from Supplier a where a.code = :code")
 @NamedQuery(name = Supplier.NQ_COUNT, query = "select count(a) from Supplier a")
-public class Supplier extends AbstractEntityWithId {
+public class Supplier extends AbstractFuntionalEntity {
     @Generated
     public static final String NQ_UK_EXISTS_BY_NAME = "Supplier.checkByName";
+    @Generated
+    public static final String NQ_UK_EXISTS_BY_NAME_AND_CODE = "Supplier.checkByNameAndCode";
     @Generated
     public static final String NQ_UK_FIND_BY_NAME = "Supplier.getByName";
     @Generated
@@ -36,8 +38,6 @@ public class Supplier extends AbstractEntityWithId {
     public static final String NQ_UK_SEARCH_BY_NAME = "Supplier.findByName";
     @Generated
     public static final String NQ_CHECK = "Supplier.check";
-    @Generated
-    public static final String NQ_UK_EXISTS_BY_NAME_AND_ID = "Supplier.checkByNameAndId";
     @Generated
     public static final String NQ_FIND = "Supplier.find";
     @Basic(optional = false)
@@ -65,7 +65,7 @@ public class Supplier extends AbstractEntityWithId {
     @Generated
     private String city;
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "country", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "country", referencedColumnName = "code", nullable = false)
     @NotNull(message = "Field \"country\" must not be null!")
     @Generated
     private Country country;
@@ -79,21 +79,21 @@ public class Supplier extends AbstractEntityWithId {
 
     /**
      * Constructor using primary key field
-     * @param id
+     * @param code
      */
     @Generated
-    public Supplier(long id) {
-        super(id);
+    public Supplier(String code) {
+        super(code);
     }
 
     /**
      * Constructor using primary key field and display attribute
-     * @param id
+     * @param code
      * @param name
      */
     @Generated
-    public Supplier(long id, String name) {
-        super(id);
+    public Supplier(String code, String name) {
+        super(code);
 
         this.name = name;
     }
@@ -195,7 +195,14 @@ public class Supplier extends AbstractEntityWithId {
 
         final var bean = (Supplier) obj;
 
-        return getId() == bean.getId();
+        if (getCode() == null) {
+            if (bean.getCode() != null)
+                return false;
+        }
+        else if (!getCode().equals(bean.getCode()))
+            return false;
+
+        return true;
     }
 
     /* (non-Javadoc)
@@ -204,7 +211,11 @@ public class Supplier extends AbstractEntityWithId {
     @Generated
     @Override
     public int hashCode() {
-        return (int) (getId() ^ (getId() >>> 32));
+        // Return hash code of current date if primary key field is not yet set!
+        if (getCode() == null)
+            return new java.util.Date().hashCode();
+
+        return getCode().hashCode();
     }
 
 }

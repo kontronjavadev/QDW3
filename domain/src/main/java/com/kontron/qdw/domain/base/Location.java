@@ -6,12 +6,12 @@ import net.sourceforge.jbizmo.commons.annotation.Generated;
 @Entity
 @Table(name = "location_tab")
 @NamedQuery(name = Location.NQ_DELETE_ALL, query = "delete from Location a")
-@NamedQuery(name = Location.NQ_DELETE, query = "delete from Location a where a.id = :id")
+@NamedQuery(name = Location.NQ_DELETE, query = "delete from Location a where a.code = :code")
 @NamedQuery(name = Location.NQ_GET_ALL, query = "select a from Location a")
-@NamedQuery(name = Location.NQ_FIND, query = "select a from Location a where a.id = :id")
-@NamedQuery(name = Location.NQ_CHECK, query = "select count(a) from Location a where a.id = :id")
+@NamedQuery(name = Location.NQ_FIND, query = "select a from Location a where a.code = :code")
+@NamedQuery(name = Location.NQ_CHECK, query = "select count(a) from Location a where a.code = :code")
 @NamedQuery(name = Location.NQ_COUNT, query = "select count(a) from Location a")
-public class Location extends AbstractEntityWithId {
+public class Location extends AbstractFunctionalActiveEntity {
     @Generated
     public static final String NQ_DELETE_ALL = "Location.deleteAll";
     @Generated
@@ -34,11 +34,11 @@ public class Location extends AbstractEntityWithId {
 
     /**
      * Constructor using primary key field
-     * @param id
+     * @param code
      */
     @Generated
-    public Location(long id) {
-        super(id);
+    public Location(String code) {
+        super(code);
     }
 
     /* (non-Javadoc)
@@ -58,7 +58,14 @@ public class Location extends AbstractEntityWithId {
 
         final var bean = (Location) obj;
 
-        return getId() == bean.getId();
+        if (getCode() == null) {
+            if (bean.getCode() != null)
+                return false;
+        }
+        else if (!getCode().equals(bean.getCode()))
+            return false;
+
+        return true;
     }
 
     /* (non-Javadoc)
@@ -67,7 +74,11 @@ public class Location extends AbstractEntityWithId {
     @Generated
     @Override
     public int hashCode() {
-        return (int) (getId() ^ (getId() >>> 32));
+        // Return hash code of current date if primary key field is not yet set!
+        if (getCode() == null)
+            return new java.util.Date().hashCode();
+
+        return getCode().hashCode();
     }
 
 }

@@ -6,12 +6,12 @@ import net.sourceforge.jbizmo.commons.annotation.Generated;
 @Entity
 @Table(name = "plant_tab")
 @NamedQuery(name = Plant.NQ_DELETE_ALL, query = "delete from Plant a")
-@NamedQuery(name = Plant.NQ_DELETE, query = "delete from Plant a where a.id = :id")
+@NamedQuery(name = Plant.NQ_DELETE, query = "delete from Plant a where a.code = :code")
 @NamedQuery(name = Plant.NQ_GET_ALL, query = "select a from Plant a")
-@NamedQuery(name = Plant.NQ_FIND, query = "select a from Plant a where a.id = :id")
-@NamedQuery(name = Plant.NQ_CHECK, query = "select count(a) from Plant a where a.id = :id")
+@NamedQuery(name = Plant.NQ_FIND, query = "select a from Plant a where a.code = :code")
+@NamedQuery(name = Plant.NQ_CHECK, query = "select count(a) from Plant a where a.code = :code")
 @NamedQuery(name = Plant.NQ_COUNT, query = "select count(a) from Plant a")
-public class Plant extends AbstractEntityWithId {
+public class Plant extends AbstractFunctionalActiveEntity {
     @Generated
     public static final String NQ_DELETE_ALL = "Plant.deleteAll";
     @Generated
@@ -34,11 +34,11 @@ public class Plant extends AbstractEntityWithId {
 
     /**
      * Constructor using primary key field
-     * @param id
+     * @param code
      */
     @Generated
-    public Plant(long id) {
-        super(id);
+    public Plant(String code) {
+        super(code);
     }
 
     /* (non-Javadoc)
@@ -58,7 +58,14 @@ public class Plant extends AbstractEntityWithId {
 
         final var bean = (Plant) obj;
 
-        return getId() == bean.getId();
+        if (getCode() == null) {
+            if (bean.getCode() != null)
+                return false;
+        }
+        else if (!getCode().equals(bean.getCode()))
+            return false;
+
+        return true;
     }
 
     /* (non-Javadoc)
@@ -67,7 +74,11 @@ public class Plant extends AbstractEntityWithId {
     @Generated
     @Override
     public int hashCode() {
-        return (int) (getId() ^ (getId() >>> 32));
+        // Return hash code of current date if primary key field is not yet set!
+        if (getCode() == null)
+            return new java.util.Date().hashCode();
+
+        return getCode().hashCode();
     }
 
 }

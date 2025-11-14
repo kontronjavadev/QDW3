@@ -6,12 +6,12 @@ import net.sourceforge.jbizmo.commons.annotation.Generated;
 @Entity
 @Table(name = "movement_type_tab")
 @NamedQuery(name = MovementType.NQ_DELETE_ALL, query = "delete from MovementType a")
-@NamedQuery(name = MovementType.NQ_DELETE, query = "delete from MovementType a where a.id = :id")
+@NamedQuery(name = MovementType.NQ_DELETE, query = "delete from MovementType a where a.code = :code")
 @NamedQuery(name = MovementType.NQ_GET_ALL, query = "select a from MovementType a")
-@NamedQuery(name = MovementType.NQ_FIND, query = "select a from MovementType a where a.id = :id")
-@NamedQuery(name = MovementType.NQ_CHECK, query = "select count(a) from MovementType a where a.id = :id")
+@NamedQuery(name = MovementType.NQ_FIND, query = "select a from MovementType a where a.code = :code")
+@NamedQuery(name = MovementType.NQ_CHECK, query = "select count(a) from MovementType a where a.code = :code")
 @NamedQuery(name = MovementType.NQ_COUNT, query = "select count(a) from MovementType a")
-public class MovementType extends AbstractEntityWithId {
+public class MovementType extends AbstractFunctionalActiveEntity {
     @Generated
     public static final String NQ_DELETE_ALL = "MovementType.deleteAll";
     @Generated
@@ -34,11 +34,11 @@ public class MovementType extends AbstractEntityWithId {
 
     /**
      * Constructor using primary key field
-     * @param id
+     * @param code
      */
     @Generated
-    public MovementType(long id) {
-        super(id);
+    public MovementType(String code) {
+        super(code);
     }
 
     /* (non-Javadoc)
@@ -58,7 +58,14 @@ public class MovementType extends AbstractEntityWithId {
 
         final var bean = (MovementType) obj;
 
-        return getId() == bean.getId();
+        if (getCode() == null) {
+            if (bean.getCode() != null)
+                return false;
+        }
+        else if (!getCode().equals(bean.getCode()))
+            return false;
+
+        return true;
     }
 
     /* (non-Javadoc)
@@ -67,7 +74,11 @@ public class MovementType extends AbstractEntityWithId {
     @Generated
     @Override
     public int hashCode() {
-        return (int) (getId() ^ (getId() >>> 32));
+        // Return hash code of current date if primary key field is not yet set!
+        if (getCode() == null)
+            return new java.util.Date().hashCode();
+
+        return getCode().hashCode();
     }
 
 }
