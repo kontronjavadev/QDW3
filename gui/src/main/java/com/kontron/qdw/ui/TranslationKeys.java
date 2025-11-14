@@ -53,9 +53,12 @@ public interface TranslationKeys {
     String FIELD_ERRORPAGE_DESCRIPTION = "field_errorpage_description";
     String FIELD_ERRORPAGE_TYPE = "field_errorpage_type";
     String FIELD_ERRORPAGE_URI = "field_errorpage_uri";
+    String FORM_BUSINESSUNITVIEW_TITLE = "form_businessunitview_title";
     String FORM_CHANGEPASSWORDDIALOG_TITLE = "form_changepassworddialog_title";
+    String FORM_CREATENEWBUSINESSUNITDIALOG_TITLE = "form_createnewbusinessunitdialog_title";
     String FORM_CREATENEWROLEDIALOG_TITLE = "form_createnewroledialog_title";
     String FORM_CREATENEWUSERDIALOG_TITLE = "form_createnewuserdialog_title";
+    String FORM_EDITBUSINESSUNITDIALOG_TITLE = "form_editbusinessunitdialog_title";
     String FORM_EDITUSERDIALOG_TITLE = "form_edituserdialog_title";
     String FORM_EDITUSERSETTINGSDIALOG_TITLE = "form_editusersettingsdialog_title";
     String FORM_ROLEVIEW_TITLE = "form_roleview_title";
@@ -68,6 +71,13 @@ public interface TranslationKeys {
     String LBL_ATTR_ABSTRACTENTITYWITHID_ID = "lbl_attr_abstractentitywithid_id";
     String LBL_ATTR_ABSTRACTENTITYWITHID_LASTUPDATE = "lbl_attr_abstractentitywithid_lastupdate";
     String LBL_ATTR_ABSTRACTENTITYWITHID_VERSION = "lbl_attr_abstractentitywithid_version";
+    String LBL_ATTR_ABSTRACTFUNCTIONALACTIVEENTITY_ACTIVE = "lbl_attr_abstractfunctionalactiveentity_active";
+    String LBL_ATTR_ABSTRACTFUNCTIONALACTIVEENTITY_CODE = "lbl_attr_abstractfunctionalactiveentity_code";
+    String LBL_ATTR_ABSTRACTFUNCTIONALACTIVEENTITY_COMMENT = "lbl_attr_abstractfunctionalactiveentity_comment";
+    String LBL_ATTR_ABSTRACTFUNCTIONALACTIVEENTITY_CREATIONDATE = "lbl_attr_abstractfunctionalactiveentity_creationdate";
+    String LBL_ATTR_ABSTRACTFUNCTIONALACTIVEENTITY_LASTUPDATE = "lbl_attr_abstractfunctionalactiveentity_lastupdate";
+    String LBL_ATTR_ABSTRACTFUNCTIONALACTIVEENTITY_SHORTTEXT = "lbl_attr_abstractfunctionalactiveentity_shorttext";
+    String LBL_ATTR_ABSTRACTFUNCTIONALACTIVEENTITY_VERSION = "lbl_attr_abstractfunctionalactiveentity_version";
     String LBL_ATTR_ROLE_NAME = "lbl_attr_role_name";
     String LBL_ATTR_USER_ACTIVE = "lbl_attr_user_active";
     String LBL_ATTR_USER_EMAIL = "lbl_attr_user_email";

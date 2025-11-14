@@ -99,11 +99,11 @@
   <net.sourceforge.jbizmo.model.java:Namespace name="dto" parent="/0/@rootNamespace" childNamespaces="/8" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="exchange" parent="/0/@rootNamespace" childNamespaces="/9" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="ui.test" parent="/0/@rootNamespace" project="/0"/>
-  <net.sourceforge.jbizmo.model.client:FormGroup name="Master data" groupOrder="1" roles="/0/@roles.0" project="/0"/>
-  <net.sourceforge.jbizmo.model.java:Namespace name="base" parent="/1" javaTypes="/14 /13" project="/0"/>
-  <net.sourceforge.jbizmo.model.java:Namespace name="base" parent="/3" javaTypes="/15 /16 /21 /25 /30 /34 /37 /40" project="/0"/>
+  <net.sourceforge.jbizmo.model.client:FormGroup name="Master data" groupOrder="1" forms="/48 /52 /42" roles="/0/@roles.0" project="/0"/>
+  <net.sourceforge.jbizmo.model.java:Namespace name="base" parent="/1" javaTypes="/14 /13 /46" project="/0"/>
+  <net.sourceforge.jbizmo.model.java:Namespace name="base" parent="/3" javaTypes="/16 /54 /51 /45 /37 /40 /15 /34 /25 /21 /30" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="base" parent="/4" project="/0"/>
-  <net.sourceforge.jbizmo.model.java:Namespace name="base" parent="/2" javaTypes="/12 /41 /11" project="/0"/>
+  <net.sourceforge.jbizmo.model.java:Namespace name="base" parent="/2" javaTypes="/12 /41 /11 /47" project="/0"/>
   <net.sourceforge.jbizmo.model.repository:Repository name="UserRepository" comment="Create, read, update and delete services for user objects." namespace="/10">
     <domainObject href="package-base.xmi#//@domainObjects.1"/>
     <repositoryMethods name="findById" javaType="/11" transactionType="REQUIRED" methodType="FIND_BY_ID">
@@ -618,4 +618,186 @@
       </methodParameters>
     </repositoryMethods>
   </net.sourceforge.jbizmo.model.repository:Repository>
+  <net.sourceforge.jbizmo.model.client:Form name="EditBusinessUnitDialog" formGroup="/6" title="Edit business unit" formPanels="/43 /44" dTO="/45" roles="/0/@roles.0">
+    <actions name="actionUpdate" boundaryMethod="/46/@boundaryMethods.0" type="UPDATE"/>
+    <domainObject href="package-base.xmi#//@domainObjects.9"/>
+  </net.sourceforge.jbizmo.model.client:Form>
+  <net.sourceforge.jbizmo.model.client:FormPanel name="panBusinessUnit" label="Basic data" form="/42">
+    <fields name="txtShortText" label="Short text" mandatory="false" width="140" dTOAttribute="/45/@attributes.1"/>
+    <fields name="chkActive" colIndex="2" label="Active" fieldType="CHECKBOX" dTOAttribute="/45/@attributes.3"/>
+    <fields name="txtComment" rowIndex="2" label="Comment" spanCols="true" mandatory="false" fieldType="MULTI_LINE_TEXT" dTOAttribute="/45/@attributes.2"/>
+  </net.sourceforge.jbizmo.model.client:FormPanel>
+  <net.sourceforge.jbizmo.model.client:FormPanel name="panAdministration" colIndex="2" label="Administration data" form="/42">
+    <fields name="txtCode" label="Code" readonly="true" width="120" dTOAttribute="/45/@attributes.0"/>
+    <fields name="txtCreationDate" rowIndex="2" label="Creation date" readonly="true" fieldType="DATE_TIME" width="120" dTOAttribute="/45/@attributes.4"/>
+    <fields name="txtLastUpdate" rowIndex="3" label="Last update" readonly="true" mandatory="false" fieldType="DATE_TIME" width="120" dTOAttribute="/45/@attributes.5"/>
+    <fields name="txtVersion" rowIndex="4" label="Version" readonly="true" width="120" dTOAttribute="/45/@attributes.6"/>
+  </net.sourceforge.jbizmo.model.client:FormPanel>
+  <net.sourceforge.jbizmo.model.dto:DTOBean name="BusinessUnitUpdateDTO" comment="Data transfer object for business unit objects" namespace="/8" standardConversion="true">
+    <domainObject href="package-base.xmi#//@domainObjects.9"/>
+    <attributes name="code">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.0"/>
+    </attributes>
+    <attributes name="shortText">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.1"/>
+    </attributes>
+    <attributes name="comment">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.2"/>
+    </attributes>
+    <attributes name="active">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.3"/>
+    </attributes>
+    <attributes name="creationDate">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.4"/>
+    </attributes>
+    <attributes name="lastUpdate">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.5"/>
+    </attributes>
+    <attributes name="version">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.6"/>
+    </attributes>
+  </net.sourceforge.jbizmo.model.dto:DTOBean>
+  <net.sourceforge.jbizmo.model.boundary:BoundaryBean name="BusinessUnitBoundaryServiceBean" comment="Boundary service for business unit objects" namespace="/7" interfaceName="BusinessUnitBoundaryService" repository="/47">
+    <domainObject href="package-base.xmi#//@domainObjects.9"/>
+    <boundaryMethods name="updateBusinessUnit" comment="Update existing business unit object" returnType="/0/@allSupportedTypes.0" methodType="UPDATE" serviceMethod="/47/@repositoryMethods.4">
+      <methodParameters name="object" type="/45"/>
+    </boundaryMethods>
+    <boundaryMethods name="getBusinessUnitForUpdate" comment="Find business unit by its ID" returnType="/45" methodType="FIND_BY_ID" serviceMethod="/47/@repositoryMethods.0">
+      <methodParameters name="code" type="/0/@allSupportedTypes.12"/>
+    </boundaryMethods>
+    <boundaryMethods name="searchAllBusinessUnits" comment="Search for business unit objects" returnType="/51" returnTypeModifier="List" queryStatement="from BusinessUnit a" customStatement="" methodType="SEARCH" serviceMethod="/47/@repositoryMethods.11"/>
+    <boundaryMethods name="deleteBusinessUnit" comment="Delete existing business unit" returnType="/0/@allSupportedTypes.0" serviceMethod="/47/@repositoryMethods.7">
+      <methodParameters name="code" type="/0/@allSupportedTypes.12"/>
+    </boundaryMethods>
+    <boundaryMethods name="copy" comment="Create copy of selected business unit" returnType="/0/@allSupportedTypes.12" methodType="COPY" serviceMethod="/47/@repositoryMethods.6">
+      <methodParameters name="sourceObjectId" type="/0/@allSupportedTypes.12"/>
+    </boundaryMethods>
+    <boundaryMethods name="createBusinessUnit" comment="Create new business unit" returnType="/54" methodType="CREATE" serviceMethod="/47/@repositoryMethods.5">
+      <methodParameters name="object" type="/54"/>
+    </boundaryMethods>
+  </net.sourceforge.jbizmo.model.boundary:BoundaryBean>
+  <net.sourceforge.jbizmo.model.repository:Repository name="BusinessUnitRepository" comment="Create, read, update and delete services for business unit objects." namespace="/10">
+    <domainObject href="package-base.xmi#//@domainObjects.9"/>
+    <repositoryMethods name="findById" javaType="/47" transactionType="REQUIRED" methodType="FIND_BY_ID">
+      <returnType href="package-base.xmi#//@domainObjects.9"/>
+      <methodParameters name="code" type="/0/@allSupportedTypes.12"/>
+    </repositoryMethods>
+    <repositoryMethods name="findById" javaType="/47" transactionType="REQUIRED" methodType="FIND_EXISTING">
+      <returnType href="package-base.xmi#//@domainObjects.9"/>
+      <methodParameters name="code" type="/0/@allSupportedTypes.12"/>
+      <methodParameters name="mustExist" type="/0/@allSupportedTypes.4"/>
+    </repositoryMethods>
+    <repositoryMethods name="findById" javaType="/47" transactionType="REQUIRED" methodType="FIND_BY_OBJECT">
+      <returnType href="package-base.xmi#//@domainObjects.9"/>
+      <methodParameters name="businessUnit">
+        <type href="package-base.xmi#//@domainObjects.9"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="deleteAll" javaType="/47" returnType="/0/@allSupportedTypes.0" transactionType="REQUIRED" methodType="DELETE_ALL"/>
+    <repositoryMethods name="merge" javaType="/47" transactionType="REQUIRED" methodType="MERGE">
+      <returnType href="package-base.xmi#//@domainObjects.9"/>
+      <methodParameters name="businessUnit">
+        <type href="package-base.xmi#//@domainObjects.9"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="persist" javaType="/47" transactionType="REQUIRED" methodType="PERSIST">
+      <returnType href="package-base.xmi#//@domainObjects.9"/>
+      <methodParameters name="businessUnit">
+        <type href="package-base.xmi#//@domainObjects.9"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="copy" javaType="/47" transactionType="REQUIRED" methodType="COPY">
+      <returnType href="package-base.xmi#//@domainObjects.9"/>
+      <methodParameters name="sourceObject">
+        <type href="package-base.xmi#//@domainObjects.9"/>
+      </methodParameters>
+      <methodParameters name="targetObject">
+        <type href="package-base.xmi#//@domainObjects.9"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="delete" javaType="/47" returnType="/0/@allSupportedTypes.0" transactionType="REQUIRED" methodType="DELETE">
+      <methodParameters name="code" type="/0/@allSupportedTypes.12"/>
+    </repositoryMethods>
+    <repositoryMethods name="findAll" javaType="/47" returnTypeModifier="List" transactionType="REQUIRED">
+      <returnType href="package-base.xmi#//@domainObjects.9"/>
+    </repositoryMethods>
+    <repositoryMethods name="existsById" javaType="/47" returnType="/0/@allSupportedTypes.4" transactionType="REQUIRED" methodType="EXISTS_BY_ID">
+      <methodParameters name="code" type="/0/@allSupportedTypes.12"/>
+    </repositoryMethods>
+    <repositoryMethods name="count" javaType="/47" returnType="/0/@allSupportedTypes.7" transactionType="REQUIRED" methodType="COUNT_ALL"/>
+    <repositoryMethods name="search" javaType="/47" returnTypeModifier="List" transactionType="REQUIRED" methodType="SEARCH">
+      <returnType href="package-base.xmi#//@domainObjects.9"/>
+    </repositoryMethods>
+    <repositoryMethods name="count" javaType="/47" returnType="/0/@allSupportedTypes.7" transactionType="REQUIRED" methodType="COUNT"/>
+  </net.sourceforge.jbizmo.model.repository:Repository>
+  <net.sourceforge.jbizmo.model.client:Form name="BusinessUnitView" formType="SIMPLE_VIEW" formGroup="/6" title="Business units" formPanels="/49" dTO="/51" roles="/0/@roles.0" boundaryMethod="/46/@boundaryMethods.2">
+    <actions name="actionDelete" description="Delete selected business unit" boundaryMethod="/46/@boundaryMethods.3" roles="/0/@roles.0" type="DELETE"/>
+    <actions name="actionUpdate" description="Edit business unit" targetForm="/42" roles="/0/@roles.0" type="UPDATE"/>
+    <actions name="actionCopy" description="Create copy of selected business unit" boundaryMethod="/46/@boundaryMethods.4" roles="/0/@roles.0" type="COPY"/>
+    <actions name="actionCreate" description="Create new business unit" targetForm="/52" roles="/0/@roles.0"/>
+    <domainObject href="package-base.xmi#//@domainObjects.9"/>
+  </net.sourceforge.jbizmo.model.client:Form>
+  <net.sourceforge.jbizmo.model.client:FormPanel name="BusinessUnitPanel" form="/48" formTable="/50" dTO="/51"/>
+  <net.sourceforge.jbizmo.model.client:FormTable name="BusinessUnitTable" formPanel="/49">
+    <fields identifier="true" title="Code" dTOAttribute="/51/@attributes.0"/>
+    <fields colIndex="2" width="150" title="Short text" dTOAttribute="/51/@attributes.1"/>
+    <fields colIndex="3" width="250" title="Comment" dTOAttribute="/51/@attributes.2"/>
+    <fields colIndex="4" width="70" title="Active" fieldType="BOOLEAN" dTOAttribute="/51/@attributes.3"/>
+    <fields colIndex="5" width="120" title="Creation date" fieldType="LOCAL_DATE_TIME" dTOAttribute="/51/@attributes.4"/>
+    <fields colIndex="6" width="120" title="Last update" fieldType="LOCAL_DATE_TIME" dTOAttribute="/51/@attributes.5"/>
+  </net.sourceforge.jbizmo.model.client:FormTable>
+  <net.sourceforge.jbizmo.model.dto:DTOBean name="BusinessUnitSearchDTO" comment="DTO for business unit objects" namespace="/8">
+    <domainObject href="package-base.xmi#//@domainObjects.9"/>
+    <attributes name="code" selectToken="a.code">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.0"/>
+    </attributes>
+    <attributes name="shortText" selectToken="a.shortText">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.1"/>
+    </attributes>
+    <attributes name="comment" selectToken="a.comment">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.2"/>
+    </attributes>
+    <attributes name="active" selectToken="a.active">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.3"/>
+    </attributes>
+    <attributes name="creationDate" selectToken="a.creationDate">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.4"/>
+    </attributes>
+    <attributes name="lastUpdate" selectToken="a.lastUpdate">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.5"/>
+    </attributes>
+  </net.sourceforge.jbizmo.model.dto:DTOBean>
+  <net.sourceforge.jbizmo.model.client:Form name="CreateNewBusinessUnitDialog" formType="CREATE" formGroup="/6" title="Create new business unit" formPanels="/53" dTO="/54" roles="/0/@roles.0">
+    <actions name="actionCreate" boundaryMethod="/46/@boundaryMethods.5"/>
+    <domainObject href="package-base.xmi#//@domainObjects.9"/>
+  </net.sourceforge.jbizmo.model.client:Form>
+  <net.sourceforge.jbizmo.model.client:FormPanel name="panBusinessUnit" label="Basic data" form="/52">
+    <fields name="txtCode" label="Code" width="140" dTOAttribute="/54/@attributes.0"/>
+    <fields name="chkActive" colIndex="2" label="Active" fieldType="CHECKBOX" defaultValue="USE_DEFAULT" dTOAttribute="/54/@attributes.3"/>
+    <fields name="txtShortText" rowIndex="2" label="Short text" mandatory="false" width="140" dTOAttribute="/54/@attributes.1"/>
+    <fields name="txtComment" rowIndex="3" label="Comment" spanCols="true" mandatory="false" fieldType="MULTI_LINE_TEXT" dTOAttribute="/54/@attributes.2"/>
+    <fields name="txtCreationDate" rowIndex="4" visible="false" label="Creation date" readonly="true" fieldType="DATE_TIME" width="120" dTOAttribute="/54/@attributes.4"/>
+    <fields name="txtVersion" rowIndex="5" visible="false" label="Version" readonly="true" width="120" dTOAttribute="/54/@attributes.5"/>
+  </net.sourceforge.jbizmo.model.client:FormPanel>
+  <net.sourceforge.jbizmo.model.dto:DTOBean name="BusinessUnitCreateDTO" comment="Data transfer object for business unit objects" namespace="/8" standardConversion="true">
+    <domainObject href="package-base.xmi#//@domainObjects.9"/>
+    <attributes name="code">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.0"/>
+    </attributes>
+    <attributes name="shortText">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.1"/>
+    </attributes>
+    <attributes name="comment">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.2"/>
+    </attributes>
+    <attributes name="active">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.3"/>
+    </attributes>
+    <attributes name="creationDate">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.4"/>
+    </attributes>
+    <attributes name="version">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.6"/>
+    </attributes>
+  </net.sourceforge.jbizmo.model.dto:DTOBean>
 </xmi:XMI>

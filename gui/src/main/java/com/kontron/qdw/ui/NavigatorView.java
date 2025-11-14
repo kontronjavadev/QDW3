@@ -77,6 +77,11 @@ public class NavigatorView implements Serializable {
             // Form group: Master data
             final var itemGroup0002 = new DefaultTreeNode<>(FOLDER_TYPE, new TreeNavigatorItem(bundle.getString(FG_TOP_MASTER_DATA)), root);
             itemGroup0002.setExpanded(true);
+
+            if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR))
+                new DefaultTreeNode<>(VIEW_TYPE,
+                        new TreeNavigatorItem(bundle.getString(FORM_BUSINESSUNITVIEW_TITLE), req.getContextPath() + "/view/BusinessUnitView.jsf"),
+                        itemGroup0002);
         }
     }
 
