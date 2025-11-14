@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<net.sourceforge.net.model.domain:DomainNamespace xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:net.sourceforge.net.model.domain="http:///net/sourceforge/jbizmo/model/domain.ecore" name="base" javaTypes="//@domainObjects.0 //@domainObjects.1 //@domainObjects.2 //@domainObjects.3">
+<net.sourceforge.net.model.domain:DomainNamespace xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:net.sourceforge.net.model.domain="http:///net/sourceforge/jbizmo/model/domain.ecore" name="base" javaTypes="//@domainObjects.0 //@domainObjects.1 //@domainObjects.2 //@domainObjects.3 //@domainObjects.4 //@domainObjects.5 //@domainObjects.6 //@domainObjects.7 //@domainObjects.8 //@domainObjects.9">
   <parent href="project.xmi#/0/@domainNamespace"/>
   <project href="project.xmi#/0"/>
-  <domainObjects name="AbstractEntityWithId" comment="Domain object for abstract entity with id objects" mappable="true" namespace="/" label="abstract entity with id" namePlural="AbstractEntityWithIds" labelPlural="abstract entity with ids" discriminatorValue="" mappedSuperClass="true" targetInheritances="//@domainObjects.1/@inheritance //@domainObjects.2/@inheritance">
+  <domainObjects name="AbstractEntityWithId" comment="Domain object for abstract entity with id objects" mappable="true" namespace="/" label="abstract entity with id" namePlural="AbstractEntityWithIds" labelPlural="abstract entity with ids" discriminatorValue="" mappedSuperClass="true" targetInheritances="//@domainObjects.1/@inheritance //@domainObjects.2/@inheritance //@domainObjects.5/@inheritance //@domainObjects.6/@inheritance //@domainObjects.7/@inheritance //@domainObjects.8/@inheritance //@domainObjects.9/@inheritance">
     <iDGenerator name="ABSTRACTENTITYWITHID_SEQ" generatorType="IDENTITY"/>
     <attributes name="id" pk="true" label="id" labelPlural="ids" fetchTypeEager="true" column="//@domainObjects.0/@databaseTable/@columns.0">
       <domainAttributeValidator maxValue="" minValue="" regularExpression=""/>
@@ -166,6 +166,196 @@
       </columns>
       <primaryKey name="pk_saved_query_tab" column="//@domainObjects.3/@databaseTable/@columns.0"/>
       <foreignKeys name="fk_saved_query_user" column="//@domainObjects.3/@databaseTable/@columns.4" referencedColumn="//@domainObjects.1/@databaseTable/@columns.4"/>
+    </databaseTable>
+  </domainObjects>
+  <domainObjects name="AbstractFuntionalEntity" comment="Domain object for abstract funtional entity objects" mappable="true" namespace="/" label="abstract funtional entity" namePlural="AbstractFuntionalEntities" labelPlural="abstract funtional entities" discriminatorValue="" mappedSuperClass="true">
+    <iDGenerator name="ABSTRACTFUNTIONALENTITY_SEQ" generatorType="IDENTITY"/>
+    <attributes name="code" pk="true" label="code" labelPlural="codes" fetchTypeEager="true" column="//@domainObjects.4/@databaseTable/@columns.0" removeWhitespaceCharacters="true">
+      <domainAttributeValidator maxLength="50" minLength="1" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <attributes name="shortText" label="short text" labelPlural="short texts" fetchTypeEager="true" column="//@domainObjects.4/@databaseTable/@columns.1" removeWhitespaceCharacters="true">
+      <domainAttributeValidator maxLength="100" minLength="0" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <attributes name="comment" label="comment" labelPlural="comments" fetchTypeEager="true" column="//@domainObjects.4/@databaseTable/@columns.2" removeWhitespaceCharacters="true">
+      <domainAttributeValidator maxLength="4000" minLength="0" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <attributes name="creationDate" label="creation date" labelPlural="creation dates" fetchTypeEager="true" updatable="false" setDateOnPersist="true" column="//@domainObjects.4/@databaseTable/@columns.3">
+      <domainAttributeValidator maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.17"/>
+    </attributes>
+    <attributes name="lastUpdate" label="last update" labelPlural="last updates" fetchTypeEager="true" setDateOnUpdate="true" column="//@domainObjects.4/@databaseTable/@columns.4">
+      <domainAttributeValidator nullable="true" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.17"/>
+    </attributes>
+    <attributes name="version" label="version" labelPlural="versions" fetchTypeEager="true" trackVersion="true" column="//@domainObjects.4/@databaseTable/@columns.5">
+      <domainAttributeValidator maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.1"/>
+    </attributes>
+    <databaseTable name="abstract_funtional_entity_tab" schemaName="" catalogName="">
+      <database href="project.xmi#/0/@database"/>
+      <columns name="code" length="50">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="short_text" length="100">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="comment" length="4000">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="creation_date">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.14"/>
+      </columns>
+      <columns name="last_update" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.14"/>
+      </columns>
+      <columns name="version">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.0"/>
+      </columns>
+      <primaryKey name="pk_abstract_funtional_entity_tab" column="//@domainObjects.4/@databaseTable/@columns.0"/>
+    </databaseTable>
+  </domainObjects>
+  <domainObjects name="Location" comment="Domain object for location objects" mappable="true" namespace="/" label="location" namePlural="Locations" labelPlural="locations" discriminatorValue="" parent="//@domainObjects.0">
+    <iDGenerator name="LOCATION_SEQ" generatorType="IDENTITY"/>
+    <inheritance target="//@domainObjects.0"/>
+    <databaseTable name="location_tab" schemaName="" catalogName="">
+      <database href="project.xmi#/0/@database"/>
+      <columns name="id">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.1"/>
+      </columns>
+      <columns name="version">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.0"/>
+      </columns>
+      <columns name="creation_date">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.14"/>
+      </columns>
+      <columns name="last_update" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.14"/>
+      </columns>
+      <primaryKey name="pk_location" column="//@domainObjects.5/@databaseTable/@columns.0"/>
+    </databaseTable>
+  </domainObjects>
+  <domainObjects name="Plant" comment="Domain object for plant objects" mappable="true" namespace="/" label="plant" namePlural="Plants" labelPlural="plants" discriminatorValue="" parent="//@domainObjects.0">
+    <iDGenerator name="PLANT_SEQ" generatorType="IDENTITY"/>
+    <inheritance target="//@domainObjects.0"/>
+    <databaseTable name="plant_tab" schemaName="" catalogName="">
+      <database href="project.xmi#/0/@database"/>
+      <columns name="id">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.1"/>
+      </columns>
+      <columns name="version">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.0"/>
+      </columns>
+      <columns name="creation_date">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.14"/>
+      </columns>
+      <columns name="last_update" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.14"/>
+      </columns>
+      <primaryKey name="pk_plant" column="//@domainObjects.6/@databaseTable/@columns.0"/>
+    </databaseTable>
+  </domainObjects>
+  <domainObjects name="MovementType" comment="Domain object for movement type objects" mappable="true" namespace="/" label="movement type" namePlural="MovementTypes" labelPlural="movement types" discriminatorValue="" parent="//@domainObjects.0">
+    <iDGenerator name="MOVEMENTTYPE_SEQ" generatorType="IDENTITY"/>
+    <inheritance target="//@domainObjects.0"/>
+    <databaseTable name="movement_type_tab" schemaName="" catalogName="">
+      <database href="project.xmi#/0/@database"/>
+      <columns name="id">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.1"/>
+      </columns>
+      <columns name="version">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.0"/>
+      </columns>
+      <columns name="creation_date">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.14"/>
+      </columns>
+      <columns name="last_update" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.14"/>
+      </columns>
+      <primaryKey name="pk_movement_type" column="//@domainObjects.7/@databaseTable/@columns.0"/>
+    </databaseTable>
+  </domainObjects>
+  <domainObjects name="Supplier" comment="Domain object for supplier objects" mappable="true" namespace="/" label="supplier" namePlural="Suppliers" labelPlural="suppliers" discriminatorValue="" parent="//@domainObjects.0">
+    <iDGenerator name="SUPPLIER_SEQ" generatorType="IDENTITY"/>
+    <inheritance target="//@domainObjects.0"/>
+    <attributes name="name" label="name" labelPlural="names" fetchTypeEager="true" displayAttribute="true" column="//@domainObjects.8/@databaseTable/@columns.4" removeWhitespaceCharacters="true">
+      <domainAttributeValidator maxLength="100" minLength="0" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <attributes name="street" label="street" labelPlural="streets" fetchTypeEager="true" column="//@domainObjects.8/@databaseTable/@columns.5" removeWhitespaceCharacters="true">
+      <domainAttributeValidator maxLength="100" minLength="0" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <attributes name="zipCode" label="zip code" labelPlural="zip codes" fetchTypeEager="true" column="//@domainObjects.8/@databaseTable/@columns.6" removeWhitespaceCharacters="true">
+      <domainAttributeValidator maxLength="20" minLength="0" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <attributes name="city" label="city" labelPlural="cities" fetchTypeEager="true" column="//@domainObjects.8/@databaseTable/@columns.7" removeWhitespaceCharacters="true">
+      <domainAttributeValidator maxLength="100" minLength="0" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <associations xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" name="country" owner="true" fetchTypeEager="true" target="//@domainObjects.9" internalComment="" userComment="" insertable="true" updatable="true" column="//@domainObjects.8/@databaseTable/@columns.8"/>
+    <databaseTable name="supplier_tab" schemaName="" catalogName="">
+      <database href="project.xmi#/0/@database"/>
+      <columns name="id">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.1"/>
+      </columns>
+      <columns name="version">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.0"/>
+      </columns>
+      <columns name="creation_date">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.14"/>
+      </columns>
+      <columns name="last_update" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.14"/>
+      </columns>
+      <columns name="name" length="100">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="street" length="100">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="zip_code" length="20">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="city" length="100">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="country">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.1"/>
+      </columns>
+      <primaryKey name="pk_supplier" column="//@domainObjects.8/@databaseTable/@columns.0"/>
+      <foreignKeys name="fk_supplier_country" column="//@domainObjects.8/@databaseTable/@columns.8" referencedColumn="//@domainObjects.9/@databaseTable/@columns.0"/>
+      <indexes name="uk_supplier_name" unique="true" columns="//@domainObjects.8/@databaseTable/@columns.4"/>
+    </databaseTable>
+  </domainObjects>
+  <domainObjects name="Country" comment="Domain object for country objects" mappable="true" namespace="/" label="country" namePlural="Countries" labelPlural="countries" discriminatorValue="" parent="//@domainObjects.0">
+    <iDGenerator name="COUNTRY_SEQ" generatorType="IDENTITY"/>
+    <inheritance target="//@domainObjects.0"/>
+    <attributes name="name" label="name" labelPlural="names" fetchTypeEager="true" column="//@domainObjects.9/@databaseTable/@columns.4" removeWhitespaceCharacters="true">
+      <domainAttributeValidator maxLength="100" minLength="0" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <databaseTable name="country_tab" schemaName="" catalogName="">
+      <database href="project.xmi#/0/@database"/>
+      <columns name="id">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.1"/>
+      </columns>
+      <columns name="version">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.0"/>
+      </columns>
+      <columns name="creation_date">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.14"/>
+      </columns>
+      <columns name="last_update" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.14"/>
+      </columns>
+      <columns name="name" length="100">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <primaryKey name="pk_country" column="//@domainObjects.9/@databaseTable/@columns.0"/>
     </databaseTable>
   </domainObjects>
 </net.sourceforge.net.model.domain:DomainNamespace>

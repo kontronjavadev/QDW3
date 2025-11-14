@@ -23,6 +23,12 @@
       <databaseTables href="package-base.xmi#//@domainObjects.2/@databaseTable"/>
       <databaseTables href="package-base.xmi#//@domainObjects.1/@associations.0/@table"/>
       <databaseTables href="package-base.xmi#//@domainObjects.3/@databaseTable"/>
+      <databaseTables href="package-base.xmi#//@domainObjects.4/@databaseTable"/>
+      <databaseTables href="package-base.xmi#//@domainObjects.5/@databaseTable"/>
+      <databaseTables href="package-base.xmi#//@domainObjects.6/@databaseTable"/>
+      <databaseTables href="package-base.xmi#//@domainObjects.7/@databaseTable"/>
+      <databaseTables href="package-base.xmi#//@domainObjects.8/@databaseTable"/>
+      <databaseTables href="package-base.xmi#//@domainObjects.9/@databaseTable"/>
       <allSupportedColumnTypes javaTypes="/0/@allSupportedTypes.1 /0/@allSupportedTypes.6" name="INTEGER" omitSizeInformation="true"/>
       <allSupportedColumnTypes javaTypes="/0/@allSupportedTypes.2 /0/@allSupportedTypes.7" name="BIGINT" omitSizeInformation="true"/>
       <allSupportedColumnTypes javaTypes="/0/@allSupportedTypes.3 /0/@allSupportedTypes.8" name="DOUBLE" omitSizeInformation="true"/>
