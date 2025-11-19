@@ -6,6 +6,10 @@ import net.sourceforge.jbizmo.commons.annotation.Generated;
 
 @Entity
 @Table(name = "country_tab")
+@NamedQuery(name = Country.NQ_UK_FIND_BY_NAME, query = "select a from Country a where a.name = :name")
+@NamedQuery(name = Country.NQ_UK_SEARCH_BY_NAME, query = "select a from Country a where a.name like :name")
+@NamedQuery(name = Country.NQ_UK_EXISTS_BY_NAME, query = "select count(a) from Country a where a.name = :name")
+@NamedQuery(name = Country.NQ_UK_EXISTS_BY_NAME_AND_CODE, query = "select count(a) from Country a where a.name = :name and a.code <> :code")
 @NamedQuery(name = Country.NQ_DELETE_ALL, query = "delete from Country a")
 @NamedQuery(name = Country.NQ_DELETE, query = "delete from Country a where a.code = :code")
 @NamedQuery(name = Country.NQ_GET_ALL, query = "select a from Country a")
@@ -13,6 +17,12 @@ import net.sourceforge.jbizmo.commons.annotation.Generated;
 @NamedQuery(name = Country.NQ_CHECK, query = "select count(a) from Country a where a.code = :code")
 @NamedQuery(name = Country.NQ_COUNT, query = "select count(a) from Country a")
 public class Country extends AbstractFunctionalActiveEntity {
+    @Generated
+    public static final String NQ_UK_EXISTS_BY_NAME = "Country.checkByName";
+    @Generated
+    public static final String NQ_UK_EXISTS_BY_NAME_AND_CODE = "Country.checkByNameAndCode";
+    @Generated
+    public static final String NQ_UK_FIND_BY_NAME = "Country.getByName";
     @Generated
     public static final String NQ_DELETE_ALL = "Country.deleteAll";
     @Generated
@@ -22,11 +32,13 @@ public class Country extends AbstractFunctionalActiveEntity {
     @Generated
     public static final String NQ_GET_ALL = "Country.getAll";
     @Generated
+    public static final String NQ_UK_SEARCH_BY_NAME = "Country.findByName";
+    @Generated
     public static final String NQ_CHECK = "Country.check";
     @Generated
     public static final String NQ_FIND = "Country.find";
     @Basic(optional = false)
-    @Column(name = "name", nullable = false, updatable = true, insertable = true, length = 100)
+    @Column(name = "name", nullable = false, updatable = true, insertable = true, length = 100, unique = true)
     @NotNull(message = "Field \"name\" must not be null!")
     @Size(max = 100, message = "Length of field \"name\" is illegal!")
     @Generated
@@ -46,6 +58,18 @@ public class Country extends AbstractFunctionalActiveEntity {
     @Generated
     public Country(String code) {
         super(code);
+    }
+
+    /**
+     * Constructor using primary key field and display attribute
+     * @param code
+     * @param name
+     */
+    @Generated
+    public Country(String code, String name) {
+        super(code);
+
+        this.name = name;
     }
 
     /**

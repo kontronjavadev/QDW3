@@ -2,7 +2,7 @@
 <datasources xmlns="http://www.jboss.org/ironjacamar/schema">
 
 	<datasource jndi-name="java:jboss/datasources/QdwDS" enabled="true" use-java-context="true" pool-name="QdwDSPool">
-		<connection-url>jdbc:mysql://localhost:3306/qdw</connection-url>
+		<connection-url>jdbc:mysql://sdemucap11.kontron.local:3306/qdw</connection-url>
 		<driver>mysql.jar</driver>
 		<pool>
 			<max-pool-size>30</max-pool-size>

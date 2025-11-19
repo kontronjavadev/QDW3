@@ -426,7 +426,7 @@
   <domainObjects name="Country" comment="Domain object for country objects" mappable="true" namespace="/" label="country" namePlural="Countries" labelPlural="countries" discriminatorValue="" parent="//@domainObjects.5">
     <iDGenerator name="COUNTRY_SEQ" generatorType="IDENTITY"/>
     <inheritance target="//@domainObjects.5"/>
-    <attributes name="name" label="name" labelPlural="names" fetchTypeEager="true" column="//@domainObjects.11/@databaseTable/@columns.7" removeWhitespaceCharacters="true">
+    <attributes name="name" label="name" labelPlural="names" fetchTypeEager="true" displayAttribute="true" column="//@domainObjects.11/@databaseTable/@columns.7" removeWhitespaceCharacters="true">
       <domainAttributeValidator maxLength="100" minLength="0" maxValue="" minValue="" regularExpression=""/>
       <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
     </attributes>
@@ -457,6 +457,7 @@
         <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
       </columns>
       <primaryKey name="pk_country" column="//@domainObjects.11/@databaseTable/@columns.0"/>
+      <indexes name="uk_country_name" unique="true" columns="//@domainObjects.11/@databaseTable/@columns.7"/>
     </databaseTable>
   </domainObjects>
   <domainObjects name="Customer" comment="Domain object for customer objects" mappable="true" namespace="/" label="customer" namePlural="Customers" labelPlural="customers" discriminatorValue="" parent="//@domainObjects.4">
@@ -483,7 +484,7 @@
       <javaType href="project.xmi#/0/@allSupportedTypes.4"/>
     </attributes>
     <associations xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" name="country" owner="true" fetchTypeEager="true" target="//@domainObjects.11" internalComment="" userComment="" insertable="true" updatable="true" column="//@domainObjects.12/@databaseTable/@columns.11"/>
-    <associations xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" name="verticalSector" owner="true" fetchTypeEager="true" target="//@domainObjects.10" internalComment="" userComment="" insertable="true" updatable="true" column="//@domainObjects.12/@databaseTable/@columns.12"/>
+    <associations xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" name="verticalSector" owner="true" fetchTypeEager="true" target="//@domainObjects.10" internalComment="" userComment="" insertable="true" updatable="true" optional="true" column="//@domainObjects.12/@databaseTable/@columns.12"/>
     <databaseTable name="customer_tab" schemaName="" catalogName="">
       <database href="project.xmi#/0/@database"/>
       <columns name="code" length="50">
@@ -522,7 +523,7 @@
       <columns name="country" length="50">
         <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
       </columns>
-      <columns name="vertical_sector" length="50">
+      <columns name="vertical_sector" length="50" nullable="true">
         <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
       </columns>
       <primaryKey name="pk_customer" column="//@domainObjects.12/@databaseTable/@columns.0"/>
