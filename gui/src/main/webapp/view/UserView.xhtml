@@ -26,12 +26,12 @@
 		</p:ajaxStatus>
 	</h:panelGrid>
 
-	<p:growl id="growl" showDetail="true"/>
+	<p:growl id="growl" showDetail="true" skipDetailIfEqualsSummary="true"/>
 
-	<p:dialog height="510" width="1000" header="#{i18n.search_input_dlg}" widgetVar="dlgSearchInput" modal="true">
+	<p:dialog height="auto" width="1000" header="#{i18n.search_input_dlg}" widgetVar="dlgSearchInput" id="dlgSearchInput" modal="true" closeOnEscape="true">
 		<p:tabView id="tabViewSearchInput" dynamic="false">
 			<p:tab title="#{i18n.search_input_filter}">
-			<p:scrollPanel style="width:100%; height:400px;" mode="native">
+			<p:scrollPanel style="width:100%; #{sizeServiceBean.searchFilterHeight()};" mode="native">
 			<h:panelGrid columns="5" cellpadding="3">
 				<h:outputText styleClass="label-field-mandatory" value="#{i18n.search_input_column}"/>
 				<h:outputText styleClass="label-field-mandatory" value="#{i18n.search_input_operator}"/>
@@ -109,6 +109,7 @@
 			</h:panelGrid>
 			</p:scrollPanel>
 			</p:tab>
+
 			<p:tab title="#{i18n.search_input_adv}">
 			<h:panelGrid columns="2">
 				<h:outputLabel value="#{i18n.search_input_case}:" styleClass="label-field-mandatory"/>
@@ -122,30 +123,32 @@
 					<f:validateLongRange minimum="1" maximum="1000000"/>
 				</p:inputText>
 				<h:outputLabel value="#{i18n.search_input_visible_fields_label}:" styleClass="label-field-mandatory"/>
-				<p:pickList value="#{userView.visibleFields}" var="savedQueryListItem" itemLabel="#{savedQueryListItem.colLabel}" itemValue="#{savedQueryListItem}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchFieldDTOConverter" addLabel="#{i18n.pick_list_add}" addAllLabel="#{i18n.pick_list_add_all}" removeLabel="#{i18n.pick_list_remove}" removeAllLabel="#{i18n.pick_list_remove_all}">
+				<p:pickList styleClass="searchdialog-picklist" value="#{userView.visibleFields}" var="savedQueryListItem" itemLabel="#{savedQueryListItem.colLabel}" itemValue="#{savedQueryListItem}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchFieldDTOConverter" addLabel="#{i18n.pick_list_add}" addAllLabel="#{i18n.pick_list_add_all}" removeLabel="#{i18n.pick_list_remove}" removeAllLabel="#{i18n.pick_list_remove_all}">
 					<f:facet name="sourceCaption">#{i18n.search_input_all_fields}</f:facet>
 					<f:facet name="targetCaption">#{i18n.search_input_visible_fields}</f:facet>
 				</p:pickList>
 			</h:panelGrid>
 			</p:tab>
+
 			<p:tab title="#{i18n.search_input_saved_query_title}">
 				<h:panelGrid columns="1">
 					<h:outputLabel styleClass="label-field-mandatory" value="#{i18n.search_input_lbl_saved_query}"/>
-					<p:selectOneListbox id="savedQueryList" value="#{userView.selectedSavedQuery}" style="height:150px; width:300px">
+					<p:selectOneListbox id="savedQueryList" value="#{userView.selectedSavedQuery}" style="#{sizeServiceBean.searchQueriesHeight()}; width:480px">
 						<f:selectItems value="#{userView.savedQueries}"/>
 					</p:selectOneListbox>
 					<h:panelGrid columns="2">
 						<p:commandButton value="#{i18n.search_input_run_saved_query}" action="#{userView.runSavedQuery}" ajax="false"/>
-						<p:commandButton value="#{i18n.search_input_delete_saved_query}" action="#{userView.deleteSavedQuery}" ajax="false"/>
+						<p:commandButton value="#{i18n.search_input_delete_saved_query}" actionListener="#{userView.deleteSavedQuery}" update="savedQueryList" ajax="true"/>
 					</h:panelGrid>
 				</h:panelGrid>
 			</p:tab>
 		</p:tabView>
-		<br/>
-		<h:panelGrid columns="3">
+
+		<h:panelGrid columns="4">
 			<p:commandButton id="cmdSearch" value="#{i18n.search_input_perform_search}" action="#{userView.fetchUsers}" ajax="false"/>
-			<p:commandButton id="cmdReset" value="#{i18n.command_reset}" action="#{userView.initSearchObject}" onclick="PF('dlgSearchInput').hide()" ajax="false"/>
-			<p:commandButton id="cmdCount" value="#{i18n.search_input_perform_count}" actionListener="#{userView.countRecords}" onclick="PF('dlgSearchInput').hide()" update="growl" ajax="true"/>
+			<p:commandButton id="cmdReset" value="#{i18n.command_reset}" action="#{userView.resetSearchObject}" onclick="PF('dlgSearchInput').hide()" ajax="false"/>
+			<p:commandButton id="cmdReset" value="#{i18n.command_clear}" action="#{userView.clearSearchObject}" update="tabViewSearchInput" ajax="true"/>
+			<p:commandButton id="cmdCount" value="#{i18n.search_input_perform_count}" actionListener="#{userView.countRecords}" update="growl" ajax="true"/>
 		</h:panelGrid>
 	</p:dialog>
 
@@ -154,7 +157,6 @@
 			<p:menuitem value="#{i18n.action_create}" ajax="true" id="panData_mniCreate" icon="pi pi-plus" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR')}" action="#{userView.openCreateNewUserDialog}">
 				<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{userView.currentPageURL}"/>
 			</p:menuitem>
-			<p:menuitem value="#{i18n.action_search_input}" ajax="true" icon="pi pi-search" id="panData_mniSearch" onclick="PF('dlgSearchInput').show()"/>
 			<p:menuitem value="#{i18n.search_input_dlg_save_query}" icon="pi pi-save" onclick="PF('dlgSaveQuery').show()"/>
 		</p:submenu>
 		<p:submenu icon="pi pi-refresh" label="#{i18n.mnu_view}">
@@ -162,25 +164,27 @@
 		</p:submenu>
 		<p:submenu icon="pi pi-print" label="#{i18n.mnu_export}">
 			<p:menuitem value="#{i18n.action_export_xls}" ajax="false" icon="pi pi-file-excel">
-				<p:dataExporter type="xls" target="panData" fileName="UserList"/>
+				<p:dataExporter type="xlsxstream" target="panData" fileName="UserList"/>
 			</p:menuitem>
 			<p:menuitem value="#{i18n.action_export_pdf}" ajax="false" icon="pi pi-file-pdf">
 				<p:dataExporter type="pdf" target="panData" fileName="UserList"/>
 			</p:menuitem>
 		</p:submenu>
+		<p:menuitem value="#{i18n.action_search_input}" ajax="true" icon="pi pi-search" id="panData_mniSearch" onclick="PF('dlgSearchInput').show()"/>
 	</p:menubar>
 
 	<br/>
 
-	<p:dataTable id="panData" var="userViewItem" rows="50"
-		selectionMode="single"
+	<p:dataTable id="panData" var="userViewItem" rows="#{userView.numberRows}"
+		selectionTextDisabled="false" allowUnsorting="true" resizeMode="expand" multiViewState="true" 
+		selectionMode="single" 
 		selection="#{userView.selectedObject}"
 		loadingMessage="#{i18n.action_fetch_data}"
 		value="#{userView.usersList}" scrollable="false"
 		paginatorPosition="top" paginatorAlwaysVisible="false" paginator="true" resizableColumns="true"
 		rowKey="#{userViewItem.id}"
 		paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-		rowsPerPageTemplate="10,50,100,500,1000">
+		rowsPerPageTemplate="50,150,400,1000">
 		<p:ajax event="rowDblselect" listener="#{userView.onDoubleClick}"/>
 
 		<p:column sortBy="#{userViewItem.name}" width="150" rendered="#{userView.searchObject.searchFields[0].visible}" >
@@ -233,9 +237,15 @@
 	<h:outputText styleClass="label-field-mandatory" value="#{i18n.result_total_number_records} #{userView.usersList.size()}"/>
 	<h:outputText styleClass="label-field-mandatory" rendered="#{userView.searchObject.count}" value="&#160;#{i18n.search_input_count_of}&#160;"/>
 	<h:outputText styleClass="label-field-mandatory" rendered="#{userView.searchObject.count}" value="#{userView.countResult}"/>
-	<p/>
 
-	<p:contextMenu for="panData">
+
+
+<!--Kontextmenü mit Möglichkeit, eine Zelle oder eine Zeile zu kopieren -->
+
+	<h:inputHidden id="cellText" value="#{userView.cellText}" />
+	<h:inputHidden id="rowCsv" value="#{userView.rowCsv}" />
+
+	<p:contextMenu for="panData" beforeShow="updateContextData(event)" >
 		<p:menuitem value="#{i18n.action_delete}" ajax="true" icon="pi pi-trash" id="panData_mniDelete" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR')}" onclick="PF('deleteConfirm').show()"/>
 		<p:menuitem value="#{i18n.action_copy}" ajax="true" icon="pi pi-copy" id="panData_mniCopy" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR')}" onclick="PF('copyConfirm').show()"/>
 		<p:menuitem value="#{i18n.action_create}" ajax="true" icon="pi pi-plus" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR')}" action="#{userView.openCreateNewUserDialog}">
@@ -247,26 +257,28 @@
 		<p:menuitem value="#{i18n.action_refresh}" ajax="false" type="push" icon="pi pi-refresh" id="panData_mniRefresh" actionListener="#{userView.fetchUsers}"/>
 	</p:contextMenu>
 
-	<p:confirmDialog modal="true" message="#{i18n.dialog_delete_question}" header="#{i18n.dialog_delete_title}" severity="alert" widgetVar="deleteConfirm">
+
+	<p:confirmDialog modal="true" closeOnEscape="true" message="#{i18n.dialog_delete_question}" header="#{i18n.dialog_delete_title}" severity="warn" widgetVar="deleteConfirm">
 		<p:commandButton value="#{i18n.command_yes}" oncomplete="PF('deleteConfirm').hide()" actionListener="#{userView.deleteUser}" id="panData_cmdYesDelete" ajax="false"/>
 		<p:commandButton value="#{i18n.command_no}" onclick="PF('deleteConfirm').hide()" type="button"/>
 	</p:confirmDialog>
 
-	<p:confirmDialog modal="true" message="#{i18n.dialog_copy_question}" header="#{i18n.dialog_copy_title}" severity="info" widgetVar="copyConfirm">
+	<p:confirmDialog modal="true" closeOnEscape="true" message="#{i18n.dialog_copy_question}" header="#{i18n.dialog_copy_title}" severity="info" widgetVar="copyConfirm">
 		<p:commandButton value="#{i18n.command_yes}" oncomplete="PF('copyConfirm').hide()" action="#{userView.copy}" id="panData_cmdYesCopy" ajax="false"/>
 		<p:commandButton value="#{i18n.command_no}" onclick="PF('copyConfirm').hide()" type="button"/>
 	</p:confirmDialog>
 
-	<p:dialog header="#{i18n.search_input_dlg_save_query}" widgetVar="dlgSaveQuery" modal="true" height="100">
+	<p:dialog header="#{i18n.search_input_dlg_save_query}" widgetVar="dlgSaveQuery" id="dlgSaveQuery" modal="true" closeOnEscape="true" height="100">
 		<h:panelGrid columns="3">
 			<h:outputLabel value="#{i18n.search_input_lbl_save_query}" styleClass="label-field-mandatory"/>
 			<p:inputText id="txtQueryName" value="#{userView.savedQueryName}">
 			</p:inputText>
-			<p:commandButton value="#{i18n.command_save}" action="#{userView.saveNewQuery}" ajax="false" onclick="PF('dlgSaveQuery').hide()"/>
+			<p:commandButton value="#{i18n.command_save}" id="saveQuery" action="#{userView.saveNewQuery}" ajax="false" onclick="PF('dlgSaveQuery').hide()"/>
+			<p:defaultCommand target="saveQuery" scope="dlgSaveQuery"/>
 		</h:panelGrid>
 	</p:dialog>
 
-	<p:defaultCommand target=":form:cmdSearch"/>
+	<p:defaultCommand target=":form:cmdSearch" scope="dlgSearchInput"/>
 
 </ui:define>
 </ui:composition>

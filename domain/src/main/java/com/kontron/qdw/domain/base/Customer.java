@@ -227,28 +227,23 @@ public class Customer extends AbstractFuntionalEntity {
     @Generated
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) {
+        if (this == obj)
             return true;
-        }
 
-        if (obj == null) {
+        if (obj == null)
             return false;
-        }
 
-        if (getClass() != obj.getClass()) {
+        if (getClass() != obj.getClass())
             return false;
-        }
 
         final var bean = (Customer) obj;
 
         if (getCode() == null) {
-            if (bean.getCode() != null) {
+            if (bean.getCode() != null)
                 return false;
-            }
         }
-        else if (!getCode().equals(bean.getCode())) {
+        else if (!getCode().equals(bean.getCode()))
             return false;
-        }
 
         return true;
     }
@@ -260,9 +255,8 @@ public class Customer extends AbstractFuntionalEntity {
     @Override
     public int hashCode() {
         // Return hash code of current date if primary key field is not yet set!
-        if (getCode() == null) {
+        if (getCode() == null)
             return new java.util.Date().hashCode();
-        }
 
         return getCode().hashCode();
     }

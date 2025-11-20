@@ -91,6 +91,7 @@ public interface TranslationKeys {
     String LOGIN_PASSWORD = "login_password";
     String LOGIN_TITLE = "login_title";
     String LOGIN_USERNAME = "login_username";
+    String MAINTENANCE_TREE = "maintenance_tree";
     String MNU_EXPORT = "mnu_export";
     String MNU_FILE = "mnu_file";
     String MNU_VIEW = "mnu_view";

@@ -3,6 +3,7 @@ package com.kontron.qdw.ui.view;
 import com.kontron.qdw.boundary.base.*;
 import org.slf4j.*;
 import java.lang.invoke.*;
+import com.kontron.qdw.ui.view.util.SuperView;
 import org.primefaces.model.DualListModel;
 import net.sourceforge.jbizmo.commons.webclient.primefaces.search.*;
 import com.kontron.qdw.ui.dialog.*;
@@ -18,13 +19,14 @@ import com.kontron.qdw.ui.*;
 import com.kontron.qdw.service.*;
 import jakarta.faces.model.*;
 import jakarta.inject.*;
+import net.sourceforge.jbizmo.commons.annotation.Customized;
 import net.sourceforge.jbizmo.commons.search.dto.*;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
 import java.io.*;
 
 @Named("userView")
 @ViewScoped
-public class UserView extends AbstractSearchableView implements Serializable {
+public class UserView extends SuperView implements Serializable {
     @Generated
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     @Generated
@@ -76,6 +78,52 @@ public class UserView extends AbstractSearchableView implements Serializable {
         this.userSession = userSession;
         this.userService = userService;
         this.queryManager = queryManager;
+    }
+
+    /**
+     * Initialize view
+     */
+    @Customized
+    public void initView() {
+        logger.debug("Initialize view");
+
+        bundle = ResourceBundle.getBundle(DEFAULT_BUNDLE_NAME, userSession.getLocale());
+
+        // Check if user is allowed to open this page!
+        if (!userSession.checkAuthorization(true, ROLE_ADMINISTRATOR)) {
+            return;
+        }
+
+        formTitle = bundle.getString(FORM_USERVIEW_TITLE);
+
+        if (searchObj == null) {
+            // Check if previous search exists!
+            final SearchDTO lastSearch = queryManager.getLastQuery(userSession.getPrincipal().getId(), getViewName());
+
+            if (lastSearch != null) {
+                searchObj = lastSearch;
+                prepareAfterLoad();
+            }
+            else {
+                initSearchObject();
+            }
+        }
+
+        initProperties();
+        fetchUsers();
+
+        logger.debug("View initialization finished");
+    }
+
+    @Override
+    protected String getViewName() {
+        return VIEW_ID;
+    }
+
+    @Override
+    public void resetSearchObject() {
+        initSearchObject();
+        fetchUsers();
     }
 
     /**
@@ -293,38 +341,6 @@ public class UserView extends AbstractSearchableView implements Serializable {
         visibleFields = new DualListModel<>();
         visibleFields.setSource(new ArrayList<>());
         visibleFields.setTarget(searchObj.getSearchFields());
-    }
-
-    /**
-     * Initialize view
-     */
-    @Generated
-    public void initView() {
-        logger.debug("Initialize view");
-
-        bundle = ResourceBundle.getBundle(DEFAULT_BUNDLE_NAME, userSession.getLocale());
-
-        // Check if user is allowed to open this page!
-        if (!userSession.checkAuthorization(true, ROLE_ADMINISTRATOR))
-            return;
-
-
-        formTitle = bundle.getString(FORM_USERVIEW_TITLE);
-
-        // Check if previous search exists!
-        final SearchDTO lastSearch = queryManager.getLastQuery(userSession.getPrincipal().getId(), VIEW_ID);
-
-        if (lastSearch != null) {
-            searchObj = lastSearch;
-
-            prepareAfterLoad();
-        }
-        else
-            initSearchObject();
-
-        fetchUsers();
-
-        logger.debug("View initialization finished");
     }
 
     /**
