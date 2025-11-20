@@ -1,6 +1,8 @@
 package com.kontron.qdw.ui.dialog;
 
 import com.kontron.qdw.boundary.base.*;
+import com.kontron.qdw.boundary.util.Constants;
+
 import org.slf4j.*;
 import jakarta.faces.context.*;
 import java.lang.invoke.*;
@@ -66,6 +68,64 @@ public class EditUserDialog implements Serializable {
         this.userService = userService;
         this.userSession = userSession;
         this.roleService = roleService;
+    }
+
+    /**
+     * Save model object
+     * @return the navigation target
+     */
+    @Generated
+    public String save() {
+        try {
+            logger.debug("Perform save operation");
+
+            // Neben dem ADMINISTRATOR darf auch der USER_ADMINISTRATOR User verwalten, jedoch darf er einige Dinge nicht:
+            // * er darf einem Anwender keine Rolle ADMINISTRATOR nehmen oder geben
+            // * er darf keine "Testaccounts" erstellen oder ändern; Problem: wie erkennt man das?
+            boolean isAdmin = userSession.checkAuthorization(false, ROLE_ADMINISTRATOR);
+
+            if (!isAdmin /*&& user.getSupplier() != null*/) {
+                // ein USER_ADMINISTRATOR darf keine Testaccounts für Supplier ändern (etwa aktivieren)
+                for (String forbiddenMailDomain : Constants.MAILDOMAIN_BLACK_LIST) {
+                    if (user.getEmail().contains("@" + forbiddenMailDomain + ".")) {
+                        logger.error("USER_ADMINISTRATOR trying to save supplier with test account");
+                        MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_ERROR, INVALID_MAIL_ADDRESS);
+                        return "";
+                    }
+                }
+            }
+
+            if (!isAdmin) {
+                // ein USER_ADMINISTRATOR darf keine Rolle ADMINISTRATOR nehmen oder geben
+                Optional<RoleListDTO> adminRoleInUserOrig = user.getRoles().stream()
+                        .filter(userRole -> userRole.getName().equals(ROLE_ADMINISTRATOR))
+                        .findFirst();
+
+                Optional<RoleListDTO> adminRoleInTarget = rolesList.getTarget().stream()
+                        .filter(target -> target.getName().equals(ROLE_ADMINISTRATOR))
+                        .findFirst();
+
+                if (adminRoleInUserOrig.isEmpty() && adminRoleInTarget.isPresent()) {
+                    rolesList.getTarget().remove(adminRoleInTarget.get());
+                    rolesList.getSource().add(adminRoleInTarget.get());
+                }
+                else if (adminRoleInUserOrig.isPresent() && adminRoleInTarget.isEmpty()) {
+                    rolesList.getTarget().add(adminRoleInUserOrig.get());
+                    rolesList.getSource().remove(adminRoleInUserOrig.get());
+                }
+            }
+
+            user.setRoles(rolesList.getTarget());
+            userService.updateUser(user);
+
+            return userSession.getLastPage();
+        }
+        catch (final Exception e) {
+            logger.error("Error while performing save operation!", e);
+
+            MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_ERROR, OPERATION_SAVE_FAIL, e);
+            return "";
+        }
     }
 
     /**
@@ -142,7 +202,7 @@ public class EditUserDialog implements Serializable {
         bundle = ResourceBundle.getBundle(DEFAULT_BUNDLE_NAME, userSession.getLocale());
 
         // Check if user is allowed to open this page!
-        if (!userSession.checkAuthorization(true, ROLE_ADMINISTRATOR))
+        if (!userSession.checkAuthorization(true, ROLE_ADMINISTRATOR, ROLE_USER_ADMINISTRATOR))
             return;
 
 
@@ -178,28 +238,6 @@ public class EditUserDialog implements Serializable {
             }
 
             facesContext.responseComplete();
-        }
-    }
-
-    /**
-     * Save model object
-     * @return the navigation target
-     */
-    @Generated
-    public String save() {
-        try {
-            logger.debug("Perform save operation");
-
-            user.setRoles(rolesList.getTarget());
-            userService.updateUser(user);
-
-            return userSession.getLastPage();
-        }
-        catch (final Exception e) {
-            logger.error("Error while performing save operation!", e);
-
-            MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_ERROR, OPERATION_SAVE_FAIL, e);
-            return "";
         }
     }
 

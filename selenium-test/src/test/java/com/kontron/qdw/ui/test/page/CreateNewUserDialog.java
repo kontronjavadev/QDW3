@@ -14,8 +14,6 @@ public class CreateNewUserDialog extends AbstractPageObject {
     @Generated
     public static final String FIELD_ID_TXTEMAIL = "form:txtEmail";
     @Generated
-    public static final String FIELD_ID_TXTPASSWORD = "form:txtPassword";
-    @Generated
     public static final String FIELD_ID_LISTROLES = "form:listRoles";
     @Generated
     private final DualDataListComponent listRoles;

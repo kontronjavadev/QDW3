@@ -54,13 +54,9 @@
 			<f:validateLength minimum="1" maximum="100"/>
 		</p:inputText>
 		<p:tooltip for="txtEmail" value=""/>
-
-		<h:outputLabel value="#{i18n.lbl_attr_user_password} *:" for="txtPassword" styleClass="label-field-mandatory"/>
-		<p:inputText id="txtPassword" value="#{createNewUserDialog.user.password}">
-			<f:validateRequired/>
-			<f:validateLength minimum="1" maximum="64"/>
-		</p:inputText>
-		<p:tooltip for="txtPassword" value=""/>
+		<h:outputLabel/>
+		<h:outputLabel/>
+		<h:outputLabel/>
 
 	</h:panelGrid>
 	</p:panel>

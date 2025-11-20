@@ -11,8 +11,6 @@ public class UserCreateDTO implements Serializable {
     @Generated
     public static final String ATTR_NAME = "name";
     @Generated
-    public static final String ATTR_PASSWORD = "password";
-    @Generated
     public static final String ATTR_EMAIL = "email";
     @Generated
     public static final String ATTR_ACTIVE = "active";
@@ -26,8 +24,6 @@ public class UserCreateDTO implements Serializable {
     public static final String ATTR_ROLES = "roles";
     @Generated
     private String name;
-    @Generated
-    private String password;
     @Generated
     private String email;
     @Generated
@@ -71,7 +67,6 @@ public class UserCreateDTO implements Serializable {
     /**
      * Constructor using fields
      * @param name
-     * @param password
      * @param email
      * @param active
      * @param id
@@ -79,9 +74,8 @@ public class UserCreateDTO implements Serializable {
      * @param creationDate
      */
     @Generated
-    public UserCreateDTO(String name, String password, String email, boolean active, long id, int version, LocalDateTime creationDate) {
+    public UserCreateDTO(String name, String email, boolean active, long id, int version, LocalDateTime creationDate) {
         this.name = name;
-        this.password = password;
         this.email = email;
         this.active = active;
         this.id = id;
@@ -103,22 +97,6 @@ public class UserCreateDTO implements Serializable {
     @Generated
     public void setName(String name) {
         this.name = name;
-    }
-
-    /**
-     * @return the password
-     */
-    @Generated
-    public String getPassword() {
-        return this.password;
-    }
-
-    /**
-     * @param password the password to set
-     */
-    @Generated
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     /**

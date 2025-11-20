@@ -1,24 +1,21 @@
 package com.kontron.qdw.ui;
 
-import org.primefaces.event.NodeCollapseEvent;
-import org.primefaces.event.NodeExpandEvent;
 import org.primefaces.model.*;
-
-import com.kontron.qdw.boundary.util.Constants;
-
-import java.util.*;
 import jakarta.enterprise.context.*;
 import jakarta.faces.context.*;
 import net.sourceforge.jbizmo.commons.webclient.primefaces.tree.*;
+import org.primefaces.event.NodeCollapseEvent;
+import com.kontron.qdw.boundary.util.Constants;
+import static com.kontron.qdw.ui.TranslationKeys.*;
+import jakarta.servlet.http.*;
+import java.util.*;
+import org.primefaces.event.NodeExpandEvent;
 import static com.kontron.qdw.ui.UserSession.*;
 import jakarta.annotation.PostConstruct;
 import jakarta.inject.*;
-import static com.kontron.qdw.ui.TranslationKeys.*;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
 import java.io.*;
 import java.text.MessageFormat;
-
-import jakarta.servlet.http.*;
 
 @Named("navigatorView")
 @SessionScoped
@@ -86,8 +83,8 @@ public class NavigatorView implements Serializable {
             // Form group: Administration
             final var itemGroup0001 = new DefaultTreeNode<>(FOLDER_TYPE, new TreeNavigatorItem(bundle.getString(FG_TOP_ADMINISTRATION)), root);
             itemGroup0001.setExpanded(false);
-            
-            if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR))
+
+            if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_USER_ADMINISTRATOR))
                 new DefaultTreeNode<>(VIEW_TYPE,
                         new TreeNavigatorItem(bundle.getString(FORM_USERVIEW_TITLE), req.getContextPath() + "/view/UserView.jsf"), itemGroup0001);
 

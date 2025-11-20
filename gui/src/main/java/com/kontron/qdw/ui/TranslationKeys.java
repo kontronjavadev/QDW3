@@ -22,6 +22,7 @@ public interface TranslationKeys {
     String COMMAND_BACK = "command_back";
     String COMMAND_BROWSE = "command_browse";
     String COMMAND_CANCEL = "command_cancel";
+    String COMMAND_CLEAR = "command_clear";
     String COMMAND_DOWNLOAD = "command_download";
     String COMMAND_FILTER = "command_filter";
     String COMMAND_LOGOUT = "command_logout";
@@ -67,6 +68,7 @@ public interface TranslationKeys {
     String FORM_USERVIEW_TITLE = "form_userview_title";
     String FORM_VIEWROLEDIALOG_TITLE = "form_viewroledialog_title";
     String ILLEGAL_ITEM_SELECTED = "illegal_item_selected";
+    String INVALID_MAIL_ADDRESS = "invalid_mail_address";
     String LABEL_LIST_ENTER_FILTER = "label_list_enter_filter";
     String LABEL_LOOKUP = "label_lookup";
     String LBL_ATTR_ABSTRACTENTITYWITHID_CREATIONDATE = "lbl_attr_abstractentitywithid_creationdate";

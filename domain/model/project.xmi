@@ -4,6 +4,7 @@
     <roles name="ADMINISTRATOR" adminRole="true"/>
     <roles name="READONLY" readonlyRole="true"/>
     <roles name="SUPERUSER"/>
+    <roles name="USER_ADMINISTRATOR"/>
     <persistenceUnitProperties value="NULL" name="eclipselink.id-validation"/>
     <persistenceUnitProperties value="false" name="eclipselink.cache.shared.default"/>
     <dataSource name="QdwDS" connectionURL="jdbc:mysql://sdemucap11.kontron.local:3306/qdw" userName="sa" password="sa" driverName="com.mysql.cj.jdbc.Driver">
@@ -364,11 +365,11 @@
     </attributes>
   </net.sourceforge.jbizmo.model.dto:DTOBean>
   <net.sourceforge.jbizmo.model.client:FormGroup name="Administration" groupOrder="2" forms="/35 /22 /26 /31 /18 /38" roles="/0/@roles.0" project="/0"/>
-  <net.sourceforge.jbizmo.model.client:Form name="UserView" formType="SEARCHABLE_VIEW" formGroup="/17" title="Users" formPanels="/19" dTO="/21" roles="/0/@roles.0" boundaryMethod="/13/@boundaryMethods.2">
+  <net.sourceforge.jbizmo.model.client:Form name="UserView" formType="SEARCHABLE_VIEW" formGroup="/17" title="Users" formPanels="/19" dTO="/21" roles="/0/@roles.0 /0/@roles.3" boundaryMethod="/13/@boundaryMethods.2">
     <actions name="actionDelete" description="Delete selected user" boundaryMethod="/13/@boundaryMethods.4" roles="/0/@roles.0" type="DELETE"/>
-    <actions name="actionCopy" description="Create copy of selected user" boundaryMethod="/13/@boundaryMethods.5" roles="/0/@roles.0" type="COPY"/>
-    <actions name="actionCreate" description="Create new user" targetForm="/22" roles="/0/@roles.0"/>
-    <actions name="actionUpdate" description="Edit user" targetForm="/26" roles="/0/@roles.0" type="UPDATE"/>
+    <actions name="actionCopy" description="Create copy of selected user" boundaryMethod="/13/@boundaryMethods.5" roles="/0/@roles.0 /0/@roles.3" type="COPY"/>
+    <actions name="actionCreate" description="Create new user" targetForm="/22" roles="/0/@roles.0 /0/@roles.3"/>
+    <actions name="actionUpdate" description="Edit user" targetForm="/26" roles="/0/@roles.0 /0/@roles.3" type="UPDATE"/>
     <domainObject href="package-base.xmi#//@domainObjects.1"/>
   </net.sourceforge.jbizmo.model.client:Form>
   <net.sourceforge.jbizmo.model.client:FormPanel name="UserPanel" form="/18" formTable="/20" dTO="/21" boundaryMethod="/13/@boundaryMethods.3"/>
@@ -401,29 +402,25 @@
       <domainAttribute href="package-base.xmi#//@domainObjects.0/@attributes.3"/>
     </attributes>
   </net.sourceforge.jbizmo.model.dto:DTOBean>
-  <net.sourceforge.jbizmo.model.client:Form name="CreateNewUserDialog" formType="CREATE" formGroup="/17" title="Create new user" formPanels="/23 /24" dTO="/25" roles="/0/@roles.0">
+  <net.sourceforge.jbizmo.model.client:Form name="CreateNewUserDialog" formType="CREATE" formGroup="/17" title="Create new user" formPanels="/23 /24" dTO="/25" roles="/0/@roles.0 /0/@roles.3">
     <actions name="actionCreate" boundaryMethod="/13/@boundaryMethods.6"/>
     <domainObject href="package-base.xmi#//@domainObjects.1"/>
   </net.sourceforge.jbizmo.model.client:Form>
   <net.sourceforge.jbizmo.model.client:FormPanel name="panUser" label="Basic data" form="/22">
     <fields name="txtName" label="Name" width="140" dTOAttribute="/25/@attributes.0"/>
-    <fields name="chkActive" colIndex="2" label="Active" fieldType="CHECKBOX" defaultValue="USE_DEFAULT" dTOAttribute="/25/@attributes.3"/>
-    <fields name="txtEmail" rowIndex="2" label="Email" width="140" dTOAttribute="/25/@attributes.2"/>
-    <fields name="txtPassword" colIndex="2" rowIndex="2" label="Password" width="140" dTOAttribute="/25/@attributes.1"/>
-    <fields name="txtId" rowIndex="3" visible="false" label="Id" width="120" dTOAttribute="/25/@attributes.4"/>
-    <fields name="txtVersion" rowIndex="4" visible="false" label="Version" readonly="true" width="120" dTOAttribute="/25/@attributes.5"/>
-    <fields name="txtCreationDate" rowIndex="5" visible="false" label="Creation date" readonly="true" fieldType="DATE_TIME" width="120" dTOAttribute="/25/@attributes.6"/>
+    <fields name="chkActive" colIndex="2" label="Active" fieldType="CHECKBOX" defaultValue="USE_DEFAULT" dTOAttribute="/25/@attributes.2"/>
+    <fields name="txtEmail" rowIndex="2" label="Email" width="140" dTOAttribute="/25/@attributes.1"/>
+    <fields name="txtId" rowIndex="3" visible="false" label="Id" width="120" dTOAttribute="/25/@attributes.3"/>
+    <fields name="txtVersion" rowIndex="4" visible="false" label="Version" readonly="true" width="120" dTOAttribute="/25/@attributes.4"/>
+    <fields name="txtCreationDate" rowIndex="5" visible="false" label="Creation date" readonly="true" fieldType="DATE_TIME" width="120" dTOAttribute="/25/@attributes.5"/>
   </net.sourceforge.jbizmo.model.client:FormPanel>
   <net.sourceforge.jbizmo.model.client:FormPanel name="panRoles" rowIndex="2" label="Roles" form="/22">
-    <fields name="listRoles" label="Roles" fieldType="LIST" width="140" dTOAttribute="/25/@attributes.7"/>
+    <fields name="listRoles" label="Roles" fieldType="LIST" width="140" dTOAttribute="/25/@attributes.6"/>
   </net.sourceforge.jbizmo.model.client:FormPanel>
   <net.sourceforge.jbizmo.model.dto:DTOBean name="UserCreateDTO" comment="Data transfer object for user objects" namespace="/8" standardConversion="true">
     <domainObject href="package-base.xmi#//@domainObjects.1"/>
     <attributes name="name">
       <domainAttribute href="package-base.xmi#//@domainObjects.1/@attributes.0"/>
-    </attributes>
-    <attributes name="password">
-      <domainAttribute href="package-base.xmi#//@domainObjects.1/@attributes.1"/>
     </attributes>
     <attributes name="email">
       <domainAttribute href="package-base.xmi#//@domainObjects.1/@attributes.2"/>
@@ -444,7 +441,7 @@
       <association xsi:type="net.sourceforge.net.model.domain:ManyToManyAssociation" href="package-base.xmi#//@domainObjects.1/@associations.0"/>
     </attributes>
   </net.sourceforge.jbizmo.model.dto:DTOBean>
-  <net.sourceforge.jbizmo.model.client:Form name="EditUserDialog" formGroup="/17" title="Edit user" formPanels="/27 /28 /29" dTO="/30" roles="/0/@roles.0">
+  <net.sourceforge.jbizmo.model.client:Form name="EditUserDialog" formGroup="/17" title="Edit user" formPanels="/27 /28 /29" dTO="/30" roles="/0/@roles.0 /0/@roles.3">
     <actions name="actionUpdate" boundaryMethod="/13/@boundaryMethods.7" type="UPDATE"/>
     <domainObject href="package-base.xmi#//@domainObjects.1"/>
   </net.sourceforge.jbizmo.model.client:Form>

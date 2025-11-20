@@ -1,8 +1,12 @@
 package com.kontron.qdw.boundary.base;
 
 import com.kontron.qdw.repository.base.*;
+import com.kontron.util.cipher.PasswordGenerator;
+
 import net.sourceforge.jbizmo.commons.search.exception.*;
 import com.kontron.qdw.dto.base.*;
+import com.kontron.qdw.boundary.util.Constants;
+import com.kontron.qdw.boundary.util.MailServiceFacade;
 import com.kontron.qdw.domain.base.*;
 import java.util.*;
 import jakarta.validation.ConstraintViolationException;
@@ -13,6 +17,7 @@ import jakarta.ejb.*;
 import jakarta.annotation.security.*;
 import net.sourceforge.jbizmo.commons.search.dto.*;
 import net.sourceforge.jbizmo.commons.repository.*;
+import net.sourceforge.jbizmo.commons.annotation.Customized;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
 
 @Stateless
@@ -36,6 +41,55 @@ public class UserBoundaryService {
     @Generated
     public UserBoundaryService(UserRepository repository) {
         this.repository = repository;
+    }
+
+    /**
+     * Create new user
+     * @param object
+     * @throws UniqueConstraintViolationException if a unique constraint check has failed
+     * @throws ConstraintViolationException if the validation of one or more persistent attribute values has failed
+     * @return the persisted user object
+     */
+    @Customized
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public UserCreateDTO createUser(UserCreateDTO object) {
+        // Create new object to be persisted
+        var newUser = new User();
+        newUser.setName(object.getName() != null ? object.getName().trim() : null);
+        newUser.setEmail(object.getEmail() != null ? object.getEmail().trim() : null);
+        newUser.setActive(object.isActive());
+        newUser.setRoles(new ArrayList<>());
+
+        for (final RoleListDTO a : object.getRoles()) {
+            final Role b = repository.getReference(Role.class, a.getId());
+            newUser.getRoles().add(b);
+        }
+
+
+        String pw = PasswordGenerator.createPassword();
+        try {
+            newUser.setPassword(HashGenerator.encryptSHA256(pw));
+        }
+        catch (final NoSuchAlgorithmException e) {
+            throw new IllegalStateException(e);
+        }
+
+        newUser = repository.persist(newUser, true, true, true);
+
+        object.setId(newUser.getId());
+        object.setVersion(newUser.getVersion());
+        object.setCreationDate(newUser.getCreationDate());
+
+
+        MailServiceFacade.sendMail(newUser.getEmail(), String.format("%s: %s", Constants.APP_ENV, "your new account"),
+                String.format("Your got an account for %s.\n"
+                        + "name: %s\n"
+                        + "password: %s\n"
+                        + "Please notice that passwords are case sensitiv.\n"
+                        + "Change password after first login (buttons at top bar).",
+                        Constants.APP_ENV, newUser.getName(), pw));
+        return object;
     }
 
     /**
@@ -175,40 +229,6 @@ public class UserBoundaryService {
         final User targetObject = repository.copy(sourceObject, null, loggedOnUserId);
 
         return targetObject.getId();
-    }
-
-    /**
-     * Create new user
-     * @param object
-     * @throws UniqueConstraintViolationException if a unique constraint check has failed
-     * @throws ConstraintViolationException if the validation of one or more persistent attribute values has failed
-     * @return the persisted user object
-     */
-    @Generated
-    @PermitAll
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public UserCreateDTO createUser(UserCreateDTO object) {
-        // Create new object to be persisted
-        var newUser = new User();
-        newUser.setName(object.getName() != null ? object.getName().trim() : null);
-        newUser.setPassword(object.getPassword());
-        newUser.setEmail(object.getEmail() != null ? object.getEmail().trim() : null);
-        newUser.setActive(object.isActive());
-        newUser.setRoles(new ArrayList<>());
-
-        for (final RoleListDTO a : object.getRoles()) {
-            final Role b = repository.getReference(Role.class, a.getId());
-            newUser.getRoles().add(b);
-        }
-
-
-        newUser = repository.persist(newUser, true, true, true);
-
-        object.setId(newUser.getId());
-        object.setVersion(newUser.getVersion());
-        object.setCreationDate(newUser.getCreationDate());
-
-        return object;
     }
 
     /**

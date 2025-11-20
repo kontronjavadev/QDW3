@@ -8,14 +8,15 @@ xmlns:p="http://primefaces.org/ui">
 
 <f:view locale="#{userSession.locale}"/>
 <h:head>
-<meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
-<meta http-equiv="refresh" content="#{session.maxInactiveInterval};url=#{request.scheme}://#{request.serverName}:#{request.serverPort}#{request.contextPath}"/>
-<link type="text/css" rel="stylesheet" href="#{request.contextPath}/css/default.css"/>
+	<link rel="shortcut icon" type="image/x-icon" href="#{request.contextPath}/favicon.ico"/>
+	<meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+	<meta http-equiv="refresh" content="#{session.maxInactiveInterval};url=#{request.scheme}://#{request.serverName}:#{request.serverPort}#{request.contextPath}"/>
+	<link type="text/css" rel="stylesheet" href="#{request.contextPath}/css/default.css"/>
 </h:head>
 
 <body>
 
-	<p:growl id="messages" showDetail="true" life="3000"/>
+	<p:growl id="messages" showDetail="true" life="3000" skipDetailIfEqualsSummary="true" />
 	<h:form id="form">
 
 	<p:dialog id="dialog" visible="true" header="#{i18n.login_title}" widgetVar="dlg" modal="true" closable="false">
