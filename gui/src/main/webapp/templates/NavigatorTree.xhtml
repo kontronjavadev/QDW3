@@ -4,18 +4,23 @@
 	xmlns:f="jakarta.faces.core"
 	xmlns:p="http://primefaces.org/ui">
 
-	<p:tree style="width:100%;" value="#{navigatorView.root}" var="navigatorItem" dynamic="true">
+	<p:tree style="width:100%; border:none;" highlight="true" 
+		value="#{navigatorView.root}" var="navigatorItem" onNodeClick="$(node).find('.ui-tree-toggler').click();" 
+		dynamic="true" class="navigation-tree" cache="false" animate="true" >
 
-		<p:treeNode type="view_type" icon="pi pi-file" >
+		<p:ajax event="expand" listener="#{navigatorView.nodeExpanded}" />
+		<p:ajax event="collapse" listener="#{navigatorView.nodeCollapsed}" />
+
+		<p:treeNode type="folder_type" expandedIcon="pi pi-folder-open" collapsedIcon="pi pi-folder">
+			<h:outputText value="#{navigatorItem.name}" />
+		</p:treeNode>
+
+		<p:treeNode type="view_type" icon="pi pi-list" >
 			<h:outputLink value="#{navigatorItem.link}">
 				<h:outputText value="#{navigatorItem.name}" />
 			</h:outputLink>
 		</p:treeNode>
-		
-		<p:treeNode type="folder_type" expandedIcon="pi pi-folder-open" collapsedIcon="pi pi-folder">
-			<h:outputText value="#{navigatorItem.name}" />
-		</p:treeNode>
-			
+
 	</p:tree>
 	
 </ui:composition>

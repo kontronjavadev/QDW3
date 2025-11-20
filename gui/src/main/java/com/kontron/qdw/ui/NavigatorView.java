@@ -1,6 +1,11 @@
 package com.kontron.qdw.ui;
 
+import org.primefaces.event.NodeCollapseEvent;
+import org.primefaces.event.NodeExpandEvent;
 import org.primefaces.model.*;
+
+import com.kontron.qdw.boundary.util.Constants;
+
 import java.util.*;
 import jakarta.enterprise.context.*;
 import jakarta.faces.context.*;
@@ -11,6 +16,8 @@ import jakarta.inject.*;
 import static com.kontron.qdw.ui.TranslationKeys.*;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
 import java.io.*;
+import java.text.MessageFormat;
+
 import jakarta.servlet.http.*;
 
 @Named("navigatorView")
@@ -47,6 +54,22 @@ public class NavigatorView implements Serializable {
         this.userSession = userSession;
     }
 
+    public void nodeExpanded(NodeExpandEvent event) {
+        // workaround, damit das Zuklappen der Listen gemerkt wird 
+    }
+
+    public void nodeCollapsed(NodeCollapseEvent event) {
+        // workaround, damit das Zuklappen der Listen gemerkt wird 
+    }
+
+    public String getEnv() {
+        if (Constants.IS_PROD_ENVIRONMENT) {
+            return "";
+        }
+
+        return new MessageFormat(bundle.getString(APPLICATION_TITLE_ENVIRONMENT)).format(new Object[] { Constants.ENVIRONMENT });
+    }
+
     /**
      * Initialize tree navigator
      */
@@ -62,21 +85,21 @@ public class NavigatorView implements Serializable {
         if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR)) {
             // Form group: Administration
             final var itemGroup0001 = new DefaultTreeNode<>(FOLDER_TYPE, new TreeNavigatorItem(bundle.getString(FG_TOP_ADMINISTRATION)), root);
-            itemGroup0001.setExpanded(true);
+            itemGroup0001.setExpanded(false);
+            
+            if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR))
+                new DefaultTreeNode<>(VIEW_TYPE,
+                        new TreeNavigatorItem(bundle.getString(FORM_USERVIEW_TITLE), req.getContextPath() + "/view/UserView.jsf"), itemGroup0001);
 
             if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR))
                 new DefaultTreeNode<>(VIEW_TYPE,
                         new TreeNavigatorItem(bundle.getString(FORM_ROLEVIEW_TITLE), req.getContextPath() + "/view/RoleView.jsf"), itemGroup0001);
-
-            if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR))
-                new DefaultTreeNode<>(VIEW_TYPE,
-                        new TreeNavigatorItem(bundle.getString(FORM_USERVIEW_TITLE), req.getContextPath() + "/view/UserView.jsf"), itemGroup0001);
         }
 
         if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR)) {
             // Form group: Master data
             final var itemGroup0002 = new DefaultTreeNode<>(FOLDER_TYPE, new TreeNavigatorItem(bundle.getString(FG_TOP_MASTER_DATA)), root);
-            itemGroup0002.setExpanded(true);
+            itemGroup0002.setExpanded(false);
 
             if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR))
                 new DefaultTreeNode<>(VIEW_TYPE,

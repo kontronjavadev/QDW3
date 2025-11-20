@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="jakarta.faces.html"
+	xmlns:f="jakarta.faces.core"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<h:panelGrid columns="3" styleClass="template-header" columnClasses="top-col-left,top-col-center,top-col-right">
+		<div><img src="#{request.contextPath}/images/logo.png" height="48" width="48"/></div>
+		<p:outputLabel styleClass="label-application-title" value="&nbsp;&nbsp;#{i18n.application_title} #{navigatorView.env}" escape="false"></p:outputLabel>
+
+		<h:panelGrid columns="8" style="float: right;">
+<!-- 
+			<p:commandButton id="cmdProductionInfoSetTree" icon="pi pi-book" action="/tree/ProductionInfoSetTreeView.jsf?faces-redirect=true" class="ui-button-menue"></p:commandButton>
+			<p:tooltip for="cmdProductionInfoSetTree" value="#{i18n.production_info_set_navigation}" position="bottom" showDelay="50"/>
+
+			<p:commandButton id="cmdQuoteSessionTree" icon="pi pi-hammer" action="/tree/QuoteSessionTreeView.jsf?faces-redirect=true" class="ui-button-menue"></p:commandButton>
+			<p:tooltip for="cmdQuoteSessionTree" value="#{i18n.quote_session_navigation}" position="bottom" showDelay="50"/>
+
+			<p:commandButton id="cmdManufacturerMaterialTree" icon="pi pi-microchip" action="/tree/ManufacturerMaterialTreeView.jsf?faces-redirect=true" class="ui-button-menue"></p:commandButton>
+			<p:tooltip for="cmdManufacturerMaterialTree" value="#{i18n.manufacturermaterial_navigation}" position="bottom" showDelay="50"/>
+ -->
+
+
+			<p:commandButton id="cmdMaintenanceTree" icon="pi pi-list" action="/view/index.jsf?faces-redirect=true" class="ui-button-menue"></p:commandButton>
+			<p:tooltip for="cmdMaintenanceTree" value="#{i18n.maintenance_tree}" position="bottom" showDelay="50"/>
+
+			<p:commandButton id="cmdEditSettings" icon="pi pi-user" action="/dialog/EditUserSettingsDialog.jsf?faces-redirect=true" class="btn-orga ui-button-menue"></p:commandButton>
+			<p:tooltip for="cmdEditSettings" value="#{i18n.navigator_settings}" position="bottom" showDelay="50"/>
+
+			<p:commandButton id="cmdChangePassword" icon="pi pi-key" action="/dialog/ChangePasswordDialog.jsf?faces-redirect=true" class="btn-orga ui-button-menue"></p:commandButton>
+			<p:tooltip for="cmdChangePassword" value="#{i18n.navigator_password}" position="bottom" showDelay="50"/>
+
+			<p:commandButton id="cmdLogout" icon="pi pi-sign-out" action="#{userSession.logout}" class="btn-logout ui-button-menue"></p:commandButton>
+			<p:tooltip for="cmdLogout" value="#{i18n.navigator_logout}" position="bottom" showDelay="50"/>
+		</h:panelGrid>
+	</h:panelGrid>
+</ui:composition>

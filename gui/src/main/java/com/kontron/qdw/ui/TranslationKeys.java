@@ -16,7 +16,9 @@ public interface TranslationKeys {
     String ACTION_REFRESH = "action_refresh";
     String ACTION_SEARCH_INPUT = "action_search_input";
     String ACTION_VIEW = "action_view";
+    String APPLICATION_TAB_TITLE = "application_tab_title";
     String APPLICATION_TITLE = "application_title";
+    String APPLICATION_TITLE_ENVIRONMENT = "application_title_environment";
     String COMMAND_BACK = "command_back";
     String COMMAND_BROWSE = "command_browse";
     String COMMAND_CANCEL = "command_cancel";

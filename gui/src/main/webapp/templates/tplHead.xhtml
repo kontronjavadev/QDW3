@@ -1,0 +1,63 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="jakarta.faces.html"
+	xmlns:f="jakarta.faces.core"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<h:head>
+		<link rel="shortcut icon" type="image/x-icon" href="#{request.contextPath}/favicon.ico"/>
+<!-- 
+stets derselbe Tab-Titel (GPE - Global price engine)
+		<title><h:outputText value="#{i18n.application_tab_title}" escape="false"/></title>
+oder der Titel richtet sich nach dem Content (<ui:define name="title"/> in jedem xhtml mit ui:composition)
+		<title><ui:insert name="title">#{i18n.application_tab_title}</ui:insert></title>
+ -->
+		<title><ui:insert name="title">#{i18n.application_tab_title}</ui:insert></title>
+
+		<meta http-equiv="refresh" content="#{session.maxInactiveInterval};url=#{request.scheme}://#{request.serverName}:#{request.serverPort}#{request.contextPath}"/>
+		<meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+		<link type="text/css" rel="stylesheet" href="#{request.contextPath}/css/default.css" />
+		<script type="text/javascript" src="#{request.contextPath}/script/util.js"/>
+
+		<script type="text/javascript">
+			<!-- Für eingebettete Panels ist das formPrefix form:tabView2 und wenn ein Dialog mehrere Panels eingebettet hat, gibt es einen Konflikt mit gleichen
+			Variablennamen. Daher müssen die Variablen einen Präfix (oder Postfix) haben, um eindeutig zu sein. Diesen gbt man ebenfalls an. -->
+			function updateContextData(event, formPrefix = 'form', varPrefix = '') {
+				const target = event?.originalEvent?.target;
+				if (!target) return;
+
+				const cell = target.closest('td');
+				const row = cell?.closest('tr');
+				if (!cell || !row) return;
+
+				// Einzelzellenwert
+				const cellValue = getCellValue(cell);
+
+				// CSV-Zeile
+				const rowCsv = Array.from(row.children)
+					.map(getCellValue)
+					.map(val => '"' + val.replace(/"/g, '""') + '"'
+				).join(',');
+
+				// Nutze JSF-spezifische ID-Namen
+				document.querySelector('[name="' + formPrefix + ':' + varPrefix + 'cellText"]').value = cellValue;
+				document.querySelector('[name="' + formPrefix + ':' + varPrefix + 'rowCsv"]').value = rowCsv;
+			}
+
+			function getCellValue(td) {
+				if (!td) return "";
+
+				const checkbox = td.querySelector('input[type="checkbox"]');
+				if (checkbox) {
+					return checkbox.checked ? "1" : "0";
+				}
+
+				const val = td.textContent.trim();
+				return val;
+			}
+		</script>
+
+	</h:head>
+</ui:composition>
