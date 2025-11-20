@@ -16,6 +16,7 @@ import static com.kontron.qdw.ui.UserSession.*;
 import com.kontron.qdw.ui.*;
 import net.sourceforge.jbizmo.commons.crypto.*;
 import jakarta.inject.*;
+import net.sourceforge.jbizmo.commons.annotation.Customized;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
 import java.io.*;
 
@@ -68,6 +69,58 @@ public class CreateNewUserDialog implements Serializable {
     }
 
     /**
+     * Initialize dialog
+     */
+    @Customized
+    public void initView() {
+        logger.debug("Initialize dialog");
+
+        bundle = ResourceBundle.getBundle(DEFAULT_BUNDLE_NAME, userSession.getLocale());
+
+        // Check if user is allowed to open this page!
+        if (!userSession.checkAuthorization(true, ROLE_ADMINISTRATOR))
+            return;
+
+
+        try {
+            user = new UserCreateDTO();
+            user.setActive(true);
+
+            final List<RoleListDTO> rolesSourceList = roleService.findRoles(null);
+            final var rolesTargetList = new ArrayList<RoleListDTO>();
+
+            rolesList = new DualListModel<>(rolesSourceList, rolesTargetList);
+            RoleListDTO roRole = rolesList.getSource().stream()
+                    .filter(dto -> dto.getName().equals(UserSession.ROLE_READONLY))
+                    .findAny()
+                    .get();
+            rolesList.getSource().remove(roRole);
+            rolesList.getTarget().add(roRole);
+
+
+            formTitle = bundle.getString(FORM_CREATENEWUSERDIALOG_TITLE);
+
+            logger.debug("Dialog initialization finished");
+        }
+        catch (final Exception e) {
+            logger.error("Dialog initialization failed!", e);
+
+            final FacesContext facesContext = FacesContext.getCurrentInstance();
+
+            try {
+                final String errorMessage = bundle.getString(DIALOG_INIT_FAIL);
+
+                facesContext.getExternalContext().responseSendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, errorMessage);
+            }
+            catch (final Exception ex) {
+                logger.error("Failed to send error code!", ex);
+            }
+
+            facesContext.responseComplete();
+        }
+    }
+
+    /**
      * @return the model object
      */
     @Generated
@@ -113,52 +166,6 @@ public class CreateNewUserDialog implements Serializable {
     @Generated
     public void setRolesList(DualListModel<RoleListDTO> rolesList) {
         this.rolesList = rolesList;
-    }
-
-    /**
-     * Initialize dialog
-     */
-    @Generated
-    public void initView() {
-        logger.debug("Initialize dialog");
-
-        bundle = ResourceBundle.getBundle(DEFAULT_BUNDLE_NAME, userSession.getLocale());
-
-        // Check if user is allowed to open this page!
-        if (!userSession.checkAuthorization(true, ROLE_ADMINISTRATOR))
-            return;
-
-
-        try {
-            user = new UserCreateDTO();
-            user.setActive(true);
-
-            final List<RoleListDTO> rolesSourceList = roleService.findRoles(null);
-            final var rolesTargetList = new ArrayList<RoleListDTO>();
-
-            rolesList = new DualListModel<>(rolesSourceList, rolesTargetList);
-
-
-            formTitle = bundle.getString(FORM_CREATENEWUSERDIALOG_TITLE);
-
-            logger.debug("Dialog initialization finished");
-        }
-        catch (final Exception e) {
-            logger.error("Dialog initialization failed!", e);
-
-            final FacesContext facesContext = FacesContext.getCurrentInstance();
-
-            try {
-                final String errorMessage = bundle.getString(DIALOG_INIT_FAIL);
-
-                facesContext.getExternalContext().responseSendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, errorMessage);
-            }
-            catch (final Exception ex) {
-                logger.error("Failed to send error code!", ex);
-            }
-
-            facesContext.responseComplete();
-        }
     }
 
     /**

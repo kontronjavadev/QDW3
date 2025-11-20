@@ -147,7 +147,7 @@
 		<h:panelGrid columns="4">
 			<p:commandButton id="cmdSearch" value="#{i18n.search_input_perform_search}" action="#{userView.fetchUsers}" ajax="false"/>
 			<p:commandButton id="cmdReset" value="#{i18n.command_reset}" action="#{userView.resetSearchObject}" onclick="PF('dlgSearchInput').hide()" ajax="false"/>
-			<p:commandButton id="cmdReset" value="#{i18n.command_clear}" action="#{userView.clearSearchObject}" update="tabViewSearchInput" ajax="true"/>
+			<p:commandButton id="cmdClear" value="#{i18n.command_clear}" action="#{userView.clearSearchObject}" update="tabViewSearchInput" ajax="true"/>
 			<p:commandButton id="cmdCount" value="#{i18n.search_input_perform_count}" actionListener="#{userView.countRecords}" update="growl" ajax="true"/>
 		</h:panelGrid>
 	</p:dialog>
