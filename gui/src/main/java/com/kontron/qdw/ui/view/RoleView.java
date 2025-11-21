@@ -159,7 +159,7 @@ public class RoleView extends CopyClipboard implements Serializable {
     public String openViewRoleDialog() {
         var url = "";
 
-        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR))
+        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_USER_ADMINISTRATOR))
             url = ViewRoleDialog.PAGE_INIT_URL + selectedObject.getId();
 
         return url;

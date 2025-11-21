@@ -540,7 +540,7 @@
       <domainAttribute href="package-base.xmi#//@domainObjects.0/@attributes.2"/>
     </attributes>
   </net.sourceforge.jbizmo.model.dto:DTOBean>
-  <net.sourceforge.jbizmo.model.client:Form name="ViewRoleDialog" formType="READONLY" formGroup="/17" title="View role" formPanels="/39" dTO="/40" roles="/0/@roles.0">
+  <net.sourceforge.jbizmo.model.client:Form name="ViewRoleDialog" formType="READONLY" formGroup="/17" title="View role" formPanels="/39" dTO="/40" roles="/0/@roles.0 /0/@roles.3">
     <actions name="actionGet" boundaryMethod="/14/@boundaryMethods.6" type="READ"/>
     <domainObject href="package-base.xmi#//@domainObjects.2"/>
   </net.sourceforge.jbizmo.model.client:Form>

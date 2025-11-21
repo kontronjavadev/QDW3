@@ -29,7 +29,7 @@
 	<p:growl id="growl" showDetail="true" skipDetailIfEqualsSummary="true"/>
 
 	<p:menubar>
-		<p:submenu icon="pi pi-file" label="#{i18n.mnu_file}" id="panData_mniFile">
+		<p:submenu icon="pi pi-file" label="#{i18n.mnu_file}" id="panData_mniFile" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR')}" >
 			<p:menuitem value="#{i18n.action_create}" ajax="true" id="panData_mniCreate" icon="pi pi-plus" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR')}" action="#{roleView.openCreateNewRoleDialog}">
 				<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{roleView.currentPageURL}"/>
 			</p:menuitem>
@@ -82,7 +82,7 @@
 		<p:menuitem value="#{i18n.action_create}" ajax="true" icon="pi pi-plus" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR')}" action="#{roleView.openCreateNewRoleDialog}">
 			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{roleView.currentPageURL}"/>
 		</p:menuitem>
-		<p:menuitem value="#{i18n.action_view}" ajax="true" icon="pi pi-file" id="panData_mniView" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR')}" action="#{roleView.openViewRoleDialog}">
+		<p:menuitem value="#{i18n.action_view}" ajax="true" icon="pi pi-file" id="panData_mniView" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;USER_ADMINISTRATOR')}" action="#{roleView.openViewRoleDialog}">
 			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{roleView.currentPageURL}"/>
 		</p:menuitem>
 		<p:menuitem value="#{i18n.action_refresh}" ajax="false" type="push" icon="pi pi-refresh" id="panData_mniRefresh" actionListener="#{roleView.fetchRoles}"/>

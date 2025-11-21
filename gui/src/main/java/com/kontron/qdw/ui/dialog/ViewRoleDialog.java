@@ -116,7 +116,7 @@ public class ViewRoleDialog implements Serializable {
         bundle = ResourceBundle.getBundle(DEFAULT_BUNDLE_NAME, userSession.getLocale());
 
         // Check if user is allowed to open this page!
-        if (!userSession.checkAuthorization(true, ROLE_ADMINISTRATOR))
+        if (!userSession.checkAuthorization(true, ROLE_ADMINISTRATOR, ROLE_USER_ADMINISTRATOR))
             return;
 
 
