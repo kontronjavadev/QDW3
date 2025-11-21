@@ -28,9 +28,12 @@ public interface TranslationKeys {
     String COMMAND_LOGOUT = "command_logout";
     String COMMAND_NO = "command_no";
     String COMMAND_RESET = "command_reset";
+    String COMMAND_RESETPW = "command_resetpw";
     String COMMAND_SAVE = "command_save";
     String COMMAND_SELECT = "command_select";
     String COMMAND_YES = "command_yes";
+    String CTXMENU_COPY_CELL = "ctxmenu_copy_cell";
+    String CTXMENU_COPY_ROW = "ctxmenu_copy_row";
     String DIALOG_COPY_QUESTION = "dialog_copy_question";
     String DIALOG_COPY_TITLE = "dialog_copy_title";
     String DIALOG_DELETE_QUESTION = "dialog_delete_question";
@@ -38,6 +41,8 @@ public interface TranslationKeys {
     String DIALOG_ILLEGAL_REFERENCE = "dialog_illegal_reference";
     String DIALOG_INIT_FAIL = "dialog_init_fail";
     String DIALOG_MISSING_PARAM = "dialog_missing_param";
+    String DIALOG_RESETPW_QUESTION = "dialog_resetpw_question";
+    String DIALOG_RESETPW_TITLE = "dialog_resetpw_title";
     String DIALOG_UPLOAD_TITLE = "dialog_upload_title";
     String ERRORPAGE_TITLE = "errorpage_title";
     String FEEDBACK_DIALOG_HEADER = "feedback_dialog_header";
@@ -64,6 +69,8 @@ public interface TranslationKeys {
     String FORM_EDITBUSINESSUNITDIALOG_TITLE = "form_editbusinessunitdialog_title";
     String FORM_EDITUSERDIALOG_TITLE = "form_edituserdialog_title";
     String FORM_EDITUSERSETTINGSDIALOG_TITLE = "form_editusersettingsdialog_title";
+    String FORM_RESETPASSWORDDIALOG_INVALIDLINK = "form_resetpassworddialog_invalidlink";
+    String FORM_RESETPASSWORDDIALOG_TITLE = "form_resetpassworddialog_title";
     String FORM_ROLEVIEW_TITLE = "form_roleview_title";
     String FORM_USERVIEW_TITLE = "form_userview_title";
     String FORM_VIEWROLEDIALOG_TITLE = "form_viewroledialog_title";
@@ -119,6 +126,8 @@ public interface TranslationKeys {
     String OPERATION_FETCH_NO_DATA = "operation_fetch_no_data";
     String OPERATION_IMPORT_FAIL = "operation_import_fail";
     String OPERATION_IMPORT_OK = "operation_import_ok";
+    String OPERATION_RESETPW_FAIL = "operation_resetpw_fail";
+    String OPERATION_RESETPWUSER = "operation_resetpwuser";
     String OPERATION_SAVE_FAIL = "operation_save_fail";
     String OPERATION_SAVE_OK = "operation_save_ok";
     String OPERATION_UPLOAD_FAIL = "operation_upload_fail";
@@ -162,6 +171,4 @@ public interface TranslationKeys {
     String SEARCH_INPUT_VALIDATION = "search_input_validation";
     String SEARCH_INPUT_VISIBLE_FIELDS = "search_input_visible_fields";
     String SEARCH_INPUT_VISIBLE_FIELDS_LABEL = "search_input_visible_fields_label";
-    String OPERATION_RESETPW_FAIL = "operation_resetpw_fail";
-    String OPERATION_RESETPWUSER = "operation_resetpwuser";
 }

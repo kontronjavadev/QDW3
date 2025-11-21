@@ -200,7 +200,7 @@ public class UserView extends SuperView implements Serializable {
             return "";
         }
 
-        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR))
+        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_USER_ADMINISTRATOR))
             url = EditUserDialog.PAGE_INIT_URL + newId;
 
         userSession.setLastPage(getCurrentPageURL());
@@ -215,7 +215,7 @@ public class UserView extends SuperView implements Serializable {
     public String openCreateNewUserDialog() {
         var url = "";
 
-        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR))
+        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_USER_ADMINISTRATOR))
             url = CreateNewUserDialog.PAGE_INIT_URL;
 
         return url;
@@ -229,7 +229,7 @@ public class UserView extends SuperView implements Serializable {
     public String openEditUserDialog() {
         var url = "";
 
-        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR))
+        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_USER_ADMINISTRATOR))
             url = EditUserDialog.PAGE_INIT_URL + selectedObject.getId();
 
         return url;

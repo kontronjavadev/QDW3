@@ -5,7 +5,6 @@ import org.slf4j.*;
 import java.lang.invoke.*;
 import com.kontron.qdw.ui.dialog.*;
 import com.kontron.qdw.ui.view.util.CopyClipboard;
-
 import static com.kontron.qdw.ui.TranslationKeys.*;
 import net.sourceforge.jbizmo.commons.webclient.primefaces.util.*;
 import com.kontron.qdw.dto.base.*;
@@ -237,7 +236,7 @@ public class RoleView extends CopyClipboard implements Serializable {
         bundle = ResourceBundle.getBundle(DEFAULT_BUNDLE_NAME, userSession.getLocale());
 
         // Check if user is allowed to open this page!
-        if (!userSession.checkAuthorization(true, ROLE_ADMINISTRATOR))
+        if (!userSession.checkAuthorization(true, ROLE_ADMINISTRATOR, ROLE_USER_ADMINISTRATOR))
             return;
 
 

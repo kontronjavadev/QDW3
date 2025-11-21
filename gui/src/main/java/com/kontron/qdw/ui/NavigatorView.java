@@ -79,7 +79,7 @@ public class NavigatorView implements Serializable {
         root = new DefaultTreeNode<>("root", null);
 
 
-        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR)) {
+        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_USER_ADMINISTRATOR, ROLE_MAINTAINER)) {
             // Form group: Administration
             final var itemGroup0001 = new DefaultTreeNode<>(FOLDER_TYPE, new TreeNavigatorItem(bundle.getString(FG_TOP_ADMINISTRATION)), root);
             itemGroup0001.setExpanded(false);
@@ -88,7 +88,7 @@ public class NavigatorView implements Serializable {
                 new DefaultTreeNode<>(VIEW_TYPE,
                         new TreeNavigatorItem(bundle.getString(FORM_USERVIEW_TITLE), req.getContextPath() + "/view/UserView.jsf"), itemGroup0001);
 
-            if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR))
+            if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_USER_ADMINISTRATOR))
                 new DefaultTreeNode<>(VIEW_TYPE,
                         new TreeNavigatorItem(bundle.getString(FORM_ROLEVIEW_TITLE), req.getContextPath() + "/view/RoleView.jsf"), itemGroup0001);
         }

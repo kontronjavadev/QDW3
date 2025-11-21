@@ -5,6 +5,7 @@
     <roles name="READONLY" readonlyRole="true"/>
     <roles name="SUPERUSER"/>
     <roles name="USER_ADMINISTRATOR"/>
+    <roles name="MAINTAINER"/>
     <persistenceUnitProperties value="NULL" name="eclipselink.id-validation"/>
     <persistenceUnitProperties value="false" name="eclipselink.cache.shared.default"/>
     <dataSource name="QdwDS" connectionURL="jdbc:mysql://sdemucap11.kontron.local:3306/qdw" userName="sa" password="sa" driverName="com.mysql.cj.jdbc.Driver">
@@ -106,7 +107,7 @@
   <net.sourceforge.jbizmo.model.java:Namespace name="base" parent="/1" javaTypes="/45 /67 /14 /13 /64" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="base" parent="/3" javaTypes="/16 /53 /50 /44 /37 /40 /15 /34 /25 /63 /21 /30 /65" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="base" parent="/4" project="/0"/>
-  <net.sourceforge.jbizmo.model.java:Namespace name="base" parent="/2" javaTypes="/46 /59 /60 /55 /57 /56 /12 /54 /61 /62 /11 /58 /66" project="/0"/>
+  <net.sourceforge.jbizmo.model.java:Namespace name="base" parent="/2" javaTypes="/46 /59 /60 /55 /57 /66 /56 /12 /54 /61 /62 /11 /58" project="/0"/>
   <net.sourceforge.jbizmo.model.repository:Repository name="UserRepository" comment="Create, read, update and delete services for user objects." namespace="/10">
     <domainObject href="package-base.xmi#//@domainObjects.1"/>
     <repositoryMethods name="findById" javaType="/11" transactionType="REQUIRED" methodType="FIND_BY_ID">
@@ -368,7 +369,7 @@
       <domainAttribute href="package-base.xmi#//@domainObjects.0/@attributes.0"/>
     </attributes>
   </net.sourceforge.jbizmo.model.dto:DTOBean>
-  <net.sourceforge.jbizmo.model.client:FormGroup name="Administration" groupOrder="2" forms="/35 /22 /26 /31 /18 /38" roles="/0/@roles.0" project="/0"/>
+  <net.sourceforge.jbizmo.model.client:FormGroup name="Administration" groupOrder="2" forms="/35 /22 /26 /31 /18 /38" roles="/0/@roles.0 /0/@roles.3 /0/@roles.4" project="/0"/>
   <net.sourceforge.jbizmo.model.client:Form name="UserView" formType="SEARCHABLE_VIEW" formGroup="/17" title="Users" formPanels="/19" dTO="/21" roles="/0/@roles.0 /0/@roles.3" boundaryMethod="/13/@boundaryMethods.2">
     <actions name="actionDelete" description="Delete selected user" boundaryMethod="/13/@boundaryMethods.4" roles="/0/@roles.0" type="DELETE"/>
     <actions name="actionCopy" description="Create copy of selected user" boundaryMethod="/13/@boundaryMethods.5" roles="/0/@roles.0 /0/@roles.3" type="COPY"/>
@@ -490,7 +491,7 @@
       <association xsi:type="net.sourceforge.net.model.domain:ManyToManyAssociation" href="package-base.xmi#//@domainObjects.1/@associations.0"/>
     </attributes>
   </net.sourceforge.jbizmo.model.dto:DTOBean>
-  <net.sourceforge.jbizmo.model.client:Form name="RoleView" formType="SIMPLE_VIEW" formGroup="/17" title="Roles view" formPanels="/32" dTO="/34" roles="/0/@roles.0" boundaryMethod="/14/@boundaryMethods.2">
+  <net.sourceforge.jbizmo.model.client:Form name="RoleView" formType="SIMPLE_VIEW" formGroup="/17" title="Roles view" formPanels="/32" dTO="/34" roles="/0/@roles.0 /0/@roles.3" boundaryMethod="/14/@boundaryMethods.2">
     <actions name="actionDelete" description="Delete selected role" boundaryMethod="/14/@boundaryMethods.3" roles="/0/@roles.0" type="DELETE"/>
     <actions name="actionCopy" description="Create copy of selected role" boundaryMethod="/14/@boundaryMethods.4" roles="/0/@roles.0" type="COPY"/>
     <actions name="actionCreate" description="Create new role" targetForm="/35" roles="/0/@roles.0"/>

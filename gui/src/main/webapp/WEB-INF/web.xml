@@ -86,6 +86,9 @@
 <security-role>
 	<role-name>USER_ADMINISTRATOR</role-name>
 </security-role>
+<security-role>
+	<role-name>MAINTAINER</role-name>
+</security-role>
 
 
 
@@ -102,6 +105,7 @@
 		<role-name>READONLY</role-name>
 		<role-name>SUPERUSER</role-name>
 		<role-name>USER_ADMINISTRATOR</role-name>
+		<role-name>MAINTAINER</role-name>
 	</auth-constraint>
 	<user-data-constraint>
 		<!-- https erzwingen -->

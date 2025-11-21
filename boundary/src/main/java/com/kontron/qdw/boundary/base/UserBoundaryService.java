@@ -43,38 +43,6 @@ public class UserBoundaryService {
     }
 
     /**
-     * @param accountOrEmail
-     * @return the user or null if it could not be found
-     */
-    @Customized
-    @PermitAll
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public UserSearchDTO findByAccountOrEmail(String accountOrEmail) {
-        // Find persistent object
-        final User user;
-        if (accountOrEmail.contains("@")) {
-            user = repository.findActiveByEmail(accountOrEmail);
-        }
-        else {
-            user = repository.findByName(accountOrEmail);            
-        }
-
-        if (user == null) {
-            return null;
-        }
-
-        final var dto = new UserSearchDTO();
-        dto.setName(user.getName());
-        dto.setEmail(user.getEmail());
-        dto.setActive(user.isActive());
-        dto.setId(user.getId());
-        dto.setCreationDate(user.getCreationDate());
-        dto.setLastUpdate(user.getLastUpdate());
-
-        return dto;
-    }
-
-    /**
      * Create new user
      * @param object
      * @throws UniqueConstraintViolationException if a unique constraint check has failed
@@ -120,6 +88,38 @@ public class UserBoundaryService {
                         + "Change password after first login (buttons at top bar).",
                         Constants.APP_ENV, newUser.getName(), pw));
         return object;
+    }
+
+    /**
+     * @param accountOrEmail
+     * @return the user or null if it could not be found
+     */
+    @Customized
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public UserSearchDTO findByAccountOrEmail(String accountOrEmail) {
+        // Find persistent object
+        final User user;
+        if (accountOrEmail.contains("@")) {
+            user = repository.findActiveByEmail(accountOrEmail);
+        }
+        else {
+            user = repository.findByName(accountOrEmail);
+        }
+
+        if (user == null) {
+            return null;
+        }
+
+        final var dto = new UserSearchDTO();
+        dto.setName(user.getName());
+        dto.setEmail(user.getEmail());
+        dto.setActive(user.isActive());
+        dto.setId(user.getId());
+        dto.setCreationDate(user.getCreationDate());
+        dto.setLastUpdate(user.getLastUpdate());
+
+        return dto;
     }
 
     /**

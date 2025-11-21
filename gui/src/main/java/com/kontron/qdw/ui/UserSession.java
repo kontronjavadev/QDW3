@@ -19,10 +19,9 @@ import jakarta.annotation.PostConstruct;
 import net.sourceforge.jbizmo.commons.crypto.*;
 import jakarta.inject.*;
 import jakarta.security.enterprise.credential.*;
+import net.sourceforge.jbizmo.commons.annotation.Customized;
 import java.nio.charset.*;
 import java.io.*;
-
-import net.sourceforge.jbizmo.commons.annotation.Customized;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
 
 @Named("userSession")
@@ -54,6 +53,8 @@ public class UserSession implements Serializable {
     public static final String ROLE_SUPERUSER = "SUPERUSER";
     @Generated
     public static final String ROLE_USER_ADMINISTRATOR = "USER_ADMINISTRATOR";
+    @Generated
+    public static final String ROLE_MAINTAINER = "MAINTAINER";
     @Generated
     private static final Map<String, Locale> supportedLocales;
     @Generated
@@ -177,7 +178,7 @@ public class UserSession implements Serializable {
         try {
             logger.debug("Perform reset password operation for '{}'", principal.getName());
 
-            UserSearchDTO userByAccountOrEmail = userService.findByAccountOrEmail(principal.getName());                
+            UserSearchDTO userByAccountOrEmail = userService.findByAccountOrEmail(principal.getName());
             if (userByAccountOrEmail == null) {
                 MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_INFO, OPERATION_RESETPWUSER);
                 return;
