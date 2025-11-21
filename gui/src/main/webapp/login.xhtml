@@ -23,13 +23,12 @@ xmlns:p="http://primefaces.org/ui">
 		<h:panelGrid columns="2" cellpadding="3">
 
 			<h:outputLabel styleClass="label-field-mandatory" value="#{i18n.login_username} *:"/>
-			<p:inputText id="txtUserName" value="#{userSession.principal.name}" required="true">
+			<p:inputText id="txtUserName" value="#{userSession.principal.name}" required="true" placeholder="#{i18n.login_username}">
 				<f:validateRequired/>
 			</p:inputText>
 
 			<h:outputLabel styleClass="label-field-mandatory" value="#{i18n.login_password} *:"/>
-			<p:password id="txtPassword" feedback="false" required="true" value="#{userSession.principal.password}">
-				<f:validateRequired/>
+			<p:password id="txtPassword" feedback="false" value="#{userSession.principal.password}" placeholder="#{i18n.login_password}">
 			</p:password>
 
 			<h:outputLabel value="#{i18n.login_language} *:" styleClass="label-field-mandatory" for="cboLocale"/>
@@ -37,7 +36,7 @@ xmlns:p="http://primefaces.org/ui">
 				<f:selectItems value="#{userSession.supportedLocales}"/>
 			</p:selectOneMenu>
 
-			<p:commandButton id="cmdLogin" value="#{i18n.login_command}" ajax="false" action="#{userSession.login}"/>
+			<p:commandButton id="cmdLogin" icon="pi pi-sign-in" value="#{i18n.login_command}" ajax="false" action="#{userSession.login}"/>
 			<p:commandButton id="cmdResetPW" icon="pi pi-key" value="#{i18n.command_resetpw}" ajax="true" onclick="PF('resetPWConfirm').show()" class="btn-dangerous" style="float:right;margin-right:0"/>
 
 		</h:panelGrid>
