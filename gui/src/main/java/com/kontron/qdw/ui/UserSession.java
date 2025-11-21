@@ -21,6 +21,8 @@ import jakarta.inject.*;
 import jakarta.security.enterprise.credential.*;
 import java.nio.charset.*;
 import java.io.*;
+
+import net.sourceforge.jbizmo.commons.annotation.Customized;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
 
 @Named("userSession")
@@ -118,9 +120,19 @@ public class UserSession implements Serializable {
     /**
      * Perform login operation
      */
-    @Generated
+    @Customized
     public void login() {
         logger.debug("Login user '{}'", principal.getName());
+        if (principal.getName().contains("@")) {
+            UserSearchDTO userByEmail = userService.findByAccountOrEmail(principal.getName());
+            if (userByEmail == null) {
+                MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_ERROR, LOG_ON_FAILED,
+                        new SecurityException("User account does not exist!"));
+                return;
+            }
+            principal.setName(userByEmail.getName());
+            logger.debug("Login user -> '{}'", principal.getName());
+        }
 
         final var credential = new UsernamePasswordCredential(principal.getName(), new Password(principal.getPassword()));
         final var resp = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
