@@ -115,6 +115,28 @@ public class UserView extends SuperView implements Serializable {
         logger.debug("View initialization finished");
     }
 
+    /**
+     * Callback method for auto-complete field
+     * @param query the filter criterion inserted by the user
+     * @return a list containing all proposals
+     */
+    public List<String> onCompleteUserName(String query) {
+        final var results = new ArrayList<String>();
+
+        try {
+            final Collection<UserListDTO> items = userService.searchByName("%" + query + "%");
+
+            for (final UserListDTO item : items) {
+                results.add(item.getName());
+            }
+        }
+        catch (final Exception e) {
+            logger.error("Error while searching for auto-complete items by using the entered text '{}'!", query, e);
+        }
+
+        return results;
+    }
+
     @Override
     protected String getViewName() {
         return VIEW_ID;

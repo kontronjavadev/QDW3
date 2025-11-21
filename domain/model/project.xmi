@@ -105,7 +105,7 @@
   <net.sourceforge.jbizmo.model.java:Namespace name="ui.test" parent="/0/@rootNamespace" project="/0"/>
   <net.sourceforge.jbizmo.model.client:FormGroup name="Master data" groupOrder="1" forms="/47 /51 /41" roles="/0/@roles.0" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="base" parent="/1" javaTypes="/45 /67 /14 /13 /64" project="/0"/>
-  <net.sourceforge.jbizmo.model.java:Namespace name="base" parent="/3" javaTypes="/16 /53 /50 /44 /37 /40 /15 /34 /25 /63 /21 /30 /65" project="/0"/>
+  <net.sourceforge.jbizmo.model.java:Namespace name="base" parent="/3" javaTypes="/16 /53 /50 /44 /65 /37 /40 /15 /34 /25 /63 /21 /30 /68" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="base" parent="/4" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="base" parent="/2" javaTypes="/46 /59 /60 /55 /57 /66 /56 /12 /54 /61 /62 /11 /58" project="/0"/>
   <net.sourceforge.jbizmo.model.repository:Repository name="UserRepository" comment="Create, read, update and delete services for user objects." namespace="/10">
@@ -315,6 +315,9 @@
     </boundaryMethods>
     <boundaryMethods name="findByAccountOrEmail" comment="" returnType="/21" methodType="FIND_BY_UNIQUE_KEY" serviceMethod="/11/@repositoryMethods.12">
       <methodParameters name="accountOrEmail" type="/0/@allSupportedTypes.12" hint=""/>
+    </boundaryMethods>
+    <boundaryMethods name="searchByName" comment="" returnType="/68" returnTypeModifier="List" methodType="SEARCH_BY_UNIQUE_KEY" serviceMethod="/11/@repositoryMethods.11">
+      <methodParameters name="filter" type="/0/@allSupportedTypes.12" hint=""/>
     </boundaryMethods>
   </net.sourceforge.jbizmo.model.boundary:BoundaryBean>
   <net.sourceforge.jbizmo.model.boundary:BoundaryBean name="RoleBoundaryServiceBean" comment="Boundary service for role objects" namespace="/7" interfaceName="RoleBoundaryService" repository="/12">
@@ -1539,4 +1542,13 @@
       <methodParameters name="passwordReset" type="/65" hint=""/>
     </boundaryMethods>
   </net.sourceforge.jbizmo.model.boundary:BoundaryBean>
+  <net.sourceforge.jbizmo.model.dto:DTOBean name="UserListDTO" comment="Instances of this class represent data transfer objects that are mapped to user domain objects" namespace="/8" standardConversion="true" createdManually="true">
+    <domainObject href="package-base.xmi#//@domainObjects.1"/>
+    <attributes name="id">
+      <domainAttribute href="package-base.xmi#//@domainObjects.0/@attributes.0"/>
+    </attributes>
+    <attributes name="name">
+      <domainAttribute href="package-base.xmi#//@domainObjects.1/@attributes.0"/>
+    </attributes>
+  </net.sourceforge.jbizmo.model.dto:DTOBean>
 </xmi:XMI>

@@ -47,7 +47,7 @@
 				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_0" id="s_0" value="#{userView.searchObject.searchFields[0].sortOrder}">
 					<f:selectItems value="#{userView.sortOrderList}"/>
 				</p:selectOneMenu>
-				<p:inputText id="fi_0" value="#{userView.searchObject.searchFields[0].stringCriterion}" size="30"/>
+				<p:autoComplete minQueryLength="2" scrollHeight="250" completeMethod="#{userView.onCompleteUserName}" id="fi_0" value="#{userView.searchObject.searchFields[0].stringCriterion}" size="30"/>
 				<h:panelGroup id="p_0">
 					<p:inputText id="b_0" rendered="#{userView.searchObject.searchFields[0].between}" value="#{userView.searchObject.searchFields[0].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>

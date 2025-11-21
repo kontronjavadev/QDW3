@@ -324,4 +324,25 @@ public class UserBoundaryService {
         return dto;
     }
 
+    /**
+     * @param filter
+     * @return a list containing user objects
+     */
+    @Generated
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public List<UserListDTO> searchByName(String filter) {
+        final var resultList = new ArrayList<UserListDTO>();
+
+        for (final User user : repository.searchByName(filter)) {
+            final var dto = new UserListDTO();
+            dto.setId(user.getId());
+            dto.setName(user.getName());
+
+            resultList.add(dto);
+        }
+
+        return resultList;
+    }
+
 }
