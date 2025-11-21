@@ -38,9 +38,17 @@ xmlns:p="http://primefaces.org/ui">
 			</p:selectOneMenu>
 
 			<p:commandButton id="cmdLogin" value="#{i18n.login_command}" ajax="false" action="#{userSession.login}"/>
+			<p:commandButton id="cmdResetPW" icon="pi pi-key" value="#{i18n.command_resetpw}" ajax="true" onclick="PF('resetPWConfirm').show()" class="btn-dangerous" style="float:right;margin-right:0"/>
 
 		</h:panelGrid>
 	</p:dialog>
+
+	<p:confirmDialog modal="true" closeOnEscape="true" message="#{i18n.dialog_resetpw_question}" header="#{i18n.dialog_resetpw_title}" severity="warn" widgetVar="resetPWConfirm">
+		<p:commandButton value="#{i18n.command_yes}" oncomplete="PF('resetPWConfirm').hide()" actionListener="#{userSession.resetPassword}" id="panData_cmdYes" ajax="false"/>
+		<p:commandButton value="#{i18n.command_no}" onclick="PF('resetPWConfirm').hide()" type="button"/>
+	</p:confirmDialog>
+
+
 	</h:form>
 </body>
 </html>

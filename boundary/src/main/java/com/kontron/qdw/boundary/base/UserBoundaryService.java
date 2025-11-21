@@ -1,13 +1,12 @@
 package com.kontron.qdw.boundary.base;
 
+import com.kontron.qdw.boundary.util.MailServiceFacade;
 import com.kontron.qdw.repository.base.*;
-import com.kontron.util.cipher.PasswordGenerator;
-
+import com.kontron.qdw.boundary.util.Constants;
 import net.sourceforge.jbizmo.commons.search.exception.*;
 import com.kontron.qdw.dto.base.*;
-import com.kontron.qdw.boundary.util.Constants;
-import com.kontron.qdw.boundary.util.MailServiceFacade;
 import com.kontron.qdw.domain.base.*;
+import com.kontron.util.cipher.PasswordGenerator;
 import java.util.*;
 import jakarta.validation.ConstraintViolationException;
 import java.security.NoSuchAlgorithmException;
@@ -15,9 +14,9 @@ import net.sourceforge.jbizmo.commons.crypto.*;
 import jakarta.inject.*;
 import jakarta.ejb.*;
 import jakarta.annotation.security.*;
+import net.sourceforge.jbizmo.commons.annotation.Customized;
 import net.sourceforge.jbizmo.commons.search.dto.*;
 import net.sourceforge.jbizmo.commons.repository.*;
-import net.sourceforge.jbizmo.commons.annotation.Customized;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
 
 @Stateless
@@ -41,6 +40,38 @@ public class UserBoundaryService {
     @Generated
     public UserBoundaryService(UserRepository repository) {
         this.repository = repository;
+    }
+
+    /**
+     * @param accountOrEmail
+     * @return the user or null if it could not be found
+     */
+    @Customized
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public UserSearchDTO findByAccountOrEmail(String accountOrEmail) {
+        // Find persistent object
+        final User user;
+        if (accountOrEmail.contains("@")) {
+            user = repository.findActiveByEmail(accountOrEmail);
+        }
+        else {
+            user = repository.findByName(accountOrEmail);            
+        }
+
+        if (user == null) {
+            return null;
+        }
+
+        final var dto = new UserSearchDTO();
+        dto.setName(user.getName());
+        dto.setEmail(user.getEmail());
+        dto.setActive(user.isActive());
+        dto.setId(user.getId());
+        dto.setCreationDate(user.getCreationDate());
+        dto.setLastUpdate(user.getLastUpdate());
+
+        return dto;
     }
 
     /**

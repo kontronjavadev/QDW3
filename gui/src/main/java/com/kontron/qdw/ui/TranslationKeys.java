@@ -162,4 +162,6 @@ public interface TranslationKeys {
     String SEARCH_INPUT_VALIDATION = "search_input_validation";
     String SEARCH_INPUT_VISIBLE_FIELDS = "search_input_visible_fields";
     String SEARCH_INPUT_VISIBLE_FIELDS_LABEL = "search_input_visible_fields_label";
+    String OPERATION_RESETPW_FAIL = "operation_resetpw_fail";
+    String OPERATION_RESETPWUSER = "operation_resetpwuser";
 }

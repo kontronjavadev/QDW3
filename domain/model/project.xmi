@@ -103,7 +103,7 @@
   <net.sourceforge.jbizmo.model.java:Namespace name="exchange" parent="/0/@rootNamespace" childNamespaces="/9" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="ui.test" parent="/0/@rootNamespace" project="/0"/>
   <net.sourceforge.jbizmo.model.client:FormGroup name="Master data" groupOrder="1" forms="/47 /51 /41" roles="/0/@roles.0" project="/0"/>
-  <net.sourceforge.jbizmo.model.java:Namespace name="base" parent="/1" javaTypes="/45 /14 /13 /64 /67" project="/0"/>
+  <net.sourceforge.jbizmo.model.java:Namespace name="base" parent="/1" javaTypes="/45 /67 /14 /13 /64" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="base" parent="/3" javaTypes="/16 /53 /50 /44 /37 /40 /15 /34 /25 /63 /21 /30 /65" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="base" parent="/4" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="base" parent="/2" javaTypes="/46 /59 /60 /55 /57 /56 /12 /54 /61 /62 /11 /58 /66" project="/0"/>
@@ -311,6 +311,9 @@
     </boundaryMethods>
     <boundaryMethods name="getUserForUpdate" comment="Find user by its ID" returnType="/30" methodType="FIND_BY_ID" serviceMethod="/11/@repositoryMethods.0">
       <methodParameters name="id" type="/0/@allSupportedTypes.2"/>
+    </boundaryMethods>
+    <boundaryMethods name="findByAccountOrEmail" comment="" returnType="/21" methodType="FIND_BY_UNIQUE_KEY" serviceMethod="/11/@repositoryMethods.12">
+      <methodParameters name="accountOrEmail" type="/0/@allSupportedTypes.12" hint=""/>
     </boundaryMethods>
   </net.sourceforge.jbizmo.model.boundary:BoundaryBean>
   <net.sourceforge.jbizmo.model.boundary:BoundaryBean name="RoleBoundaryServiceBean" comment="Boundary service for role objects" namespace="/7" interfaceName="RoleBoundaryService" repository="/12">

@@ -8,6 +8,7 @@ import net.sourceforge.jbizmo.commons.annotation.Generated;
 @Entity
 @Table(name = "user_tab")
 @NamedQuery(name = User.NQ_UK_FIND_BY_NAME, query = "select a from User a where a.name = :name")
+@NamedQuery(name = User.NQ_UK_FIND_ACTIVE_BY_EMAIL, query = "select a from User a where a.email = :email and a.active = true")
 @NamedQuery(name = User.NQ_UK_SEARCH_BY_NAME, query = "select a from User a where a.name like :name")
 @NamedQuery(name = User.NQ_UK_EXISTS_BY_NAME, query = "select count(a) from User a where a.name = :name")
 @NamedQuery(name = User.NQ_UK_EXISTS_BY_NAME_AND_ID, query = "select count(a) from User a where a.name = :name and a.id <> :id")
@@ -23,6 +24,7 @@ public class User extends AbstractEntityWithId {
     public static final String NQ_UK_EXISTS_BY_NAME = "User.checkByName";
     @Generated
     public static final String NQ_UK_FIND_BY_NAME = "User.getByName";
+    public static final String NQ_UK_FIND_ACTIVE_BY_EMAIL = "User.getActiveByEmail";
     @Generated
     public static final String NQ_GET_ROLES = "User.getRoles";
     @Generated

@@ -90,14 +90,16 @@ public class UserSession implements Serializable {
     private final transient ResourceBundle bundle = ResourceBundle.getBundle(DEFAULT_BUNDLE_NAME, locale);
     @Generated
     private final transient SecurityContext securityContext;
+    private final transient PasswordResetBoundaryService passwordResetService;
 
     /**
      * Default constructor
      */
     @Generated
     public UserSession() {
-        this.userService = null;
-        this.securityContext = null;
+        userService = null;
+        securityContext = null;
+        passwordResetService = null;
     }
 
     /**
@@ -107,9 +109,79 @@ public class UserSession implements Serializable {
      */
     @Inject
     @Generated
-    public UserSession(UserBoundaryService userService, SecurityContext securityContext) {
+    public UserSession(UserBoundaryService userService, SecurityContext securityContext, PasswordResetBoundaryService passwordResetService) {
         this.userService = userService;
         this.securityContext = securityContext;
+        this.passwordResetService = passwordResetService;
+    }
+
+    /**
+     * Perform login operation
+     */
+    @Generated
+    public void login() {
+        logger.debug("Login user '{}'", principal.getName());
+
+        final var credential = new UsernamePasswordCredential(principal.getName(), new Password(principal.getPassword()));
+        final var resp = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
+        final var req = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+
+        try {
+            final String enteredPassword = principal.getPassword();
+            final String encryptedPassword = HashGenerator.encryptSHA256(enteredPassword);
+
+            // Verify if user exists
+            principal = userService.logOn(principal.getName(), encryptedPassword);
+
+            // Due to security reasons we don't want to carry the password along the hole session!
+            principal.setPassword(null);
+
+            final AuthenticationStatus status = securityContext.authenticate(req, resp, AuthenticationParameters.withParams().credential(credential));
+
+            if (!status.equals(AuthenticationStatus.SEND_CONTINUE) && !status.equals(AuthenticationStatus.SUCCESS)) {
+                logger.info("Login of user '{}' failed! Status: {}", principal.getName(), status);
+
+                MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_ERROR, TranslationKeys.LOG_ON_FAILED);
+                return;
+            }
+
+            // Save entered user name in cookie
+            final var userNameCookie = new Cookie(USER_NAME_COOKIE, URLEncoder.encode(principal.getName(), StandardCharsets.UTF_8));
+            userNameCookie.setPath(req.getContextPath());
+
+            resp.addCookie(userNameCookie);
+        }
+        catch (final Exception e) {
+            logger.error("Error while performing login of user '{}'!", principal.getName(), e);
+            MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_ERROR, LOG_ON_FAILED, e);
+        }
+    }
+
+    /**
+     * Reset password
+     * @return the navigation target
+     */
+    public void resetPassword() {
+        try {
+            logger.debug("Perform reset password operation for '{}'", principal.getName());
+
+            UserSearchDTO userByAccountOrEmail = userService.findByAccountOrEmail(principal.getName());                
+            if (userByAccountOrEmail == null) {
+                MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_INFO, OPERATION_RESETPWUSER);
+                return;
+            }
+
+            PasswordResetDTO passwordResetDTO = new PasswordResetDTO();
+            passwordResetDTO.setUuid(UUID.randomUUID());
+            passwordResetDTO.setUserId(userByAccountOrEmail.getId());
+            passwordResetService.savePasswordResetAndMail(passwordResetDTO);
+
+            MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_INFO, OPERATION_RESETPWUSER);
+        }
+        catch (final Exception e) {
+            logger.error("Error while performing reset password operation!", e);
+            MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_ERROR, OPERATION_RESETPW_FAIL, e);
+        }
     }
 
     /**
@@ -410,49 +482,6 @@ public class UserSession implements Serializable {
 
         facesContext.responseComplete();
         return false;
-    }
-
-    /**
-     * Perform login operation
-     */
-    @Generated
-    public void login() {
-        logger.debug("Login user '{}'", principal.getName());
-
-        final var credential = new UsernamePasswordCredential(principal.getName(), new Password(principal.getPassword()));
-        final var resp = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
-        final var req = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-
-        try {
-            final String enteredPassword = principal.getPassword();
-            final String encryptedPassword = HashGenerator.encryptSHA256(enteredPassword);
-
-            // Verify if user exists
-            principal = userService.logOn(principal.getName(), encryptedPassword);
-
-            // Due to security reasons we don't want to carry the password along the hole session!
-            principal.setPassword(null);
-
-            final AuthenticationStatus status = securityContext.authenticate(req, resp, AuthenticationParameters.withParams().credential(credential));
-
-            if (!status.equals(AuthenticationStatus.SEND_CONTINUE) && !status.equals(AuthenticationStatus.SUCCESS)) {
-                logger.info("Login of user '{}' failed! Status: {}", principal.getName(), status);
-
-                MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_ERROR, TranslationKeys.LOG_ON_FAILED);
-                return;
-            }
-
-            // Save entered user name in cookie
-            final var userNameCookie = new Cookie(USER_NAME_COOKIE, URLEncoder.encode(principal.getName(), StandardCharsets.UTF_8));
-            userNameCookie.setPath(req.getContextPath());
-
-            resp.addCookie(userNameCookie);
-        }
-        catch (final Exception e) {
-            logger.error("Error while performing login of user '{}'!", principal.getName(), e);
-
-            MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_ERROR, LOG_ON_FAILED, e);
-        }
     }
 
     /**

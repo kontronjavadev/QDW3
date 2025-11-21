@@ -13,8 +13,27 @@ import com.kontron.qdw.domain.base.*;
 public class UserRepository extends AbstractRepository<User, Long> {
     @Generated
     private static final String PARAM_NAME = "name";
+    private static final String PARAM_EMAIL = "email";
     @Generated
     private static final String PARAM_ID = "id";
+
+    /**
+     * Find a persistent user object by using the provided parameters
+     * @param email
+     * @return the user object or null if it could not be found
+     * @throws IllegalStateException if the query returned more than one object
+     */
+    public User findActiveByEmail(String email) {
+        final TypedQuery<User> query = em.createNamedQuery(User.NQ_UK_FIND_ACTIVE_BY_EMAIL, User.class);
+        query.setParameter(PARAM_EMAIL, email);
+
+        final List<User> resultList = query.getResultList();
+
+        if (resultList.size() <= 1)
+            return resultList.stream().findFirst().orElse(null);
+
+        throw new IllegalStateException("Non unique result!");
+    }
 
     /**
      * Find a persistent user by using the primary key of the provided object
