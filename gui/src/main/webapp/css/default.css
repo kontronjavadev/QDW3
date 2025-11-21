@@ -794,7 +794,6 @@ body .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content .ui-tree-togg
 
 
 
-/***** css für Nodes weichen von GPE supplier ab. NICHT ÄNDERN oder Teile davon VERSCHIEBEN! *****/
 /* Nodes in Tree highlighted */
 body .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content.ui-state-highlight {
 	/* Hintergrundfarbe soll bei Selektion erhalten bleiben; andernfalls wären sämtliche aufgewählten Einträge Blau */ 
