@@ -35,6 +35,7 @@
       <databaseTables href="package-base.xmi#//@domainObjects.12/@databaseTable"/>
       <databaseTables href="package-base.xmi#//@domainObjects.13/@databaseTable"/>
       <databaseTables href="package-base.xmi#//@domainObjects.14/@databaseTable"/>
+      <databaseTables href="package-base.xmi#//@domainObjects.15/@databaseTable"/>
       <allSupportedColumnTypes javaTypes="/0/@allSupportedTypes.1 /0/@allSupportedTypes.6" name="INTEGER" omitSizeInformation="true"/>
       <allSupportedColumnTypes javaTypes="/0/@allSupportedTypes.2 /0/@allSupportedTypes.7" name="BIGINT" omitSizeInformation="true"/>
       <allSupportedColumnTypes javaTypes="/0/@allSupportedTypes.3 /0/@allSupportedTypes.8" name="DOUBLE" omitSizeInformation="true"/>
@@ -102,10 +103,10 @@
   <net.sourceforge.jbizmo.model.java:Namespace name="exchange" parent="/0/@rootNamespace" childNamespaces="/9" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="ui.test" parent="/0/@rootNamespace" project="/0"/>
   <net.sourceforge.jbizmo.model.client:FormGroup name="Master data" groupOrder="1" forms="/47 /51 /41" roles="/0/@roles.0" project="/0"/>
-  <net.sourceforge.jbizmo.model.java:Namespace name="base" parent="/1" javaTypes="/45 /14 /13 /64" project="/0"/>
-  <net.sourceforge.jbizmo.model.java:Namespace name="base" parent="/3" javaTypes="/16 /53 /50 /44 /37 /40 /15 /34 /25 /63 /21 /30" project="/0"/>
+  <net.sourceforge.jbizmo.model.java:Namespace name="base" parent="/1" javaTypes="/45 /14 /13 /64 /67" project="/0"/>
+  <net.sourceforge.jbizmo.model.java:Namespace name="base" parent="/3" javaTypes="/16 /53 /50 /44 /37 /40 /15 /34 /25 /63 /21 /30 /65" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="base" parent="/4" project="/0"/>
-  <net.sourceforge.jbizmo.model.java:Namespace name="base" parent="/2" javaTypes="/46 /12 /11 /54 /55 /56 /57 /58 /59 /60 /61 /62" project="/0"/>
+  <net.sourceforge.jbizmo.model.java:Namespace name="base" parent="/2" javaTypes="/46 /59 /60 /55 /57 /56 /12 /54 /61 /62 /11 /58 /66" project="/0"/>
   <net.sourceforge.jbizmo.model.repository:Repository name="UserRepository" comment="Create, read, update and delete services for user objects." namespace="/10">
     <domainObject href="package-base.xmi#//@domainObjects.1"/>
     <repositoryMethods name="findById" javaType="/11" transactionType="REQUIRED" methodType="FIND_BY_ID">
@@ -1393,6 +1394,145 @@
     <domainObject href="package-base.xmi#//@domainObjects.14"/>
     <boundaryMethods name="saveUserProperty" comment="Save the given user property" returnType="/63" methodType="SAVE" serviceMethod="/62/@repositoryMethods.0">
       <methodParameters name="userProperty" type="/63" hint=""/>
+    </boundaryMethods>
+  </net.sourceforge.jbizmo.model.boundary:BoundaryBean>
+  <net.sourceforge.jbizmo.model.dto:DTOBean name="PasswordResetDTO" comment="Instances of this class represent data transfer objects that are mapped to password reset domain objects" namespace="/8" standardConversion="true" createdManually="true">
+    <domainObject href="package-base.xmi#//@domainObjects.15"/>
+    <attributes name="uuid">
+      <domainAttribute href="package-base.xmi#//@domainObjects.15/@attributes.0"/>
+    </attributes>
+    <attributes name="id">
+      <domainAttribute href="package-base.xmi#//@domainObjects.0/@attributes.0"/>
+    </attributes>
+    <attributes name="version">
+      <domainAttribute href="package-base.xmi#//@domainObjects.0/@attributes.1"/>
+    </attributes>
+    <attributes name="creationDate">
+      <domainAttribute href="package-base.xmi#//@domainObjects.0/@attributes.2"/>
+    </attributes>
+    <attributes name="lastUpdate">
+      <domainAttribute href="package-base.xmi#//@domainObjects.0/@attributes.3"/>
+    </attributes>
+    <attributes name="userId">
+      <association xsi:type="net.sourceforge.net.model.domain:OneToOneAssociation" href="package-base.xmi#//@domainObjects.15/@associations.0"/>
+      <domainAttribute href="package-base.xmi#//@domainObjects.0/@attributes.0"/>
+    </attributes>
+    <attributes name="userName">
+      <association xsi:type="net.sourceforge.net.model.domain:OneToOneAssociation" href="package-base.xmi#//@domainObjects.15/@associations.0"/>
+      <domainAttribute href="package-base.xmi#//@domainObjects.1/@attributes.0"/>
+    </attributes>
+  </net.sourceforge.jbizmo.model.dto:DTOBean>
+  <net.sourceforge.jbizmo.model.repository:Repository name="PasswordResetRepository" comment="Create, read, update and delete services for password reset objects." namespace="/10">
+    <domainObject href="package-base.xmi#//@domainObjects.15"/>
+    <repositoryMethods name="findById" javaType="/66" transactionType="REQUIRED" methodType="FIND_BY_ID">
+      <returnType href="package-base.xmi#//@domainObjects.15"/>
+      <methodParameters name="id" type="/0/@allSupportedTypes.2"/>
+    </repositoryMethods>
+    <repositoryMethods name="findById" javaType="/66" transactionType="REQUIRED" methodType="FIND_EXISTING">
+      <returnType href="package-base.xmi#//@domainObjects.15"/>
+      <methodParameters name="id" type="/0/@allSupportedTypes.2"/>
+      <methodParameters name="mustExist" type="/0/@allSupportedTypes.4"/>
+    </repositoryMethods>
+    <repositoryMethods name="findById" javaType="/66" transactionType="REQUIRED" methodType="FIND_BY_OBJECT">
+      <returnType href="package-base.xmi#//@domainObjects.15"/>
+      <methodParameters name="passwordReset">
+        <type href="package-base.xmi#//@domainObjects.15"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="deleteAll" javaType="/66" returnType="/0/@allSupportedTypes.0" transactionType="REQUIRED" methodType="DELETE_ALL"/>
+    <repositoryMethods name="merge" javaType="/66" transactionType="REQUIRED" methodType="MERGE">
+      <returnType href="package-base.xmi#//@domainObjects.15"/>
+      <methodParameters name="passwordReset">
+        <type href="package-base.xmi#//@domainObjects.15"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="persist" javaType="/66" transactionType="REQUIRED" methodType="PERSIST">
+      <returnType href="package-base.xmi#//@domainObjects.15"/>
+      <methodParameters name="passwordReset">
+        <type href="package-base.xmi#//@domainObjects.15"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="copy" javaType="/66" transactionType="REQUIRED" methodType="COPY">
+      <returnType href="package-base.xmi#//@domainObjects.15"/>
+      <methodParameters name="sourceObject">
+        <type href="package-base.xmi#//@domainObjects.15"/>
+      </methodParameters>
+      <methodParameters name="targetObject">
+        <type href="package-base.xmi#//@domainObjects.15"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="delete" javaType="/66" returnType="/0/@allSupportedTypes.0" transactionType="REQUIRED" methodType="DELETE">
+      <methodParameters name="id" type="/0/@allSupportedTypes.2"/>
+    </repositoryMethods>
+    <repositoryMethods name="findAll" javaType="/66" returnTypeModifier="List" transactionType="REQUIRED">
+      <returnType href="package-base.xmi#//@domainObjects.15"/>
+    </repositoryMethods>
+    <repositoryMethods name="existsByUserId" javaType="/66" returnType="/0/@allSupportedTypes.4" transactionType="REQUIRED" methodType="EXISTS_BY_UNIQUE_KEY" hint="NQ_UK_EXISTS_BY_USER">
+      <methodParameters xsi:type="net.sourceforge.jbizmo.model.repository:RepositoryMethodParameter" name="user">
+        <type href="package-base.xmi#//@domainObjects.1"/>
+        <association xsi:type="net.sourceforge.net.model.domain:OneToOneAssociation" href="package-base.xmi#//@domainObjects.15/@associations.0"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="existsByIdAndUserId" javaType="/66" returnType="/0/@allSupportedTypes.4" transactionType="REQUIRED" methodType="EXISTS_BY_UNIQUE_KEY_WITH_ID" hint="NQ_UK_EXISTS_BY_USER_AND_ID">
+      <methodParameters xsi:type="net.sourceforge.jbizmo.model.repository:RepositoryMethodParameter" name="id" type="/0/@allSupportedTypes.2">
+        <attribute href="package-base.xmi#//@domainObjects.0/@attributes.0"/>
+      </methodParameters>
+      <methodParameters xsi:type="net.sourceforge.jbizmo.model.repository:RepositoryMethodParameter" name="user">
+        <type href="package-base.xmi#//@domainObjects.1"/>
+        <association xsi:type="net.sourceforge.net.model.domain:OneToOneAssociation" href="package-base.xmi#//@domainObjects.15/@associations.0"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="findByUserId" javaType="/66" transactionType="REQUIRED" methodType="FIND_BY_UNIQUE_KEY" hint="NQ_UK_FIND_BY_USER">
+      <returnType href="package-base.xmi#//@domainObjects.15"/>
+      <methodParameters xsi:type="net.sourceforge.jbizmo.model.repository:RepositoryMethodParameter" name="user">
+        <type href="package-base.xmi#//@domainObjects.1"/>
+        <association xsi:type="net.sourceforge.net.model.domain:OneToOneAssociation" href="package-base.xmi#//@domainObjects.15/@associations.0"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="existsByUuid" javaType="/66" returnType="/0/@allSupportedTypes.4" transactionType="REQUIRED" methodType="EXISTS_BY_UNIQUE_KEY" hint="NQ_UK_EXISTS_BY_UUID">
+      <methodParameters xsi:type="net.sourceforge.jbizmo.model.repository:RepositoryMethodParameter" name="uuid" type="/0/@allSupportedTypes.21">
+        <attribute href="package-base.xmi#//@domainObjects.15/@attributes.0"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="existsByIdAndUuid" javaType="/66" returnType="/0/@allSupportedTypes.4" transactionType="REQUIRED" methodType="EXISTS_BY_UNIQUE_KEY_WITH_ID" hint="NQ_UK_EXISTS_BY_UUID_AND_ID">
+      <methodParameters xsi:type="net.sourceforge.jbizmo.model.repository:RepositoryMethodParameter" name="id" type="/0/@allSupportedTypes.2">
+        <attribute href="package-base.xmi#//@domainObjects.0/@attributes.0"/>
+      </methodParameters>
+      <methodParameters xsi:type="net.sourceforge.jbizmo.model.repository:RepositoryMethodParameter" name="uuid" type="/0/@allSupportedTypes.21">
+        <attribute href="package-base.xmi#//@domainObjects.15/@attributes.0"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="findByUuid" javaType="/66" transactionType="REQUIRED" methodType="FIND_BY_UNIQUE_KEY" hint="NQ_UK_FIND_BY_UUID">
+      <returnType href="package-base.xmi#//@domainObjects.15"/>
+      <methodParameters xsi:type="net.sourceforge.jbizmo.model.repository:RepositoryMethodParameter" name="uuid" type="/0/@allSupportedTypes.21">
+        <attribute href="package-base.xmi#//@domainObjects.15/@attributes.0"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="existsById" javaType="/66" returnType="/0/@allSupportedTypes.4" transactionType="REQUIRED" methodType="EXISTS_BY_ID">
+      <methodParameters name="id" type="/0/@allSupportedTypes.2"/>
+    </repositoryMethods>
+    <repositoryMethods name="count" javaType="/66" returnType="/0/@allSupportedTypes.7" transactionType="REQUIRED" methodType="COUNT_ALL"/>
+    <repositoryMethods name="search" javaType="/66" returnTypeModifier="List" transactionType="REQUIRED" methodType="SEARCH">
+      <returnType href="package-base.xmi#//@domainObjects.15"/>
+    </repositoryMethods>
+    <repositoryMethods name="count" javaType="/66" returnType="/0/@allSupportedTypes.7" transactionType="REQUIRED" methodType="COUNT"/>
+    <repositoryMethods name="getUser" javaType="/66" transactionType="REQUIRED" methodType="GET_ASSOCIATION" hint="NQ_GET_USER">
+      <returnType href="package-base.xmi#//@domainObjects.1"/>
+      <methodParameters xsi:type="net.sourceforge.jbizmo.model.repository:RepositoryMethodParameter" name="id" type="/0/@allSupportedTypes.2">
+        <association xsi:type="net.sourceforge.net.model.domain:OneToOneAssociation" href="package-base.xmi#//@domainObjects.15/@associations.0"/>
+      </methodParameters>
+    </repositoryMethods>
+  </net.sourceforge.jbizmo.model.repository:Repository>
+  <net.sourceforge.jbizmo.model.boundary:BoundaryBean name="PasswordResetBoundaryServiceBean" comment="Boundary service for password reset objects" namespace="/7" interfaceName="PasswordResetBoundaryService" repository="/66">
+    <domainObject href="package-base.xmi#//@domainObjects.15"/>
+    <boundaryMethods name="findByUuid" comment="" returnType="/65" methodType="FIND_BY_UNIQUE_KEY" serviceMethod="/66/@repositoryMethods.14">
+      <methodParameters name="uuid" type="/0/@allSupportedTypes.21" hint=""/>
+    </boundaryMethods>
+    <boundaryMethods name="delete" comment="" returnType="/0/@allSupportedTypes.0" serviceMethod="/66/@repositoryMethods.7">
+      <methodParameters name="id" type="/0/@allSupportedTypes.2" hint=""/>
+    </boundaryMethods>
+    <boundaryMethods name="savePasswordReset" comment="Save the given password reset" returnType="/65" methodType="SAVE" serviceMethod="/66/@repositoryMethods.0">
+      <methodParameters name="passwordReset" type="/65" hint=""/>
     </boundaryMethods>
   </net.sourceforge.jbizmo.model.boundary:BoundaryBean>
 </xmi:XMI>

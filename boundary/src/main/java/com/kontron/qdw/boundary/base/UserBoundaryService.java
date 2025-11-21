@@ -81,7 +81,6 @@ public class UserBoundaryService {
         object.setVersion(newUser.getVersion());
         object.setCreationDate(newUser.getCreationDate());
 
-
         MailServiceFacade.sendMail(newUser.getEmail(), String.format("%s: %s", Constants.APP_ENV, "your new account"),
                 String.format("Your got an account for %s.\n"
                         + "name: %s\n"
