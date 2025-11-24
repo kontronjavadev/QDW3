@@ -187,7 +187,7 @@
 		rowsPerPageTemplate="50,150,400,1000">
 		<p:ajax event="rowDblselect" listener="#{userView.onDoubleClick}"/>
 
-		<p:column sortBy="#{userViewItem.name}" width="150" rendered="#{userView.searchObject.searchFields[0].visible}" >
+		<p:column sortBy="#{userViewItem.name}" width="150" rendered="#{userView.searchObject.searchFields[0].visible}" displayPriority="#{userView.searchObject.searchFields[0].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_user_name}"/>
 			</f:facet>
@@ -195,7 +195,7 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{userViewItem.email}" width="150" rendered="#{userView.searchObject.searchFields[1].visible}" >
+		<p:column sortBy="#{userViewItem.email}" width="150" rendered="#{userView.searchObject.searchFields[1].visible}" displayPriority="#{userView.searchObject.searchFields[1].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_user_email}"/>
 			</f:facet>
@@ -203,14 +203,14 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{userViewItem.active}" width="70" rendered="#{userView.searchObject.searchFields[2].visible}" >
+		<p:column sortBy="#{userViewItem.active}" width="70" rendered="#{userView.searchObject.searchFields[2].visible}" displayPriority="#{userView.searchObject.searchFields[2].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_user_active}"/>
 			</f:facet>
 			<p:selectBooleanCheckbox value="#{userViewItem.active}" disabled="true"/>
 		</p:column>
 
-		<p:column sortBy="#{userViewItem.creationDate}" width="120" rendered="#{userView.searchObject.searchFields[3].visible}" >
+		<p:column sortBy="#{userViewItem.creationDate}" width="120" rendered="#{userView.searchObject.searchFields[3].visible}" displayPriority="#{userView.searchObject.searchFields[3].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_abstractentitywithid_creationdate}"/>
 			</f:facet>
@@ -221,7 +221,7 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{userViewItem.lastUpdate}" width="120" rendered="#{userView.searchObject.searchFields[4].visible}" >
+		<p:column sortBy="#{userViewItem.lastUpdate}" width="120" rendered="#{userView.searchObject.searchFields[4].visible}" displayPriority="#{userView.searchObject.searchFields[4].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_abstractentitywithid_lastupdate}"/>
 			</f:facet>
