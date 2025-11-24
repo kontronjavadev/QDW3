@@ -26,7 +26,7 @@
 		</p:ajaxStatus>
 	</h:panelGrid>
 
-	<p:growl id="growl" showDetail="true" skipDetailIfEqualsSummary="true"/>
+	<p:growl id="growl" showDetail="true" skipDetailIfEqualsSummary="true" />
 
 	<p:dialog height="auto" width="1000" header="#{i18n.search_input_dlg}" widgetVar="dlgSearchInput" id="dlgSearchInput" closeOnEscape="true" modal="true" >
 		<p:tabView id="tabViewSearchInput" dynamic="false">
@@ -395,7 +395,7 @@
 		<p:menuitem value="#{i18n.action_edit}" ajax="true" icon="pi pi-pencil" id="panData_mniUpdate" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR')}" action="#{customerView.openEditCustomerDialog}">
 			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{customerView.currentPageURL}"/>
 		</p:menuitem>
-		<p:menuitem value="#{i18n.action_copy}" ajax="true" icon="pi pi-copy" id="panData_mniCopy" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR')}" onclick="PF('copyConfirm').show()"/>
+		<p:menuitem value="#{i18n.action_copy}" ajax="true" icon="pi pi-copy" id="panData_mniCopy" rendered="false" onclick="PF('copyConfirm').show()"/>
 		<p:menuitem value="#{i18n.action_refresh}" ajax="false" type="push" icon="pi pi-refresh" id="panData_mniRefresh" actionListener="#{customerView.fetchCustomers}"/>
 
 		<p:separator/>

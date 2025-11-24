@@ -68,14 +68,17 @@ public interface TranslationKeys {
     String FORM_CREATENEWBUSINESSUNITDIALOG_TITLE = "form_createnewbusinessunitdialog_title";
     String FORM_CREATENEWCOUNTRYDIALOG_TITLE = "form_createnewcountrydialog_title";
     String FORM_CREATENEWCUSTOMERDIALOG_TITLE = "form_createnewcustomerdialog_title";
+    String FORM_CREATENEWLOCATIONDIALOG_TITLE = "form_createnewlocationdialog_title";
     String FORM_CREATENEWROLEDIALOG_TITLE = "form_createnewroledialog_title";
     String FORM_CREATENEWUSERDIALOG_TITLE = "form_createnewuserdialog_title";
     String FORM_CUSTOMERVIEW_TITLE = "form_customerview_title";
     String FORM_EDITBUSINESSUNITDIALOG_TITLE = "form_editbusinessunitdialog_title";
     String FORM_EDITCOUNTRYDIALOG_TITLE = "form_editcountrydialog_title";
     String FORM_EDITCUSTOMERDIALOG_TITLE = "form_editcustomerdialog_title";
+    String FORM_EDITLOCATIONDIALOG_TITLE = "form_editlocationdialog_title";
     String FORM_EDITUSERDIALOG_TITLE = "form_edituserdialog_title";
     String FORM_EDITUSERSETTINGSDIALOG_TITLE = "form_editusersettingsdialog_title";
+    String FORM_LOCATIONVIEW_TITLE = "form_locationview_title";
     String FORM_RESETPASSWORDDIALOG_INVALIDLINK = "form_resetpassworddialog_invalidlink";
     String FORM_RESETPASSWORDDIALOG_TITLE = "form_resetpassworddialog_title";
     String FORM_ROLEVIEW_TITLE = "form_roleview_title";

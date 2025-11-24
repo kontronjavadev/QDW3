@@ -130,7 +130,7 @@
 		<p:menuitem value="#{i18n.action_edit}" ajax="true" icon="pi pi-pencil" id="panData_mniUpdate" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR')}" action="#{businessUnitView.openEditBusinessUnitDialog}">
 			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{businessUnitView.currentPageURL}"/>
 		</p:menuitem>
-		<p:menuitem value="#{i18n.action_copy}" ajax="true" icon="pi pi-copy" id="panData_mniCopy" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR')}" onclick="PF('copyConfirm').show()"/>
+		<p:menuitem value="#{i18n.action_copy}" ajax="true" icon="pi pi-copy" id="panData_mniCopy" rendered="false" onclick="PF('copyConfirm').show()"/>
 		<p:menuitem value="#{i18n.action_create}" ajax="true" icon="pi pi-plus" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR')}" action="#{businessUnitView.openCreateNewBusinessUnitDialog}">
 			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{businessUnitView.currentPageURL}"/>
 		</p:menuitem>
