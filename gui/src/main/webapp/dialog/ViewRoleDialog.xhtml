@@ -32,26 +32,33 @@
 	</h:panelGrid>
 
 	<p:panel>
-	<h:panelGrid columns="1">
-		<h:outputText styleClass="header-label" value="#{i18n.panel_admin_title}"/>
-	</h:panelGrid>
+		<h:panelGrid columns="1">
+			<h:outputText styleClass="header-label" value="#{i18n.panel_admin_title}"/>
+		</h:panelGrid>
 
-	<h:panelGrid columns="3">
+		<h:panelGrid columns="3">
+			<h:outputLabel value="#{i18n.lbl_attr_abstractentitywithid_id}:" for="txtId" styleClass="label-field-optional"/>
+			<p:inputText id="txtId" value="#{viewRoleDialog.role.id}" readonly="true">
+			</p:inputText>
+			<p:tooltip for="txtId" value=""/>
 
-		<h:outputLabel value="#{i18n.lbl_attr_abstractentitywithid_id}:" for="txtId" styleClass="label-field-optional"/>
-		<p:inputText id="txtId" value="#{viewRoleDialog.role.id}" readonly="true">
-		</p:inputText>
-		<p:tooltip for="txtId" value=""/>
+			<h:outputLabel value="#{i18n.lbl_attr_role_name}:" for="txtName" styleClass="label-field-optional"/>
+			<p:inputText id="txtName" value="#{viewRoleDialog.role.name}" readonly="true">
+			</p:inputText>
+			<p:tooltip for="txtName" value=""/>
+		</h:panelGrid>
 
-		<h:outputLabel value="#{i18n.lbl_attr_role_name}:" for="txtName" styleClass="label-field-optional"/>
-		<p:inputText id="txtName" value="#{viewRoleDialog.role.name}" readonly="true">
-		</p:inputText>
-		<p:tooltip for="txtName" value=""/>
 
-	</h:panelGrid>
+		<h:panelGrid columns="1">
+			<h:outputText styleClass="header-label" value="#{i18n.panel_viewroledialog_users_title}"/>
+		</h:panelGrid>
+
+		<ui:include src="panel/RoleUserPanel.xhtml"/>
 	</p:panel>
 
 	<p/>
+
+
 
 	<h:panelGrid columns="1">
 		<p:commandButton id="cmdBack" icon="pi pi-caret-left" value="#{i18n.command_back}" action="#{userSession.getLastPage}" immediate="true" ajax="false"/>

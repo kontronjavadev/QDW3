@@ -8,10 +8,13 @@ import com.kontron.qdw.dto.base.*;
 import com.kontron.qdw.domain.base.*;
 import com.kontron.util.cipher.PasswordGenerator;
 import java.util.*;
+import java.util.stream.Collectors;
+
 import jakarta.validation.ConstraintViolationException;
 import java.security.NoSuchAlgorithmException;
 import net.sourceforge.jbizmo.commons.crypto.*;
 import jakarta.inject.*;
+import jakarta.persistence.TypedQuery;
 import jakarta.ejb.*;
 import jakarta.annotation.security.*;
 import net.sourceforge.jbizmo.commons.annotation.Customized;
@@ -120,6 +123,23 @@ public class UserBoundaryService {
         dto.setLastUpdate(user.getLastUpdate());
 
         return dto;
+    }
+
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public List<UserOfRoleDTO> findUsersWithRole(long roleId) {
+        String statement = "select u "
+                + "from User u "
+                + "where :role member of u.roles "
+                + "order by u.name";
+
+        @SuppressWarnings("resource")
+        final TypedQuery<User> query = repository.getEntityManager().createQuery(statement, User.class);
+        query.setParameter("role", new Role(roleId));
+
+        return query.getResultList().stream()
+                .map(u -> new UserOfRoleDTO(u.getId(), u.getName(), u.getEmail(), u.isActive()))
+                .collect(Collectors.toList());
     }
 
     /**

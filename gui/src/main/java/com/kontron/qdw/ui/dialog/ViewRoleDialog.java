@@ -11,6 +11,8 @@ import java.util.*;
 import jakarta.faces.view.*;
 import static com.kontron.qdw.ui.UserSession.*;
 import com.kontron.qdw.ui.*;
+import com.kontron.qdw.ui.panel.RoleUserPanel;
+
 import jakarta.inject.*;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
 import java.io.*;
@@ -36,14 +38,16 @@ public class ViewRoleDialog implements Serializable {
     private String formTitle = "";
     @Generated
     private transient ResourceBundle bundle;
+    private final RoleUserPanel panRoleUser;
 
     /**
      * Default constructor
      */
     @Generated
     public ViewRoleDialog() {
-        this.roleService = null;
-        this.userSession = null;
+        roleService = null;
+        userSession = null;
+        panRoleUser = null;
     }
 
     /**
@@ -53,9 +57,57 @@ public class ViewRoleDialog implements Serializable {
      */
     @Inject
     @Generated
-    public ViewRoleDialog(RoleBoundaryService roleService, UserSession userSession) {
+    public ViewRoleDialog(RoleBoundaryService roleService, UserSession userSession, RoleUserPanel panRoleUser) {
         this.roleService = roleService;
         this.userSession = userSession;
+        this.panRoleUser = panRoleUser;
+    }
+
+    /**
+     * Initialize dialog
+     */
+    @Generated
+    public void initView() {
+        logger.debug("Initialize dialog");
+
+        bundle = ResourceBundle.getBundle(DEFAULT_BUNDLE_NAME, userSession.getLocale());
+
+        // Check if user is allowed to open this page!
+        if (!userSession.checkAuthorization(true, ROLE_ADMINISTRATOR, ROLE_USER_ADMINISTRATOR)) {
+            return;
+        }
+
+
+        try {
+            logger.debug("Fetch data for object with id '{}'", selectedObjectId);
+
+            role = roleService.findRoleById(selectedObjectId);
+
+            panRoleUser.setSelectedObjectId(selectedObjectId);
+            panRoleUser.setCurrentPageURL(ViewRoleDialog.PAGE_INIT_URL + selectedObjectId);
+            panRoleUser.setReadOnly(true);
+            panRoleUser.initView();
+
+            formTitle = bundle.getString(FORM_VIEWROLEDIALOG_TITLE) + " \"" + role.getName() + "\"";
+
+            logger.debug("Dialog initialization finished");
+        }
+        catch (final Exception e) {
+            logger.error("Dialog initialization failed!", e);
+
+            final FacesContext facesContext = FacesContext.getCurrentInstance();
+
+            try {
+                final String errorMessage = bundle.getString(DIALOG_INIT_FAIL);
+
+                facesContext.getExternalContext().responseSendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, errorMessage);
+            }
+            catch (final Exception ex) {
+                logger.error("Failed to send error code!", ex);
+            }
+
+            facesContext.responseComplete();
+        }
     }
 
     /**
@@ -104,47 +156,6 @@ public class ViewRoleDialog implements Serializable {
     @Generated
     public void setSelectedObjectId(long selectedObjectId) {
         this.selectedObjectId = selectedObjectId;
-    }
-
-    /**
-     * Initialize dialog
-     */
-    @Generated
-    public void initView() {
-        logger.debug("Initialize dialog");
-
-        bundle = ResourceBundle.getBundle(DEFAULT_BUNDLE_NAME, userSession.getLocale());
-
-        // Check if user is allowed to open this page!
-        if (!userSession.checkAuthorization(true, ROLE_ADMINISTRATOR, ROLE_USER_ADMINISTRATOR))
-            return;
-
-
-        try {
-            logger.debug("Fetch data for object with id '{}'", selectedObjectId);
-
-            role = roleService.findRoleById(selectedObjectId);
-
-            formTitle = bundle.getString(FORM_VIEWROLEDIALOG_TITLE) + " '" + selectedObjectId + "'";
-
-            logger.debug("Dialog initialization finished");
-        }
-        catch (final Exception e) {
-            logger.error("Dialog initialization failed!", e);
-
-            final FacesContext facesContext = FacesContext.getCurrentInstance();
-
-            try {
-                final String errorMessage = bundle.getString(DIALOG_INIT_FAIL);
-
-                facesContext.getExternalContext().responseSendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, errorMessage);
-            }
-            catch (final Exception ex) {
-                logger.error("Failed to send error code!", ex);
-            }
-
-            facesContext.responseComplete();
-        }
     }
 
     /**

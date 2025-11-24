@@ -1,0 +1,76 @@
+<ui:composition xmlns="https://jakarta.ee/xml/ns/jakartaee"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:h="jakarta.faces.html"
+	xmlns:f="jakarta.faces.core"
+	xmlns:p="http://primefaces.org/ui">
+
+	<p:menubar>
+		<p:submenu icon="pi pi-refresh" label="#{i18n.mnu_view}">
+			<p:menuitem value="#{i18n.action_refresh}" ajax="false" icon="pi pi-refresh" actionListener="#{roleUserPanel.fetchUsers}"/>
+		</p:submenu>
+		<p:submenu icon="pi pi-print" label="#{i18n.mnu_export}">
+			<p:menuitem value="#{i18n.action_export_xls}" ajax="false" icon="pi pi-file-excel">
+				<p:dataExporter type="xlsxstream" target="gridRoleUserPanel" fileName="UserList"/>
+			</p:menuitem>
+			<p:menuitem value="#{i18n.action_export_pdf}" ajax="false" icon="pi pi-file-pdf">
+				<p:dataExporter type="pdf" target="gridRoleUserPanel" fileName="UserList"/>
+			</p:menuitem>
+		</p:submenu>
+	</p:menubar>
+
+
+	<p:dataTable id="gridRoleUserPanel" var="roleUserPanelItem" rows="50"
+		selectionMode="single" selectionTextDisabled="false"
+		selection="#{roleUserPanel.selItemOfUsers}"
+		loadingMessage="#{i18n.action_fetch_data}"
+		value="#{roleUserPanel.usersList}" 
+        scrollable="false" styleClass="panelScrollable" allowUnsorting="true" 
+		paginatorPosition="top" paginatorAlwaysVisible="false" paginator="true" resizableColumns="true" resizeMode="expand" 
+		rowKey="#{roleUserPanelItem.id}"
+		paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+		rowsPerPageTemplate="50,150,400,1000,{ShowAll|'All'}">
+		<p:ajax event="rowDblselect" listener="#{roleUserPanel.onUsersGridDoubleClick}"/>
+
+		<p:column sortBy="#{roleUserPanelItem.name}" width="120" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_user_name}"/>
+			</f:facet>
+			<h:outputText value="#{roleUserPanelItem.name}"/>
+		</p:column>
+		<p:column sortBy="#{roleUserPanelItem.email}" width="120" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_user_email}"/>
+			</f:facet>
+			<h:outputText value="#{roleUserPanelItem.email}"/>
+		</p:column>
+		<p:column sortBy="#{roleUserPanelItem.active}" width="40" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_user_active}"/>
+			</f:facet>
+			<p:selectBooleanCheckbox value="#{roleUserPanelItem.active}" disabled="true"/>
+		</p:column>
+	</p:dataTable>
+	<p/>
+
+	<h:outputText styleClass="label-field-mandatory" value="#{i18n.result_total_number_records} #{roleUserPanel.usersList.size()}"/>
+
+
+
+<!--Kontextmenü mit Möglichkeit, eine Zelle oder eine Zeile zu kopieren -->
+
+	<h:inputHidden id="cellText" value="#{roleUserPanel.cellText}" />
+	<h:inputHidden id="rowCsv" value="#{roleUserPanel.rowCsv}" />
+
+	<p:contextMenu for="gridRoleUserPanel" beforeShow="updateContextData(event)" >
+		<p:menuitem value="#{i18n.action_edit}" ajax="true" icon="pi pi-pencil" id="gridRoleUserPanel_mniUpdate" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;USER_ADMINISTRATOR')}" action="#{roleUserPanel.openEditUserDialog}">
+			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{roleUserPanel.currentPageURL}"/>
+		</p:menuitem>
+		<p:menuitem value="#{i18n.action_refresh}" ajax="false" type="push" icon="pi pi-refresh" id="gridRoleUserPanel_mniRefresh" actionListener="#{roleUserPanel.fetchUsers}"/>
+
+		<p:separator/>
+
+		<p:menuitem value="#{i18n.ctxmenu_copy_cell}" actionListener="#{roleUserPanel.copyCellToClipboard}" icon="pi pi-copy" update="@none"/>
+		<p:menuitem value="#{i18n.ctxmenu_copy_row}" actionListener="#{roleUserPanel.copyRowToClipboard}" icon="pi pi-copy" update="@none"/>
+	</p:contextMenu>
+
+</ui:composition>
