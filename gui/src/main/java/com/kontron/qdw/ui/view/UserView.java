@@ -116,6 +116,42 @@ public class UserView extends SuperView implements Serializable {
     }
 
     /**
+     * Initialize search object
+     */
+    @Customized
+    public void initSearchObject() {
+        searchObj = new SearchDTO();
+        int colOrderId = -1;
+
+        // Initialize search object
+        searchObj.setMaxResult(1000);
+        searchObj.setExactFilterMatch(true);
+        searchObj.setCaseSensitive(false);
+        searchObj.setCount(true);
+
+        refreshFormatSettings();
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, UserSearchDTO.SELECT_NAME,
+                bundle.getString(LBL_ATTR_USER_NAME), SearchFieldDataTypeEnum.STRING, 150);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, UserSearchDTO.SELECT_EMAIL,
+                bundle.getString(LBL_ATTR_USER_EMAIL), SearchFieldDataTypeEnum.STRING, 150);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, UserSearchDTO.SELECT_ACTIVE,
+                bundle.getString(LBL_ATTR_USER_ACTIVE), SearchFieldDataTypeEnum.BOOLEAN, 70);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, UserSearchDTO.SELECT_CREATIONDATE,
+                bundle.getString(LBL_ATTR_ABSTRACTENTITYWITHID_CREATIONDATE), SearchFieldDataTypeEnum.LOCAL_DATE_TIME, 120);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, UserSearchDTO.SELECT_LASTUPDATE,
+                bundle.getString(LBL_ATTR_ABSTRACTENTITYWITHID_LASTUPDATE), SearchFieldDataTypeEnum.LOCAL_DATE_TIME, 120);
+
+        visibleFields = new DualListModel<>();
+        visibleFields.setSource(new ArrayList<>());
+        visibleFields.setTarget(searchObj.getSearchFields());
+    }
+
+    /**
      * Callback method for auto-complete field
      * @param query the filter criterion inserted by the user
      * @return a list containing all proposals
@@ -331,38 +367,6 @@ public class UserView extends SuperView implements Serializable {
         searchObj.setNumberFormat(userSession.getNumberFormat());
         searchObj.setDecimalSeparator(DecimalFormatSymbols.getInstance(userSession.getLocale()).getDecimalSeparator());
         searchObj.setGroupingSeparator(DecimalFormatSymbols.getInstance(userSession.getLocale()).getGroupingSeparator());
-    }
-
-    /**
-     * Initialize search object
-     */
-    @Generated
-    public void initSearchObject() {
-        searchObj = new SearchDTO();
-        int colOrderId = -1;
-
-        // Initialize search object
-        searchObj.setMaxResult(1000);
-        searchObj.setExactFilterMatch(true);
-        searchObj.setCaseSensitive(false);
-        searchObj.setCount(false);
-
-        refreshFormatSettings();
-
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, UserSearchDTO.SELECT_NAME, bundle.getString(LBL_ATTR_USER_NAME),
-                SearchFieldDataTypeEnum.STRING, 150);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, UserSearchDTO.SELECT_EMAIL, bundle.getString(LBL_ATTR_USER_EMAIL),
-                SearchFieldDataTypeEnum.STRING, 150);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, UserSearchDTO.SELECT_ACTIVE, bundle.getString(LBL_ATTR_USER_ACTIVE),
-                SearchFieldDataTypeEnum.BOOLEAN, 70);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, UserSearchDTO.SELECT_CREATIONDATE,
-                bundle.getString(LBL_ATTR_ABSTRACTENTITYWITHID_CREATIONDATE), SearchFieldDataTypeEnum.LOCAL_DATE_TIME, 120);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, UserSearchDTO.SELECT_LASTUPDATE, bundle.getString(LBL_ATTR_ABSTRACTENTITYWITHID_LASTUPDATE),
-                SearchFieldDataTypeEnum.LOCAL_DATE_TIME, 120);
-
-        visibleFields = new DualListModel<>();
-        visibleFields.setSource(new ArrayList<>());
-        visibleFields.setTarget(searchObj.getSearchFields());
     }
 
     /**

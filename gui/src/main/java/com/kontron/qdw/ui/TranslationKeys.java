@@ -63,10 +63,13 @@ public interface TranslationKeys {
     String FIELD_ERRORPAGE_URI = "field_errorpage_uri";
     String FORM_BUSINESSUNITVIEW_TITLE = "form_businessunitview_title";
     String FORM_CHANGEPASSWORDDIALOG_TITLE = "form_changepassworddialog_title";
+    String FORM_COUNTRYVIEW_TITLE = "form_countryview_title";
     String FORM_CREATENEWBUSINESSUNITDIALOG_TITLE = "form_createnewbusinessunitdialog_title";
+    String FORM_CREATENEWCOUNTRYDIALOG_TITLE = "form_createnewcountrydialog_title";
     String FORM_CREATENEWROLEDIALOG_TITLE = "form_createnewroledialog_title";
     String FORM_CREATENEWUSERDIALOG_TITLE = "form_createnewuserdialog_title";
     String FORM_EDITBUSINESSUNITDIALOG_TITLE = "form_editbusinessunitdialog_title";
+    String FORM_EDITCOUNTRYDIALOG_TITLE = "form_editcountrydialog_title";
     String FORM_EDITUSERDIALOG_TITLE = "form_edituserdialog_title";
     String FORM_EDITUSERSETTINGSDIALOG_TITLE = "form_editusersettingsdialog_title";
     String FORM_RESETPASSWORDDIALOG_INVALIDLINK = "form_resetpassworddialog_invalidlink";
@@ -89,6 +92,7 @@ public interface TranslationKeys {
     String LBL_ATTR_ABSTRACTFUNCTIONALACTIVEENTITY_LASTUPDATE = "lbl_attr_abstractfunctionalactiveentity_lastupdate";
     String LBL_ATTR_ABSTRACTFUNCTIONALACTIVEENTITY_SHORTTEXT = "lbl_attr_abstractfunctionalactiveentity_shorttext";
     String LBL_ATTR_ABSTRACTFUNCTIONALACTIVEENTITY_VERSION = "lbl_attr_abstractfunctionalactiveentity_version";
+    String LBL_ATTR_COUNTRY_NAME = "lbl_attr_country_name";
     String LBL_ATTR_ROLE_NAME = "lbl_attr_role_name";
     String LBL_ATTR_USER_ACTIVE = "lbl_attr_user_active";
     String LBL_ATTR_USER_EMAIL = "lbl_attr_user_email";
@@ -136,6 +140,7 @@ public interface TranslationKeys {
     String PANEL_BASIC_TITLE = "panel_basic_title";
     String PANEL_CREATENEWUSERDIALOG_PANROLES_TITLE = "panel_createnewuserdialog_panroles_title";
     String PANEL_EDITUSERDIALOG_PANROLES_TITLE = "panel_edituserdialog_panroles_title";
+    String PANEL_VIEWROLEDIALOG_USERS_TITLE = "panel_viewroledialog_users_title";
     String PICK_LIST_ADD = "pick_list_add";
     String PICK_LIST_ADD_ALL = "pick_list_add_all";
     String PICK_LIST_REMOVE = "pick_list_remove";
