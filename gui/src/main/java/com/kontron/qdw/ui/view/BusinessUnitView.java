@@ -4,6 +4,8 @@ import com.kontron.qdw.boundary.base.*;
 import org.slf4j.*;
 import java.lang.invoke.*;
 import com.kontron.qdw.ui.dialog.*;
+import com.kontron.qdw.ui.view.util.CopyClipboard;
+
 import static com.kontron.qdw.ui.TranslationKeys.*;
 import net.sourceforge.jbizmo.commons.webclient.primefaces.util.*;
 import com.kontron.qdw.dto.base.*;
@@ -20,7 +22,7 @@ import java.io.*;
 
 @Named("businessUnitView")
 @ViewScoped
-public class BusinessUnitView implements Serializable {
+public class BusinessUnitView extends CopyClipboard implements Serializable {
     @Generated
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     @Generated

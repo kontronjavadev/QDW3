@@ -48,15 +48,14 @@
 	</p:menubar>
 
 
-	<p:dataTable id="panData" var="countryViewItem" rows="50"
+	<p:dataTable id="panData" var="countryViewItem" 
+		selectionTextDisabled="false" allowUnsorting="true" resizeMode="expand" multiViewState="true" 
 		selectionMode="single"
 		selection="#{countryView.selectedObject}"
 		loadingMessage="#{i18n.action_fetch_data}"
 		value="#{countryView.countriesList}" scrollable="false"
-		paginatorPosition="top" paginatorAlwaysVisible="false" paginator="true" resizableColumns="true"
-		rowKey="#{countryViewItem.code}"
-		paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-		rowsPerPageTemplate="10,50,100,500,1000">
+		resizableColumns="true"
+		rowKey="#{countryViewItem.code}" >
 		<p:ajax event="rowDblselect" listener="#{countryView.onDoubleClick}"/>
 
 		<p:column sortBy="#{countryViewItem.name}" width="150" >
@@ -125,7 +124,14 @@
 	<h:outputText styleClass="label-field-mandatory" value="#{i18n.result_total_number_records} #{countryView.countriesList.size()}"/>
 	<p/>
 
-	<p:contextMenu for="panData">
+
+
+<!--Kontextmenü mit Möglichkeit, eine Zelle oder eine Zeile zu kopieren -->
+
+	<h:inputHidden id="cellText" value="#{countryView.cellText}" />
+	<h:inputHidden id="rowCsv" value="#{countryView.rowCsv}" />
+
+	<p:contextMenu for="panData" beforeShow="updateContextData(event)" >
 		<p:menuitem value="#{i18n.action_delete}" ajax="true" icon="pi pi-trash" id="panData_mniDelete" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR')}" onclick="PF('deleteConfirm').show()"/>
 		<p:menuitem value="#{i18n.action_create}" ajax="true" icon="pi pi-plus" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR')}" action="#{countryView.openCreateNewCountryDialog}">
 			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{countryView.currentPageURL}"/>
@@ -135,6 +141,11 @@
 		</p:menuitem>
 		<p:menuitem value="#{i18n.action_copy}" ajax="true" icon="pi pi-copy" id="panData_mniCopy" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR')}" onclick="PF('copyConfirm').show()"/>
 		<p:menuitem value="#{i18n.action_refresh}" ajax="false" type="push" icon="pi pi-refresh" id="panData_mniRefresh" actionListener="#{countryView.fetchCountries}"/>
+
+		<p:separator/>
+
+		<p:menuitem value="#{i18n.ctxmenu_copy_cell}" actionListener="#{countryView.copyCellToClipboard}" icon="pi pi-copy" update="@none"/>
+		<p:menuitem value="#{i18n.ctxmenu_copy_row}" actionListener="#{countryView.copyRowToClipboard}" icon="pi pi-copy" update="@none"/>
 	</p:contextMenu>
 
 	<p:confirmDialog modal="true" closeOnEscape="true" message="#{i18n.dialog_delete_question}" header="#{i18n.dialog_delete_title}" severity="warn" widgetVar="deleteConfirm">

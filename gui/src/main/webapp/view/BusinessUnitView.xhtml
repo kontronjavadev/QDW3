@@ -48,15 +48,14 @@
 	</p:menubar>
 
 
-	<p:dataTable id="panData" var="businessUnitViewItem" rows="50"
+	<p:dataTable id="panData" var="businessUnitViewItem" 
+		selectionTextDisabled="false" allowUnsorting="true" resizeMode="expand" multiViewState="true" 
 		selectionMode="single"
 		selection="#{businessUnitView.selectedObject}"
 		loadingMessage="#{i18n.action_fetch_data}"
 		value="#{businessUnitView.businessUnitsList}" scrollable="false"
-		paginatorPosition="top" paginatorAlwaysVisible="false" paginator="true" resizableColumns="true"
-		rowKey="#{businessUnitViewItem.code}"
-		paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-		rowsPerPageTemplate="10,50,100,500,1000">
+		resizableColumns="true"
+		rowKey="#{businessUnitViewItem.code}" >
 		<p:ajax event="rowDblselect" listener="#{businessUnitView.onDoubleClick}"/>
 
 		<p:column sortBy="#{businessUnitViewItem.code}" width="100" >
@@ -119,7 +118,14 @@
 	<h:outputText styleClass="label-field-mandatory" value="#{i18n.result_total_number_records} #{businessUnitView.businessUnitsList.size()}"/>
 	<p/>
 
-	<p:contextMenu for="panData">
+
+
+<!--Kontextmenü mit Möglichkeit, eine Zelle oder eine Zeile zu kopieren -->
+
+	<h:inputHidden id="cellText" value="#{businessUnitView.cellText}" />
+	<h:inputHidden id="rowCsv" value="#{businessUnitView.rowCsv}" />
+
+	<p:contextMenu for="panData" beforeShow="updateContextData(event)" >
 		<p:menuitem value="#{i18n.action_delete}" ajax="true" icon="pi pi-trash" id="panData_mniDelete" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR')}" onclick="PF('deleteConfirm').show()"/>
 		<p:menuitem value="#{i18n.action_edit}" ajax="true" icon="pi pi-pencil" id="panData_mniUpdate" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR')}" action="#{businessUnitView.openEditBusinessUnitDialog}">
 			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{businessUnitView.currentPageURL}"/>
@@ -129,6 +135,11 @@
 			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{businessUnitView.currentPageURL}"/>
 		</p:menuitem>
 		<p:menuitem value="#{i18n.action_refresh}" ajax="false" type="push" icon="pi pi-refresh" id="panData_mniRefresh" actionListener="#{businessUnitView.fetchBusinessUnits}"/>
+
+		<p:separator/>
+
+		<p:menuitem value="#{i18n.ctxmenu_copy_cell}" actionListener="#{businessUnitView.copyCellToClipboard}" icon="pi pi-copy" update="@none"/>
+		<p:menuitem value="#{i18n.ctxmenu_copy_row}" actionListener="#{businessUnitView.copyRowToClipboard}" icon="pi pi-copy" update="@none"/>
 	</p:contextMenu>
 
 	<p:confirmDialog modal="true" closeOnEscape="true" message="#{i18n.dialog_delete_question}" header="#{i18n.dialog_delete_title}" severity="warn" widgetVar="deleteConfirm">
