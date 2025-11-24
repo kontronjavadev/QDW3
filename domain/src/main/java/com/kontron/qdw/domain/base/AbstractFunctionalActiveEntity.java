@@ -10,8 +10,8 @@ import com.kontron.qdw.domain.base.listen.AbstractFunctionalActiveEntityCallback
 @EntityListeners(AbstractFunctionalActiveEntityCallbackListener.class)
 public class AbstractFunctionalActiveEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "code")
+    @NotNull(message = "Field \"code\" must not be null!")
     @Size(min = 1, max = 50, message = "Length of field \"code\" is illegal!")
     @Generated
     private String code;

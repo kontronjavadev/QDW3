@@ -10,8 +10,8 @@ import net.sourceforge.jbizmo.commons.annotation.Generated;
 @EntityListeners(AbstractFuntionalEntityCallbackListener.class)
 public class AbstractFuntionalEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "code")
+    @NotNull(message = "Field \"code\" must not be null!")
     @Size(min = 1, max = 50, message = "Length of field \"code\" is illegal!")
     @Generated
     private String code;

@@ -9,8 +9,6 @@ import jakarta.annotation.security.*;
 import net.sourceforge.jbizmo.commons.search.exception.*;
 import net.sourceforge.jbizmo.commons.search.dto.*;
 import com.kontron.qdw.dto.base.*;
-
-import net.sourceforge.jbizmo.commons.annotation.Customized;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
 import com.kontron.qdw.domain.base.*;
 
@@ -35,31 +33,6 @@ public class BusinessUnitBoundaryService {
     @Generated
     public BusinessUnitBoundaryService(BusinessUnitRepository repository) {
         this.repository = repository;
-    }
-
-    /**
-     * Create new business unit
-     * @param object
-     * @throws ConstraintViolationException if the validation of one or more persistent attribute values has failed
-     * @return the persisted business unit object
-     */
-    @Customized
-    @PermitAll
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public BusinessUnitCreateDTO createBusinessUnit(BusinessUnitCreateDTO object) {
-        // Create new object to be persisted
-        var newBusinessUnit = new BusinessUnit();
-        newBusinessUnit.setCode(newBusinessUnit.getCode());
-        newBusinessUnit.setShortText(object.getShortText() != null ? object.getShortText().trim() : null);
-        newBusinessUnit.setComment(object.getComment() != null ? object.getComment().trim() : null);
-        newBusinessUnit.setActive(object.isActive());
-
-        newBusinessUnit = repository.persist(newBusinessUnit, true, true);
-
-        object.setCreationDate(newBusinessUnit.getCreationDate());
-        object.setVersion(newBusinessUnit.getVersion());
-
-        return object;
     }
 
     /**
@@ -156,6 +129,32 @@ public class BusinessUnitBoundaryService {
         final BusinessUnit targetObject = repository.copy(sourceObject, null, loggedOnUserId);
 
         return targetObject.getCode();
+    }
+
+    /**
+     * Create new business unit
+     * @param object
+     * @throws ConstraintViolationException if the validation of one or more persistent attribute values has failed
+     * @return the persisted business unit object
+     */
+    @Generated
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public BusinessUnitCreateDTO createBusinessUnit(BusinessUnitCreateDTO object) {
+        // Create new object to be persisted
+        var newBusinessUnit = new BusinessUnit();
+        newBusinessUnit.setCode(object.getCode() != null ? object.getCode().trim() : null);
+        newBusinessUnit.setShortText(object.getShortText() != null ? object.getShortText().trim() : null);
+        newBusinessUnit.setComment(object.getComment() != null ? object.getComment().trim() : null);
+        newBusinessUnit.setActive(object.isActive());
+
+        newBusinessUnit = repository.persist(newBusinessUnit, true, true);
+
+        object.setCode(newBusinessUnit.getCode());
+        object.setCreationDate(newBusinessUnit.getCreationDate());
+        object.setVersion(newBusinessUnit.getVersion());
+
+        return object;
     }
 
 }

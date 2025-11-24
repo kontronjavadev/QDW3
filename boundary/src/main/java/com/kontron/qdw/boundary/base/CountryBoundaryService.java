@@ -1,19 +1,17 @@
 package com.kontron.qdw.boundary.base;
 
+import com.kontron.qdw.repository.base.*;
+import net.sourceforge.jbizmo.commons.search.exception.*;
+import com.kontron.qdw.dto.base.*;
+import com.kontron.qdw.domain.base.*;
 import jakarta.validation.ConstraintViolationException;
 import java.util.*;
-import com.kontron.qdw.repository.base.*;
 import jakarta.inject.*;
 import jakarta.ejb.*;
 import jakarta.annotation.security.*;
-import net.sourceforge.jbizmo.commons.search.exception.*;
 import net.sourceforge.jbizmo.commons.repository.*;
 import net.sourceforge.jbizmo.commons.search.dto.*;
-import com.kontron.qdw.dto.base.*;
-
-import net.sourceforge.jbizmo.commons.annotation.Customized;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
-import com.kontron.qdw.domain.base.*;
 
 @Stateless
 public class CountryBoundaryService {
@@ -45,20 +43,21 @@ public class CountryBoundaryService {
      * @throws ConstraintViolationException if the validation of one or more persistent attribute values has failed
      * @return the persisted country object
      */
-    @Customized
+    @Generated
     @PermitAll
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public CountryCreateDTO createCountry(CountryCreateDTO object) {
         // Create new object to be persisted
         var newCountry = new Country();
-        newCountry.setCode(newCountry.getCode());
         newCountry.setName(object.getName() != null ? object.getName().trim() : null);
+        newCountry.setCode(object.getCode() != null ? object.getCode().trim() : null);
         newCountry.setShortText(object.getShortText() != null ? object.getShortText().trim() : null);
         newCountry.setComment(object.getComment() != null ? object.getComment().trim() : null);
         newCountry.setActive(object.isActive());
 
         newCountry = repository.persist(newCountry, true, true, true);
 
+        object.setCode(newCountry.getCode());
         object.setCreationDate(newCountry.getCreationDate());
         object.setVersion(newCountry.getVersion());
 

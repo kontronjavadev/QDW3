@@ -1,22 +1,20 @@
 package com.kontron.qdw.boundary.base;
 
-import java.security.NoSuchAlgorithmException;
+import com.kontron.qdw.boundary.util.MailServiceFacade;
+import net.sourceforge.jbizmo.commons.crypto.HashGenerator;
+import com.kontron.qdw.repository.base.*;
+import com.kontron.qdw.boundary.util.Constants;
+import com.kontron.qdw.dto.base.*;
+import com.kontron.qdw.domain.base.*;
 import java.util.*;
 import jakarta.validation.ConstraintViolationException;
-import com.kontron.qdw.repository.base.*;
+import java.security.NoSuchAlgorithmException;
 import jakarta.inject.*;
 import jakarta.ejb.*;
 import jakarta.annotation.security.*;
-import net.sourceforge.jbizmo.commons.repository.*;
-import com.kontron.qdw.dto.base.*;
-
 import net.sourceforge.jbizmo.commons.annotation.Customized;
+import net.sourceforge.jbizmo.commons.repository.*;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
-import net.sourceforge.jbizmo.commons.crypto.HashGenerator;
-
-import com.kontron.qdw.boundary.util.Constants;
-import com.kontron.qdw.boundary.util.MailServiceFacade;
-import com.kontron.qdw.domain.base.*;
 
 @Stateless
 public class PasswordResetBoundaryService {
@@ -42,50 +40,6 @@ public class PasswordResetBoundaryService {
     public PasswordResetBoundaryService(PasswordResetRepository repository, UserRepository userRepository) {
         this.repository = repository;
         this.userRepository = userRepository;
-    }
-
-    /**
-     * Change password of given user account
-     * @throws IllegalStateException if the password encryption algorithm does not exist
-     */
-    @PermitAll
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public void changePassword(PasswordResetDTO passwordReset, String newPassword) {
-        // Find persistent object
-        final User user = userRepository.findById(passwordReset.getUserId(), true);
-
-        try {
-            user.setPassword(HashGenerator.encryptSHA256(newPassword));
-            delete(passwordReset.getId());
-        }
-        catch (final NoSuchAlgorithmException e) {
-            throw new IllegalStateException(e);
-        }
-    }
-
-    /**
-     * Speichert das PasswordReset-Objekt mit dem Benutzer und einer uuid und schickt dem Anwender eine Benachrichtigung.
-     * @param passwordReset the password reset to be saved
-     * @throws UniqueConstraintViolationException if a unique constraint check has failed
-     * @throws ConstraintViolationException if the validation of one or more persistent attribute values has failed
-     * @return the saved password reset object
-     */
-    @PermitAll
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public PasswordResetDTO savePasswordResetAndMail(PasswordResetDTO passwordReset) {
-        passwordReset = savePasswordReset(passwordReset);
-
-        User user = userRepository.findById(passwordReset.getUserId(), true);
-
-        MailServiceFacade.sendMail(user.getEmail(), String.format("%s: %s", Constants.APP_ENV, "Password reset information"),
-                String.format("Hello %s,\n"
-                        + "\n"
-                        + "Use this link to reset your password:\n"
-                        + "%s\n",
-                        user.getName(),
-                        Constants.APP_SERVER + "PasswordReset.jsf?uuid=" + passwordReset.getUuid().toString()));
-
-        return passwordReset;
     }
 
     /**
@@ -132,6 +86,50 @@ public class PasswordResetBoundaryService {
             passwordReset.setVersion(passwordResetToSave.getVersion());
             passwordReset.setLastUpdate(passwordResetToSave.getLastUpdate());
         }
+
+        return passwordReset;
+    }
+
+    /**
+     * Change password of given user account
+     * @throws IllegalStateException if the password encryption algorithm does not exist
+     */
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public void changePassword(PasswordResetDTO passwordReset, String newPassword) {
+        // Find persistent object
+        final User user = userRepository.findById(passwordReset.getUserId(), true);
+
+        try {
+            user.setPassword(HashGenerator.encryptSHA256(newPassword));
+            delete(passwordReset.getId());
+        }
+        catch (final NoSuchAlgorithmException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    /**
+     * Speichert das PasswordReset-Objekt mit dem Benutzer und einer uuid und schickt dem Anwender eine Benachrichtigung.
+     * @param passwordReset the password reset to be saved
+     * @throws UniqueConstraintViolationException if a unique constraint check has failed
+     * @throws ConstraintViolationException if the validation of one or more persistent attribute values has failed
+     * @return the saved password reset object
+     */
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public PasswordResetDTO savePasswordResetAndMail(PasswordResetDTO passwordReset) {
+        passwordReset = savePasswordReset(passwordReset);
+
+        User user = userRepository.findById(passwordReset.getUserId(), true);
+
+        MailServiceFacade.sendMail(user.getEmail(), String.format("%s: %s", Constants.APP_ENV, "Password reset information"),
+                String.format("Hello %s,\n"
+                        + "\n"
+                        + "Use this link to reset your password:\n"
+                        + "%s\n",
+                        user.getName(),
+                        Constants.APP_SERVER + "PasswordReset.jsf?uuid=" + passwordReset.getUuid().toString()));
 
         return passwordReset;
     }
