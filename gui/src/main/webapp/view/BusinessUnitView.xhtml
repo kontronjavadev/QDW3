@@ -47,7 +47,6 @@
 		</p:submenu>
 	</p:menubar>
 
-	<br/>
 
 	<p:dataTable id="panData" var="businessUnitViewItem" rows="50"
 		selectionMode="single"
@@ -68,7 +67,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{businessUnitViewItem.shortText}" width="150" class="tdnowrap" >
+		<p:column sortBy="#{businessUnitViewItem.shortText}" width="150" 
+			exportValue="#{businessUnitViewItem.shortText}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_abstractfunctionalactiveentity_shorttext}"/>
 			</f:facet>
@@ -76,7 +76,8 @@
 			<p:tooltip for="shortText" value="#{businessUnitViewItem.shortText}" position="top" showDelay="50"/>
 		</p:column>
 
-		<p:column sortBy="#{businessUnitViewItem.comment}" width="250" class="tdnowrap" >
+		<p:column sortBy="#{businessUnitViewItem.comment}" width="250" 
+			exportValue="#{businessUnitViewItem.comment}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_abstractfunctionalactiveentity_comment}"/>
 			</f:facet>

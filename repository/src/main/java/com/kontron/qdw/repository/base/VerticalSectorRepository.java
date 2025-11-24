@@ -1,5 +1,6 @@
 package com.kontron.qdw.repository.base;
 
+import net.sourceforge.jbizmo.commons.random.*;
 import jakarta.persistence.*;
 import net.sourceforge.jbizmo.commons.jpa.*;
 import jakarta.ejb.*;
@@ -32,28 +33,17 @@ public class VerticalSectorRepository extends AbstractRepository<VerticalSector,
      */
     @Generated
     public VerticalSector copy(VerticalSector sourceObject, VerticalSector targetObject, long loggedOnUserId) {
-        boolean flushAndRefresh = false;
-
         if (targetObject == null) {
-            flushAndRefresh = true;
-
             targetObject = new VerticalSector();
         }
 
+        targetObject.setCode(RandomStringGenerator.generateRandomString(50));
         targetObject.setShortText(sourceObject.getShortText());
         targetObject.setComment(sourceObject.getComment());
         targetObject.setActive(sourceObject.isActive());
         targetObject.setBusinessUnit(sourceObject.getBusinessUnit());
 
         targetObject = persist(targetObject, false, false);
-
-        if (flushAndRefresh) {
-            // Call the flush() method in order to force the database insert immediately!
-            em.flush();
-
-            // Get a fully attached version of the entity
-            em.refresh(targetObject);
-        }
 
         return targetObject;
     }

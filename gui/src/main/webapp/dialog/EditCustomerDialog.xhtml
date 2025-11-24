@@ -1,0 +1,146 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:h="jakarta.faces.html"
+	xmlns:f="jakarta.faces.core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/templates/ui.xhtml">
+
+<f:metadata>
+	<f:viewAction action="#{editCustomerDialog.initView()}"/>
+	<f:viewParam name="selectedObjectId" value="#{editCustomerDialog.selectedObjectId}"/>
+</f:metadata>
+
+<ui:define name="title">#{editCustomerDialog.formTitle}</ui:define>
+
+<ui:define name="content">
+	<p:dialog header="#{i18n.feedback_dialog_header}" modal="true" widgetVar="msgBox" visible="#{(not empty facesContext.messageList)}">
+		<p:messages id="messages" showDetail="true" showSummary="true"/>
+	</p:dialog>
+
+	<h:panelGrid columns="3">
+		<div class="pi pi-file-edit" style="font-size: 2em"/>
+		<h:outputText id="lblFormTitle" value="&#160;#{editCustomerDialog.formTitle}" styleClass="label-form-title"/>
+		<p:ajaxStatus style="width:16px;height:16px;">
+			<f:facet name="start">
+				<h:graphicImage value="/images/ajaxloading.gif"/>
+			</f:facet>
+
+			<f:facet name="complete">
+				<h:outputText value=""/>
+			</f:facet>
+		</p:ajaxStatus>
+	</h:panelGrid>
+
+	<p:tabView id="tabview1" dynamic="true" effect="fade" effectDuration="fast">
+	<p:tab id="tabPanCustomer" title="#{i18n.panel_basic_title}">
+	<h:panelGrid columns="6">
+
+		<h:outputLabel value="#{i18n.lbl_attr_abstractfuntionalentity_code}:" for="txtCode" styleClass="label-field-optional"/>
+		<p:inputText id="txtCode" value="#{editCustomerDialog.customer.code}" readonly="true">
+		</p:inputText>
+		<p:tooltip for="txtCode" value=""/>
+
+		<h:outputLabel value="#{i18n.lbl_attr_customer_internal} *:" for="chkInternal" styleClass="label-field-mandatory"/>
+		<p:selectBooleanCheckbox id="chkInternal" value="#{editCustomerDialog.customer.internal}"/>
+		<p:tooltip for="chkInternal" value=""/>
+
+		<h:outputLabel value="#{i18n.lbl_attr_customer_name}:" for="txtName" styleClass="label-field-optional"/>
+		<p:inputText id="txtName" value="#{editCustomerDialog.customer.name}">
+			<f:validateLength maximum="100"/>
+		</p:inputText>
+		<p:tooltip for="txtName" value=""/>
+		<h:outputLabel/>
+		<h:outputLabel/>
+		<h:outputLabel/>
+
+		<h:outputLabel value="#{i18n.lbl_attr_abstractfuntionalentity_shorttext}:" for="txtShortText" styleClass="label-field-optional"/>
+		<p:inputText id="txtShortText" value="#{editCustomerDialog.customer.shortText}">
+			<f:validateLength maximum="100"/>
+		</p:inputText>
+		<p:tooltip for="txtShortText" value=""/>
+
+		<h:outputLabel value="#{i18n.lbl_assoc_customer_verticalsector}:" for="cboVerticalSector" styleClass="label-field-optional"/>
+		<p:selectOneMenu converter="#{verticalSectorListDTOConverter}" id="cboVerticalSector" value="#{editCustomerDialog.customer.verticalSector}">
+			<f:selectItem noSelectionOption="true" itemLabel=""/>
+			<f:selectItems value="#{editCustomerDialog.verticalSectorList}" var="cboVerticalSectorItem" itemLabel="#{cboVerticalSectorItem.code}" itemValue="#{cboVerticalSectorItem}"/>
+		</p:selectOneMenu>
+		<p:tooltip for="cboVerticalSector" value=""/>
+
+		<h:outputLabel value="#{i18n.lbl_attr_customer_street}:" for="txtStreet" styleClass="label-field-optional"/>
+		<p:inputText id="txtStreet" value="#{editCustomerDialog.customer.street}">
+			<f:validateLength maximum="100"/>
+		</p:inputText>
+		<p:tooltip for="txtStreet" value=""/>
+		<h:outputLabel/>
+		<h:outputLabel/>
+		<h:outputLabel/>
+
+		<h:outputLabel value="#{i18n.lbl_attr_customer_zipcode}:" for="txtZipCode" styleClass="label-field-optional"/>
+		<p:inputText id="txtZipCode" value="#{editCustomerDialog.customer.zipCode}">
+			<f:validateLength maximum="20"/>
+		</p:inputText>
+		<p:tooltip for="txtZipCode" value=""/>
+
+		<h:outputLabel value="#{i18n.lbl_attr_customer_city}:" for="txtCity" styleClass="label-field-optional"/>
+		<p:inputText id="txtCity" value="#{editCustomerDialog.customer.city}">
+			<f:validateLength maximum="100"/>
+		</p:inputText>
+		<p:tooltip for="txtCity" value=""/>
+
+		<h:outputLabel value="#{i18n.lbl_assoc_customer_country} *:" for="cboCountry" styleClass="label-field-mandatory"/>
+		<p:autoComplete id="cboCountry" value="#{editCustomerDialog.customer.country}" converter="#{countryListDTOConverter}" minQueryLength="2" forceSelection="true" completeMethod="#{editCustomerDialog.onCompleteCountry}" var="cboCountryItem" itemValue="#{cboCountryItem}" itemLabel="#{cboCountryItem.name}">
+			<f:validateRequired/>
+		</p:autoComplete>
+		<p:tooltip for="cboCountry" value=""/>
+		<h:outputLabel/>
+		<h:outputLabel/>
+		<h:outputLabel/>
+
+		<h:outputLabel value="#{i18n.lbl_attr_abstractfuntionalentity_comment}:" for="txtComment" styleClass="label-field-optional"/>
+		<p:inputTextarea style="width:200px;height:80px;" id="txtComment" value="#{editCustomerDialog.customer.comment}">
+			<f:validateLength maximum="4000"/>
+		</p:inputTextarea>
+		<p:tooltip for="txtComment" value=""/>
+		<h:outputLabel/>
+		<h:outputLabel/>
+		<h:outputLabel/>
+
+	</h:panelGrid>
+	</p:tab>
+	<p:tab id="tabPanAdministration" title="#{i18n.panel_admin_title}">
+	<h:panelGrid columns="3">
+
+		<h:outputLabel value="#{i18n.lbl_attr_abstractfuntionalentity_creationdate}:" for="txtCreationDate" styleClass="label-field-optional"/>
+		<p:inputText id="txtCreationDate" value="#{editCustomerDialog.customer.creationDate}" readonly="true">
+			<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateTimeConverter"/>
+			<f:attribute name="pattern" value="#{userSession.dateTimeFormat}"/>
+			<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
+		</p:inputText>
+		<p:tooltip for="txtCreationDate" value=""/>
+
+		<h:outputLabel value="#{i18n.lbl_attr_abstractfuntionalentity_lastupdate}:" for="txtLastUpdate" styleClass="label-field-optional"/>
+		<p:inputText id="txtLastUpdate" value="#{editCustomerDialog.customer.lastUpdate}" readonly="true">
+			<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateTimeConverter"/>
+			<f:attribute name="pattern" value="#{userSession.dateTimeFormat}"/>
+			<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
+		</p:inputText>
+		<p:tooltip for="txtLastUpdate" value=""/>
+
+		<h:outputLabel value="#{i18n.lbl_attr_abstractfuntionalentity_version}:" for="txtVersion" styleClass="label-field-optional"/>
+		<p:inputText id="txtVersion" value="#{editCustomerDialog.customer.version}" readonly="true">
+		</p:inputText>
+		<p:tooltip for="txtVersion" value=""/>
+
+	</h:panelGrid>
+	</p:tab>
+	</p:tabView>
+
+	<p/>
+
+	<h:panelGrid columns="2">
+		<p:commandButton id="cmdSave" icon="pi pi-save" action="#{editCustomerDialog.save}" value="#{i18n.command_save}" ajax="false"/>
+		<p:commandButton id="cmdBack" icon="pi pi-caret-left" value="#{i18n.command_back}" action="#{userSession.getLastPage}" immediate="true" ajax="false"/>
+	</h:panelGrid>
+
+</ui:define>
+</ui:composition>

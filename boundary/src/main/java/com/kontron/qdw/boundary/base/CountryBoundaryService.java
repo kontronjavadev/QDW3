@@ -2,6 +2,7 @@ package com.kontron.qdw.boundary.base;
 
 import com.kontron.qdw.repository.base.*;
 import net.sourceforge.jbizmo.commons.search.exception.*;
+import static net.sourceforge.jbizmo.commons.jpa.AbstractRepository.WILDCARD;
 import com.kontron.qdw.dto.base.*;
 import com.kontron.qdw.domain.base.*;
 import jakarta.validation.ConstraintViolationException;
@@ -12,6 +13,7 @@ import jakarta.annotation.security.*;
 import net.sourceforge.jbizmo.commons.repository.*;
 import net.sourceforge.jbizmo.commons.search.dto.*;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
+import static net.sourceforge.jbizmo.commons.jpa.AbstractRepository.SMALL_LIST_SIZE;
 
 @Stateless
 public class CountryBoundaryService {
@@ -163,6 +165,57 @@ public class CountryBoundaryService {
         final Country targetObject = repository.copy(sourceObject, null, loggedOnUserId);
 
         return targetObject.getCode();
+    }
+
+    /**
+     * Search for country objects
+     * @param filter
+     * @return a list of country objects
+     * @throws GeneralSearchException if the search operation has failed
+     */
+    @Generated
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public List<CountryListDTO> findCountries(String filter) {
+        // Collect the select tokens of all fields that should be fetched
+        final var selectTokens = new ArrayList<String>();
+        selectTokens.add(CountryListDTO.SELECT_CODE);
+        selectTokens.add(CountryListDTO.SELECT_NAME);
+
+        // Initialize the search object
+        final var searchObj = new SearchDTO();
+        searchObj.setExactFilterMatch(true);
+        searchObj.setCaseSensitive(true);
+        searchObj.setMaxResult(SMALL_LIST_SIZE);
+        searchObj.setFromClause("from Country a");
+
+        if (filter != null && !filter.isEmpty() && !filter.equals(WILDCARD)) {
+            final var filterField = searchObj.addSearchField(CountryListDTO.SELECT_NAME, SearchFieldDataTypeEnum.STRING);
+            filterField.setFilterCriteria(filter + WILDCARD);
+            filterField.setSortIndex(1);
+            filterField.setSortOrder(SortDirectionEnum.ASC);
+        }
+
+        return repository.search(searchObj, CountryListDTO.class, selectTokens);
+    }
+
+    /**
+     * Find country by its ID
+     * @param id
+     * @return the country object
+     */
+    @Generated
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public CountryListDTO findListCountry(String id) {
+        // Find persistent object
+        final Country country = repository.findById(id, true);
+
+        final var dto = new CountryListDTO();
+        dto.setCode(country.getCode());
+        dto.setName(country.getName());
+
+        return dto;
     }
 
 }

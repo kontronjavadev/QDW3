@@ -1,6 +1,7 @@
 package com.kontron.qdw.repository.base;
 
 import java.util.*;
+import net.sourceforge.jbizmo.commons.random.*;
 import jakarta.persistence.*;
 import net.sourceforge.jbizmo.commons.jpa.*;
 import jakarta.ejb.*;
@@ -74,11 +75,7 @@ public class CustomerRepository extends AbstractRepository<Customer, String> {
      */
     @Generated
     public Customer copy(Customer sourceObject, Customer targetObject, long loggedOnUserId) {
-        boolean flushAndRefresh = false;
-
         if (targetObject == null) {
-            flushAndRefresh = true;
-
             targetObject = new Customer();
         }
 
@@ -87,20 +84,13 @@ public class CustomerRepository extends AbstractRepository<Customer, String> {
         targetObject.setZipCode(sourceObject.getZipCode());
         targetObject.setCity(sourceObject.getCity());
         targetObject.setInternal(sourceObject.isInternal());
+        targetObject.setCode(RandomStringGenerator.generateRandomString(50));
         targetObject.setShortText(sourceObject.getShortText());
         targetObject.setComment(sourceObject.getComment());
         targetObject.setCountry(sourceObject.getCountry());
         targetObject.setVerticalSector(sourceObject.getVerticalSector());
 
         targetObject = persist(targetObject, true, false, false);
-
-        if (flushAndRefresh) {
-            // Call the flush() method in order to force the database insert immediately!
-            em.flush();
-
-            // Get a fully attached version of the entity
-            em.refresh(targetObject);
-        }
 
         return targetObject;
     }

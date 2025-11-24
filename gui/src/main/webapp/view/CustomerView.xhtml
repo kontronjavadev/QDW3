@@ -1,0 +1,430 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:h="jakarta.faces.html"
+	xmlns:f="jakarta.faces.core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/templates/ui.xhtml">
+
+<f:metadata>
+	<f:viewAction action="#{customerView.initView()}"/>
+</f:metadata>
+
+<ui:define name="title">#{customerView.formTitle}</ui:define>
+
+<ui:define name="content">
+	<h:panelGrid columns="3">
+		<div class="pi pi-list" style="font-size: 2em"/>
+		<h:outputText id="lblFormTitle" value="&#160;#{customerView.formTitle}" styleClass="label-form-title"/>
+		<p:ajaxStatus style="width:16px;height:16px;">
+			<f:facet name="start">
+				<h:graphicImage value="/images/ajaxloading.gif"/>
+			</f:facet>
+
+			<f:facet name="complete">
+				<h:outputText value=""/>
+			</f:facet>
+		</p:ajaxStatus>
+	</h:panelGrid>
+
+	<p:growl id="growl" showDetail="true" skipDetailIfEqualsSummary="true"/>
+
+	<p:dialog height="auto" width="1000" header="#{i18n.search_input_dlg}" widgetVar="dlgSearchInput" id="dlgSearchInput" closeOnEscape="true" modal="true" >
+		<p:tabView id="tabViewSearchInput" dynamic="false">
+			<p:tab title="#{i18n.search_input_filter}">
+			<p:scrollPanel style="width:100%; #{sizeServiceBean.searchFilterHeight()};" mode="native">
+			<h:panelGrid columns="5" cellpadding="3">
+				<h:outputText styleClass="label-field-mandatory" value="#{i18n.search_input_column}"/>
+				<h:outputText styleClass="label-field-mandatory" value="#{i18n.search_input_operator}"/>
+				<h:outputText styleClass="label-field-mandatory" value="#{i18n.search_input_sort}"/>
+				<h:outputText styleClass="label-field-mandatory" value="#{i18n.search_input_filter_input}"/>
+				<h:outputText styleClass="label-field-mandatory" value="#{i18n.search_input_and}"/>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_0" value="#{customerView.searchObject.searchFields[0].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{customerView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_0" value="#{customerView.searchObject.searchFields[0].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_0" value="#{customerView.textOperators}" var="advInputItem0" itemValue="#{advInputItem0}" itemLabel="#{advInputItem0.description}"/>
+					<f:ajax render="p_0"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_0" id="s_0" value="#{customerView.searchObject.searchFields[0].sortOrder}">
+					<f:selectItems value="#{customerView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_0" value="#{customerView.searchObject.searchFields[0].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_0">
+					<p:inputText id="b_0" rendered="#{customerView.searchObject.searchFields[0].between}" value="#{customerView.searchObject.searchFields[0].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_1" value="#{customerView.searchObject.searchFields[1].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{customerView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_1" value="#{customerView.searchObject.searchFields[1].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_1" value="#{customerView.textOperators}" var="advInputItem1" itemValue="#{advInputItem1}" itemLabel="#{advInputItem1.description}"/>
+					<f:ajax render="p_1"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_1" id="s_1" value="#{customerView.searchObject.searchFields[1].sortOrder}">
+					<f:selectItems value="#{customerView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_1" value="#{customerView.searchObject.searchFields[1].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_1">
+					<p:inputText id="b_1" rendered="#{customerView.searchObject.searchFields[1].between}" value="#{customerView.searchObject.searchFields[1].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_2" value="#{customerView.searchObject.searchFields[2].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{customerView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_2" value="#{customerView.searchObject.searchFields[2].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_2" value="#{customerView.textOperators}" var="advInputItem2" itemValue="#{advInputItem2}" itemLabel="#{advInputItem2.description}"/>
+					<f:ajax render="p_2"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_2" id="s_2" value="#{customerView.searchObject.searchFields[2].sortOrder}">
+					<f:selectItems value="#{customerView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_2" value="#{customerView.searchObject.searchFields[2].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_2">
+					<p:inputText id="b_2" rendered="#{customerView.searchObject.searchFields[2].between}" value="#{customerView.searchObject.searchFields[2].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_3" value="#{customerView.searchObject.searchFields[3].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{customerView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_3" value="#{customerView.searchObject.searchFields[3].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_3" value="#{customerView.textOperators}" var="advInputItem3" itemValue="#{advInputItem3}" itemLabel="#{advInputItem3.description}"/>
+					<f:ajax render="p_3"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_3" id="s_3" value="#{customerView.searchObject.searchFields[3].sortOrder}">
+					<f:selectItems value="#{customerView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_3" value="#{customerView.searchObject.searchFields[3].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_3">
+					<p:inputText id="b_3" rendered="#{customerView.searchObject.searchFields[3].between}" value="#{customerView.searchObject.searchFields[3].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_4" value="#{customerView.searchObject.searchFields[4].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{customerView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_4" value="#{customerView.searchObject.searchFields[4].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_4" value="#{customerView.textOperators}" var="advInputItem4" itemValue="#{advInputItem4}" itemLabel="#{advInputItem4.description}"/>
+					<f:ajax render="p_4"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_4" id="s_4" value="#{customerView.searchObject.searchFields[4].sortOrder}">
+					<f:selectItems value="#{customerView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_4" value="#{customerView.searchObject.searchFields[4].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_4">
+					<p:inputText id="b_4" rendered="#{customerView.searchObject.searchFields[4].between}" value="#{customerView.searchObject.searchFields[4].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_5" value="#{customerView.searchObject.searchFields[5].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{customerView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_5" value="#{customerView.searchObject.searchFields[5].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_5" value="#{customerView.textOperators}" var="advInputItem5" itemValue="#{advInputItem5}" itemLabel="#{advInputItem5.description}"/>
+					<f:ajax render="p_5"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_5" id="s_5" value="#{customerView.searchObject.searchFields[5].sortOrder}">
+					<f:selectItems value="#{customerView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:autoComplete minQueryLength="2" maxResults="10" completeMethod="#{customerView.onCompleteCountryName}" id="fi_5" value="#{customerView.searchObject.searchFields[5].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_5">
+				<p:autoComplete minQueryLength="2" rendered="#{customerView.searchObject.searchFields[5].between}" maxResults="10" completeMethod="#{customerView.onCompleteCountryName}" id="b_5" value="#{customerView.searchObject.searchFields[5].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fc_6" value="#{customerView.searchObject.searchFields[6].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{customerView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_6" value="#{customerView.searchObject.searchFields[6].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_6" value="#{customerView.boolOperators}" var="advInputItem6" itemValue="#{advInputItem6}" itemLabel="#{advInputItem6.description}"/>
+					<f:ajax render="p_6"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_6" id="s_6" value="#{customerView.searchObject.searchFields[6].sortOrder}">
+					<f:selectItems value="#{customerView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu id="fc_6" value="#{customerView.searchObject.searchFields[6].stringCriterion}">
+					<f:selectItem itemLabel="" itemValue=""/>
+					<f:selectItem itemLabel="true" itemValue="true"/>
+					<f:selectItem itemLabel="false" itemValue="false"/>
+				</p:selectOneMenu>
+				<h:panelGroup id="p_6"/>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_7" value="#{customerView.searchObject.searchFields[7].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{customerView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_7" value="#{customerView.searchObject.searchFields[7].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_7" value="#{customerView.textOperators}" var="advInputItem7" itemValue="#{advInputItem7}" itemLabel="#{advInputItem7.description}"/>
+					<f:ajax render="p_7"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_7" id="s_7" value="#{customerView.searchObject.searchFields[7].sortOrder}">
+					<f:selectItems value="#{customerView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_7" value="#{customerView.searchObject.searchFields[7].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_7">
+					<p:inputText id="b_7" rendered="#{customerView.searchObject.searchFields[7].between}" value="#{customerView.searchObject.searchFields[7].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_8" value="#{customerView.searchObject.searchFields[8].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{customerView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_8" value="#{customerView.searchObject.searchFields[8].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_8" value="#{customerView.textOperators}" var="advInputItem8" itemValue="#{advInputItem8}" itemLabel="#{advInputItem8.description}"/>
+					<f:ajax render="p_8"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_8" id="s_8" value="#{customerView.searchObject.searchFields[8].sortOrder}">
+					<f:selectItems value="#{customerView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_8" value="#{customerView.searchObject.searchFields[8].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_8">
+					<p:inputText id="b_8" rendered="#{customerView.searchObject.searchFields[8].between}" value="#{customerView.searchObject.searchFields[8].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_9" value="#{customerView.searchObject.searchFields[9].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{customerView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_9" value="#{customerView.searchObject.searchFields[9].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_9" value="#{customerView.dateOperators}" var="advInputItem9" itemValue="#{advInputItem9}" itemLabel="#{advInputItem9.description}"/>
+					<f:ajax render="p_9"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_9" id="s_9" value="#{customerView.searchObject.searchFields[9].sortOrder}">
+					<f:selectItems value="#{customerView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:datePicker id="fi_9" value="#{customerView.searchObject.searchFields[9].dateCriterion}" pattern="#{userSession.dateTimeFormat}" size="20" showButtonBar="true" showIcon="true" showTime="true"/>
+				<h:panelGroup id="p_9">
+					<p:datePicker id="fb_9" value="#{customerView.searchObject.searchFields[9].dateBetweenCriterion}" pattern="#{userSession.dateTimeFormat}" size="20" showButtonBar="true" showIcon="true" rendered="#{customerView.searchObject.searchFields[9].between}" showTime="true"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_10" value="#{customerView.searchObject.searchFields[10].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{customerView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_10" value="#{customerView.searchObject.searchFields[10].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_10" value="#{customerView.dateOperators}" var="advInputItem10" itemValue="#{advInputItem10}" itemLabel="#{advInputItem10.description}"/>
+					<f:ajax render="p_10"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_10" id="s_10" value="#{customerView.searchObject.searchFields[10].sortOrder}">
+					<f:selectItems value="#{customerView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:datePicker id="fi_10" value="#{customerView.searchObject.searchFields[10].dateCriterion}" pattern="#{userSession.dateTimeFormat}" size="20" showButtonBar="true" showIcon="true" showTime="true"/>
+				<h:panelGroup id="p_10">
+					<p:datePicker id="fb_10" value="#{customerView.searchObject.searchFields[10].dateBetweenCriterion}" pattern="#{userSession.dateTimeFormat}" size="20" showButtonBar="true" showIcon="true" rendered="#{customerView.searchObject.searchFields[10].between}" showTime="true"/>
+				</h:panelGroup>
+
+			</h:panelGrid>
+			</p:scrollPanel>
+			</p:tab>
+
+			<p:tab title="#{i18n.search_input_adv}">
+			<h:panelGrid columns="2">
+				<h:outputLabel value="#{i18n.search_input_case}:" styleClass="label-field-mandatory"/>
+				<p:selectBooleanCheckbox value="#{customerView.searchObject.caseSensitive}"/>
+				<h:outputLabel value="#{i18n.search_input_count}:" styleClass="label-field-mandatory"/>
+				<p:selectBooleanCheckbox value="#{customerView.searchObject.count}"/>
+				<h:outputLabel value="#{i18n.search_input_filter_match}:" styleClass="label-field-mandatory"/>
+				<p:selectBooleanCheckbox value="#{customerView.searchObject.exactFilterMatch}"/>
+				<h:outputLabel value="#{i18n.search_input_filter_fetch_size}:" styleClass="label-field-mandatory"/>
+				<p:inputText value="#{customerView.searchObject.maxResult}" size="5">
+					<f:validateLongRange minimum="1" maximum="1000000"/>
+				</p:inputText>
+				<h:outputLabel value="#{i18n.search_input_visible_fields_label}:" styleClass="label-field-mandatory"/>
+				<p:pickList styleClass="searchdialog-picklist" value="#{customerView.visibleFields}" var="savedQueryListItem" itemLabel="#{savedQueryListItem.colLabel}" itemValue="#{savedQueryListItem}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchFieldDTOConverter" addLabel="#{i18n.pick_list_add}" addAllLabel="#{i18n.pick_list_add_all}" removeLabel="#{i18n.pick_list_remove}" removeAllLabel="#{i18n.pick_list_remove_all}">
+					<f:facet name="sourceCaption">#{i18n.search_input_all_fields}</f:facet>
+					<f:facet name="targetCaption">#{i18n.search_input_visible_fields}</f:facet>
+				</p:pickList>
+			</h:panelGrid>
+			</p:tab>
+
+			<p:tab title="#{i18n.search_input_saved_query_title}">
+				<h:panelGrid columns="1">
+					<h:outputLabel styleClass="label-field-mandatory" value="#{i18n.search_input_lbl_saved_query}"/>
+					<p:selectOneListbox id="savedQueryList" value="#{customerView.selectedSavedQuery}" style="#{sizeServiceBean.searchQueriesHeight()}; width:480px">
+						<f:selectItems value="#{customerView.savedQueries}"/>
+					</p:selectOneListbox>
+					<h:panelGrid columns="2">
+						<p:commandButton value="#{i18n.search_input_run_saved_query}" action="#{customerView.runSavedQuery}" ajax="false"/>
+						<p:commandButton value="#{i18n.search_input_delete_saved_query}" actionListener="#{customerView.deleteSavedQuery}" update="savedQueryList" ajax="true"/>
+					</h:panelGrid>
+				</h:panelGrid>
+			</p:tab>
+		</p:tabView>
+		<br/>
+		<h:panelGrid columns="4">
+			<p:commandButton id="cmdSearch" value="#{i18n.search_input_perform_search}" action="#{customerView.fetchCustomers}" ajax="false"/>
+			<p:commandButton id="cmdReset" value="#{i18n.command_reset}" action="#{customerView.resetSearchObject}" onclick="PF('dlgSearchInput').hide()" ajax="false"/>
+			<p:commandButton id="cmdClear" value="#{i18n.command_clear}" action="#{customerView.clearSearchObject}" update="tabViewSearchInput" ajax="true"/>
+			<p:commandButton id="cmdCount" value="#{i18n.search_input_perform_count}" actionListener="#{customerView.countRecords}" update="growl" ajax="true"/>
+		</h:panelGrid>
+	</p:dialog>
+
+	<p:menubar>
+		<p:submenu icon="pi pi-file" label="#{i18n.mnu_file}" id="panData_mniFile">
+			<p:menuitem value="#{i18n.action_create}" ajax="true" id="panData_mniCreate" icon="pi pi-plus" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR')}" action="#{customerView.openCreateNewCustomerDialog}">
+				<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{customerView.currentPageURL}"/>
+			</p:menuitem>
+			<p:menuitem value="#{i18n.search_input_dlg_save_query}" icon="pi pi-save" onclick="PF('dlgSaveQuery').show()"/>
+		</p:submenu>
+		<p:submenu icon="pi pi-refresh" label="#{i18n.mnu_view}">
+			<p:menuitem value="#{i18n.action_refresh}" ajax="false" icon="pi pi-refresh" actionListener="#{customerView.fetchCustomers}"/>
+		</p:submenu>
+		<p:submenu icon="pi pi-print" label="#{i18n.mnu_export}">
+			<p:menuitem value="#{i18n.action_export_xls}" ajax="false" icon="pi pi-file-excel">
+				<p:dataExporter type="xlsxstream" target="panData" fileName="CustomerList"/>
+			</p:menuitem>
+			<p:menuitem value="#{i18n.action_export_pdf}" ajax="false" icon="pi pi-file-pdf">
+				<p:dataExporter type="pdf" target="panData" fileName="CustomerList"/>
+			</p:menuitem>
+		</p:submenu>
+		<p:menuitem value="#{i18n.action_search_input}" ajax="true" icon="pi pi-search" id="panData_mniSearch" onclick="PF('dlgSearchInput').show()"/>
+	</p:menubar>
+
+
+	<p:dataTable id="panData" var="customerViewItem" rows="#{customerView.numberRows}"
+		selectionTextDisabled="false" allowUnsorting="true" resizeMode="expand" multiViewState="true" 
+		selectionMode="single"
+		selection="#{customerView.selectedObject}"
+		loadingMessage="#{i18n.action_fetch_data}"
+		value="#{customerView.customersList}" scrollable="false"
+		paginatorPosition="top" paginatorAlwaysVisible="false" paginator="true" resizableColumns="true"
+		rowKey="#{customerViewItem.code}"
+		paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+		rowsPerPageTemplate="50,150,400,1000">
+		<p:ajax event="rowDblselect" listener="#{customerView.onDoubleClick}"/>
+
+		<p:column sortBy="#{customerViewItem.code}" width="100" 
+			rendered="#{customerView.searchObject.searchFields[0].visible}" displayPriority="#{customerView.searchObject.searchFields[0].colOrder}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_abstractfuntionalentity_code}"/>
+			</f:facet>
+			<h:outputText value="#{customerViewItem.code}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{customerViewItem.name}" width="250" 
+			rendered="#{customerView.searchObject.searchFields[1].visible}" displayPriority="#{customerView.searchObject.searchFields[1].colOrder}" 
+			exportValue="#{customerViewItem.name}" class="tdnowrap" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_customer_name}"/>
+			</f:facet>
+			<h:outputText value="#{customerViewItem.name}" id="name" />
+			<p:tooltip for="name" value="#{customerViewItem.name}" position="top" showDelay="50"/>
+		</p:column>
+
+		<p:column sortBy="#{customerViewItem.street}" width="150" 
+			rendered="#{customerView.searchObject.searchFields[2].visible}" displayPriority="#{customerView.searchObject.searchFields[2].colOrder}" 
+			exportValue="#{customerViewItem.street}" class="tdnowrap" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_customer_street}"/>
+			</f:facet>
+			<h:outputText value="#{customerViewItem.street}" id="street" />
+			<p:tooltip for="street" value="#{customerViewItem.street}" position="top" showDelay="50"/>
+		</p:column>
+
+		<p:column sortBy="#{customerViewItem.zipCode}" width="80" 
+			rendered="#{customerView.searchObject.searchFields[3].visible}" displayPriority="#{customerView.searchObject.searchFields[3].colOrder}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_customer_zipcode}"/>
+			</f:facet>
+			<h:outputText value="#{customerViewItem.zipCode}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{customerViewItem.city}" width="150" 
+			rendered="#{customerView.searchObject.searchFields[4].visible}" displayPriority="#{customerView.searchObject.searchFields[4].colOrder}" 
+			exportValue="#{customerViewItem.city}" class="tdnowrap" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_customer_city}"/>
+			</f:facet>
+			<h:outputText value="#{customerViewItem.city}" id="city" />
+			<p:tooltip for="city" value="#{customerViewItem.city}" position="top" showDelay="50"/>
+		</p:column>
+
+		<p:column sortBy="#{customerViewItem.countryName}" width="100" 
+			rendered="#{customerView.searchObject.searchFields[5].visible}" displayPriority="#{customerView.searchObject.searchFields[5].colOrder}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_customerview_countryname}"/>
+			</f:facet>
+			<h:outputText value="#{customerViewItem.countryName}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{customerViewItem.internal}" width="70" 
+			rendered="#{customerView.searchObject.searchFields[6].visible}" displayPriority="#{customerView.searchObject.searchFields[6].colOrder}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_customer_internal}"/>
+			</f:facet>
+			<p:selectBooleanCheckbox value="#{customerViewItem.internal}" disabled="true"/>
+		</p:column>
+
+		<p:column sortBy="#{customerViewItem.shortText}" width="250" 
+			rendered="#{customerView.searchObject.searchFields[7].visible}" displayPriority="#{customerView.searchObject.searchFields[7].colOrder}" 
+			exportValue="#{customerViewItem.shortText}" class="tdnowrap" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_abstractfuntionalentity_shorttext}"/>
+			</f:facet>
+			<h:outputText value="#{customerViewItem.shortText}" id="shortText" />
+			<p:tooltip for="shortText" value="#{customerViewItem.shortText}" position="top" showDelay="50"/>
+		</p:column>
+
+		<p:column sortBy="#{customerViewItem.comment}" width="150" 
+			rendered="#{customerView.searchObject.searchFields[8].visible}" displayPriority="#{customerView.searchObject.searchFields[8].colOrder}" 
+			exportValue="#{customerViewItem.comment}" class="tdnowrap" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_abstractfuntionalentity_comment}"/>
+			</f:facet>
+			<h:outputText value="#{customerViewItem.comment}" id="comment" />
+			<p:tooltip for="comment" value="#{customerViewItem.comment}" position="top" showDelay="50"/>
+		</p:column>
+
+		<p:column sortBy="#{customerViewItem.creationDate}" width="120" 
+			rendered="#{customerView.searchObject.searchFields[9].visible}" displayPriority="#{customerView.searchObject.searchFields[9].colOrder}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_abstractfuntionalentity_creationdate}"/>
+			</f:facet>
+			<h:outputText value="#{customerViewItem.creationDate}">
+				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateTimeConverter"/>
+				<f:attribute name="pattern" value="#{userSession.dateTimeFormat}"/>
+				<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{customerViewItem.lastUpdate}" width="120" 
+			rendered="#{customerView.searchObject.searchFields[10].visible}" displayPriority="#{customerView.searchObject.searchFields[10].colOrder}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_abstractfuntionalentity_lastupdate}"/>
+			</f:facet>
+			<h:outputText value="#{customerViewItem.lastUpdate}">
+				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateTimeConverter"/>
+				<f:attribute name="pattern" value="#{userSession.dateTimeFormat}"/>
+				<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
+			</h:outputText>
+		</p:column>
+	</p:dataTable>
+	<p/>
+
+	<h:outputText styleClass="label-field-mandatory" value="#{i18n.result_total_number_records} #{customerView.customersList.size()}"/>
+	<h:outputText styleClass="label-field-mandatory" rendered="#{customerView.searchObject.count}" value="&#160;#{i18n.search_input_count_of}&#160;"/>
+	<h:outputText styleClass="label-field-mandatory" rendered="#{customerView.searchObject.count}" value="#{customerView.countResult}"/>
+	<p/>
+
+
+
+<!--Kontextmenü mit Möglichkeit, eine Zelle oder eine Zeile zu kopieren -->
+
+	<h:inputHidden id="cellText" value="#{customerView.cellText}" />
+	<h:inputHidden id="rowCsv" value="#{customerView.rowCsv}" />
+
+	<p:contextMenu for="panData" beforeShow="updateContextData(event)" >
+		<p:menuitem value="#{i18n.action_delete}" ajax="true" icon="pi pi-trash" id="panData_mniDelete" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR')}" onclick="PF('deleteConfirm').show()"/>
+		<p:menuitem value="#{i18n.action_create}" ajax="true" icon="pi pi-plus" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR')}" action="#{customerView.openCreateNewCustomerDialog}">
+			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{customerView.currentPageURL}"/>
+		</p:menuitem>
+		<p:menuitem value="#{i18n.action_edit}" ajax="true" icon="pi pi-pencil" id="panData_mniUpdate" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR')}" action="#{customerView.openEditCustomerDialog}">
+			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{customerView.currentPageURL}"/>
+		</p:menuitem>
+		<p:menuitem value="#{i18n.action_copy}" ajax="true" icon="pi pi-copy" id="panData_mniCopy" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR')}" onclick="PF('copyConfirm').show()"/>
+		<p:menuitem value="#{i18n.action_refresh}" ajax="false" type="push" icon="pi pi-refresh" id="panData_mniRefresh" actionListener="#{customerView.fetchCustomers}"/>
+
+		<p:separator/>
+
+		<p:menuitem value="#{i18n.ctxmenu_copy_cell}" actionListener="#{customerView.copyCellToClipboard}" icon="pi pi-copy" update="@none"/>
+		<p:menuitem value="#{i18n.ctxmenu_copy_row}" actionListener="#{customerView.copyRowToClipboard}" icon="pi pi-copy" update="@none"/>
+	</p:contextMenu>
+
+	<p:confirmDialog modal="true" closeOnEscape="true" message="#{i18n.dialog_delete_question}" header="#{i18n.dialog_delete_title}" severity="warn" widgetVar="deleteConfirm">
+		<p:commandButton value="#{i18n.command_yes}" oncomplete="PF('deleteConfirm').hide()" actionListener="#{customerView.deleteCustomer}" id="panData_cmdYesDelete" ajax="false"/>
+		<p:commandButton value="#{i18n.command_no}" onclick="PF('deleteConfirm').hide()" type="button"/>
+	</p:confirmDialog>
+
+	<p:confirmDialog modal="true" closeOnEscape="true" message="#{i18n.dialog_copy_question}" header="#{i18n.dialog_copy_title}" severity="info" widgetVar="copyConfirm">
+		<p:commandButton value="#{i18n.command_yes}" oncomplete="PF('copyConfirm').hide()" action="#{customerView.copy}" id="panData_cmdYesCopy" ajax="false"/>
+		<p:commandButton value="#{i18n.command_no}" onclick="PF('copyConfirm').hide()" type="button"/>
+	</p:confirmDialog>
+
+	<p:dialog header="#{i18n.search_input_dlg_save_query}" widgetVar="dlgSaveQuery" id="dlgSaveQuery" closeOnEscape="true" modal="true" height="100">
+		<h:panelGrid columns="3">
+			<h:outputLabel value="#{i18n.search_input_lbl_save_query}" styleClass="label-field-mandatory"/>
+			<p:inputText id="txtQueryName" value="#{customerView.savedQueryName}">
+			</p:inputText>
+			<p:commandButton id="saveQuery" value="#{i18n.command_save}" action="#{customerView.saveNewQuery}" ajax="false" onclick="PF('dlgSaveQuery').hide()"/>
+			<p:defaultCommand target="saveQuery" scope="dlgSaveQuery"/>
+		</h:panelGrid>
+	</p:dialog>
+
+	<p:defaultCommand target=":form:cmdSearch" scope="dlgSearchInput" />
+
+</ui:define>
+</ui:composition>
