@@ -70,6 +70,7 @@ public interface TranslationKeys {
     String FORM_CREATENEWCUSTOMERDIALOG_TITLE = "form_createnewcustomerdialog_title";
     String FORM_CREATENEWLOCATIONDIALOG_TITLE = "form_createnewlocationdialog_title";
     String FORM_CREATENEWMATERIALCLASSDIALOG_TITLE = "form_createnewmaterialclassdialog_title";
+    String FORM_CREATENEWMATERIALTYPEDIALOG_TITLE = "form_createnewmaterialtypedialog_title";
     String FORM_CREATENEWROLEDIALOG_TITLE = "form_createnewroledialog_title";
     String FORM_CREATENEWUSERDIALOG_TITLE = "form_createnewuserdialog_title";
     String FORM_CUSTOMERVIEW_TITLE = "form_customerview_title";
@@ -78,10 +79,12 @@ public interface TranslationKeys {
     String FORM_EDITCUSTOMERDIALOG_TITLE = "form_editcustomerdialog_title";
     String FORM_EDITLOCATIONDIALOG_TITLE = "form_editlocationdialog_title";
     String FORM_EDITMATERIALCLASSDIALOG_TITLE = "form_editmaterialclassdialog_title";
+    String FORM_EDITMATERIALTYPEDIALOG_TITLE = "form_editmaterialtypedialog_title";
     String FORM_EDITUSERDIALOG_TITLE = "form_edituserdialog_title";
     String FORM_EDITUSERSETTINGSDIALOG_TITLE = "form_editusersettingsdialog_title";
     String FORM_LOCATIONVIEW_TITLE = "form_locationview_title";
     String FORM_MATERIALCLASSVIEW_TITLE = "form_materialclassview_title";
+    String FORM_MATERIALTYPEVIEW_TITLE = "form_materialtypeview_title";
     String FORM_RESETPASSWORDDIALOG_INVALIDLINK = "form_resetpassworddialog_invalidlink";
     String FORM_RESETPASSWORDDIALOG_TITLE = "form_resetpassworddialog_title";
     String FORM_ROLEVIEW_TITLE = "form_roleview_title";
