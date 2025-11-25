@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<net.sourceforge.net.model.domain:DomainNamespace xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:net.sourceforge.net.model.domain="http:///net/sourceforge/jbizmo/model/domain.ecore" name="material" javaTypes="//@domainObjects.0 //@domainObjects.1">
+  <parent href="project.xmi#/0/@domainNamespace"/>
+  <project href="project.xmi#/0"/>
+  <domainObjects name="MaterialType" comment="Domain object for material type objects" mappable="true" namespace="/" label="material type" namePlural="MaterialTypes" labelPlural="material types" discriminatorValue="">
+    <parent href="package-base.xmi#//@domainObjects.4"/>
+    <iDGenerator name="MATERIALTYPE_SEQ"/>
+    <inheritance>
+      <target href="package-base.xmi#//@domainObjects.4"/>
+    </inheritance>
+    <databaseTable name="material_type_tab" schemaName="" catalogName="">
+      <database href="project.xmi#/0/@database"/>
+      <columns name="code" length="50">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="short_text" length="100">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="comment" length="4000">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="creation_date">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.14"/>
+      </columns>
+      <columns name="last_update" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.14"/>
+      </columns>
+      <columns name="version">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.0"/>
+      </columns>
+      <primaryKey name="pk_material_type" column="//@domainObjects.0/@databaseTable/@columns.0"/>
+    </databaseTable>
+  </domainObjects>
+  <domainObjects name="MaterialClass" comment="Domain object for material class objects" mappable="true" namespace="/" label="material class" namePlural="MaterialClasses" labelPlural="material classes" discriminatorValue="">
+    <parent href="package-base.xmi#//@domainObjects.4"/>
+    <iDGenerator name="MATERIALCLASS_SEQ"/>
+    <inheritance>
+      <target href="package-base.xmi#//@domainObjects.4"/>
+    </inheritance>
+    <databaseTable name="material_class_tab" schemaName="" catalogName="">
+      <database href="project.xmi#/0/@database"/>
+      <columns name="code" length="50">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="short_text" length="100">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="comment" length="4000">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="creation_date">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.14"/>
+      </columns>
+      <columns name="last_update" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.14"/>
+      </columns>
+      <columns name="version">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.0"/>
+      </columns>
+      <primaryKey name="pk_material_class" column="//@domainObjects.1/@databaseTable/@columns.0"/>
+    </databaseTable>
+  </domainObjects>
+</net.sourceforge.net.model.domain:DomainNamespace>

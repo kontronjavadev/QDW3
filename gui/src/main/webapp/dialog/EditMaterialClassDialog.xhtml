@@ -1,0 +1,93 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:h="jakarta.faces.html"
+	xmlns:f="jakarta.faces.core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/templates/ui.xhtml">
+
+<f:metadata>
+	<f:viewAction action="#{editMaterialClassDialog.initView()}"/>
+	<f:viewParam name="selectedObjectId" value="#{editMaterialClassDialog.selectedObjectId}"/>
+</f:metadata>
+
+<ui:define name="title">#{editMaterialClassDialog.formTitle}</ui:define>
+
+<ui:define name="content">
+	<p:dialog header="#{i18n.feedback_dialog_header}" modal="true" widgetVar="msgBox" visible="#{(not empty facesContext.messageList)}">
+		<p:messages id="messages" showDetail="true" showSummary="true"/>
+	</p:dialog>
+
+	<h:panelGrid columns="3">
+		<div class="pi pi-file-edit" style="font-size: 2em"/>
+		<h:outputText id="lblFormTitle" value="&#160;#{editMaterialClassDialog.formTitle}" styleClass="label-form-title"/>
+		<p:ajaxStatus style="width:16px;height:16px;">
+			<f:facet name="start">
+				<h:graphicImage value="/images/ajaxloading.gif"/>
+			</f:facet>
+
+			<f:facet name="complete">
+				<h:outputText value=""/>
+			</f:facet>
+		</p:ajaxStatus>
+	</h:panelGrid>
+
+	<p:tabView id="tabview1" dynamic="true" effect="fade" effectDuration="fast">
+	<p:tab id="tabPanMaterialClass" title="#{i18n.panel_basic_title}">
+	<h:panelGrid columns="3">
+
+		<h:outputLabel value="#{i18n.lbl_attr_abstractfuntionalentity_code}:" for="txtCode" styleClass="label-field-optional"/>
+		<p:inputText id="txtCode" value="#{editMaterialClassDialog.materialClass.code}" readonly="true">
+		</p:inputText>
+		<p:tooltip for="txtCode" value=""/>
+
+		<h:outputLabel value="#{i18n.lbl_attr_abstractfuntionalentity_shorttext}:" for="txtShortText" styleClass="label-field-optional"/>
+		<p:inputText id="txtShortText" value="#{editMaterialClassDialog.materialClass.shortText}">
+			<f:validateLength maximum="100"/>
+		</p:inputText>
+		<p:tooltip for="txtShortText" value=""/>
+
+		<h:outputLabel value="#{i18n.lbl_attr_abstractfuntionalentity_comment}:" for="txtComment" styleClass="label-field-optional"/>
+		<p:inputTextarea style="width:200px;height:80px;" id="txtComment" value="#{editMaterialClassDialog.materialClass.comment}">
+			<f:validateLength maximum="4000"/>
+		</p:inputTextarea>
+		<p:tooltip for="txtComment" value=""/>
+
+	</h:panelGrid>
+	</p:tab>
+	<p:tab id="tabPanAdministration" title="#{i18n.panel_admin_title}">
+	<h:panelGrid columns="3">
+
+		<h:outputLabel value="#{i18n.lbl_attr_abstractfuntionalentity_creationdate}:" for="txtCreationDate" styleClass="label-field-optional"/>
+		<p:inputText id="txtCreationDate" value="#{editMaterialClassDialog.materialClass.creationDate}" readonly="true">
+			<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateTimeConverter"/>
+			<f:attribute name="pattern" value="#{userSession.dateTimeFormat}"/>
+			<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
+		</p:inputText>
+		<p:tooltip for="txtCreationDate" value=""/>
+
+		<h:outputLabel value="#{i18n.lbl_attr_abstractfuntionalentity_lastupdate}:" for="txtLastUpdate" styleClass="label-field-optional"/>
+		<p:inputText id="txtLastUpdate" value="#{editMaterialClassDialog.materialClass.lastUpdate}" readonly="true">
+			<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateTimeConverter"/>
+			<f:attribute name="pattern" value="#{userSession.dateTimeFormat}"/>
+			<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
+		</p:inputText>
+		<p:tooltip for="txtLastUpdate" value=""/>
+
+		<h:outputLabel value="#{i18n.lbl_attr_abstractfuntionalentity_version}:" for="txtVersion" styleClass="label-field-optional"/>
+		<p:inputText id="txtVersion" value="#{editMaterialClassDialog.materialClass.version}" readonly="true">
+		</p:inputText>
+		<p:tooltip for="txtVersion" value=""/>
+
+	</h:panelGrid>
+	</p:tab>
+	</p:tabView>
+
+	<p/>
+
+	<h:panelGrid columns="2">
+		<p:commandButton id="cmdSave" icon="pi pi-save" action="#{editMaterialClassDialog.save}" value="#{i18n.command_save}" ajax="false"/>
+		<p:commandButton id="cmdBack" icon="pi pi-caret-left" value="#{i18n.command_back}" action="#{userSession.getLastPage}" immediate="true" ajax="false"/>
+	</h:panelGrid>
+
+</ui:define>
+</ui:composition>
