@@ -139,6 +139,11 @@ public class NavigatorView implements Serializable {
 
             if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR))
                 new DefaultTreeNode<>(VIEW_TYPE,
+                        new TreeNavigatorItem(bundle.getString(FORM_SUPPLIERVIEW_TITLE), req.getContextPath() + "/view/SupplierView.jsf"),
+                        itemGroup0002);
+
+            if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR))
+                new DefaultTreeNode<>(VIEW_TYPE,
                         new TreeNavigatorItem(bundle.getString(FORM_VERTICALSECTORVIEW_TITLE), req.getContextPath() + "/view/VerticalSectorView.jsf"),
                         itemGroup0002);
         }

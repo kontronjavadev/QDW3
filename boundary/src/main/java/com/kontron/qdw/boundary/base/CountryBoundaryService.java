@@ -59,7 +59,6 @@ public class CountryBoundaryService {
 
         newCountry = repository.persist(newCountry, true, true, true);
 
-        object.setCode(newCountry.getCode());
         object.setCreationDate(newCountry.getCreationDate());
         object.setVersion(newCountry.getVersion());
 

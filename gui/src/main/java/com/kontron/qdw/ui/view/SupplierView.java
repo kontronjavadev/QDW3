@@ -3,11 +3,10 @@ package com.kontron.qdw.ui.view;
 import com.kontron.qdw.boundary.base.*;
 import org.slf4j.*;
 import java.lang.invoke.*;
+import com.kontron.qdw.ui.view.util.SuperView;
 import org.primefaces.model.DualListModel;
 import net.sourceforge.jbizmo.commons.webclient.primefaces.search.*;
 import com.kontron.qdw.ui.dialog.*;
-import com.kontron.qdw.ui.view.util.SuperView;
-
 import static com.kontron.qdw.ui.TranslationKeys.*;
 import net.sourceforge.jbizmo.commons.webclient.primefaces.util.*;
 import com.kontron.qdw.dto.base.*;
@@ -20,30 +19,30 @@ import com.kontron.qdw.ui.*;
 import com.kontron.qdw.service.*;
 import jakarta.faces.model.*;
 import jakarta.inject.*;
-import net.sourceforge.jbizmo.commons.search.dto.*;
 import net.sourceforge.jbizmo.commons.annotation.Customized;
+import net.sourceforge.jbizmo.commons.search.dto.*;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
 import java.io.*;
 
-@Named("customerView")
+@Named("supplierView")
 @ViewScoped
-public class CustomerView extends SuperView implements Serializable {
+public class SupplierView extends SuperView implements Serializable {
     @Generated
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     @Generated
     private static final long serialVersionUID = 1L;
     @Generated
-    private List<CustomerSearchDTO> customersList = new ArrayList<>();
+    private List<SupplierSearchDTO> suppliersList = new ArrayList<>();
     @Generated
-    private CustomerSearchDTO selectedObject;
+    private SupplierSearchDTO selectedObject;
     @Generated
     private final UserSession userSession;
     @Generated
     private transient ResourceBundle bundle;
     @Generated
-    private final transient CustomerBoundaryService customerService;
+    private final transient SupplierBoundaryService supplierService;
     @Generated
-    public static final String PAGE_URL = "/view/CustomerView.jsf?faces-redirect=true";
+    public static final String PAGE_URL = "/view/SupplierView.jsf?faces-redirect=true";
     @Generated
     private String formTitle = "";
     @Generated
@@ -51,7 +50,7 @@ public class CustomerView extends SuperView implements Serializable {
     @Generated
     private final transient CountryBoundaryService countryService;
     @Generated
-    public static final String VIEW_ID = "com.kontron.qdw.ui.view.CustomerView";
+    public static final String VIEW_ID = "com.kontron.qdw.ui.view.SupplierView";
     @Generated
     private final transient SavedQueryService queryManager;
     @Generated
@@ -63,9 +62,9 @@ public class CustomerView extends SuperView implements Serializable {
      * Default constructor
      */
     @Generated
-    public CustomerView() {
+    public SupplierView() {
         this.userSession = null;
-        this.customerService = null;
+        this.supplierService = null;
         this.countryService = null;
         this.queryManager = null;
     }
@@ -73,53 +72,18 @@ public class CustomerView extends SuperView implements Serializable {
     /**
      * Constructor for injecting all required beans
      * @param userSession
-     * @param customerService
+     * @param supplierService
      * @param countryService
      * @param queryManager
      */
     @Inject
     @Generated
-    public CustomerView(UserSession userSession, CustomerBoundaryService customerService, CountryBoundaryService countryService,
+    public SupplierView(UserSession userSession, SupplierBoundaryService supplierService, CountryBoundaryService countryService,
             SavedQueryService queryManager) {
         this.userSession = userSession;
-        this.customerService = customerService;
+        this.supplierService = supplierService;
         this.countryService = countryService;
         this.queryManager = queryManager;
-    }
-
-    /**
-     * Initialize view
-     */
-    @Customized
-    public void initView() {
-        logger.debug("Initialize view");
-
-        bundle = ResourceBundle.getBundle(DEFAULT_BUNDLE_NAME, userSession.getLocale());
-
-        // Check if user is allowed to open this page!
-        if (!userSession.checkAuthorization(true, ROLE_ADMINISTRATOR)) {
-            return;
-        }
-
-
-        formTitle = bundle.getString(FORM_CUSTOMERVIEW_TITLE);
-
-        // Check if previous search exists!
-        final SearchDTO lastSearch = queryManager.getLastQuery(userSession.getPrincipal().getId(), getViewName());
-
-        if (lastSearch != null) {
-            searchObj = lastSearch;
-
-            prepareAfterLoad();
-        }
-        else {
-            initSearchObject();
-        }
-
-        initProperties();
-        fetchCustomers();
-
-        logger.debug("View initialization finished");
     }
 
     /**
@@ -138,51 +102,74 @@ public class CustomerView extends SuperView implements Serializable {
 
         refreshFormatSettings();
 
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, CustomerSearchDTO.SELECT_CODE,
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, SupplierSearchDTO.SELECT_CODE,
                 bundle.getString(LBL_ATTR_ABSTRACTFUNTIONALENTITY_CODE), SearchFieldDataTypeEnum.STRING, 100);
 
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, CustomerSearchDTO.SELECT_NAME,
-                bundle.getString(LBL_ATTR_CUSTOMER_NAME), SearchFieldDataTypeEnum.STRING, 250);
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, SupplierSearchDTO.SELECT_NAME,
+                bundle.getString(LBL_ATTR_SUPPLIER_NAME), SearchFieldDataTypeEnum.STRING, 250);
 
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, CustomerSearchDTO.SELECT_STREET,
-                bundle.getString(LBL_ATTR_CUSTOMER_STREET), SearchFieldDataTypeEnum.STRING, 150);
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, SupplierSearchDTO.SELECT_STREET,
+                bundle.getString(LBL_ATTR_SUPPLIER_STREET), SearchFieldDataTypeEnum.STRING, 150);
 
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, CustomerSearchDTO.SELECT_ZIPCODE,
-                bundle.getString(LBL_ATTR_CUSTOMER_ZIPCODE), SearchFieldDataTypeEnum.STRING, 80);
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, SupplierSearchDTO.SELECT_ZIPCODE,
+                bundle.getString(LBL_ATTR_SUPPLIER_ZIPCODE), SearchFieldDataTypeEnum.STRING, 80);
 
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, CustomerSearchDTO.SELECT_CITY,
-                bundle.getString(LBL_ATTR_CUSTOMER_CITY), SearchFieldDataTypeEnum.STRING, 150);
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, SupplierSearchDTO.SELECT_CITY,
+                bundle.getString(LBL_ATTR_SUPPLIER_CITY), SearchFieldDataTypeEnum.STRING, 150);
 
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, CustomerSearchDTO.SELECT_COUNTRYNAME,
-                bundle.getString(COL_CUSTOMERVIEW_COUNTRYNAME), SearchFieldDataTypeEnum.STRING, 100);
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, SupplierSearchDTO.SELECT_COUNTRYNAME,
+                bundle.getString(COL_SUPPLIERVIEW_COUNTRYNAME), SearchFieldDataTypeEnum.STRING, 150);
 
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, CustomerSearchDTO.SELECT_INTERNAL,
-                bundle.getString(LBL_ATTR_CUSTOMER_INTERNAL), SearchFieldDataTypeEnum.BOOLEAN, 70);
-
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, CustomerSearchDTO.SELECT_SHORTTEXT,
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, SupplierSearchDTO.SELECT_SHORTTEXT,
                 bundle.getString(LBL_ATTR_ABSTRACTFUNTIONALENTITY_SHORTTEXT), SearchFieldDataTypeEnum.STRING, 250);
 
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, CustomerSearchDTO.SELECT_COMMENT,
-                bundle.getString(LBL_ATTR_ABSTRACTFUNTIONALENTITY_COMMENT), SearchFieldDataTypeEnum.STRING, 150);
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, SupplierSearchDTO.SELECT_COMMENT,
+                bundle.getString(LBL_ATTR_ABSTRACTFUNTIONALENTITY_COMMENT), SearchFieldDataTypeEnum.STRING, 250);
 
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, CustomerSearchDTO.SELECT_CREATIONDATE,
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, SupplierSearchDTO.SELECT_CREATIONDATE,
                 bundle.getString(LBL_ATTR_ABSTRACTFUNTIONALENTITY_CREATIONDATE), SearchFieldDataTypeEnum.LOCAL_DATE_TIME, 120);
 
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, CustomerSearchDTO.SELECT_LASTUPDATE,
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, SupplierSearchDTO.SELECT_LASTUPDATE,
                 bundle.getString(LBL_ATTR_ABSTRACTFUNTIONALENTITY_LASTUPDATE), SearchFieldDataTypeEnum.LOCAL_DATE_TIME, 120);
 
         visibleFields = new DualListModel<>();
         visibleFields.setSource(new ArrayList<>());
-        visibleFields.setTarget(new ArrayList<>());
+        visibleFields.setTarget(searchObj.getSearchFields());
+    }
 
-        for (final SearchFieldDTO d : searchObj.getSearchFields()) {
-            if (!d.isVisible()) {
-                visibleFields.getSource().add(d);
-            }
-            else {
-                visibleFields.getTarget().add(d);
-            }
+    /**
+     * Initialize view
+     */
+    @Customized
+    public void initView() {
+        logger.debug("Initialize view");
+
+        bundle = ResourceBundle.getBundle(DEFAULT_BUNDLE_NAME, userSession.getLocale());
+
+        // Check if user is allowed to open this page!
+        if (!userSession.checkAuthorization(true, ROLE_ADMINISTRATOR)) {
+            return;
         }
+
+
+        formTitle = bundle.getString(FORM_SUPPLIERVIEW_TITLE);
+
+        // Check if previous search exists!
+        final SearchDTO lastSearch = queryManager.getLastQuery(userSession.getPrincipal().getId(), VIEW_ID);
+
+        if (lastSearch != null) {
+            searchObj = lastSearch;
+
+            prepareAfterLoad();
+        }
+        else {
+            initSearchObject();
+        }
+
+        initProperties();
+        fetchSuppliers();
+
+        logger.debug("View initialization finished");
     }
 
     @Override
@@ -193,22 +180,22 @@ public class CustomerView extends SuperView implements Serializable {
     @Override
     public void resetSearchObject() {
         initSearchObject();
-        fetchCustomers();
+        fetchSuppliers();
     }
 
     /**
      * @return the list of elements
      */
     @Generated
-    public Collection<CustomerSearchDTO> getCustomersList() {
-        return customersList;
+    public Collection<SupplierSearchDTO> getSuppliersList() {
+        return suppliersList;
     }
 
     /**
      * @return the selected item
      */
     @Generated
-    public CustomerSearchDTO getSelectedObject() {
+    public SupplierSearchDTO getSelectedObject() {
         return selectedObject;
     }
 
@@ -216,7 +203,7 @@ public class CustomerView extends SuperView implements Serializable {
      * @param selectedObject
      */
     @Generated
-    public void setSelectedObject(CustomerSearchDTO selectedObject) {
+    public void setSelectedObject(SupplierSearchDTO selectedObject) {
         this.selectedObject = selectedObject;
     }
 
@@ -227,18 +214,18 @@ public class CustomerView extends SuperView implements Serializable {
     public void onDoubleClick() {
         logger.debug("Handle double-click event");
 
-        userSession.redirectTo(getCurrentPageURL(), openEditCustomerDialog());
+        userSession.redirectTo(getCurrentPageURL(), openEditSupplierDialog());
     }
 
     /**
      * Delete selected element
      */
     @Generated
-    public void deleteCustomer() {
+    public void deleteSupplier() {
         try {
             logger.debug("Delete selected object with id '{}'", selectedObject.getCode());
 
-            customerService.deleteCustomer(selectedObject.getCode());
+            supplierService.deleteSupplier(selectedObject.getCode());
         }
         catch (final Exception e) {
             logger.error("Error while deleting selected object!", e);
@@ -246,7 +233,7 @@ public class CustomerView extends SuperView implements Serializable {
             MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_ERROR, OPERATION_DELETE_FAIL, e);
         }
 
-        fetchCustomers();
+        fetchSuppliers();
     }
 
     /**
@@ -261,7 +248,7 @@ public class CustomerView extends SuperView implements Serializable {
         try {
             logger.debug("Create a copy of the selected object with id '{}'", selectedObject.getCode());
 
-            newId = customerService.copy(selectedObject.getCode(), userSession.getPrincipal().getId());
+            newId = supplierService.copy(selectedObject.getCode(), userSession.getPrincipal().getId());
         }
         catch (final Exception e) {
             logger.error("Error while creating a copy of the selected object!", e);
@@ -271,7 +258,7 @@ public class CustomerView extends SuperView implements Serializable {
         }
 
         if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR))
-            url = EditCustomerDialog.PAGE_INIT_URL + java.net.URLEncoder.encode(newId, java.nio.charset.StandardCharsets.UTF_8);
+            url = EditSupplierDialog.PAGE_INIT_URL + java.net.URLEncoder.encode(newId, java.nio.charset.StandardCharsets.UTF_8);
 
         userSession.setLastPage(getCurrentPageURL());
         return url;
@@ -282,11 +269,11 @@ public class CustomerView extends SuperView implements Serializable {
      * @return the navigation target
      */
     @Generated
-    public String openCreateNewCustomerDialog() {
+    public String openCreateNewSupplierDialog() {
         var url = "";
 
         if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR))
-            url = CreateNewCustomerDialog.PAGE_INIT_URL;
+            url = CreateNewSupplierDialog.PAGE_INIT_URL;
 
         return url;
     }
@@ -296,11 +283,11 @@ public class CustomerView extends SuperView implements Serializable {
      * @return the navigation target
      */
     @Generated
-    public String openEditCustomerDialog() {
+    public String openEditSupplierDialog() {
         var url = "";
 
         if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR))
-            url = EditCustomerDialog.PAGE_INIT_URL + java.net.URLEncoder.encode(selectedObject.getCode(), java.nio.charset.StandardCharsets.UTF_8);
+            url = EditSupplierDialog.PAGE_INIT_URL + java.net.URLEncoder.encode(selectedObject.getCode(), java.nio.charset.StandardCharsets.UTF_8);
 
         return url;
     }
@@ -385,7 +372,7 @@ public class CustomerView extends SuperView implements Serializable {
      * Perform data fetch operation
      */
     @Generated
-    public void fetchCustomers() {
+    public void fetchSuppliers() {
         logger.debug("Perform data fetch operation");
 
         try {
@@ -399,10 +386,10 @@ public class CustomerView extends SuperView implements Serializable {
         refreshFormatSettings();
 
         try {
-            customersList = customerService.searchAllCustomers(searchObj);
+            suppliersList = supplierService.searchAllSuppliers(searchObj);
 
             if (searchObj.isCount())
-                countResult = customerService.countAllCustomers(searchObj);
+                countResult = supplierService.countAllSuppliers(searchObj);
 
             queryManager.saveQuery(userSession.getPrincipal().getId(), VIEW_ID, null, searchObj);
         }
@@ -434,7 +421,7 @@ public class CustomerView extends SuperView implements Serializable {
         refreshFormatSettings();
 
         try {
-            countResult = customerService.countAllCustomers(searchObj);
+            countResult = supplierService.countAllSuppliers(searchObj);
 
             MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_INFO, OPERATION_COUNT_RESULT, "", countResult);
         }
@@ -537,7 +524,7 @@ public class CustomerView extends SuperView implements Serializable {
         searchObj = queryManager.getSavedQuery(userSession.getPrincipal().getId(), VIEW_ID, selectedSavedQuery);
 
         prepareAfterLoad();
-        fetchCustomers();
+        fetchSuppliers();
     }
 
 }

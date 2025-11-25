@@ -20,6 +20,7 @@ public interface TranslationKeys {
     String APPLICATION_TITLE = "application_title";
     String APPLICATION_TITLE_ENVIRONMENT = "application_title_environment";
     String COL_CUSTOMERVIEW_COUNTRYNAME = "col_customerview_countryname";
+    String COL_SUPPLIERVIEW_COUNTRYNAME = "col_supplierview_countryname";
     String COL_VERTICALSECTORVIEW_BUSINESSUNITCODE = "col_verticalsectorview_businessunitcode";
     String COMMAND_BACK = "command_back";
     String COMMAND_BROWSE = "command_browse";
@@ -75,6 +76,7 @@ public interface TranslationKeys {
     String FORM_CREATENEWMOVEMENTTYPEDIALOG_TITLE = "form_createnewmovementtypedialog_title";
     String FORM_CREATENEWPLANTDIALOG_TITLE = "form_createnewplantdialog_title";
     String FORM_CREATENEWROLEDIALOG_TITLE = "form_createnewroledialog_title";
+    String FORM_CREATENEWSUPPLIERDIALOG_TITLE = "form_createnewsupplierdialog_title";
     String FORM_CREATENEWUSERDIALOG_TITLE = "form_createnewuserdialog_title";
     String FORM_CREATENEWVERTICALSECTORDIALOG_TITLE = "form_createnewverticalsectordialog_title";
     String FORM_CUSTOMERVIEW_TITLE = "form_customerview_title";
@@ -86,6 +88,7 @@ public interface TranslationKeys {
     String FORM_EDITMATERIALTYPEDIALOG_TITLE = "form_editmaterialtypedialog_title";
     String FORM_EDITMOVEMENTTYPEDIALOG_TITLE = "form_editmovementtypedialog_title";
     String FORM_EDITPLANTDIALOG_TITLE = "form_editplantdialog_title";
+    String FORM_EDITSUPPLIERDIALOG_TITLE = "form_editsupplierdialog_title";
     String FORM_EDITUSERDIALOG_TITLE = "form_edituserdialog_title";
     String FORM_EDITUSERSETTINGSDIALOG_TITLE = "form_editusersettingsdialog_title";
     String FORM_EDITVERTICALSECTORDIALOG_TITLE = "form_editverticalsectordialog_title";
@@ -97,6 +100,7 @@ public interface TranslationKeys {
     String FORM_RESETPASSWORDDIALOG_INVALIDLINK = "form_resetpassworddialog_invalidlink";
     String FORM_RESETPASSWORDDIALOG_TITLE = "form_resetpassworddialog_title";
     String FORM_ROLEVIEW_TITLE = "form_roleview_title";
+    String FORM_SUPPLIERVIEW_TITLE = "form_supplierview_title";
     String FORM_USERVIEW_TITLE = "form_userview_title";
     String FORM_VERTICALSECTORVIEW_TITLE = "form_verticalsectorview_title";
     String FORM_VIEWROLEDIALOG_TITLE = "form_viewroledialog_title";
@@ -106,6 +110,7 @@ public interface TranslationKeys {
     String LABEL_LOOKUP = "label_lookup";
     String LBL_ASSOC_CUSTOMER_COUNTRY = "lbl_assoc_customer_country";
     String LBL_ASSOC_CUSTOMER_VERTICALSECTOR = "lbl_assoc_customer_verticalsector";
+    String LBL_ASSOC_SUPPLIER_COUNTRY = "lbl_assoc_supplier_country";
     String LBL_ASSOC_VERTICALSECTOR_BUSINESSUNIT = "lbl_assoc_verticalsector_businessunit";
     String LBL_ATTR_ABSTRACTENTITYWITHID_CREATIONDATE = "lbl_attr_abstractentitywithid_creationdate";
     String LBL_ATTR_ABSTRACTENTITYWITHID_ID = "lbl_attr_abstractentitywithid_id";
@@ -131,6 +136,10 @@ public interface TranslationKeys {
     String LBL_ATTR_CUSTOMER_STREET = "lbl_attr_customer_street";
     String LBL_ATTR_CUSTOMER_ZIPCODE = "lbl_attr_customer_zipcode";
     String LBL_ATTR_ROLE_NAME = "lbl_attr_role_name";
+    String LBL_ATTR_SUPPLIER_CITY = "lbl_attr_supplier_city";
+    String LBL_ATTR_SUPPLIER_NAME = "lbl_attr_supplier_name";
+    String LBL_ATTR_SUPPLIER_STREET = "lbl_attr_supplier_street";
+    String LBL_ATTR_SUPPLIER_ZIPCODE = "lbl_attr_supplier_zipcode";
     String LBL_ATTR_USER_ACTIVE = "lbl_attr_user_active";
     String LBL_ATTR_USER_EMAIL = "lbl_attr_user_email";
     String LBL_ATTR_USER_NAME = "lbl_attr_user_name";
