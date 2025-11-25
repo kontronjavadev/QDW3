@@ -1,11 +1,11 @@
 package com.kontron.qdw.repository.material;
 
-import net.sourceforge.jbizmo.commons.random.*;
-import com.kontron.qdw.domain.material.*;
 import net.sourceforge.jbizmo.commons.jpa.*;
+import net.sourceforge.jbizmo.commons.random.*;
 import jakarta.ejb.*;
 import jakarta.validation.*;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
+import com.kontron.qdw.domain.material.*;
 
 @Stateless
 public class MaterialTypeRepository extends AbstractRepository<MaterialType, String> {

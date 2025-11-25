@@ -1,0 +1,147 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:h="jakarta.faces.html"
+	xmlns:f="jakarta.faces.core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/templates/ui.xhtml">
+
+<f:metadata>
+	<f:viewAction action="#{materialTypeView.fetchMaterialTypes()}"/>
+</f:metadata>
+
+<ui:define name="title">#{materialTypeView.formTitle}</ui:define>
+
+<ui:define name="content">
+	<h:panelGrid columns="3">
+		<div class="pi pi-list" style="font-size: 2em"/>
+		<h:outputText id="lblFormTitle" value="&#160;#{materialTypeView.formTitle}" styleClass="label-form-title"/>
+		<p:ajaxStatus style="width:16px;height:16px;">
+			<f:facet name="start">
+				<h:graphicImage value="/images/ajaxloading.gif"/>
+			</f:facet>
+
+			<f:facet name="complete">
+				<h:outputText value=""/>
+			</f:facet>
+		</p:ajaxStatus>
+	</h:panelGrid>
+
+	<p:growl id="growl" showDetail="true" skipDetailIfEqualsSummary="true" />
+
+	<p:menubar>
+		<p:submenu icon="pi pi-file" label="#{i18n.mnu_file}" id="panData_mniFile">
+			<p:menuitem value="#{i18n.action_create}" ajax="true" id="panData_mniCreate" icon="pi pi-plus" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR')}" action="#{materialTypeView.openCreateNewMaterialTypeDialog}">
+				<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{materialTypeView.currentPageURL}"/>
+			</p:menuitem>
+		</p:submenu>
+		<p:submenu icon="pi pi-refresh" label="#{i18n.mnu_view}">
+			<p:menuitem value="#{i18n.action_refresh}" ajax="false" icon="pi pi-refresh" actionListener="#{materialTypeView.fetchMaterialTypes}"/>
+		</p:submenu>
+		<p:submenu icon="pi pi-print" label="#{i18n.mnu_export}">
+			<p:menuitem value="#{i18n.action_export_xls}" ajax="false" icon="pi pi-file-excel">
+				<p:dataExporter type="xlsxstream" target="panData" fileName="MaterialTypeList"/>
+			</p:menuitem>
+			<p:menuitem value="#{i18n.action_export_pdf}" ajax="false" icon="pi pi-file-pdf">
+				<p:dataExporter type="pdf" target="panData" fileName="MaterialTypeList"/>
+			</p:menuitem>
+		</p:submenu>
+	</p:menubar>
+
+
+	<p:dataTable id="panData" var="materialTypeViewItem" 
+		selectionTextDisabled="false" allowUnsorting="true" resizeMode="expand" multiViewState="true" 
+		selectionMode="single"
+		selection="#{materialTypeView.selectedObject}"
+		loadingMessage="#{i18n.action_fetch_data}"
+		value="#{materialTypeView.materialTypesList}" scrollable="false"
+		resizableColumns="true"
+		rowKey="#{materialTypeViewItem.code}" >
+		<p:ajax event="rowDblselect" listener="#{materialTypeView.onDoubleClick}"/>
+
+		<p:column sortBy="#{materialTypeViewItem.code}" width="100" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_abstractfuntionalentity_code}"/>
+			</f:facet>
+			<h:outputText value="#{materialTypeViewItem.code}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materialTypeViewItem.shortText}" width="150" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_abstractfuntionalentity_shorttext}"/>
+			</f:facet>
+			<h:outputText value="#{materialTypeViewItem.shortText}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materialTypeViewItem.comment}" width="150" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_abstractfuntionalentity_comment}"/>
+			</f:facet>
+			<h:outputText value="#{materialTypeViewItem.comment}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materialTypeViewItem.creationDate}" width="120" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_abstractfuntionalentity_creationdate}"/>
+			</f:facet>
+			<h:outputText value="#{materialTypeViewItem.creationDate}">
+				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateTimeConverter"/>
+				<f:attribute name="pattern" value="#{userSession.dateTimeFormat}"/>
+				<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materialTypeViewItem.lastUpdate}" width="120" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_abstractfuntionalentity_lastupdate}"/>
+			</f:facet>
+			<h:outputText value="#{materialTypeViewItem.lastUpdate}">
+				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateTimeConverter"/>
+				<f:attribute name="pattern" value="#{userSession.dateTimeFormat}"/>
+				<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
+			</h:outputText>
+		</p:column>
+	</p:dataTable>
+	<p/>
+
+	<h:outputText styleClass="label-field-mandatory" value="#{i18n.result_total_number_records} #{materialTypeView.materialTypesList.size()}"/>
+	<p/>
+
+
+
+<!--Kontextmenü mit Möglichkeit, eine Zelle oder eine Zeile zu kopieren -->
+
+	<h:inputHidden id="cellText" value="#{materialTypeView.cellText}" />
+	<h:inputHidden id="rowCsv" value="#{materialTypeView.rowCsv}" />
+
+	<p:contextMenu for="panData" beforeShow="updateContextData(event)" >
+		<p:menuitem value="#{i18n.action_delete}" ajax="true" icon="pi pi-trash" id="panData_mniDelete" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR')}" onclick="PF('deleteConfirm').show()"/>
+		<p:menuitem value="#{i18n.action_create}" ajax="true" icon="pi pi-plus" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR')}" action="#{materialTypeView.openCreateNewMaterialTypeDialog}">
+			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{materialTypeView.currentPageURL}"/>
+		</p:menuitem>
+		<p:menuitem value="#{i18n.action_edit}" ajax="true" icon="pi pi-pencil" id="panData_mniUpdate" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR')}" action="#{materialTypeView.openEditMaterialTypeDialog}">
+			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{materialTypeView.currentPageURL}"/>
+		</p:menuitem>
+		<p:menuitem value="#{i18n.action_copy}" ajax="true" icon="pi pi-copy" id="panData_mniCopy" rendered="false" onclick="PF('copyConfirm').show()"/>
+		<p:menuitem value="#{i18n.action_refresh}" ajax="false" type="push" icon="pi pi-refresh" id="panData_mniRefresh" actionListener="#{materialTypeView.fetchMaterialTypes}"/>
+
+		<p:separator/>
+
+		<p:menuitem value="#{i18n.ctxmenu_copy_cell}" actionListener="#{materialTypeView.copyCellToClipboard}" icon="pi pi-copy" update="@none"/>
+		<p:menuitem value="#{i18n.ctxmenu_copy_row}" actionListener="#{materialTypeView.copyRowToClipboard}" icon="pi pi-copy" update="@none"/>
+	</p:contextMenu>
+
+	<p:confirmDialog modal="true" closeOnEscape="true" message="#{i18n.dialog_delete_question}" header="#{i18n.dialog_delete_title}" severity="warn" widgetVar="deleteConfirm">
+		<p:commandButton value="#{i18n.command_yes}" oncomplete="PF('deleteConfirm').hide()" actionListener="#{materialTypeView.deleteMaterialType}" id="panData_cmdYesDelete" ajax="false"/>
+		<p:commandButton value="#{i18n.command_no}" onclick="PF('deleteConfirm').hide()" type="button"/>
+	</p:confirmDialog>
+
+	<p:confirmDialog modal="true" closeOnEscape="true" message="#{i18n.dialog_copy_question}" header="#{i18n.dialog_copy_title}" severity="info" widgetVar="copyConfirm">
+		<p:commandButton value="#{i18n.command_yes}" oncomplete="PF('copyConfirm').hide()" action="#{materialTypeView.copy}" id="panData_cmdYesCopy" ajax="false"/>
+		<p:commandButton value="#{i18n.command_no}" onclick="PF('copyConfirm').hide()" type="button"/>
+	</p:confirmDialog>
+
+</ui:define>
+</ui:composition>
