@@ -1,6 +1,7 @@
 package com.kontron.qdw.repository.base;
 
 import net.sourceforge.jbizmo.commons.jpa.*;
+import net.sourceforge.jbizmo.commons.random.*;
 import jakarta.ejb.*;
 import jakarta.validation.*;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
@@ -28,27 +29,16 @@ public class BusinessUnitRepository extends AbstractRepository<BusinessUnit, Str
      */
     @Generated
     public BusinessUnit copy(BusinessUnit sourceObject, BusinessUnit targetObject, long loggedOnUserId) {
-        boolean flushAndRefresh = false;
-
         if (targetObject == null) {
-            flushAndRefresh = true;
-
             targetObject = new BusinessUnit();
         }
 
+        targetObject.setCode(RandomStringGenerator.generateRandomString(50));
         targetObject.setShortText(sourceObject.getShortText());
         targetObject.setComment(sourceObject.getComment());
         targetObject.setActive(sourceObject.isActive());
 
         targetObject = persist(targetObject, false, false);
-
-        if (flushAndRefresh) {
-            // Call the flush() method in order to force the database insert immediately!
-            em.flush();
-
-            // Get a fully attached version of the entity
-            em.refresh(targetObject);
-        }
 
         return targetObject;
     }

@@ -106,9 +106,9 @@
   <net.sourceforge.jbizmo.model.java:Namespace name="dto" parent="/0/@rootNamespace" childNamespaces="/8 /111" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="exchange" parent="/0/@rootNamespace" childNamespaces="/9 /112" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="ui.test" parent="/0/@rootNamespace" project="/0"/>
-  <net.sourceforge.jbizmo.model.client:FormGroup name="Master data" groupOrder="1" forms="/47 /78 /51 /70 /82 /97 /115 /127 /139 /93 /41 /74 /89 /101 /119 /131 /143 /105 /123 /135 /147" roles="/0/@roles.0" project="/0"/>
-  <net.sourceforge.jbizmo.model.java:Namespace name="base" parent="/1" javaTypes="/45 /67 /14 /13 /64 /73 /87 /88 /100 /142" project="/0"/>
-  <net.sourceforge.jbizmo.model.java:Namespace name="base" parent="/3" javaTypes="/16 /53 /50 /44 /65 /37 /40 /15 /34 /25 /68 /63 /21 /30 /69 /72 /77 /81 /86 /85 /84 /92 /96 /99 /104 /108 /141 /146 /150" project="/0"/>
+  <net.sourceforge.jbizmo.model.client:FormGroup name="Master data" groupOrder="1" forms="/47 /78 /51 /70 /82 /97 /115 /127 /139 /151 /159 /93 /41 /74 /89 /101 /119 /131 /143 /155 /163 /105 /123 /135 /147 /167 /171" roles="/0/@roles.0" project="/0"/>
+  <net.sourceforge.jbizmo.model.java:Namespace name="base" parent="/1" javaTypes="/45 /67 /14 /13 /64 /73 /87 /88 /100 /142 /154" project="/0"/>
+  <net.sourceforge.jbizmo.model.java:Namespace name="base" parent="/3" javaTypes="/16 /53 /50 /44 /65 /37 /40 /15 /34 /25 /68 /63 /21 /30 /69 /72 /77 /81 /86 /85 /84 /92 /96 /99 /104 /108 /141 /146 /150 /153 /158 /162 /161 /166 /170 /174" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="base" parent="/4" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="base" parent="/2" javaTypes="/46 /59 /60 /55 /57 /66 /56 /12 /54 /61 /62 /11 /58" project="/0"/>
   <net.sourceforge.jbizmo.model.repository:Repository name="UserRepository" comment="Create, read, update and delete services for user objects." namespace="/10">
@@ -616,6 +616,9 @@
     </boundaryMethods>
     <boundaryMethods name="createBusinessUnit" comment="Create new business unit" returnType="/53" methodType="CREATE" serviceMethod="/46/@repositoryMethods.5">
       <methodParameters name="object" type="/53"/>
+    </boundaryMethods>
+    <boundaryMethods name="findBusinessUnits" comment="Search for business unit objects" returnType="/162" returnTypeModifier="List" queryStatement="from BusinessUnit a" customStatement="" methodType="SEARCH_BY_FILTER" serviceMethod="/46/@repositoryMethods.0">
+      <methodParameters name="filter" type="/0/@allSupportedTypes.12"/>
     </boundaryMethods>
   </net.sourceforge.jbizmo.model.boundary:BoundaryBean>
   <net.sourceforge.jbizmo.model.repository:Repository name="BusinessUnitRepository" comment="Create, read, update and delete services for business unit objects." namespace="/10">
@@ -1815,6 +1818,22 @@
     <boundaryMethods name="findVerticalSectors" comment="Search for vertical sector objects" returnType="/85" returnTypeModifier="List" queryStatement="from VerticalSector a" customStatement="" methodType="SEARCH_BY_FILTER" serviceMethod="/58/@repositoryMethods.0">
       <methodParameters name="filter" type="/0/@allSupportedTypes.12"/>
     </boundaryMethods>
+    <boundaryMethods name="createVerticalSector" comment="Create new vertical sector" returnType="/161" methodType="CREATE" serviceMethod="/58/@repositoryMethods.5">
+      <methodParameters name="object" type="/161"/>
+    </boundaryMethods>
+    <boundaryMethods name="updateVerticalSector" comment="Update existing vertical sector object" returnType="/0/@allSupportedTypes.0" methodType="UPDATE" serviceMethod="/58/@repositoryMethods.4">
+      <methodParameters name="object" type="/166"/>
+    </boundaryMethods>
+    <boundaryMethods name="getVerticalSectorForUpdate" comment="Find vertical sector by its ID" returnType="/166" methodType="FIND_BY_ID" serviceMethod="/58/@repositoryMethods.0">
+      <methodParameters name="code" type="/0/@allSupportedTypes.12"/>
+    </boundaryMethods>
+    <boundaryMethods name="searchAllVerticalSectors" comment="Search for vertical sector objects" returnType="/174" returnTypeModifier="List" queryStatement="from VerticalSector a join a.businessUnit b" customStatement="" methodType="SEARCH" serviceMethod="/58/@repositoryMethods.11"/>
+    <boundaryMethods name="deleteVerticalSector" comment="Delete existing vertical sector" returnType="/0/@allSupportedTypes.0" serviceMethod="/58/@repositoryMethods.7">
+      <methodParameters name="code" type="/0/@allSupportedTypes.12"/>
+    </boundaryMethods>
+    <boundaryMethods name="copy" comment="Create copy of selected vertical sector" returnType="/0/@allSupportedTypes.12" methodType="COPY" serviceMethod="/58/@repositoryMethods.6">
+      <methodParameters name="sourceObjectId" type="/0/@allSupportedTypes.12"/>
+    </boundaryMethods>
   </net.sourceforge.jbizmo.model.boundary:BoundaryBean>
   <net.sourceforge.jbizmo.model.client:Form name="EditCustomerDialog" formGroup="/6" title="Edit customer" formPanels="/90 /91" dTO="/92" roles="/0/@roles.0">
     <actions name="actionUpdate" boundaryMethod="/87/@boundaryMethods.1" type="UPDATE"/>
@@ -2540,6 +2559,262 @@
     </attributes>
     <attributes name="lastUpdate" selectToken="a.lastUpdate">
       <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.5"/>
+    </attributes>
+  </net.sourceforge.jbizmo.model.dto:DTOBean>
+  <net.sourceforge.jbizmo.model.client:Form name="CreateNewPlantDialog" formType="CREATE" formGroup="/6" title="Create new plant" formPanels="/152" dTO="/153" roles="/0/@roles.0">
+    <actions name="actionCreate" boundaryMethod="/154/@boundaryMethods.0"/>
+    <domainObject href="package-base.xmi#//@domainObjects.7"/>
+  </net.sourceforge.jbizmo.model.client:Form>
+  <net.sourceforge.jbizmo.model.client:FormPanel name="panPlant" label="Basic data" form="/151">
+    <fields name="txtCode" label="Code" width="140" dTOAttribute="/153/@attributes.0"/>
+    <fields name="chkActive" colIndex="2" label="Active" fieldType="CHECKBOX" defaultValue="USE_DEFAULT" dTOAttribute="/153/@attributes.3"/>
+    <fields name="txtShortText" rowIndex="2" label="Short text" spanCols="true" mandatory="false" width="140" dTOAttribute="/153/@attributes.1"/>
+    <fields name="txtComment" rowIndex="3" label="Comment" spanCols="true" mandatory="false" fieldType="MULTI_LINE_TEXT" dTOAttribute="/153/@attributes.2"/>
+    <fields name="txtCreationDate" rowIndex="4" visible="false" label="Creation date" readonly="true" fieldType="DATE_TIME" width="120" dTOAttribute="/153/@attributes.4"/>
+    <fields name="txtVersion" rowIndex="5" visible="false" label="Version" readonly="true" width="120" dTOAttribute="/153/@attributes.5"/>
+  </net.sourceforge.jbizmo.model.client:FormPanel>
+  <net.sourceforge.jbizmo.model.dto:DTOBean name="PlantCreateDTO" comment="Data transfer object for plant objects" namespace="/8" standardConversion="true">
+    <domainObject href="package-base.xmi#//@domainObjects.7"/>
+    <attributes name="code">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.0"/>
+    </attributes>
+    <attributes name="shortText">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.1"/>
+    </attributes>
+    <attributes name="comment">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.2"/>
+    </attributes>
+    <attributes name="active">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.3"/>
+    </attributes>
+    <attributes name="creationDate">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.4"/>
+    </attributes>
+    <attributes name="version">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.6"/>
+    </attributes>
+  </net.sourceforge.jbizmo.model.dto:DTOBean>
+  <net.sourceforge.jbizmo.model.boundary:BoundaryBean name="PlantBoundaryServiceBean" comment="Boundary service for plant objects" namespace="/7" interfaceName="PlantBoundaryService" repository="/56">
+    <domainObject href="package-base.xmi#//@domainObjects.7"/>
+    <boundaryMethods name="createPlant" comment="Create new plant" returnType="/153" methodType="CREATE" serviceMethod="/56/@repositoryMethods.5">
+      <methodParameters name="object" type="/153"/>
+    </boundaryMethods>
+    <boundaryMethods name="updatePlant" comment="Update existing plant object" returnType="/0/@allSupportedTypes.0" methodType="UPDATE" serviceMethod="/56/@repositoryMethods.4">
+      <methodParameters name="object" type="/158"/>
+    </boundaryMethods>
+    <boundaryMethods name="getPlantForUpdate" comment="Find plant by its ID" returnType="/158" methodType="FIND_BY_ID" serviceMethod="/56/@repositoryMethods.0">
+      <methodParameters name="code" type="/0/@allSupportedTypes.12"/>
+    </boundaryMethods>
+    <boundaryMethods name="searchAllPlants" comment="Search for plant objects" returnType="/170" returnTypeModifier="List" queryStatement="from Plant a" customStatement="" methodType="SEARCH" serviceMethod="/56/@repositoryMethods.11"/>
+    <boundaryMethods name="deletePlant" comment="Delete existing plant" returnType="/0/@allSupportedTypes.0" serviceMethod="/56/@repositoryMethods.7">
+      <methodParameters name="code" type="/0/@allSupportedTypes.12"/>
+    </boundaryMethods>
+    <boundaryMethods name="copy" comment="Create copy of selected plant" returnType="/0/@allSupportedTypes.12" methodType="COPY" serviceMethod="/56/@repositoryMethods.6">
+      <methodParameters name="sourceObjectId" type="/0/@allSupportedTypes.12"/>
+    </boundaryMethods>
+  </net.sourceforge.jbizmo.model.boundary:BoundaryBean>
+  <net.sourceforge.jbizmo.model.client:Form name="EditPlantDialog" formGroup="/6" title="Edit plant" formPanels="/156 /157" dTO="/158" roles="/0/@roles.0">
+    <actions name="actionUpdate" boundaryMethod="/154/@boundaryMethods.1" type="UPDATE"/>
+    <domainObject href="package-base.xmi#//@domainObjects.7"/>
+  </net.sourceforge.jbizmo.model.client:Form>
+  <net.sourceforge.jbizmo.model.client:FormPanel name="panPlant" label="Basic data" form="/155">
+    <fields name="txtCode" label="Code" readonly="true" width="140" dTOAttribute="/158/@attributes.0"/>
+    <fields name="chkActive" colIndex="2" label="Active" fieldType="CHECKBOX" dTOAttribute="/158/@attributes.3"/>
+    <fields name="txtShortText" rowIndex="2" label="Short text" spanCols="true" mandatory="false" width="140" dTOAttribute="/158/@attributes.1"/>
+    <fields name="txtComment" rowIndex="3" label="Comment" spanCols="true" mandatory="false" fieldType="MULTI_LINE_TEXT" dTOAttribute="/158/@attributes.2"/>
+  </net.sourceforge.jbizmo.model.client:FormPanel>
+  <net.sourceforge.jbizmo.model.client:FormPanel name="panAdministration" colIndex="2" label="Administration data" form="/155">
+    <fields name="txtCreationDate" label="Creation date" readonly="true" fieldType="DATE_TIME" width="120" dTOAttribute="/158/@attributes.4"/>
+    <fields name="txtLastUpdate" rowIndex="2" label="Last update" readonly="true" mandatory="false" fieldType="DATE_TIME" width="120" dTOAttribute="/158/@attributes.5"/>
+    <fields name="txtVersion" rowIndex="3" label="Version" readonly="true" width="120" dTOAttribute="/158/@attributes.6"/>
+  </net.sourceforge.jbizmo.model.client:FormPanel>
+  <net.sourceforge.jbizmo.model.dto:DTOBean name="PlantUpdateDTO" comment="Data transfer object for plant objects" namespace="/8" standardConversion="true">
+    <domainObject href="package-base.xmi#//@domainObjects.7"/>
+    <attributes name="code">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.0"/>
+    </attributes>
+    <attributes name="shortText">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.1"/>
+    </attributes>
+    <attributes name="comment">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.2"/>
+    </attributes>
+    <attributes name="active">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.3"/>
+    </attributes>
+    <attributes name="creationDate">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.4"/>
+    </attributes>
+    <attributes name="lastUpdate">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.5"/>
+    </attributes>
+    <attributes name="version">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.6"/>
+    </attributes>
+  </net.sourceforge.jbizmo.model.dto:DTOBean>
+  <net.sourceforge.jbizmo.model.client:Form name="CreateNewVerticalSectorDialog" formType="CREATE" formGroup="/6" title="Create new vertical sector" formPanels="/160" dTO="/161" roles="/0/@roles.0">
+    <actions name="actionCreate" boundaryMethod="/88/@boundaryMethods.1"/>
+    <domainObject href="package-base.xmi#//@domainObjects.10"/>
+  </net.sourceforge.jbizmo.model.client:Form>
+  <net.sourceforge.jbizmo.model.client:FormPanel name="panVerticalSector" label="Basic data" form="/159">
+    <fields name="txtCode" label="Code" width="140" dTOAttribute="/161/@attributes.0"/>
+    <fields name="chkActive" colIndex="2" label="Active" fieldType="CHECKBOX" defaultValue="USE_DEFAULT" dTOAttribute="/161/@attributes.3"/>
+    <fields name="cboBusinessUnit" rowIndex="2" label="Business unit" fieldType="COMBOBOX" width="140" dTOAttribute="/161/@attributes.6"/>
+    <fields name="txtShortText" colIndex="2" rowIndex="2" label="Short text" mandatory="false" width="140" dTOAttribute="/161/@attributes.1"/>
+    <fields name="txtComment" rowIndex="3" label="Comment" spanCols="true" mandatory="false" fieldType="MULTI_LINE_TEXT" dTOAttribute="/161/@attributes.2"/>
+    <fields name="txtCreationDate" rowIndex="4" visible="false" label="Creation date" readonly="true" fieldType="DATE_TIME" width="120" dTOAttribute="/161/@attributes.4"/>
+    <fields name="txtVersion" rowIndex="5" visible="false" label="Version" readonly="true" width="120" dTOAttribute="/161/@attributes.5"/>
+  </net.sourceforge.jbizmo.model.client:FormPanel>
+  <net.sourceforge.jbizmo.model.dto:DTOBean name="VerticalSectorCreateDTO" comment="Data transfer object for vertical sector objects" namespace="/8" standardConversion="true">
+    <domainObject href="package-base.xmi#//@domainObjects.10"/>
+    <attributes name="code">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.0"/>
+    </attributes>
+    <attributes name="shortText">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.1"/>
+    </attributes>
+    <attributes name="comment">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.2"/>
+    </attributes>
+    <attributes name="active">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.3"/>
+    </attributes>
+    <attributes name="creationDate">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.4"/>
+    </attributes>
+    <attributes name="version">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.6"/>
+    </attributes>
+    <attributes name="businessUnit" referencedDTOBean="/162">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-base.xmi#//@domainObjects.10/@associations.0"/>
+    </attributes>
+  </net.sourceforge.jbizmo.model.dto:DTOBean>
+  <net.sourceforge.jbizmo.model.dto:DTOBean name="BusinessUnitListDTO" comment="Data transfer object for business unit objects" namespace="/8">
+    <domainObject href="package-base.xmi#//@domainObjects.9"/>
+    <attributes name="code" selectToken="a.code">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.0"/>
+    </attributes>
+  </net.sourceforge.jbizmo.model.dto:DTOBean>
+  <net.sourceforge.jbizmo.model.client:Form name="EditVerticalSectorDialog" formGroup="/6" title="Edit vertical sector" formPanels="/164 /165" dTO="/166" roles="/0/@roles.0">
+    <actions name="actionUpdate" boundaryMethod="/88/@boundaryMethods.2" type="UPDATE"/>
+    <domainObject href="package-base.xmi#//@domainObjects.10"/>
+  </net.sourceforge.jbizmo.model.client:Form>
+  <net.sourceforge.jbizmo.model.client:FormPanel name="panVerticalSector" label="Basic data" form="/163">
+    <fields name="txtCode" label="Code" readonly="true" width="140" dTOAttribute="/166/@attributes.0"/>
+    <fields name="chkActive" colIndex="2" label="Active" fieldType="CHECKBOX" dTOAttribute="/166/@attributes.3"/>
+    <fields name="cboBusinessUnit" rowIndex="2" label="Business unit" fieldType="COMBOBOX" width="140" dTOAttribute="/166/@attributes.7"/>
+    <fields name="txtShortText" colIndex="2" rowIndex="2" label="Short text" mandatory="false" width="140" dTOAttribute="/166/@attributes.1"/>
+    <fields name="txtComment" rowIndex="3" label="Comment" spanCols="true" mandatory="false" fieldType="MULTI_LINE_TEXT" dTOAttribute="/166/@attributes.2"/>
+  </net.sourceforge.jbizmo.model.client:FormPanel>
+  <net.sourceforge.jbizmo.model.client:FormPanel name="panAdministration" colIndex="2" label="Administration data" form="/163">
+    <fields name="txtCreationDate" label="Creation date" readonly="true" fieldType="DATE_TIME" width="120" dTOAttribute="/166/@attributes.4"/>
+    <fields name="txtLastUpdate" rowIndex="2" label="Last update" readonly="true" mandatory="false" fieldType="DATE_TIME" width="120" dTOAttribute="/166/@attributes.5"/>
+    <fields name="txtVersion" rowIndex="3" label="Version" readonly="true" width="120" dTOAttribute="/166/@attributes.6"/>
+  </net.sourceforge.jbizmo.model.client:FormPanel>
+  <net.sourceforge.jbizmo.model.dto:DTOBean name="VerticalSectorUpdateDTO" comment="Data transfer object for vertical sector objects" namespace="/8" standardConversion="true">
+    <domainObject href="package-base.xmi#//@domainObjects.10"/>
+    <attributes name="code">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.0"/>
+    </attributes>
+    <attributes name="shortText">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.1"/>
+    </attributes>
+    <attributes name="comment">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.2"/>
+    </attributes>
+    <attributes name="active">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.3"/>
+    </attributes>
+    <attributes name="creationDate">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.4"/>
+    </attributes>
+    <attributes name="lastUpdate">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.5"/>
+    </attributes>
+    <attributes name="version">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.6"/>
+    </attributes>
+    <attributes name="businessUnit" referencedDTOBean="/162">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-base.xmi#//@domainObjects.10/@associations.0"/>
+    </attributes>
+  </net.sourceforge.jbizmo.model.dto:DTOBean>
+  <net.sourceforge.jbizmo.model.client:Form name="PlantView" formType="SIMPLE_VIEW" formGroup="/6" title="Plants" formPanels="/168" dTO="/170" roles="/0/@roles.0" boundaryMethod="/154/@boundaryMethods.3">
+    <actions name="actionDelete" description="Delete selected plant" boundaryMethod="/154/@boundaryMethods.4" roles="/0/@roles.0" type="DELETE"/>
+    <actions name="actionCreate" description="Create new plant" targetForm="/151" roles="/0/@roles.0"/>
+    <actions name="actionUpdate" description="Edit plant" targetForm="/155" roles="/0/@roles.0" type="UPDATE"/>
+    <actions name="actionCopy" description="Create copy of selected plant" boundaryMethod="/154/@boundaryMethods.5" type="COPY"/>
+    <domainObject href="package-base.xmi#//@domainObjects.7"/>
+  </net.sourceforge.jbizmo.model.client:Form>
+  <net.sourceforge.jbizmo.model.client:FormPanel name="PlantPanel" form="/167" formTable="/169" dTO="/170"/>
+  <net.sourceforge.jbizmo.model.client:FormTable name="PlantTable" formPanel="/168">
+    <fields identifier="true" title="Code" dTOAttribute="/170/@attributes.0"/>
+    <fields colIndex="2" width="150" title="Short text" dTOAttribute="/170/@attributes.1"/>
+    <fields colIndex="3" width="250" title="Comment" dTOAttribute="/170/@attributes.2"/>
+    <fields colIndex="4" width="70" title="Active" fieldType="BOOLEAN" dTOAttribute="/170/@attributes.3"/>
+    <fields colIndex="5" width="120" title="Creation date" fieldType="LOCAL_DATE_TIME" dTOAttribute="/170/@attributes.4"/>
+    <fields colIndex="6" width="120" title="Last update" fieldType="LOCAL_DATE_TIME" dTOAttribute="/170/@attributes.5"/>
+  </net.sourceforge.jbizmo.model.client:FormTable>
+  <net.sourceforge.jbizmo.model.dto:DTOBean name="PlantSearchDTO" comment="DTO for plant objects" namespace="/8">
+    <domainObject href="package-base.xmi#//@domainObjects.7"/>
+    <attributes name="code" selectToken="a.code">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.0"/>
+    </attributes>
+    <attributes name="shortText" selectToken="a.shortText">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.1"/>
+    </attributes>
+    <attributes name="comment" selectToken="a.comment">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.2"/>
+    </attributes>
+    <attributes name="active" selectToken="a.active">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.3"/>
+    </attributes>
+    <attributes name="creationDate" selectToken="a.creationDate">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.4"/>
+    </attributes>
+    <attributes name="lastUpdate" selectToken="a.lastUpdate">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.5"/>
+    </attributes>
+  </net.sourceforge.jbizmo.model.dto:DTOBean>
+  <net.sourceforge.jbizmo.model.client:Form name="VerticalSectorView" formType="SIMPLE_VIEW" formGroup="/6" title="Vertical sectors" formPanels="/172" dTO="/174" roles="/0/@roles.0" boundaryMethod="/88/@boundaryMethods.4">
+    <actions name="actionDelete" description="Delete selected vertical sector" boundaryMethod="/88/@boundaryMethods.5" roles="/0/@roles.0" type="DELETE"/>
+    <actions name="actionCreate" description="Create new vertical sector" targetForm="/159" roles="/0/@roles.0"/>
+    <actions name="actionUpdate" description="Edit vertical sector" targetForm="/163" roles="/0/@roles.0" type="UPDATE"/>
+    <actions name="actionCopy" description="Create copy of selected vertical sector" boundaryMethod="/88/@boundaryMethods.6" type="COPY"/>
+    <domainObject href="package-base.xmi#//@domainObjects.10"/>
+  </net.sourceforge.jbizmo.model.client:Form>
+  <net.sourceforge.jbizmo.model.client:FormPanel name="VerticalSectorPanel" form="/171" formTable="/173" dTO="/174"/>
+  <net.sourceforge.jbizmo.model.client:FormTable name="VerticalSectorTable" formPanel="/172">
+    <fields identifier="true" title="Code" dTOAttribute="/174/@attributes.0"/>
+    <fields colIndex="2" width="250" title="Short text" dTOAttribute="/174/@attributes.1"/>
+    <fields colIndex="3" width="250" title="Comment" dTOAttribute="/174/@attributes.2"/>
+    <fields colIndex="4" width="70" title="Active" fieldType="BOOLEAN" dTOAttribute="/174/@attributes.3"/>
+    <fields colIndex="5" title="Business unit" dTOAttribute="/174/@attributes.6"/>
+    <fields colIndex="6" width="120" title="Creation date" fieldType="LOCAL_DATE_TIME" dTOAttribute="/174/@attributes.4"/>
+    <fields colIndex="7" width="120" title="Last update" fieldType="LOCAL_DATE_TIME" dTOAttribute="/174/@attributes.5"/>
+  </net.sourceforge.jbizmo.model.client:FormTable>
+  <net.sourceforge.jbizmo.model.dto:DTOBean name="VerticalSectorSearchDTO" comment="DTO for vertical sector objects" namespace="/8">
+    <domainObject href="package-base.xmi#//@domainObjects.10"/>
+    <attributes name="code" selectToken="a.code">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.0"/>
+    </attributes>
+    <attributes name="shortText" selectToken="a.shortText">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.1"/>
+    </attributes>
+    <attributes name="comment" selectToken="a.comment">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.2"/>
+    </attributes>
+    <attributes name="active" selectToken="a.active">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.3"/>
+    </attributes>
+    <attributes name="creationDate" selectToken="a.creationDate">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.4"/>
+    </attributes>
+    <attributes name="lastUpdate" selectToken="a.lastUpdate">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.5"/>
+    </attributes>
+    <attributes name="businessUnitCode" selectToken="b.code">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-base.xmi#//@domainObjects.10/@associations.0"/>
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.0"/>
     </attributes>
   </net.sourceforge.jbizmo.model.dto:DTOBean>
 </xmi:XMI>
