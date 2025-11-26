@@ -1,0 +1,81 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:h="jakarta.faces.html"
+	xmlns:f="jakarta.faces.core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/templates/ui.xhtml">
+
+<f:metadata>
+	<f:viewAction action="#{addBoMItemDialog.initView()}"/>
+	<f:viewParam name="selectedObjectId" value="#{addBoMItemDialog.selectedObjectId}"/>
+</f:metadata>
+
+<ui:define name="title">#{addBoMItemDialog.formTitle}</ui:define>
+
+<ui:define name="content">
+	<p:dialog header="#{i18n.feedback_dialog_header}" modal="true" widgetVar="msgBox" visible="#{(not empty facesContext.messageList)}">
+		<p:messages id="messages" showDetail="true" showSummary="true"/>
+	</p:dialog>
+
+	<h:panelGrid columns="3">
+		<div class="pi pi-file-edit" style="font-size: 2em"/>
+		<h:outputText id="lblFormTitle" value="&#160;#{addBoMItemDialog.formTitle}" styleClass="label-form-title"/>
+		<p:ajaxStatus style="width:16px;height:16px;">
+			<f:facet name="start">
+				<h:graphicImage value="/images/ajaxloading.gif"/>
+			</f:facet>
+
+			<f:facet name="complete">
+				<h:outputText value=""/>
+			</f:facet>
+		</p:ajaxStatus>
+	</h:panelGrid>
+
+	<p:panel>
+	<h:panelGrid columns="1">
+		<h:outputText styleClass="header-label" value="#{i18n.panel_basic_title}"/>
+	</h:panelGrid>
+
+	<h:panelGrid columns="6">
+
+		<h:outputLabel value="#{i18n.lbl_assoc_bomitem_material}:" for="cboMaterial" styleClass="label-field-optional"/>
+		<p:autoComplete id="cboMaterial" value="#{addBoMItemDialog.boMItem.material}" converter="#{materialListDTOConverter}" minQueryLength="2" forceSelection="true" completeMethod="#{addBoMItemDialog.onCompleteMaterial}" var="cboMaterialItem" itemValue="#{cboMaterialItem}" itemLabel="#{cboMaterialItem.materialNumber}">
+		</p:autoComplete>
+		<p:tooltip for="cboMaterial" value=""/>
+
+		<h:outputLabel value="#{i18n.lbl_attr_bomitem_quantity}:" for="txtQuantity" styleClass="label-field-optional"/>
+		<p:inputText id="txtQuantity" value="#{addBoMItemDialog.boMItem.quantity}">
+			<f:convertNumber pattern="#{userSession.numberFormat}"/>
+		</p:inputText>
+		<p:tooltip for="txtQuantity" value=""/>
+
+		<h:outputLabel value="#{i18n.lbl_attr_bomitem_label}:" for="txtLabel" styleClass="label-field-optional"/>
+		<p:inputText id="txtLabel" value="#{addBoMItemDialog.boMItem.label}">
+			<f:validateLength maximum="200"/>
+		</p:inputText>
+		<p:tooltip for="txtLabel" value=""/>
+		<h:outputLabel/>
+		<h:outputLabel/>
+		<h:outputLabel/>
+
+		<h:outputLabel value="#{i18n.lbl_attr_bomitem_position}:" for="txtPosition" styleClass="label-field-optional"/>
+		<p:inputText id="txtPosition" value="#{addBoMItemDialog.boMItem.position}">
+			<f:validateLength maximum="20"/>
+		</p:inputText>
+		<p:tooltip for="txtPosition" value=""/>
+		<h:outputLabel/>
+		<h:outputLabel/>
+		<h:outputLabel/>
+
+	</h:panelGrid>
+	</p:panel>
+
+	<p/>
+
+	<h:panelGrid columns="2">
+		<p:commandButton id="cmdSave" action="#{addBoMItemDialog.save}" value="#{i18n.command_save}" ajax="false"/>
+		<p:commandButton id="cmdBack" value="#{i18n.command_back}" action="#{userSession.getLastPage}" immediate="true" ajax="false"/>
+	</h:panelGrid>
+
+</ui:define>
+</ui:composition>

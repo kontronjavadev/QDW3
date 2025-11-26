@@ -2092,9 +2092,9 @@
       <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.5"/>
     </attributes>
   </net.sourceforge.jbizmo.model.dto:DTOBean>
-  <net.sourceforge.jbizmo.model.java:Namespace name="material" parent="/2" javaTypes="/113 /114" project="/0"/>
-  <net.sourceforge.jbizmo.model.java:Namespace name="material" parent="/1" javaTypes="/118 /130" project="/0"/>
-  <net.sourceforge.jbizmo.model.java:Namespace name="material" parent="/3" javaTypes="/117 /122 /126 /129 /134 /138" project="/0"/>
+  <net.sourceforge.jbizmo.model.java:Namespace name="material" parent="/2" javaTypes="/113 /114 /195 /197 /199" project="/0"/>
+  <net.sourceforge.jbizmo.model.java:Namespace name="material" parent="/1" javaTypes="/118 /130 /194 /196 /198" project="/0"/>
+  <net.sourceforge.jbizmo.model.java:Namespace name="material" parent="/3" javaTypes="/117 /122 /126 /129 /134 /138 /192 /191 /193 /203 /206 /209" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="material" parent="/4" project="/0"/>
   <net.sourceforge.jbizmo.model.repository:Repository name="MaterialTypeRepository" comment="Create, read, update and delete services for material type objects." namespace="/109">
     <domainObject href="package-material.xmi#//@domainObjects.0"/>
@@ -3003,5 +3003,588 @@
       <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.0"/>
     </attributes>
   </net.sourceforge.jbizmo.model.dto:DTOBean>
-  <net.sourceforge.jbizmo.model.client:FormGroup name="Material" groupOrder="3" roles="/0/@roles.0 /0/@roles.1 /0/@roles.2" project="/0"/>
+  <net.sourceforge.jbizmo.model.client:FormGroup name="Material" groupOrder="3" forms="/207 /188 /200" panels="/204" roles="/0/@roles.0 /0/@roles.1 /0/@roles.2" project="/0"/>
+  <net.sourceforge.jbizmo.model.client:Form name="EditBoMItemDialog" formGroup="/187" title="Edit bom item" formPanels="/189 /190" dTO="/191" roles="/0/@roles.0">
+    <actions name="actionUpdate" boundaryMethod="/194/@boundaryMethods.0" type="UPDATE"/>
+    <domainObject href="package-material.xmi#//@domainObjects.4"/>
+  </net.sourceforge.jbizmo.model.client:Form>
+  <net.sourceforge.jbizmo.model.client:FormPanel name="panBoMItem" label="Basic data" form="/188">
+    <fields name="cboMaterialRevision" label="Material revision" fieldType="PROPOSAL_TEXT" width="100" dTOAttribute="/191/@attributes.8"/>
+    <fields name="txtQuantity" colIndex="2" label="Quantity" mandatory="false" width="120" dTOAttribute="/191/@attributes.0"/>
+    <fields name="txtLabel" rowIndex="2" label="Label" spanCols="true" mandatory="false" dTOAttribute="/191/@attributes.1"/>
+    <fields name="txtPosition" rowIndex="3" label="Position" mandatory="false" width="100" dTOAttribute="/191/@attributes.2"/>
+    <fields name="cboMaterial" colIndex="2" rowIndex="3" label="Material" mandatory="false" fieldType="PROPOSAL_TEXT" width="120" dTOAttribute="/191/@attributes.7"/>
+  </net.sourceforge.jbizmo.model.client:FormPanel>
+  <net.sourceforge.jbizmo.model.client:FormPanel name="panAdministration" colIndex="2" label="Administration data" form="/188">
+    <fields name="txtId" label="Id" readonly="true" width="120" dTOAttribute="/191/@attributes.3"/>
+    <fields name="txtVersion" rowIndex="2" label="Version" readonly="true" width="120" dTOAttribute="/191/@attributes.4"/>
+    <fields name="txtCreationDate" rowIndex="3" label="Creation date" readonly="true" fieldType="DATE_TIME" width="120" dTOAttribute="/191/@attributes.5"/>
+    <fields name="txtLastUpdate" rowIndex="4" label="Last update" readonly="true" mandatory="false" fieldType="DATE_TIME" width="120" dTOAttribute="/191/@attributes.6"/>
+  </net.sourceforge.jbizmo.model.client:FormPanel>
+  <net.sourceforge.jbizmo.model.dto:DTOBean name="BoMItemUpdateDTO" comment="Data transfer object for bom item objects" namespace="/111" standardConversion="true">
+    <domainObject href="package-material.xmi#//@domainObjects.4"/>
+    <attributes name="quantity">
+      <domainAttribute href="package-material.xmi#//@domainObjects.4/@attributes.0"/>
+    </attributes>
+    <attributes name="label">
+      <domainAttribute href="package-material.xmi#//@domainObjects.4/@attributes.1"/>
+    </attributes>
+    <attributes name="position">
+      <domainAttribute href="package-material.xmi#//@domainObjects.4/@attributes.2"/>
+    </attributes>
+    <attributes name="id">
+      <domainAttribute href="package-base.xmi#//@domainObjects.0/@attributes.0"/>
+    </attributes>
+    <attributes name="version">
+      <domainAttribute href="package-base.xmi#//@domainObjects.0/@attributes.1"/>
+    </attributes>
+    <attributes name="creationDate">
+      <domainAttribute href="package-base.xmi#//@domainObjects.0/@attributes.2"/>
+    </attributes>
+    <attributes name="lastUpdate">
+      <domainAttribute href="package-base.xmi#//@domainObjects.0/@attributes.3"/>
+    </attributes>
+    <attributes name="material" referencedDTOBean="/192">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-material.xmi#//@domainObjects.4/@associations.0"/>
+    </attributes>
+    <attributes name="materialRevision" referencedDTOBean="/193">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-material.xmi#//@domainObjects.4/@associations.1"/>
+    </attributes>
+  </net.sourceforge.jbizmo.model.dto:DTOBean>
+  <net.sourceforge.jbizmo.model.dto:DTOBean name="MaterialListDTO" comment="Data transfer object for material objects" namespace="/111">
+    <domainObject href="package-material.xmi#//@domainObjects.2"/>
+    <attributes name="id" selectToken="a.id">
+      <domainAttribute href="package-base.xmi#//@domainObjects.0/@attributes.0"/>
+    </attributes>
+    <attributes name="materialNumber" selectToken="a.materialNumber">
+      <domainAttribute href="package-material.xmi#//@domainObjects.2/@attributes.0"/>
+    </attributes>
+  </net.sourceforge.jbizmo.model.dto:DTOBean>
+  <net.sourceforge.jbizmo.model.dto:DTOBean name="MaterialRevisionListDTO" comment="Data transfer object for material revision objects" namespace="/111">
+    <domainObject href="package-material.xmi#//@domainObjects.3"/>
+    <attributes name="id" selectToken="a.id">
+      <domainAttribute href="package-base.xmi#//@domainObjects.0/@attributes.0"/>
+    </attributes>
+  </net.sourceforge.jbizmo.model.dto:DTOBean>
+  <net.sourceforge.jbizmo.model.boundary:BoundaryBean name="BoMItemBoundaryServiceBean" comment="Boundary service for bom item objects" namespace="/110" interfaceName="BoMItemBoundaryService" repository="/195">
+    <domainObject href="package-material.xmi#//@domainObjects.4"/>
+    <boundaryMethods name="updateBoMItem" comment="Update existing bom item object" returnType="/0/@allSupportedTypes.0" methodType="UPDATE" serviceMethod="/195/@repositoryMethods.4">
+      <methodParameters name="object" type="/191"/>
+    </boundaryMethods>
+    <boundaryMethods name="getBoMItemForUpdate" comment="Find bom item by its ID" returnType="/191" methodType="FIND_BY_ID" serviceMethod="/195/@repositoryMethods.0">
+      <methodParameters name="id" type="/0/@allSupportedTypes.2"/>
+    </boundaryMethods>
+    <boundaryMethods name="findBoMItemById" comment="Find bom item by its ID" returnType="/203" methodType="FIND_BY_ID" serviceMethod="/195/@repositoryMethods.0">
+      <methodParameters name="id" type="/0/@allSupportedTypes.2"/>
+    </boundaryMethods>
+    <boundaryMethods name="deleteBoMItem" comment="Delete existing bom item" returnType="/0/@allSupportedTypes.0" serviceMethod="/195/@repositoryMethods.7">
+      <methodParameters name="id" type="/0/@allSupportedTypes.2"/>
+    </boundaryMethods>
+    <boundaryMethods name="copy" comment="Create copy of selected bom item" returnType="/0/@allSupportedTypes.2" methodType="COPY" serviceMethod="/195/@repositoryMethods.6">
+      <methodParameters name="sourceObjectId" type="/0/@allSupportedTypes.2"/>
+    </boundaryMethods>
+    <boundaryMethods name="createBoMItem" comment="Create new bom item" returnType="/209" methodType="CREATE" serviceMethod="/195/@repositoryMethods.5">
+      <methodParameters name="object" type="/209"/>
+    </boundaryMethods>
+  </net.sourceforge.jbizmo.model.boundary:BoundaryBean>
+  <net.sourceforge.jbizmo.model.repository:Repository name="BoMItemRepository" comment="Create, read, update and delete services for bom item objects." namespace="/109">
+    <domainObject href="package-material.xmi#//@domainObjects.4"/>
+    <repositoryMethods name="findById" javaType="/195" transactionType="REQUIRED" methodType="FIND_BY_ID">
+      <returnType href="package-material.xmi#//@domainObjects.4"/>
+      <methodParameters name="id" type="/0/@allSupportedTypes.2"/>
+    </repositoryMethods>
+    <repositoryMethods name="findById" javaType="/195" transactionType="REQUIRED" methodType="FIND_EXISTING">
+      <returnType href="package-material.xmi#//@domainObjects.4"/>
+      <methodParameters name="id" type="/0/@allSupportedTypes.2"/>
+      <methodParameters name="mustExist" type="/0/@allSupportedTypes.4"/>
+    </repositoryMethods>
+    <repositoryMethods name="findById" javaType="/195" transactionType="REQUIRED" methodType="FIND_BY_OBJECT">
+      <returnType href="package-material.xmi#//@domainObjects.4"/>
+      <methodParameters name="boMItem">
+        <type href="package-material.xmi#//@domainObjects.4"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="deleteAll" javaType="/195" returnType="/0/@allSupportedTypes.0" transactionType="REQUIRED" methodType="DELETE_ALL"/>
+    <repositoryMethods name="merge" javaType="/195" transactionType="REQUIRED" methodType="MERGE">
+      <returnType href="package-material.xmi#//@domainObjects.4"/>
+      <methodParameters name="boMItem">
+        <type href="package-material.xmi#//@domainObjects.4"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="persist" javaType="/195" transactionType="REQUIRED" methodType="PERSIST">
+      <returnType href="package-material.xmi#//@domainObjects.4"/>
+      <methodParameters name="boMItem">
+        <type href="package-material.xmi#//@domainObjects.4"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="copy" javaType="/195" transactionType="REQUIRED" methodType="COPY">
+      <returnType href="package-material.xmi#//@domainObjects.4"/>
+      <methodParameters name="sourceObject">
+        <type href="package-material.xmi#//@domainObjects.4"/>
+      </methodParameters>
+      <methodParameters name="targetObject">
+        <type href="package-material.xmi#//@domainObjects.4"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="delete" javaType="/195" returnType="/0/@allSupportedTypes.0" transactionType="REQUIRED" methodType="DELETE">
+      <methodParameters name="id" type="/0/@allSupportedTypes.2"/>
+    </repositoryMethods>
+    <repositoryMethods name="findAll" javaType="/195" returnTypeModifier="List" transactionType="REQUIRED">
+      <returnType href="package-material.xmi#//@domainObjects.4"/>
+    </repositoryMethods>
+    <repositoryMethods name="existsById" javaType="/195" returnType="/0/@allSupportedTypes.4" transactionType="REQUIRED" methodType="EXISTS_BY_ID">
+      <methodParameters name="id" type="/0/@allSupportedTypes.2"/>
+    </repositoryMethods>
+    <repositoryMethods name="count" javaType="/195" returnType="/0/@allSupportedTypes.7" transactionType="REQUIRED" methodType="COUNT_ALL"/>
+    <repositoryMethods name="search" javaType="/195" returnTypeModifier="List" transactionType="REQUIRED" methodType="SEARCH">
+      <returnType href="package-material.xmi#//@domainObjects.4"/>
+    </repositoryMethods>
+    <repositoryMethods name="count" javaType="/195" returnType="/0/@allSupportedTypes.7" transactionType="REQUIRED" methodType="COUNT"/>
+    <repositoryMethods name="getMaterial" javaType="/195" transactionType="REQUIRED" methodType="GET_ASSOCIATION" hint="NQ_GET_MATERIAL">
+      <returnType href="package-material.xmi#//@domainObjects.2"/>
+      <methodParameters xsi:type="net.sourceforge.jbizmo.model.repository:RepositoryMethodParameter" name="id" type="/0/@allSupportedTypes.2">
+        <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-material.xmi#//@domainObjects.4/@associations.0"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="getMaterialRevision" javaType="/195" transactionType="REQUIRED" methodType="GET_ASSOCIATION" hint="NQ_GET_MATERIALREVISION">
+      <returnType href="package-material.xmi#//@domainObjects.3"/>
+      <methodParameters xsi:type="net.sourceforge.jbizmo.model.repository:RepositoryMethodParameter" name="id" type="/0/@allSupportedTypes.2">
+        <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-material.xmi#//@domainObjects.4/@associations.1"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="setMaterial" javaType="/195" returnType="/0/@allSupportedTypes.0" transactionType="REQUIRED" methodType="CHANGE_PARENT">
+      <methodParameters name="id" type="/0/@allSupportedTypes.2"/>
+      <methodParameters xsi:type="net.sourceforge.jbizmo.model.repository:RepositoryMethodParameter" name="material">
+        <type href="package-material.xmi#//@domainObjects.2"/>
+        <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-material.xmi#//@domainObjects.4/@associations.0"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="setMaterialRevision" javaType="/195" returnType="/0/@allSupportedTypes.0" transactionType="REQUIRED" methodType="CHANGE_PARENT">
+      <methodParameters name="id" type="/0/@allSupportedTypes.2"/>
+      <methodParameters xsi:type="net.sourceforge.jbizmo.model.repository:RepositoryMethodParameter" name="materialRevision">
+        <type href="package-material.xmi#//@domainObjects.3"/>
+        <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-material.xmi#//@domainObjects.4/@associations.1"/>
+      </methodParameters>
+    </repositoryMethods>
+  </net.sourceforge.jbizmo.model.repository:Repository>
+  <net.sourceforge.jbizmo.model.boundary:BoundaryBean name="MaterialRevisionBoundaryServiceBean" comment="Boundary service for material revision objects" namespace="/110" interfaceName="MaterialRevisionBoundaryService" repository="/197">
+    <domainObject href="package-material.xmi#//@domainObjects.3"/>
+    <boundaryMethods name="findMaterialRevisions" comment="Search for material revision objects" returnType="/193" returnTypeModifier="List" queryStatement="from MaterialRevision a" customStatement="" methodType="SEARCH_BY_FILTER" serviceMethod="/197/@repositoryMethods.0">
+      <methodParameters name="filter" type="/0/@allSupportedTypes.12"/>
+    </boundaryMethods>
+    <boundaryMethods name="getBoMItemsOfMaterialRevision" comment="Get all bom items of a given material revision" returnType="/206" returnTypeModifier="List" queryStatement="from MaterialRevision x join x.boMItems a left join a.material b left join a.materialRevision c left join b.materialClass e left join b.materialType f" customStatement="" methodType="FIND_BY_PARENT" serviceMethod="/197/@repositoryMethods.11">
+      <methodParameters name="id" type="/0/@allSupportedTypes.2"/>
+    </boundaryMethods>
+  </net.sourceforge.jbizmo.model.boundary:BoundaryBean>
+  <net.sourceforge.jbizmo.model.repository:Repository name="MaterialRevisionRepository" comment="Create, read, update and delete services for material revision objects." namespace="/109">
+    <domainObject href="package-material.xmi#//@domainObjects.3"/>
+    <repositoryMethods name="findById" javaType="/197" transactionType="REQUIRED" methodType="FIND_BY_ID">
+      <returnType href="package-material.xmi#//@domainObjects.3"/>
+      <methodParameters name="id" type="/0/@allSupportedTypes.2"/>
+    </repositoryMethods>
+    <repositoryMethods name="findById" javaType="/197" transactionType="REQUIRED" methodType="FIND_EXISTING">
+      <returnType href="package-material.xmi#//@domainObjects.3"/>
+      <methodParameters name="id" type="/0/@allSupportedTypes.2"/>
+      <methodParameters name="mustExist" type="/0/@allSupportedTypes.4"/>
+    </repositoryMethods>
+    <repositoryMethods name="findById" javaType="/197" transactionType="REQUIRED" methodType="FIND_BY_OBJECT">
+      <returnType href="package-material.xmi#//@domainObjects.3"/>
+      <methodParameters name="materialRevision">
+        <type href="package-material.xmi#//@domainObjects.3"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="deleteAll" javaType="/197" returnType="/0/@allSupportedTypes.0" transactionType="REQUIRED" methodType="DELETE_ALL"/>
+    <repositoryMethods name="merge" javaType="/197" transactionType="REQUIRED" methodType="MERGE">
+      <returnType href="package-material.xmi#//@domainObjects.3"/>
+      <methodParameters name="materialRevision">
+        <type href="package-material.xmi#//@domainObjects.3"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="persist" javaType="/197" transactionType="REQUIRED" methodType="PERSIST">
+      <returnType href="package-material.xmi#//@domainObjects.3"/>
+      <methodParameters name="materialRevision">
+        <type href="package-material.xmi#//@domainObjects.3"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="copy" javaType="/197" transactionType="REQUIRED" methodType="COPY">
+      <returnType href="package-material.xmi#//@domainObjects.3"/>
+      <methodParameters name="sourceObject">
+        <type href="package-material.xmi#//@domainObjects.3"/>
+      </methodParameters>
+      <methodParameters name="targetObject">
+        <type href="package-material.xmi#//@domainObjects.3"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="delete" javaType="/197" returnType="/0/@allSupportedTypes.0" transactionType="REQUIRED" methodType="DELETE">
+      <methodParameters name="id" type="/0/@allSupportedTypes.2"/>
+    </repositoryMethods>
+    <repositoryMethods name="findAll" javaType="/197" returnTypeModifier="List" transactionType="REQUIRED">
+      <returnType href="package-material.xmi#//@domainObjects.3"/>
+    </repositoryMethods>
+    <repositoryMethods name="existsById" javaType="/197" returnType="/0/@allSupportedTypes.4" transactionType="REQUIRED" methodType="EXISTS_BY_ID">
+      <methodParameters name="id" type="/0/@allSupportedTypes.2"/>
+    </repositoryMethods>
+    <repositoryMethods name="count" javaType="/197" returnType="/0/@allSupportedTypes.7" transactionType="REQUIRED" methodType="COUNT_ALL"/>
+    <repositoryMethods name="search" javaType="/197" returnTypeModifier="List" transactionType="REQUIRED" methodType="SEARCH">
+      <returnType href="package-material.xmi#//@domainObjects.3"/>
+    </repositoryMethods>
+    <repositoryMethods name="count" javaType="/197" returnType="/0/@allSupportedTypes.7" transactionType="REQUIRED" methodType="COUNT"/>
+    <repositoryMethods name="getMaterial" javaType="/197" transactionType="REQUIRED" methodType="GET_ASSOCIATION" hint="NQ_GET_MATERIAL">
+      <returnType href="package-material.xmi#//@domainObjects.2"/>
+      <methodParameters xsi:type="net.sourceforge.jbizmo.model.repository:RepositoryMethodParameter" name="id" type="/0/@allSupportedTypes.2">
+        <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-material.xmi#//@domainObjects.3/@associations.0"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="getPlant" javaType="/197" transactionType="REQUIRED" methodType="GET_ASSOCIATION" hint="NQ_GET_PLANT">
+      <returnType href="package-base.xmi#//@domainObjects.7"/>
+      <methodParameters xsi:type="net.sourceforge.jbizmo.model.repository:RepositoryMethodParameter" name="id" type="/0/@allSupportedTypes.2">
+        <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-material.xmi#//@domainObjects.3/@associations.1"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="getBoMItems" javaType="/197" returnTypeModifier="List" transactionType="REQUIRED" methodType="GET_ASSOCIATION" hint="NQ_GET_BOMITEMS">
+      <returnType href="package-material.xmi#//@domainObjects.4"/>
+      <methodParameters xsi:type="net.sourceforge.jbizmo.model.repository:RepositoryMethodParameter" name="id" type="/0/@allSupportedTypes.2">
+        <association xsi:type="net.sourceforge.net.model.domain:OneToManyAssociation" href="package-material.xmi#//@domainObjects.3/@associations.2"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="setMaterial" javaType="/197" returnType="/0/@allSupportedTypes.0" transactionType="REQUIRED" methodType="CHANGE_PARENT">
+      <methodParameters name="id" type="/0/@allSupportedTypes.2"/>
+      <methodParameters xsi:type="net.sourceforge.jbizmo.model.repository:RepositoryMethodParameter" name="material">
+        <type href="package-material.xmi#//@domainObjects.2"/>
+        <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-material.xmi#//@domainObjects.3/@associations.0"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="setPlant" javaType="/197" returnType="/0/@allSupportedTypes.0" transactionType="REQUIRED" methodType="CHANGE_PARENT">
+      <methodParameters name="id" type="/0/@allSupportedTypes.2"/>
+      <methodParameters xsi:type="net.sourceforge.jbizmo.model.repository:RepositoryMethodParameter" name="plant">
+        <type href="package-base.xmi#//@domainObjects.7"/>
+        <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-material.xmi#//@domainObjects.3/@associations.1"/>
+      </methodParameters>
+    </repositoryMethods>
+  </net.sourceforge.jbizmo.model.repository:Repository>
+  <net.sourceforge.jbizmo.model.boundary:BoundaryBean name="MaterialBoundaryServiceBean" comment="Boundary service for material objects" namespace="/110" interfaceName="MaterialBoundaryService" repository="/199">
+    <domainObject href="package-material.xmi#//@domainObjects.2"/>
+    <boundaryMethods name="findMaterials" comment="Search for material objects" returnType="/192" returnTypeModifier="List" queryStatement="from Material a" customStatement="" methodType="SEARCH_BY_FILTER" serviceMethod="/199/@repositoryMethods.0">
+      <methodParameters name="filter" type="/0/@allSupportedTypes.12"/>
+    </boundaryMethods>
+    <boundaryMethods name="findListMaterial" comment="Find material by its ID" returnType="/192" methodType="FIND_BY_ID" serviceMethod="/199/@repositoryMethods.0">
+      <methodParameters name="id" type="/0/@allSupportedTypes.2"/>
+    </boundaryMethods>
+  </net.sourceforge.jbizmo.model.boundary:BoundaryBean>
+  <net.sourceforge.jbizmo.model.repository:Repository name="MaterialRepository" comment="Create, read, update and delete services for material objects." namespace="/109">
+    <domainObject href="package-material.xmi#//@domainObjects.2"/>
+    <repositoryMethods name="findById" javaType="/199" transactionType="REQUIRED" methodType="FIND_BY_ID">
+      <returnType href="package-material.xmi#//@domainObjects.2"/>
+      <methodParameters name="id" type="/0/@allSupportedTypes.2"/>
+    </repositoryMethods>
+    <repositoryMethods name="findById" javaType="/199" transactionType="REQUIRED" methodType="FIND_EXISTING">
+      <returnType href="package-material.xmi#//@domainObjects.2"/>
+      <methodParameters name="id" type="/0/@allSupportedTypes.2"/>
+      <methodParameters name="mustExist" type="/0/@allSupportedTypes.4"/>
+    </repositoryMethods>
+    <repositoryMethods name="findById" javaType="/199" transactionType="REQUIRED" methodType="FIND_BY_OBJECT">
+      <returnType href="package-material.xmi#//@domainObjects.2"/>
+      <methodParameters name="material">
+        <type href="package-material.xmi#//@domainObjects.2"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="deleteAll" javaType="/199" returnType="/0/@allSupportedTypes.0" transactionType="REQUIRED" methodType="DELETE_ALL"/>
+    <repositoryMethods name="merge" javaType="/199" transactionType="REQUIRED" methodType="MERGE">
+      <returnType href="package-material.xmi#//@domainObjects.2"/>
+      <methodParameters name="material">
+        <type href="package-material.xmi#//@domainObjects.2"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="persist" javaType="/199" transactionType="REQUIRED" methodType="PERSIST">
+      <returnType href="package-material.xmi#//@domainObjects.2"/>
+      <methodParameters name="material">
+        <type href="package-material.xmi#//@domainObjects.2"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="copy" javaType="/199" transactionType="REQUIRED" methodType="COPY">
+      <returnType href="package-material.xmi#//@domainObjects.2"/>
+      <methodParameters name="sourceObject">
+        <type href="package-material.xmi#//@domainObjects.2"/>
+      </methodParameters>
+      <methodParameters name="targetObject">
+        <type href="package-material.xmi#//@domainObjects.2"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="delete" javaType="/199" returnType="/0/@allSupportedTypes.0" transactionType="REQUIRED" methodType="DELETE">
+      <methodParameters name="id" type="/0/@allSupportedTypes.2"/>
+    </repositoryMethods>
+    <repositoryMethods name="findAll" javaType="/199" returnTypeModifier="List" transactionType="REQUIRED">
+      <returnType href="package-material.xmi#//@domainObjects.2"/>
+    </repositoryMethods>
+    <repositoryMethods name="existsByMaterialNumber" javaType="/199" returnType="/0/@allSupportedTypes.4" transactionType="REQUIRED" methodType="EXISTS_BY_UNIQUE_KEY" hint="NQ_UK_EXISTS_BY_MATERIALNUMBER">
+      <methodParameters xsi:type="net.sourceforge.jbizmo.model.repository:RepositoryMethodParameter" name="materialNumber" type="/0/@allSupportedTypes.12">
+        <attribute href="package-material.xmi#//@domainObjects.2/@attributes.0"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="existsByIdAndMaterialNumber" javaType="/199" returnType="/0/@allSupportedTypes.4" transactionType="REQUIRED" methodType="EXISTS_BY_UNIQUE_KEY_WITH_ID" hint="NQ_UK_EXISTS_BY_MATERIALNUMBER_AND_ID">
+      <methodParameters xsi:type="net.sourceforge.jbizmo.model.repository:RepositoryMethodParameter" name="id" type="/0/@allSupportedTypes.2">
+        <attribute href="package-base.xmi#//@domainObjects.0/@attributes.0"/>
+      </methodParameters>
+      <methodParameters xsi:type="net.sourceforge.jbizmo.model.repository:RepositoryMethodParameter" name="materialNumber" type="/0/@allSupportedTypes.12">
+        <attribute href="package-material.xmi#//@domainObjects.2/@attributes.0"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="searchByMaterialNumber" javaType="/199" returnTypeModifier="List" transactionType="REQUIRED" methodType="SEARCH_BY_UNIQUE_KEY" hint="NQ_UK_SEARCH_BY_MATERIALNUMBER">
+      <returnType href="package-material.xmi#//@domainObjects.2"/>
+      <methodParameters xsi:type="net.sourceforge.jbizmo.model.repository:RepositoryMethodParameter" name="materialNumber" type="/0/@allSupportedTypes.12">
+        <attribute href="package-material.xmi#//@domainObjects.2/@attributes.0"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="findByMaterialNumber" javaType="/199" transactionType="REQUIRED" methodType="FIND_BY_UNIQUE_KEY" hint="NQ_UK_FIND_BY_MATERIALNUMBER">
+      <returnType href="package-material.xmi#//@domainObjects.2"/>
+      <methodParameters xsi:type="net.sourceforge.jbizmo.model.repository:RepositoryMethodParameter" name="materialNumber" type="/0/@allSupportedTypes.12">
+        <attribute href="package-material.xmi#//@domainObjects.2/@attributes.0"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="existsBySapNumber" javaType="/199" returnType="/0/@allSupportedTypes.4" transactionType="REQUIRED" methodType="EXISTS_BY_UNIQUE_KEY" hint="NQ_UK_EXISTS_BY_SAPNUMBER">
+      <methodParameters xsi:type="net.sourceforge.jbizmo.model.repository:RepositoryMethodParameter" name="sapNumber" type="/0/@allSupportedTypes.12">
+        <attribute href="package-material.xmi#//@domainObjects.2/@attributes.1"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="existsByIdAndSapNumber" javaType="/199" returnType="/0/@allSupportedTypes.4" transactionType="REQUIRED" methodType="EXISTS_BY_UNIQUE_KEY_WITH_ID" hint="NQ_UK_EXISTS_BY_SAPNUMBER_AND_ID">
+      <methodParameters xsi:type="net.sourceforge.jbizmo.model.repository:RepositoryMethodParameter" name="id" type="/0/@allSupportedTypes.2">
+        <attribute href="package-base.xmi#//@domainObjects.0/@attributes.0"/>
+      </methodParameters>
+      <methodParameters xsi:type="net.sourceforge.jbizmo.model.repository:RepositoryMethodParameter" name="sapNumber" type="/0/@allSupportedTypes.12">
+        <attribute href="package-material.xmi#//@domainObjects.2/@attributes.1"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="searchBySapNumber" javaType="/199" returnTypeModifier="List" transactionType="REQUIRED" methodType="SEARCH_BY_UNIQUE_KEY" hint="NQ_UK_SEARCH_BY_SAPNUMBER">
+      <returnType href="package-material.xmi#//@domainObjects.2"/>
+      <methodParameters xsi:type="net.sourceforge.jbizmo.model.repository:RepositoryMethodParameter" name="sapNumber" type="/0/@allSupportedTypes.12">
+        <attribute href="package-material.xmi#//@domainObjects.2/@attributes.1"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="findBySapNumber" javaType="/199" transactionType="REQUIRED" methodType="FIND_BY_UNIQUE_KEY" hint="NQ_UK_FIND_BY_SAPNUMBER">
+      <returnType href="package-material.xmi#//@domainObjects.2"/>
+      <methodParameters xsi:type="net.sourceforge.jbizmo.model.repository:RepositoryMethodParameter" name="sapNumber" type="/0/@allSupportedTypes.12">
+        <attribute href="package-material.xmi#//@domainObjects.2/@attributes.1"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="existsById" javaType="/199" returnType="/0/@allSupportedTypes.4" transactionType="REQUIRED" methodType="EXISTS_BY_ID">
+      <methodParameters name="id" type="/0/@allSupportedTypes.2"/>
+    </repositoryMethods>
+    <repositoryMethods name="count" javaType="/199" returnType="/0/@allSupportedTypes.7" transactionType="REQUIRED" methodType="COUNT_ALL"/>
+    <repositoryMethods name="search" javaType="/199" returnTypeModifier="List" transactionType="REQUIRED" methodType="SEARCH">
+      <returnType href="package-material.xmi#//@domainObjects.2"/>
+    </repositoryMethods>
+    <repositoryMethods name="count" javaType="/199" returnType="/0/@allSupportedTypes.7" transactionType="REQUIRED" methodType="COUNT"/>
+    <repositoryMethods name="getOwnerLocation" javaType="/199" transactionType="REQUIRED" methodType="GET_ASSOCIATION" hint="NQ_GET_OWNERLOCATION">
+      <returnType href="package-base.xmi#//@domainObjects.6"/>
+      <methodParameters xsi:type="net.sourceforge.jbizmo.model.repository:RepositoryMethodParameter" name="id" type="/0/@allSupportedTypes.2">
+        <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-material.xmi#//@domainObjects.2/@associations.0"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="getMaterialClass" javaType="/199" transactionType="REQUIRED" methodType="GET_ASSOCIATION" hint="NQ_GET_MATERIALCLASS">
+      <returnType href="package-material.xmi#//@domainObjects.1"/>
+      <methodParameters xsi:type="net.sourceforge.jbizmo.model.repository:RepositoryMethodParameter" name="id" type="/0/@allSupportedTypes.2">
+        <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-material.xmi#//@domainObjects.2/@associations.1"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="getMaterialType" javaType="/199" transactionType="REQUIRED" methodType="GET_ASSOCIATION" hint="NQ_GET_MATERIALTYPE">
+      <returnType href="package-material.xmi#//@domainObjects.0"/>
+      <methodParameters xsi:type="net.sourceforge.jbizmo.model.repository:RepositoryMethodParameter" name="id" type="/0/@allSupportedTypes.2">
+        <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-material.xmi#//@domainObjects.2/@associations.2"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="getRevisions" javaType="/199" returnTypeModifier="List" transactionType="REQUIRED" methodType="GET_ASSOCIATION" hint="NQ_GET_REVISIONS">
+      <returnType href="package-material.xmi#//@domainObjects.3"/>
+      <methodParameters xsi:type="net.sourceforge.jbizmo.model.repository:RepositoryMethodParameter" name="id" type="/0/@allSupportedTypes.2">
+        <association xsi:type="net.sourceforge.net.model.domain:OneToManyAssociation" href="package-material.xmi#//@domainObjects.2/@associations.3"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="setOwnerLocation" javaType="/199" returnType="/0/@allSupportedTypes.0" transactionType="REQUIRED" methodType="CHANGE_PARENT">
+      <methodParameters name="id" type="/0/@allSupportedTypes.2"/>
+      <methodParameters xsi:type="net.sourceforge.jbizmo.model.repository:RepositoryMethodParameter" name="ownerLocation">
+        <type href="package-base.xmi#//@domainObjects.6"/>
+        <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-material.xmi#//@domainObjects.2/@associations.0"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="setMaterialClass" javaType="/199" returnType="/0/@allSupportedTypes.0" transactionType="REQUIRED" methodType="CHANGE_PARENT">
+      <methodParameters name="id" type="/0/@allSupportedTypes.2"/>
+      <methodParameters xsi:type="net.sourceforge.jbizmo.model.repository:RepositoryMethodParameter" name="materialClass">
+        <type href="package-material.xmi#//@domainObjects.1"/>
+        <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-material.xmi#//@domainObjects.2/@associations.1"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="setMaterialType" javaType="/199" returnType="/0/@allSupportedTypes.0" transactionType="REQUIRED" methodType="CHANGE_PARENT">
+      <methodParameters name="id" type="/0/@allSupportedTypes.2"/>
+      <methodParameters xsi:type="net.sourceforge.jbizmo.model.repository:RepositoryMethodParameter" name="materialType">
+        <type href="package-material.xmi#//@domainObjects.0"/>
+        <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-material.xmi#//@domainObjects.2/@associations.2"/>
+      </methodParameters>
+    </repositoryMethods>
+  </net.sourceforge.jbizmo.model.repository:Repository>
+  <net.sourceforge.jbizmo.model.client:Form name="ViewBoMItemDialog" formType="READONLY" formGroup="/187" title="View bom item" formPanels="/201 /202" dTO="/203" roles="/0/@roles.0 /0/@roles.1 /0/@roles.2">
+    <actions name="actionGet" boundaryMethod="/194/@boundaryMethods.2" type="READ"/>
+    <domainObject href="package-material.xmi#//@domainObjects.4"/>
+  </net.sourceforge.jbizmo.model.client:Form>
+  <net.sourceforge.jbizmo.model.client:FormPanel name="panBoMItem" label="Basic data" form="/200">
+    <fields name="cboMaterialRevisionMaterial" label="Material no." readonly="true" fieldType="FORM_LINK" width="140" dTOAttribute="/203/@attributes.9"/>
+    <fields name="cboMaterialRevision" colIndex="2" label="Revision no." readonly="true" fieldType="FORM_LINK" width="140" dTOAttribute="/203/@attributes.8"/>
+    <fields name="cboMaterial" rowIndex="2" label="Material" readonly="true" mandatory="false" fieldType="FORM_LINK" width="140" dTOAttribute="/203/@attributes.7"/>
+    <fields name="txtQuantity" colIndex="2" rowIndex="2" label="Quantity" readonly="true" mandatory="false" width="140" dTOAttribute="/203/@attributes.0"/>
+    <fields name="txtLabel" rowIndex="3" label="Label" spanCols="true" readonly="true" mandatory="false" dTOAttribute="/203/@attributes.1"/>
+    <fields name="txtPosition" rowIndex="4" label="Position" readonly="true" mandatory="false" width="140" dTOAttribute="/203/@attributes.2"/>
+  </net.sourceforge.jbizmo.model.client:FormPanel>
+  <net.sourceforge.jbizmo.model.client:FormPanel name="panAdministration" colIndex="2" label="Administration data" form="/200">
+    <fields name="txtId" label="Id" readonly="true" width="120" dTOAttribute="/203/@attributes.3"/>
+    <fields name="txtVersion" rowIndex="2" label="Version" readonly="true" width="120" dTOAttribute="/203/@attributes.4"/>
+    <fields name="txtCreationDate" rowIndex="3" label="Creation date" readonly="true" fieldType="DATE_TIME" width="120" dTOAttribute="/203/@attributes.5"/>
+    <fields name="txtLastUpdate" rowIndex="4" label="Last update" readonly="true" mandatory="false" fieldType="DATE_TIME" width="120" dTOAttribute="/203/@attributes.6"/>
+  </net.sourceforge.jbizmo.model.client:FormPanel>
+  <net.sourceforge.jbizmo.model.dto:DTOBean name="BoMItemDTO" comment="Data transfer object for bom item objects" namespace="/111" standardConversion="true">
+    <domainObject href="package-material.xmi#//@domainObjects.4"/>
+    <attributes name="quantity">
+      <domainAttribute href="package-material.xmi#//@domainObjects.4/@attributes.0"/>
+    </attributes>
+    <attributes name="label">
+      <domainAttribute href="package-material.xmi#//@domainObjects.4/@attributes.1"/>
+    </attributes>
+    <attributes name="position">
+      <domainAttribute href="package-material.xmi#//@domainObjects.4/@attributes.2"/>
+    </attributes>
+    <attributes name="id">
+      <domainAttribute href="package-base.xmi#//@domainObjects.0/@attributes.0"/>
+    </attributes>
+    <attributes name="version">
+      <domainAttribute href="package-base.xmi#//@domainObjects.0/@attributes.1"/>
+    </attributes>
+    <attributes name="creationDate">
+      <domainAttribute href="package-base.xmi#//@domainObjects.0/@attributes.2"/>
+    </attributes>
+    <attributes name="lastUpdate">
+      <domainAttribute href="package-base.xmi#//@domainObjects.0/@attributes.3"/>
+    </attributes>
+    <attributes name="material" referencedDTOBean="/192">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-material.xmi#//@domainObjects.4/@associations.0"/>
+    </attributes>
+    <attributes name="materialRevision" referencedDTOBean="/193">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-material.xmi#//@domainObjects.4/@associations.1"/>
+    </attributes>
+    <attributes name="materialRevisionMaterial" referencedDTOBean="/192">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-material.xmi#//@domainObjects.3/@associations.0"/>
+      <associationList xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-material.xmi#//@domainObjects.4/@associations.1"/>
+    </attributes>
+  </net.sourceforge.jbizmo.model.dto:DTOBean>
+  <net.sourceforge.jbizmo.model.client:FormPanel name="MaterialRevisionBoMItemsPanel" formGroup="/187" label="BoM items of a material revision" formTable="/205" dTO="/206" boundaryMethod="/196/@boundaryMethods.1">
+    <actions name="actionDelete" description="Delete selected bom item" boundaryMethod="/194/@boundaryMethods.3" roles="/0/@roles.0" type="DELETE"/>
+    <actions name="actionUpdate" description="Edit bom item" targetForm="/188" roles="/0/@roles.0" type="UPDATE"/>
+    <actions name="actionGet" description="View bom item" targetForm="/200" roles="/0/@roles.0 /0/@roles.1 /0/@roles.2" type="READ"/>
+    <actions name="actionCopy" description="Create copy of selected bom item" boundaryMethod="/194/@boundaryMethods.4" roles="/0/@roles.0" type="COPY"/>
+    <actions name="actionAdd" description="Add new bom item" targetForm="/207" roles="/0/@roles.0"/>
+    <association xsi:type="net.sourceforge.net.model.domain:OneToManyAssociation" href="package-material.xmi#//@domainObjects.3/@associations.2"/>
+  </net.sourceforge.jbizmo.model.client:FormPanel>
+  <net.sourceforge.jbizmo.model.client:FormTable name="BoMItemTable" formPanel="/204">
+    <fields width="80" title="Position" dTOAttribute="/206/@attributes.2"/>
+    <fields colIndex="2" width="150" title="Material no." dTOAttribute="/206/@attributes.8"/>
+    <fields colIndex="3" width="150" title="SAP no." dTOAttribute="/206/@attributes.9"/>
+    <fields colIndex="4" width="250" title="Material short text" dTOAttribute="/206/@attributes.10"/>
+    <fields colIndex="5" title="Material type" dTOAttribute="/206/@attributes.11"/>
+    <fields colIndex="6" title="Material class" dTOAttribute="/206/@attributes.12"/>
+    <fields colIndex="7" width="80" title="Quantity" fieldType="DOUBLE" dTOAttribute="/206/@attributes.0"/>
+    <fields colIndex="8" width="150" title="Label" dTOAttribute="/206/@attributes.1"/>
+    <fields colIndex="9" width="120" title="Creation date" fieldType="LOCAL_DATE_TIME" dTOAttribute="/206/@attributes.4"/>
+    <fields colIndex="10" width="120" title="Last update" fieldType="LOCAL_DATE_TIME" dTOAttribute="/206/@attributes.5"/>
+    <fields colIndex="11" visible="false" width="80" title="Material id" fieldType="LONG" dTOAttribute="/206/@attributes.7"/>
+    <fields colIndex="12" visible="false" identifier="true" width="80" title="Id" fieldType="LONG" dTOAttribute="/206/@attributes.3"/>
+    <fields colIndex="13" visible="false" width="140" title="Material revision id" fieldType="LONG" associationRef="true" dTOAttribute="/206/@attributes.6"/>
+  </net.sourceforge.jbizmo.model.client:FormTable>
+  <net.sourceforge.jbizmo.model.dto:DTOBean name="MaterialRevisionBoMItemsDTO" comment="DTO for bom item objects" namespace="/111">
+    <domainObject href="package-material.xmi#//@domainObjects.4"/>
+    <attributes name="quantity" selectToken="a.quantity">
+      <domainAttribute href="package-material.xmi#//@domainObjects.4/@attributes.0"/>
+    </attributes>
+    <attributes name="label" selectToken="a.label">
+      <domainAttribute href="package-material.xmi#//@domainObjects.4/@attributes.1"/>
+    </attributes>
+    <attributes name="position" selectToken="a.position">
+      <domainAttribute href="package-material.xmi#//@domainObjects.4/@attributes.2"/>
+    </attributes>
+    <attributes name="id" selectToken="a.id">
+      <domainAttribute href="package-base.xmi#//@domainObjects.0/@attributes.0"/>
+    </attributes>
+    <attributes name="creationDate" selectToken="a.creationDate">
+      <domainAttribute href="package-base.xmi#//@domainObjects.0/@attributes.2"/>
+    </attributes>
+    <attributes name="lastUpdate" selectToken="a.lastUpdate">
+      <domainAttribute href="package-base.xmi#//@domainObjects.0/@attributes.3"/>
+    </attributes>
+    <attributes name="materialRevisionId" selectToken="c.id">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-material.xmi#//@domainObjects.4/@associations.1"/>
+      <domainAttribute href="package-base.xmi#//@domainObjects.0/@attributes.0"/>
+    </attributes>
+    <attributes name="materialId" selectToken="b.id">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-material.xmi#//@domainObjects.4/@associations.0"/>
+      <domainAttribute href="package-base.xmi#//@domainObjects.0/@attributes.0"/>
+    </attributes>
+    <attributes name="materialMaterialNumber" selectToken="b.materialNumber">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-material.xmi#//@domainObjects.4/@associations.0"/>
+      <domainAttribute href="package-material.xmi#//@domainObjects.2/@attributes.0"/>
+    </attributes>
+    <attributes name="materialSapNumber" selectToken="b.sapNumber">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-material.xmi#//@domainObjects.4/@associations.0"/>
+      <domainAttribute href="package-material.xmi#//@domainObjects.2/@attributes.1"/>
+    </attributes>
+    <attributes name="materialShortText" selectToken="b.shortText">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-material.xmi#//@domainObjects.4/@associations.0"/>
+      <domainAttribute href="package-material.xmi#//@domainObjects.2/@attributes.2"/>
+    </attributes>
+    <attributes name="materialTypeCode" selectToken="f.code">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-material.xmi#//@domainObjects.2/@associations.2"/>
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.0"/>
+      <associationList xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-material.xmi#//@domainObjects.4/@associations.0"/>
+    </attributes>
+    <attributes name="materialClassCode" selectToken="e.code">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-material.xmi#//@domainObjects.2/@associations.1"/>
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.0"/>
+      <associationList xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-material.xmi#//@domainObjects.4/@associations.0"/>
+    </attributes>
+  </net.sourceforge.jbizmo.model.dto:DTOBean>
+  <net.sourceforge.jbizmo.model.client:Form name="AddBoMItemDialog" formType="ADD" formGroup="/187" title="Add new bom item" formPanels="/208" dTO="/209" roles="/0/@roles.0">
+    <actions name="actionCreate" boundaryMethod="/194/@boundaryMethods.5"/>
+    <domainObject href="package-material.xmi#//@domainObjects.4"/>
+  </net.sourceforge.jbizmo.model.client:Form>
+  <net.sourceforge.jbizmo.model.client:FormPanel name="panBoMItem" label="Basic data" form="/207">
+    <fields name="cboMaterial" label="Material" mandatory="false" fieldType="PROPOSAL_TEXT" width="140" dTOAttribute="/209/@attributes.6"/>
+    <fields name="txtQuantity" colIndex="2" label="Quantity" mandatory="false" width="140" dTOAttribute="/209/@attributes.0"/>
+    <fields name="txtLabel" rowIndex="2" label="Label" spanCols="true" mandatory="false" dTOAttribute="/209/@attributes.1"/>
+    <fields name="txtPosition" rowIndex="3" label="Position" mandatory="false" width="140" dTOAttribute="/209/@attributes.2"/>
+    <fields name="txtId" rowIndex="4" visible="false" label="Id" width="120" dTOAttribute="/209/@attributes.3"/>
+    <fields name="txtVersion" rowIndex="5" visible="false" label="Version" readonly="true" width="120" dTOAttribute="/209/@attributes.4"/>
+    <fields name="txtCreationDate" rowIndex="6" visible="false" label="Creation date" readonly="true" fieldType="DATE_TIME" width="120" dTOAttribute="/209/@attributes.5"/>
+    <fields name="cboMaterialRevision" rowIndex="7" visible="false" label="Material revision" fieldType="SELECTION_BY_PARENT_FORM" width="100" dTOAttribute="/209/@attributes.7"/>
+  </net.sourceforge.jbizmo.model.client:FormPanel>
+  <net.sourceforge.jbizmo.model.dto:DTOBean name="BoMItemCreateDTO" comment="Data transfer object for bom item objects" namespace="/111" standardConversion="true">
+    <domainObject href="package-material.xmi#//@domainObjects.4"/>
+    <attributes name="quantity">
+      <domainAttribute href="package-material.xmi#//@domainObjects.4/@attributes.0"/>
+    </attributes>
+    <attributes name="label">
+      <domainAttribute href="package-material.xmi#//@domainObjects.4/@attributes.1"/>
+    </attributes>
+    <attributes name="position">
+      <domainAttribute href="package-material.xmi#//@domainObjects.4/@attributes.2"/>
+    </attributes>
+    <attributes name="id">
+      <domainAttribute href="package-base.xmi#//@domainObjects.0/@attributes.0"/>
+    </attributes>
+    <attributes name="version">
+      <domainAttribute href="package-base.xmi#//@domainObjects.0/@attributes.1"/>
+    </attributes>
+    <attributes name="creationDate">
+      <domainAttribute href="package-base.xmi#//@domainObjects.0/@attributes.2"/>
+    </attributes>
+    <attributes name="material" referencedDTOBean="/192">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-material.xmi#//@domainObjects.4/@associations.0"/>
+    </attributes>
+    <attributes name="materialRevision" referencedDTOBean="/193">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-material.xmi#//@domainObjects.4/@associations.1"/>
+    </attributes>
+  </net.sourceforge.jbizmo.model.dto:DTOBean>
 </xmi:XMI>
