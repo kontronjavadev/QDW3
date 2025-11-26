@@ -183,7 +183,7 @@
       <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
     </attributes>
     <attributes name="comment" label="comment" labelPlural="comments" fetchTypeEager="true" column="//@domainObjects.4/@databaseTable/@columns.2" removeWhitespaceCharacters="true">
-      <domainAttributeValidator maxLength="4000" minLength="0" maxValue="" minValue="" regularExpression=""/>
+      <domainAttributeValidator maxLength="4000" minLength="0" nullable="true" maxValue="" minValue="" regularExpression=""/>
       <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
     </attributes>
     <attributes name="creationDate" label="creation date" labelPlural="creation dates" fetchTypeEager="true" updatable="false" setDateOnPersist="true" column="//@domainObjects.4/@databaseTable/@columns.3">
@@ -210,7 +210,7 @@
       <columns name="short_text" length="100">
         <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
       </columns>
-      <columns name="comment" length="4000">
+      <columns name="comment" length="4000" nullable="true">
         <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
       </columns>
       <columns name="creation_date">
@@ -236,7 +236,7 @@
       <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
     </attributes>
     <attributes name="comment" label="comment" labelPlural="comments" fetchTypeEager="true" column="//@domainObjects.5/@databaseTable/@columns.2" removeWhitespaceCharacters="true">
-      <domainAttributeValidator maxLength="4000" minLength="0" maxValue="" minValue="" regularExpression=""/>
+      <domainAttributeValidator maxLength="4000" minLength="0" nullable="true" maxValue="" minValue="" regularExpression=""/>
       <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
     </attributes>
     <attributes name="active" label="active" labelPlural="actives" fetchTypeEager="true" column="//@domainObjects.5/@databaseTable/@columns.3">
@@ -263,7 +263,7 @@
       <columns name="short_text" length="100">
         <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
       </columns>
-      <columns name="comment" length="4000">
+      <columns name="comment" length="4000" nullable="true">
         <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
       </columns>
       <columns name="active">
@@ -292,7 +292,7 @@
       <columns name="short_text" length="100">
         <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
       </columns>
-      <columns name="comment" length="4000">
+      <columns name="comment" length="4000" nullable="true">
         <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
       </columns>
       <columns name="active">
@@ -321,7 +321,7 @@
       <columns name="short_text" length="100">
         <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
       </columns>
-      <columns name="comment" length="4000">
+      <columns name="comment" length="4000" nullable="true">
         <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
       </columns>
       <columns name="active">
@@ -350,7 +350,7 @@
       <columns name="short_text" length="100">
         <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
       </columns>
-      <columns name="comment" length="4000">
+      <columns name="comment" length="4000" nullable="true">
         <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
       </columns>
       <columns name="active">
@@ -379,7 +379,7 @@
       <columns name="short_text" length="100">
         <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
       </columns>
-      <columns name="comment" length="4000">
+      <columns name="comment" length="4000" nullable="true">
         <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
       </columns>
       <columns name="active">
@@ -409,7 +409,7 @@
       <columns name="short_text" length="100">
         <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
       </columns>
-      <columns name="comment" length="4000">
+      <columns name="comment" length="4000" nullable="true">
         <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
       </columns>
       <columns name="active">
@@ -446,7 +446,7 @@
       <columns name="short_text" length="100">
         <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
       </columns>
-      <columns name="comment" length="4000">
+      <columns name="comment" length="4000" nullable="true">
         <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
       </columns>
       <columns name="active">
@@ -501,7 +501,7 @@
       <columns name="short_text" length="100">
         <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
       </columns>
-      <columns name="comment" length="4000">
+      <columns name="comment" length="4000" nullable="true">
         <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
       </columns>
       <columns name="creation_date">
@@ -568,7 +568,7 @@
       <columns name="short_text" length="100">
         <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
       </columns>
-      <columns name="comment" length="4000">
+      <columns name="comment" length="4000" nullable="true">
         <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
       </columns>
       <columns name="creation_date">

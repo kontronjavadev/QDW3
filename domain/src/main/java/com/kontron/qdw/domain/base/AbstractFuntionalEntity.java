@@ -21,9 +21,7 @@ public class AbstractFuntionalEntity {
     @Size(max = 100, message = "Length of field \"shortText\" is illegal!")
     @Generated
     private String shortText;
-    @Basic(optional = false)
-    @Column(name = "comment", nullable = false, updatable = true, insertable = true, length = 4000)
-    @NotNull(message = "Field \"comment\" must not be null!")
+    @Column(name = "comment", nullable = true, updatable = true, insertable = true, length = 4000)
     @Size(max = 4000, message = "Length of field \"comment\" is illegal!")
     @Generated
     private String comment;
