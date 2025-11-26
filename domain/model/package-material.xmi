@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<net.sourceforge.net.model.domain:DomainNamespace xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:net.sourceforge.net.model.domain="http:///net/sourceforge/jbizmo/model/domain.ecore" name="material" javaTypes="//@domainObjects.0 //@domainObjects.1">
+<net.sourceforge.net.model.domain:DomainNamespace xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:net.sourceforge.net.model.domain="http:///net/sourceforge/jbizmo/model/domain.ecore" name="material" javaTypes="//@domainObjects.0 //@domainObjects.1 //@domainObjects.2">
   <parent href="project.xmi#/0/@domainNamespace"/>
   <project href="project.xmi#/0"/>
   <domainObjects name="MaterialType" comment="Domain object for material type objects" mappable="true" namespace="/" label="material type" namePlural="MaterialTypes" labelPlural="material types" discriminatorValue="">
@@ -58,6 +58,99 @@
         <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.0"/>
       </columns>
       <primaryKey name="pk_material_class" column="//@domainObjects.1/@databaseTable/@columns.0"/>
+    </databaseTable>
+  </domainObjects>
+  <domainObjects name="Material" comment="Domain object for material objects" mappable="true" namespace="/" label="material" namePlural="Materials" labelPlural="materials" discriminatorValue="">
+    <parent href="package-base.xmi#//@domainObjects.0"/>
+    <iDGenerator name="MATERIAL_SEQ" generatorType="IDENTITY"/>
+    <inheritance>
+      <target href="package-base.xmi#//@domainObjects.0"/>
+    </inheritance>
+    <attributes name="materialNumber" label="material number" labelPlural="material numbers" fetchTypeEager="true" displayAttribute="true" column="//@domainObjects.2/@databaseTable/@columns.4" removeWhitespaceCharacters="true">
+      <domainAttributeValidator maxLength="50" minLength="1" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <attributes name="sapNumber" label="sap number" labelPlural="sap numbers" fetchTypeEager="true" column="//@domainObjects.2/@databaseTable/@columns.5" removeWhitespaceCharacters="true">
+      <domainAttributeValidator maxLength="20" minLength="1" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <attributes name="shortText" label="short text" labelPlural="short texts" fetchTypeEager="true" column="//@domainObjects.2/@databaseTable/@columns.6" removeWhitespaceCharacters="true">
+      <domainAttributeValidator maxLength="200" minLength="0" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <attributes name="comment" label="comment" labelPlural="comments" fetchTypeEager="true" column="//@domainObjects.2/@databaseTable/@columns.7" removeWhitespaceCharacters="true">
+      <domainAttributeValidator maxLength="4000" minLength="0" nullable="true" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <attributes name="fitValue" label="fit value" labelPlural="fit values" fetchTypeEager="true" column="//@domainObjects.2/@databaseTable/@columns.8">
+      <domainAttributeValidator nullable="true" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.8"/>
+    </attributes>
+    <attributes name="materialHierarchy" label="material hierarchy" labelPlural="material hierarchies" fetchTypeEager="true" column="//@domainObjects.2/@databaseTable/@columns.9" removeWhitespaceCharacters="true">
+      <domainAttributeValidator maxLength="250" minLength="0" nullable="true" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <attributes name="searchSubAssemblies" label="search sub assemblies" labelPlural="search sub assemblies" fetchTypeEager="true" column="//@domainObjects.2/@databaseTable/@columns.10">
+      <domainAttributeValidator maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.4"/>
+    </attributes>
+    <associations xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" name="ownerLocation" owner="true" fetchTypeEager="true" internalComment="" userComment="" insertable="true" updatable="true" column="//@domainObjects.2/@databaseTable/@columns.11">
+      <target href="package-base.xmi#//@domainObjects.6"/>
+    </associations>
+    <associations xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" name="materialClass" owner="true" fetchTypeEager="true" target="//@domainObjects.1" internalComment="" userComment="" insertable="true" updatable="true" column="//@domainObjects.2/@databaseTable/@columns.12"/>
+    <associations xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" name="materialType" owner="true" fetchTypeEager="true" target="//@domainObjects.0" internalComment="" userComment="" insertable="true" updatable="true" column="//@domainObjects.2/@databaseTable/@columns.13"/>
+    <databaseTable name="material_tab" schemaName="" catalogName="">
+      <database href="project.xmi#/0/@database"/>
+      <columns name="id">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.1"/>
+      </columns>
+      <columns name="version">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.0"/>
+      </columns>
+      <columns name="creation_date">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.14"/>
+      </columns>
+      <columns name="last_update" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.14"/>
+      </columns>
+      <columns name="material_number" length="50">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="sap_number" length="20">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="short_text" length="200">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="comment" length="4000" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="fit_value" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.2"/>
+      </columns>
+      <columns name="material_hierarchy" length="250" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="search_sub_assemblies">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.11"/>
+      </columns>
+      <columns name="owner_location" length="50">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="material_class" length="50">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="material_type" length="50">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <primaryKey name="pk_material" column="//@domainObjects.2/@databaseTable/@columns.0"/>
+      <foreignKeys name="fk_material_owner_location" column="//@domainObjects.2/@databaseTable/@columns.11">
+        <referencedColumn href="package-base.xmi#//@domainObjects.6/@databaseTable/@columns.0"/>
+      </foreignKeys>
+      <foreignKeys name="fk_material_material_class" column="//@domainObjects.2/@databaseTable/@columns.12" referencedColumn="//@domainObjects.1/@databaseTable/@columns.0"/>
+      <foreignKeys name="fk_material_material_type" column="//@domainObjects.2/@databaseTable/@columns.13" referencedColumn="//@domainObjects.0/@databaseTable/@columns.0"/>
+      <indexes name="uk_material_material_number" unique="true" columns="//@domainObjects.2/@databaseTable/@columns.4"/>
+      <indexes name="uk_material_sap_number" unique="true" columns="//@domainObjects.2/@databaseTable/@columns.5"/>
     </databaseTable>
   </domainObjects>
 </net.sourceforge.net.model.domain:DomainNamespace>

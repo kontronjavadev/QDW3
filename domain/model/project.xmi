@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:net.sourceforge.jbizmo.model.boundary="http:///net/sourceforge/jbizmo/model/boundary.ecore" xmlns:net.sourceforge.jbizmo.model.client="http:///net/sourceforge/jbizmo/model/client.ecore" xmlns:net.sourceforge.jbizmo.model.dto="http:///net/sourceforge/jbizmo/model/dto.ecore" xmlns:net.sourceforge.jbizmo.model.java="http:///net/sourceforge/jbizmo/model/java.ecore" xmlns:net.sourceforge.jbizmo.model.project="http:///net/sourceforge/jbizmo/model/project.ecore" xmlns:net.sourceforge.jbizmo.model.repository="http:///net/sourceforge/jbizmo/model/repository.ecore" xmlns:net.sourceforge.jbizmo.model.testing="http:///net/sourceforge/jbizmo/model/testing.ecore" xmlns:net.sourceforge.net.model.domain="http:///net/sourceforge/jbizmo/model/domain.ecore">
-  <net.sourceforge.jbizmo.model.project:Project name="QDW" code="qdw" clientPlatform="JSF_PRIMEFACES" repositoryNamespace="/2" dTONamespace="/3" boundaryNamespace="/1" formGroups="/17 /6" persistenceProvider="ECLIPSELINK" validationType="STANDARD" boundaryMode="true" exchangeNamespace="/4" xmlNamespace="http://www.kontron.com/qdw/xml" mappingStrategy="ON_DEMAND" xmlNamespacePrefix="pre" protectManualChanges="true">
+  <net.sourceforge.jbizmo.model.project:Project name="QDW" code="qdw" clientPlatform="JSF_PRIMEFACES" repositoryNamespace="/2" dTONamespace="/3" boundaryNamespace="/1" formGroups="/17 /6 /187" persistenceProvider="ECLIPSELINK" validationType="STANDARD" boundaryMode="true" exchangeNamespace="/4" xmlNamespace="http://www.kontron.com/qdw/xml" mappingStrategy="ON_DEMAND" xmlNamespacePrefix="pre" protectManualChanges="true">
     <roles name="ADMINISTRATOR" adminRole="true"/>
     <roles name="READONLY" readonlyRole="true"/>
     <roles name="SUPERUSER"/>
@@ -40,6 +40,7 @@
       <databaseTables href="package-base.xmi#//@domainObjects.15/@databaseTable"/>
       <databaseTables href="package-material.xmi#//@domainObjects.0/@databaseTable"/>
       <databaseTables href="package-material.xmi#//@domainObjects.1/@databaseTable"/>
+      <databaseTables href="package-material.xmi#//@domainObjects.2/@databaseTable"/>
       <allSupportedColumnTypes javaTypes="/0/@allSupportedTypes.1 /0/@allSupportedTypes.6" name="INTEGER" omitSizeInformation="true"/>
       <allSupportedColumnTypes javaTypes="/0/@allSupportedTypes.2 /0/@allSupportedTypes.7" name="BIGINT" omitSizeInformation="true"/>
       <allSupportedColumnTypes javaTypes="/0/@allSupportedTypes.3 /0/@allSupportedTypes.8" name="DOUBLE" omitSizeInformation="true"/>
@@ -3000,4 +3001,5 @@
       <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.0"/>
     </attributes>
   </net.sourceforge.jbizmo.model.dto:DTOBean>
+  <net.sourceforge.jbizmo.model.client:FormGroup name="Material" groupOrder="3" roles="/0/@roles.0 /0/@roles.1 /0/@roles.2" project="/0"/>
 </xmi:XMI>
