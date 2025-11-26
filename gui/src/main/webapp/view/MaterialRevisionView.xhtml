@@ -1,0 +1,457 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:h="jakarta.faces.html"
+	xmlns:f="jakarta.faces.core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/templates/ui.xhtml">
+
+<f:metadata>
+	<f:viewAction action="#{materialRevisionView.initView()}"/>
+</f:metadata>
+
+<ui:define name="title">#{materialRevisionView.formTitle}</ui:define>
+
+<ui:define name="content">
+	<h:panelGrid columns="3">
+		<div class="pi pi-list" style="font-size: 2em"/>
+		<h:outputText id="lblFormTitle" value="&#160;#{materialRevisionView.formTitle}" styleClass="label-form-title"/>
+		<p:ajaxStatus style="width:16px;height:16px;">
+			<f:facet name="start">
+				<h:graphicImage value="/images/ajaxloading.gif"/>
+			</f:facet>
+
+			<f:facet name="complete">
+				<h:outputText value=""/>
+			</f:facet>
+		</p:ajaxStatus>
+	</h:panelGrid>
+
+	<p:growl id="growl" showDetail="true"/>
+
+	<p:dialog height="510" width="1000" header="#{i18n.search_input_dlg}" widgetVar="dlgSearchInput" modal="true">
+		<p:tabView id="tabViewSearchInput" dynamic="false">
+			<p:tab title="#{i18n.search_input_filter}">
+			<p:scrollPanel style="width:100%; height:400px;" mode="native">
+			<h:panelGrid columns="5" cellpadding="3">
+				<h:outputText styleClass="label-field-mandatory" value="#{i18n.search_input_column}"/>
+				<h:outputText styleClass="label-field-mandatory" value="#{i18n.search_input_operator}"/>
+				<h:outputText styleClass="label-field-mandatory" value="#{i18n.search_input_sort}"/>
+				<h:outputText styleClass="label-field-mandatory" value="#{i18n.search_input_filter_input}"/>
+				<h:outputText styleClass="label-field-mandatory" value="#{i18n.search_input_and}"/>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_0" value="#{materialRevisionView.searchObject.searchFields[0].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materialRevisionView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_0" value="#{materialRevisionView.searchObject.searchFields[0].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_0" value="#{materialRevisionView.textOperators}" var="advInputItem0" itemValue="#{advInputItem0}" itemLabel="#{advInputItem0.description}"/>
+					<f:ajax render="p_0"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_0" id="s_0" value="#{materialRevisionView.searchObject.searchFields[0].sortOrder}">
+					<f:selectItems value="#{materialRevisionView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:autoComplete minQueryLength="2" maxResults="10" completeMethod="#{materialRevisionView.onCompleteMaterialMaterialNumber}" id="fi_0" value="#{materialRevisionView.searchObject.searchFields[0].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_0">
+				<p:autoComplete minQueryLength="2" rendered="#{materialRevisionView.searchObject.searchFields[0].between}" maxResults="10" completeMethod="#{materialRevisionView.onCompleteMaterialMaterialNumber}" id="b_0" value="#{materialRevisionView.searchObject.searchFields[0].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_1" value="#{materialRevisionView.searchObject.searchFields[1].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materialRevisionView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_1" value="#{materialRevisionView.searchObject.searchFields[1].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_1" value="#{materialRevisionView.textOperators}" var="advInputItem1" itemValue="#{advInputItem1}" itemLabel="#{advInputItem1.description}"/>
+					<f:ajax render="p_1"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_1" id="s_1" value="#{materialRevisionView.searchObject.searchFields[1].sortOrder}">
+					<f:selectItems value="#{materialRevisionView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_1" value="#{materialRevisionView.searchObject.searchFields[1].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_1">
+					<p:inputText id="b_1" rendered="#{materialRevisionView.searchObject.searchFields[1].between}" value="#{materialRevisionView.searchObject.searchFields[1].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_2" value="#{materialRevisionView.searchObject.searchFields[2].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materialRevisionView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_2" value="#{materialRevisionView.searchObject.searchFields[2].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_2" value="#{materialRevisionView.textOperators}" var="advInputItem2" itemValue="#{advInputItem2}" itemLabel="#{advInputItem2.description}"/>
+					<f:ajax render="p_2"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_2" id="s_2" value="#{materialRevisionView.searchObject.searchFields[2].sortOrder}">
+					<f:selectItems value="#{materialRevisionView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_2" value="#{materialRevisionView.searchObject.searchFields[2].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_2">
+					<p:inputText id="b_2" rendered="#{materialRevisionView.searchObject.searchFields[2].between}" value="#{materialRevisionView.searchObject.searchFields[2].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_3" value="#{materialRevisionView.searchObject.searchFields[3].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materialRevisionView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_3" value="#{materialRevisionView.searchObject.searchFields[3].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_3" value="#{materialRevisionView.textOperators}" var="advInputItem3" itemValue="#{advInputItem3}" itemLabel="#{advInputItem3.description}"/>
+					<f:ajax render="p_3"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_3" id="s_3" value="#{materialRevisionView.searchObject.searchFields[3].sortOrder}">
+					<f:selectItems value="#{materialRevisionView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_3" value="#{materialRevisionView.searchObject.searchFields[3].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_3">
+					<p:inputText id="b_3" rendered="#{materialRevisionView.searchObject.searchFields[3].between}" value="#{materialRevisionView.searchObject.searchFields[3].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_4" value="#{materialRevisionView.searchObject.searchFields[4].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materialRevisionView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_4" value="#{materialRevisionView.searchObject.searchFields[4].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_4" value="#{materialRevisionView.textOperators}" var="advInputItem4" itemValue="#{advInputItem4}" itemLabel="#{advInputItem4.description}"/>
+					<f:ajax render="p_4"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_4" id="s_4" value="#{materialRevisionView.searchObject.searchFields[4].sortOrder}">
+					<f:selectItems value="#{materialRevisionView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_4" value="#{materialRevisionView.searchObject.searchFields[4].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_4">
+					<p:inputText id="b_4" rendered="#{materialRevisionView.searchObject.searchFields[4].between}" value="#{materialRevisionView.searchObject.searchFields[4].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_5" value="#{materialRevisionView.searchObject.searchFields[5].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materialRevisionView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_5" value="#{materialRevisionView.searchObject.searchFields[5].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_5" value="#{materialRevisionView.textOperators}" var="advInputItem5" itemValue="#{advInputItem5}" itemLabel="#{advInputItem5.description}"/>
+					<f:ajax render="p_5"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_5" id="s_5" value="#{materialRevisionView.searchObject.searchFields[5].sortOrder}">
+					<f:selectItems value="#{materialRevisionView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_5" value="#{materialRevisionView.searchObject.searchFields[5].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_5">
+					<p:inputText id="b_5" rendered="#{materialRevisionView.searchObject.searchFields[5].between}" value="#{materialRevisionView.searchObject.searchFields[5].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_6" value="#{materialRevisionView.searchObject.searchFields[6].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materialRevisionView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_6" value="#{materialRevisionView.searchObject.searchFields[6].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_6" value="#{materialRevisionView.textOperators}" var="advInputItem6" itemValue="#{advInputItem6}" itemLabel="#{advInputItem6.description}"/>
+					<f:ajax render="p_6"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_6" id="s_6" value="#{materialRevisionView.searchObject.searchFields[6].sortOrder}">
+					<f:selectItems value="#{materialRevisionView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_6" value="#{materialRevisionView.searchObject.searchFields[6].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_6">
+					<p:inputText id="b_6" rendered="#{materialRevisionView.searchObject.searchFields[6].between}" value="#{materialRevisionView.searchObject.searchFields[6].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_7" value="#{materialRevisionView.searchObject.searchFields[7].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materialRevisionView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_7" value="#{materialRevisionView.searchObject.searchFields[7].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_7" value="#{materialRevisionView.textOperators}" var="advInputItem7" itemValue="#{advInputItem7}" itemLabel="#{advInputItem7.description}"/>
+					<f:ajax render="p_7"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_7" id="s_7" value="#{materialRevisionView.searchObject.searchFields[7].sortOrder}">
+					<f:selectItems value="#{materialRevisionView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_7" value="#{materialRevisionView.searchObject.searchFields[7].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_7">
+					<p:inputText id="b_7" rendered="#{materialRevisionView.searchObject.searchFields[7].between}" value="#{materialRevisionView.searchObject.searchFields[7].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_8" value="#{materialRevisionView.searchObject.searchFields[8].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materialRevisionView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_8" value="#{materialRevisionView.searchObject.searchFields[8].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_8" value="#{materialRevisionView.textOperators}" var="advInputItem8" itemValue="#{advInputItem8}" itemLabel="#{advInputItem8.description}"/>
+					<f:ajax render="p_8"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_8" id="s_8" value="#{materialRevisionView.searchObject.searchFields[8].sortOrder}">
+					<f:selectItems value="#{materialRevisionView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_8" value="#{materialRevisionView.searchObject.searchFields[8].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_8">
+					<p:inputText id="b_8" rendered="#{materialRevisionView.searchObject.searchFields[8].between}" value="#{materialRevisionView.searchObject.searchFields[8].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_9" value="#{materialRevisionView.searchObject.searchFields[9].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materialRevisionView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_9" value="#{materialRevisionView.searchObject.searchFields[9].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_9" value="#{materialRevisionView.textOperators}" var="advInputItem9" itemValue="#{advInputItem9}" itemLabel="#{advInputItem9.description}"/>
+					<f:ajax render="p_9"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_9" id="s_9" value="#{materialRevisionView.searchObject.searchFields[9].sortOrder}">
+					<f:selectItems value="#{materialRevisionView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_9" value="#{materialRevisionView.searchObject.searchFields[9].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_9">
+					<p:inputText id="b_9" rendered="#{materialRevisionView.searchObject.searchFields[9].between}" value="#{materialRevisionView.searchObject.searchFields[9].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_10" value="#{materialRevisionView.searchObject.searchFields[10].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materialRevisionView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_10" value="#{materialRevisionView.searchObject.searchFields[10].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_10" value="#{materialRevisionView.textOperators}" var="advInputItem10" itemValue="#{advInputItem10}" itemLabel="#{advInputItem10.description}"/>
+					<f:ajax render="p_10"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_10" id="s_10" value="#{materialRevisionView.searchObject.searchFields[10].sortOrder}">
+					<f:selectItems value="#{materialRevisionView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_10" value="#{materialRevisionView.searchObject.searchFields[10].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_10">
+					<p:inputText id="b_10" rendered="#{materialRevisionView.searchObject.searchFields[10].between}" value="#{materialRevisionView.searchObject.searchFields[10].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_11" value="#{materialRevisionView.searchObject.searchFields[11].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materialRevisionView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_11" value="#{materialRevisionView.searchObject.searchFields[11].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_11" value="#{materialRevisionView.dateOperators}" var="advInputItem11" itemValue="#{advInputItem11}" itemLabel="#{advInputItem11.description}"/>
+					<f:ajax render="p_11"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_11" id="s_11" value="#{materialRevisionView.searchObject.searchFields[11].sortOrder}">
+					<f:selectItems value="#{materialRevisionView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:datePicker id="fi_11" value="#{materialRevisionView.searchObject.searchFields[11].dateCriterion}" pattern="#{userSession.dateTimeFormat}" size="20" showButtonBar="true" showIcon="true" showTime="true"/>
+				<h:panelGroup id="p_11">
+					<p:datePicker id="fb_11" value="#{materialRevisionView.searchObject.searchFields[11].dateBetweenCriterion}" pattern="#{userSession.dateTimeFormat}" size="20" showButtonBar="true" showIcon="true" rendered="#{materialRevisionView.searchObject.searchFields[11].between}" showTime="true"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_12" value="#{materialRevisionView.searchObject.searchFields[12].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materialRevisionView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_12" value="#{materialRevisionView.searchObject.searchFields[12].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_12" value="#{materialRevisionView.dateOperators}" var="advInputItem12" itemValue="#{advInputItem12}" itemLabel="#{advInputItem12.description}"/>
+					<f:ajax render="p_12"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_12" id="s_12" value="#{materialRevisionView.searchObject.searchFields[12].sortOrder}">
+					<f:selectItems value="#{materialRevisionView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:datePicker id="fi_12" value="#{materialRevisionView.searchObject.searchFields[12].dateCriterion}" pattern="#{userSession.dateTimeFormat}" size="20" showButtonBar="true" showIcon="true" showTime="true"/>
+				<h:panelGroup id="p_12">
+					<p:datePicker id="fb_12" value="#{materialRevisionView.searchObject.searchFields[12].dateBetweenCriterion}" pattern="#{userSession.dateTimeFormat}" size="20" showButtonBar="true" showIcon="true" rendered="#{materialRevisionView.searchObject.searchFields[12].between}" showTime="true"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_13" value="#{materialRevisionView.searchObject.searchFields[13].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materialRevisionView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_13" value="#{materialRevisionView.searchObject.searchFields[13].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_13" value="#{materialRevisionView.textOperators}" var="advInputItem13" itemValue="#{advInputItem13}" itemLabel="#{advInputItem13.description}"/>
+					<f:ajax render="p_13"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_13" id="s_13" value="#{materialRevisionView.searchObject.searchFields[13].sortOrder}">
+					<f:selectItems value="#{materialRevisionView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_13" value="#{materialRevisionView.searchObject.searchFields[13].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_13">
+					<p:inputText id="b_13" rendered="#{materialRevisionView.searchObject.searchFields[13].between}" value="#{materialRevisionView.searchObject.searchFields[13].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+			</h:panelGrid>
+			</p:scrollPanel>
+			</p:tab>
+			<p:tab title="#{i18n.search_input_adv}">
+			<h:panelGrid columns="2">
+				<h:outputLabel value="#{i18n.search_input_case}:" styleClass="label-field-mandatory"/>
+				<p:selectBooleanCheckbox value="#{materialRevisionView.searchObject.caseSensitive}"/>
+				<h:outputLabel value="#{i18n.search_input_count}:" styleClass="label-field-mandatory"/>
+				<p:selectBooleanCheckbox value="#{materialRevisionView.searchObject.count}"/>
+				<h:outputLabel value="#{i18n.search_input_filter_match}:" styleClass="label-field-mandatory"/>
+				<p:selectBooleanCheckbox value="#{materialRevisionView.searchObject.exactFilterMatch}"/>
+				<h:outputLabel value="#{i18n.search_input_filter_fetch_size}:" styleClass="label-field-mandatory"/>
+				<p:inputText value="#{materialRevisionView.searchObject.maxResult}" size="5">
+					<f:validateLongRange minimum="1" maximum="1000000"/>
+				</p:inputText>
+				<h:outputLabel value="#{i18n.search_input_visible_fields_label}:" styleClass="label-field-mandatory"/>
+				<p:pickList value="#{materialRevisionView.visibleFields}" var="savedQueryListItem" itemLabel="#{savedQueryListItem.colLabel}" itemValue="#{savedQueryListItem}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchFieldDTOConverter" addLabel="#{i18n.pick_list_add}" addAllLabel="#{i18n.pick_list_add_all}" removeLabel="#{i18n.pick_list_remove}" removeAllLabel="#{i18n.pick_list_remove_all}">
+					<f:facet name="sourceCaption">#{i18n.search_input_all_fields}</f:facet>
+					<f:facet name="targetCaption">#{i18n.search_input_visible_fields}</f:facet>
+				</p:pickList>
+			</h:panelGrid>
+			</p:tab>
+			<p:tab title="#{i18n.search_input_saved_query_title}">
+				<h:panelGrid columns="1">
+					<h:outputLabel styleClass="label-field-mandatory" value="#{i18n.search_input_lbl_saved_query}"/>
+					<p:selectOneListbox id="savedQueryList" value="#{materialRevisionView.selectedSavedQuery}" style="height:150px; width:300px">
+						<f:selectItems value="#{materialRevisionView.savedQueries}"/>
+					</p:selectOneListbox>
+					<h:panelGrid columns="2">
+						<p:commandButton value="#{i18n.search_input_run_saved_query}" action="#{materialRevisionView.runSavedQuery}" ajax="false"/>
+						<p:commandButton value="#{i18n.search_input_delete_saved_query}" action="#{materialRevisionView.deleteSavedQuery}" ajax="false"/>
+					</h:panelGrid>
+				</h:panelGrid>
+			</p:tab>
+		</p:tabView>
+		<br/>
+		<h:panelGrid columns="3">
+			<p:commandButton id="cmdSearch" value="#{i18n.search_input_perform_search}" action="#{materialRevisionView.fetchMaterialRevisions}" ajax="false"/>
+			<p:commandButton id="cmdReset" value="#{i18n.command_reset}" action="#{materialRevisionView.initSearchObject}" onclick="PF('dlgSearchInput').hide()" ajax="false"/>
+			<p:commandButton id="cmdCount" value="#{i18n.search_input_perform_count}" actionListener="#{materialRevisionView.countRecords}" onclick="PF('dlgSearchInput').hide()" update="growl" ajax="true"/>
+		</h:panelGrid>
+	</p:dialog>
+
+	<p:menubar>
+		<p:submenu icon="pi pi-file" label="#{i18n.mnu_file}" id="panData_mniFile">
+			<p:menuitem value="#{i18n.action_search_input}" ajax="true" icon="pi pi-search" id="panData_mniSearch" onclick="PF('dlgSearchInput').show()"/>
+			<p:menuitem value="#{i18n.search_input_dlg_save_query}" icon="pi pi-save" onclick="PF('dlgSaveQuery').show()"/>
+		</p:submenu>
+		<p:submenu icon="pi pi-refresh" label="#{i18n.mnu_view}">
+			<p:menuitem value="#{i18n.action_refresh}" ajax="false" icon="pi pi-refresh" actionListener="#{materialRevisionView.fetchMaterialRevisions}"/>
+		</p:submenu>
+		<p:submenu icon="pi pi-print" label="#{i18n.mnu_export}">
+			<p:menuitem value="#{i18n.action_export_xls}" ajax="false" icon="pi pi-file-excel">
+				<p:dataExporter type="xls" target="panData" fileName="MaterialRevisionList"/>
+			</p:menuitem>
+			<p:menuitem value="#{i18n.action_export_pdf}" ajax="false" icon="pi pi-file-pdf">
+				<p:dataExporter type="pdf" target="panData" fileName="MaterialRevisionList"/>
+			</p:menuitem>
+		</p:submenu>
+	</p:menubar>
+
+	<br/>
+
+	<p:dataTable id="panData" var="materialRevisionViewItem" rows="50"
+		selectionMode="single"
+		selection="#{materialRevisionView.selectedObject}"
+		loadingMessage="#{i18n.action_fetch_data}"
+		value="#{materialRevisionView.materialRevisionsList}" scrollable="false"
+		paginatorPosition="top" paginatorAlwaysVisible="false" paginator="true" resizableColumns="true"
+		rowKey="#{materialRevisionViewItem.id}"
+		paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+		rowsPerPageTemplate="10,50,100,500,1000">
+		<p:ajax event="rowDblselect" listener="#{materialRevisionView.onDoubleClick}"/>
+
+		<p:column sortBy="#{materialRevisionViewItem.materialMaterialNumber}" width="150" rendered="#{materialRevisionView.searchObject.searchFields[0].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materialrevisionview_materialmaterialnumber}"/>
+			</f:facet>
+			<h:outputText value="#{materialRevisionViewItem.materialMaterialNumber}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materialRevisionViewItem.materialSapNumber}" width="150" rendered="#{materialRevisionView.searchObject.searchFields[1].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materialrevisionview_materialsapnumber}"/>
+			</f:facet>
+			<h:outputText value="#{materialRevisionViewItem.materialSapNumber}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materialRevisionViewItem.materialShortText}" width="250" rendered="#{materialRevisionView.searchObject.searchFields[2].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materialrevisionview_materialshorttext}"/>
+			</f:facet>
+			<h:outputText value="#{materialRevisionViewItem.materialShortText}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materialRevisionViewItem.ownerLocationCode}" width="100" rendered="#{materialRevisionView.searchObject.searchFields[3].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materialrevisionview_ownerlocationcode}"/>
+			</f:facet>
+			<h:outputText value="#{materialRevisionViewItem.ownerLocationCode}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materialRevisionViewItem.materialTypeCode}" width="100" rendered="#{materialRevisionView.searchObject.searchFields[4].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materialrevisionview_materialtypecode}"/>
+			</f:facet>
+			<h:outputText value="#{materialRevisionViewItem.materialTypeCode}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materialRevisionViewItem.materialClassCode}" width="100" rendered="#{materialRevisionView.searchObject.searchFields[5].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materialrevisionview_materialclasscode}"/>
+			</f:facet>
+			<h:outputText value="#{materialRevisionViewItem.materialClassCode}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materialRevisionViewItem.revisionNumber}" width="100" rendered="#{materialRevisionView.searchObject.searchFields[6].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materialrevisionview_revisionnumber}"/>
+			</f:facet>
+			<h:outputText value="#{materialRevisionViewItem.revisionNumber}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materialRevisionViewItem.rev2}" width="80" rendered="#{materialRevisionView.searchObject.searchFields[7].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_materialrevision_rev2}"/>
+			</f:facet>
+			<h:outputText value="#{materialRevisionViewItem.rev2}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materialRevisionViewItem.rev6}" width="80" rendered="#{materialRevisionView.searchObject.searchFields[8].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_materialrevision_rev6}"/>
+			</f:facet>
+			<h:outputText value="#{materialRevisionViewItem.rev6}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materialRevisionViewItem.alternativeNumber}" width="100" rendered="#{materialRevisionView.searchObject.searchFields[9].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materialrevisionview_alternativenumber}"/>
+			</f:facet>
+			<h:outputText value="#{materialRevisionViewItem.alternativeNumber}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materialRevisionViewItem.comment}" width="250" rendered="#{materialRevisionView.searchObject.searchFields[10].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_materialrevision_comment}"/>
+			</f:facet>
+			<h:outputText value="#{materialRevisionViewItem.comment}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materialRevisionViewItem.creationDate}" width="120" rendered="#{materialRevisionView.searchObject.searchFields[11].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_abstractentitywithid_creationdate}"/>
+			</f:facet>
+			<h:outputText value="#{materialRevisionViewItem.creationDate}">
+				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateTimeConverter"/>
+				<f:attribute name="pattern" value="#{userSession.dateTimeFormat}"/>
+				<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materialRevisionViewItem.lastUpdate}" width="120" rendered="#{materialRevisionView.searchObject.searchFields[12].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_abstractentitywithid_lastupdate}"/>
+			</f:facet>
+			<h:outputText value="#{materialRevisionViewItem.lastUpdate}">
+				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateTimeConverter"/>
+				<f:attribute name="pattern" value="#{userSession.dateTimeFormat}"/>
+				<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materialRevisionViewItem.plantCode}" width="100" rendered="#{materialRevisionView.searchObject.searchFields[13].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materialrevisionview_plantcode}"/>
+			</f:facet>
+			<h:outputText value="#{materialRevisionViewItem.plantCode}">
+			</h:outputText>
+		</p:column>
+	</p:dataTable>
+	<p/>
+
+	<h:outputText styleClass="label-field-mandatory" value="#{i18n.result_total_number_records} #{materialRevisionView.materialRevisionsList.size()}"/>
+	<h:outputText styleClass="label-field-mandatory" rendered="#{materialRevisionView.searchObject.count}" value="&#160;#{i18n.search_input_count_of}&#160;"/>
+	<h:outputText styleClass="label-field-mandatory" rendered="#{materialRevisionView.searchObject.count}" value="#{materialRevisionView.countResult}"/>
+	<p/>
+
+	<p:contextMenu for="panData">
+		<p:menuitem value="#{i18n.action_delete}" ajax="true" icon="pi pi-trash" id="panData_mniDelete" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR')}" onclick="PF('deleteConfirm').show()"/>
+		<p:menuitem value="#{i18n.action_edit}" ajax="true" icon="pi pi-pencil" id="panData_mniUpdate" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR')}" action="#{materialRevisionView.openEditMaterialRevisionDialog}">
+			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{materialRevisionView.currentPageURL}"/>
+		</p:menuitem>
+		<p:menuitem value="#{i18n.action_view}" ajax="true" icon="pi pi-file" id="panData_mniView" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;SUPERUSER')}" action="#{materialRevisionView.openViewMaterialRevisionDialog}">
+			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{materialRevisionView.currentPageURL}"/>
+		</p:menuitem>
+		<p:menuitem value="#{i18n.action_copy}" ajax="true" icon="pi pi-copy" id="panData_mniCopy" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR')}" onclick="PF('copyConfirm').show()"/>
+		<p:menuitem value="#{i18n.action_refresh}" ajax="false" type="push" icon="pi pi-refresh" id="panData_mniRefresh" actionListener="#{materialRevisionView.fetchMaterialRevisions}"/>
+	</p:contextMenu>
+
+	<p:confirmDialog modal="true" message="#{i18n.dialog_delete_question}" header="#{i18n.dialog_delete_title}" severity="alert" widgetVar="deleteConfirm">
+		<p:commandButton value="#{i18n.command_yes}" oncomplete="PF('deleteConfirm').hide()" actionListener="#{materialRevisionView.deleteMaterialRevision}" id="panData_cmdYesDelete" ajax="false"/>
+		<p:commandButton value="#{i18n.command_no}" onclick="PF('deleteConfirm').hide()" type="button"/>
+	</p:confirmDialog>
+
+	<p:confirmDialog modal="true" message="#{i18n.dialog_copy_question}" header="#{i18n.dialog_copy_title}" severity="info" widgetVar="copyConfirm">
+		<p:commandButton value="#{i18n.command_yes}" oncomplete="PF('copyConfirm').hide()" action="#{materialRevisionView.copy}" id="panData_cmdYesCopy" ajax="false"/>
+		<p:commandButton value="#{i18n.command_no}" onclick="PF('copyConfirm').hide()" type="button"/>
+	</p:confirmDialog>
+
+	<p:dialog header="#{i18n.search_input_dlg_save_query}" widgetVar="dlgSaveQuery" modal="true" height="100">
+		<h:panelGrid columns="3">
+			<h:outputLabel value="#{i18n.search_input_lbl_save_query}" styleClass="label-field-mandatory"/>
+			<p:inputText id="txtQueryName" value="#{materialRevisionView.savedQueryName}">
+			</p:inputText>
+			<p:commandButton value="#{i18n.command_save}" action="#{materialRevisionView.saveNewQuery}" ajax="false" onclick="PF('dlgSaveQuery').hide()"/>
+		</h:panelGrid>
+	</p:dialog>
+
+	<p:defaultCommand target=":form:cmdSearch"/>
+
+</ui:define>
+</ui:composition>

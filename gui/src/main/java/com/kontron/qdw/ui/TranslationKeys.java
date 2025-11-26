@@ -25,6 +25,15 @@ public interface TranslationKeys {
     String COL_MATERIALREVISIONBOMITEMSPANEL_MATERIALSAPNUMBER = "col_materialrevisionbomitemspanel_materialsapnumber";
     String COL_MATERIALREVISIONBOMITEMSPANEL_MATERIALSHORTTEXT = "col_materialrevisionbomitemspanel_materialshorttext";
     String COL_MATERIALREVISIONBOMITEMSPANEL_MATERIALTYPECODE = "col_materialrevisionbomitemspanel_materialtypecode";
+    String COL_MATERIALREVISIONVIEW_ALTERNATIVENUMBER = "col_materialrevisionview_alternativenumber";
+    String COL_MATERIALREVISIONVIEW_MATERIALCLASSCODE = "col_materialrevisionview_materialclasscode";
+    String COL_MATERIALREVISIONVIEW_MATERIALMATERIALNUMBER = "col_materialrevisionview_materialmaterialnumber";
+    String COL_MATERIALREVISIONVIEW_MATERIALSAPNUMBER = "col_materialrevisionview_materialsapnumber";
+    String COL_MATERIALREVISIONVIEW_MATERIALSHORTTEXT = "col_materialrevisionview_materialshorttext";
+    String COL_MATERIALREVISIONVIEW_MATERIALTYPECODE = "col_materialrevisionview_materialtypecode";
+    String COL_MATERIALREVISIONVIEW_OWNERLOCATIONCODE = "col_materialrevisionview_ownerlocationcode";
+    String COL_MATERIALREVISIONVIEW_PLANTCODE = "col_materialrevisionview_plantcode";
+    String COL_MATERIALREVISIONVIEW_REVISIONNUMBER = "col_materialrevisionview_revisionnumber";
     String COL_SUPPLIERVIEW_COUNTRYNAME = "col_supplierview_countryname";
     String COL_VERTICALSECTORVIEW_BUSINESSUNITCODE = "col_verticalsectorview_businessunitcode";
     String COMMAND_BACK = "command_back";
@@ -56,6 +65,7 @@ public interface TranslationKeys {
     String FEEDBACK_DIALOG_HEADER = "feedback_dialog_header";
     String FG_TOP_ADMINISTRATION = "fg_top_administration";
     String FG_TOP_MASTER_DATA = "fg_top_master_data";
+    String FG_TOP_MATERIAL = "fg_top_material";
     String FIELD_CHANGEPASSWORDDIALOG_TXTNEWPASSWORD = "field_changepassworddialog_txtnewpassword";
     String FIELD_CHANGEPASSWORDDIALOG_TXTNEWPASSWORDCONFIRM = "field_changepassworddialog_txtnewpasswordconfirm";
     String FIELD_CHANGEPASSWORDDIALOG_TXTOLDPASSWORD = "field_changepassworddialog_txtoldpassword";
@@ -108,6 +118,7 @@ public interface TranslationKeys {
     String FORM_EDITVERTICALSECTORDIALOG_TITLE = "form_editverticalsectordialog_title";
     String FORM_LOCATIONVIEW_TITLE = "form_locationview_title";
     String FORM_MATERIALCLASSVIEW_TITLE = "form_materialclassview_title";
+    String FORM_MATERIALREVISIONVIEW_TITLE = "form_materialrevisionview_title";
     String FORM_MATERIALTYPEVIEW_TITLE = "form_materialtypeview_title";
     String FORM_MOVEMENTTYPEVIEW_TITLE = "form_movementtypeview_title";
     String FORM_PLANTVIEW_TITLE = "form_plantview_title";

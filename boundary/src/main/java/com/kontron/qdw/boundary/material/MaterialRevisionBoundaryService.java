@@ -205,4 +205,83 @@ public class MaterialRevisionBoundaryService {
         return dto;
     }
 
+    /**
+     * Search for material revision objects
+     * @param searchObj a generic container that holds filter criteria
+     * @return a list of material revision objects
+     * @throws GeneralSearchException if the search operation has failed
+     */
+    @Generated
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public List<MaterialRevisionSearchDTO> searchAllMaterialRevisions(SearchDTO searchObj) {
+        // Collect the select tokens of all fields that should be fetched
+        final var selectTokens = new ArrayList<String>();
+        selectTokens.add(MaterialRevisionSearchDTO.SELECT_REVISIONNUMBER);
+        selectTokens.add(MaterialRevisionSearchDTO.SELECT_REV2);
+        selectTokens.add(MaterialRevisionSearchDTO.SELECT_REV6);
+        selectTokens.add(MaterialRevisionSearchDTO.SELECT_ALTERNATIVENUMBER);
+        selectTokens.add(MaterialRevisionSearchDTO.SELECT_COMMENT);
+        selectTokens.add(MaterialRevisionSearchDTO.SELECT_ID);
+        selectTokens.add(MaterialRevisionSearchDTO.SELECT_CREATIONDATE);
+        selectTokens.add(MaterialRevisionSearchDTO.SELECT_LASTUPDATE);
+        selectTokens.add(MaterialRevisionSearchDTO.SELECT_MATERIALMATERIALNUMBER);
+        selectTokens.add(MaterialRevisionSearchDTO.SELECT_PLANTCODE);
+        selectTokens.add(MaterialRevisionSearchDTO.SELECT_MATERIALID);
+        selectTokens.add(MaterialRevisionSearchDTO.SELECT_MATERIALSAPNUMBER);
+        selectTokens.add(MaterialRevisionSearchDTO.SELECT_MATERIALSHORTTEXT);
+        selectTokens.add(MaterialRevisionSearchDTO.SELECT_OWNERLOCATIONCODE);
+        selectTokens.add(MaterialRevisionSearchDTO.SELECT_MATERIALTYPECODE);
+        selectTokens.add(MaterialRevisionSearchDTO.SELECT_MATERIALCLASSCODE);
+
+        searchObj.setFromClause(
+                "from MaterialRevision a join a.material b join a.plant c join b.ownerLocation e join b.materialClass f join b.materialType g");
+
+        return repository.search(searchObj, MaterialRevisionSearchDTO.class, selectTokens);
+    }
+
+    /**
+     * Count material revision objects
+     * @param searchObj the query criteria
+     * @return the number of objects a query would return
+     * @throws GeneralSearchException if the count operation has failed
+     */
+    @Generated
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public long countAllMaterialRevisions(SearchDTO searchObj) {
+        searchObj.setFromClause(
+                "from MaterialRevision a join a.material b join a.plant c join b.ownerLocation e join b.materialClass f join b.materialType g");
+
+        return repository.count(searchObj);
+    }
+
+    /**
+     * Delete existing material revision
+     * @param id the ID of the object to be deleted
+     */
+    @Generated
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public void deleteMaterialRevision(long id) {
+        repository.delete(id);
+    }
+
+    /**
+     * Create copy of selected material revision
+     * @param sourceObjectId
+     * @param loggedOnUserId
+     * @throws ConstraintViolationException if the validation of one or more persistent attribute values has failed
+     * @return the id of the new object
+     */
+    @Generated
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public long copy(long sourceObjectId, long loggedOnUserId) {
+        final MaterialRevision sourceObject = repository.findById(sourceObjectId);
+        final MaterialRevision targetObject = repository.copy(sourceObject, null, loggedOnUserId);
+
+        return targetObject.getId();
+    }
+
 }
