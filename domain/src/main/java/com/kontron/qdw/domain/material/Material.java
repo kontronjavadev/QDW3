@@ -2,6 +2,7 @@ package com.kontron.qdw.domain.material;
 
 import jakarta.validation.constraints.*;
 import jakarta.persistence.*;
+import java.util.*;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
 import com.kontron.qdw.domain.base.*;
 
@@ -18,6 +19,7 @@ import com.kontron.qdw.domain.base.*;
 @NamedQuery(name = Material.NQ_GET_OWNERLOCATION, query = "select b from Material a join a.ownerLocation b where a.id = :id")
 @NamedQuery(name = Material.NQ_GET_MATERIALCLASS, query = "select b from Material a join a.materialClass b where a.id = :id")
 @NamedQuery(name = Material.NQ_GET_MATERIALTYPE, query = "select b from Material a join a.materialType b where a.id = :id")
+@NamedQuery(name = Material.NQ_GET_REVISIONS, query = "select b from Material a join a.revisions b where a.id = :id")
 @NamedQuery(name = Material.NQ_DELETE_ALL, query = "delete from Material a")
 @NamedQuery(name = Material.NQ_DELETE, query = "delete from Material a where a.id = :id")
 @NamedQuery(name = Material.NQ_GET_ALL, query = "select a from Material a")
@@ -55,6 +57,8 @@ public class Material extends AbstractEntityWithId {
     public static final String NQ_COUNT = "Material.count";
     @Generated
     public static final String NQ_UK_EXISTS_BY_SAPNUMBER = "Material.checkBySapNumber";
+    @Generated
+    public static final String NQ_GET_REVISIONS = "Material.getRevisions";
     @Generated
     public static final String NQ_GET_OWNERLOCATION = "Material.getOwnerLocation";
     @Generated
@@ -107,6 +111,9 @@ public class Material extends AbstractEntityWithId {
     @NotNull(message = "Field \"materialType\" must not be null!")
     @Generated
     private MaterialType materialType;
+    @OneToMany(targetEntity = MaterialRevision.class, mappedBy = "material", fetch = FetchType.LAZY, cascade = { CascadeType.ALL })
+    @Generated
+    private Collection<MaterialRevision> revisions = new ArrayList<>();
 
     /**
      * Default constructor
@@ -294,6 +301,22 @@ public class Material extends AbstractEntityWithId {
     @Generated
     public void setMaterialType(MaterialType materialType) {
         this.materialType = materialType;
+    }
+
+    /**
+     * @return a collection of material revisions
+     */
+    @Generated
+    public Collection<MaterialRevision> getRevisions() {
+        return this.revisions;
+    }
+
+    /**
+     * @param revisions the material revisions to set
+     */
+    @Generated
+    public void setRevisions(Collection<MaterialRevision> revisions) {
+        this.revisions = revisions;
     }
 
     /* (non-Javadoc)

@@ -24,6 +24,8 @@
     <targetInheritances href="#//@domainObjects.2/@inheritance"/>
     <targetInheritances href="#//@domainObjects.15/@inheritance"/>
     <targetInheritances href="package-material.xmi#//@domainObjects.2/@inheritance"/>
+    <targetInheritances href="package-material.xmi#//@domainObjects.3/@inheritance"/>
+    <targetInheritances href="package-material.xmi#//@domainObjects.4/@inheritance"/>
     <databaseTable name="abstract_entity_with_id_tab" schemaName="" catalogName="">
       <database href="project.xmi#/0/@database"/>
       <columns name="id">
