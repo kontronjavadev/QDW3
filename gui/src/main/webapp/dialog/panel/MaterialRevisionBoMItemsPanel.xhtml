@@ -5,7 +5,7 @@
 	xmlns:p="http://primefaces.org/ui">
 
 	<p:menubar>
-		<p:submenu icon="pi pi-file" label="#{i18n.mnu_file}" id="gridMaterialRevisionBoMItemsPanel_mniFile">
+		<p:submenu icon="pi pi-file" label="#{i18n.mnu_file}" id="gridMaterialRevisionBoMItemsPanel_mniFile" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR') and not materialRevisionBoMItemsPanel.readOnly}" >
 			<p:menuitem value="#{i18n.action_add}" ajax="true" id="gridMaterialRevisionBoMItemsPanel_mniAdd" icon="pi pi-plus" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR') and not materialRevisionBoMItemsPanel.readOnly}" action="#{materialRevisionBoMItemsPanel.openAddBoMItemDialog}">
 				<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{materialRevisionBoMItemsPanel.currentPageURL}"/>
 			</p:menuitem>
@@ -142,12 +142,12 @@
 		<p:menuitem value="#{i18n.action_refresh}" ajax="false" type="push" icon="pi pi-refresh" id="gridMaterialRevisionBoMItemsPanel_mniRefresh" actionListener="#{materialRevisionBoMItemsPanel.fetchBoMItems}"/>
 	</p:contextMenu>
 
-	<p:confirmDialog modal="true" message="#{i18n.dialog_delete_question}" header="#{i18n.dialog_delete_title}" severity="alert" widgetVar="deleteConfirmBoMItems">
+	<p:confirmDialog modal="true" closeOnEscape="true" message="#{i18n.dialog_delete_question}" header="#{i18n.dialog_delete_title}" severity="warn" widgetVar="deleteConfirmBoMItems">
 		<p:commandButton value="#{i18n.command_yes}" oncomplete="PF('deleteConfirmBoMItems').hide()" actionListener="#{materialRevisionBoMItemsPanel.deleteBoMItem}" id="gridMaterialRevisionBoMItemsPanel_cmdYesDelete" ajax="false"/>
 		<p:commandButton value="#{i18n.command_no}" onclick="PF('deleteConfirmBoMItems').hide()" type="button"/>
 	</p:confirmDialog>
 
-	<p:confirmDialog modal="true" message="#{i18n.dialog_copy_question}" header="#{i18n.dialog_copy_title}" severity="info" widgetVar="copyConfirmBoMItems">
+	<p:confirmDialog modal="true" closeOnEscape="true" message="#{i18n.dialog_copy_question}" header="#{i18n.dialog_copy_title}" severity="info" widgetVar="copyConfirmBoMItems">
 		<p:commandButton value="#{i18n.command_yes}" oncomplete="PF('copyConfirmBoMItems').hide()" action="#{materialRevisionBoMItemsPanel.copy}" id="gridMaterialRevisionBoMItemsPanel_cmdYesCopy" ajax="false"/>
 		<p:commandButton value="#{i18n.command_no}" onclick="PF('copyConfirmBoMItems').hide()" type="button"/>
 	</p:confirmDialog>

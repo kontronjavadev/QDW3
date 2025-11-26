@@ -39,8 +39,6 @@ public class EditBoMItemDialog implements Serializable {
     @Generated
     private transient ResourceBundle bundle;
     @Generated
-    private final transient MaterialRevisionBoundaryService materialRevisionService;
-    @Generated
     private final transient MaterialBoundaryService materialService;
 
     /**
@@ -50,7 +48,6 @@ public class EditBoMItemDialog implements Serializable {
     public EditBoMItemDialog() {
         this.boMItemService = null;
         this.userSession = null;
-        this.materialRevisionService = null;
         this.materialService = null;
     }
 
@@ -58,16 +55,13 @@ public class EditBoMItemDialog implements Serializable {
      * Constructor for injecting all required beans
      * @param boMItemService
      * @param userSession
-     * @param materialRevisionService
      * @param materialService
      */
     @Inject
     @Generated
-    public EditBoMItemDialog(BoMItemBoundaryService boMItemService, UserSession userSession, MaterialRevisionBoundaryService materialRevisionService,
-            MaterialBoundaryService materialService) {
+    public EditBoMItemDialog(BoMItemBoundaryService boMItemService, UserSession userSession, MaterialBoundaryService materialService) {
         this.boMItemService = boMItemService;
         this.userSession = userSession;
-        this.materialRevisionService = materialRevisionService;
         this.materialService = materialService;
     }
 
@@ -117,23 +111,6 @@ public class EditBoMItemDialog implements Serializable {
     @Generated
     public void setSelectedObjectId(long selectedObjectId) {
         this.selectedObjectId = selectedObjectId;
-    }
-
-    /**
-     * Callback method for auto-complete field 'cboMaterialRevision'
-     * @param filter the filter criterion inserted the by the user
-     * @return the proposal list
-     */
-    @Generated
-    public List<MaterialRevisionListDTO> onCompleteMaterialRevision(String filter) {
-        try {
-            return materialRevisionService.findMaterialRevisions(filter);
-        }
-        catch (final Exception e) {
-            logger.error("Error while fetching data for proposal text field 'cboMaterialRevision'!", e);
-
-            return Collections.emptyList();
-        }
     }
 
     /**
@@ -221,6 +198,14 @@ public class EditBoMItemDialog implements Serializable {
     @Generated
     public String getCurrentPageURL() {
         return EditBoMItemDialog.PAGE_INIT_URL + selectedObjectId;
+    }
+
+    /**
+     * @return the navigation target
+     */
+    @Generated
+    public String openViewMaterialRevisionDialogLink() {
+        return ViewMaterialRevisionDialog.PAGE_INIT_URL + boMItem.getMaterialRevision().getId();
     }
 
 }

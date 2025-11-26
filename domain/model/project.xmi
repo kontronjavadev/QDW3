@@ -3006,17 +3006,18 @@
       <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.0"/>
     </attributes>
   </net.sourceforge.jbizmo.model.dto:DTOBean>
-  <net.sourceforge.jbizmo.model.client:FormGroup name="Material" groupOrder="3" forms="/207 /188 /210 /200 /216 /221" panels="/204" roles="/0/@roles.0 /0/@roles.1 /0/@roles.2" project="/0"/>
-  <net.sourceforge.jbizmo.model.client:Form name="EditBoMItemDialog" formGroup="/187" title="Edit bom item" formPanels="/189 /190" dTO="/191" roles="/0/@roles.0">
+  <net.sourceforge.jbizmo.model.client:FormGroup name="Material" groupOrder="3" forms="/207 /188 /210 /221 /200 /216" panels="/204" roles="/0/@roles.0 /0/@roles.1 /0/@roles.2" project="/0"/>
+  <net.sourceforge.jbizmo.model.client:Form name="EditBoMItemDialog" formGroup="/187" title="Edit BoM item" formPanels="/189 /190" dTO="/191" roles="/0/@roles.0">
     <actions name="actionUpdate" boundaryMethod="/194/@boundaryMethods.0" type="UPDATE"/>
     <domainObject href="package-material.xmi#//@domainObjects.4"/>
   </net.sourceforge.jbizmo.model.client:Form>
   <net.sourceforge.jbizmo.model.client:FormPanel name="panBoMItem" label="Basic data" form="/188">
-    <fields name="cboMaterialRevision" label="Material revision" fieldType="PROPOSAL_TEXT" width="100" dTOAttribute="/191/@attributes.8"/>
-    <fields name="txtQuantity" colIndex="2" label="Quantity" mandatory="false" width="120" dTOAttribute="/191/@attributes.0"/>
-    <fields name="txtLabel" rowIndex="2" label="Label" spanCols="true" mandatory="false" dTOAttribute="/191/@attributes.1"/>
-    <fields name="txtPosition" rowIndex="3" label="Position" mandatory="false" width="100" dTOAttribute="/191/@attributes.2"/>
-    <fields name="cboMaterial" colIndex="2" rowIndex="3" label="Material" mandatory="false" fieldType="PROPOSAL_TEXT" width="120" dTOAttribute="/191/@attributes.7"/>
+    <fields name="cboMaterialRevisionMaterial" label="Material no." readonly="true" fieldType="FORM_LINK" width="140" dTOAttribute="/191/@attributes.9"/>
+    <fields name="cboMaterialRevision" colIndex="2" label="Revision no." readonly="true" fieldType="FORM_LINK" width="140" dTOAttribute="/191/@attributes.8"/>
+    <fields name="cboMaterial" rowIndex="2" label="Material" mandatory="false" fieldType="PROPOSAL_TEXT" width="140" dTOAttribute="/191/@attributes.7"/>
+    <fields name="txtQuantity" colIndex="2" rowIndex="2" label="Quantity" mandatory="false" width="140" dTOAttribute="/191/@attributes.0"/>
+    <fields name="txtLabel" rowIndex="3" label="Label" spanCols="true" mandatory="false" width="150" dTOAttribute="/191/@attributes.1"/>
+    <fields name="txtPosition" rowIndex="4" label="Position" mandatory="false" width="100" dTOAttribute="/191/@attributes.2"/>
   </net.sourceforge.jbizmo.model.client:FormPanel>
   <net.sourceforge.jbizmo.model.client:FormPanel name="panAdministration" colIndex="2" label="Administration data" form="/188">
     <fields name="txtId" label="Id" readonly="true" width="120" dTOAttribute="/191/@attributes.3"/>
@@ -3052,6 +3053,10 @@
     </attributes>
     <attributes name="materialRevision" referencedDTOBean="/193">
       <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-material.xmi#//@domainObjects.4/@associations.1"/>
+    </attributes>
+    <attributes name="materialRevisionMaterial" referencedDTOBean="/192">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-material.xmi#//@domainObjects.3/@associations.0"/>
+      <associationList xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-material.xmi#//@domainObjects.4/@associations.1"/>
     </attributes>
   </net.sourceforge.jbizmo.model.dto:DTOBean>
   <net.sourceforge.jbizmo.model.dto:DTOBean name="MaterialListDTO" comment="Data transfer object for material objects" namespace="/111">
@@ -3725,7 +3730,7 @@
       <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-material.xmi#//@domainObjects.3/@associations.1"/>
     </attributes>
   </net.sourceforge.jbizmo.model.dto:DTOBean>
-  <net.sourceforge.jbizmo.model.client:Form name="MaterialRevisionView" formType="SEARCHABLE_VIEW" formGroup="/187" title="Material revisions view" formPanels="/222" dTO="/224" roles="/0/@roles.0 /0/@roles.1 /0/@roles.2" boundaryMethod="/196/@boundaryMethods.5">
+  <net.sourceforge.jbizmo.model.client:Form name="MaterialRevisionView" formType="SEARCHABLE_VIEW" formGroup="/187" title="Material revisions" formPanels="/222" dTO="/224" roles="/0/@roles.0 /0/@roles.1 /0/@roles.2" boundaryMethod="/196/@boundaryMethods.5">
     <actions name="actionDelete" description="Delete selected material revision" boundaryMethod="/196/@boundaryMethods.7" roles="/0/@roles.0" type="DELETE"/>
     <actions name="actionUpdate" description="Edit material revision" targetForm="/210" roles="/0/@roles.0" type="UPDATE"/>
     <actions name="actionGet" description="View material revision" targetForm="/216" roles="/0/@roles.0 /0/@roles.1 /0/@roles.2" type="READ"/>

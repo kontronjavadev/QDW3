@@ -1,22 +1,24 @@
 package com.kontron.qdw.ui.test.page;
 
-import net.sourceforge.jbizmo.commons.selenium.page.imp.primefaces.*;
 import net.sourceforge.jbizmo.commons.selenium.junit.*;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
+import net.sourceforge.jbizmo.commons.selenium.page.imp.primefaces.*;
 
 public class EditBoMItemDialog extends AbstractPageObject {
     @Generated
     public static final String RESOURCE_PATH = "/dialog/EditBoMItemDialog.jsf";
     @Generated
-    public static final String FIELD_ID_CBOMATERIALREVISION = "form:tabview1:cboMaterialRevision_input";
+    public static final String FIELD_ID_CBOMATERIALREVISIONMATERIAL = "form:tabview1:cboMaterialRevisionMaterial";
+    @Generated
+    public static final String FIELD_ID_CBOMATERIALREVISION = "form:tabview1:cboMaterialRevision";
+    @Generated
+    public static final String FIELD_ID_CBOMATERIAL = "form:tabview1:cboMaterial_input";
     @Generated
     public static final String FIELD_ID_TXTQUANTITY = "form:tabview1:txtQuantity";
     @Generated
     public static final String FIELD_ID_TXTLABEL = "form:tabview1:txtLabel";
     @Generated
     public static final String FIELD_ID_TXTPOSITION = "form:tabview1:txtPosition";
-    @Generated
-    public static final String FIELD_ID_CBOMATERIAL = "form:tabview1:cboMaterial_input";
     @Generated
     public static final String FIELD_ID_TXTID = "form:tabview1:txtId";
     @Generated

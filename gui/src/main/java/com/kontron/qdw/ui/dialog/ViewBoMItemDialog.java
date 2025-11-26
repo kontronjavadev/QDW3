@@ -155,4 +155,12 @@ public class ViewBoMItemDialog implements Serializable {
         return ViewBoMItemDialog.PAGE_INIT_URL + selectedObjectId;
     }
 
+    /**
+     * @return the navigation target
+     */
+    @Generated
+    public String openViewMaterialRevisionDialogLink() {
+        return ViewMaterialRevisionDialog.PAGE_INIT_URL + boMItem.getMaterialRevision().getId();
+    }
+
 }

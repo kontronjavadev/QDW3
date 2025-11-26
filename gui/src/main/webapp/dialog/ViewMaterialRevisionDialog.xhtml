@@ -123,10 +123,10 @@
 	<p/>
 
 	<h:panelGrid columns="1">
-		<p:commandButton id="cmdBack" value="#{i18n.command_back}" action="#{userSession.getLastPage}" immediate="true" ajax="false"/>
+		<p:commandButton id="cmdBack" icon="pi pi-caret-left" value="#{i18n.command_back}" action="#{userSession.getLastPage}" immediate="true" ajax="false"/>
 	</h:panelGrid>
 
-	<h:inputHidden id="selectedObjectId" icon="pi pi-caret-left" value="#{viewMaterialRevisionDialog.materialRevision.id}"/>
+	<h:inputHidden id="selectedObjectId" value="#{viewMaterialRevisionDialog.materialRevision.id}"/>
 
 	<p:defaultCommand target=":form:cmdBack"/>
 

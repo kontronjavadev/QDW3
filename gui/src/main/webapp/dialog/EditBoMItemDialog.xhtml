@@ -35,11 +35,23 @@
 	<p:tab id="tabPanBoMItem" title="#{i18n.panel_basic_title}">
 	<h:panelGrid columns="6">
 
-		<h:outputLabel value="#{i18n.lbl_assoc_bomitem_materialrevision} *:" for="cboMaterialRevision" styleClass="label-field-mandatory"/>
-		<p:autoComplete id="cboMaterialRevision" value="#{editBoMItemDialog.boMItem.materialRevision}" converter="#{materialRevisionListDTOConverter}" minQueryLength="1" forceSelection="true" completeMethod="#{editBoMItemDialog.onCompleteMaterialRevision}" var="cboMaterialRevisionItem" itemValue="#{cboMaterialRevisionItem}" itemLabel="#{cboMaterialRevisionItem.id}">
-			<f:validateRequired/>
-		</p:autoComplete>
+		<h:outputLabel value="#{i18n.field_editbomitemdialog_cbomaterialrevisionmaterial}:" for="cboMaterialRevisionMaterial" styleClass="label-field-optional"/>
+		<h:outputText styleClass="label-field-value" id="cboMaterialRevisionMaterial" value="#{editBoMItemDialog.boMItem.materialRevisionMaterial.materialNumber}"/>
+		<p:tooltip for="cboMaterialRevisionMaterial" value=""/>
+
+		<h:outputLabel value="#{i18n.field_editbomitemdialog_cbomaterialrevision}:" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;SUPERUSER')}" for="cboMaterialRevision" styleClass="label-field-optional"/>
+		<p:commandLink rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;SUPERUSER')}" id="cboMaterialRevision" style="font-weight: bold;color: #0063ac" action="#{editBoMItemDialog.openViewMaterialRevisionDialogLink}">
+			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{editBoMItemDialog.currentPageURL}"/>
+			<h:outputText value="#{editBoMItemDialog.boMItem.materialRevision.id}"/>
+		</p:commandLink>
+		<h:outputLabel value="#{i18n.field_editbomitemdialog_cbomaterialrevision}:" rendered="#{!userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;SUPERUSER')}" for="cboMaterialRevisionAltLbl" styleClass="label-field-optional"/>
+		<h:outputText styleClass="label-field-value" rendered="#{!userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;SUPERUSER')}" id="cboMaterialRevisionAltLbl" value="#{editBoMItemDialog.boMItem.materialRevision.id}"/>
 		<p:tooltip for="cboMaterialRevision" value=""/>
+
+		<h:outputLabel value="#{i18n.lbl_assoc_bomitem_material}:" for="cboMaterial" styleClass="label-field-optional"/>
+		<p:autoComplete id="cboMaterial" value="#{editBoMItemDialog.boMItem.material}" converter="#{materialListDTOConverter}" minQueryLength="2" forceSelection="true" completeMethod="#{editBoMItemDialog.onCompleteMaterial}" var="cboMaterialItem" itemValue="#{cboMaterialItem}" itemLabel="#{cboMaterialItem.materialNumber}">
+		</p:autoComplete>
+		<p:tooltip for="cboMaterial" value=""/>
 
 		<h:outputLabel value="#{i18n.lbl_attr_bomitem_quantity}:" for="txtQuantity" styleClass="label-field-optional"/>
 		<p:inputText id="txtQuantity" value="#{editBoMItemDialog.boMItem.quantity}">
@@ -61,11 +73,9 @@
 			<f:validateLength maximum="20"/>
 		</p:inputText>
 		<p:tooltip for="txtPosition" value=""/>
-
-		<h:outputLabel value="#{i18n.lbl_assoc_bomitem_material}:" for="cboMaterial" styleClass="label-field-optional"/>
-		<p:autoComplete id="cboMaterial" value="#{editBoMItemDialog.boMItem.material}" converter="#{materialListDTOConverter}" minQueryLength="2" forceSelection="true" completeMethod="#{editBoMItemDialog.onCompleteMaterial}" var="cboMaterialItem" itemValue="#{cboMaterialItem}" itemLabel="#{cboMaterialItem.materialNumber}">
-		</p:autoComplete>
-		<p:tooltip for="cboMaterial" value=""/>
+		<h:outputLabel/>
+		<h:outputLabel/>
+		<h:outputLabel/>
 
 	</h:panelGrid>
 	</p:tab>

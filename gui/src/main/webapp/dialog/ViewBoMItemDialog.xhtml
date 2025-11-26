@@ -39,8 +39,13 @@
 		<h:outputText styleClass="label-field-value" id="cboMaterialRevisionMaterial" value="#{viewBoMItemDialog.boMItem.materialRevisionMaterial.materialNumber}"/>
 		<p:tooltip for="cboMaterialRevisionMaterial" value=""/>
 
-		<h:outputLabel value="#{i18n.field_viewbomitemdialog_cbomaterialrevision}:" for="cboMaterialRevision" styleClass="label-field-optional"/>
-		<h:outputText styleClass="label-field-value" id="cboMaterialRevision" value="#{viewBoMItemDialog.boMItem.materialRevision.id}"/>
+		<h:outputLabel value="#{i18n.field_viewbomitemdialog_cbomaterialrevision}:" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;SUPERUSER')}" for="cboMaterialRevision" styleClass="label-field-optional"/>
+		<p:commandLink rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;SUPERUSER')}" id="cboMaterialRevision" style="font-weight: bold;color: #0063ac" action="#{viewBoMItemDialog.openViewMaterialRevisionDialogLink}">
+			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{viewBoMItemDialog.currentPageURL}"/>
+			<h:outputText value="#{viewBoMItemDialog.boMItem.materialRevision.id}"/>
+		</p:commandLink>
+		<h:outputLabel value="#{i18n.field_viewbomitemdialog_cbomaterialrevision}:" rendered="#{!userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;SUPERUSER')}" for="cboMaterialRevisionAltLbl" styleClass="label-field-optional"/>
+		<h:outputText styleClass="label-field-value" rendered="#{!userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;SUPERUSER')}" id="cboMaterialRevisionAltLbl" value="#{viewBoMItemDialog.boMItem.materialRevision.id}"/>
 		<p:tooltip for="cboMaterialRevision" value=""/>
 
 		<h:outputLabel value="#{i18n.lbl_assoc_bomitem_material}:" for="cboMaterial" styleClass="label-field-optional"/>

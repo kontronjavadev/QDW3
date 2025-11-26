@@ -3,9 +3,13 @@ package com.kontron.qdw.ui.view;
 import org.slf4j.*;
 import com.kontron.qdw.boundary.material.*;
 import java.lang.invoke.*;
+
+import org.apache.commons.lang3.StringUtils;
 import org.primefaces.model.DualListModel;
 import net.sourceforge.jbizmo.commons.webclient.primefaces.search.*;
 import com.kontron.qdw.ui.dialog.*;
+import com.kontron.qdw.ui.view.util.SuperView;
+
 import static com.kontron.qdw.ui.TranslationKeys.*;
 import net.sourceforge.jbizmo.commons.webclient.primefaces.util.*;
 import jakarta.faces.application.FacesMessage;
@@ -19,12 +23,13 @@ import com.kontron.qdw.dto.material.*;
 import jakarta.faces.model.*;
 import jakarta.inject.*;
 import net.sourceforge.jbizmo.commons.search.dto.*;
+import net.sourceforge.jbizmo.commons.annotation.Customized;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
 import java.io.*;
 
 @Named("materialRevisionView")
 @ViewScoped
-public class MaterialRevisionView extends AbstractSearchableView implements Serializable {
+public class MaterialRevisionView extends SuperView implements Serializable {
     @Generated
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     @Generated
@@ -82,6 +87,167 @@ public class MaterialRevisionView extends AbstractSearchableView implements Seri
         this.materialRevisionService = materialRevisionService;
         this.materialService = materialService;
         this.queryManager = queryManager;
+    }
+
+    /**
+     * Initialize view
+     */
+    @Customized
+    public void initView() {
+        logger.debug("Initialize view");
+
+        bundle = ResourceBundle.getBundle(DEFAULT_BUNDLE_NAME, userSession.getLocale());
+
+        // Check if user is allowed to open this page!
+        if (!userSession.checkAuthorization(true, ROLE_ADMINISTRATOR, ROLE_READONLY, ROLE_SUPERUSER)) {
+            return;
+        }
+
+
+        formTitle = bundle.getString(FORM_MATERIALREVISIONVIEW_TITLE);
+
+        if (searchObj == null) {
+            // Check if previous search exists!
+            final SearchDTO lastSearch = queryManager.getLastQuery(userSession.getPrincipal().getId(), VIEW_ID);
+            if (lastSearch != null) {
+                searchObj = lastSearch;
+                prepareAfterLoad();
+            }
+            else {
+                initSearchObject();
+            }
+        }
+
+        initProperties();
+        fetchMaterialRevisions();
+
+        logger.debug("View initialization finished");
+    }
+
+    /**
+     * Initialize search object
+     */
+    @Customized
+    public void initSearchObject() {
+        searchObj = new SearchDTO();
+        int colOrderId = -1;
+
+        // Initialize search object
+        searchObj.setMaxResult(1000);
+        searchObj.setExactFilterMatch(true);
+        searchObj.setCaseSensitive(false);
+        searchObj.setCount(false);
+
+        refreshFormatSettings();
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterialRevisionSearchDTO.SELECT_MATERIALMATERIALNUMBER,
+                bundle.getString(COL_MATERIALREVISIONVIEW_MATERIALMATERIALNUMBER), SearchFieldDataTypeEnum.STRING, 150);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterialRevisionSearchDTO.SELECT_MATERIALSAPNUMBER,
+                bundle.getString(COL_MATERIALREVISIONVIEW_MATERIALSAPNUMBER), SearchFieldDataTypeEnum.STRING, 150);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterialRevisionSearchDTO.SELECT_MATERIALSHORTTEXT,
+                bundle.getString(COL_MATERIALREVISIONVIEW_MATERIALSHORTTEXT), SearchFieldDataTypeEnum.STRING, 250);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterialRevisionSearchDTO.SELECT_OWNERLOCATIONCODE,
+                bundle.getString(COL_MATERIALREVISIONVIEW_OWNERLOCATIONCODE), SearchFieldDataTypeEnum.STRING, 100);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterialRevisionSearchDTO.SELECT_MATERIALTYPECODE,
+                bundle.getString(COL_MATERIALREVISIONVIEW_MATERIALTYPECODE), SearchFieldDataTypeEnum.STRING, 100);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterialRevisionSearchDTO.SELECT_MATERIALCLASSCODE,
+                bundle.getString(COL_MATERIALREVISIONVIEW_MATERIALCLASSCODE), SearchFieldDataTypeEnum.STRING, 100);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterialRevisionSearchDTO.SELECT_REVISIONNUMBER,
+                bundle.getString(COL_MATERIALREVISIONVIEW_REVISIONNUMBER), SearchFieldDataTypeEnum.STRING, 100);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterialRevisionSearchDTO.SELECT_REV2,
+                bundle.getString(LBL_ATTR_MATERIALREVISION_REV2), SearchFieldDataTypeEnum.STRING, 80);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterialRevisionSearchDTO.SELECT_REV6,
+                bundle.getString(LBL_ATTR_MATERIALREVISION_REV6), SearchFieldDataTypeEnum.STRING, 80);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterialRevisionSearchDTO.SELECT_ALTERNATIVENUMBER,
+                bundle.getString(COL_MATERIALREVISIONVIEW_ALTERNATIVENUMBER), SearchFieldDataTypeEnum.STRING, 100);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterialRevisionSearchDTO.SELECT_COMMENT,
+                bundle.getString(LBL_ATTR_MATERIALREVISION_COMMENT), SearchFieldDataTypeEnum.STRING, 250);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterialRevisionSearchDTO.SELECT_CREATIONDATE,
+                bundle.getString(LBL_ATTR_ABSTRACTENTITYWITHID_CREATIONDATE), SearchFieldDataTypeEnum.LOCAL_DATE_TIME, 120);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterialRevisionSearchDTO.SELECT_LASTUPDATE,
+                bundle.getString(LBL_ATTR_ABSTRACTENTITYWITHID_LASTUPDATE), SearchFieldDataTypeEnum.LOCAL_DATE_TIME, 120);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterialRevisionSearchDTO.SELECT_PLANTCODE,
+                bundle.getString(COL_MATERIALREVISIONVIEW_PLANTCODE), SearchFieldDataTypeEnum.STRING, 100);
+
+        visibleFields = new DualListModel<>();
+        visibleFields.setSource(new ArrayList<>());
+        visibleFields.setTarget(new ArrayList<>());
+
+        for (final SearchFieldDTO d : searchObj.getSearchFields()) {
+            if (!d.isVisible()) {
+                visibleFields.getSource().add(d);
+            }
+            else {
+                visibleFields.getTarget().add(d);
+            }
+        }
+    }
+
+    /**
+     * Perform data fetch operation
+     */
+    @Customized
+    public void fetchMaterialRevisions() {
+        logger.debug("Perform data fetch operation");
+
+        try {
+            preSearch();
+        }
+        catch (final SearchInputFieldValidationException e) {
+            MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_INFO, SEARCH_INPUT_VALIDATION, "", e.getSearchFieldName());
+            return;
+        }
+
+        refreshFormatSettings();
+        searchObj.setCount(searchObj.getSearchFields().stream()
+                .map(JSFSearchFieldDTO.class::cast)
+                .anyMatch(dto -> dto.getDateCriterion() != null
+                        || dto.getDoubleCriterion() != null
+                        || dto.getIntegerCriterion() != null
+                        || StringUtils.isNotEmpty(dto.getStringCriterion())
+                        || dto.getBigDecimalCriterion() != null));
+
+        try {
+            materialRevisionsList = materialRevisionService.searchAllMaterialRevisions(searchObj);
+
+            if (searchObj.isCount()) {
+                countResult = materialRevisionService.countAllMaterialRevisions(searchObj);
+            }
+
+            queryManager.saveQuery(userSession.getPrincipal().getId(), VIEW_ID, null, searchObj);
+        }
+        catch (final Exception e) {
+            logger.error("Error while fetching data!", e);
+
+            MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_ERROR, OPERATION_FETCH_FAIL, e);
+        }
+        finally {
+            postSearch();
+        }
+    }
+
+    @Override
+    protected String getViewName() {
+        return VIEW_ID;
+    }
+
+    @Override
+    public void resetSearchObject() {
+        initSearchObject();
+        fetchMaterialRevisions();
     }
 
     /**
@@ -270,141 +436,6 @@ public class MaterialRevisionView extends AbstractSearchableView implements Seri
         searchObj.setNumberFormat(userSession.getNumberFormat());
         searchObj.setDecimalSeparator(DecimalFormatSymbols.getInstance(userSession.getLocale()).getDecimalSeparator());
         searchObj.setGroupingSeparator(DecimalFormatSymbols.getInstance(userSession.getLocale()).getGroupingSeparator());
-    }
-
-    /**
-     * Initialize search object
-     */
-    @Generated
-    public void initSearchObject() {
-        searchObj = new SearchDTO();
-        int colOrderId = -1;
-
-        // Initialize search object
-        searchObj.setMaxResult(1000);
-        searchObj.setExactFilterMatch(true);
-        searchObj.setCaseSensitive(false);
-        searchObj.setCount(false);
-
-        refreshFormatSettings();
-
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterialRevisionSearchDTO.SELECT_MATERIALMATERIALNUMBER,
-                bundle.getString(COL_MATERIALREVISIONVIEW_MATERIALMATERIALNUMBER), SearchFieldDataTypeEnum.STRING, 150);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterialRevisionSearchDTO.SELECT_MATERIALSAPNUMBER,
-                bundle.getString(COL_MATERIALREVISIONVIEW_MATERIALSAPNUMBER), SearchFieldDataTypeEnum.STRING, 150);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterialRevisionSearchDTO.SELECT_MATERIALSHORTTEXT,
-                bundle.getString(COL_MATERIALREVISIONVIEW_MATERIALSHORTTEXT), SearchFieldDataTypeEnum.STRING, 250);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterialRevisionSearchDTO.SELECT_OWNERLOCATIONCODE,
-                bundle.getString(COL_MATERIALREVISIONVIEW_OWNERLOCATIONCODE), SearchFieldDataTypeEnum.STRING, 100);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterialRevisionSearchDTO.SELECT_MATERIALTYPECODE,
-                bundle.getString(COL_MATERIALREVISIONVIEW_MATERIALTYPECODE), SearchFieldDataTypeEnum.STRING, 100);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterialRevisionSearchDTO.SELECT_MATERIALCLASSCODE,
-                bundle.getString(COL_MATERIALREVISIONVIEW_MATERIALCLASSCODE), SearchFieldDataTypeEnum.STRING, 100);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterialRevisionSearchDTO.SELECT_REVISIONNUMBER,
-                bundle.getString(COL_MATERIALREVISIONVIEW_REVISIONNUMBER), SearchFieldDataTypeEnum.STRING, 100);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterialRevisionSearchDTO.SELECT_REV2, bundle.getString(LBL_ATTR_MATERIALREVISION_REV2),
-                SearchFieldDataTypeEnum.STRING, 80);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterialRevisionSearchDTO.SELECT_REV6, bundle.getString(LBL_ATTR_MATERIALREVISION_REV6),
-                SearchFieldDataTypeEnum.STRING, 80);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterialRevisionSearchDTO.SELECT_ALTERNATIVENUMBER,
-                bundle.getString(COL_MATERIALREVISIONVIEW_ALTERNATIVENUMBER), SearchFieldDataTypeEnum.STRING, 100);
-
-        final var f11 = new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterialRevisionSearchDTO.SELECT_COMMENT,
-                bundle.getString(LBL_ATTR_MATERIALREVISION_COMMENT), SearchFieldDataTypeEnum.STRING, 250);
-        f11.setVisible(false);
-
-
-        final var f12 = new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterialRevisionSearchDTO.SELECT_CREATIONDATE,
-                bundle.getString(LBL_ATTR_ABSTRACTENTITYWITHID_CREATIONDATE), SearchFieldDataTypeEnum.LOCAL_DATE_TIME, 120);
-        f12.setVisible(false);
-
-
-        final var f13 = new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterialRevisionSearchDTO.SELECT_LASTUPDATE,
-                bundle.getString(LBL_ATTR_ABSTRACTENTITYWITHID_LASTUPDATE), SearchFieldDataTypeEnum.LOCAL_DATE_TIME, 120);
-        f13.setVisible(false);
-
-
-        final var f14 = new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterialRevisionSearchDTO.SELECT_PLANTCODE,
-                bundle.getString(COL_MATERIALREVISIONVIEW_PLANTCODE), SearchFieldDataTypeEnum.STRING, 100);
-        f14.setVisible(false);
-
-
-        visibleFields = new DualListModel<>();
-        visibleFields.setSource(new ArrayList<>());
-        visibleFields.setTarget(new ArrayList<>());
-
-        for (final SearchFieldDTO d : searchObj.getSearchFields())
-            if (!d.isVisible())
-                visibleFields.getSource().add(d);
-            else
-                visibleFields.getTarget().add(d);
-    }
-
-    /**
-     * Initialize view
-     */
-    @Generated
-    public void initView() {
-        logger.debug("Initialize view");
-
-        bundle = ResourceBundle.getBundle(DEFAULT_BUNDLE_NAME, userSession.getLocale());
-
-        // Check if user is allowed to open this page!
-        if (!userSession.checkAuthorization(true, ROLE_ADMINISTRATOR, ROLE_READONLY, ROLE_SUPERUSER))
-            return;
-
-
-        formTitle = bundle.getString(FORM_MATERIALREVISIONVIEW_TITLE);
-
-        // Check if previous search exists!
-        final SearchDTO lastSearch = queryManager.getLastQuery(userSession.getPrincipal().getId(), VIEW_ID);
-
-        if (lastSearch != null) {
-            searchObj = lastSearch;
-
-            prepareAfterLoad();
-        }
-        else
-            initSearchObject();
-
-        fetchMaterialRevisions();
-
-        logger.debug("View initialization finished");
-    }
-
-    /**
-     * Perform data fetch operation
-     */
-    @Generated
-    public void fetchMaterialRevisions() {
-        logger.debug("Perform data fetch operation");
-
-        try {
-            preSearch();
-        }
-        catch (final SearchInputFieldValidationException e) {
-            MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_INFO, SEARCH_INPUT_VALIDATION, "", e.getSearchFieldName());
-            return;
-        }
-
-        refreshFormatSettings();
-
-        try {
-            materialRevisionsList = materialRevisionService.searchAllMaterialRevisions(searchObj);
-
-            if (searchObj.isCount())
-                countResult = materialRevisionService.countAllMaterialRevisions(searchObj);
-
-            queryManager.saveQuery(userSession.getPrincipal().getId(), VIEW_ID, null, searchObj);
-        }
-        catch (final Exception e) {
-            logger.error("Error while fetching data!", e);
-
-            MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_ERROR, OPERATION_FETCH_FAIL, e);
-        }
-        finally {
-            postSearch();
-        }
     }
 
     /**

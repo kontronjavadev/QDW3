@@ -55,6 +55,7 @@ public class BoMItemBoundaryService {
             boMItem.setMaterial(repository.getReference(Material.class, object.getMaterial().getId()));
 
         boMItem.setMaterialRevision(repository.getReference(MaterialRevision.class, object.getMaterialRevision().getId()));
+        boMItem.getMaterialRevision().setMaterial(repository.getReference(Material.class, object.getMaterialRevisionMaterial().getId()));
 
         repository.merge(boMItem, false);
     }
@@ -88,6 +89,9 @@ public class BoMItemBoundaryService {
 
         dto.setMaterialRevision(new MaterialRevisionListDTO());
         dto.getMaterialRevision().setId(boMItem.getMaterialRevision().getId());
+        dto.setMaterialRevisionMaterial(new MaterialListDTO());
+        dto.getMaterialRevisionMaterial().setId(boMItem.getMaterialRevision().getMaterial().getId());
+        dto.getMaterialRevisionMaterial().setMaterialNumber(boMItem.getMaterialRevision().getMaterial().getMaterialNumber());
 
         return dto;
     }

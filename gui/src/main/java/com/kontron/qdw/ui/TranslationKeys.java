@@ -69,6 +69,8 @@ public interface TranslationKeys {
     String FIELD_CHANGEPASSWORDDIALOG_TXTNEWPASSWORD = "field_changepassworddialog_txtnewpassword";
     String FIELD_CHANGEPASSWORDDIALOG_TXTNEWPASSWORDCONFIRM = "field_changepassworddialog_txtnewpasswordconfirm";
     String FIELD_CHANGEPASSWORDDIALOG_TXTOLDPASSWORD = "field_changepassworddialog_txtoldpassword";
+    String FIELD_EDITBOMITEMDIALOG_CBOMATERIALREVISION = "field_editbomitemdialog_cbomaterialrevision";
+    String FIELD_EDITBOMITEMDIALOG_CBOMATERIALREVISIONMATERIAL = "field_editbomitemdialog_cbomaterialrevisionmaterial";
     String FIELD_EDITMATERIALREVISIONDIALOG_TXTALTERNATIVENUMBER = "field_editmaterialrevisiondialog_txtalternativenumber";
     String FIELD_EDITMATERIALREVISIONDIALOG_TXTREVISIONNUMBER = "field_editmaterialrevisiondialog_txtrevisionnumber";
     String FIELD_EDITUSERSETTINGSDIALOG_CBOLOCALE = "field_editusersettingsdialog_cbolocale";

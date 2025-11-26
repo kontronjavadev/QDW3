@@ -26,6 +26,8 @@ public class BoMItemUpdateDTO implements Serializable {
     @Generated
     public static final String ATTR_MATERIALREVISION = "materialRevision";
     @Generated
+    public static final String ATTR_MATERIALREVISIONMATERIAL = "materialRevisionMaterial";
+    @Generated
     private Double quantity;
     @Generated
     private String label;
@@ -43,6 +45,8 @@ public class BoMItemUpdateDTO implements Serializable {
     private MaterialListDTO material;
     @Generated
     private MaterialRevisionListDTO materialRevision;
+    @Generated
+    private MaterialListDTO materialRevisionMaterial;
 
     /**
      * Default constructor
@@ -224,6 +228,22 @@ public class BoMItemUpdateDTO implements Serializable {
     @Generated
     public void setMaterialRevision(MaterialRevisionListDTO materialRevision) {
         this.materialRevision = materialRevision;
+    }
+
+    /**
+     * @return the material
+     */
+    @Generated
+    public MaterialListDTO getMaterialRevisionMaterial() {
+        return this.materialRevisionMaterial;
+    }
+
+    /**
+     * @param materialRevisionMaterial the material to set
+     */
+    @Generated
+    public void setMaterialRevisionMaterial(MaterialListDTO materialRevisionMaterial) {
+        this.materialRevisionMaterial = materialRevisionMaterial;
     }
 
     /* (non-Javadoc)
