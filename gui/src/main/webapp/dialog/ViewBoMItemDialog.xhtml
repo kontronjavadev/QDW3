@@ -1,0 +1,116 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:h="jakarta.faces.html"
+	xmlns:f="jakarta.faces.core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/templates/ui.xhtml">
+
+<f:metadata>
+	<f:viewAction action="#{viewBoMItemDialog.initView()}"/>
+	<f:viewParam name="selectedObjectId" value="#{viewBoMItemDialog.selectedObjectId}"/>
+</f:metadata>
+
+<ui:define name="title">#{viewBoMItemDialog.formTitle}</ui:define>
+
+<ui:define name="content">
+	<p:dialog header="#{i18n.feedback_dialog_header}" modal="true" widgetVar="msgBox" visible="#{(not empty facesContext.messageList)}">
+		<p:messages id="messages" showDetail="true" showSummary="true"/>
+	</p:dialog>
+
+	<h:panelGrid columns="3">
+		<div class="pi pi-file" style="font-size: 2em"/>
+		<h:outputText id="lblFormTitle" value="&#160;#{viewBoMItemDialog.formTitle}" styleClass="label-form-title"/>
+		<p:ajaxStatus style="width:16px;height:16px;">
+			<f:facet name="start">
+				<h:graphicImage value="/images/ajaxloading.gif"/>
+			</f:facet>
+
+			<f:facet name="complete">
+				<h:outputText value=""/>
+			</f:facet>
+		</p:ajaxStatus>
+	</h:panelGrid>
+
+	<p:tabView id="tabview1" dynamic="true" effect="fade" effectDuration="fast">
+	<p:tab id="tabPanBoMItem" title="#{i18n.panel_basic_title}">
+	<h:panelGrid columns="6">
+
+		<h:outputLabel value="#{i18n.field_viewbomitemdialog_cbomaterialrevisionmaterial}:" for="cboMaterialRevisionMaterial" styleClass="label-field-optional"/>
+		<h:outputText styleClass="label-field-value" id="cboMaterialRevisionMaterial" value="#{viewBoMItemDialog.boMItem.materialRevisionMaterial.materialNumber}"/>
+		<p:tooltip for="cboMaterialRevisionMaterial" value=""/>
+
+		<h:outputLabel value="#{i18n.field_viewbomitemdialog_cbomaterialrevision}:" for="cboMaterialRevision" styleClass="label-field-optional"/>
+		<h:outputText styleClass="label-field-value" id="cboMaterialRevision" value="#{viewBoMItemDialog.boMItem.materialRevision.id}"/>
+		<p:tooltip for="cboMaterialRevision" value=""/>
+
+		<h:outputLabel value="#{i18n.lbl_assoc_bomitem_material}:" for="cboMaterial" styleClass="label-field-optional"/>
+		<h:outputText styleClass="label-field-value" id="cboMaterial" value="#{viewBoMItemDialog.boMItem.material.materialNumber}"/>
+		<p:tooltip for="cboMaterial" value=""/>
+
+		<h:outputLabel value="#{i18n.lbl_attr_bomitem_quantity}:" for="txtQuantity" styleClass="label-field-optional"/>
+		<p:inputText id="txtQuantity" value="#{viewBoMItemDialog.boMItem.quantity}" readonly="true">
+			<f:convertNumber pattern="#{userSession.numberFormat}"/>
+		</p:inputText>
+		<p:tooltip for="txtQuantity" value=""/>
+
+		<h:outputLabel value="#{i18n.lbl_attr_bomitem_label}:" for="txtLabel" styleClass="label-field-optional"/>
+		<p:inputText id="txtLabel" value="#{viewBoMItemDialog.boMItem.label}" readonly="true">
+		</p:inputText>
+		<p:tooltip for="txtLabel" value=""/>
+		<h:outputLabel/>
+		<h:outputLabel/>
+		<h:outputLabel/>
+
+		<h:outputLabel value="#{i18n.lbl_attr_bomitem_position}:" for="txtPosition" styleClass="label-field-optional"/>
+		<p:inputText id="txtPosition" value="#{viewBoMItemDialog.boMItem.position}" readonly="true">
+		</p:inputText>
+		<p:tooltip for="txtPosition" value=""/>
+		<h:outputLabel/>
+		<h:outputLabel/>
+		<h:outputLabel/>
+
+	</h:panelGrid>
+	</p:tab>
+	<p:tab id="tabPanAdministration" title="#{i18n.panel_admin_title}">
+	<h:panelGrid columns="3">
+
+		<h:outputLabel value="#{i18n.lbl_attr_abstractentitywithid_id}:" for="txtId" styleClass="label-field-optional"/>
+		<p:inputText id="txtId" value="#{viewBoMItemDialog.boMItem.id}" readonly="true">
+		</p:inputText>
+		<p:tooltip for="txtId" value=""/>
+
+		<h:outputLabel value="#{i18n.lbl_attr_abstractentitywithid_version}:" for="txtVersion" styleClass="label-field-optional"/>
+		<p:inputText id="txtVersion" value="#{viewBoMItemDialog.boMItem.version}" readonly="true">
+		</p:inputText>
+		<p:tooltip for="txtVersion" value=""/>
+
+		<h:outputLabel value="#{i18n.lbl_attr_abstractentitywithid_creationdate}:" for="txtCreationDate" styleClass="label-field-optional"/>
+		<p:inputText id="txtCreationDate" value="#{viewBoMItemDialog.boMItem.creationDate}" readonly="true">
+			<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateTimeConverter"/>
+			<f:attribute name="pattern" value="#{userSession.dateTimeFormat}"/>
+			<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
+		</p:inputText>
+		<p:tooltip for="txtCreationDate" value=""/>
+
+		<h:outputLabel value="#{i18n.lbl_attr_abstractentitywithid_lastupdate}:" for="txtLastUpdate" styleClass="label-field-optional"/>
+		<p:inputText id="txtLastUpdate" value="#{viewBoMItemDialog.boMItem.lastUpdate}" readonly="true">
+			<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateTimeConverter"/>
+			<f:attribute name="pattern" value="#{userSession.dateTimeFormat}"/>
+			<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
+		</p:inputText>
+		<p:tooltip for="txtLastUpdate" value=""/>
+
+	</h:panelGrid>
+	</p:tab>
+	</p:tabView>
+
+	<p/>
+
+	<h:panelGrid columns="1">
+		<p:commandButton id="cmdBack" value="#{i18n.command_back}" action="#{userSession.getLastPage}" immediate="true" ajax="false"/>
+	</h:panelGrid>
+
+	<p:defaultCommand target=":form:cmdBack"/>
+
+</ui:define>
+</ui:composition>

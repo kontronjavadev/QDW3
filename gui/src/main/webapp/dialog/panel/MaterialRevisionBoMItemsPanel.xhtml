@@ -1,0 +1,155 @@
+<ui:composition xmlns="https://jakarta.ee/xml/ns/jakartaee"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:h="jakarta.faces.html"
+	xmlns:f="jakarta.faces.core"
+	xmlns:p="http://primefaces.org/ui">
+
+	<p:menubar>
+		<p:submenu icon="pi pi-file" label="#{i18n.mnu_file}" id="gridMaterialRevisionBoMItemsPanel_mniFile">
+			<p:menuitem value="#{i18n.action_add}" ajax="true" id="gridMaterialRevisionBoMItemsPanel_mniAdd" icon="pi pi-plus" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR') and not materialRevisionBoMItemsPanel.readOnly}" action="#{materialRevisionBoMItemsPanel.openAddBoMItemDialog}">
+				<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{materialRevisionBoMItemsPanel.currentPageURL}"/>
+			</p:menuitem>
+		</p:submenu>
+		<p:submenu icon="pi pi-refresh" label="#{i18n.mnu_view}">
+			<p:menuitem value="#{i18n.action_refresh}" ajax="false" icon="pi pi-refresh" actionListener="#{materialRevisionBoMItemsPanel.fetchBoMItems}"/>
+		</p:submenu>
+		<p:submenu icon="pi pi-print" label="#{i18n.mnu_export}">
+			<p:menuitem value="#{i18n.action_export_xls}" ajax="false" icon="pi pi-file-excel">
+				<p:dataExporter type="xls" target="gridMaterialRevisionBoMItemsPanel" fileName="BoMItemList"/>
+			</p:menuitem>
+			<p:menuitem value="#{i18n.action_export_pdf}" ajax="false" icon="pi pi-file-pdf">
+				<p:dataExporter type="pdf" target="gridMaterialRevisionBoMItemsPanel" fileName="BoMItemList"/>
+			</p:menuitem>
+		</p:submenu>
+	</p:menubar>
+
+	<br/>
+
+	<p:dataTable id="gridMaterialRevisionBoMItemsPanel" var="materialRevisionBoMItemsPanelItem" rows="50"
+		selectionMode="single"
+		selection="#{materialRevisionBoMItemsPanel.selItemOfBoMItems}"
+		loadingMessage="#{i18n.action_fetch_data}"
+		value="#{materialRevisionBoMItemsPanel.boMItemsList}" scrollable="false"
+		paginatorPosition="top" paginatorAlwaysVisible="false" paginator="true" resizableColumns="true"
+		rowKey="#{materialRevisionBoMItemsPanelItem.id}"
+		paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+		rowsPerPageTemplate="10,50,100,500,1000">
+		<p:ajax event="rowDblselect" listener="#{materialRevisionBoMItemsPanel.onBoMItemsGridDoubleClick}"/>
+
+		<p:column sortBy="#{materialRevisionBoMItemsPanelItem.position}" width="80" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_bomitem_position}"/>
+			</f:facet>
+			<h:outputText value="#{materialRevisionBoMItemsPanelItem.position}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materialRevisionBoMItemsPanelItem.materialMaterialNumber}" width="150" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materialrevisionbomitemspanel_materialmaterialnumber}"/>
+			</f:facet>
+			<h:outputText value="#{materialRevisionBoMItemsPanelItem.materialMaterialNumber}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materialRevisionBoMItemsPanelItem.materialSapNumber}" width="150" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materialrevisionbomitemspanel_materialsapnumber}"/>
+			</f:facet>
+			<h:outputText value="#{materialRevisionBoMItemsPanelItem.materialSapNumber}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materialRevisionBoMItemsPanelItem.materialShortText}" width="250" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materialrevisionbomitemspanel_materialshorttext}"/>
+			</f:facet>
+			<h:outputText value="#{materialRevisionBoMItemsPanelItem.materialShortText}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materialRevisionBoMItemsPanelItem.materialTypeCode}" width="100" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materialrevisionbomitemspanel_materialtypecode}"/>
+			</f:facet>
+			<h:outputText value="#{materialRevisionBoMItemsPanelItem.materialTypeCode}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materialRevisionBoMItemsPanelItem.materialClassCode}" width="100" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materialrevisionbomitemspanel_materialclasscode}"/>
+			</f:facet>
+			<h:outputText value="#{materialRevisionBoMItemsPanelItem.materialClassCode}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materialRevisionBoMItemsPanelItem.quantity}" width="80" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_bomitem_quantity}"/>
+			</f:facet>
+			<h:outputText value="#{materialRevisionBoMItemsPanelItem.quantity}">
+				<f:convertNumber pattern="#{userSession.numberFormat}"/>
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materialRevisionBoMItemsPanelItem.label}" width="150" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_bomitem_label}"/>
+			</f:facet>
+			<h:outputText value="#{materialRevisionBoMItemsPanelItem.label}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materialRevisionBoMItemsPanelItem.creationDate}" width="120" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_abstractentitywithid_creationdate}"/>
+			</f:facet>
+			<h:outputText value="#{materialRevisionBoMItemsPanelItem.creationDate}">
+				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateTimeConverter"/>
+				<f:attribute name="pattern" value="#{userSession.dateTimeFormat}"/>
+				<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materialRevisionBoMItemsPanelItem.lastUpdate}" width="120" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_abstractentitywithid_lastupdate}"/>
+			</f:facet>
+			<h:outputText value="#{materialRevisionBoMItemsPanelItem.lastUpdate}">
+				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateTimeConverter"/>
+				<f:attribute name="pattern" value="#{userSession.dateTimeFormat}"/>
+				<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
+			</h:outputText>
+		</p:column>
+	</p:dataTable>
+	<p/>
+
+	<h:outputText styleClass="label-field-mandatory" value="#{i18n.result_total_number_records} #{materialRevisionBoMItemsPanel.boMItemsList.size()}"/>
+
+	<p:contextMenu for="gridMaterialRevisionBoMItemsPanel">
+		<p:menuitem value="#{i18n.action_delete}" ajax="true" icon="pi pi-trash" id="gridMaterialRevisionBoMItemsPanel_mniDelete" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR') and not materialRevisionBoMItemsPanel.readOnly}" onclick="PF('deleteConfirmBoMItems').show()"/>
+		<p:menuitem value="#{i18n.action_edit}" ajax="true" icon="pi pi-pencil" id="gridMaterialRevisionBoMItemsPanel_mniUpdate" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR') and not materialRevisionBoMItemsPanel.readOnly}" action="#{materialRevisionBoMItemsPanel.openEditBoMItemDialog}">
+			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{materialRevisionBoMItemsPanel.currentPageURL}"/>
+		</p:menuitem>
+		<p:menuitem value="#{i18n.action_view}" ajax="true" icon="pi pi-file" id="gridMaterialRevisionBoMItemsPanel_mniView" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;SUPERUSER')}" action="#{materialRevisionBoMItemsPanel.openViewBoMItemDialog}">
+			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{materialRevisionBoMItemsPanel.currentPageURL}"/>
+		</p:menuitem>
+		<p:menuitem value="#{i18n.action_copy}" ajax="true" icon="pi pi-copy" id="gridMaterialRevisionBoMItemsPanel_mniCopy" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR') and not materialRevisionBoMItemsPanel.readOnly}" onclick="PF('copyConfirmBoMItems').show()"/>
+		<p:menuitem value="#{i18n.action_add}" ajax="true" icon="pi pi-plus" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR') and not materialRevisionBoMItemsPanel.readOnly}" action="#{materialRevisionBoMItemsPanel.openAddBoMItemDialog}">
+			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{materialRevisionBoMItemsPanel.currentPageURL}"/>
+		</p:menuitem>
+		<p:menuitem value="#{i18n.action_refresh}" ajax="false" type="push" icon="pi pi-refresh" id="gridMaterialRevisionBoMItemsPanel_mniRefresh" actionListener="#{materialRevisionBoMItemsPanel.fetchBoMItems}"/>
+	</p:contextMenu>
+
+	<p:confirmDialog modal="true" message="#{i18n.dialog_delete_question}" header="#{i18n.dialog_delete_title}" severity="alert" widgetVar="deleteConfirmBoMItems">
+		<p:commandButton value="#{i18n.command_yes}" oncomplete="PF('deleteConfirmBoMItems').hide()" actionListener="#{materialRevisionBoMItemsPanel.deleteBoMItem}" id="gridMaterialRevisionBoMItemsPanel_cmdYesDelete" ajax="false"/>
+		<p:commandButton value="#{i18n.command_no}" onclick="PF('deleteConfirmBoMItems').hide()" type="button"/>
+	</p:confirmDialog>
+
+	<p:confirmDialog modal="true" message="#{i18n.dialog_copy_question}" header="#{i18n.dialog_copy_title}" severity="info" widgetVar="copyConfirmBoMItems">
+		<p:commandButton value="#{i18n.command_yes}" oncomplete="PF('copyConfirmBoMItems').hide()" action="#{materialRevisionBoMItemsPanel.copy}" id="gridMaterialRevisionBoMItemsPanel_cmdYesCopy" ajax="false"/>
+		<p:commandButton value="#{i18n.command_no}" onclick="PF('copyConfirmBoMItems').hide()" type="button"/>
+	</p:confirmDialog>
+
+</ui:composition>
