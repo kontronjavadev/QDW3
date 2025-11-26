@@ -105,8 +105,8 @@
 	<p/>
 
 	<h:panelGrid columns="2">
-		<p:commandButton id="cmdSave" action="#{editBoMItemDialog.save}" value="#{i18n.command_save}" ajax="false"/>
-		<p:commandButton id="cmdBack" value="#{i18n.command_back}" action="#{userSession.getLastPage}" immediate="true" ajax="false"/>
+		<p:commandButton id="cmdSave" icon="pi pi-save" action="#{editBoMItemDialog.save}" value="#{i18n.command_save}" ajax="false"/>
+		<p:commandButton id="cmdBack" icon="pi pi-caret-left" value="#{i18n.command_back}" action="#{userSession.getLastPage}" immediate="true" ajax="false"/>
 	</h:panelGrid>
 
 </ui:define>

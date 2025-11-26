@@ -1,9 +1,13 @@
 package com.kontron.qdw.boundary.material;
 
+import com.kontron.qdw.domain.material.*;
 import net.sourceforge.jbizmo.commons.search.exception.*;
 import static net.sourceforge.jbizmo.commons.jpa.AbstractRepository.DEFAULT_LIST_SIZE;
 import static net.sourceforge.jbizmo.commons.jpa.AbstractRepository.WILDCARD;
+import com.kontron.qdw.dto.base.*;
+import com.kontron.qdw.domain.base.*;
 import java.util.*;
+import jakarta.validation.ConstraintViolationException;
 import com.kontron.qdw.repository.material.*;
 import com.kontron.qdw.dto.material.*;
 import jakarta.inject.*;
@@ -113,6 +117,92 @@ public class MaterialRevisionBoundaryService {
         parentFilterField.setFilterCriteria(Long.toString(id));
 
         return repository.search(searchObj, MaterialRevisionBoMItemsDTO.class, selectTokens);
+    }
+
+    /**
+     * Update existing material revision object
+     * @param object the material revision to update
+     * @throws ConstraintViolationException if the validation of one or more persistent attribute values has failed
+     */
+    @Generated
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public void updateMaterialRevision(MaterialRevisionUpdateDTO object) {
+        // Find and attach object
+        MaterialRevision materialRevision = repository.findById(object.getId(), true);
+
+        materialRevision.setRevisionNumber(object.getRevisionNumber() != null ? object.getRevisionNumber().trim() : null);
+        materialRevision.setRev2(object.getRev2() != null ? object.getRev2().trim() : null);
+        materialRevision.setRev6(object.getRev6() != null ? object.getRev6().trim() : null);
+        materialRevision.setAlternativeNumber(object.getAlternativeNumber() != null ? object.getAlternativeNumber().trim() : null);
+        materialRevision.setComment(object.getComment() != null ? object.getComment().trim() : null);
+        materialRevision.setVersion(object.getVersion());
+        materialRevision.setMaterial(repository.getReference(Material.class, object.getMaterial().getId()));
+        materialRevision.setPlant(repository.getReference(Plant.class, object.getPlant().getCode()));
+
+        repository.merge(materialRevision, false);
+    }
+
+    /**
+     * Find material revision by its ID
+     * @param id
+     * @return the material revision object
+     */
+    @Generated
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public MaterialRevisionUpdateDTO getMaterialRevisionForUpdate(long id) {
+        // Find persistent object
+        final MaterialRevision materialRevision = repository.findById(id, true);
+
+        final var dto = new MaterialRevisionUpdateDTO();
+        dto.setRevisionNumber(materialRevision.getRevisionNumber());
+        dto.setRev2(materialRevision.getRev2());
+        dto.setRev6(materialRevision.getRev6());
+        dto.setAlternativeNumber(materialRevision.getAlternativeNumber());
+        dto.setComment(materialRevision.getComment());
+        dto.setId(materialRevision.getId());
+        dto.setVersion(materialRevision.getVersion());
+        dto.setCreationDate(materialRevision.getCreationDate());
+        dto.setLastUpdate(materialRevision.getLastUpdate());
+        dto.setMaterial(new MaterialListDTO());
+        dto.getMaterial().setId(materialRevision.getMaterial().getId());
+        dto.getMaterial().setMaterialNumber(materialRevision.getMaterial().getMaterialNumber());
+        dto.setPlant(new PlantListDTO());
+        dto.getPlant().setCode(materialRevision.getPlant().getCode());
+
+        return dto;
+    }
+
+    /**
+     * Find material revision by its ID
+     * @param id
+     * @return the material revision object
+     */
+    @Generated
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public MaterialRevisionDTO findMaterialRevisionById(long id) {
+        // Find persistent object
+        final MaterialRevision materialRevision = repository.findById(id, true);
+
+        final var dto = new MaterialRevisionDTO();
+        dto.setRevisionNumber(materialRevision.getRevisionNumber());
+        dto.setRev2(materialRevision.getRev2());
+        dto.setRev6(materialRevision.getRev6());
+        dto.setAlternativeNumber(materialRevision.getAlternativeNumber());
+        dto.setComment(materialRevision.getComment());
+        dto.setId(materialRevision.getId());
+        dto.setVersion(materialRevision.getVersion());
+        dto.setCreationDate(materialRevision.getCreationDate());
+        dto.setLastUpdate(materialRevision.getLastUpdate());
+        dto.setMaterial(new MaterialListDTO());
+        dto.getMaterial().setId(materialRevision.getMaterial().getId());
+        dto.getMaterial().setMaterialNumber(materialRevision.getMaterial().getMaterialNumber());
+        dto.setPlant(new PlantListDTO());
+        dto.getPlant().setCode(materialRevision.getPlant().getCode());
+
+        return dto;
     }
 
 }
