@@ -5,14 +5,12 @@
 	xmlns:p="http://primefaces.org/ui">
 
 	<p:menubar>
-		<p:submenu icon="pi pi-file" label="#{i18n.mnu_file}" id="gridMaterialRevisionsPanel_mniFile">
-		</p:submenu>
 		<p:submenu icon="pi pi-refresh" label="#{i18n.mnu_view}">
 			<p:menuitem value="#{i18n.action_refresh}" ajax="false" icon="pi pi-refresh" actionListener="#{materialRevisionsPanel.fetchRevisions}"/>
 		</p:submenu>
 		<p:submenu icon="pi pi-print" label="#{i18n.mnu_export}">
 			<p:menuitem value="#{i18n.action_export_xls}" ajax="false" icon="pi pi-file-excel">
-				<p:dataExporter type="xls" target="gridMaterialRevisionsPanel" fileName="MaterialRevisionList"/>
+				<p:dataExporter type="xlsxstream" target="gridMaterialRevisionsPanel" fileName="MaterialRevisionList"/>
 			</p:menuitem>
 			<p:menuitem value="#{i18n.action_export_pdf}" ajax="false" icon="pi pi-file-pdf">
 				<p:dataExporter type="pdf" target="gridMaterialRevisionsPanel" fileName="MaterialRevisionList"/>
@@ -20,17 +18,15 @@
 		</p:submenu>
 	</p:menubar>
 
-	<br/>
 
-	<p:dataTable id="gridMaterialRevisionsPanel" var="materialRevisionsPanelItem" rows="50"
+	<p:dataTable id="gridMaterialRevisionsPanel" var="materialRevisionsPanelItem" 
+		selectionTextDisabled="false" allowUnsorting="true" resizeMode="expand" multiViewState="true" 
 		selectionMode="single"
 		selection="#{materialRevisionsPanel.selItemOfRevisions}"
 		loadingMessage="#{i18n.action_fetch_data}"
 		value="#{materialRevisionsPanel.revisionsList}" scrollable="false"
-		paginatorPosition="top" paginatorAlwaysVisible="false" paginator="true" resizableColumns="true"
-		rowKey="#{materialRevisionsPanelItem.id}"
-		paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-		rowsPerPageTemplate="10,50,100,500,1000">
+		resizableColumns="true"
+		rowKey="#{materialRevisionsPanelItem.id}" >
 		<p:ajax event="rowDblselect" listener="#{materialRevisionsPanel.onRevisionsGridDoubleClick}"/>
 
 		<p:column sortBy="#{materialRevisionsPanelItem.revisionNumber}" width="150" >
@@ -99,7 +95,14 @@
 
 	<h:outputText styleClass="label-field-mandatory" value="#{i18n.result_total_number_records} #{materialRevisionsPanel.revisionsList.size()}"/>
 
-	<p:contextMenu for="gridMaterialRevisionsPanel">
+
+
+<!--Kontextmenü mit Möglichkeit, eine Zelle oder eine Zeile zu kopieren -->
+
+	<h:inputHidden id="cellText" value="#{materialRevisionsPanel.cellText}" />
+	<h:inputHidden id="rowCsv" value="#{materialRevisionsPanel.rowCsv}" />
+
+	<p:contextMenu for="gridMaterialRevisionsPanel" beforeShow="updateContextData(event)" >
 		<p:menuitem value="#{i18n.action_delete}" ajax="true" icon="pi pi-trash" id="gridMaterialRevisionsPanel_mniDelete" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR') and not materialRevisionsPanel.readOnly}" onclick="PF('deleteConfirmRevisions').show()"/>
 		<p:menuitem value="#{i18n.action_edit}" ajax="true" icon="pi pi-pencil" id="gridMaterialRevisionsPanel_mniUpdate" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR') and not materialRevisionsPanel.readOnly}" action="#{materialRevisionsPanel.openEditMaterialRevisionDialog}">
 			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{materialRevisionsPanel.currentPageURL}"/>
@@ -109,14 +112,19 @@
 		</p:menuitem>
 		<p:menuitem value="#{i18n.action_copy}" ajax="true" icon="pi pi-copy" id="gridMaterialRevisionsPanel_mniCopy" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR') and not materialRevisionsPanel.readOnly}" onclick="PF('copyConfirmRevisions').show()"/>
 		<p:menuitem value="#{i18n.action_refresh}" ajax="false" type="push" icon="pi pi-refresh" id="gridMaterialRevisionsPanel_mniRefresh" actionListener="#{materialRevisionsPanel.fetchRevisions}"/>
+
+		<p:separator/>
+
+		<p:menuitem value="#{i18n.ctxmenu_copy_cell}" actionListener="#{materialRevisionsPanel.copyCellToClipboard}" icon="pi pi-copy" update="@none"/>
+		<p:menuitem value="#{i18n.ctxmenu_copy_row}" actionListener="#{materialRevisionsPanel.copyRowToClipboard}" icon="pi pi-copy" update="@none"/>
 	</p:contextMenu>
 
-	<p:confirmDialog modal="true" message="#{i18n.dialog_delete_question}" header="#{i18n.dialog_delete_title}" severity="alert" widgetVar="deleteConfirmRevisions">
+	<p:confirmDialog modal="true" closeOnEscape="true" message="#{i18n.dialog_delete_question}" header="#{i18n.dialog_delete_title}" severity="warn" widgetVar="deleteConfirmRevisions">
 		<p:commandButton value="#{i18n.command_yes}" oncomplete="PF('deleteConfirmRevisions').hide()" actionListener="#{materialRevisionsPanel.deleteMaterialRevision}" id="gridMaterialRevisionsPanel_cmdYesDelete" ajax="false"/>
 		<p:commandButton value="#{i18n.command_no}" onclick="PF('deleteConfirmRevisions').hide()" type="button"/>
 	</p:confirmDialog>
 
-	<p:confirmDialog modal="true" message="#{i18n.dialog_copy_question}" header="#{i18n.dialog_copy_title}" severity="info" widgetVar="copyConfirmRevisions">
+	<p:confirmDialog modal="true" closeOnEscape="true" message="#{i18n.dialog_copy_question}" header="#{i18n.dialog_copy_title}" severity="info" widgetVar="copyConfirmRevisions">
 		<p:commandButton value="#{i18n.command_yes}" oncomplete="PF('copyConfirmRevisions').hide()" action="#{materialRevisionsPanel.copy}" id="gridMaterialRevisionsPanel_cmdYesCopy" ajax="false"/>
 		<p:commandButton value="#{i18n.command_no}" onclick="PF('copyConfirmRevisions').hide()" type="button"/>
 	</p:confirmDialog>

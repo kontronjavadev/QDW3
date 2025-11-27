@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.function.ToIntFunction;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.kontron.qdw.boundary.base.UserPropertyBoundaryService;
 import com.kontron.qdw.dto.base.UserPropertyDTO;
 import com.kontron.qdw.ui.UserSession;
@@ -57,6 +59,16 @@ public abstract class SuperView extends CopyClipboard {
      * fetchXxxxx();
      */
     public abstract void resetSearchObject();
+
+    protected void setCountFilterDependent() {
+        searchObj.setCount(searchObj.getSearchFields().stream()
+                .map(JSFSearchFieldDTO.class::cast)
+                .anyMatch(dto -> dto.getDateCriterion() != null
+                        || dto.getDoubleCriterion() != null
+                        || dto.getIntegerCriterion() != null
+                        || StringUtils.isNotEmpty(dto.getStringCriterion())
+                        || dto.getBigDecimalCriterion() != null));
+    }
 
 
 

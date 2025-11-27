@@ -4,6 +4,8 @@ import org.slf4j.*;
 import com.kontron.qdw.boundary.material.*;
 import java.lang.invoke.*;
 import com.kontron.qdw.ui.dialog.*;
+import com.kontron.qdw.ui.view.util.CopyClipboard;
+
 import static com.kontron.qdw.ui.TranslationKeys.*;
 import net.sourceforge.jbizmo.commons.webclient.primefaces.util.*;
 import jakarta.faces.application.FacesMessage;
@@ -18,7 +20,7 @@ import java.io.*;
 
 @Named("materialRevisionsPanel")
 @ViewScoped
-public class MaterialRevisionsPanel implements Serializable {
+public class MaterialRevisionsPanel extends CopyClipboard implements Serializable {
     @Generated
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     @Generated

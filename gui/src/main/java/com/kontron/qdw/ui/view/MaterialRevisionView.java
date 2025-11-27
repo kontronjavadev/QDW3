@@ -4,7 +4,6 @@ import org.slf4j.*;
 import com.kontron.qdw.boundary.material.*;
 import java.lang.invoke.*;
 
-import org.apache.commons.lang3.StringUtils;
 import org.primefaces.model.DualListModel;
 import net.sourceforge.jbizmo.commons.webclient.primefaces.search.*;
 import com.kontron.qdw.ui.dialog.*;
@@ -212,13 +211,7 @@ public class MaterialRevisionView extends SuperView implements Serializable {
         }
 
         refreshFormatSettings();
-        searchObj.setCount(searchObj.getSearchFields().stream()
-                .map(JSFSearchFieldDTO.class::cast)
-                .anyMatch(dto -> dto.getDateCriterion() != null
-                        || dto.getDoubleCriterion() != null
-                        || dto.getIntegerCriterion() != null
-                        || StringUtils.isNotEmpty(dto.getStringCriterion())
-                        || dto.getBigDecimalCriterion() != null));
+        setCountFilterDependent();
 
         try {
             materialRevisionsList = materialRevisionService.searchAllMaterialRevisions(searchObj);
