@@ -282,21 +282,23 @@
 		<p:ajax event="rowDblselect" listener="#{materialView.onDoubleClick}"/>
 
 		<p:column sortBy="#{materialViewItem.materialNumber}" width="150" 
-			rendered="#{materialView.searchObject.searchFields[0].visible}" displayPriority="#{materialView.searchObject.searchFields[0].colOrder}" >
+			rendered="#{materialView.searchObject.searchFields[0].visible}" displayPriority="#{materialView.searchObject.searchFields[0].colOrder}" 
+			exportValue="#{materialViewItem.materialNumber}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materialview_materialnumber}"/>
 			</f:facet>
-			<h:outputText value="#{materialViewItem.materialNumber}">
-			</h:outputText>
+			<h:outputText value="#{materialViewItem.materialNumber}" id="materialNumber"/>
+			<p:tooltip for="materialNumber" value="#{materialViewItem.materialNumber}" position="top" showDelay="50"/>
 		</p:column>
 
 		<p:column sortBy="#{materialViewItem.sapNumber}" width="150" 
-			rendered="#{materialView.searchObject.searchFields[1].visible}" displayPriority="#{materialView.searchObject.searchFields[1].colOrder}" >
+			rendered="#{materialView.searchObject.searchFields[1].visible}" displayPriority="#{materialView.searchObject.searchFields[1].colOrder}" 
+			exportValue="#{materialViewItem.sapNumber}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materialview_sapnumber}"/>
 			</f:facet>
-			<h:outputText value="#{materialViewItem.sapNumber}">
-			</h:outputText>
+			<h:outputText value="#{materialViewItem.sapNumber}" id="sapNumber"/>
+			<p:tooltip for="sapNumber" value="#{materialViewItem.sapNumber}" position="top" showDelay="50"/>
 		</p:column>
 
 		<p:column sortBy="#{materialViewItem.materialTypeCode}" width="100" 
@@ -309,12 +311,13 @@
 		</p:column>
 
 		<p:column sortBy="#{materialViewItem.materialClassCode}" width="100" 
-			rendered="#{materialView.searchObject.searchFields[3].visible}" displayPriority="#{materialView.searchObject.searchFields[3].colOrder}" >
+			rendered="#{materialView.searchObject.searchFields[3].visible}" displayPriority="#{materialView.searchObject.searchFields[3].colOrder}" 
+			exportValue="#{materialViewItem.materialClassCode}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materialview_materialclasscode}"/>
 			</f:facet>
-			<h:outputText value="#{materialViewItem.materialClassCode}">
-			</h:outputText>
+			<h:outputText value="#{materialViewItem.materialClassCode}" id="materialClassCode"/>
+			<p:tooltip for="materialClassCode" value="#{materialViewItem.materialClassCode}" position="top" showDelay="50"/>
 		</p:column>
 
 		<p:column sortBy="#{materialViewItem.materialHierarchy}" width="150" 
@@ -327,12 +330,13 @@
 		</p:column>
 
 		<p:column sortBy="#{materialViewItem.shortText}" width="250" 
-			rendered="#{materialView.searchObject.searchFields[5].visible}" displayPriority="#{materialView.searchObject.searchFields[5].colOrder}" >
+			rendered="#{materialView.searchObject.searchFields[5].visible}" displayPriority="#{materialView.searchObject.searchFields[5].colOrder}" 
+			exportValue="#{materialViewItem.shortText}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_material_shorttext}"/>
 			</f:facet>
-			<h:outputText value="#{materialViewItem.shortText}">
-			</h:outputText>
+			<h:outputText value="#{materialViewItem.shortText}" id="shortText"/>
+			<p:tooltip for="shortText" value="#{materialViewItem.shortText}" position="top" showDelay="50"/>
 		</p:column>
 
 		<p:column sortBy="#{materialViewItem.ownerLocationCode}" width="100" 
@@ -355,20 +359,23 @@
 		</p:column>
 
 		<p:column sortBy="#{materialViewItem.searchSubAssemblies}" width="100" 
-			rendered="#{materialView.searchObject.searchFields[8].visible}" displayPriority="#{materialView.searchObject.searchFields[8].colOrder}" >
+			rendered="#{materialView.searchObject.searchFields[8].visible}" displayPriority="#{materialView.searchObject.searchFields[8].colOrder}" 
+			exportHeaderValue="#{i18n.col_materialview_searchsubassemblies_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materialview_searchsubassemblies}"/>
+				<h:outputText value="#{i18n.col_materialview_searchsubassemblies}" id="searchSubAssembliesHeader"/>
+				<p:tooltip for="searchSubAssembliesHeader" value="#{i18n.col_materialview_searchsubassemblies_tooltip}" position="top" showDelay="50"/>
 			</f:facet>
 			<p:selectBooleanCheckbox value="#{materialViewItem.searchSubAssemblies}" disabled="true"/>
 		</p:column>
 
 		<p:column sortBy="#{materialViewItem.comment}" width="250" 
-			rendered="#{materialView.searchObject.searchFields[9].visible}" displayPriority="#{materialView.searchObject.searchFields[9].colOrder}" >
+			rendered="#{materialView.searchObject.searchFields[9].visible}" displayPriority="#{materialView.searchObject.searchFields[9].colOrder}" 
+			exportValue="#{materialViewItem.comment}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_material_comment}"/>
 			</f:facet>
-			<h:outputText value="#{materialViewItem.comment}">
-			</h:outputText>
+			<h:outputText value="#{materialViewItem.comment}" id="comment"/>
+			<p:tooltip for="comment" value="#{materialViewItem.comment}" position="top" showDelay="50"/>
 		</p:column>
 
 		<p:column sortBy="#{materialViewItem.creationDate}" width="120" 

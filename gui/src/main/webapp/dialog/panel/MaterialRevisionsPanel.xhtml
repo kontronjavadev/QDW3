@@ -29,12 +29,12 @@
 		rowKey="#{materialRevisionsPanelItem.id}" >
 		<p:ajax event="rowDblselect" listener="#{materialRevisionsPanel.onRevisionsGridDoubleClick}"/>
 
-		<p:column sortBy="#{materialRevisionsPanelItem.revisionNumber}" width="150" >
+		<p:column sortBy="#{materialRevisionsPanelItem.revisionNumber}" width="150" exportValue="#{materialRevisionsPanelItem.revisionNumber}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materialrevisionspanel_revisionnumber}"/>
 			</f:facet>
-			<h:outputText value="#{materialRevisionsPanelItem.revisionNumber}">
-			</h:outputText>
+			<h:outputText value="#{materialRevisionsPanelItem.revisionNumber}" id="revisionNumber"/>
+			<p:tooltip for="revisionNumber" value="#{materialRevisionsPanelItem.revisionNumber}" position="top" showDelay="50"/>
 		</p:column>
 
 		<p:column sortBy="#{materialRevisionsPanelItem.rev2}" width="80" >
@@ -61,12 +61,12 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materialRevisionsPanelItem.comment}" width="250" >
+		<p:column sortBy="#{materialRevisionsPanelItem.comment}" width="250" exportValue="#{materialRevisionsPanelItem.comment}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_materialrevision_comment}"/>
 			</f:facet>
-			<h:outputText value="#{materialRevisionsPanelItem.comment}">
-			</h:outputText>
+			<h:outputText value="#{materialRevisionsPanelItem.comment}" id="comment"/>
+			<p:tooltip for="comment" value="#{materialRevisionsPanelItem.comment}" position="top" showDelay="50"/>
 		</p:column>
 
 		<p:column sortBy="#{materialRevisionsPanelItem.creationDate}" width="120" >

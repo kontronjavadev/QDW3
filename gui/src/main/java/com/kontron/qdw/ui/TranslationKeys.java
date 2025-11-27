@@ -42,6 +42,7 @@ public interface TranslationKeys {
     String COL_MATERIALVIEW_OWNERLOCATIONCODE = "col_materialview_ownerlocationcode";
     String COL_MATERIALVIEW_SAPNUMBER = "col_materialview_sapnumber";
     String COL_MATERIALVIEW_SEARCHSUBASSEMBLIES = "col_materialview_searchsubassemblies";
+    String COL_MATERIALVIEW_SEARCHSUBASSEMBLIES_TOOLTIP = "col_materialview_searchsubassemblies_tooltip";
     String COL_SUPPLIERVIEW_COUNTRYNAME = "col_supplierview_countryname";
     String COL_VERTICALSECTORVIEW_BUSINESSUNITCODE = "col_verticalsectorview_businessunitcode";
     String COMMAND_BACK = "command_back";
