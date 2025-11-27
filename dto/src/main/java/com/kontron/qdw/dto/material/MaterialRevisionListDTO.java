@@ -9,9 +9,21 @@ public class MaterialRevisionListDTO implements Serializable {
     @Generated
     public static final String ATTR_ID = "id";
     @Generated
+    public static final String ATTR_REVISIONNUMBER = "revisionNumber";
+    @Generated
+    public static final String ATTR_PLANTCODE = "plantCode";
+    @Generated
     public static final String SELECT_ID = "a.id";
     @Generated
+    public static final String SELECT_REVISIONNUMBER = "a.revisionNumber";
+    @Generated
+    public static final String SELECT_PLANTCODE = "a.plant.code";
+    @Generated
     private long id;
+    @Generated
+    private String revisionNumber;
+    @Generated
+    private String plantCode;
 
     /**
      * Default constructor
@@ -30,6 +42,30 @@ public class MaterialRevisionListDTO implements Serializable {
     }
 
     /**
+     * Constructor using fields
+     * @param id
+     * @param revisionNumber
+     * @param plantCode
+     */
+    @Generated
+    public MaterialRevisionListDTO(long id, String revisionNumber, String plantCode) {
+        this.id = id;
+        this.revisionNumber = revisionNumber;
+        this.plantCode = plantCode;
+    }
+
+    @Override
+    public String toString() {
+        if (getRevisionNumber() == null) {
+            // es steht wohl überhaupt nichts im DTO, mglw. vom Converter produziert, aber wir wollen trotzdem etwas sehen!
+            return "id " + getId();
+        }
+        return getPlantCode() == null
+                ? getRevisionNumber()
+                : String.format("%s (plant %s)", getRevisionNumber(), getPlantCode());
+    }
+
+    /**
      * @return the id
      */
     @Generated
@@ -43,6 +79,38 @@ public class MaterialRevisionListDTO implements Serializable {
     @Generated
     public void setId(long id) {
         this.id = id;
+    }
+
+    /**
+     * @return the revision number
+     */
+    @Generated
+    public String getRevisionNumber() {
+        return this.revisionNumber;
+    }
+
+    /**
+     * @param revisionNumber the revision number to set
+     */
+    @Generated
+    public void setRevisionNumber(String revisionNumber) {
+        this.revisionNumber = revisionNumber;
+    }
+
+    /**
+     * @return the code of the plant
+     */
+    @Generated
+    public String getPlantCode() {
+        return this.plantCode;
+    }
+
+    /**
+     * @param plantCode the code of the plant to set
+     */
+    @Generated
+    public void setPlantCode(String plantCode) {
+        this.plantCode = plantCode;
     }
 
     /* (non-Javadoc)

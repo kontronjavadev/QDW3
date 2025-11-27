@@ -61,6 +61,8 @@ public class MaterialRevisionBoundaryService {
         // Collect the select tokens of all fields that should be fetched
         final var selectTokens = new ArrayList<String>();
         selectTokens.add(MaterialRevisionListDTO.SELECT_ID);
+        selectTokens.add(MaterialRevisionListDTO.SELECT_REVISIONNUMBER);
+        selectTokens.add(MaterialRevisionListDTO.SELECT_PLANTCODE);
 
         // Initialize the search object
         final var searchObj = new SearchDTO();

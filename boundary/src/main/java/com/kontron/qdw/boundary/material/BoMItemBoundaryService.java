@@ -7,6 +7,7 @@ import com.kontron.qdw.dto.material.*;
 import jakarta.inject.*;
 import jakarta.ejb.*;
 import jakarta.annotation.security.*;
+import net.sourceforge.jbizmo.commons.annotation.Customized;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
 
 @Stateless
@@ -30,6 +31,82 @@ public class BoMItemBoundaryService {
     @Generated
     public BoMItemBoundaryService(BoMItemRepository repository) {
         this.repository = repository;
+    }
+
+    /**
+     * Find bom item by its ID
+     * @param id
+     * @return the bom item object
+     */
+    @Customized
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public BoMItemUpdateDTO getBoMItemForUpdate(long id) {
+        // Find persistent object
+        final BoMItem boMItem = repository.findById(id, true);
+
+        final var dto = new BoMItemUpdateDTO();
+        dto.setQuantity(boMItem.getQuantity());
+        dto.setLabel(boMItem.getLabel());
+        dto.setPosition(boMItem.getPosition());
+        dto.setId(boMItem.getId());
+        dto.setVersion(boMItem.getVersion());
+        dto.setCreationDate(boMItem.getCreationDate());
+        dto.setLastUpdate(boMItem.getLastUpdate());
+
+        if (boMItem.getMaterial() != null) {
+            dto.setMaterial(new MaterialListDTO());
+            dto.getMaterial().setId(boMItem.getMaterial().getId());
+            dto.getMaterial().setMaterialNumber(boMItem.getMaterial().getMaterialNumber());
+        }
+
+        dto.setMaterialRevision(new MaterialRevisionListDTO());
+        dto.getMaterialRevision().setId(boMItem.getMaterialRevision().getId());
+        dto.getMaterialRevision().setRevisionNumber(boMItem.getMaterialRevision().getRevisionNumber());
+        dto.getMaterialRevision().setPlantCode(boMItem.getMaterialRevision().getPlant().getCode());
+        dto.setMaterialRevisionMaterial(new MaterialListDTO());
+        dto.getMaterialRevisionMaterial().setId(boMItem.getMaterialRevision().getMaterial().getId());
+        dto.getMaterialRevisionMaterial().setMaterialNumber(boMItem.getMaterialRevision().getMaterial().getMaterialNumber());
+
+        return dto;
+    }
+
+    /**
+     * Find bom item by its ID
+     * @param id
+     * @return the bom item object
+     */
+    @Customized
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public BoMItemDTO findBoMItemById(long id) {
+        // Find persistent object
+        final BoMItem boMItem = repository.findById(id, true);
+
+        final var dto = new BoMItemDTO();
+        dto.setQuantity(boMItem.getQuantity());
+        dto.setLabel(boMItem.getLabel());
+        dto.setPosition(boMItem.getPosition());
+        dto.setId(boMItem.getId());
+        dto.setVersion(boMItem.getVersion());
+        dto.setCreationDate(boMItem.getCreationDate());
+        dto.setLastUpdate(boMItem.getLastUpdate());
+
+        if (boMItem.getMaterial() != null) {
+            dto.setMaterial(new MaterialListDTO());
+            dto.getMaterial().setId(boMItem.getMaterial().getId());
+            dto.getMaterial().setMaterialNumber(boMItem.getMaterial().getMaterialNumber());
+        }
+
+        dto.setMaterialRevision(new MaterialRevisionListDTO());
+        dto.getMaterialRevision().setId(boMItem.getMaterialRevision().getId());
+        dto.getMaterialRevision().setRevisionNumber(boMItem.getMaterialRevision().getRevisionNumber());
+        dto.getMaterialRevision().setPlantCode(boMItem.getMaterialRevision().getPlant().getCode());
+        dto.setMaterialRevisionMaterial(new MaterialListDTO());
+        dto.getMaterialRevisionMaterial().setId(boMItem.getMaterialRevision().getMaterial().getId());
+        dto.getMaterialRevisionMaterial().setMaterialNumber(boMItem.getMaterialRevision().getMaterial().getMaterialNumber());
+
+        return dto;
     }
 
     /**
@@ -58,78 +135,6 @@ public class BoMItemBoundaryService {
         boMItem.getMaterialRevision().setMaterial(repository.getReference(Material.class, object.getMaterialRevisionMaterial().getId()));
 
         repository.merge(boMItem, false);
-    }
-
-    /**
-     * Find bom item by its ID
-     * @param id
-     * @return the bom item object
-     */
-    @Generated
-    @PermitAll
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public BoMItemUpdateDTO getBoMItemForUpdate(long id) {
-        // Find persistent object
-        final BoMItem boMItem = repository.findById(id, true);
-
-        final var dto = new BoMItemUpdateDTO();
-        dto.setQuantity(boMItem.getQuantity());
-        dto.setLabel(boMItem.getLabel());
-        dto.setPosition(boMItem.getPosition());
-        dto.setId(boMItem.getId());
-        dto.setVersion(boMItem.getVersion());
-        dto.setCreationDate(boMItem.getCreationDate());
-        dto.setLastUpdate(boMItem.getLastUpdate());
-
-        if (boMItem.getMaterial() != null) {
-            dto.setMaterial(new MaterialListDTO());
-            dto.getMaterial().setId(boMItem.getMaterial().getId());
-            dto.getMaterial().setMaterialNumber(boMItem.getMaterial().getMaterialNumber());
-        }
-
-        dto.setMaterialRevision(new MaterialRevisionListDTO());
-        dto.getMaterialRevision().setId(boMItem.getMaterialRevision().getId());
-        dto.setMaterialRevisionMaterial(new MaterialListDTO());
-        dto.getMaterialRevisionMaterial().setId(boMItem.getMaterialRevision().getMaterial().getId());
-        dto.getMaterialRevisionMaterial().setMaterialNumber(boMItem.getMaterialRevision().getMaterial().getMaterialNumber());
-
-        return dto;
-    }
-
-    /**
-     * Find bom item by its ID
-     * @param id
-     * @return the bom item object
-     */
-    @Generated
-    @PermitAll
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public BoMItemDTO findBoMItemById(long id) {
-        // Find persistent object
-        final BoMItem boMItem = repository.findById(id, true);
-
-        final var dto = new BoMItemDTO();
-        dto.setQuantity(boMItem.getQuantity());
-        dto.setLabel(boMItem.getLabel());
-        dto.setPosition(boMItem.getPosition());
-        dto.setId(boMItem.getId());
-        dto.setVersion(boMItem.getVersion());
-        dto.setCreationDate(boMItem.getCreationDate());
-        dto.setLastUpdate(boMItem.getLastUpdate());
-
-        if (boMItem.getMaterial() != null) {
-            dto.setMaterial(new MaterialListDTO());
-            dto.getMaterial().setId(boMItem.getMaterial().getId());
-            dto.getMaterial().setMaterialNumber(boMItem.getMaterial().getMaterialNumber());
-        }
-
-        dto.setMaterialRevision(new MaterialRevisionListDTO());
-        dto.getMaterialRevision().setId(boMItem.getMaterialRevision().getId());
-        dto.setMaterialRevisionMaterial(new MaterialListDTO());
-        dto.getMaterialRevisionMaterial().setId(boMItem.getMaterialRevision().getMaterial().getId());
-        dto.getMaterialRevisionMaterial().setMaterialNumber(boMItem.getMaterialRevision().getMaterial().getMaterialNumber());
-
-        return dto;
     }
 
     /**

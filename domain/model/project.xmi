@@ -111,7 +111,7 @@
   <net.sourceforge.jbizmo.model.java:Namespace name="ui.test" parent="/0/@rootNamespace" project="/0"/>
   <net.sourceforge.jbizmo.model.client:FormGroup name="Master data" groupOrder="1" forms="/47 /78 /51 /70 /82 /97 /115 /127 /139 /151 /175 /159 /93 /41 /74 /89 /101 /119 /131 /143 /155 /179 /163 /105 /123 /135 /147 /167 /183 /171" roles="/0/@roles.0" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="base" parent="/1" javaTypes="/45 /67 /14 /13 /64 /73 /87 /88 /100 /142 /154 /178" project="/0"/>
-  <net.sourceforge.jbizmo.model.java:Namespace name="base" parent="/3" javaTypes="/16 /53 /50 /44 /65 /37 /40 /15 /34 /25 /68 /63 /21 /30 /69 /72 /77 /81 /86 /85 /84 /92 /96 /99 /104 /108 /141 /146 /150 /153 /158 /162 /161 /166 /170 /174 /177 /182 /186 /215" project="/0"/>
+  <net.sourceforge.jbizmo.model.java:Namespace name="base" parent="/3" javaTypes="/16 /53 /162 /50 /44 /72 /86 /81 /77 /84 /96 /92 /99 /108 /104 /141 /150 /146 /65 /153 /215 /170 /158 /37 /40 /15 /34 /177 /186 /182 /25 /68 /69 /63 /21 /30 /161 /85 /174 /166" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="base" parent="/4" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="base" parent="/2" javaTypes="/46 /59 /60 /55 /57 /66 /56 /12 /54 /61 /62 /11 /58" project="/0"/>
   <net.sourceforge.jbizmo.model.repository:Repository name="UserRepository" comment="Create, read, update and delete services for user objects." namespace="/10">
@@ -2094,7 +2094,7 @@
   </net.sourceforge.jbizmo.model.dto:DTOBean>
   <net.sourceforge.jbizmo.model.java:Namespace name="material" parent="/2" javaTypes="/113 /114 /195 /197 /199" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="material" parent="/1" javaTypes="/118 /130 /194 /196 /198" project="/0"/>
-  <net.sourceforge.jbizmo.model.java:Namespace name="material" parent="/3" javaTypes="/117 /122 /126 /129 /134 /138 /192 /191 /193 /203 /206 /209 /214 /220 /224" project="/0"/>
+  <net.sourceforge.jbizmo.model.java:Namespace name="material" parent="/3" javaTypes="/209 /203 /191 /117 /126 /122 /192 /206 /220 /193 /224 /214 /129 /138 /134" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="material" parent="/4" project="/0"/>
   <net.sourceforge.jbizmo.model.repository:Repository name="MaterialTypeRepository" comment="Create, read, update and delete services for material type objects." namespace="/109">
     <domainObject href="package-material.xmi#//@domainObjects.0"/>
@@ -3072,6 +3072,13 @@
     <domainObject href="package-material.xmi#//@domainObjects.3"/>
     <attributes name="id" selectToken="a.id">
       <domainAttribute href="package-base.xmi#//@domainObjects.0/@attributes.0"/>
+    </attributes>
+    <attributes name="revisionNumber" selectToken="a.revisionNumber">
+      <domainAttribute href="package-material.xmi#//@domainObjects.3/@attributes.0"/>
+    </attributes>
+    <attributes name="plantCode" selectToken="a.plant.code">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-material.xmi#//@domainObjects.3/@associations.1"/>
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.0"/>
     </attributes>
   </net.sourceforge.jbizmo.model.dto:DTOBean>
   <net.sourceforge.jbizmo.model.boundary:BoundaryBean name="BoMItemBoundaryServiceBean" comment="Boundary service for bom item objects" namespace="/110" interfaceName="BoMItemBoundaryService" repository="/195">

@@ -42,10 +42,10 @@
 		<h:outputLabel value="#{i18n.field_editbomitemdialog_cbomaterialrevision}:" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;SUPERUSER')}" for="cboMaterialRevision" styleClass="label-field-optional"/>
 		<p:commandLink rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;SUPERUSER')}" id="cboMaterialRevision" style="font-weight: bold;color: #0063ac" action="#{editBoMItemDialog.openViewMaterialRevisionDialogLink}">
 			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{editBoMItemDialog.currentPageURL}"/>
-			<h:outputText value="#{editBoMItemDialog.boMItem.materialRevision.id}"/>
+			<h:outputText value="#{editBoMItemDialog.boMItem.materialRevision.toString()}"/>
 		</p:commandLink>
 		<h:outputLabel value="#{i18n.field_editbomitemdialog_cbomaterialrevision}:" rendered="#{!userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;SUPERUSER')}" for="cboMaterialRevisionAltLbl" styleClass="label-field-optional"/>
-		<h:outputText styleClass="label-field-value" rendered="#{!userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;SUPERUSER')}" id="cboMaterialRevisionAltLbl" value="#{editBoMItemDialog.boMItem.materialRevision.id}"/>
+		<h:outputText styleClass="label-field-value" rendered="#{!userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;SUPERUSER')}" id="cboMaterialRevisionAltLbl" value="#{editBoMItemDialog.boMItem.materialRevision.toString()}"/>
 		<p:tooltip for="cboMaterialRevision" value=""/>
 
 		<h:outputLabel value="#{i18n.lbl_assoc_bomitem_material}:" for="cboMaterial" styleClass="label-field-optional"/>
