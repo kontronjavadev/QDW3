@@ -44,28 +44,31 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materialRevisionBoMItemsPanelItem.materialMaterialNumber}" width="150" >
+		<p:column sortBy="#{materialRevisionBoMItemsPanelItem.materialMaterialNumber}" width="150" 
+			exportValue="#{materialRevisionBoMItemsPanelItem.materialMaterialNumber}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materialrevisionbomitemspanel_materialmaterialnumber}"/>
 			</f:facet>
-			<h:outputText value="#{materialRevisionBoMItemsPanelItem.materialMaterialNumber}">
-			</h:outputText>
+			<h:outputText value="#{materialRevisionBoMItemsPanelItem.materialMaterialNumber}" id="materialMaterialNumber"/>
+			<p:tooltip for="materialMaterialNumber" value="#{materialRevisionBoMItemsPanelItem.materialMaterialNumber}" position="top" showDelay="50"/>
 		</p:column>
 
-		<p:column sortBy="#{materialRevisionBoMItemsPanelItem.materialSapNumber}" width="150" >
+		<p:column sortBy="#{materialRevisionBoMItemsPanelItem.materialSapNumber}" width="150" 
+			exportValue="#{materialRevisionBoMItemsPanelItem.materialSapNumber}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materialrevisionbomitemspanel_materialsapnumber}"/>
 			</f:facet>
-			<h:outputText value="#{materialRevisionBoMItemsPanelItem.materialSapNumber}">
-			</h:outputText>
+			<h:outputText value="#{materialRevisionBoMItemsPanelItem.materialSapNumber}" id="materialSapNumber"/>
+			<p:tooltip for="materialSapNumber" value="#{materialRevisionBoMItemsPanelItem.materialSapNumber}" position="top" showDelay="50"/>
 		</p:column>
 
-		<p:column sortBy="#{materialRevisionBoMItemsPanelItem.materialShortText}" width="250" >
+		<p:column sortBy="#{materialRevisionBoMItemsPanelItem.materialShortText}" width="250" 
+			exportValue="#{materialRevisionBoMItemsPanelItem.materialShortText}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materialrevisionbomitemspanel_materialshorttext}"/>
 			</f:facet>
-			<h:outputText value="#{materialRevisionBoMItemsPanelItem.materialShortText}">
-			</h:outputText>
+			<h:outputText value="#{materialRevisionBoMItemsPanelItem.materialShortText}" id="materialShortText"/>
+			<p:tooltip for="materialShortText" value="#{materialRevisionBoMItemsPanelItem.materialShortText}" position="top" showDelay="50"/>
 		</p:column>
 
 		<p:column sortBy="#{materialRevisionBoMItemsPanelItem.materialTypeCode}" width="100" >
@@ -93,12 +96,13 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materialRevisionBoMItemsPanelItem.label}" width="150" >
+		<p:column sortBy="#{materialRevisionBoMItemsPanelItem.label}" width="150" 
+			exportValue="#{materialRevisionBoMItemsPanelItem.label}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_bomitem_label}"/>
 			</f:facet>
-			<h:outputText value="#{materialRevisionBoMItemsPanelItem.label}">
-			</h:outputText>
+			<h:outputText value="#{materialRevisionBoMItemsPanelItem.label}" id="label"/>
+			<p:tooltip for="label" value="#{materialRevisionBoMItemsPanelItem.label}" position="top" showDelay="50"/>
 		</p:column>
 
 		<p:column sortBy="#{materialRevisionBoMItemsPanelItem.creationDate}" width="120" >

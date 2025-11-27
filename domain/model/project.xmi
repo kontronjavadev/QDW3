@@ -3743,16 +3743,16 @@
     <fields colIndex="2" width="150" title="SAP no." dTOAttribute="/224/@attributes.11"/>
     <fields colIndex="3" width="250" title="Material short text" dTOAttribute="/224/@attributes.12"/>
     <fields colIndex="4" title="Owner location" dTOAttribute="/224/@attributes.13"/>
-    <fields colIndex="5" title="Material type" dTOAttribute="/224/@attributes.14"/>
-    <fields colIndex="6" title="Material class" dTOAttribute="/224/@attributes.15"/>
-    <fields colIndex="7" title="Revision no." dTOAttribute="/224/@attributes.0"/>
-    <fields colIndex="8" width="80" title="Rev 2" dTOAttribute="/224/@attributes.1"/>
-    <fields colIndex="9" width="80" title="Rev 6" dTOAttribute="/224/@attributes.2"/>
-    <fields colIndex="10" title="Alternative no." dTOAttribute="/224/@attributes.3"/>
-    <fields colIndex="11" width="250" title="Comment" dTOAttribute="/224/@attributes.4"/>
-    <fields colIndex="12" width="120" title="Creation date" fieldType="LOCAL_DATE_TIME" dTOAttribute="/224/@attributes.6"/>
-    <fields colIndex="13" width="120" title="Last update" fieldType="LOCAL_DATE_TIME" dTOAttribute="/224/@attributes.7"/>
-    <fields colIndex="14" title="Plant code" dTOAttribute="/224/@attributes.9"/>
+    <fields colIndex="5" width="80" title="Plant" dTOAttribute="/224/@attributes.9"/>
+    <fields colIndex="6" title="Material type" dTOAttribute="/224/@attributes.14"/>
+    <fields colIndex="7" title="Material class" dTOAttribute="/224/@attributes.15"/>
+    <fields colIndex="8" title="Revision no." dTOAttribute="/224/@attributes.0"/>
+    <fields colIndex="9" width="80" title="Rev 2" dTOAttribute="/224/@attributes.1"/>
+    <fields colIndex="10" width="80" title="Rev 6" dTOAttribute="/224/@attributes.2"/>
+    <fields colIndex="11" title="Alternative no." dTOAttribute="/224/@attributes.3"/>
+    <fields colIndex="12" width="250" title="Comment" dTOAttribute="/224/@attributes.4"/>
+    <fields colIndex="13" width="120" title="Creation date" fieldType="LOCAL_DATE_TIME" dTOAttribute="/224/@attributes.6"/>
+    <fields colIndex="14" width="120" title="Last update" fieldType="LOCAL_DATE_TIME" dTOAttribute="/224/@attributes.7"/>
     <fields colIndex="15" visible="false" identifier="true" width="80" title="Id" fieldType="LONG" dTOAttribute="/224/@attributes.5"/>
     <fields colIndex="16" visible="false" width="80" title="Material id" fieldType="LONG" dTOAttribute="/224/@attributes.10"/>
   </net.sourceforge.jbizmo.model.client:FormTable>

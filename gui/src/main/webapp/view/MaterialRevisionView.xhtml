@@ -184,15 +184,15 @@
 
 				<h:outputLabel styleClass="label-field-optional" for="fi_11" value="#{materialRevisionView.searchObject.searchFields[11].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{materialRevisionView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_11" value="#{materialRevisionView.searchObject.searchFields[11].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
-					<f:selectItems update="b_11" value="#{materialRevisionView.dateOperators}" var="advInputItem11" itemValue="#{advInputItem11}" itemLabel="#{advInputItem11.description}"/>
+					<f:selectItems update="b_11" value="#{materialRevisionView.textOperators}" var="advInputItem11" itemValue="#{advInputItem11}" itemLabel="#{advInputItem11.description}"/>
 					<f:ajax render="p_11"/>
 				</p:selectOneMenu>
 				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_11" id="s_11" value="#{materialRevisionView.searchObject.searchFields[11].sortOrder}">
 					<f:selectItems value="#{materialRevisionView.sortOrderList}"/>
 				</p:selectOneMenu>
-				<p:datePicker id="fi_11" value="#{materialRevisionView.searchObject.searchFields[11].dateCriterion}" pattern="#{userSession.dateTimeFormat}" size="20" showButtonBar="true" showIcon="true" showTime="true"/>
+				<p:inputText id="fi_11" value="#{materialRevisionView.searchObject.searchFields[11].stringCriterion}" size="30"/>
 				<h:panelGroup id="p_11">
-					<p:datePicker id="fb_11" value="#{materialRevisionView.searchObject.searchFields[11].dateBetweenCriterion}" pattern="#{userSession.dateTimeFormat}" size="20" showButtonBar="true" showIcon="true" rendered="#{materialRevisionView.searchObject.searchFields[11].between}" showTime="true"/>
+					<p:inputText id="b_11" rendered="#{materialRevisionView.searchObject.searchFields[11].between}" value="#{materialRevisionView.searchObject.searchFields[11].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
 				<h:outputLabel styleClass="label-field-optional" for="fi_12" value="#{materialRevisionView.searchObject.searchFields[12].colLabel}"/>
@@ -210,15 +210,15 @@
 
 				<h:outputLabel styleClass="label-field-optional" for="fi_13" value="#{materialRevisionView.searchObject.searchFields[13].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{materialRevisionView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_13" value="#{materialRevisionView.searchObject.searchFields[13].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
-					<f:selectItems update="b_13" value="#{materialRevisionView.textOperators}" var="advInputItem13" itemValue="#{advInputItem13}" itemLabel="#{advInputItem13.description}"/>
+					<f:selectItems update="b_13" value="#{materialRevisionView.dateOperators}" var="advInputItem13" itemValue="#{advInputItem13}" itemLabel="#{advInputItem13.description}"/>
 					<f:ajax render="p_13"/>
 				</p:selectOneMenu>
 				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_13" id="s_13" value="#{materialRevisionView.searchObject.searchFields[13].sortOrder}">
 					<f:selectItems value="#{materialRevisionView.sortOrderList}"/>
 				</p:selectOneMenu>
-				<p:inputText id="fi_13" value="#{materialRevisionView.searchObject.searchFields[13].stringCriterion}" size="30"/>
+				<p:datePicker id="fi_13" value="#{materialRevisionView.searchObject.searchFields[13].dateCriterion}" pattern="#{userSession.dateTimeFormat}" size="20" showButtonBar="true" showIcon="true" showTime="true"/>
 				<h:panelGroup id="p_13">
-					<p:inputText id="b_13" rendered="#{materialRevisionView.searchObject.searchFields[13].between}" value="#{materialRevisionView.searchObject.searchFields[13].stringBetweenCriterion}" size="30"/>
+					<p:datePicker id="fb_13" value="#{materialRevisionView.searchObject.searchFields[13].dateBetweenCriterion}" pattern="#{userSession.dateTimeFormat}" size="20" showButtonBar="true" showIcon="true" rendered="#{materialRevisionView.searchObject.searchFields[13].between}" showTime="true"/>
 				</h:panelGroup>
 
 			</h:panelGrid>
@@ -299,30 +299,33 @@
 		<p:ajax event="rowDblselect" listener="#{materialRevisionView.onDoubleClick}"/>
 
 		<p:column sortBy="#{materialRevisionViewItem.materialMaterialNumber}" width="150" 
-			rendered="#{materialRevisionView.searchObject.searchFields[0].visible}" displayPriority="#{materialRevisionView.searchObject.searchFields[0].colOrder}" >
+			rendered="#{materialRevisionView.searchObject.searchFields[0].visible}" displayPriority="#{materialRevisionView.searchObject.searchFields[0].colOrder}" 
+			exportValue="#{materialRevisionViewItem.materialMaterialNumber}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materialrevisionview_materialmaterialnumber}"/>
 			</f:facet>
-			<h:outputText value="#{materialRevisionViewItem.materialMaterialNumber}">
-			</h:outputText>
+			<h:outputText value="#{materialRevisionViewItem.materialMaterialNumber}" id="materialMaterialNumber"/>
+			<p:tooltip for="materialMaterialNumber" value="#{materialRevisionViewItem.materialMaterialNumber}" position="top" showDelay="50"/>
 		</p:column>
 
 		<p:column sortBy="#{materialRevisionViewItem.materialSapNumber}" width="150" 
-			rendered="#{materialRevisionView.searchObject.searchFields[1].visible}" displayPriority="#{materialRevisionView.searchObject.searchFields[1].colOrder}" >
+			rendered="#{materialRevisionView.searchObject.searchFields[1].visible}" displayPriority="#{materialRevisionView.searchObject.searchFields[1].colOrder}" 
+			exportValue="#{materialRevisionViewItem.materialSapNumber}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materialrevisionview_materialsapnumber}"/>
 			</f:facet>
-			<h:outputText value="#{materialRevisionViewItem.materialSapNumber}">
-			</h:outputText>
+			<h:outputText value="#{materialRevisionViewItem.materialSapNumber}" id="materialSapNumber"/>
+			<p:tooltip for="materialSapNumber" value="#{materialRevisionViewItem.materialSapNumber}" position="top" showDelay="50"/>
 		</p:column>
 
 		<p:column sortBy="#{materialRevisionViewItem.materialShortText}" width="250" 
-			rendered="#{materialRevisionView.searchObject.searchFields[2].visible}" displayPriority="#{materialRevisionView.searchObject.searchFields[2].colOrder}" >
+			rendered="#{materialRevisionView.searchObject.searchFields[2].visible}" displayPriority="#{materialRevisionView.searchObject.searchFields[2].colOrder}" 
+			exportValue="#{materialRevisionViewItem.materialShortText}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materialrevisionview_materialshorttext}"/>
 			</f:facet>
-			<h:outputText value="#{materialRevisionViewItem.materialShortText}">
-			</h:outputText>
+			<h:outputText value="#{materialRevisionViewItem.materialShortText}" id="materialShortText"/>
+			<p:tooltip for="materialShortText" value="#{materialRevisionViewItem.materialShortText}" position="top" showDelay="50"/>
 		</p:column>
 
 		<p:column sortBy="#{materialRevisionViewItem.ownerLocationCode}" width="100" 
@@ -334,8 +337,17 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materialRevisionViewItem.materialTypeCode}" width="100" 
+		<p:column sortBy="#{materialRevisionViewItem.plantCode}" width="80" 
 			rendered="#{materialRevisionView.searchObject.searchFields[4].visible}" displayPriority="#{materialRevisionView.searchObject.searchFields[4].colOrder}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materialrevisionview_plantcode}"/>
+			</f:facet>
+			<h:outputText value="#{materialRevisionViewItem.plantCode}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materialRevisionViewItem.materialTypeCode}" width="100" 
+			rendered="#{materialRevisionView.searchObject.searchFields[5].visible}" displayPriority="#{materialRevisionView.searchObject.searchFields[5].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materialrevisionview_materialtypecode}"/>
 			</f:facet>
@@ -344,25 +356,27 @@
 		</p:column>
 
 		<p:column sortBy="#{materialRevisionViewItem.materialClassCode}" width="100" 
-			rendered="#{materialRevisionView.searchObject.searchFields[5].visible}" displayPriority="#{materialRevisionView.searchObject.searchFields[5].colOrder}" >
+			rendered="#{materialRevisionView.searchObject.searchFields[6].visible}" displayPriority="#{materialRevisionView.searchObject.searchFields[6].colOrder}" 
+			exportValue="#{materialRevisionViewItem.materialClassCode}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materialrevisionview_materialclasscode}"/>
 			</f:facet>
-			<h:outputText value="#{materialRevisionViewItem.materialClassCode}">
-			</h:outputText>
+			<h:outputText value="#{materialRevisionViewItem.materialClassCode}" id="materialClassCode"/>
+			<p:tooltip for="materialClassCode" value="#{materialRevisionViewItem.materialClassCode}" position="top" showDelay="50"/>
 		</p:column>
 
 		<p:column sortBy="#{materialRevisionViewItem.revisionNumber}" width="100" 
-			rendered="#{materialRevisionView.searchObject.searchFields[6].visible}" displayPriority="#{materialRevisionView.searchObject.searchFields[6].colOrder}" >
+			rendered="#{materialRevisionView.searchObject.searchFields[7].visible}" displayPriority="#{materialRevisionView.searchObject.searchFields[7].colOrder}" 
+			exportValue="#{materialRevisionViewItem.revisionNumber}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materialrevisionview_revisionnumber}"/>
 			</f:facet>
-			<h:outputText value="#{materialRevisionViewItem.revisionNumber}">
-			</h:outputText>
+			<h:outputText value="#{materialRevisionViewItem.revisionNumber}" id="revisionNumber"/>
+			<p:tooltip for="revisionNumber" value="#{materialRevisionViewItem.revisionNumber}" position="top" showDelay="50"/>
 		</p:column>
 
 		<p:column sortBy="#{materialRevisionViewItem.rev2}" width="80" 
-			rendered="#{materialRevisionView.searchObject.searchFields[7].visible}" displayPriority="#{materialRevisionView.searchObject.searchFields[7].colOrder}" >
+			rendered="#{materialRevisionView.searchObject.searchFields[8].visible}" displayPriority="#{materialRevisionView.searchObject.searchFields[8].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_materialrevision_rev2}"/>
 			</f:facet>
@@ -371,7 +385,7 @@
 		</p:column>
 
 		<p:column sortBy="#{materialRevisionViewItem.rev6}" width="80" 
-			rendered="#{materialRevisionView.searchObject.searchFields[8].visible}" displayPriority="#{materialRevisionView.searchObject.searchFields[8].colOrder}" >
+			rendered="#{materialRevisionView.searchObject.searchFields[9].visible}" displayPriority="#{materialRevisionView.searchObject.searchFields[9].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_materialrevision_rev6}"/>
 			</f:facet>
@@ -380,7 +394,7 @@
 		</p:column>
 
 		<p:column sortBy="#{materialRevisionViewItem.alternativeNumber}" width="100" 
-			rendered="#{materialRevisionView.searchObject.searchFields[9].visible}" displayPriority="#{materialRevisionView.searchObject.searchFields[9].colOrder}" >
+			rendered="#{materialRevisionView.searchObject.searchFields[10].visible}" displayPriority="#{materialRevisionView.searchObject.searchFields[10].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materialrevisionview_alternativenumber}"/>
 			</f:facet>
@@ -389,16 +403,17 @@
 		</p:column>
 
 		<p:column sortBy="#{materialRevisionViewItem.comment}" width="250" 
-			rendered="#{materialRevisionView.searchObject.searchFields[10].visible}" displayPriority="#{materialRevisionView.searchObject.searchFields[10].colOrder}" >
+			rendered="#{materialRevisionView.searchObject.searchFields[11].visible}" displayPriority="#{materialRevisionView.searchObject.searchFields[11].colOrder}" 
+			exportValue="#{materialRevisionViewItem.comment}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_materialrevision_comment}"/>
 			</f:facet>
-			<h:outputText value="#{materialRevisionViewItem.comment}">
-			</h:outputText>
+			<h:outputText value="#{materialRevisionViewItem.comment}" id="comment"/>
+			<p:tooltip for="comment" value="#{materialRevisionViewItem.comment}" position="top" showDelay="50"/>
 		</p:column>
 
 		<p:column sortBy="#{materialRevisionViewItem.creationDate}" width="120" 
-			rendered="#{materialRevisionView.searchObject.searchFields[11].visible}" displayPriority="#{materialRevisionView.searchObject.searchFields[11].colOrder}" >
+			rendered="#{materialRevisionView.searchObject.searchFields[12].visible}" displayPriority="#{materialRevisionView.searchObject.searchFields[12].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_abstractentitywithid_creationdate}"/>
 			</f:facet>
@@ -410,7 +425,7 @@
 		</p:column>
 
 		<p:column sortBy="#{materialRevisionViewItem.lastUpdate}" width="120" 
-			rendered="#{materialRevisionView.searchObject.searchFields[12].visible}" displayPriority="#{materialRevisionView.searchObject.searchFields[12].colOrder}" >
+			rendered="#{materialRevisionView.searchObject.searchFields[13].visible}" displayPriority="#{materialRevisionView.searchObject.searchFields[13].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_abstractentitywithid_lastupdate}"/>
 			</f:facet>
@@ -418,15 +433,6 @@
 				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateTimeConverter"/>
 				<f:attribute name="pattern" value="#{userSession.dateTimeFormat}"/>
 				<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
-			</h:outputText>
-		</p:column>
-
-		<p:column sortBy="#{materialRevisionViewItem.plantCode}" width="100" 
-			rendered="#{materialRevisionView.searchObject.searchFields[13].visible}" displayPriority="#{materialRevisionView.searchObject.searchFields[13].colOrder}" >
-			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materialrevisionview_plantcode}"/>
-			</f:facet>
-			<h:outputText value="#{materialRevisionViewItem.plantCode}">
 			</h:outputText>
 		</p:column>
 	</p:dataTable>

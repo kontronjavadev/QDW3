@@ -152,6 +152,9 @@ public class MaterialRevisionView extends SuperView implements Serializable {
         new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterialRevisionSearchDTO.SELECT_OWNERLOCATIONCODE,
                 bundle.getString(COL_MATERIALREVISIONVIEW_OWNERLOCATIONCODE), SearchFieldDataTypeEnum.STRING, 100);
 
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterialRevisionSearchDTO.SELECT_PLANTCODE,
+                bundle.getString(COL_MATERIALREVISIONVIEW_PLANTCODE), SearchFieldDataTypeEnum.STRING, 80);
+
         new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterialRevisionSearchDTO.SELECT_MATERIALTYPECODE,
                 bundle.getString(COL_MATERIALREVISIONVIEW_MATERIALTYPECODE), SearchFieldDataTypeEnum.STRING, 100);
 
@@ -178,9 +181,6 @@ public class MaterialRevisionView extends SuperView implements Serializable {
 
         new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterialRevisionSearchDTO.SELECT_LASTUPDATE,
                 bundle.getString(LBL_ATTR_ABSTRACTENTITYWITHID_LASTUPDATE), SearchFieldDataTypeEnum.LOCAL_DATE_TIME, 120);
-
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterialRevisionSearchDTO.SELECT_PLANTCODE,
-                bundle.getString(COL_MATERIALREVISIONVIEW_PLANTCODE), SearchFieldDataTypeEnum.STRING, 100);
 
         visibleFields = new DualListModel<>();
         visibleFields.setSource(new ArrayList<>());
