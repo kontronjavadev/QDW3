@@ -25,6 +25,8 @@ public interface TranslationKeys {
     String COL_MATERIALREVISIONBOMITEMSPANEL_MATERIALSAPNUMBER = "col_materialrevisionbomitemspanel_materialsapnumber";
     String COL_MATERIALREVISIONBOMITEMSPANEL_MATERIALSHORTTEXT = "col_materialrevisionbomitemspanel_materialshorttext";
     String COL_MATERIALREVISIONBOMITEMSPANEL_MATERIALTYPECODE = "col_materialrevisionbomitemspanel_materialtypecode";
+    String COL_MATERIALREVISIONSPANEL_ALTERNATIVENUMBER = "col_materialrevisionspanel_alternativenumber";
+    String COL_MATERIALREVISIONSPANEL_REVISIONNUMBER = "col_materialrevisionspanel_revisionnumber";
     String COL_MATERIALREVISIONVIEW_ALTERNATIVENUMBER = "col_materialrevisionview_alternativenumber";
     String COL_MATERIALREVISIONVIEW_MATERIALCLASSCODE = "col_materialrevisionview_materialclasscode";
     String COL_MATERIALREVISIONVIEW_MATERIALMATERIALNUMBER = "col_materialrevisionview_materialmaterialnumber";
@@ -34,6 +36,12 @@ public interface TranslationKeys {
     String COL_MATERIALREVISIONVIEW_OWNERLOCATIONCODE = "col_materialrevisionview_ownerlocationcode";
     String COL_MATERIALREVISIONVIEW_PLANTCODE = "col_materialrevisionview_plantcode";
     String COL_MATERIALREVISIONVIEW_REVISIONNUMBER = "col_materialrevisionview_revisionnumber";
+    String COL_MATERIALVIEW_MATERIALCLASSCODE = "col_materialview_materialclasscode";
+    String COL_MATERIALVIEW_MATERIALNUMBER = "col_materialview_materialnumber";
+    String COL_MATERIALVIEW_MATERIALTYPECODE = "col_materialview_materialtypecode";
+    String COL_MATERIALVIEW_OWNERLOCATIONCODE = "col_materialview_ownerlocationcode";
+    String COL_MATERIALVIEW_SAPNUMBER = "col_materialview_sapnumber";
+    String COL_MATERIALVIEW_SEARCHSUBASSEMBLIES = "col_materialview_searchsubassemblies";
     String COL_SUPPLIERVIEW_COUNTRYNAME = "col_supplierview_countryname";
     String COL_VERTICALSECTORVIEW_BUSINESSUNITCODE = "col_verticalsectorview_businessunitcode";
     String COMMAND_BACK = "command_back";
@@ -69,8 +77,12 @@ public interface TranslationKeys {
     String FIELD_CHANGEPASSWORDDIALOG_TXTNEWPASSWORD = "field_changepassworddialog_txtnewpassword";
     String FIELD_CHANGEPASSWORDDIALOG_TXTNEWPASSWORDCONFIRM = "field_changepassworddialog_txtnewpasswordconfirm";
     String FIELD_CHANGEPASSWORDDIALOG_TXTOLDPASSWORD = "field_changepassworddialog_txtoldpassword";
+    String FIELD_CREATENEWMATERIALDIALOG_TXTMATERIALNUMBER = "field_createnewmaterialdialog_txtmaterialnumber";
+    String FIELD_CREATENEWMATERIALDIALOG_TXTSAPNUMBER = "field_createnewmaterialdialog_txtsapnumber";
     String FIELD_EDITBOMITEMDIALOG_CBOMATERIALREVISION = "field_editbomitemdialog_cbomaterialrevision";
     String FIELD_EDITBOMITEMDIALOG_CBOMATERIALREVISIONMATERIAL = "field_editbomitemdialog_cbomaterialrevisionmaterial";
+    String FIELD_EDITMATERIALDIALOG_TXTMATERIALNUMBER = "field_editmaterialdialog_txtmaterialnumber";
+    String FIELD_EDITMATERIALDIALOG_TXTSAPNUMBER = "field_editmaterialdialog_txtsapnumber";
     String FIELD_EDITMATERIALREVISIONDIALOG_TXTALTERNATIVENUMBER = "field_editmaterialrevisiondialog_txtalternativenumber";
     String FIELD_EDITMATERIALREVISIONDIALOG_TXTREVISIONNUMBER = "field_editmaterialrevisiondialog_txtrevisionnumber";
     String FIELD_EDITUSERSETTINGSDIALOG_CBOLOCALE = "field_editusersettingsdialog_cbolocale";
@@ -85,6 +97,8 @@ public interface TranslationKeys {
     String FIELD_ERRORPAGE_URI = "field_errorpage_uri";
     String FIELD_VIEWBOMITEMDIALOG_CBOMATERIALREVISION = "field_viewbomitemdialog_cbomaterialrevision";
     String FIELD_VIEWBOMITEMDIALOG_CBOMATERIALREVISIONMATERIAL = "field_viewbomitemdialog_cbomaterialrevisionmaterial";
+    String FIELD_VIEWMATERIALDIALOG_TXTMATERIALNUMBER = "field_viewmaterialdialog_txtmaterialnumber";
+    String FIELD_VIEWMATERIALDIALOG_TXTSAPNUMBER = "field_viewmaterialdialog_txtsapnumber";
     String FIELD_VIEWMATERIALREVISIONDIALOG_TXTALTERNATIVENUMBER = "field_viewmaterialrevisiondialog_txtalternativenumber";
     String FIELD_VIEWMATERIALREVISIONDIALOG_TXTREVISIONNUMBER = "field_viewmaterialrevisiondialog_txtrevisionnumber";
     String FORM_ADDBOMITEMDIALOG_TITLE = "form_addbomitemdialog_title";
@@ -96,6 +110,7 @@ public interface TranslationKeys {
     String FORM_CREATENEWCUSTOMERDIALOG_TITLE = "form_createnewcustomerdialog_title";
     String FORM_CREATENEWLOCATIONDIALOG_TITLE = "form_createnewlocationdialog_title";
     String FORM_CREATENEWMATERIALCLASSDIALOG_TITLE = "form_createnewmaterialclassdialog_title";
+    String FORM_CREATENEWMATERIALDIALOG_TITLE = "form_createnewmaterialdialog_title";
     String FORM_CREATENEWMATERIALTYPEDIALOG_TITLE = "form_createnewmaterialtypedialog_title";
     String FORM_CREATENEWMOVEMENTTYPEDIALOG_TITLE = "form_createnewmovementtypedialog_title";
     String FORM_CREATENEWPLANTDIALOG_TITLE = "form_createnewplantdialog_title";
@@ -110,6 +125,7 @@ public interface TranslationKeys {
     String FORM_EDITCUSTOMERDIALOG_TITLE = "form_editcustomerdialog_title";
     String FORM_EDITLOCATIONDIALOG_TITLE = "form_editlocationdialog_title";
     String FORM_EDITMATERIALCLASSDIALOG_TITLE = "form_editmaterialclassdialog_title";
+    String FORM_EDITMATERIALDIALOG_TITLE = "form_editmaterialdialog_title";
     String FORM_EDITMATERIALREVISIONDIALOG_TITLE = "form_editmaterialrevisiondialog_title";
     String FORM_EDITMATERIALTYPEDIALOG_TITLE = "form_editmaterialtypedialog_title";
     String FORM_EDITMOVEMENTTYPEDIALOG_TITLE = "form_editmovementtypedialog_title";
@@ -122,6 +138,7 @@ public interface TranslationKeys {
     String FORM_MATERIALCLASSVIEW_TITLE = "form_materialclassview_title";
     String FORM_MATERIALREVISIONVIEW_TITLE = "form_materialrevisionview_title";
     String FORM_MATERIALTYPEVIEW_TITLE = "form_materialtypeview_title";
+    String FORM_MATERIALVIEW_TITLE = "form_materialview_title";
     String FORM_MOVEMENTTYPEVIEW_TITLE = "form_movementtypeview_title";
     String FORM_PLANTVIEW_TITLE = "form_plantview_title";
     String FORM_RESETPASSWORDDIALOG_INVALIDLINK = "form_resetpassworddialog_invalidlink";
@@ -131,6 +148,7 @@ public interface TranslationKeys {
     String FORM_USERVIEW_TITLE = "form_userview_title";
     String FORM_VERTICALSECTORVIEW_TITLE = "form_verticalsectorview_title";
     String FORM_VIEWBOMITEMDIALOG_TITLE = "form_viewbomitemdialog_title";
+    String FORM_VIEWMATERIALDIALOG_TITLE = "form_viewmaterialdialog_title";
     String FORM_VIEWMATERIALREVISIONDIALOG_TITLE = "form_viewmaterialrevisiondialog_title";
     String FORM_VIEWROLEDIALOG_TITLE = "form_viewroledialog_title";
     String ILLEGAL_ITEM_SELECTED = "illegal_item_selected";
@@ -141,6 +159,9 @@ public interface TranslationKeys {
     String LBL_ASSOC_BOMITEM_MATERIALREVISION = "lbl_assoc_bomitem_materialrevision";
     String LBL_ASSOC_CUSTOMER_COUNTRY = "lbl_assoc_customer_country";
     String LBL_ASSOC_CUSTOMER_VERTICALSECTOR = "lbl_assoc_customer_verticalsector";
+    String LBL_ASSOC_MATERIAL_MATERIALCLASS = "lbl_assoc_material_materialclass";
+    String LBL_ASSOC_MATERIAL_MATERIALTYPE = "lbl_assoc_material_materialtype";
+    String LBL_ASSOC_MATERIAL_OWNERLOCATION = "lbl_assoc_material_ownerlocation";
     String LBL_ASSOC_MATERIALREVISION_MATERIAL = "lbl_assoc_materialrevision_material";
     String LBL_ASSOC_MATERIALREVISION_PLANT = "lbl_assoc_materialrevision_plant";
     String LBL_ASSOC_SUPPLIER_COUNTRY = "lbl_assoc_supplier_country";
@@ -171,8 +192,12 @@ public interface TranslationKeys {
     String LBL_ATTR_CUSTOMER_NAME = "lbl_attr_customer_name";
     String LBL_ATTR_CUSTOMER_STREET = "lbl_attr_customer_street";
     String LBL_ATTR_CUSTOMER_ZIPCODE = "lbl_attr_customer_zipcode";
+    String LBL_ATTR_MATERIAL_COMMENT = "lbl_attr_material_comment";
+    String LBL_ATTR_MATERIAL_FITVALUE = "lbl_attr_material_fitvalue";
+    String LBL_ATTR_MATERIAL_MATERIALHIERARCHY = "lbl_attr_material_materialhierarchy";
     String LBL_ATTR_MATERIAL_MATERIALNUMBER = "lbl_attr_material_materialnumber";
     String LBL_ATTR_MATERIAL_SAPNUMBER = "lbl_attr_material_sapnumber";
+    String LBL_ATTR_MATERIAL_SEARCHSUBASSEMBLIES = "lbl_attr_material_searchsubassemblies";
     String LBL_ATTR_MATERIAL_SHORTTEXT = "lbl_attr_material_shorttext";
     String LBL_ATTR_MATERIALREVISION_ALTERNATIVENUMBER = "lbl_attr_materialrevision_alternativenumber";
     String LBL_ATTR_MATERIALREVISION_COMMENT = "lbl_attr_materialrevision_comment";
@@ -229,8 +254,10 @@ public interface TranslationKeys {
     String PANEL_ADMIN_TITLE = "panel_admin_title";
     String PANEL_BASIC_TITLE = "panel_basic_title";
     String PANEL_CREATENEWUSERDIALOG_PANROLES_TITLE = "panel_createnewuserdialog_panroles_title";
+    String PANEL_EDITMATERIALDIALOG_PANREVISIONS_TITLE = "panel_editmaterialdialog_panrevisions_title";
     String PANEL_EDITMATERIALREVISIONDIALOG_PANBOMITEMS_TITLE = "panel_editmaterialrevisiondialog_panbomitems_title";
     String PANEL_EDITUSERDIALOG_PANROLES_TITLE = "panel_edituserdialog_panroles_title";
+    String PANEL_VIEWMATERIALDIALOG_PANREVISIONS_TITLE = "panel_viewmaterialdialog_panrevisions_title";
     String PANEL_VIEWMATERIALREVISIONDIALOG_PANBOMITEMS_TITLE = "panel_viewmaterialrevisiondialog_panbomitems_title";
     String PANEL_VIEWROLEDIALOG_USERS_TITLE = "panel_viewroledialog_users_title";
     String PICK_LIST_ADD = "pick_list_add";

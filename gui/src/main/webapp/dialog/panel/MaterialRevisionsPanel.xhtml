@@ -1,0 +1,124 @@
+<ui:composition xmlns="https://jakarta.ee/xml/ns/jakartaee"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:h="jakarta.faces.html"
+	xmlns:f="jakarta.faces.core"
+	xmlns:p="http://primefaces.org/ui">
+
+	<p:menubar>
+		<p:submenu icon="pi pi-file" label="#{i18n.mnu_file}" id="gridMaterialRevisionsPanel_mniFile">
+		</p:submenu>
+		<p:submenu icon="pi pi-refresh" label="#{i18n.mnu_view}">
+			<p:menuitem value="#{i18n.action_refresh}" ajax="false" icon="pi pi-refresh" actionListener="#{materialRevisionsPanel.fetchRevisions}"/>
+		</p:submenu>
+		<p:submenu icon="pi pi-print" label="#{i18n.mnu_export}">
+			<p:menuitem value="#{i18n.action_export_xls}" ajax="false" icon="pi pi-file-excel">
+				<p:dataExporter type="xls" target="gridMaterialRevisionsPanel" fileName="MaterialRevisionList"/>
+			</p:menuitem>
+			<p:menuitem value="#{i18n.action_export_pdf}" ajax="false" icon="pi pi-file-pdf">
+				<p:dataExporter type="pdf" target="gridMaterialRevisionsPanel" fileName="MaterialRevisionList"/>
+			</p:menuitem>
+		</p:submenu>
+	</p:menubar>
+
+	<br/>
+
+	<p:dataTable id="gridMaterialRevisionsPanel" var="materialRevisionsPanelItem" rows="50"
+		selectionMode="single"
+		selection="#{materialRevisionsPanel.selItemOfRevisions}"
+		loadingMessage="#{i18n.action_fetch_data}"
+		value="#{materialRevisionsPanel.revisionsList}" scrollable="false"
+		paginatorPosition="top" paginatorAlwaysVisible="false" paginator="true" resizableColumns="true"
+		rowKey="#{materialRevisionsPanelItem.id}"
+		paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+		rowsPerPageTemplate="10,50,100,500,1000">
+		<p:ajax event="rowDblselect" listener="#{materialRevisionsPanel.onRevisionsGridDoubleClick}"/>
+
+		<p:column sortBy="#{materialRevisionsPanelItem.revisionNumber}" width="150" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materialrevisionspanel_revisionnumber}"/>
+			</f:facet>
+			<h:outputText value="#{materialRevisionsPanelItem.revisionNumber}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materialRevisionsPanelItem.rev2}" width="80" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_materialrevision_rev2}"/>
+			</f:facet>
+			<h:outputText value="#{materialRevisionsPanelItem.rev2}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materialRevisionsPanelItem.rev6}" width="80" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_materialrevision_rev6}"/>
+			</f:facet>
+			<h:outputText value="#{materialRevisionsPanelItem.rev6}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materialRevisionsPanelItem.alternativeNumber}" width="100" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materialrevisionspanel_alternativenumber}"/>
+			</f:facet>
+			<h:outputText value="#{materialRevisionsPanelItem.alternativeNumber}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materialRevisionsPanelItem.comment}" width="250" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_materialrevision_comment}"/>
+			</f:facet>
+			<h:outputText value="#{materialRevisionsPanelItem.comment}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materialRevisionsPanelItem.creationDate}" width="120" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_abstractentitywithid_creationdate}"/>
+			</f:facet>
+			<h:outputText value="#{materialRevisionsPanelItem.creationDate}">
+				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateTimeConverter"/>
+				<f:attribute name="pattern" value="#{userSession.dateTimeFormat}"/>
+				<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materialRevisionsPanelItem.lastUpdate}" width="120" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_abstractentitywithid_lastupdate}"/>
+			</f:facet>
+			<h:outputText value="#{materialRevisionsPanelItem.lastUpdate}">
+				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateTimeConverter"/>
+				<f:attribute name="pattern" value="#{userSession.dateTimeFormat}"/>
+				<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
+			</h:outputText>
+		</p:column>
+	</p:dataTable>
+	<p/>
+
+	<h:outputText styleClass="label-field-mandatory" value="#{i18n.result_total_number_records} #{materialRevisionsPanel.revisionsList.size()}"/>
+
+	<p:contextMenu for="gridMaterialRevisionsPanel">
+		<p:menuitem value="#{i18n.action_delete}" ajax="true" icon="pi pi-trash" id="gridMaterialRevisionsPanel_mniDelete" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR') and not materialRevisionsPanel.readOnly}" onclick="PF('deleteConfirmRevisions').show()"/>
+		<p:menuitem value="#{i18n.action_edit}" ajax="true" icon="pi pi-pencil" id="gridMaterialRevisionsPanel_mniUpdate" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR') and not materialRevisionsPanel.readOnly}" action="#{materialRevisionsPanel.openEditMaterialRevisionDialog}">
+			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{materialRevisionsPanel.currentPageURL}"/>
+		</p:menuitem>
+		<p:menuitem value="#{i18n.action_view}" ajax="true" icon="pi pi-file" id="gridMaterialRevisionsPanel_mniView" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;SUPERUSER')}" action="#{materialRevisionsPanel.openViewMaterialRevisionDialog}">
+			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{materialRevisionsPanel.currentPageURL}"/>
+		</p:menuitem>
+		<p:menuitem value="#{i18n.action_copy}" ajax="true" icon="pi pi-copy" id="gridMaterialRevisionsPanel_mniCopy" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR') and not materialRevisionsPanel.readOnly}" onclick="PF('copyConfirmRevisions').show()"/>
+		<p:menuitem value="#{i18n.action_refresh}" ajax="false" type="push" icon="pi pi-refresh" id="gridMaterialRevisionsPanel_mniRefresh" actionListener="#{materialRevisionsPanel.fetchRevisions}"/>
+	</p:contextMenu>
+
+	<p:confirmDialog modal="true" message="#{i18n.dialog_delete_question}" header="#{i18n.dialog_delete_title}" severity="alert" widgetVar="deleteConfirmRevisions">
+		<p:commandButton value="#{i18n.command_yes}" oncomplete="PF('deleteConfirmRevisions').hide()" actionListener="#{materialRevisionsPanel.deleteMaterialRevision}" id="gridMaterialRevisionsPanel_cmdYesDelete" ajax="false"/>
+		<p:commandButton value="#{i18n.command_no}" onclick="PF('deleteConfirmRevisions').hide()" type="button"/>
+	</p:confirmDialog>
+
+	<p:confirmDialog modal="true" message="#{i18n.dialog_copy_question}" header="#{i18n.dialog_copy_title}" severity="info" widgetVar="copyConfirmRevisions">
+		<p:commandButton value="#{i18n.command_yes}" oncomplete="PF('copyConfirmRevisions').hide()" action="#{materialRevisionsPanel.copy}" id="gridMaterialRevisionsPanel_cmdYesCopy" ajax="false"/>
+		<p:commandButton value="#{i18n.command_no}" onclick="PF('copyConfirmRevisions').hide()" type="button"/>
+	</p:confirmDialog>
+
+</ui:composition>
