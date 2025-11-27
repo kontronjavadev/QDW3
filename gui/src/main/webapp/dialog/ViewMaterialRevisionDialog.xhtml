@@ -106,18 +106,14 @@
 	</p:tab>
 	</p:tabView>
 
-	<p/>
 
 	<p:panel>
-	<h:panelGrid columns="1">
-		<h:outputText styleClass="header-label" value="#{i18n.panel_viewmaterialrevisiondialog_panbomitems_title}"/>
-	</h:panelGrid>
-
-	<h:panelGrid columns="1">
-
-		<ui:include src="panel/MaterialRevisionBoMItemsPanel.xhtml"/>
-
-	</h:panelGrid>
+		<h:panelGrid columns="1">
+			<h:outputText styleClass="header-label" value="#{i18n.panel_viewmaterialrevisiondialog_panbomitems_title}"/>
+		</h:panelGrid>
+		<h:panelGrid columns="1">
+			<ui:include src="panel/MaterialRevisionBoMItemsPanel.xhtml"/>
+		</h:panelGrid>
 	</p:panel>
 
 	<p/>

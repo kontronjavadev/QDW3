@@ -23,9 +23,9 @@
 		</p:submenu>
 	</p:menubar>
 
-	<br/>
 
 	<p:dataTable id="gridMaterialRevisionBoMItemsPanel" var="materialRevisionBoMItemsPanelItem" rows="50"
+		selectionTextDisabled="false" allowUnsorting="true" resizeMode="expand" multiViewState="true" 
 		selectionMode="single"
 		selection="#{materialRevisionBoMItemsPanel.selItemOfBoMItems}"
 		loadingMessage="#{i18n.action_fetch_data}"
@@ -33,7 +33,7 @@
 		paginatorPosition="top" paginatorAlwaysVisible="false" paginator="true" resizableColumns="true"
 		rowKey="#{materialRevisionBoMItemsPanelItem.id}"
 		paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-		rowsPerPageTemplate="10,50,100,500,1000">
+		rowsPerPageTemplate="50,150,400,1000">
 		<p:ajax event="rowDblselect" listener="#{materialRevisionBoMItemsPanel.onBoMItemsGridDoubleClick}"/>
 
 		<p:column sortBy="#{materialRevisionBoMItemsPanelItem.position}" width="80" >
@@ -127,7 +127,14 @@
 
 	<h:outputText styleClass="label-field-mandatory" value="#{i18n.result_total_number_records} #{materialRevisionBoMItemsPanel.boMItemsList.size()}"/>
 
-	<p:contextMenu for="gridMaterialRevisionBoMItemsPanel">
+
+
+<!--Kontextmenü mit Möglichkeit, eine Zelle oder eine Zeile zu kopieren -->
+
+	<h:inputHidden id="cellText" value="#{materialRevisionBoMItemsPanel.cellText}" />
+	<h:inputHidden id="rowCsv" value="#{materialRevisionBoMItemsPanel.rowCsv}" />
+
+	<p:contextMenu for="gridMaterialRevisionBoMItemsPanel" beforeShow="updateContextData(event)" >
 		<p:menuitem value="#{i18n.action_delete}" ajax="true" icon="pi pi-trash" id="gridMaterialRevisionBoMItemsPanel_mniDelete" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR') and not materialRevisionBoMItemsPanel.readOnly}" onclick="PF('deleteConfirmBoMItems').show()"/>
 		<p:menuitem value="#{i18n.action_edit}" ajax="true" icon="pi pi-pencil" id="gridMaterialRevisionBoMItemsPanel_mniUpdate" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR') and not materialRevisionBoMItemsPanel.readOnly}" action="#{materialRevisionBoMItemsPanel.openEditBoMItemDialog}">
 			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{materialRevisionBoMItemsPanel.currentPageURL}"/>
@@ -140,6 +147,11 @@
 			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{materialRevisionBoMItemsPanel.currentPageURL}"/>
 		</p:menuitem>
 		<p:menuitem value="#{i18n.action_refresh}" ajax="false" type="push" icon="pi pi-refresh" id="gridMaterialRevisionBoMItemsPanel_mniRefresh" actionListener="#{materialRevisionBoMItemsPanel.fetchBoMItems}"/>
+
+		<p:separator/>
+
+		<p:menuitem value="#{i18n.ctxmenu_copy_cell}" actionListener="#{materialRevisionBoMItemsPanel.copyCellToClipboard}" icon="pi pi-copy" update="@none"/>
+		<p:menuitem value="#{i18n.ctxmenu_copy_row}" actionListener="#{materialRevisionBoMItemsPanel.copyRowToClipboard}" icon="pi pi-copy" update="@none"/>
 	</p:contextMenu>
 
 	<p:confirmDialog modal="true" closeOnEscape="true" message="#{i18n.dialog_delete_question}" header="#{i18n.dialog_delete_title}" severity="warn" widgetVar="deleteConfirmBoMItems">
