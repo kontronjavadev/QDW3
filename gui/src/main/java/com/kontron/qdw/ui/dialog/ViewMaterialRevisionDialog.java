@@ -168,4 +168,12 @@ public class ViewMaterialRevisionDialog implements Serializable {
         return ViewMaterialRevisionDialog.PAGE_INIT_URL + selectedObjectId;
     }
 
+    /**
+     * @return the navigation target
+     */
+    @Generated
+    public String openViewMaterialDialogLink() {
+        return ViewMaterialDialog.PAGE_INIT_URL + materialRevision.getMaterial().getId();
+    }
+
 }

@@ -35,8 +35,13 @@
 	<p:tab id="tabPanMaterialRevision" title="#{i18n.panel_basic_title}">
 	<h:panelGrid columns="6">
 
-		<h:outputLabel value="#{i18n.lbl_assoc_materialrevision_material}:" for="cboMaterial" styleClass="label-field-optional"/>
-		<h:outputText styleClass="label-field-value" id="cboMaterial" value="#{viewMaterialRevisionDialog.materialRevision.material.materialNumber}"/>
+		<h:outputLabel value="#{i18n.lbl_assoc_materialrevision_material}:" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;SUPERUSER')}" for="cboMaterial" styleClass="label-field-optional"/>
+		<p:commandLink rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;SUPERUSER')}" id="cboMaterial" style="font-weight: bold;color: #0063ac" action="#{viewMaterialRevisionDialog.openViewMaterialDialogLink}">
+			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{viewMaterialRevisionDialog.currentPageURL}"/>
+			<h:outputText value="#{viewMaterialRevisionDialog.materialRevision.material.materialNumber}"/>
+		</p:commandLink>
+		<h:outputLabel value="#{i18n.lbl_assoc_materialrevision_material}:" rendered="#{!userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;SUPERUSER')}" for="cboMaterialAltLbl" styleClass="label-field-optional"/>
+		<h:outputText styleClass="label-field-value" rendered="#{!userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;SUPERUSER')}" id="cboMaterialAltLbl" value="#{viewMaterialRevisionDialog.materialRevision.material.materialNumber}"/>
 		<p:tooltip for="cboMaterial" value=""/>
 
 		<h:outputLabel value="#{i18n.field_viewmaterialrevisiondialog_txtrevisionnumber}:" for="txtRevisionNumber" styleClass="label-field-optional"/>
