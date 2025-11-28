@@ -2956,7 +2956,7 @@
       <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-base.xmi#//@domainObjects.13/@associations.0"/>
     </attributes>
   </net.sourceforge.jbizmo.model.dto:DTOBean>
-  <net.sourceforge.jbizmo.model.client:Form name="SupplierView" formType="SEARCHABLE_VIEW" formGroup="/6" title="Suppliers view" formPanels="/184" dTO="/186" roles="/0/@roles.0" boundaryMethod="/178/@boundaryMethods.3">
+  <net.sourceforge.jbizmo.model.client:Form name="SupplierView" formType="SEARCHABLE_VIEW" formGroup="/6" title="Suppliers" formPanels="/184" dTO="/186" roles="/0/@roles.0" boundaryMethod="/178/@boundaryMethods.3">
     <actions name="actionDelete" description="Delete selected supplier" boundaryMethod="/178/@boundaryMethods.5" roles="/0/@roles.0" type="DELETE"/>
     <actions name="actionCreate" description="Create new supplier" targetForm="/175" roles="/0/@roles.0"/>
     <actions name="actionUpdate" description="Edit supplier" targetForm="/179" roles="/0/@roles.0" type="UPDATE"/>

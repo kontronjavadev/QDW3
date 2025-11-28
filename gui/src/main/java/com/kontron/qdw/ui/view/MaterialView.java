@@ -4,8 +4,6 @@ import org.slf4j.*;
 import com.kontron.qdw.boundary.material.*;
 import java.lang.invoke.*;
 
-import org.apache.commons.lang3.StringUtils;
-import org.primefaces.PrimeFaces;
 import org.primefaces.model.DualListModel;
 import net.sourceforge.jbizmo.commons.webclient.primefaces.search.*;
 import com.kontron.qdw.ui.dialog.*;
@@ -60,7 +58,6 @@ public class MaterialView extends SuperView implements Serializable {
     private String savedQueryName;
     @Generated
     private String selectedSavedQuery;
-    private String newQueryName;
 
     /**
      * Default constructor
@@ -236,38 +233,6 @@ public class MaterialView extends SuperView implements Serializable {
     public void resetSearchObject() {
         initSearchObject();
         fetchMaterials();
-    }
-
-    public String getNewQueryName() {
-        return newQueryName;
-    }
-
-    public void setNewQueryName(String newQueryName) {
-        this.newQueryName = newQueryName;
-    }
-
-    public void openRenameDialog() {
-        if (selectedSavedQuery == null) {
-            return;
-        }
-        PrimeFaces.current().executeScript("PF('dlgQeryRename').show();");
-    }
-
-    public void renameQuery() {
-        if (StringUtils.isEmpty(selectedSavedQuery) || StringUtils.isEmpty(newQueryName)) {
-            return;
-        }
-
-        boolean nameExists = queryManager.getSavedQueries(userSession.getPrincipal().getId(), VIEW_ID).stream()
-                .anyMatch(q -> q.equals(newQueryName));
-        if (nameExists) {
-            MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_ERROR, OPERATION_RENAME_FAIL,
-                    bundle.getString(OPERATION_QUERYRENAME_NOT_UNIQUE).formatted(newQueryName));
-            return;
-        }
-
-        queryManager.renameQuery(userSession.getPrincipal().getId(), VIEW_ID, selectedSavedQuery, newQueryName);
-        MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_INFO, OPERATION_RENAME_SUCCESS);
     }
 
     /**

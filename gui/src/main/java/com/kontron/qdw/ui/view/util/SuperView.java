@@ -1,24 +1,34 @@
 package com.kontron.qdw.ui.view.util;
 
+import static com.kontron.qdw.ui.TranslationKeys.OPERATION_QUERYRENAME_NOT_UNIQUE;
+import static com.kontron.qdw.ui.TranslationKeys.OPERATION_RENAME_FAIL;
+import static com.kontron.qdw.ui.TranslationKeys.OPERATION_RENAME_SUCCESS;
+import static com.kontron.qdw.ui.UserSession.DEFAULT_BUNDLE_NAME;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.function.ToIntFunction;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
+import org.primefaces.PrimeFaces;
 
 import com.kontron.qdw.boundary.base.UserPropertyBoundaryService;
 import com.kontron.qdw.dto.base.UserPropertyDTO;
+import com.kontron.qdw.service.SavedQueryService;
 import com.kontron.qdw.ui.UserSession;
 
+import jakarta.faces.application.FacesMessage;
 import jakarta.inject.Inject;
 import net.sourceforge.jbizmo.commons.search.dto.SearchFieldDTO;
 import net.sourceforge.jbizmo.commons.search.dto.SortDirectionEnum;
 import net.sourceforge.jbizmo.commons.webclient.primefaces.search.JSFSearchFieldDTO;
+import net.sourceforge.jbizmo.commons.webclient.primefaces.util.MessageUtil;
 
 public abstract class SuperView extends CopyClipboard {
 
@@ -30,8 +40,12 @@ public abstract class SuperView extends CopyClipboard {
     private UserSession userSession;
     @Inject
     private UserPropertyBoundaryService userPropertyService;
+    @Inject
+    private SavedQueryService queryManager;
 
     private UserPropertyDTO userPropNumberRows;
+
+    private String newQueryName;
 
 
 
@@ -161,6 +175,7 @@ public abstract class SuperView extends CopyClipboard {
     }
 
 
+
     /**
      * Sucht das SearchField zum angegebenen Namen.
      * <p/>
@@ -174,6 +189,7 @@ public abstract class SuperView extends CopyClipboard {
     }
 
 
+
     public String getNumberRows() {
         return userPropNumberRows.getValue();
     }
@@ -185,6 +201,44 @@ public abstract class SuperView extends CopyClipboard {
 
     public String getPaginatorAlwaysVisible() {
         return Integer.parseInt(getNumberRows()) > PAGINATOR_INVISIBLE_MAX_ROWS ? "true" : "false";
+    }
+
+
+
+    public abstract String getSelectedSavedQuery();
+
+    public String getNewQueryName() {
+        return newQueryName;
+    }
+
+    public void setNewQueryName(String newQueryName) {
+        this.newQueryName = newQueryName;
+    }
+
+    public void openRenameDialog() {
+        if (getSelectedSavedQuery() == null) {
+            return;
+        }
+        PrimeFaces.current().executeScript("PF('dlgQeryRename').show();");
+    }
+
+    public void renameQuery() {
+        if (StringUtils.isEmpty(getSelectedSavedQuery()) || StringUtils.isEmpty(newQueryName)) {
+            return;
+        }
+
+        ResourceBundle bundle = ResourceBundle.getBundle(DEFAULT_BUNDLE_NAME, userSession.getLocale());
+
+        boolean nameExists = queryManager.getSavedQueries(userSession.getPrincipal().getId(), getViewName()).stream()
+                .anyMatch(q -> q.equals(newQueryName));
+        if (nameExists) {
+            MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_ERROR, OPERATION_RENAME_FAIL,
+                    bundle.getString(OPERATION_QUERYRENAME_NOT_UNIQUE).formatted(newQueryName));
+            return;
+        }
+
+        queryManager.renameQuery(userSession.getPrincipal().getId(), getViewName(), getSelectedSavedQuery(), newQueryName);
+        MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_INFO, OPERATION_RENAME_SUCCESS);
     }
 
 }

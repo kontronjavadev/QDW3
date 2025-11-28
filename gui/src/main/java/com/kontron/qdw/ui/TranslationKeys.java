@@ -53,6 +53,7 @@ public interface TranslationKeys {
     String COMMAND_FILTER = "command_filter";
     String COMMAND_LOGOUT = "command_logout";
     String COMMAND_NO = "command_no";
+    String COMMAND_RENAME = "command_rename";
     String COMMAND_RESET = "command_reset";
     String COMMAND_RESETPW = "command_resetpw";
     String COMMAND_SAVE = "command_save";
@@ -244,11 +245,11 @@ public interface TranslationKeys {
     String OPERATION_EXPORT_OK = "operation_export_ok";
     String OPERATION_FETCH_FAIL = "operation_fetch_fail";
     String OPERATION_FETCH_NO_DATA = "operation_fetch_no_data";
-    String OPERATION_RENAME_FAIL = "operation_rename_fail";
-    String OPERATION_QUERYRENAME_NOT_UNIQUE = "operation_queryrename_notunique";
-    String OPERATION_RENAME_SUCCESS = "operation_rename_success";
     String OPERATION_IMPORT_FAIL = "operation_import_fail";
     String OPERATION_IMPORT_OK = "operation_import_ok";
+    String OPERATION_QUERYRENAME_NOTUNIQUE = "operation_queryrename_notunique";
+    String OPERATION_RENAME_FAIL = "operation_rename_fail";
+    String OPERATION_RENAME_SUCCESS = "operation_rename_success";
     String OPERATION_RESETPW_FAIL = "operation_resetpw_fail";
     String OPERATION_RESETPWUSER = "operation_resetpwuser";
     String OPERATION_SAVE_FAIL = "operation_save_fail";
@@ -268,6 +269,8 @@ public interface TranslationKeys {
     String PICK_LIST_ADD_ALL = "pick_list_add_all";
     String PICK_LIST_REMOVE = "pick_list_remove";
     String PICK_LIST_REMOVE_ALL = "pick_list_remove_all";
+    String QUERY_RENAME_NEWNAME = "query_rename_newname";
+    String QUERY_RENAME_TITLE = "query_rename_title";
     String RESULT_TOTAL_NUMBER_RECORDS = "result_total_number_records";
     String SAVED_QUERY_DELETE_SUCCESS = "saved_query_delete_success";
     String SAVED_QUERY_EMPTY_NAME = "saved_query_empty_name";
@@ -293,6 +296,7 @@ public interface TranslationKeys {
     String SEARCH_INPUT_OPERATOR = "search_input_operator";
     String SEARCH_INPUT_PERFORM_COUNT = "search_input_perform_count";
     String SEARCH_INPUT_PERFORM_SEARCH = "search_input_perform_search";
+    String SEARCH_INPUT_RENAME_SAVED_QUERY = "search_input_rename_saved_query";
     String SEARCH_INPUT_RUN_SAVED_QUERY = "search_input_run_saved_query";
     String SEARCH_INPUT_SAVED_QUERY_TITLE = "search_input_saved_query_title";
     String SEARCH_INPUT_SORT = "search_input_sort";

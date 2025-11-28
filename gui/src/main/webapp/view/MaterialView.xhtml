@@ -234,7 +234,7 @@
 					<h:panelGrid columns="3">
 						<p:commandButton icon="pi pi-caret-right" value="#{i18n.search_input_run_saved_query}" action="#{materialView.runSavedQuery}" ajax="false"/>
 						<p:commandButton icon="pi pi-pencil" value="#{i18n.search_input_rename_saved_query}" actionListener="#{materialView.openRenameDialog}" ajax="true"/>
-						<p:commandButton icon="pi pi-eraser" value="#{i18n.search_input_delete_saved_query}" actionListener="#{customerView.deleteSavedQuery}" update="savedQueryList" ajax="true"/>
+						<p:commandButton icon="pi pi-eraser" value="#{i18n.search_input_delete_saved_query}" actionListener="#{materialView.deleteSavedQuery}" update="savedQueryList" ajax="true"/>
 					</h:panelGrid>
 				</h:panelGrid>
 			</p:tab>
