@@ -55,4 +55,6 @@ public interface SavedQueryService {
     @Generated
     Collection<String> getSavedQueries(long ownerId, String viewName);
 
+    void renameQuery(long ownerId, String viewName, String oldTitle, String newTitle);
+
 }

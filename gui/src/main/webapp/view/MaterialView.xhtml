@@ -223,17 +223,18 @@
 					<f:facet name="targetCaption">#{i18n.search_input_visible_fields}</f:facet>
 				</p:pickList>
 			</h:panelGrid>
-
 			</p:tab>
+
 			<p:tab title="#{i18n.search_input_saved_query_title}">
 				<h:panelGrid columns="1">
 					<h:outputLabel styleClass="label-field-mandatory" value="#{i18n.search_input_lbl_saved_query}"/>
 					<p:selectOneListbox id="savedQueryList" value="#{materialView.selectedSavedQuery}" style="#{sizeServiceBean.searchQueriesHeight()}; width:480px">
 						<f:selectItems value="#{materialView.savedQueries}"/>
 					</p:selectOneListbox>
-					<h:panelGrid columns="2">
-						<p:commandButton value="#{i18n.search_input_run_saved_query}" action="#{materialView.runSavedQuery}" ajax="false"/>
-						<p:commandButton value="#{i18n.search_input_delete_saved_query}" actionListener="#{customerView.deleteSavedQuery}" update="savedQueryList" ajax="true"/>
+					<h:panelGrid columns="3">
+						<p:commandButton icon="pi pi-caret-right" value="#{i18n.search_input_run_saved_query}" action="#{materialView.runSavedQuery}" ajax="false"/>
+						<p:commandButton icon="pi pi-pencil" value="#{i18n.search_input_rename_saved_query}" actionListener="#{materialView.openRenameDialog}" ajax="true"/>
+						<p:commandButton icon="pi pi-eraser" value="#{i18n.search_input_delete_saved_query}" actionListener="#{customerView.deleteSavedQuery}" update="savedQueryList" ajax="true"/>
 					</h:panelGrid>
 				</h:panelGrid>
 			</p:tab>
@@ -246,6 +247,33 @@
 			<p:commandButton id="cmdCount" value="#{i18n.search_input_perform_count}" actionListener="#{materialView.countRecords}" update="growl" ajax="true"/>
 		</h:panelGrid>
 	</p:dialog>
+
+<!-- Query rename dialog -->
+	<p:dialog widgetVar="dlgQeryRename" id="dlgQeryRename" modal="true" showEffect="fade" hideEffect="fade" focus="txtNewQueryName" closeOnEscape="true">
+		<f:facet name="header">
+			<i class="pi pi-pencil"/>
+			<h:outputText value="&#160;#{i18n.query_rename_title}"/>
+		</f:facet>
+
+		<h:panelGrid columns="3">
+			<h:outputLabel value="#{i18n.query_rename_newname} *:" for="txtNewQueryName" styleClass="label-field-mandatory"/>
+			<p:inputText id="txtNewQueryName" value="#{materialView.newQueryName}"/>
+			<p:tooltip for="txtNewQueryName" value=""/>
+		</h:panelGrid>
+		<p/>
+
+		<f:facet name="footer">
+			<p:commandButton id="cmdRename" icon="pi pi-save" value="#{i18n.command_rename}" ajax="true" 
+				actionListener="#{materialView.renameQuery()}"
+				update="tabViewSearchInput,growl" oncomplete="PF('dlgQeryRename').hide()"/>
+
+			<p:commandButton id="cmdCancel" icon="pi pi-times" value="#{i18n.command_cancel}" onclick="PF('dlgQeryRename').hide()" />
+
+			<p:defaultCommand target="cmdRename" scope="dlgQeryRename"/>
+		</f:facet>
+	</p:dialog>
+
+
 
 	<p:menubar>
 		<p:submenu icon="pi pi-file" label="#{i18n.mnu_file}" id="panData_mniFile">

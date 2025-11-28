@@ -144,4 +144,19 @@ public class SavedQueryServiceBean extends AbstractRepository<SavedQuery, Long> 
         return search(buildQueryStatement(ownerId, viewName, null, false)).stream().map(SavedQuery::getTitle).toList();
     }
 
+    public void renameQuery(long ownerId, String viewName, String oldTitle, String newTitle) {
+        final List<SavedQuery> savedQueries = search(buildQueryStatement(ownerId, viewName, oldTitle, true));
+
+        if (!savedQueries.isEmpty()) {
+            if (oldTitle == null || oldTitle.isEmpty()) {
+                logger.debug("Overwrite last query of view '{}' (owner id: '{}')", viewName, ownerId);
+            }
+            else {
+                logger.debug("Overwrite saved query '{}' of view '{}' (owner id: '{}')", oldTitle, viewName, ownerId);
+            }
+
+            savedQueries.getFirst().setTitle(newTitle);
+        }
+    }
+
 }

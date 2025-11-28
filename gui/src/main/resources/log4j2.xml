@@ -2,7 +2,7 @@
 <Configuration>
 
 	<Appenders>
-		<RollingFile name="FILE" fileName="${sys:user.home}/development/test/logs/code_gui.log" filePattern="${sys:user.home}/development/test/logs/code_gui-%i.log">
+		<RollingFile name="FILE" fileName="${sys:JBOSS_LOG_DIR}/qdw/qdw_gui.log" filePattern="${sys:JBOSS_LOG_DIR}/qdw/qdw_gui-%i.log">
 			<PatternLayout pattern="%d{dd.MM.yyyy HH:mm:ss,SSS} %-5p %c (%L) - %m%n"/>
 
 			<Policies>

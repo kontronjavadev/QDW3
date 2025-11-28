@@ -244,6 +244,9 @@ public interface TranslationKeys {
     String OPERATION_EXPORT_OK = "operation_export_ok";
     String OPERATION_FETCH_FAIL = "operation_fetch_fail";
     String OPERATION_FETCH_NO_DATA = "operation_fetch_no_data";
+    String OPERATION_RENAME_FAIL = "operation_rename_fail";
+    String OPERATION_QUERYRENAME_NOT_UNIQUE = "operation_queryrename_notunique";
+    String OPERATION_RENAME_SUCCESS = "operation_rename_success";
     String OPERATION_IMPORT_FAIL = "operation_import_fail";
     String OPERATION_IMPORT_OK = "operation_import_ok";
     String OPERATION_RESETPW_FAIL = "operation_resetpw_fail";
