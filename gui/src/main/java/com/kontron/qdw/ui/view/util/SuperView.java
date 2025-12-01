@@ -16,6 +16,7 @@ import java.util.function.ToIntFunction;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.primefaces.PrimeFaces;
 
 import com.kontron.qdw.boundary.base.UserPropertyBoundaryService;
@@ -223,14 +224,15 @@ public abstract class SuperView extends CopyClipboard {
     }
 
     public void renameQuery() {
-        if (StringUtils.isEmpty(getSelectedSavedQuery()) || StringUtils.isEmpty(newQueryName)) {
+        if (StringUtils.isEmpty(getSelectedSavedQuery()) || StringUtils.isEmpty(newQueryName)
+                || Strings.CI.equals(getSelectedSavedQuery(), newQueryName)) {
             return;
         }
 
         ResourceBundle bundle = ResourceBundle.getBundle(DEFAULT_BUNDLE_NAME, userSession.getLocale());
 
         boolean nameExists = queryManager.getSavedQueries(userSession.getPrincipal().getId(), getViewName()).stream()
-                .anyMatch(q -> q.equals(newQueryName));
+                .anyMatch(q -> q.equalsIgnoreCase(newQueryName));
         if (nameExists) {
             MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_ERROR, OPERATION_RENAME_FAIL,
                     bundle.getString(OPERATION_QUERYRENAME_NOT_UNIQUE).formatted(newQueryName));

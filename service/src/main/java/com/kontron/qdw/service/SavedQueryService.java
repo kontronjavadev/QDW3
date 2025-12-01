@@ -1,6 +1,8 @@
 package com.kontron.qdw.service;
 
 import java.util.*;
+
+import jakarta.validation.constraints.NotEmpty;
 import net.sourceforge.jbizmo.commons.search.dto.SearchDTO;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
 
@@ -55,6 +57,6 @@ public interface SavedQueryService {
     @Generated
     Collection<String> getSavedQueries(long ownerId, String viewName);
 
-    void renameQuery(long ownerId, String viewName, String oldTitle, String newTitle);
+    void renameQuery(long ownerId, String viewName, @NotEmpty String oldTitle, @NotEmpty String newTitle);
 
 }

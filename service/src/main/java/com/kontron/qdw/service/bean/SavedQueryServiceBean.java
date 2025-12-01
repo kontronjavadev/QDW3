@@ -7,6 +7,7 @@ import net.sourceforge.jbizmo.commons.jpa.*;
 import net.sourceforge.jbizmo.commons.search.dto.SearchDTO;
 import com.kontron.qdw.service.*;
 import jakarta.ejb.*;
+import jakarta.validation.constraints.NotEmpty;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
 import java.io.*;
 import com.kontron.qdw.domain.base.*;
@@ -144,17 +145,11 @@ public class SavedQueryServiceBean extends AbstractRepository<SavedQuery, Long> 
         return search(buildQueryStatement(ownerId, viewName, null, false)).stream().map(SavedQuery::getTitle).toList();
     }
 
-    public void renameQuery(long ownerId, String viewName, String oldTitle, String newTitle) {
+    public void renameQuery(long ownerId, String viewName, @NotEmpty String oldTitle, @NotEmpty String newTitle) {
         final List<SavedQuery> savedQueries = search(buildQueryStatement(ownerId, viewName, oldTitle, true));
 
         if (!savedQueries.isEmpty()) {
-            if (oldTitle == null || oldTitle.isEmpty()) {
-                logger.debug("Overwrite last query of view '{}' (owner id: '{}')", viewName, ownerId);
-            }
-            else {
-                logger.debug("Overwrite saved query '{}' of view '{}' (owner id: '{}')", oldTitle, viewName, ownerId);
-            }
-
+            logger.debug("Rename saved query '{}' of view '{}' (owner id: '{}') to '{}'", oldTitle, viewName, ownerId, newTitle);
             savedQueries.getFirst().setTitle(newTitle);
         }
     }
