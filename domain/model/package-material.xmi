@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<net.sourceforge.net.model.domain:DomainNamespace xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:net.sourceforge.net.model.domain="http:///net/sourceforge/jbizmo/model/domain.ecore" name="material" javaTypes="//@domainObjects.0 //@domainObjects.1 //@domainObjects.2 //@domainObjects.3 //@domainObjects.4">
+<net.sourceforge.net.model.domain:DomainNamespace xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:net.sourceforge.net.model.domain="http:///net/sourceforge/jbizmo/model/domain.ecore" name="material" javaTypes="//@domainObjects.0 //@domainObjects.1 //@domainObjects.2 //@domainObjects.3 //@domainObjects.4 //@domainObjects.5 //@domainObjects.6 //@domainObjects.7 //@domainObjects.8">
   <parent href="project.xmi#/0/@domainNamespace"/>
   <project href="project.xmi#/0"/>
   <domainObjects name="MaterialType" comment="Domain object for material type objects" mappable="true" namespace="/" label="material type" namePlural="MaterialTypes" labelPlural="material types" discriminatorValue="">
@@ -100,6 +100,21 @@
     <associations xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" name="materialClass" owner="true" fetchTypeEager="true" target="//@domainObjects.1" internalComment="" userComment="" insertable="true" updatable="true" column="//@domainObjects.2/@databaseTable/@columns.12"/>
     <associations xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" name="materialType" owner="true" fetchTypeEager="true" target="//@domainObjects.0" internalComment="" userComment="" insertable="true" updatable="true" column="//@domainObjects.2/@databaseTable/@columns.13"/>
     <associations xsi:type="net.sourceforge.net.model.domain:OneToManyAssociation" name="revisions" owner="true" cascadePersist="true" cascadeMerge="true" cascadeRemove="true" cascadeRefresh="true" target="//@domainObjects.3" internalComment="" userComment="" reverseAssociation="//@domainObjects.3/@associations.0"/>
+    <associations xsi:type="net.sourceforge.net.model.domain:ManyToManyAssociation" name="productLines" owner="true" target="//@domainObjects.5" internalComment="" userComment="" reverseAssociation="//@domainObjects.5/@associations.0">
+      <table name="material_product_lines_tab" schemaName="" catalogName="">
+        <database href="project.xmi#/0/@database"/>
+        <columns name="material_pk">
+          <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.1"/>
+        </columns>
+        <columns name="product_line_pk">
+          <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.1"/>
+        </columns>
+        <foreignKeys name="fk_material_product_lines_1" column="//@domainObjects.2/@associations.4/@table/@columns.0" referencedColumn="//@domainObjects.2/@databaseTable/@columns.0"/>
+        <foreignKeys name="fk_material_product_lines_product_2" column="//@domainObjects.2/@associations.4/@table/@columns.1" referencedColumn="//@domainObjects.5/@databaseTable/@columns.0"/>
+        <indexes name="uk_material_product_lines" unique="true" columns="//@domainObjects.2/@associations.4/@table/@columns.0 //@domainObjects.2/@associations.4/@table/@columns.1"/>
+      </table>
+    </associations>
+    <associations xsi:type="net.sourceforge.net.model.domain:ManyToManyAssociation" name="materialNumberSets" target="//@domainObjects.6" reverseAssociation="//@domainObjects.6/@associations.0"/>
     <databaseTable name="material_tab" schemaName="" catalogName="">
       <database href="project.xmi#/0/@database"/>
       <columns name="id">
@@ -280,6 +295,141 @@
       <primaryKey name="pk_bom_item" column="//@domainObjects.4/@databaseTable/@columns.0"/>
       <foreignKeys name="fk_bom_item_material" column="//@domainObjects.4/@databaseTable/@columns.7" referencedColumn="//@domainObjects.2/@databaseTable/@columns.0"/>
       <foreignKeys name="fk_bom_item_material_revision" column="//@domainObjects.4/@databaseTable/@columns.8" referencedColumn="//@domainObjects.3/@databaseTable/@columns.0"/>
+    </databaseTable>
+  </domainObjects>
+  <domainObjects name="ProductLine" comment="Domain object for product line objects" mappable="true" namespace="/" label="product line" namePlural="ProductLines" labelPlural="product lines" discriminatorValue="">
+    <parent href="package-base.xmi#//@domainObjects.0"/>
+    <iDGenerator name="PRODUCTLINE_SEQ" generatorType="IDENTITY"/>
+    <inheritance>
+      <target href="package-base.xmi#//@domainObjects.0"/>
+    </inheritance>
+    <attributes name="label" label="label" labelPlural="labels" fetchTypeEager="true" displayAttribute="true" column="//@domainObjects.5/@databaseTable/@columns.4" removeWhitespaceCharacters="true">
+      <domainAttributeValidator maxLength="50" minLength="1" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <associations xsi:type="net.sourceforge.net.model.domain:ManyToManyAssociation" name="materials" target="//@domainObjects.2" reverseAssociation="//@domainObjects.2/@associations.4"/>
+    <databaseTable name="product_line_tab" schemaName="" catalogName="">
+      <database href="project.xmi#/0/@database"/>
+      <columns name="id">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.1"/>
+      </columns>
+      <columns name="version">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.0"/>
+      </columns>
+      <columns name="creation_date">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.14"/>
+      </columns>
+      <columns name="last_update" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.14"/>
+      </columns>
+      <columns name="label" length="50">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <primaryKey name="pk_product_line" column="//@domainObjects.5/@databaseTable/@columns.0"/>
+      <indexes name="uk_product_line_label" unique="true" columns="//@domainObjects.5/@databaseTable/@columns.4"/>
+      <indexes name="idx_product_line_label" columns="//@domainObjects.5/@databaseTable/@columns.4"/>
+    </databaseTable>
+  </domainObjects>
+  <domainObjects name="MaterialNumberSet" comment="Domain object for material number set objects" mappable="true" namespace="/" label="material number set" namePlural="MaterialNumberSets" labelPlural="material number sets" discriminatorValue="">
+    <parent href="package-base.xmi#//@domainObjects.0"/>
+    <iDGenerator name="MATERIALNUMBERSET_SEQ" generatorType="IDENTITY"/>
+    <inheritance>
+      <target href="package-base.xmi#//@domainObjects.0"/>
+    </inheritance>
+    <attributes name="label" label="label" labelPlural="labels" fetchTypeEager="true" column="//@domainObjects.6/@databaseTable/@columns.4" removeWhitespaceCharacters="true">
+      <domainAttributeValidator maxLength="50" minLength="1" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <associations xsi:type="net.sourceforge.net.model.domain:ManyToManyAssociation" name="materials" owner="true" target="//@domainObjects.2" internalComment="" userComment="" reverseAssociation="//@domainObjects.2/@associations.5">
+      <table name="material_number_set_materials_tab" schemaName="" catalogName="">
+        <database href="project.xmi#/0/@database"/>
+        <columns name="material_number_set_pk">
+          <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.1"/>
+        </columns>
+        <columns name="material_pk">
+          <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.1"/>
+        </columns>
+        <foreignKeys name="fk_material_number_set_materials_1" column="//@domainObjects.6/@associations.0/@table/@columns.0" referencedColumn="//@domainObjects.6/@databaseTable/@columns.0"/>
+        <foreignKeys name="fk_material_number_set_materials_2" column="//@domainObjects.6/@associations.0/@table/@columns.1" referencedColumn="//@domainObjects.2/@databaseTable/@columns.0"/>
+        <indexes name="uk_material_number_set_materials" unique="true" columns="//@domainObjects.6/@associations.0/@table/@columns.0 //@domainObjects.6/@associations.0/@table/@columns.1"/>
+      </table>
+    </associations>
+    <databaseTable name="material_number_set_tab" schemaName="" catalogName="">
+      <database href="project.xmi#/0/@database"/>
+      <columns name="id">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.1"/>
+      </columns>
+      <columns name="version">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.0"/>
+      </columns>
+      <columns name="creation_date">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.14"/>
+      </columns>
+      <columns name="last_update" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.14"/>
+      </columns>
+      <columns name="label" length="50">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <primaryKey name="pk_material_number_set" column="//@domainObjects.6/@databaseTable/@columns.0"/>
+      <indexes name="uk_material_number_set_label" unique="true" columns="//@domainObjects.6/@databaseTable/@columns.4"/>
+      <indexes name="idx_material_number_set_label" columns="//@domainObjects.6/@databaseTable/@columns.4"/>
+    </databaseTable>
+  </domainObjects>
+  <domainObjects name="SerialNumberSet" comment="Domain object for serial number set objects" mappable="true" namespace="/" label="serial number set" namePlural="SerialNumberSets" labelPlural="serial number sets" discriminatorValue="">
+    <parent href="package-base.xmi#//@domainObjects.4"/>
+    <iDGenerator name="SERIALNUMBERSET_SEQ"/>
+    <inheritance>
+      <target href="package-base.xmi#//@domainObjects.4"/>
+    </inheritance>
+    <associations xsi:type="net.sourceforge.net.model.domain:OneToManyAssociation" name="serialNumbers" owner="true" cascadePersist="true" cascadeMerge="true" cascadeRemove="true" cascadeRefresh="true" target="//@domainObjects.8" internalComment="" userComment="" reverseAssociation="//@domainObjects.8/@associations.0"/>
+    <databaseTable name="serial_number_set_tab" schemaName="" catalogName="">
+      <database href="project.xmi#/0/@database"/>
+      <columns name="code" length="50">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="short_text" length="100">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="comment" length="4000" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="creation_date">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.14"/>
+      </columns>
+      <columns name="last_update" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.14"/>
+      </columns>
+      <columns name="version">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.0"/>
+      </columns>
+      <primaryKey name="pk_serial_number_set" column="//@domainObjects.7/@databaseTable/@columns.0"/>
+    </databaseTable>
+  </domainObjects>
+  <domainObjects name="SerialNumberSetItem" comment="Domain object for serial number set item objects" mappable="true" namespace="/" label="serial number set item" namePlural="SerialNumberSetItems" labelPlural="serial number set items" discriminatorValue="">
+    <iDGenerator name="SERIALNUMBERSETITEM_SEQ" generatorType="IDENTITY"/>
+    <attributes name="id" pk="true" label="id" labelPlural="ids" fetchTypeEager="true" column="//@domainObjects.8/@databaseTable/@columns.0">
+      <domainAttributeValidator maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.2"/>
+    </attributes>
+    <attributes name="serialNumber" label="serial number" labelPlural="serial numbers" fetchTypeEager="true" column="//@domainObjects.8/@databaseTable/@columns.1" removeWhitespaceCharacters="true">
+      <domainAttributeValidator maxLength="50" minLength="1" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <associations xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" name="serialNumberSet" cascadePersist="true" cascadeMerge="true" cascadeRemove="true" cascadeRefresh="true" target="//@domainObjects.7" reverseAssociation="//@domainObjects.7/@associations.0" insertable="true" updatable="true" column="//@domainObjects.8/@databaseTable/@columns.2"/>
+    <databaseTable name="serial_number_set_item_tab" schemaName="" catalogName="">
+      <database href="project.xmi#/0/@database"/>
+      <columns name="id">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.1"/>
+      </columns>
+      <columns name="serial_number" length="50">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="serial_number_set" length="50">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <primaryKey name="pk_serial_number_set_item_tab" column="//@domainObjects.8/@databaseTable/@columns.0"/>
+      <foreignKeys name="fk_serial_number_set_item_serial_number_set" column="//@domainObjects.8/@databaseTable/@columns.2" referencedColumn="//@domainObjects.7/@databaseTable/@columns.0"/>
     </databaseTable>
   </domainObjects>
 </net.sourceforge.net.model.domain:DomainNamespace>

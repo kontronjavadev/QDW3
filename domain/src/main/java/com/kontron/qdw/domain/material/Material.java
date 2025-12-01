@@ -20,6 +20,8 @@ import com.kontron.qdw.domain.base.*;
 @NamedQuery(name = Material.NQ_GET_MATERIALCLASS, query = "select b from Material a join a.materialClass b where a.id = :id")
 @NamedQuery(name = Material.NQ_GET_MATERIALTYPE, query = "select b from Material a join a.materialType b where a.id = :id")
 @NamedQuery(name = Material.NQ_GET_REVISIONS, query = "select b from Material a join a.revisions b where a.id = :id")
+@NamedQuery(name = Material.NQ_GET_PRODUCTLINES, query = "select b from Material a join a.productLines b where a.id = :id")
+@NamedQuery(name = Material.NQ_GET_MATERIALNUMBERSETS, query = "select b from Material a join a.materialNumberSets b where a.id = :id")
 @NamedQuery(name = Material.NQ_DELETE_ALL, query = "delete from Material a")
 @NamedQuery(name = Material.NQ_DELETE, query = "delete from Material a where a.id = :id")
 @NamedQuery(name = Material.NQ_GET_ALL, query = "select a from Material a")
@@ -27,6 +29,8 @@ import com.kontron.qdw.domain.base.*;
 @NamedQuery(name = Material.NQ_CHECK, query = "select count(a) from Material a where a.id = :id")
 @NamedQuery(name = Material.NQ_COUNT, query = "select count(a) from Material a")
 public class Material extends AbstractEntityWithId {
+    @Generated
+    public static final String NQ_GET_MATERIALNUMBERSETS = "Material.getMaterialNumberSets";
     @Generated
     public static final String NQ_DELETE_ALL = "Material.deleteAll";
     @Generated
@@ -55,6 +59,8 @@ public class Material extends AbstractEntityWithId {
     public static final String NQ_UK_EXISTS_BY_MATERIALNUMBER = "Material.checkByMaterialNumber";
     @Generated
     public static final String NQ_COUNT = "Material.count";
+    @Generated
+    public static final String NQ_GET_PRODUCTLINES = "Material.getProductLines";
     @Generated
     public static final String NQ_UK_EXISTS_BY_SAPNUMBER = "Material.checkBySapNumber";
     @Generated
@@ -114,6 +120,14 @@ public class Material extends AbstractEntityWithId {
     @OneToMany(targetEntity = MaterialRevision.class, mappedBy = "material", fetch = FetchType.LAZY, cascade = { CascadeType.ALL })
     @Generated
     private Collection<MaterialRevision> revisions = new ArrayList<>();
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "material_product_lines_tab", joinColumns = { @JoinColumn(name = "material_pk") }, inverseJoinColumns = {
+            @JoinColumn(name = "product_line_pk") })
+    @Generated
+    private Collection<ProductLine> productLines = new ArrayList<>();
+    @ManyToMany(mappedBy = "materials", fetch = FetchType.LAZY)
+    @Generated
+    private Collection<MaterialNumberSet> materialNumberSets = new ArrayList<>();
 
     /**
      * Default constructor
@@ -317,6 +331,38 @@ public class Material extends AbstractEntityWithId {
     @Generated
     public void setRevisions(Collection<MaterialRevision> revisions) {
         this.revisions = revisions;
+    }
+
+    /**
+     * @return a collection of product lines
+     */
+    @Generated
+    public Collection<ProductLine> getProductLines() {
+        return this.productLines;
+    }
+
+    /**
+     * @param productLines the product lines to set
+     */
+    @Generated
+    public void setProductLines(Collection<ProductLine> productLines) {
+        this.productLines = productLines;
+    }
+
+    /**
+     * @return a collection of material number sets
+     */
+    @Generated
+    public Collection<MaterialNumberSet> getMaterialNumberSets() {
+        return this.materialNumberSets;
+    }
+
+    /**
+     * @param materialNumberSets the material number sets to set
+     */
+    @Generated
+    public void setMaterialNumberSets(Collection<MaterialNumberSet> materialNumberSets) {
+        this.materialNumberSets = materialNumberSets;
     }
 
     /* (non-Javadoc)

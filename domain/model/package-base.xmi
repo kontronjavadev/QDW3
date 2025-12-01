@@ -26,6 +26,8 @@
     <targetInheritances href="package-material.xmi#//@domainObjects.2/@inheritance"/>
     <targetInheritances href="package-material.xmi#//@domainObjects.3/@inheritance"/>
     <targetInheritances href="package-material.xmi#//@domainObjects.4/@inheritance"/>
+    <targetInheritances href="package-material.xmi#//@domainObjects.5/@inheritance"/>
+    <targetInheritances href="package-material.xmi#//@domainObjects.6/@inheritance"/>
     <databaseTable name="abstract_entity_with_id_tab" schemaName="" catalogName="">
       <database href="project.xmi#/0/@database"/>
       <columns name="id">
@@ -204,6 +206,7 @@
     <targetInheritances href="#//@domainObjects.13/@inheritance"/>
     <targetInheritances href="package-material.xmi#//@domainObjects.0/@inheritance"/>
     <targetInheritances href="package-material.xmi#//@domainObjects.1/@inheritance"/>
+    <targetInheritances href="package-material.xmi#//@domainObjects.7/@inheritance"/>
     <databaseTable name="abstract_funtional_entity_tab" schemaName="" catalogName="">
       <database href="project.xmi#/0/@database"/>
       <columns name="code" length="50">

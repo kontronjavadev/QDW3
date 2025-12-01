@@ -28,4 +28,8 @@ public class Material_ extends AbstractEntityWithId_ {
     public static volatile SingularAttribute<Material, MaterialType> materialType;
     @Generated
     public static volatile CollectionAttribute<Material, MaterialRevision> revisions;
+    @Generated
+    public static volatile CollectionAttribute<Material, ProductLine> productLines;
+    @Generated
+    public static volatile CollectionAttribute<Material, MaterialNumberSet> materialNumberSets;
 }
