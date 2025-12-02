@@ -110,7 +110,7 @@
           <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.1"/>
         </columns>
         <foreignKeys name="fk_material_product_lines_1" column="//@domainObjects.2/@associations.4/@table/@columns.0" referencedColumn="//@domainObjects.2/@databaseTable/@columns.0"/>
-        <foreignKeys name="fk_material_product_lines_product_2" column="//@domainObjects.2/@associations.4/@table/@columns.1" referencedColumn="//@domainObjects.5/@databaseTable/@columns.0"/>
+        <foreignKeys name="fk_material_product_lines_2" column="//@domainObjects.2/@associations.4/@table/@columns.1" referencedColumn="//@domainObjects.5/@databaseTable/@columns.0"/>
         <indexes name="uk_material_product_lines" unique="true" columns="//@domainObjects.2/@associations.4/@table/@columns.0 //@domainObjects.2/@associations.4/@table/@columns.1"/>
       </table>
     </associations>

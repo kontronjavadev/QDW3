@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<notation:Diagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:net.sourceforge.net.model.domain="http:///net/sourceforge/jbizmo/model/domain.ecore" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.3/notation" xmi:id="_iOflkM-OEfCBf8sYbckyRg" type="JBizMo" measurementUnit="Pixel">
+  <children xmi:type="notation:Node" xmi:id="_sdNcUM-OEfCBf8sYbckyRg" type="2001">
+    <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_sdRGsM-OEfCBf8sYbckyRg" source="Shortcut">
+      <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_sdRGsc-OEfCBf8sYbckyRg" key="modelID" value="JBizMo"/>
+    </eAnnotations>
+    <children xmi:type="notation:Node" xmi:id="_sdP4kM-OEfCBf8sYbckyRg" type="5002"/>
+    <children xmi:type="notation:Node" xmi:id="_sdP4kc-OEfCBf8sYbckyRg" type="7001">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_sdP4ks-OEfCBf8sYbckyRg"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_sdP4k8-OEfCBf8sYbckyRg"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_sdP4lM-OEfCBf8sYbckyRg"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_sdNcUc-OEfCBf8sYbckyRg" fontName="Segoe UI"/>
+    <element xmi:type="net.sourceforge.net.model.domain:DomainObject" href="package-base.xmi#//@domainObjects.0"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_sdNcUs-OEfCBf8sYbckyRg" y="15"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_4kL1MM-OEfCBf8sYbckyRg" type="2001">
+    <children xmi:type="notation:Node" xmi:id="_4kL1M8-OEfCBf8sYbckyRg" type="5002"/>
+    <children xmi:type="notation:Node" xmi:id="_4kMcQM-OEfCBf8sYbckyRg" type="7001">
+      <children xmi:type="notation:Node" xmi:id="_Hf2jQM-PEfCBf8sYbckyRg" type="3001">
+        <children xmi:type="notation:Node" xmi:id="_Hf2jRM-PEfCBf8sYbckyRg" type="5001"/>
+        <styles xmi:type="notation:ShapeStyle" xmi:id="_Hf2jQc-PEfCBf8sYbckyRg" fontName="Segoe UI"/>
+        <styles xmi:type="notation:FontStyle" xmi:id="_Hf2jQs-PEfCBf8sYbckyRg"/>
+        <element xmi:type="net.sourceforge.net.model.domain:DomainAttribute" href="package-serial.xmi#//@domainObjects.0/@attributes.0"/>
+        <layoutConstraint xmi:type="notation:Bounds" xmi:id="_Hf2jQ8-PEfCBf8sYbckyRg"/>
+      </children>
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_4kMcQc-OEfCBf8sYbckyRg"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_4kMcQs-OEfCBf8sYbckyRg"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_4kMcQ8-OEfCBf8sYbckyRg"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_4kL1Mc-OEfCBf8sYbckyRg" fontName="Segoe UI"/>
+    <element xmi:type="net.sourceforge.net.model.domain:DomainObject" href="package-serial.xmi#//@domainObjects.0"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_4kL1Ms-OEfCBf8sYbckyRg" y="245" width="226"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_z3SLwM-PEfCBf8sYbckyRg" type="2001">
+    <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_z3WdMM-PEfCBf8sYbckyRg" source="Shortcut">
+      <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_z3WdMc-PEfCBf8sYbckyRg" key="modelID" value="JBizMo"/>
+    </eAnnotations>
+    <children xmi:type="notation:Node" xmi:id="_z3V2IM-PEfCBf8sYbckyRg" type="5002"/>
+    <children xmi:type="notation:Node" xmi:id="_z3V2Ic-PEfCBf8sYbckyRg" type="7001">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_z3V2Is-PEfCBf8sYbckyRg"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_z3V2I8-PEfCBf8sYbckyRg"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_z3V2JM-PEfCBf8sYbckyRg"/>
+    </children>
+    <styles xmi:type="notation:ShapeStyle" xmi:id="_z3SLwc-PEfCBf8sYbckyRg" fontName="Segoe UI"/>
+    <element xmi:type="net.sourceforge.net.model.domain:DomainObject" href="package-material.xmi#//@domainObjects.2"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_z3SLws-PEfCBf8sYbckyRg" y="485"/>
+  </children>
+  <styles xmi:type="notation:DiagramStyle" xmi:id="_iOflkc-OEfCBf8sYbckyRg"/>
+  <element xmi:type="net.sourceforge.net.model.domain:DomainNamespace" href="package-serial.xmi#/"/>
+  <edges xmi:type="notation:Edge" xmi:id="_5M2-wM-OEfCBf8sYbckyRg" type="4005" source="_4kL1MM-OEfCBf8sYbckyRg" target="_sdNcUM-OEfCBf8sYbckyRg">
+    <styles xmi:type="notation:ConnectorStyle" xmi:id="_5M2-wc-OEfCBf8sYbckyRg" routing="Rectilinear"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_5M2-ws-OEfCBf8sYbckyRg" fontName="Segoe UI"/>
+    <element xmi:type="net.sourceforge.net.model.domain:DomainInheritance" href="package-serial.xmi#//@domainObjects.0/@inheritance"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_5M2-w8-OEfCBf8sYbckyRg" points="[-47, -5, -63, 229]$[-47, -122, -63, 112]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_5M6CEM-OEfCBf8sYbckyRg" id="(0.32,0.11904761904761904)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_5M6CEc-OEfCBf8sYbckyRg" id="(0.3893805309734513,0.008849557522123894)"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="_2bE-MM-PEfCBf8sYbckyRg" type="4004" source="_4kL1MM-OEfCBf8sYbckyRg" target="_z3SLwM-PEfCBf8sYbckyRg">
+    <styles xmi:type="notation:RoutingStyle" xmi:id="_2bE-Mc-PEfCBf8sYbckyRg" routing="Rectilinear"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_2bE-Ms-PEfCBf8sYbckyRg" fontName="Segoe UI"/>
+    <element xmi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-serial.xmi#//@domainObjects.0/@associations.0"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_2bE-M8-PEfCBf8sYbckyRg" points="[-58, 57, -61, -213]$[-58, 184, -61, -86]"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="_2bGzYM-PEfCBf8sYbckyRg" type="4006" source="_4kL1MM-OEfCBf8sYbckyRg" target="_4kL1MM-OEfCBf8sYbckyRg">
+    <styles xmi:type="notation:RoutingStyle" xmi:id="_2bGzYc-PEfCBf8sYbckyRg" routing="Rectilinear"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_2bGzYs-PEfCBf8sYbckyRg" fontName="Segoe UI"/>
+    <element xmi:type="net.sourceforge.net.model.domain:OneToManyAssociation" href="package-serial.xmi#//@domainObjects.0/@associations.2"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_2bGzY8-PEfCBf8sYbckyRg" points="[0, 0, 0, 0]$[0, 0, 0, 0]"/>
+  </edges>
+</notation:Diagram>

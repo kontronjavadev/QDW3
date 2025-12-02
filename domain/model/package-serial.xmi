@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<net.sourceforge.net.model.domain:DomainNamespace xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:net.sourceforge.net.model.domain="http:///net/sourceforge/jbizmo/model/domain.ecore" name="serial" javaTypes="//@domainObjects.0">
+  <parent href="project.xmi#/0/@domainNamespace"/>
+  <project href="project.xmi#/0"/>
+  <domainObjects name="SerialObject" comment="Domain object for serial object objects" mappable="true" namespace="/" label="serial object" namePlural="SerialObjects" labelPlural="serial objects" discriminatorValue="">
+    <parent href="package-base.xmi#//@domainObjects.0"/>
+    <iDGenerator name="SERIALOBJECT_SEQ" generatorType="IDENTITY"/>
+    <inheritance>
+      <target href="package-base.xmi#//@domainObjects.0"/>
+    </inheritance>
+    <attributes name="serialNumber" label="serial number" labelPlural="serial numbers" fetchTypeEager="true" column="//@domainObjects.0/@databaseTable/@columns.4" removeWhitespaceCharacters="true">
+      <domainAttributeValidator maxLength="50" minLength="1" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <attributes name="assemblyDate" label="assembly date" labelPlural="assembly dates" fetchTypeEager="true" column="//@domainObjects.0/@databaseTable/@columns.5">
+      <domainAttributeValidator nullable="true" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.16"/>
+    </attributes>
+    <attributes name="customerSerialNumber" label="customer serial number" labelPlural="customer serial numbers" fetchTypeEager="true" column="//@domainObjects.0/@databaseTable/@columns.6">
+      <domainAttributeValidator maxLength="50" nullable="true" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <attributes name="productionOrderNumber" label="production order number" labelPlural="production order numbers" fetchTypeEager="true" column="//@domainObjects.0/@databaseTable/@columns.7">
+      <domainAttributeValidator maxLength="50" nullable="true" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <associations xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" name="material" owner="true" insertable="true" updatable="true" column="//@domainObjects.0/@databaseTable/@columns.8">
+      <target href="package-material.xmi#//@domainObjects.2"/>
+    </associations>
+    <associations xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" name="parentObject" target="//@domainObjects.0" reverseAssociation="//@domainObjects.0/@associations.2" insertable="true" updatable="true" optional="true" column="//@domainObjects.0/@databaseTable/@columns.9"/>
+    <associations xsi:type="net.sourceforge.net.model.domain:OneToManyAssociation" name="serialObjects" owner="true" cascadePersist="true" cascadeMerge="true" cascadeRemove="true" cascadeRefresh="true" target="//@domainObjects.0" reverseAssociation="//@domainObjects.0/@associations.1"/>
+    <databaseTable name="serial_object_tab" schemaName="" catalogName="">
+      <database href="project.xmi#/0/@database"/>
+      <columns name="id">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.1"/>
+      </columns>
+      <columns name="version">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.0"/>
+      </columns>
+      <columns name="creation_date">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.14"/>
+      </columns>
+      <columns name="last_update" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.14"/>
+      </columns>
+      <columns name="serial_number" length="50">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="assembly_date" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.3"/>
+      </columns>
+      <columns name="customer_serial_number" length="50" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="production_order_number" length="50" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="material">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.1"/>
+      </columns>
+      <columns name="parent_object" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.1"/>
+      </columns>
+      <primaryKey name="pk_serial_object" column="//@domainObjects.0/@databaseTable/@columns.0"/>
+      <foreignKeys name="fk_serial_object_material" column="//@domainObjects.0/@databaseTable/@columns.8">
+        <referencedColumn href="package-material.xmi#//@domainObjects.2/@databaseTable/@columns.0"/>
+      </foreignKeys>
+      <foreignKeys name="fk_serial_object_parent_object" column="//@domainObjects.0/@databaseTable/@columns.9" referencedColumn="//@domainObjects.0/@databaseTable/@columns.0"/>
+      <indexes name="idx_serial_number" columns="//@domainObjects.0/@databaseTable/@columns.4"/>
+      <indexes name="uk_serial_object_snr_mat" unique="true" columns="//@domainObjects.0/@databaseTable/@columns.4 //@domainObjects.0/@databaseTable/@columns.8"/>
+    </databaseTable>
+  </domainObjects>
+</net.sourceforge.net.model.domain:DomainNamespace>
