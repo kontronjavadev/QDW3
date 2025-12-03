@@ -69,14 +69,12 @@ public class MaterializedEntitiy {
     @Size(max = 20, message = "Length of field \"parentSapNumber\" is illegal!")
     @Generated
     private String parentSapNumber;
-    @Basic(optional = false)
-    @Column(name = "material_hierarchy", nullable = false, updatable = true, insertable = true, length = 250)
-    @NotNull(message = "Field \"materialHierarchy\" must not be null!")
-    @Size(max = 250, message = "Length of field \"materialHierarchy\" is illegal!")
+    @Column(name = "material_hierarchy", nullable = true, updatable = true, insertable = true, length = 255)
+    @Size(max = 255, message = "Length of field \"materialHierarchy\" is illegal!")
     @Generated
     private String materialHierarchy;
-    @Column(name = "parent_material_hierarchy", nullable = true, updatable = true, insertable = true, length = 250)
-    @Size(max = 250, message = "Length of field \"parentMaterialHierarchy\" is illegal!")
+    @Column(name = "parent_material_hierarchy", nullable = true, updatable = true, insertable = true, length = 255)
+    @Size(max = 255, message = "Length of field \"parentMaterialHierarchy\" is illegal!")
     @Generated
     private String parentMaterialHierarchy;
     @Basic(optional = false)

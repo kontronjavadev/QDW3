@@ -74,8 +74,10 @@ public class MaterializedArrivalShipment extends MaterializedEntitiy {
     @Size(min = 1, max = 50, message = "Length of field \"customerOrderNumber\" is illegal!")
     @Generated
     private String customerOrderNumber;
-    @Column(name = "owner_location", nullable = true, updatable = true, insertable = true, length = 50)
-    @Size(max = 50, message = "Length of field \"ownerLocation\" is illegal!")
+    @Basic(optional = false)
+    @Column(name = "owner_location", nullable = false, updatable = true, insertable = true, length = 50)
+    @NotNull(message = "Field \"ownerLocation\" must not be null!")
+    @Size(min = 1, max = 50, message = "Length of field \"ownerLocation\" is illegal!")
     @Generated
     private String ownerLocation;
     @Column(name = "purchase_order_number", nullable = true, updatable = true, insertable = true, length = 50)
