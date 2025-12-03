@@ -1,12 +1,18 @@
 package com.kontron.qdw.domain.mv;
 
 import jakarta.validation.constraints.*;
-import jakarta.persistence.*;
+import com.kontron.qdw.domain.serial.*;
+import java.util.*;
 import java.time.*;
+import com.kontron.qdw.domain.material.*;
+import jakarta.persistence.*;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
 
 @Entity
 @Table(name = "service_message_mv")
+@NamedQuery(name = MaterializedServiceMessage.NQ_GET_SERIALOBJECT, query = "select b from MaterializedServiceMessage a join a.serialObject b where a.id = :id")
+@NamedQuery(name = MaterializedServiceMessage.NQ_GET_FAILUREMATERIALS, query = "select b from MaterializedServiceMessage a join a.failureMaterials b where a.id = :id")
+@NamedQuery(name = MaterializedServiceMessage.NQ_GET_MATERIAL, query = "select b from MaterializedServiceMessage a join a.material b where a.id = :id")
 @NamedQuery(name = MaterializedServiceMessage.NQ_DELETE_ALL, query = "delete from MaterializedServiceMessage a")
 @NamedQuery(name = MaterializedServiceMessage.NQ_DELETE, query = "delete from MaterializedServiceMessage a where a.id = :id")
 @NamedQuery(name = MaterializedServiceMessage.NQ_GET_ALL, query = "select a from MaterializedServiceMessage a")
@@ -15,6 +21,8 @@ import net.sourceforge.jbizmo.commons.annotation.Generated;
 @NamedQuery(name = MaterializedServiceMessage.NQ_COUNT, query = "select count(a) from MaterializedServiceMessage a")
 public class MaterializedServiceMessage extends MaterializedEntitiy {
     @Generated
+    public static final String NQ_GET_SERIALOBJECT = "MaterializedServiceMessage.getSerialObject";
+    @Generated
     public static final String NQ_DELETE_ALL = "MaterializedServiceMessage.deleteAll";
     @Generated
     public static final String NQ_COUNT = "MaterializedServiceMessage.count";
@@ -22,6 +30,10 @@ public class MaterializedServiceMessage extends MaterializedEntitiy {
     public static final String NQ_DELETE = "MaterializedServiceMessage.delete";
     @Generated
     public static final String NQ_GET_ALL = "MaterializedServiceMessage.getAll";
+    @Generated
+    public static final String NQ_GET_FAILUREMATERIALS = "MaterializedServiceMessage.getFailureMaterials";
+    @Generated
+    public static final String NQ_GET_MATERIAL = "MaterializedServiceMessage.getMaterial";
     @Generated
     public static final String NQ_CHECK = "MaterializedServiceMessage.check";
     @Generated
@@ -138,10 +150,10 @@ public class MaterializedServiceMessage extends MaterializedEntitiy {
     @Size(max = 100, message = "Length of field \"supplierName\" is illegal!")
     @Generated
     private String supplierName;
-    @Column(name = "supplier_arrival_date", nullable = true, updatable = true, insertable = true)
+    @Column(name = "sup_arrival_date", nullable = true, updatable = true, insertable = true)
     @Generated
     private LocalDate supplierArrivalDate;
-    @Column(name = "customer_shipment_date", nullable = true, updatable = true, insertable = true)
+    @Column(name = "cust_ship_date", nullable = true, updatable = true, insertable = true)
     @Generated
     private LocalDate customerShipmentDate;
     @Column(name = "fault_analysis_code", nullable = true, updatable = true, insertable = true, length = 50)
@@ -190,6 +202,21 @@ public class MaterializedServiceMessage extends MaterializedEntitiy {
     @Size(max = 100, message = "Length of field \"errorShortText\" is illegal!")
     @Generated
     private String errorShortText;
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "serial_object", referencedColumnName = "id", nullable = false)
+    @NotNull(message = "Field \"serialObject\" must not be null!")
+    @Generated
+    private SerialObject serialObject;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "service_message_materials_tab", joinColumns = { @JoinColumn(name = "service_message_pk") }, inverseJoinColumns = {
+            @JoinColumn(name = "material_pk") })
+    @Generated
+    private Collection<Material> failureMaterials = new ArrayList<>();
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "material", referencedColumnName = "id", nullable = false)
+    @NotNull(message = "Field \"material\" must not be null!")
+    @Generated
+    private Material material;
 
     /**
      * Default constructor
@@ -861,6 +888,54 @@ public class MaterializedServiceMessage extends MaterializedEntitiy {
     @Generated
     public void setErrorShortText(String errorShortText) {
         this.errorShortText = errorShortText;
+    }
+
+    /**
+     * @return the serial object
+     */
+    @Generated
+    public SerialObject getSerialObject() {
+        return this.serialObject;
+    }
+
+    /**
+     * @param serialObject the serial object to set
+     */
+    @Generated
+    public void setSerialObject(SerialObject serialObject) {
+        this.serialObject = serialObject;
+    }
+
+    /**
+     * @return a collection of materials
+     */
+    @Generated
+    public Collection<Material> getFailureMaterials() {
+        return this.failureMaterials;
+    }
+
+    /**
+     * @param failureMaterials the materials to set
+     */
+    @Generated
+    public void setFailureMaterials(Collection<Material> failureMaterials) {
+        this.failureMaterials = failureMaterials;
+    }
+
+    /**
+     * @return the material
+     */
+    @Generated
+    public Material getMaterial() {
+        return this.material;
+    }
+
+    /**
+     * @param material the material to set
+     */
+    @Generated
+    public void setMaterial(Material material) {
+        this.material = material;
     }
 
     /* (non-Javadoc)

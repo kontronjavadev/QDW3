@@ -60,12 +60,12 @@ public class MaterializedEntitiy {
     @Generated
     private String parentMaterialShortText;
     @Basic(optional = false)
-    @Column(name = "sap_number", nullable = false, updatable = true, insertable = true, length = 20)
+    @Column(name = "sap_no", nullable = false, updatable = true, insertable = true, length = 20)
     @NotNull(message = "Field \"sapNumber\" must not be null!")
     @Size(min = 1, max = 20, message = "Length of field \"sapNumber\" is illegal!")
     @Generated
     private String sapNumber;
-    @Column(name = "parent_sap_number", nullable = true, updatable = true, insertable = true, length = 20)
+    @Column(name = "parent_sap_no", nullable = true, updatable = true, insertable = true, length = 20)
     @Size(max = 20, message = "Length of field \"parentSapNumber\" is illegal!")
     @Generated
     private String parentSapNumber;
@@ -87,12 +87,12 @@ public class MaterializedEntitiy {
     @Generated
     private Long parentRevisionId;
     @Basic(optional = false)
-    @Column(name = "revision_number", nullable = false, updatable = true, insertable = true, length = 50)
+    @Column(name = "revision_no", nullable = false, updatable = true, insertable = true, length = 50)
     @NotNull(message = "Field \"revisionNumber\" must not be null!")
     @Size(min = 1, max = 50, message = "Length of field \"revisionNumber\" is illegal!")
     @Generated
     private String revisionNumber;
-    @Column(name = "parent_revision_number", nullable = true, updatable = true, insertable = true, length = 50)
+    @Column(name = "parent_revision_no", nullable = true, updatable = true, insertable = true, length = 50)
     @Size(max = 50, message = "Length of field \"parentRevisionNumber\" is illegal!")
     @Generated
     private String parentRevisionNumber;

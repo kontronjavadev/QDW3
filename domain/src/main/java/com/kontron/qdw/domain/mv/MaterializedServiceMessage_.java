@@ -1,8 +1,10 @@
 package com.kontron.qdw.domain.mv;
 
+import com.kontron.qdw.domain.serial.*;
 import jakarta.persistence.metamodel.*;
 import java.time.*;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
+import com.kontron.qdw.domain.material.*;
 
 @StaticMetamodel(MaterializedServiceMessage.class)
 public class MaterializedServiceMessage_ extends MaterializedEntitiy_ {
@@ -88,4 +90,10 @@ public class MaterializedServiceMessage_ extends MaterializedEntitiy_ {
     public static volatile SingularAttribute<MaterializedServiceMessage, String> ownerLocation;
     @Generated
     public static volatile SingularAttribute<MaterializedServiceMessage, String> errorShortText;
+    @Generated
+    public static volatile SingularAttribute<MaterializedServiceMessage, SerialObject> serialObject;
+    @Generated
+    public static volatile CollectionAttribute<MaterializedServiceMessage, Material> failureMaterials;
+    @Generated
+    public static volatile SingularAttribute<MaterializedServiceMessage, Material> material;
 }

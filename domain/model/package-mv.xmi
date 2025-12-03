@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<net.sourceforge.net.model.domain:DomainNamespace xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:net.sourceforge.net.model.domain="http:///net/sourceforge/jbizmo/model/domain.ecore" name="mv" javaTypes="//@domainObjects.0 //@domainObjects.1 //@domainObjects.2 //@domainObjects.3 //@domainObjects.4 //@enumerations.0">
+<net.sourceforge.net.model.domain:DomainNamespace xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:net.sourceforge.net.model.domain="http:///net/sourceforge/jbizmo/model/domain.ecore" name="mv" javaTypes="//@domainObjects.0 //@domainObjects.1 //@domainObjects.2 //@domainObjects.3 //@domainObjects.4 //@enumerations.0 //@domainObjects.5 //@domainObjects.6 //@domainObjects.7">
   <parent href="project.xmi#/0/@domainNamespace"/>
   <project href="project.xmi#/0"/>
   <domainObjects name="MaterializedEntitiy" comment="Domain object for materialized entitiy objects" mappable="true" namespace="/" label="materialized entitiy" namePlural="MaterializedEntitiies" labelPlural="materialized entitiies" discriminatorValue="" mappedSuperClass="true" targetInheritances="//@domainObjects.1/@inheritance //@domainObjects.2/@inheritance //@domainObjects.3/@inheritance //@domainObjects.4/@inheritance">
@@ -127,10 +127,10 @@
       <columns name="parent_material_short_text" length="200" nullable="true">
         <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
       </columns>
-      <columns name="sap_number" length="20">
+      <columns name="sap_no" length="20">
         <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
       </columns>
-      <columns name="parent_sap_number" length="20" nullable="true">
+      <columns name="parent_sap_no" length="20" nullable="true">
         <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
       </columns>
       <columns name="material_hierarchy" length="250">
@@ -145,10 +145,10 @@
       <columns name="parent_revision_id" nullable="true">
         <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.1"/>
       </columns>
-      <columns name="revision_number" length="50">
+      <columns name="revision_no" length="50">
         <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
       </columns>
-      <columns name="parent_revision_number" length="50" nullable="true">
+      <columns name="parent_revision_no" length="50" nullable="true">
         <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
       </columns>
       <columns name="assembly_date" nullable="true">
@@ -471,10 +471,10 @@
       <columns name="parent_material_short_text" length="200" nullable="true">
         <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
       </columns>
-      <columns name="sap_number" length="20">
+      <columns name="sap_no" length="20">
         <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
       </columns>
-      <columns name="parent_sap_number" length="20" nullable="true">
+      <columns name="parent_sap_no" length="20" nullable="true">
         <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
       </columns>
       <columns name="material_hierarchy" length="250">
@@ -489,10 +489,10 @@
       <columns name="parent_revision_id" nullable="true">
         <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.1"/>
       </columns>
-      <columns name="revision_number" length="50">
+      <columns name="revision_no" length="50">
         <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
       </columns>
-      <columns name="parent_revision_number" length="50" nullable="true">
+      <columns name="parent_revision_no" length="50" nullable="true">
         <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
       </columns>
       <columns name="assembly_date" nullable="true">
@@ -594,6 +594,11 @@
       <indexes name="in_as_snr_no" columns="//@domainObjects.2/@databaseTable/@columns.3"/>
       <indexes name="in_as_sup_code" columns="//@domainObjects.2/@databaseTable/@columns.35"/>
       <indexes name="in_as_sup_name" columns="//@domainObjects.2/@databaseTable/@columns.36"/>
+      <indexes name="in_as_prev_no" columns="//@domainObjects.2/@databaseTable/@columns.18"/>
+      <indexes name="in_as_psap_no" columns="//@domainObjects.2/@databaseTable/@columns.12"/>
+      <indexes name="in_as_rev_no" columns="//@domainObjects.2/@databaseTable/@columns.17"/>
+      <indexes name="in_as_sap_no" columns="//@domainObjects.2/@databaseTable/@columns.11"/>
+      <indexes name="in_as_snr" columns="//@domainObjects.2/@databaseTable/@columns.38"/>
     </databaseTable>
   </domainObjects>
   <domainObjects name="MaterializedArrival" comment="Domain object for materialized arrival objects" mappable="true" namespace="/" label="materialized arrival" namePlural="MaterializedArrivals" labelPlural="materialized arrivals" discriminatorValue="" parent="//@domainObjects.0">
@@ -668,10 +673,10 @@
       <columns name="parent_material_short_text" length="200" nullable="true">
         <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
       </columns>
-      <columns name="sap_number" length="20">
+      <columns name="sap_no" length="20">
         <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
       </columns>
-      <columns name="parent_sap_number" length="20" nullable="true">
+      <columns name="parent_sap_no" length="20" nullable="true">
         <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
       </columns>
       <columns name="material_hierarchy" length="250">
@@ -686,10 +691,10 @@
       <columns name="parent_revision_id" nullable="true">
         <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.1"/>
       </columns>
-      <columns name="revision_number" length="50">
+      <columns name="revision_no" length="50">
         <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
       </columns>
-      <columns name="parent_revision_number" length="50" nullable="true">
+      <columns name="parent_revision_no" length="50" nullable="true">
         <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
       </columns>
       <columns name="assembly_date" nullable="true">
@@ -764,6 +769,8 @@
       <indexes name="in_a_country_name" columns="//@domainObjects.3/@databaseTable/@columns.28"/>
       <indexes name="in_a_material" columns="//@domainObjects.3/@databaseTable/@columns.29"/>
       <indexes name="in_a_snr" columns="//@domainObjects.3/@databaseTable/@columns.30"/>
+      <indexes name="in_a_psnr_no" columns="//@domainObjects.3/@databaseTable/@columns.4"/>
+      <indexes name="in_a_snr_no" columns="//@domainObjects.3/@databaseTable/@columns.3"/>
     </databaseTable>
   </domainObjects>
   <domainObjects name="MaterializedServiceMessage" comment="Domain object for materialized service message objects" mappable="true" namespace="/" label="materialized service message" namePlural="MaterializedServiceMessages" labelPlural="materialized service messages" discriminatorValue="" parent="//@domainObjects.0">
@@ -932,6 +939,29 @@
       <domainAttributeValidator maxLength="100" minLength="0" nullable="true" maxValue="" minValue="" regularExpression=""/>
       <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
     </attributes>
+    <associations xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" name="serialObject" owner="true" fetchTypeEager="true" internalComment="" userComment="" insertable="true" updatable="true" column="//@domainObjects.4/@databaseTable/@columns.63">
+      <target href="package-serial.xmi#//@domainObjects.0"/>
+    </associations>
+    <associations xsi:type="net.sourceforge.net.model.domain:ManyToManyAssociation" name="failureMaterials" owner="true" internalComment="" userComment="">
+      <target href="package-material.xmi#//@domainObjects.2"/>
+      <table name="service_message_materials_tab" schemaName="" catalogName="">
+        <database href="project.xmi#/0/@database"/>
+        <columns name="service_message_pk">
+          <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.1"/>
+        </columns>
+        <columns name="material_pk">
+          <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.1"/>
+        </columns>
+        <foreignKeys name="fk_service_message_materials_service_message_pk" column="//@domainObjects.4/@associations.1/@table/@columns.0" referencedColumn="//@domainObjects.4/@databaseTable/@columns.0"/>
+        <foreignKeys name="fk_service_message_materials_material_pk" column="//@domainObjects.4/@associations.1/@table/@columns.1">
+          <referencedColumn href="package-material.xmi#//@domainObjects.2/@databaseTable/@columns.0"/>
+        </foreignKeys>
+        <indexes name="uk_service_message_materials" unique="true" columns="//@domainObjects.4/@associations.1/@table/@columns.0 //@domainObjects.4/@associations.1/@table/@columns.1"/>
+      </table>
+    </associations>
+    <associations xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" name="material" owner="true" fetchTypeEager="true" internalComment="" userComment="" insertable="true" updatable="true" column="//@domainObjects.4/@databaseTable/@columns.64">
+      <target href="package-material.xmi#//@domainObjects.2"/>
+    </associations>
     <enumAssociations target="//@enumerations.0" domainAttribute="//@domainObjects.4/@attributes.1"/>
     <databaseTable name="service_message_mv" schemaName="" catalogName="">
       <database href="project.xmi#/0/@database"/>
@@ -968,10 +998,10 @@
       <columns name="parent_material_short_text" length="200" nullable="true">
         <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
       </columns>
-      <columns name="sap_number" length="20">
+      <columns name="sap_no" length="20">
         <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
       </columns>
-      <columns name="parent_sap_number" length="20" nullable="true">
+      <columns name="parent_sap_no" length="20" nullable="true">
         <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
       </columns>
       <columns name="material_hierarchy" length="250">
@@ -986,10 +1016,10 @@
       <columns name="parent_revision_id" nullable="true">
         <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.1"/>
       </columns>
-      <columns name="revision_number" length="50">
+      <columns name="revision_no" length="50">
         <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
       </columns>
-      <columns name="parent_revision_number" length="50" nullable="true">
+      <columns name="parent_revision_no" length="50" nullable="true">
         <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
       </columns>
       <columns name="assembly_date" nullable="true">
@@ -1085,10 +1115,10 @@
       <columns name="supplier_name" length="100" nullable="true">
         <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
       </columns>
-      <columns name="supplier_arrival_date" nullable="true">
+      <columns name="sup_arrival_date" nullable="true">
         <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.3"/>
       </columns>
-      <columns name="customer_shipment_date" nullable="true">
+      <columns name="cust_ship_date" nullable="true">
         <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.3"/>
       </columns>
       <columns name="fault_analysis_code" length="50" nullable="true">
@@ -1124,7 +1154,116 @@
       <columns name="error_short_text" length="100" nullable="true">
         <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
       </columns>
+      <columns name="serial_object">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.1"/>
+      </columns>
+      <columns name="material">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.1"/>
+      </columns>
       <primaryKey name="pk_service_message_mv" column="//@domainObjects.4/@databaseTable/@columns.0"/>
+      <foreignKeys name="fk_service_message_mv_serial_object" column="//@domainObjects.4/@databaseTable/@columns.63">
+        <referencedColumn href="package-serial.xmi#//@domainObjects.0/@databaseTable/@columns.0"/>
+      </foreignKeys>
+      <foreignKeys name="fk_service_message_mv_material" column="//@domainObjects.4/@databaseTable/@columns.64">
+        <referencedColumn href="package-material.xmi#//@domainObjects.2/@databaseTable/@columns.0"/>
+      </foreignKeys>
+      <indexes name="in_sm_anal_text" columns="//@domainObjects.4/@databaseTable/@columns.35"/>
+      <indexes name="in_sm_ass_date" columns="//@domainObjects.4/@databaseTable/@columns.19"/>
+      <indexes name="in_sm_ass_po" columns="//@domainObjects.4/@databaseTable/@columns.20"/>
+      <indexes name="in_sm_bas_edate" columns="//@domainObjects.4/@databaseTable/@columns.32"/>
+      <indexes name="in_sm_bas_sdate" columns="//@domainObjects.4/@databaseTable/@columns.31"/>
+      <indexes name="in_sm_country_code" columns="//@domainObjects.4/@databaseTable/@columns.46"/>
+      <indexes name="in_sm_country_name" columns="//@domainObjects.4/@databaseTable/@columns.47"/>
+      <indexes name="in_sm_cust_code" columns="//@domainObjects.4/@databaseTable/@columns.43"/>
+      <indexes name="in_sm_cust_group" columns="//@domainObjects.4/@databaseTable/@columns.45"/>
+      <indexes name="in_sm_cust_name" columns="//@domainObjects.4/@databaseTable/@columns.44"/>
+      <indexes name="in_sm_cust_sdate" columns="//@domainObjects.4/@databaseTable/@columns.51"/>
+      <indexes name="in_sm_def_comp" columns="//@domainObjects.4/@databaseTable/@columns.34"/>
+      <indexes name="in_sm_del_note_no" columns="//@domainObjects.4/@databaseTable/@columns.56"/>
+      <indexes name="in_sm_designator" columns="//@domainObjects.4/@databaseTable/@columns.33"/>
+      <indexes name="in_sm_error_code" columns="//@domainObjects.4/@databaseTable/@columns.53"/>
+      <indexes name="in_sm_error_group" columns="//@domainObjects.4/@databaseTable/@columns.57"/>
+      <indexes name="in_sm_error_id" columns="//@domainObjects.4/@databaseTable/@columns.40"/>
+      <indexes name="in_sm_ext_sup_code" columns="//@domainObjects.4/@databaseTable/@columns.54"/>
+      <indexes name="in_sm_ext_sup_name" columns="//@domainObjects.4/@databaseTable/@columns.55"/>
+      <indexes name="in_sm_fault" columns="//@domainObjects.4/@databaseTable/@columns.52"/>
+      <indexes name="in_sm_hierarc" columns="//@domainObjects.4/@databaseTable/@columns.13"/>
+      <indexes name="in_sm_id" columns="//@domainObjects.4/@databaseTable/@columns.0"/>
+      <indexes name="in_sm_int_adate" columns="//@domainObjects.4/@databaseTable/@columns.29"/>
+      <indexes name="in_sm_int_sdate" columns="//@domainObjects.4/@databaseTable/@columns.30"/>
+      <indexes name="in_sm_location" columns="//@domainObjects.4/@databaseTable/@columns.25"/>
+      <indexes name="in_sm_mat_no" columns="//@domainObjects.4/@databaseTable/@columns.5"/>
+      <indexes name="in_sm_mat_stext" columns="//@domainObjects.4/@databaseTable/@columns.9"/>
+      <indexes name="in_sm_mat_type" columns="//@domainObjects.4/@databaseTable/@columns.7"/>
+      <indexes name="in_sm_material" columns="//@domainObjects.4/@databaseTable/@columns.64"/>
+      <indexes name="in_sm_origin" columns="//@domainObjects.4/@databaseTable/@columns.41"/>
+      <indexes name="in_sm_phierarc" columns="//@domainObjects.4/@databaseTable/@columns.14"/>
+      <indexes name="in_sm_plant" columns="//@domainObjects.4/@databaseTable/@columns.21"/>
+      <indexes name="in_sm_pmat_no" columns="//@domainObjects.4/@databaseTable/@columns.6"/>
+      <indexes name="in_sm_pmat_stext" columns="//@domainObjects.4/@databaseTable/@columns.10"/>
+      <indexes name="in_sm_pmat_type" columns="//@domainObjects.4/@databaseTable/@columns.8"/>
+      <indexes name="in_sm_prev_id" columns="//@domainObjects.4/@databaseTable/@columns.16"/>
+      <indexes name="in_sm_prev_no" columns="//@domainObjects.4/@databaseTable/@columns.18"/>
+      <indexes name="in_sm_psap_no" columns="//@domainObjects.4/@databaseTable/@columns.12"/>
+      <indexes name="in_sm_psnr_id" columns="//@domainObjects.4/@databaseTable/@columns.2"/>
+      <indexes name="in_sm_psnr_no" columns="//@domainObjects.4/@databaseTable/@columns.4"/>
+      <indexes name="in_sm_rev_id" columns="//@domainObjects.4/@databaseTable/@columns.15"/>
+      <indexes name="in_sm_rev_no" columns="//@domainObjects.4/@databaseTable/@columns.17"/>
+      <indexes name="in_sm_rma_type" columns="//@domainObjects.4/@databaseTable/@columns.24"/>
+      <indexes name="in_sm_sap_no" columns="//@domainObjects.4/@databaseTable/@columns.11"/>
+      <indexes name="in_sm_serv_order" columns="//@domainObjects.4/@databaseTable/@columns.22"/>
+      <indexes name="in_sm_serv_order_type" columns="//@domainObjects.4/@databaseTable/@columns.23"/>
+      <indexes name="in_sm_service" columns="//@domainObjects.4/@databaseTable/@columns.26"/>
+      <indexes name="in_sm_snr" columns="//@domainObjects.4/@databaseTable/@columns.63"/>
+      <indexes name="in_sm_snr_id" columns="//@domainObjects.4/@databaseTable/@columns.1"/>
+      <indexes name="in_sm_snr_no" columns="//@domainObjects.4/@databaseTable/@columns.3"/>
+      <indexes name="in_sm_state" columns="//@domainObjects.4/@databaseTable/@columns.28"/>
+      <indexes name="in_sm_sup_adate" columns="//@domainObjects.4/@databaseTable/@columns.50"/>
+      <indexes name="in_sm_sup_code" columns="//@domainObjects.4/@databaseTable/@columns.48"/>
+      <indexes name="in_sm_sup_name" columns="//@domainObjects.4/@databaseTable/@columns.49"/>
+      <indexes name="in_sm_task" columns="//@domainObjects.4/@databaseTable/@columns.27"/>
+    </databaseTable>
+  </domainObjects>
+  <domainObjects name="AggregatedShipment" comment="Domain object for aggregated shipment objects" mappable="true" namespace="/" label="aggregated shipment" namePlural="AggregatedShipments" labelPlural="aggregated shipments" discriminatorValue="">
+    <iDGenerator name="AGGREGATEDSHIPMENT_SEQ" generatorType="IDENTITY"/>
+    <attributes name="id" pk="true" label="id" labelPlural="ids" fetchTypeEager="true" column="//@domainObjects.5/@databaseTable/@columns.0">
+      <domainAttributeValidator maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.2"/>
+    </attributes>
+    <databaseTable name="aggregated_shipment_tab" schemaName="" catalogName="">
+      <database href="project.xmi#/0/@database"/>
+      <columns name="id">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.1"/>
+      </columns>
+      <primaryKey name="pk_aggregated_shipment_tab" column="//@domainObjects.5/@databaseTable/@columns.0"/>
+    </databaseTable>
+  </domainObjects>
+  <domainObjects name="AggregatedShipmentArrival" comment="Domain object for aggregated shipment arrival objects" mappable="true" namespace="/" label="aggregated shipment arrival" namePlural="AggregatedShipmentArrivals" labelPlural="aggregated shipment arrivals" discriminatorValue="">
+    <iDGenerator name="AGGREGATEDSHIPMENTARRIVAL_SEQ" generatorType="IDENTITY"/>
+    <attributes name="id" pk="true" label="id" labelPlural="ids" fetchTypeEager="true" column="//@domainObjects.6/@databaseTable/@columns.0">
+      <domainAttributeValidator maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.2"/>
+    </attributes>
+    <databaseTable name="aggregated_shipment_arrival_tab" schemaName="" catalogName="">
+      <database href="project.xmi#/0/@database"/>
+      <columns name="id">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.1"/>
+      </columns>
+      <primaryKey name="pk_aggregated_shipment_arrival_tab" column="//@domainObjects.6/@databaseTable/@columns.0"/>
+    </databaseTable>
+  </domainObjects>
+  <domainObjects name="AggregatedArrival" comment="Domain object for aggregated arrival objects" mappable="true" namespace="/" label="aggregated arrival" namePlural="AggregatedArrivals" labelPlural="aggregated arrivals" discriminatorValue="">
+    <iDGenerator name="AGGREGATEDARRIVAL_SEQ" generatorType="IDENTITY"/>
+    <attributes name="id" pk="true" label="id" labelPlural="ids" fetchTypeEager="true" column="//@domainObjects.7/@databaseTable/@columns.0">
+      <domainAttributeValidator maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.2"/>
+    </attributes>
+    <databaseTable name="aggregated_arrival_tab" schemaName="" catalogName="">
+      <database href="project.xmi#/0/@database"/>
+      <columns name="id">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.1"/>
+      </columns>
+      <primaryKey name="pk_aggregated_arrival_tab" column="//@domainObjects.7/@databaseTable/@columns.0"/>
     </databaseTable>
   </domainObjects>
   <enumerations name="ServiceOrderType" comment="" mappable="true" namespace="/">
