@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<net.sourceforge.net.model.domain:DomainNamespace xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:net.sourceforge.net.model.domain="http:///net/sourceforge/jbizmo/model/domain.ecore" name="mv" javaTypes="//@domainObjects.0 //@domainObjects.1 //@domainObjects.2 //@domainObjects.3">
+<net.sourceforge.net.model.domain:DomainNamespace xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:net.sourceforge.net.model.domain="http:///net/sourceforge/jbizmo/model/domain.ecore" name="mv" javaTypes="//@domainObjects.0 //@domainObjects.1 //@domainObjects.2 //@domainObjects.3 //@domainObjects.4 //@enumerations.0">
   <parent href="project.xmi#/0/@domainNamespace"/>
   <project href="project.xmi#/0"/>
-  <domainObjects name="MaterializedEntitiy" comment="Domain object for materialized entitiy objects" mappable="true" namespace="/" label="materialized entitiy" namePlural="MaterializedEntitiies" labelPlural="materialized entitiies" discriminatorValue="" mappedSuperClass="true" targetInheritances="//@domainObjects.1/@inheritance //@domainObjects.2/@inheritance //@domainObjects.3/@inheritance">
+  <domainObjects name="MaterializedEntitiy" comment="Domain object for materialized entitiy objects" mappable="true" namespace="/" label="materialized entitiy" namePlural="MaterializedEntitiies" labelPlural="materialized entitiies" discriminatorValue="" mappedSuperClass="true" targetInheritances="//@domainObjects.1/@inheritance //@domainObjects.2/@inheritance //@domainObjects.3/@inheritance //@domainObjects.4/@inheritance">
     <iDGenerator name="MATERIALIZEDENTITIY_SEQ" generatorType="IDENTITY"/>
     <attributes name="id" pk="true" label="id" labelPlural="ids" fetchTypeEager="true" column="//@domainObjects.0/@databaseTable/@columns.0">
       <domainAttributeValidator maxValue="" minValue="" regularExpression=""/>
@@ -599,6 +599,40 @@
   <domainObjects name="MaterializedArrival" comment="Domain object for materialized arrival objects" mappable="true" namespace="/" label="materialized arrival" namePlural="MaterializedArrivals" labelPlural="materialized arrivals" discriminatorValue="" parent="//@domainObjects.0">
     <iDGenerator name="MATERIALIZEDARRIVAL_SEQ" generatorType="IDENTITY"/>
     <inheritance target="//@domainObjects.0"/>
+    <attributes name="arrivalDate" label="arrival date" labelPlural="arrival dates" fetchTypeEager="true" column="//@domainObjects.3/@databaseTable/@columns.22">
+      <domainAttributeValidator maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.16"/>
+    </attributes>
+    <attributes name="supplierCode" label="supplier code" labelPlural="supplier codes" fetchTypeEager="true" column="//@domainObjects.3/@databaseTable/@columns.23" removeWhitespaceCharacters="true">
+      <domainAttributeValidator maxLength="50" minLength="1" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <attributes name="supplierName" label="supplier name" labelPlural="supplier names" fetchTypeEager="true" column="//@domainObjects.3/@databaseTable/@columns.24" removeWhitespaceCharacters="true">
+      <domainAttributeValidator maxLength="100" minLength="1" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <attributes name="movementType" label="movement type" labelPlural="movement types" fetchTypeEager="true" column="//@domainObjects.3/@databaseTable/@columns.25" removeWhitespaceCharacters="true">
+      <domainAttributeValidator maxLength="50" minLength="1" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <attributes name="orderNumber" label="order number" labelPlural="order numbers" fetchTypeEager="true" column="//@domainObjects.3/@databaseTable/@columns.26" removeWhitespaceCharacters="true">
+      <domainAttributeValidator maxLength="50" minLength="1" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <attributes name="countryCode" label="country code" labelPlural="country codes" fetchTypeEager="true" column="//@domainObjects.3/@databaseTable/@columns.27" removeWhitespaceCharacters="true">
+      <domainAttributeValidator maxLength="50" minLength="1" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <attributes name="countryName" label="country name" labelPlural="country names" fetchTypeEager="true" column="//@domainObjects.3/@databaseTable/@columns.28" removeWhitespaceCharacters="true">
+      <domainAttributeValidator maxLength="100" minLength="1" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <associations xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" name="material" owner="true" fetchTypeEager="true" internalComment="" userComment="" insertable="true" updatable="true" column="//@domainObjects.3/@databaseTable/@columns.29">
+      <target href="package-material.xmi#//@domainObjects.2"/>
+    </associations>
+    <associations xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" name="serialObject" owner="true" fetchTypeEager="true" internalComment="" userComment="" insertable="true" updatable="true" column="//@domainObjects.3/@databaseTable/@columns.30">
+      <target href="package-serial.xmi#//@domainObjects.0"/>
+    </associations>
     <databaseTable name="materialized_arrival_mv" schemaName="" catalogName="">
       <database href="project.xmi#/0/@database"/>
       <columns name="id">
@@ -667,7 +701,435 @@
       <columns name="plant" length="50">
         <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
       </columns>
+      <columns name="arrival_date">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.3"/>
+      </columns>
+      <columns name="supplier_code" length="50">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="supplier_name" length="100">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="movement_type" length="50">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="order_number" length="50">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="country_code" length="50">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="country_name" length="100">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="material">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.1"/>
+      </columns>
+      <columns name="serial_object">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.1"/>
+      </columns>
       <primaryKey name="pk_materialized_arrival_mv" column="//@domainObjects.3/@databaseTable/@columns.0"/>
+      <foreignKeys name="fk_materialized_arrival_mv_material" column="//@domainObjects.3/@databaseTable/@columns.29">
+        <referencedColumn href="package-material.xmi#//@domainObjects.2/@databaseTable/@columns.0"/>
+      </foreignKeys>
+      <foreignKeys name="fk_materialized_arrival_mv_serial_object" column="//@domainObjects.3/@databaseTable/@columns.30">
+        <referencedColumn href="package-serial.xmi#//@domainObjects.0/@databaseTable/@columns.0"/>
+      </foreignKeys>
+      <indexes name="in_a_id" columns="//@domainObjects.3/@databaseTable/@columns.0"/>
+      <indexes name="in_a_snr_id" columns="//@domainObjects.3/@databaseTable/@columns.1"/>
+      <indexes name="in_a_psnr_id" columns="//@domainObjects.3/@databaseTable/@columns.2"/>
+      <indexes name="in_a_mat_no" columns="//@domainObjects.3/@databaseTable/@columns.5"/>
+      <indexes name="in_a_pmat_no" columns="//@domainObjects.3/@databaseTable/@columns.6"/>
+      <indexes name="in_a_mat_type" columns="//@domainObjects.3/@databaseTable/@columns.7"/>
+      <indexes name="in_a_pmat_type" columns="//@domainObjects.3/@databaseTable/@columns.8"/>
+      <indexes name="in_a_mat_stext" columns="//@domainObjects.3/@databaseTable/@columns.9"/>
+      <indexes name="in_a_pmat_stext" columns="//@domainObjects.3/@databaseTable/@columns.10"/>
+      <indexes name="in_a_sap_no" columns="//@domainObjects.3/@databaseTable/@columns.11"/>
+      <indexes name="in_a_psap_no" columns="//@domainObjects.3/@databaseTable/@columns.12"/>
+      <indexes name="in_a_hierarc" columns="//@domainObjects.3/@databaseTable/@columns.13"/>
+      <indexes name="in_a_phierarc" columns="//@domainObjects.3/@databaseTable/@columns.14"/>
+      <indexes name="in_a_rev_id" columns="//@domainObjects.3/@databaseTable/@columns.15"/>
+      <indexes name="in_a_prev_id" columns="//@domainObjects.3/@databaseTable/@columns.18"/>
+      <indexes name="in_a_rev_no" columns="//@domainObjects.3/@databaseTable/@columns.17"/>
+      <indexes name="in_a_prev_no" columns="//@domainObjects.3/@databaseTable/@columns.18"/>
+      <indexes name="in_a_ass_date" columns="//@domainObjects.3/@databaseTable/@columns.19"/>
+      <indexes name="in_a_ass_po" columns="//@domainObjects.3/@databaseTable/@columns.20"/>
+      <indexes name="in_a_plant" columns="//@domainObjects.3/@databaseTable/@columns.21"/>
+      <indexes name="in_a_arr_date" columns="//@domainObjects.3/@databaseTable/@columns.22"/>
+      <indexes name="in_a_sup_code" columns="//@domainObjects.3/@databaseTable/@columns.23"/>
+      <indexes name="in_a_sup_name" columns="//@domainObjects.3/@databaseTable/@columns.24"/>
+      <indexes name="in_a_arr_mt" columns="//@domainObjects.3/@databaseTable/@columns.25"/>
+      <indexes name="in_a_purch_order" columns="//@domainObjects.3/@databaseTable/@columns.26"/>
+      <indexes name="in_a_country_code" columns="//@domainObjects.3/@databaseTable/@columns.27"/>
+      <indexes name="in_a_country_name" columns="//@domainObjects.3/@databaseTable/@columns.28"/>
+      <indexes name="in_a_material" columns="//@domainObjects.3/@databaseTable/@columns.29"/>
+      <indexes name="in_a_snr" columns="//@domainObjects.3/@databaseTable/@columns.30"/>
     </databaseTable>
   </domainObjects>
+  <domainObjects name="MaterializedServiceMessage" comment="Domain object for materialized service message objects" mappable="true" namespace="/" label="materialized service message" namePlural="MaterializedServiceMessages" labelPlural="materialized service messages" discriminatorValue="" parent="//@domainObjects.0">
+    <iDGenerator name="MATERIALIZEDSERVICEMESSAGE_SEQ" generatorType="IDENTITY"/>
+    <inheritance target="//@domainObjects.0"/>
+    <attributes name="serviceOrder" label="service order" labelPlural="service orders" fetchTypeEager="true" column="//@domainObjects.4/@databaseTable/@columns.22" removeWhitespaceCharacters="true">
+      <domainAttributeValidator maxLength="50" minLength="1" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <attributes name="serviceOrderType" label="service order type" labelPlural="service order types" fetchTypeEager="true" javaType="//@enumerations.0" column="//@domainObjects.4/@databaseTable/@columns.23" internalComment="" userComment="">
+      <domainAttributeValidator maxLength="255" minLength="-1" maxValue="" minValue="" regularExpression=""/>
+    </attributes>
+    <attributes name="rmaType" label="rma type" labelPlural="rma types" fetchTypeEager="true" column="//@domainObjects.4/@databaseTable/@columns.24" removeWhitespaceCharacters="true">
+      <domainAttributeValidator maxLength="50" minLength="0" nullable="true" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <attributes name="location" label="location" labelPlural="locations" fetchTypeEager="true" column="//@domainObjects.4/@databaseTable/@columns.25" removeWhitespaceCharacters="true">
+      <domainAttributeValidator maxLength="50" minLength="0" nullable="true" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <attributes name="serviceName" label="service name" labelPlural="service names" fetchTypeEager="true" column="//@domainObjects.4/@databaseTable/@columns.26" removeWhitespaceCharacters="true">
+      <domainAttributeValidator maxLength="50" minLength="0" nullable="true" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <attributes name="taskName" label="task name" labelPlural="task names" fetchTypeEager="true" column="//@domainObjects.4/@databaseTable/@columns.27" removeWhitespaceCharacters="true">
+      <domainAttributeValidator maxLength="50" minLength="0" nullable="true" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <attributes name="stateName" label="state name" labelPlural="state names" fetchTypeEager="true" column="//@domainObjects.4/@databaseTable/@columns.28" removeWhitespaceCharacters="true">
+      <domainAttributeValidator maxLength="50" minLength="0" nullable="true" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <attributes name="internalArrivalDate" label="internal arrival date" labelPlural="internal arrival dates" fetchTypeEager="true" column="//@domainObjects.4/@databaseTable/@columns.29">
+      <domainAttributeValidator nullable="true" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.16"/>
+    </attributes>
+    <attributes name="internalShipmentDate" label="internal shipment date" labelPlural="internal shipment dates" fetchTypeEager="true" column="//@domainObjects.4/@databaseTable/@columns.30">
+      <domainAttributeValidator nullable="true" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.16"/>
+    </attributes>
+    <attributes name="basicStartDate" label="basic start date" labelPlural="basic start dates" fetchTypeEager="true" column="//@domainObjects.4/@databaseTable/@columns.31">
+      <domainAttributeValidator nullable="true" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.16"/>
+    </attributes>
+    <attributes name="basicEndDate" label="basic end date" labelPlural="basic end dates" fetchTypeEager="true" column="//@domainObjects.4/@databaseTable/@columns.32">
+      <domainAttributeValidator nullable="true" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.16"/>
+    </attributes>
+    <attributes name="designator" label="designator" labelPlural="designators" fetchTypeEager="true" column="//@domainObjects.4/@databaseTable/@columns.33" removeWhitespaceCharacters="true">
+      <domainAttributeValidator maxLength="50" minLength="0" nullable="true" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <attributes name="defectComponent" label="defect component" labelPlural="defect components" fetchTypeEager="true" column="//@domainObjects.4/@databaseTable/@columns.34" removeWhitespaceCharacters="true">
+      <domainAttributeValidator maxLength="100" minLength="0" nullable="true" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <attributes name="analysisText" label="analysis text" labelPlural="analysis texts" fetchTypeEager="true" column="//@domainObjects.4/@databaseTable/@columns.35" removeWhitespaceCharacters="true">
+      <domainAttributeValidator maxLength="100" minLength="0" nullable="true" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <attributes name="internalReport" label="internal report" labelPlural="internal reports" fetchTypeEager="true" column="//@domainObjects.4/@databaseTable/@columns.36" removeWhitespaceCharacters="true">
+      <domainAttributeValidator maxLength="4000" minLength="0" nullable="true" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <attributes name="externalReport" label="external report" labelPlural="external reports" fetchTypeEager="true" column="//@domainObjects.4/@databaseTable/@columns.37" removeWhitespaceCharacters="true">
+      <domainAttributeValidator maxLength="4000" minLength="0" nullable="true" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <attributes name="customerReport" label="customer report" labelPlural="customer reports" fetchTypeEager="true" column="//@domainObjects.4/@databaseTable/@columns.38" removeWhitespaceCharacters="true">
+      <domainAttributeValidator maxLength="4000" minLength="0" nullable="true" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <attributes name="epidemicFailure" label="epidemic failure" labelPlural="epidemic failures" fetchTypeEager="true" column="//@domainObjects.4/@databaseTable/@columns.39">
+      <domainAttributeValidator maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.4"/>
+    </attributes>
+    <attributes name="errorId" label="error id" labelPlural="error ids" fetchTypeEager="true" column="//@domainObjects.4/@databaseTable/@columns.40" removeWhitespaceCharacters="true">
+      <domainAttributeValidator maxLength="100" minLength="0" nullable="true" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <attributes name="origin" label="origin" labelPlural="origins" fetchTypeEager="true" column="//@domainObjects.4/@databaseTable/@columns.41" removeWhitespaceCharacters="true">
+      <domainAttributeValidator maxLength="100" minLength="0" nullable="true" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <attributes name="customerFailure" label="customer failure" labelPlural="customer failures" fetchTypeEager="true" column="//@domainObjects.4/@databaseTable/@columns.42">
+      <domainAttributeValidator maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.4"/>
+    </attributes>
+    <attributes name="customerCode" label="customer code" labelPlural="customer codes" fetchTypeEager="true" column="//@domainObjects.4/@databaseTable/@columns.43" removeWhitespaceCharacters="true">
+      <domainAttributeValidator maxLength="50" minLength="0" nullable="true" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <attributes name="customerName" label="customer name" labelPlural="customer names" fetchTypeEager="true" column="//@domainObjects.4/@databaseTable/@columns.44" removeWhitespaceCharacters="true">
+      <domainAttributeValidator maxLength="100" minLength="0" nullable="true" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <attributes name="customerGroup" label="customer group" labelPlural="customer groups" fetchTypeEager="true" column="//@domainObjects.4/@databaseTable/@columns.45" removeWhitespaceCharacters="true">
+      <domainAttributeValidator maxLength="100" minLength="0" nullable="true" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <attributes name="countryCode" label="country code" labelPlural="country codes" fetchTypeEager="true" column="//@domainObjects.4/@databaseTable/@columns.46" removeWhitespaceCharacters="true">
+      <domainAttributeValidator maxLength="50" minLength="0" nullable="true" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <attributes name="countryName" label="country name" labelPlural="country names" fetchTypeEager="true" column="//@domainObjects.4/@databaseTable/@columns.47" removeWhitespaceCharacters="true">
+      <domainAttributeValidator maxLength="100" minLength="0" nullable="true" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <attributes name="supplierCode" label="supplier code" labelPlural="supplier codes" fetchTypeEager="true" column="//@domainObjects.4/@databaseTable/@columns.48" removeWhitespaceCharacters="true">
+      <domainAttributeValidator maxLength="50" minLength="0" nullable="true" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <attributes name="supplierName" label="supplier name" labelPlural="supplier names" fetchTypeEager="true" column="//@domainObjects.4/@databaseTable/@columns.49" removeWhitespaceCharacters="true">
+      <domainAttributeValidator maxLength="100" minLength="0" nullable="true" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <attributes name="supplierArrivalDate" label="supplier arrival date" labelPlural="supplier arrival dates" fetchTypeEager="true" column="//@domainObjects.4/@databaseTable/@columns.50">
+      <domainAttributeValidator nullable="true" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.16"/>
+    </attributes>
+    <attributes name="customerShipmentDate" label="customer shipment date" labelPlural="customer shipment dates" fetchTypeEager="true" column="//@domainObjects.4/@databaseTable/@columns.51">
+      <domainAttributeValidator nullable="true" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.16"/>
+    </attributes>
+    <attributes name="faultAnalysisCode" label="fault analysis code" labelPlural="fault analysis codes" fetchTypeEager="true" column="//@domainObjects.4/@databaseTable/@columns.52" removeWhitespaceCharacters="true">
+      <domainAttributeValidator maxLength="50" minLength="0" nullable="true" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <attributes name="errorCodeName" label="error code name" labelPlural="error code names" fetchTypeEager="true" column="//@domainObjects.4/@databaseTable/@columns.53" removeWhitespaceCharacters="true">
+      <domainAttributeValidator maxLength="150" minLength="0" nullable="true" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <attributes name="externalSupplierCode" label="external supplier code" labelPlural="external supplier codes" fetchTypeEager="true" column="//@domainObjects.4/@databaseTable/@columns.54" removeWhitespaceCharacters="true">
+      <domainAttributeValidator maxLength="50" minLength="0" nullable="true" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <attributes name="externalSupplierName" label="external supplier name" labelPlural="external supplier names" fetchTypeEager="true" column="//@domainObjects.4/@databaseTable/@columns.55" removeWhitespaceCharacters="true">
+      <domainAttributeValidator maxLength="100" minLength="0" nullable="true" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <attributes name="deliveryNoteNumber" label="delivery note number" labelPlural="delivery note numbers" fetchTypeEager="true" column="//@domainObjects.4/@databaseTable/@columns.56" removeWhitespaceCharacters="true">
+      <domainAttributeValidator maxLength="50" minLength="0" nullable="true" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <attributes name="errorCodeGroup" label="error code group" labelPlural="error code groups" fetchTypeEager="true" column="//@domainObjects.4/@databaseTable/@columns.57" removeWhitespaceCharacters="true">
+      <domainAttributeValidator maxLength="50" minLength="0" nullable="true" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <attributes name="symptomShortText" label="symptom short text" labelPlural="symptom short texts" fetchTypeEager="true" column="//@domainObjects.4/@databaseTable/@columns.58" internalComment="" userComment="Der alte Name war &quot;faultAnalysisShortText&quot;. Die Labels und der Spaltenname lautete auf &quot;Symptom&quot;" removeWhitespaceCharacters="true">
+      <domainAttributeValidator maxLength="100" minLength="0" nullable="true" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <attributes name="repairTaskShortText" label="repair task short text" labelPlural="repair task short texts" fetchTypeEager="true" column="//@domainObjects.4/@databaseTable/@columns.59" internalComment="" userComment="Der alte Name war &quot;taskhortText&quot;. Die Labels und der Spaltenname lautete auf &quot;Repair task&quot;" removeWhitespaceCharacters="true">
+      <domainAttributeValidator maxLength="100" minLength="0" nullable="true" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <attributes name="repairDescription" label="repair description" labelPlural="repair descriptions" fetchTypeEager="true" column="//@domainObjects.4/@databaseTable/@columns.60" removeWhitespaceCharacters="true">
+      <domainAttributeValidator maxLength="4000" minLength="0" nullable="true" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <attributes name="ownerLocation" label="owner location" labelPlural="owner locations" fetchTypeEager="true" column="//@domainObjects.4/@databaseTable/@columns.61" removeWhitespaceCharacters="true">
+      <domainAttributeValidator maxLength="50" minLength="1" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <attributes name="errorShortText" label="error short text" labelPlural="error short texts" fetchTypeEager="true" column="//@domainObjects.4/@databaseTable/@columns.62" removeWhitespaceCharacters="true">
+      <domainAttributeValidator maxLength="100" minLength="0" nullable="true" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <enumAssociations target="//@enumerations.0" domainAttribute="//@domainObjects.4/@attributes.1"/>
+    <databaseTable name="service_message_mv" schemaName="" catalogName="">
+      <database href="project.xmi#/0/@database"/>
+      <columns name="id">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.1"/>
+      </columns>
+      <columns name="serial_object_id">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.1"/>
+      </columns>
+      <columns name="parent_serial_object_id" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.1"/>
+      </columns>
+      <columns name="serial_number" length="50">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="parent_serial_number" length="50" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="material_number" length="50">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="parent_material_number" length="50" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="material_type" length="50">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="parent_material_type" length="50" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="material_short_text" length="200">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="parent_material_short_text" length="200" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="sap_number" length="20">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="parent_sap_number" length="20" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="material_hierarchy" length="250">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="parent_material_hierarchy" length="250" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="revision_id">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.1"/>
+      </columns>
+      <columns name="parent_revision_id" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.1"/>
+      </columns>
+      <columns name="revision_number" length="50">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="parent_revision_number" length="50" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="assembly_date" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.3"/>
+      </columns>
+      <columns name="assembly_po" length="50" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="plant" length="50">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="service_order" length="50">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="service_order_type" length="255">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="rma_type" length="50" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="location" length="50" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="service_name" length="50" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="task_name" length="50" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="state_name" length="50" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="internal_arrival_date" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.3"/>
+      </columns>
+      <columns name="internal_shipment_date" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.3"/>
+      </columns>
+      <columns name="basic_start_date" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.3"/>
+      </columns>
+      <columns name="basic_end_date" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.3"/>
+      </columns>
+      <columns name="designator" length="50" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="defect_component" length="100" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="analysis_text" length="100" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="internal_report" length="4000" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="external_report" length="4000" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="customer_report" length="4000" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="epidemic_failure">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.11"/>
+      </columns>
+      <columns name="error_id" length="100" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="origin" length="100" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="customer_failure">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.11"/>
+      </columns>
+      <columns name="customer_code" length="50" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="customer_name" length="100" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="customer_group" length="100" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="country_code" length="50" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="country_name" length="100" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="supplier_code" length="50" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="supplier_name" length="100" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="supplier_arrival_date" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.3"/>
+      </columns>
+      <columns name="customer_shipment_date" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.3"/>
+      </columns>
+      <columns name="fault_analysis_code" length="50" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="error_code_name" length="150" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="external_supplier_code" length="50" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="external_supplier_name" length="100" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="delivery_note_number" length="50" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="error_code_group" length="50" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="symptom_short_text" length="100" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="repair_task_short_text" length="100" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="repair_description" length="4000" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="owner_location" length="50">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="error_short_text" length="100" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <primaryKey name="pk_service_message_mv" column="//@domainObjects.4/@databaseTable/@columns.0"/>
+    </databaseTable>
+  </domainObjects>
+  <enumerations name="ServiceOrderType" comment="" mappable="true" namespace="/">
+    <enumerationValues name="RMA"/>
+    <enumerationValues name="PRODUCTION"/>
+    <enumerationValues name="INCOMING_INSPECTION"/>
+  </enumerations>
 </net.sourceforge.net.model.domain:DomainNamespace>

@@ -56,6 +56,7 @@
       <databaseTables href="package-mv.xmi#//@domainObjects.2/@databaseTable"/>
       <databaseTables href="package-serial.xmi#//@domainObjects.0/@databaseTable"/>
       <databaseTables href="package-mv.xmi#//@domainObjects.3/@databaseTable"/>
+      <databaseTables href="package-mv.xmi#//@domainObjects.4/@databaseTable"/>
       <allSupportedColumnTypes javaTypes="/0/@allSupportedTypes.1 /0/@allSupportedTypes.6" name="INTEGER" omitSizeInformation="true"/>
       <allSupportedColumnTypes javaTypes="/0/@allSupportedTypes.2 /0/@allSupportedTypes.7" name="BIGINT" omitSizeInformation="true"/>
       <allSupportedColumnTypes javaTypes="/0/@allSupportedTypes.3 /0/@allSupportedTypes.8" name="DOUBLE" omitSizeInformation="true"/>
