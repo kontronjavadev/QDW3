@@ -35,6 +35,7 @@
     <targetInheritances href="package-serial.xmi#//@domainObjects.4/@inheritance"/>
     <targetInheritances href="package-serial.xmi#//@domainObjects.5/@inheritance"/>
     <targetInheritances href="package-serial.xmi#//@domainObjects.6/@inheritance"/>
+    <targetInheritances href="package-service.xmi#//@domainObjects.1/@inheritance"/>
     <databaseTable name="abstract_entity_with_id_tab" schemaName="" catalogName="">
       <database href="project.xmi#/0/@database"/>
       <columns name="id">
@@ -237,7 +238,7 @@
       <primaryKey name="pk_abstract_funtional_entity_tab" column="//@domainObjects.4/@databaseTable/@columns.0"/>
     </databaseTable>
   </domainObjects>
-  <domainObjects name="AbstractFunctionalActiveEntity" comment="Domain object for abstract functional active entity objects" mappable="true" namespace="/" label="abstract functional active entity" namePlural="AbstractFunctionalActiveEntities" labelPlural="abstract functional active entities" discriminatorValue="" mappedSuperClass="true" targetInheritances="//@domainObjects.6/@inheritance //@domainObjects.7/@inheritance //@domainObjects.8/@inheritance //@domainObjects.9/@inheritance //@domainObjects.10/@inheritance //@domainObjects.11/@inheritance">
+  <domainObjects name="AbstractFunctionalActiveEntity" comment="Domain object for abstract functional active entity objects" mappable="true" namespace="/" label="abstract functional active entity" namePlural="AbstractFunctionalActiveEntities" labelPlural="abstract functional active entities" discriminatorValue="" mappedSuperClass="true">
     <iDGenerator name="ABSTRACTFUNCTIONALACTIVEENTITY_SEQ"/>
     <attributes name="code" pk="true" label="code" labelPlural="codes" fetchTypeEager="true" column="//@domainObjects.5/@databaseTable/@columns.0" removeWhitespaceCharacters="true">
       <domainAttributeValidator maxLength="50" minLength="1" maxValue="" minValue="" regularExpression=""/>
@@ -267,6 +268,13 @@
       <domainAttributeValidator maxValue="" minValue="" regularExpression=""/>
       <javaType href="project.xmi#/0/@allSupportedTypes.1"/>
     </attributes>
+    <targetInheritances href="#//@domainObjects.6/@inheritance"/>
+    <targetInheritances href="#//@domainObjects.7/@inheritance"/>
+    <targetInheritances href="#//@domainObjects.8/@inheritance"/>
+    <targetInheritances href="#//@domainObjects.9/@inheritance"/>
+    <targetInheritances href="#//@domainObjects.10/@inheritance"/>
+    <targetInheritances href="#//@domainObjects.11/@inheritance"/>
+    <targetInheritances href="package-service.xmi#//@domainObjects.0/@inheritance"/>
     <databaseTable name="abstract_functional_active_entity_tab" schemaName="" catalogName="">
       <database href="project.xmi#/0/@database"/>
       <columns name="code" length="50">

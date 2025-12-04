@@ -4,6 +4,7 @@ import jakarta.validation.constraints.*;
 import java.util.*;
 import java.time.*;
 import com.kontron.qdw.domain.material.*;
+import com.kontron.qdw.domain.service.*;
 import jakarta.persistence.*;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
 import com.kontron.qdw.domain.base.*;
@@ -21,6 +22,7 @@ import com.kontron.qdw.domain.base.*;
 @NamedQuery(name = SerialObject.NQ_GET_ARRIVALS, query = "select b from SerialObject a join a.arrivals b where a.id = :id")
 @NamedQuery(name = SerialObject.NQ_GET_SHIPMENTS, query = "select b from SerialObject a join a.shipments b where a.id = :id")
 @NamedQuery(name = SerialObject.NQ_GET_TRACEBOM, query = "select b from SerialObject a join a.traceBom b where a.id = :id")
+@NamedQuery(name = SerialObject.NQ_GET_SERVICEMESSAGES, query = "select b from SerialObject a join a.serviceMessages b where a.id = :id")
 @NamedQuery(name = SerialObject.NQ_DELETE_ALL, query = "delete from SerialObject a")
 @NamedQuery(name = SerialObject.NQ_DELETE, query = "delete from SerialObject a where a.id = :id")
 @NamedQuery(name = SerialObject.NQ_GET_ALL, query = "select a from SerialObject a")
@@ -48,6 +50,8 @@ public class SerialObject extends AbstractEntityWithId {
     public static final String NQ_GET_TRACEBOM = "SerialObject.getTraceBom";
     @Generated
     public static final String NQ_GET_ARRIVALS = "SerialObject.getArrivals";
+    @Generated
+    public static final String NQ_GET_SERVICEMESSAGES = "SerialObject.getServiceMessages";
     @Generated
     public static final String NQ_UK_SEARCH_BY_SERIALNUMBER_AND_MATERIAL = "SerialObject.findBySerialNumber_And_Material";
     @Generated
@@ -104,6 +108,9 @@ public class SerialObject extends AbstractEntityWithId {
     @JoinColumn(name = "trace_bom", referencedColumnName = "id", nullable = true)
     @Generated
     private TraceBoM traceBom;
+    @OneToMany(targetEntity = ServiceMessage.class, mappedBy = "serialObject", fetch = FetchType.LAZY, cascade = { CascadeType.ALL })
+    @Generated
+    private Collection<ServiceMessage> serviceMessages = new ArrayList<>();
 
     /**
      * Default constructor
@@ -295,6 +302,22 @@ public class SerialObject extends AbstractEntityWithId {
     @Generated
     public void setTraceBom(TraceBoM traceBom) {
         this.traceBom = traceBom;
+    }
+
+    /**
+     * @return a collection of service messages
+     */
+    @Generated
+    public Collection<ServiceMessage> getServiceMessages() {
+        return this.serviceMessages;
+    }
+
+    /**
+     * @param serviceMessages the service messages to set
+     */
+    @Generated
+    public void setServiceMessages(Collection<ServiceMessage> serviceMessages) {
+        this.serviceMessages = serviceMessages;
     }
 
     /* (non-Javadoc)

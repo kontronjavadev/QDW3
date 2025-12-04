@@ -4,6 +4,7 @@ import jakarta.persistence.metamodel.*;
 import java.time.*;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
 import com.kontron.qdw.domain.material.*;
+import com.kontron.qdw.domain.service.*;
 import com.kontron.qdw.domain.base.*;
 
 @StaticMetamodel(SerialObject.class)
@@ -30,4 +31,6 @@ public class SerialObject_ extends AbstractEntityWithId_ {
     public static volatile CollectionAttribute<SerialObject, Shipment> shipments;
     @Generated
     public static volatile SingularAttribute<SerialObject, TraceBoM> traceBom;
+    @Generated
+    public static volatile CollectionAttribute<SerialObject, ServiceMessage> serviceMessages;
 }

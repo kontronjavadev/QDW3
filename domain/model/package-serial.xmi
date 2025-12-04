@@ -33,6 +33,10 @@
     <associations xsi:type="net.sourceforge.net.model.domain:OneToManyAssociation" name="arrivals" owner="true" cascadePersist="true" cascadeMerge="true" cascadeRemove="true" cascadeRefresh="true" target="//@domainObjects.2" reverseAssociation="//@domainObjects.2/@associations.3"/>
     <associations xsi:type="net.sourceforge.net.model.domain:OneToManyAssociation" name="shipments" owner="true" cascadePersist="true" cascadeMerge="true" cascadeRemove="true" cascadeRefresh="true" target="//@domainObjects.3" reverseAssociation="//@domainObjects.3/@associations.4"/>
     <associations xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" name="traceBom" owner="true" target="//@domainObjects.4" insertable="true" updatable="true" optional="true" column="//@domainObjects.0/@databaseTable/@columns.10"/>
+    <associations xsi:type="net.sourceforge.net.model.domain:OneToManyAssociation" name="serviceMessages" owner="true" cascadePersist="true" cascadeMerge="true" cascadeRemove="true" cascadeRefresh="true">
+      <target href="package-service.xmi#//@domainObjects.1"/>
+      <reverseAssociation xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-service.xmi#//@domainObjects.1/@associations.3"/>
+    </associations>
     <databaseTable name="serial_object_tab" schemaName="" catalogName="">
       <database href="project.xmi#/0/@database"/>
       <columns name="id">

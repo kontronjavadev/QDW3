@@ -17,6 +17,7 @@
       <childNamespaces href="package-material.xmi#/"/>
       <childNamespaces href="package-mv.xmi#/"/>
       <childNamespaces href="package-serial.xmi#/"/>
+      <childNamespaces href="package-service.xmi#/"/>
     </domainNamespace>
     <clientNamespace name="ui" parent="/0/@rootNamespace" project="/0"/>
     <supportedStandardNamespaces name="java.util" javaTypes="/0/@allSupportedTypes.14 /0/@allSupportedTypes.15 /0/@allSupportedTypes.18 /0/@allSupportedTypes.21" project="/0"/>
@@ -68,6 +69,8 @@
       <databaseTables href="package-serial.xmi#//@domainObjects.4/@databaseTable"/>
       <databaseTables href="package-serial.xmi#//@domainObjects.5/@databaseTable"/>
       <databaseTables href="package-serial.xmi#//@domainObjects.6/@databaseTable"/>
+      <databaseTables href="package-service.xmi#//@domainObjects.0/@databaseTable"/>
+      <databaseTables href="package-service.xmi#//@domainObjects.1/@databaseTable"/>
       <allSupportedColumnTypes javaTypes="/0/@allSupportedTypes.1 /0/@allSupportedTypes.6" name="INTEGER" omitSizeInformation="true"/>
       <allSupportedColumnTypes javaTypes="/0/@allSupportedTypes.2 /0/@allSupportedTypes.7" name="BIGINT" omitSizeInformation="true"/>
       <allSupportedColumnTypes javaTypes="/0/@allSupportedTypes.3 /0/@allSupportedTypes.8" name="DOUBLE" omitSizeInformation="true"/>
@@ -133,10 +136,10 @@
     <buildConfiguration name="qdw-selenium-test" type="SELENIUM_TEST"/>
     <testModules xsi:type="net.sourceforge.jbizmo.model.testing:SeleniumTestModule" namespace="/5" testCaseSuffix="Test" driver="FIREFOX" driverPath="D:\lib\selenium-firefox-driver-4.19.1.jar" maximizeWindow="true" implicitWaitTime="1" pageLoadTime="5"/>
   </net.sourceforge.jbizmo.model.project:Project>
-  <net.sourceforge.jbizmo.model.java:Namespace name="boundary" parent="/0/@rootNamespace" childNamespaces="/7 /110 /250 /254" project="/0"/>
-  <net.sourceforge.jbizmo.model.java:Namespace name="repository" parent="/0/@rootNamespace" childNamespaces="/10 /109 /249 /253" project="/0"/>
-  <net.sourceforge.jbizmo.model.java:Namespace name="dto" parent="/0/@rootNamespace" childNamespaces="/8 /111 /251 /255" project="/0"/>
-  <net.sourceforge.jbizmo.model.java:Namespace name="exchange" parent="/0/@rootNamespace" childNamespaces="/9 /112 /252 /256" project="/0"/>
+  <net.sourceforge.jbizmo.model.java:Namespace name="boundary" parent="/0/@rootNamespace" childNamespaces="/7 /110 /250 /254 /258" project="/0"/>
+  <net.sourceforge.jbizmo.model.java:Namespace name="repository" parent="/0/@rootNamespace" childNamespaces="/10 /109 /249 /253 /257" project="/0"/>
+  <net.sourceforge.jbizmo.model.java:Namespace name="dto" parent="/0/@rootNamespace" childNamespaces="/8 /111 /251 /255 /259" project="/0"/>
+  <net.sourceforge.jbizmo.model.java:Namespace name="exchange" parent="/0/@rootNamespace" childNamespaces="/9 /112 /252 /256 /260" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="ui.test" parent="/0/@rootNamespace" project="/0"/>
   <net.sourceforge.jbizmo.model.client:FormGroup name="Master data" groupOrder="1" forms="/47 /78 /51 /70 /82 /97 /115 /127 /139 /151 /175 /159 /93 /41 /74 /89 /101 /119 /131 /143 /155 /179 /163 /105 /123 /135 /147 /167 /183 /171" roles="/0/@roles.0" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="base" parent="/1" javaTypes="/45 /67 /14 /13 /64 /73 /87 /88 /100 /142 /154 /178" project="/0"/>
@@ -4233,4 +4236,8 @@
   <net.sourceforge.jbizmo.model.java:Namespace name="serial" parent="/1" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="serial" parent="/3" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="serial" parent="/4" project="/0"/>
+  <net.sourceforge.jbizmo.model.java:Namespace name="service" parent="/2" project="/0"/>
+  <net.sourceforge.jbizmo.model.java:Namespace name="service" parent="/1" project="/0"/>
+  <net.sourceforge.jbizmo.model.java:Namespace name="service" parent="/3" project="/0"/>
+  <net.sourceforge.jbizmo.model.java:Namespace name="service" parent="/4" project="/0"/>
 </xmi:XMI>
