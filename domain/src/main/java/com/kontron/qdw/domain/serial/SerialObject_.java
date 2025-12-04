@@ -22,4 +22,10 @@ public class SerialObject_ extends AbstractEntityWithId_ {
     public static volatile SingularAttribute<SerialObject, SerialObject> parentObject;
     @Generated
     public static volatile CollectionAttribute<SerialObject, SerialObject> serialObjects;
+    @Generated
+    public static volatile CollectionAttribute<SerialObject, AssemblyRecord> assemblyRecords;
+    @Generated
+    public static volatile CollectionAttribute<SerialObject, Arrival> arrivals;
+    @Generated
+    public static volatile CollectionAttribute<SerialObject, Shipment> shipments;
 }

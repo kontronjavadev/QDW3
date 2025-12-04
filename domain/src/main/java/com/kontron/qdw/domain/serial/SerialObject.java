@@ -17,6 +17,9 @@ import com.kontron.qdw.domain.base.*;
 @NamedQuery(name = SerialObject.NQ_GET_MATERIAL, query = "select b from SerialObject a join a.material b where a.id = :id")
 @NamedQuery(name = SerialObject.NQ_GET_PARENTOBJECT, query = "select b from SerialObject a join a.parentObject b where a.id = :id")
 @NamedQuery(name = SerialObject.NQ_GET_SERIALOBJECTS, query = "select b from SerialObject a join a.serialObjects b where a.id = :id")
+@NamedQuery(name = SerialObject.NQ_GET_ASSEMBLYRECORDS, query = "select b from SerialObject a join a.assemblyRecords b where a.id = :id")
+@NamedQuery(name = SerialObject.NQ_GET_ARRIVALS, query = "select b from SerialObject a join a.arrivals b where a.id = :id")
+@NamedQuery(name = SerialObject.NQ_GET_SHIPMENTS, query = "select b from SerialObject a join a.shipments b where a.id = :id")
 @NamedQuery(name = SerialObject.NQ_DELETE_ALL, query = "delete from SerialObject a")
 @NamedQuery(name = SerialObject.NQ_DELETE, query = "delete from SerialObject a where a.id = :id")
 @NamedQuery(name = SerialObject.NQ_GET_ALL, query = "select a from SerialObject a")
@@ -37,7 +40,11 @@ public class SerialObject extends AbstractEntityWithId {
     @Generated
     public static final String NQ_GET_ALL = "SerialObject.getAll";
     @Generated
+    public static final String NQ_GET_SHIPMENTS = "SerialObject.getShipments";
+    @Generated
     public static final String NQ_GET_MATERIAL = "SerialObject.getMaterial";
+    @Generated
+    public static final String NQ_GET_ARRIVALS = "SerialObject.getArrivals";
     @Generated
     public static final String NQ_UK_SEARCH_BY_SERIALNUMBER_AND_MATERIAL = "SerialObject.findBySerialNumber_And_Material";
     @Generated
@@ -48,6 +55,8 @@ public class SerialObject extends AbstractEntityWithId {
     public static final String NQ_FIND = "SerialObject.find";
     @Generated
     public static final String NQ_UK_EXISTS_BY_SERIALNUMBER_AND_MATERIAL = "SerialObject.checkBySerialNumber_And_Material";
+    @Generated
+    public static final String NQ_GET_ASSEMBLYRECORDS = "SerialObject.getAssemblyRecords";
     @Generated
     public static final String NQ_COUNT = "SerialObject.count";
     @Basic(optional = false)
@@ -79,6 +88,15 @@ public class SerialObject extends AbstractEntityWithId {
     @OneToMany(targetEntity = SerialObject.class, mappedBy = "parentObject", fetch = FetchType.LAZY, cascade = { CascadeType.ALL })
     @Generated
     private Collection<SerialObject> serialObjects = new ArrayList<>();
+    @OneToMany(targetEntity = AssemblyRecord.class, mappedBy = "parentSerialObject", fetch = FetchType.LAZY, cascade = { CascadeType.ALL })
+    @Generated
+    private Collection<AssemblyRecord> assemblyRecords = new ArrayList<>();
+    @OneToMany(targetEntity = Arrival.class, mappedBy = "serialObject", fetch = FetchType.LAZY, cascade = { CascadeType.ALL })
+    @Generated
+    private Collection<Arrival> arrivals = new ArrayList<>();
+    @OneToMany(targetEntity = Shipment.class, mappedBy = "serialObject", fetch = FetchType.LAZY, cascade = { CascadeType.ALL })
+    @Generated
+    private Collection<Shipment> shipments = new ArrayList<>();
 
     /**
      * Default constructor
@@ -206,6 +224,54 @@ public class SerialObject extends AbstractEntityWithId {
     @Generated
     public void setSerialObjects(Collection<SerialObject> serialObjects) {
         this.serialObjects = serialObjects;
+    }
+
+    /**
+     * @return a collection of assembly records
+     */
+    @Generated
+    public Collection<AssemblyRecord> getAssemblyRecords() {
+        return this.assemblyRecords;
+    }
+
+    /**
+     * @param assemblyRecords the assembly records to set
+     */
+    @Generated
+    public void setAssemblyRecords(Collection<AssemblyRecord> assemblyRecords) {
+        this.assemblyRecords = assemblyRecords;
+    }
+
+    /**
+     * @return a collection of arrivals
+     */
+    @Generated
+    public Collection<Arrival> getArrivals() {
+        return this.arrivals;
+    }
+
+    /**
+     * @param arrivals the arrivals to set
+     */
+    @Generated
+    public void setArrivals(Collection<Arrival> arrivals) {
+        this.arrivals = arrivals;
+    }
+
+    /**
+     * @return a collection of shipments
+     */
+    @Generated
+    public Collection<Shipment> getShipments() {
+        return this.shipments;
+    }
+
+    /**
+     * @param shipments the shipments to set
+     */
+    @Generated
+    public void setShipments(Collection<Shipment> shipments) {
+        this.shipments = shipments;
     }
 
     /* (non-Javadoc)

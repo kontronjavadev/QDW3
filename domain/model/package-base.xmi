@@ -29,6 +29,9 @@
     <targetInheritances href="package-material.xmi#//@domainObjects.5/@inheritance"/>
     <targetInheritances href="package-material.xmi#//@domainObjects.6/@inheritance"/>
     <targetInheritances href="package-serial.xmi#//@domainObjects.0/@inheritance"/>
+    <targetInheritances href="package-serial.xmi#//@domainObjects.1/@inheritance"/>
+    <targetInheritances href="package-serial.xmi#//@domainObjects.2/@inheritance"/>
+    <targetInheritances href="package-serial.xmi#//@domainObjects.3/@inheritance"/>
     <databaseTable name="abstract_entity_with_id_tab" schemaName="" catalogName="">
       <database href="project.xmi#/0/@database"/>
       <columns name="id">
