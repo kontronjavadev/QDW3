@@ -11,7 +11,6 @@ import net.sourceforge.jbizmo.commons.annotation.Generated;
 @Entity
 @Table(name = "service_message_mv")
 @NamedQuery(name = MaterializedServiceMessage.NQ_GET_SERIALOBJECT, query = "select b from MaterializedServiceMessage a join a.serialObject b where a.id = :id")
-@NamedQuery(name = MaterializedServiceMessage.NQ_GET_FAILUREMATERIALS, query = "select b from MaterializedServiceMessage a join a.failureMaterials b where a.id = :id")
 @NamedQuery(name = MaterializedServiceMessage.NQ_GET_MATERIAL, query = "select b from MaterializedServiceMessage a join a.material b where a.id = :id")
 @NamedQuery(name = MaterializedServiceMessage.NQ_DELETE_ALL, query = "delete from MaterializedServiceMessage a")
 @NamedQuery(name = MaterializedServiceMessage.NQ_DELETE, query = "delete from MaterializedServiceMessage a where a.id = :id")
@@ -30,8 +29,6 @@ public class MaterializedServiceMessage extends MaterializedEntitiy {
     public static final String NQ_DELETE = "MaterializedServiceMessage.delete";
     @Generated
     public static final String NQ_GET_ALL = "MaterializedServiceMessage.getAll";
-    @Generated
-    public static final String NQ_GET_FAILUREMATERIALS = "MaterializedServiceMessage.getFailureMaterials";
     @Generated
     public static final String NQ_GET_MATERIAL = "MaterializedServiceMessage.getMaterial";
     @Generated
@@ -207,11 +204,6 @@ public class MaterializedServiceMessage extends MaterializedEntitiy {
     @NotNull(message = "Field \"serialObject\" must not be null!")
     @Generated
     private SerialObject serialObject;
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "service_message_materials_tab", joinColumns = { @JoinColumn(name = "service_message_pk") }, inverseJoinColumns = {
-            @JoinColumn(name = "material_pk") })
-    @Generated
-    private Collection<Material> failureMaterials = new ArrayList<>();
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "material", referencedColumnName = "id", nullable = false)
     @NotNull(message = "Field \"material\" must not be null!")
@@ -904,22 +896,6 @@ public class MaterializedServiceMessage extends MaterializedEntitiy {
     @Generated
     public void setSerialObject(SerialObject serialObject) {
         this.serialObject = serialObject;
-    }
-
-    /**
-     * @return a collection of materials
-     */
-    @Generated
-    public Collection<Material> getFailureMaterials() {
-        return this.failureMaterials;
-    }
-
-    /**
-     * @param failureMaterials the materials to set
-     */
-    @Generated
-    public void setFailureMaterials(Collection<Material> failureMaterials) {
-        this.failureMaterials = failureMaterials;
     }
 
     /**

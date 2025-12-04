@@ -206,7 +206,7 @@
     <styles xmi:type="notation:RoutingStyle" xmi:id="_Ms11IdEGEfCfo6I86f1oaA" routing="Rectilinear"/>
     <styles xmi:type="notation:FontStyle" xmi:id="_Ms11ItEGEfCfo6I86f1oaA" fontName="Segoe UI"/>
     <element xmi:type="net.sourceforge.net.model.domain:OneToManyAssociation" href="package-serial.xmi#//@domainObjects.0/@associations.7"/>
-    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_Ms11I9EGEfCfo6I86f1oaA" points="[80, 57, 80, -298]$[80, 149, 80, -206]"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_Ms11I9EGEfCfo6I86f1oaA" points="[50, 57, 50, -293]$[50, 144, 50, -206]"/>
   </edges>
   <edges xmi:type="notation:Edge" xmi:id="_Ms11JNEGEfCfo6I86f1oaA" type="4004" source="_P9VncNEEEfCfo6I86f1oaA" target="_3onfUNEDEfCfo6I86f1oaA">
     <styles xmi:type="notation:RoutingStyle" xmi:id="_Ms11JdEGEfCfo6I86f1oaA" routing="Rectilinear"/>
@@ -237,5 +237,13 @@
     <styles xmi:type="notation:FontStyle" xmi:id="_5nrawtEIEfCfo6I86f1oaA" fontName="Segoe UI"/>
     <element xmi:type="net.sourceforge.net.model.domain:EnumAssociation" href="package-service.xmi#//@domainObjects.0/@enumAssociations.0"/>
     <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_5nraw9EIEfCfo6I86f1oaA" points="[-137, 14, 150, -34]$[-205, 14, 82, -34]"/>
+  </edges>
+  <edges xmi:type="notation:Edge" xmi:id="_0Iu6QNESEfCfo6I86f1oaA" type="4002" source="_P9VncNEEEfCfo6I86f1oaA" target="_akoWQNEEEfCfo6I86f1oaA">
+    <styles xmi:type="notation:RoutingStyle" xmi:id="_0Iu6QdESEfCfo6I86f1oaA" routing="Rectilinear"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_0Iu6QtESEfCfo6I86f1oaA" fontName="Segoe UI"/>
+    <element xmi:type="net.sourceforge.net.model.domain:ManyToManyAssociation" href="package-service.xmi#//@domainObjects.1/@associations.5"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_0Iu6Q9ESEfCfo6I86f1oaA" points="[8, -13, -300, 189]$[8, -58, -300, 144]$[213, -58, -95, 144]"/>
+    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_0IwIYNESEfCfo6I86f1oaA" id="(0.9004149377593361,0.031476997578692496)"/>
+    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_0IwIYdESEfCfo6I86f1oaA" id="(0.40772532188841204,0.06358381502890173)"/>
   </edges>
 </notation:Diagram>

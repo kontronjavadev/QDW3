@@ -93,7 +93,5 @@ public class MaterializedServiceMessage_ extends MaterializedEntitiy_ {
     @Generated
     public static volatile SingularAttribute<MaterializedServiceMessage, SerialObject> serialObject;
     @Generated
-    public static volatile CollectionAttribute<MaterializedServiceMessage, Material> failureMaterials;
-    @Generated
     public static volatile SingularAttribute<MaterializedServiceMessage, Material> material;
 }

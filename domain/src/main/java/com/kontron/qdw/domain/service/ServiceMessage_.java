@@ -57,4 +57,6 @@ public class ServiceMessage_ extends AbstractEntityWithId_ {
     public static volatile SingularAttribute<ServiceMessage, SerialObject> serialObject;
     @Generated
     public static volatile SingularAttribute<ServiceMessage, ServiceOrder> serviceOrder;
+    @Generated
+    public static volatile CollectionAttribute<ServiceMessage, Material> failureMaterials;
 }

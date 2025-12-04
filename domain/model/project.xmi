@@ -58,7 +58,6 @@
       <databaseTables href="package-serial.xmi#//@domainObjects.0/@databaseTable"/>
       <databaseTables href="package-mv.xmi#//@domainObjects.3/@databaseTable"/>
       <databaseTables href="package-mv.xmi#//@domainObjects.4/@databaseTable"/>
-      <databaseTables href="package-mv.xmi#//@domainObjects.4/@associations.1/@table"/>
       <databaseTables href="package-mv.xmi#//@domainObjects.5/@databaseTable"/>
       <databaseTables href="package-mv.xmi#//@domainObjects.6/@databaseTable"/>
       <databaseTables href="package-mv.xmi#//@domainObjects.7/@databaseTable"/>
@@ -71,6 +70,7 @@
       <databaseTables href="package-serial.xmi#//@domainObjects.6/@databaseTable"/>
       <databaseTables href="package-service.xmi#//@domainObjects.0/@databaseTable"/>
       <databaseTables href="package-service.xmi#//@domainObjects.1/@databaseTable"/>
+      <databaseTables href="package-service.xmi#//@domainObjects.1/@associations.5/@table"/>
       <allSupportedColumnTypes javaTypes="/0/@allSupportedTypes.1 /0/@allSupportedTypes.6" name="INTEGER" omitSizeInformation="true"/>
       <allSupportedColumnTypes javaTypes="/0/@allSupportedTypes.2 /0/@allSupportedTypes.7" name="BIGINT" omitSizeInformation="true"/>
       <allSupportedColumnTypes javaTypes="/0/@allSupportedTypes.3 /0/@allSupportedTypes.8" name="DOUBLE" omitSizeInformation="true"/>

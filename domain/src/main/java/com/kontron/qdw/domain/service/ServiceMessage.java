@@ -2,6 +2,7 @@ package com.kontron.qdw.domain.service;
 
 import jakarta.validation.constraints.*;
 import com.kontron.qdw.domain.serial.*;
+import java.util.*;
 import java.time.*;
 import com.kontron.qdw.domain.material.*;
 import jakarta.persistence.*;
@@ -15,6 +16,7 @@ import com.kontron.qdw.domain.base.*;
 @NamedQuery(name = ServiceMessage.NQ_GET_PLANT, query = "select b from ServiceMessage a join a.plant b where a.id = :id")
 @NamedQuery(name = ServiceMessage.NQ_GET_SERIALOBJECT, query = "select b from ServiceMessage a join a.serialObject b where a.id = :id")
 @NamedQuery(name = ServiceMessage.NQ_GET_SERVICEORDER, query = "select b from ServiceMessage a join a.serviceOrder b where a.id = :id")
+@NamedQuery(name = ServiceMessage.NQ_GET_FAILUREMATERIALS, query = "select b from ServiceMessage a join a.failureMaterials b where a.id = :id")
 @NamedQuery(name = ServiceMessage.NQ_DELETE_ALL, query = "delete from ServiceMessage a")
 @NamedQuery(name = ServiceMessage.NQ_DELETE, query = "delete from ServiceMessage a where a.id = :id")
 @NamedQuery(name = ServiceMessage.NQ_GET_ALL, query = "select a from ServiceMessage a")
@@ -40,6 +42,8 @@ public class ServiceMessage extends AbstractEntityWithId {
     public static final String NQ_GET_ALL = "ServiceMessage.getAll";
     @Generated
     public static final String NQ_GET_PLANT = "ServiceMessage.getPlant";
+    @Generated
+    public static final String NQ_GET_FAILUREMATERIALS = "ServiceMessage.getFailureMaterials";
     @Generated
     public static final String NQ_CHECK = "ServiceMessage.check";
     @Generated
@@ -140,6 +144,11 @@ public class ServiceMessage extends AbstractEntityWithId {
     @NotNull(message = "Field \"serviceOrder\" must not be null!")
     @Generated
     private ServiceOrder serviceOrder;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "service_message_materials_tab", joinColumns = { @JoinColumn(name = "service_message_pk") }, inverseJoinColumns = {
+            @JoinColumn(name = "material_pk") })
+    @Generated
+    private Collection<Material> failureMaterials = new ArrayList<>();
 
     /**
      * Default constructor
@@ -539,6 +548,22 @@ public class ServiceMessage extends AbstractEntityWithId {
     @Generated
     public void setServiceOrder(ServiceOrder serviceOrder) {
         this.serviceOrder = serviceOrder;
+    }
+
+    /**
+     * @return a collection of materials
+     */
+    @Generated
+    public Collection<Material> getFailureMaterials() {
+        return this.failureMaterials;
+    }
+
+    /**
+     * @param failureMaterials the materials to set
+     */
+    @Generated
+    public void setFailureMaterials(Collection<Material> failureMaterials) {
+        this.failureMaterials = failureMaterials;
     }
 
     /* (non-Javadoc)

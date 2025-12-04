@@ -967,19 +967,11 @@
     <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_zBv9wNBGEfCGFpNMaDWZOQ" id="(0.3741258741258741,0.0035169988276670576)"/>
     <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_zBv9wdBGEfCGFpNMaDWZOQ" id="(0.7883817427385892,0.09219858156028368)"/>
   </edges>
-  <edges xmi:type="notation:Edge" xmi:id="_gPIW0NBHEfCGFpNMaDWZOQ" type="4002" source="_kyl2kNApEfCGFpNMaDWZOQ" target="_pSe0cM-IEfCpkO0fRWuKMQ">
-    <styles xmi:type="notation:RoutingStyle" xmi:id="_gPIW0dBHEfCGFpNMaDWZOQ" routing="Rectilinear"/>
-    <styles xmi:type="notation:FontStyle" xmi:id="_gPIW0tBHEfCGFpNMaDWZOQ" fontName="Segoe UI"/>
-    <element xmi:type="net.sourceforge.net.model.domain:ManyToManyAssociation" href="package-mv.xmi#//@domainObjects.4/@associations.1"/>
-    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_gPIW09BHEfCGFpNMaDWZOQ" points="[-159, 558, 609, 90]$[-728, 558, 40, 90]"/>
-    <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_gPSH0NBHEfCGFpNMaDWZOQ" id="(0.5559440559440559,0.01406799531066823)"/>
-    <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_gPSH0dBHEfCGFpNMaDWZOQ" id="(0.8373983739837398,0.11560693641618497)"/>
-  </edges>
   <edges xmi:type="notation:Edge" xmi:id="_occ9kNBHEfCGFpNMaDWZOQ" type="4004" source="_kyl2kNApEfCGFpNMaDWZOQ" target="_pSe0cM-IEfCpkO0fRWuKMQ">
     <styles xmi:type="notation:RoutingStyle" xmi:id="_occ9kdBHEfCGFpNMaDWZOQ" routing="Rectilinear"/>
     <styles xmi:type="notation:FontStyle" xmi:id="_occ9ktBHEfCGFpNMaDWZOQ" fontName="Segoe UI"/>
-    <element xmi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-mv.xmi#//@domainObjects.4/@associations.2"/>
-    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_occ9k9BHEfCGFpNMaDWZOQ" points="[-170, 595, 627, 127]$[-739, 595, 58, 127]"/>
+    <element xmi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-mv.xmi#//@domainObjects.4/@associations.1"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_occ9k9BHEfCGFpNMaDWZOQ" points="[-170, 550, 627, 82]$[-739, 550, 58, 82]"/>
     <sourceAnchor xmi:type="notation:IdentityAnchor" xmi:id="_oceLsNBHEfCGFpNMaDWZOQ" id="(0.5944055944055944,0.017584994138335287)"/>
     <targetAnchor xmi:type="notation:IdentityAnchor" xmi:id="_oceLsdBHEfCGFpNMaDWZOQ" id="(0.7642276422764228,0.1329479768786127)"/>
   </edges>

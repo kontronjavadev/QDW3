@@ -166,6 +166,23 @@
       <reverseAssociation xsi:type="net.sourceforge.net.model.domain:OneToManyAssociation" href="package-serial.xmi#//@domainObjects.0/@associations.7"/>
     </associations>
     <associations xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" name="serviceOrder" target="//@domainObjects.0" reverseAssociation="//@domainObjects.0/@associations.2" insertable="true" updatable="true" column="//@domainObjects.1/@databaseTable/@columns.27"/>
+    <associations xsi:type="net.sourceforge.net.model.domain:ManyToManyAssociation" name="failureMaterials" owner="true" internalComment="" userComment="">
+      <target href="package-material.xmi#//@domainObjects.2"/>
+      <table name="service_message_materials_tab" schemaName="" catalogName="">
+        <database href="project.xmi#/0/@database"/>
+        <columns name="service_message_pk">
+          <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.1"/>
+        </columns>
+        <columns name="material_pk">
+          <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.1"/>
+        </columns>
+        <foreignKeys name="fk_service_message_materials_1" column="//@domainObjects.1/@associations.5/@table/@columns.0" referencedColumn="//@domainObjects.1/@databaseTable/@columns.0"/>
+        <foreignKeys name="fk_service_message_materials_2" column="//@domainObjects.1/@associations.5/@table/@columns.1">
+          <referencedColumn href="package-material.xmi#//@domainObjects.2/@databaseTable/@columns.0"/>
+        </foreignKeys>
+        <indexes name="uk_service_message_materials" unique="true" columns="//@domainObjects.1/@associations.5/@table/@columns.0 //@domainObjects.1/@associations.5/@table/@columns.1"/>
+      </table>
+    </associations>
     <databaseTable name="service_message_tab" schemaName="" catalogName="">
       <database href="project.xmi#/0/@database"/>
       <columns name="id">
