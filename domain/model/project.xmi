@@ -65,11 +65,18 @@
       <databaseTables href="package-serial.xmi#//@domainObjects.1/@databaseTable"/>
       <databaseTables href="package-serial.xmi#//@domainObjects.2/@databaseTable"/>
       <databaseTables href="package-serial.xmi#//@domainObjects.3/@databaseTable"/>
+      <databaseTables href="package-serial.xmi#//@domainObjects.4/@databaseTable"/>
+      <databaseTables href="package-serial.xmi#//@domainObjects.5/@databaseTable"/>
+      <databaseTables href="package-serial.xmi#//@domainObjects.6/@databaseTable"/>
       <allSupportedColumnTypes javaTypes="/0/@allSupportedTypes.1 /0/@allSupportedTypes.6" name="INTEGER" omitSizeInformation="true"/>
       <allSupportedColumnTypes javaTypes="/0/@allSupportedTypes.2 /0/@allSupportedTypes.7" name="BIGINT" omitSizeInformation="true"/>
       <allSupportedColumnTypes javaTypes="/0/@allSupportedTypes.3 /0/@allSupportedTypes.8" name="DOUBLE" omitSizeInformation="true"/>
       <allSupportedColumnTypes javaTypes="/0/@allSupportedTypes.16 /0/@allSupportedTypes.14 /0/@allSupportedTypes.15" name="DATE" omitSizeInformation="true"/>
-      <allSupportedColumnTypes javaTypes="/0/@allSupportedTypes.12 /0/@allSupportedTypes.21" name="VARCHAR"/>
+      <allSupportedColumnTypes name="VARCHAR">
+        <javaTypes href="#/0/@allSupportedTypes.12"/>
+        <javaTypes href="#/0/@allSupportedTypes.21"/>
+        <javaTypes href="package-mv.xmi#//@enumerations.0"/>
+      </allSupportedColumnTypes>
       <allSupportedColumnTypes javaTypes="/0/@allSupportedTypes.12 /0/@allSupportedTypes.13 /0/@allSupportedTypes.21" name="CHAR"/>
       <allSupportedColumnTypes javaTypes="/0/@allSupportedTypes.19 /0/@allSupportedTypes.20 /0/@allSupportedTypes.21" name="BLOB" omitSizeInformation="true"/>
       <allSupportedColumnTypes javaTypes="/0/@allSupportedTypes.11" name="DECIMAL" omitSizeInformation="true"/>

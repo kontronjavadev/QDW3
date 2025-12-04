@@ -2,10 +2,10 @@ package com.kontron.qdw.domain.serial;
 
 import jakarta.validation.constraints.*;
 import jakarta.persistence.*;
-import net.sourceforge.jbizmo.commons.annotation.Generated;
 import java.time.*;
-import com.kontron.qdw.domain.base.*;
+import net.sourceforge.jbizmo.commons.annotation.Generated;
 import com.kontron.qdw.domain.material.*;
+import com.kontron.qdw.domain.base.*;
 
 @Entity
 @Table(name = "shipment_tab")

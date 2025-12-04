@@ -1,10 +1,10 @@
 package com.kontron.qdw.domain.serial;
 
 import jakarta.persistence.metamodel.*;
-import net.sourceforge.jbizmo.commons.annotation.Generated;
 import java.time.*;
-import com.kontron.qdw.domain.base.*;
+import net.sourceforge.jbizmo.commons.annotation.Generated;
 import com.kontron.qdw.domain.material.*;
+import com.kontron.qdw.domain.base.*;
 
 @StaticMetamodel(Shipment.class)
 public class Shipment_ extends AbstractEntityWithId_ {

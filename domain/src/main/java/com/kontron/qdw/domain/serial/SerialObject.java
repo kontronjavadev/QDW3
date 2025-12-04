@@ -20,6 +20,7 @@ import com.kontron.qdw.domain.base.*;
 @NamedQuery(name = SerialObject.NQ_GET_ASSEMBLYRECORDS, query = "select b from SerialObject a join a.assemblyRecords b where a.id = :id")
 @NamedQuery(name = SerialObject.NQ_GET_ARRIVALS, query = "select b from SerialObject a join a.arrivals b where a.id = :id")
 @NamedQuery(name = SerialObject.NQ_GET_SHIPMENTS, query = "select b from SerialObject a join a.shipments b where a.id = :id")
+@NamedQuery(name = SerialObject.NQ_GET_TRACEBOM, query = "select b from SerialObject a join a.traceBom b where a.id = :id")
 @NamedQuery(name = SerialObject.NQ_DELETE_ALL, query = "delete from SerialObject a")
 @NamedQuery(name = SerialObject.NQ_DELETE, query = "delete from SerialObject a where a.id = :id")
 @NamedQuery(name = SerialObject.NQ_GET_ALL, query = "select a from SerialObject a")
@@ -43,6 +44,8 @@ public class SerialObject extends AbstractEntityWithId {
     public static final String NQ_GET_SHIPMENTS = "SerialObject.getShipments";
     @Generated
     public static final String NQ_GET_MATERIAL = "SerialObject.getMaterial";
+    @Generated
+    public static final String NQ_GET_TRACEBOM = "SerialObject.getTraceBom";
     @Generated
     public static final String NQ_GET_ARRIVALS = "SerialObject.getArrivals";
     @Generated
@@ -97,6 +100,10 @@ public class SerialObject extends AbstractEntityWithId {
     @OneToMany(targetEntity = Shipment.class, mappedBy = "serialObject", fetch = FetchType.LAZY, cascade = { CascadeType.ALL })
     @Generated
     private Collection<Shipment> shipments = new ArrayList<>();
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "trace_bom", referencedColumnName = "id", nullable = true)
+    @Generated
+    private TraceBoM traceBom;
 
     /**
      * Default constructor
@@ -272,6 +279,22 @@ public class SerialObject extends AbstractEntityWithId {
     @Generated
     public void setShipments(Collection<Shipment> shipments) {
         this.shipments = shipments;
+    }
+
+    /**
+     * @return the trace BoM
+     */
+    @Generated
+    public TraceBoM getTraceBom() {
+        return this.traceBom;
+    }
+
+    /**
+     * @param traceBom the trace BoM to set
+     */
+    @Generated
+    public void setTraceBom(TraceBoM traceBom) {
+        this.traceBom = traceBom;
     }
 
     /* (non-Javadoc)

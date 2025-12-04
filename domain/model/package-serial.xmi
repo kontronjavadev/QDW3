@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<net.sourceforge.net.model.domain:DomainNamespace xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:net.sourceforge.net.model.domain="http:///net/sourceforge/jbizmo/model/domain.ecore" name="serial" javaTypes="//@domainObjects.0 //@domainObjects.1 //@domainObjects.2 //@domainObjects.3">
+<net.sourceforge.net.model.domain:DomainNamespace xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:net.sourceforge.net.model.domain="http:///net/sourceforge/jbizmo/model/domain.ecore" name="serial" javaTypes="//@domainObjects.0 //@domainObjects.1 //@domainObjects.2 //@domainObjects.3 //@domainObjects.4 //@domainObjects.5 //@domainObjects.6">
   <parent href="project.xmi#/0/@domainNamespace"/>
   <project href="project.xmi#/0"/>
   <domainObjects name="SerialObject" comment="Domain object for serial object objects" mappable="true" namespace="/" label="serial object" namePlural="SerialObjects" labelPlural="serial objects" discriminatorValue="">
@@ -32,6 +32,7 @@
     <associations xsi:type="net.sourceforge.net.model.domain:OneToManyAssociation" name="assemblyRecords" owner="true" cascadePersist="true" cascadeMerge="true" cascadeRemove="true" cascadeRefresh="true" target="//@domainObjects.1" reverseAssociation="//@domainObjects.1/@associations.1"/>
     <associations xsi:type="net.sourceforge.net.model.domain:OneToManyAssociation" name="arrivals" owner="true" cascadePersist="true" cascadeMerge="true" cascadeRemove="true" cascadeRefresh="true" target="//@domainObjects.2" reverseAssociation="//@domainObjects.2/@associations.3"/>
     <associations xsi:type="net.sourceforge.net.model.domain:OneToManyAssociation" name="shipments" owner="true" cascadePersist="true" cascadeMerge="true" cascadeRemove="true" cascadeRefresh="true" target="//@domainObjects.3" reverseAssociation="//@domainObjects.3/@associations.4"/>
+    <associations xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" name="traceBom" owner="true" target="//@domainObjects.4" insertable="true" updatable="true" optional="true" column="//@domainObjects.0/@databaseTable/@columns.10"/>
     <databaseTable name="serial_object_tab" schemaName="" catalogName="">
       <database href="project.xmi#/0/@database"/>
       <columns name="id">
@@ -64,11 +65,15 @@
       <columns name="parent_object" nullable="true">
         <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.1"/>
       </columns>
+      <columns name="trace_bom" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.1"/>
+      </columns>
       <primaryKey name="pk_serial_object" column="//@domainObjects.0/@databaseTable/@columns.0"/>
       <foreignKeys name="fk_serial_object_material" column="//@domainObjects.0/@databaseTable/@columns.8">
         <referencedColumn href="package-material.xmi#//@domainObjects.2/@databaseTable/@columns.0"/>
       </foreignKeys>
       <foreignKeys name="fk_serial_object_parent_object" column="//@domainObjects.0/@databaseTable/@columns.9" referencedColumn="//@domainObjects.0/@databaseTable/@columns.0"/>
+      <foreignKeys name="fk_serial_object_trace_bom" column="//@domainObjects.0/@databaseTable/@columns.10" referencedColumn="//@domainObjects.4/@databaseTable/@columns.0"/>
       <indexes name="idx_serial_number" columns="//@domainObjects.0/@databaseTable/@columns.4"/>
       <indexes name="uk_serial_object_snr_mat" unique="true" columns="//@domainObjects.0/@databaseTable/@columns.4 //@domainObjects.0/@databaseTable/@columns.8"/>
     </databaseTable>
@@ -299,6 +304,240 @@
       </foreignKeys>
       <foreignKeys name="fk_shipment_serial_object" column="//@domainObjects.3/@databaseTable/@columns.11" referencedColumn="//@domainObjects.0/@databaseTable/@columns.0"/>
       <indexes name="idx_shipment_rebuild" columns="//@domainObjects.3/@databaseTable/@columns.5"/>
+    </databaseTable>
+  </domainObjects>
+  <domainObjects name="TraceBoM" comment="Domain object for trace BoM objects" mappable="true" namespace="/" label="trace BoM" namePlural="TraceBoMs" labelPlural="trace BoMs" discriminatorValue="">
+    <parent href="package-base.xmi#//@domainObjects.0"/>
+    <iDGenerator name="TRACEBOM_SEQ" generatorType="IDENTITY"/>
+    <inheritance>
+      <target href="package-base.xmi#//@domainObjects.0"/>
+    </inheritance>
+    <attributes name="deliveryNoteNumber" label="delivery note number" labelPlural="delivery note numbers" fetchTypeEager="true" column="//@domainObjects.4/@databaseTable/@columns.4">
+      <domainAttributeValidator maxLength="50" minLength="1" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <attributes name="lotNumber" label="lot number" labelPlural="lot numbers" fetchTypeEager="true" column="//@domainObjects.4/@databaseTable/@columns.5">
+      <domainAttributeValidator maxLength="20" nullable="true" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <attributes name="orderNumber" label="order number" labelPlural="order numbers" fetchTypeEager="true" column="//@domainObjects.4/@databaseTable/@columns.6">
+      <domainAttributeValidator maxLength="50" minLength="1" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <attributes name="productionDate" label="production date" labelPlural="production dates" fetchTypeEager="true" column="//@domainObjects.4/@databaseTable/@columns.7">
+      <domainAttributeValidator maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.16"/>
+    </attributes>
+    <associations xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" name="materialRevision" owner="true" insertable="true" updatable="true" column="//@domainObjects.4/@databaseTable/@columns.8">
+      <target href="package-material.xmi#//@domainObjects.3"/>
+    </associations>
+    <associations xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" name="supplier" owner="true" insertable="true" updatable="true" column="//@domainObjects.4/@databaseTable/@columns.9">
+      <target href="package-base.xmi#//@domainObjects.13"/>
+    </associations>
+    <associations xsi:type="net.sourceforge.net.model.domain:OneToManyAssociation" name="traceBoMItems" owner="true" cascadePersist="true" cascadeMerge="true" cascadeRemove="true" cascadeRefresh="true" target="//@domainObjects.5" reverseAssociation="//@domainObjects.5/@associations.1"/>
+    <associations xsi:type="net.sourceforge.net.model.domain:OneToManyAssociation" name="illegalTraceBoMItems" owner="true" cascadePersist="true" cascadeMerge="true" cascadeRemove="true" cascadeRefresh="true" target="//@domainObjects.6" reverseAssociation="//@domainObjects.6/@associations.0"/>
+    <databaseTable name="trace_bom_tab" schemaName="" catalogName="">
+      <database href="project.xmi#/0/@database"/>
+      <columns name="id">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.1"/>
+      </columns>
+      <columns name="version">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.0"/>
+      </columns>
+      <columns name="creation_date">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.14"/>
+      </columns>
+      <columns name="last_update" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.14"/>
+      </columns>
+      <columns name="delivery_note_number" length="50">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="lot_number" length="20" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="order_number" length="50">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="production_date">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.3"/>
+      </columns>
+      <columns name="material_revision">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.1"/>
+      </columns>
+      <columns name="supplier" length="50">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <primaryKey name="pk_trace_bom" column="//@domainObjects.4/@databaseTable/@columns.0"/>
+      <foreignKeys name="fk_trace_bom_material_revision" column="//@domainObjects.4/@databaseTable/@columns.8">
+        <referencedColumn href="package-material.xmi#//@domainObjects.3/@databaseTable/@columns.0"/>
+      </foreignKeys>
+      <foreignKeys name="fk_trace_bom_supplier" column="//@domainObjects.4/@databaseTable/@columns.9">
+        <referencedColumn href="package-base.xmi#//@domainObjects.13/@databaseTable/@columns.0"/>
+      </foreignKeys>
+    </databaseTable>
+  </domainObjects>
+  <domainObjects name="TraceBoMItem" comment="Domain object for trace BoM item objects" mappable="true" namespace="/" label="trace BoM item" namePlural="TraceBoMItems" labelPlural="trace BoM items" discriminatorValue="">
+    <parent href="package-base.xmi#//@domainObjects.0"/>
+    <iDGenerator name="TRACEBOMITEM_SEQ" generatorType="IDENTITY"/>
+    <inheritance>
+      <target href="package-base.xmi#//@domainObjects.0"/>
+    </inheritance>
+    <attributes name="dateCode" label="date code" labelPlural="date codes" fetchTypeEager="true" column="//@domainObjects.5/@databaseTable/@columns.4">
+      <domainAttributeValidator maxLength="255" minLength="1" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <attributes name="infoField1" label="info field 1" labelPlural="info field 1s" fetchTypeEager="true" column="//@domainObjects.5/@databaseTable/@columns.5">
+      <domainAttributeValidator maxLength="255" minLength="1" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <attributes name="infoField2" label="info field 2" labelPlural="info field 2s" fetchTypeEager="true" column="//@domainObjects.5/@databaseTable/@columns.6">
+      <domainAttributeValidator maxLength="255" minLength="1" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <attributes name="infoField3" label="info field 3" labelPlural="info field 3s" fetchTypeEager="true" column="//@domainObjects.5/@databaseTable/@columns.7">
+      <domainAttributeValidator maxLength="255" minLength="1" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <attributes name="infoField4" label="info field 4" labelPlural="info field 4s" fetchTypeEager="true" column="//@domainObjects.5/@databaseTable/@columns.8">
+      <domainAttributeValidator maxLength="255" minLength="1" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <attributes name="manufacturerName" label="manufacturer name" labelPlural="manufacturer names" fetchTypeEager="true" column="//@domainObjects.5/@databaseTable/@columns.9">
+      <domainAttributeValidator maxLength="255" minLength="1" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <attributes name="manufacturerRevision" label="manufacturer revision" labelPlural="manufacturer revisions" fetchTypeEager="true" column="//@domainObjects.5/@databaseTable/@columns.10">
+      <domainAttributeValidator maxLength="255" minLength="1" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <attributes name="orderCode" label="order code" labelPlural="order codes" fetchTypeEager="true" column="//@domainObjects.5/@databaseTable/@columns.11">
+      <domainAttributeValidator maxLength="255" minLength="1" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <attributes name="quantity" label="quantity" labelPlural="quantities" fetchTypeEager="true" column="//@domainObjects.5/@databaseTable/@columns.12">
+      <domainAttributeValidator maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.1"/>
+    </attributes>
+    <associations xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" name="material" owner="true" insertable="true" updatable="true" column="//@domainObjects.5/@databaseTable/@columns.13">
+      <target href="package-material.xmi#//@domainObjects.2"/>
+    </associations>
+    <associations xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" name="traceBom" target="//@domainObjects.4" reverseAssociation="//@domainObjects.4/@associations.2" insertable="true" updatable="true" column="//@domainObjects.5/@databaseTable/@columns.14"/>
+    <databaseTable name="trace_bom_item_tab" schemaName="" catalogName="">
+      <database href="project.xmi#/0/@database"/>
+      <columns name="id">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.1"/>
+      </columns>
+      <columns name="version">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.0"/>
+      </columns>
+      <columns name="creation_date">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.14"/>
+      </columns>
+      <columns name="last_update" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.14"/>
+      </columns>
+      <columns name="date_code" length="255">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="info_field_1" length="255">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="info_field_2" length="255">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="info_field_3" length="255">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="info_field_4" length="255">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="manufacturer_name" length="255">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="manufacturer_revision" length="255">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="order_code" length="255">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="quantity">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.22"/>
+      </columns>
+      <columns name="material">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.1"/>
+      </columns>
+      <columns name="trace_bom">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.1"/>
+      </columns>
+      <primaryKey name="pk_trace_bom_item" column="//@domainObjects.5/@databaseTable/@columns.0"/>
+      <foreignKeys name="fk_trace_bom_item_material" column="//@domainObjects.5/@databaseTable/@columns.13">
+        <referencedColumn href="package-material.xmi#//@domainObjects.2/@databaseTable/@columns.0"/>
+      </foreignKeys>
+      <foreignKeys name="fk_trace_bom_item_trace_bom" column="//@domainObjects.5/@databaseTable/@columns.14" referencedColumn="//@domainObjects.4/@databaseTable/@columns.0"/>
+    </databaseTable>
+  </domainObjects>
+  <domainObjects name="IllegalTraceBoMItem" comment="Domain object for illegal trace BoM item objects" mappable="true" namespace="/" label="illegal trace BoM item" namePlural="IllegalTraceBoMItems" labelPlural="illegal trace BoM items" discriminatorValue="">
+    <parent href="package-base.xmi#//@domainObjects.0"/>
+    <iDGenerator name="ILLEGALTRACEBOMITEM_SEQ" generatorType="IDENTITY"/>
+    <inheritance>
+      <target href="package-base.xmi#//@domainObjects.0"/>
+    </inheritance>
+    <attributes name="dateCode" label="date code" labelPlural="date codes" fetchTypeEager="true" column="//@domainObjects.6/@databaseTable/@columns.4">
+      <domainAttributeValidator maxLength="255" minLength="1" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <attributes name="manufacturer" label="manufacturer" labelPlural="manufacturers" fetchTypeEager="true" column="//@domainObjects.6/@databaseTable/@columns.5">
+      <domainAttributeValidator maxLength="255" minLength="1" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <attributes name="manufacturerRevision" label="manufacturer revision" labelPlural="manufacturer revisions" fetchTypeEager="true" column="//@domainObjects.6/@databaseTable/@columns.6">
+      <domainAttributeValidator maxLength="255" minLength="1" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <attributes name="materialNumber" label="material number" labelPlural="material numbers" fetchTypeEager="true" column="//@domainObjects.6/@databaseTable/@columns.7">
+      <domainAttributeValidator maxLength="255" minLength="1" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <attributes name="orderCode" label="order code" labelPlural="order codes" fetchTypeEager="true" column="//@domainObjects.6/@databaseTable/@columns.8">
+      <domainAttributeValidator maxLength="255" minLength="1" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <associations xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" name="traceBom" target="//@domainObjects.4" reverseAssociation="//@domainObjects.4/@associations.3" insertable="true" updatable="true" column="//@domainObjects.6/@databaseTable/@columns.9"/>
+    <databaseTable name="illegal_trace_bom_item_tab" schemaName="" catalogName="">
+      <database href="project.xmi#/0/@database"/>
+      <columns name="id">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.1"/>
+      </columns>
+      <columns name="version">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.0"/>
+      </columns>
+      <columns name="creation_date">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.14"/>
+      </columns>
+      <columns name="last_update" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.14"/>
+      </columns>
+      <columns name="date_code" length="255">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="manufacturer" length="255">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="manufacturer_revision" length="255">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="material_number" length="255">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="order_code" length="255">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="trace_bom">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.1"/>
+      </columns>
+      <primaryKey name="pk_illegal_trace_bom_item" column="//@domainObjects.6/@databaseTable/@columns.0"/>
+      <foreignKeys name="fk_illegal_trace_bom_item_trace_bom" column="//@domainObjects.6/@databaseTable/@columns.9" referencedColumn="//@domainObjects.4/@databaseTable/@columns.0"/>
     </databaseTable>
   </domainObjects>
 </net.sourceforge.net.model.domain:DomainNamespace>
