@@ -59,4 +59,18 @@ public class ServiceMessage_ extends AbstractEntityWithId_ {
     public static volatile SingularAttribute<ServiceMessage, ServiceOrder> serviceOrder;
     @Generated
     public static volatile CollectionAttribute<ServiceMessage, Material> failureMaterials;
+    @Generated
+    public static volatile SingularAttribute<ServiceMessage, FaultAnalysis> faultAnalysis;
+    @Generated
+    public static volatile SingularAttribute<ServiceMessage, RMAType> rMAType;
+    @Generated
+    public static volatile SingularAttribute<ServiceMessage, RepairErrorCode> repairErrorCode;
+    @Generated
+    public static volatile SingularAttribute<ServiceMessage, RepairLocation> repairLocation;
+    @Generated
+    public static volatile SingularAttribute<ServiceMessage, RepairService> repairService;
+    @Generated
+    public static volatile SingularAttribute<ServiceMessage, RepairState> repairState;
+    @Generated
+    public static volatile SingularAttribute<ServiceMessage, RepairTask> repairTask;
 }

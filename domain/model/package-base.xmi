@@ -215,6 +215,12 @@
     <targetInheritances href="package-material.xmi#//@domainObjects.0/@inheritance"/>
     <targetInheritances href="package-material.xmi#//@domainObjects.1/@inheritance"/>
     <targetInheritances href="package-material.xmi#//@domainObjects.7/@inheritance"/>
+    <targetInheritances href="package-service.xmi#//@domainObjects.2/@inheritance"/>
+    <targetInheritances href="package-service.xmi#//@domainObjects.3/@inheritance"/>
+    <targetInheritances href="package-service.xmi#//@domainObjects.4/@inheritance"/>
+    <targetInheritances href="package-service.xmi#//@domainObjects.6/@inheritance"/>
+    <targetInheritances href="package-service.xmi#//@domainObjects.7/@inheritance"/>
+    <targetInheritances href="package-service.xmi#//@domainObjects.8/@inheritance"/>
     <databaseTable name="abstract_funtional_entity_tab" schemaName="" catalogName="">
       <database href="project.xmi#/0/@database"/>
       <columns name="code" length="50">
@@ -275,6 +281,7 @@
     <targetInheritances href="#//@domainObjects.10/@inheritance"/>
     <targetInheritances href="#//@domainObjects.11/@inheritance"/>
     <targetInheritances href="package-service.xmi#//@domainObjects.0/@inheritance"/>
+    <targetInheritances href="package-service.xmi#//@domainObjects.5/@inheritance"/>
     <databaseTable name="abstract_functional_active_entity_tab" schemaName="" catalogName="">
       <database href="project.xmi#/0/@database"/>
       <columns name="code" length="50">

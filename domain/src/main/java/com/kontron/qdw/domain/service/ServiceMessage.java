@@ -17,6 +17,13 @@ import com.kontron.qdw.domain.base.*;
 @NamedQuery(name = ServiceMessage.NQ_GET_SERIALOBJECT, query = "select b from ServiceMessage a join a.serialObject b where a.id = :id")
 @NamedQuery(name = ServiceMessage.NQ_GET_SERVICEORDER, query = "select b from ServiceMessage a join a.serviceOrder b where a.id = :id")
 @NamedQuery(name = ServiceMessage.NQ_GET_FAILUREMATERIALS, query = "select b from ServiceMessage a join a.failureMaterials b where a.id = :id")
+@NamedQuery(name = ServiceMessage.NQ_GET_FAULTANALYSIS, query = "select b from ServiceMessage a join a.faultAnalysis b where a.id = :id")
+@NamedQuery(name = ServiceMessage.NQ_GET_RMATYPE, query = "select b from ServiceMessage a join a.rMAType b where a.id = :id")
+@NamedQuery(name = ServiceMessage.NQ_GET_REPAIRERRORCODE, query = "select b from ServiceMessage a join a.repairErrorCode b where a.id = :id")
+@NamedQuery(name = ServiceMessage.NQ_GET_REPAIRLOCATION, query = "select b from ServiceMessage a join a.repairLocation b where a.id = :id")
+@NamedQuery(name = ServiceMessage.NQ_GET_REPAIRSERVICE, query = "select b from ServiceMessage a join a.repairService b where a.id = :id")
+@NamedQuery(name = ServiceMessage.NQ_GET_REPAIRSTATE, query = "select b from ServiceMessage a join a.repairState b where a.id = :id")
+@NamedQuery(name = ServiceMessage.NQ_GET_REPAIRTASK, query = "select b from ServiceMessage a join a.repairTask b where a.id = :id")
 @NamedQuery(name = ServiceMessage.NQ_DELETE_ALL, query = "delete from ServiceMessage a")
 @NamedQuery(name = ServiceMessage.NQ_DELETE, query = "delete from ServiceMessage a where a.id = :id")
 @NamedQuery(name = ServiceMessage.NQ_GET_ALL, query = "select a from ServiceMessage a")
@@ -27,27 +34,41 @@ public class ServiceMessage extends AbstractEntityWithId {
     @Generated
     public static final String NQ_GET_SERIALOBJECT = "ServiceMessage.getSerialObject";
     @Generated
-    public static final String NQ_GET_SERVICEORDER = "ServiceMessage.getServiceOrder";
+    public static final String NQ_GET_REPAIRERRORCODE = "ServiceMessage.getRepairErrorCode";
     @Generated
     public static final String NQ_DELETE_ALL = "ServiceMessage.deleteAll";
     @Generated
-    public static final String NQ_GET_EXTERNALSUPPLIER = "ServiceMessage.getExternalSupplier";
-    @Generated
     public static final String NQ_GET_MATERIALREVISION = "ServiceMessage.getMaterialRevision";
-    @Generated
-    public static final String NQ_COUNT = "ServiceMessage.count";
     @Generated
     public static final String NQ_DELETE = "ServiceMessage.delete";
     @Generated
     public static final String NQ_GET_ALL = "ServiceMessage.getAll";
     @Generated
-    public static final String NQ_GET_PLANT = "ServiceMessage.getPlant";
+    public static final String NQ_GET_RMATYPE = "ServiceMessage.getRMAType";
     @Generated
-    public static final String NQ_GET_FAILUREMATERIALS = "ServiceMessage.getFailureMaterials";
+    public static final String NQ_GET_REPAIRTASK = "ServiceMessage.getRepairTask";
     @Generated
     public static final String NQ_CHECK = "ServiceMessage.check";
     @Generated
     public static final String NQ_FIND = "ServiceMessage.find";
+    @Generated
+    public static final String NQ_GET_SERVICEORDER = "ServiceMessage.getServiceOrder";
+    @Generated
+    public static final String NQ_GET_FAULTANALYSIS = "ServiceMessage.getFaultAnalysis";
+    @Generated
+    public static final String NQ_GET_REPAIRLOCATION = "ServiceMessage.getRepairLocation";
+    @Generated
+    public static final String NQ_GET_EXTERNALSUPPLIER = "ServiceMessage.getExternalSupplier";
+    @Generated
+    public static final String NQ_COUNT = "ServiceMessage.count";
+    @Generated
+    public static final String NQ_GET_REPAIRSTATE = "ServiceMessage.getRepairState";
+    @Generated
+    public static final String NQ_GET_PLANT = "ServiceMessage.getPlant";
+    @Generated
+    public static final String NQ_GET_FAILUREMATERIALS = "ServiceMessage.getFailureMaterials";
+    @Generated
+    public static final String NQ_GET_REPAIRSERVICE = "ServiceMessage.getRepairService";
     @Column(name = "analysis_text", nullable = true, updatable = true, insertable = true, length = 100)
     @Size(max = 100, message = "Length of field \"analysisText\" is illegal!")
     @Generated
@@ -149,6 +170,35 @@ public class ServiceMessage extends AbstractEntityWithId {
             @JoinColumn(name = "material_pk") })
     @Generated
     private Collection<Material> failureMaterials = new ArrayList<>();
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "fault_analysis", referencedColumnName = "code", nullable = true)
+    @Generated
+    private FaultAnalysis faultAnalysis;
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "rma_type", referencedColumnName = "code", nullable = true)
+    @Generated
+    private RMAType rMAType;
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "repair_error_code", referencedColumnName = "code", nullable = true)
+    @Generated
+    private RepairErrorCode repairErrorCode;
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "repair_location", referencedColumnName = "code", nullable = true)
+    @Generated
+    private RepairLocation repairLocation;
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "repair_service", referencedColumnName = "code", nullable = true)
+    @Generated
+    private RepairService repairService;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "repair_state", referencedColumnName = "code", nullable = false)
+    @NotNull(message = "Field \"repairState\" must not be null!")
+    @Generated
+    private RepairState repairState;
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "repair_task", referencedColumnName = "code", nullable = true)
+    @Generated
+    private RepairTask repairTask;
 
     /**
      * Default constructor
@@ -564,6 +614,118 @@ public class ServiceMessage extends AbstractEntityWithId {
     @Generated
     public void setFailureMaterials(Collection<Material> failureMaterials) {
         this.failureMaterials = failureMaterials;
+    }
+
+    /**
+     * @return the fault analysis
+     */
+    @Generated
+    public FaultAnalysis getFaultAnalysis() {
+        return this.faultAnalysis;
+    }
+
+    /**
+     * @param faultAnalysis the fault analysis to set
+     */
+    @Generated
+    public void setFaultAnalysis(FaultAnalysis faultAnalysis) {
+        this.faultAnalysis = faultAnalysis;
+    }
+
+    /**
+     * @return the RMA type
+     */
+    @Generated
+    public RMAType getrMAType() {
+        return this.rMAType;
+    }
+
+    /**
+     * @param rMAType the RMA type to set
+     */
+    @Generated
+    public void setrMAType(RMAType rMAType) {
+        this.rMAType = rMAType;
+    }
+
+    /**
+     * @return the repair error code
+     */
+    @Generated
+    public RepairErrorCode getRepairErrorCode() {
+        return this.repairErrorCode;
+    }
+
+    /**
+     * @param repairErrorCode the repair error code to set
+     */
+    @Generated
+    public void setRepairErrorCode(RepairErrorCode repairErrorCode) {
+        this.repairErrorCode = repairErrorCode;
+    }
+
+    /**
+     * @return the repair location
+     */
+    @Generated
+    public RepairLocation getRepairLocation() {
+        return this.repairLocation;
+    }
+
+    /**
+     * @param repairLocation the repair location to set
+     */
+    @Generated
+    public void setRepairLocation(RepairLocation repairLocation) {
+        this.repairLocation = repairLocation;
+    }
+
+    /**
+     * @return the repair service
+     */
+    @Generated
+    public RepairService getRepairService() {
+        return this.repairService;
+    }
+
+    /**
+     * @param repairService the repair service to set
+     */
+    @Generated
+    public void setRepairService(RepairService repairService) {
+        this.repairService = repairService;
+    }
+
+    /**
+     * @return the repair state
+     */
+    @Generated
+    public RepairState getRepairState() {
+        return this.repairState;
+    }
+
+    /**
+     * @param repairState the repair state to set
+     */
+    @Generated
+    public void setRepairState(RepairState repairState) {
+        this.repairState = repairState;
+    }
+
+    /**
+     * @return the repair task
+     */
+    @Generated
+    public RepairTask getRepairTask() {
+        return this.repairTask;
+    }
+
+    /**
+     * @param repairTask the repair task to set
+     */
+    @Generated
+    public void setRepairTask(RepairTask repairTask) {
+        this.repairTask = repairTask;
     }
 
     /* (non-Javadoc)

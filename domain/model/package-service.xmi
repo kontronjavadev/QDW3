@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<net.sourceforge.net.model.domain:DomainNamespace xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:net.sourceforge.net.model.domain="http:///net/sourceforge/jbizmo/model/domain.ecore" name="service" javaTypes="//@domainObjects.0 //@domainObjects.1">
+<net.sourceforge.net.model.domain:DomainNamespace xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:net.sourceforge.net.model.domain="http:///net/sourceforge/jbizmo/model/domain.ecore" name="service" javaTypes="//@domainObjects.0 //@domainObjects.1 //@domainObjects.2 //@domainObjects.3 //@domainObjects.4 //@domainObjects.5 //@domainObjects.6 //@domainObjects.7 //@domainObjects.8">
   <parent href="project.xmi#/0/@domainNamespace"/>
   <project href="project.xmi#/0"/>
   <domainObjects name="ServiceOrder" comment="Domain object for service order objects" mappable="true" namespace="/" label="service order" namePlural="ServiceOrders" labelPlural="service orders" discriminatorValue="">
@@ -183,6 +183,13 @@
         <indexes name="uk_service_message_materials" unique="true" columns="//@domainObjects.1/@associations.5/@table/@columns.0 //@domainObjects.1/@associations.5/@table/@columns.1"/>
       </table>
     </associations>
+    <associations xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" name="faultAnalysis" owner="true" target="//@domainObjects.8" insertable="true" updatable="true" optional="true" column="//@domainObjects.1/@databaseTable/@columns.28"/>
+    <associations xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" name="rMAType" owner="true" target="//@domainObjects.3" insertable="true" updatable="true" optional="true" column="//@domainObjects.1/@databaseTable/@columns.29"/>
+    <associations xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" name="repairErrorCode" owner="true" target="//@domainObjects.5" insertable="true" updatable="true" optional="true" column="//@domainObjects.1/@databaseTable/@columns.30"/>
+    <associations xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" name="repairLocation" owner="true" target="//@domainObjects.2" insertable="true" updatable="true" optional="true" column="//@domainObjects.1/@databaseTable/@columns.31"/>
+    <associations xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" name="repairService" owner="true" target="//@domainObjects.4" insertable="true" updatable="true" optional="true" column="//@domainObjects.1/@databaseTable/@columns.32"/>
+    <associations xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" name="repairState" owner="true" target="//@domainObjects.6" insertable="true" updatable="true" column="//@domainObjects.1/@databaseTable/@columns.33"/>
+    <associations xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" name="repairTask" owner="true" target="//@domainObjects.7" insertable="true" updatable="true" optional="true" column="//@domainObjects.1/@databaseTable/@columns.34"/>
     <databaseTable name="service_message_tab" schemaName="" catalogName="">
       <database href="project.xmi#/0/@database"/>
       <columns name="id">
@@ -269,6 +276,27 @@
       <columns name="service_order" length="50">
         <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
       </columns>
+      <columns name="fault_analysis" length="50" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="rma_type" length="50" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="repair_error_code" length="50" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="repair_location" length="50" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="repair_service" length="50" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="repair_state" length="50">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="repair_task" length="50" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
       <primaryKey name="pk_service_message" column="//@domainObjects.1/@databaseTable/@columns.0"/>
       <foreignKeys name="fk_service_message_material_revision" column="//@domainObjects.1/@databaseTable/@columns.24">
         <referencedColumn href="package-material.xmi#//@domainObjects.3/@databaseTable/@columns.0"/>
@@ -283,7 +311,271 @@
       <foreignKeys name="fk_service_message_external_supplier" column="//@domainObjects.1/@databaseTable/@columns.23">
         <referencedColumn href="package-base.xmi#//@domainObjects.13/@databaseTable/@columns.0"/>
       </foreignKeys>
+      <foreignKeys name="fk_service_message_fault_analysis" column="//@domainObjects.1/@databaseTable/@columns.28" referencedColumn="//@domainObjects.8/@databaseTable/@columns.0"/>
+      <foreignKeys name="fk_service_message_repair_error_code" column="//@domainObjects.1/@databaseTable/@columns.30" referencedColumn="//@domainObjects.5/@databaseTable/@columns.0"/>
+      <foreignKeys name="fk_service_message_repair_location" column="//@domainObjects.1/@databaseTable/@columns.31" referencedColumn="//@domainObjects.2/@databaseTable/@columns.0"/>
+      <foreignKeys name="fk_service_message_repair_service" column="//@domainObjects.1/@databaseTable/@columns.32" referencedColumn="//@domainObjects.4/@databaseTable/@columns.0"/>
+      <foreignKeys name="fk_service_message_repair_state" column="//@domainObjects.1/@databaseTable/@columns.33" referencedColumn="//@domainObjects.6/@databaseTable/@columns.0"/>
+      <foreignKeys name="fk_service_message_repair_task" column="//@domainObjects.1/@databaseTable/@columns.34" referencedColumn="//@domainObjects.7/@databaseTable/@columns.0"/>
+      <foreignKeys name="fk_service_message_rma_type" column="//@domainObjects.1/@databaseTable/@columns.29" referencedColumn="//@domainObjects.3/@databaseTable/@columns.0"/>
       <indexes name="idx_servicemessages_rebuild" columns="//@domainObjects.1/@databaseTable/@columns.20"/>
+    </databaseTable>
+  </domainObjects>
+  <domainObjects name="RepairLocation" comment="Domain object for repair location objects" mappable="true" namespace="/" label="repair location" namePlural="RepairLocations" labelPlural="repair locations" discriminatorValue="">
+    <parent href="package-base.xmi#//@domainObjects.4"/>
+    <iDGenerator name="REPAIRLOCATION_SEQ"/>
+    <inheritance>
+      <target href="package-base.xmi#//@domainObjects.4"/>
+    </inheritance>
+    <databaseTable name="repair_location_tab" schemaName="" catalogName="">
+      <database href="project.xmi#/0/@database"/>
+      <columns name="code" length="50">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="short_text" length="100">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="comment" length="4000" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="creation_date">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.14"/>
+      </columns>
+      <columns name="last_update" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.14"/>
+      </columns>
+      <columns name="version">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.0"/>
+      </columns>
+      <primaryKey name="pk_repair_location" column="//@domainObjects.2/@databaseTable/@columns.0"/>
+    </databaseTable>
+  </domainObjects>
+  <domainObjects name="RMAType" comment="Domain object for RMA type objects" mappable="true" namespace="/" label="RMA type" namePlural="RMATypes" labelPlural="RMA types" discriminatorValue="">
+    <parent href="package-base.xmi#//@domainObjects.4"/>
+    <iDGenerator name="RMATYPE_SEQ"/>
+    <inheritance>
+      <target href="package-base.xmi#//@domainObjects.4"/>
+    </inheritance>
+    <associations xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" name="mappedTo" owner="true" target="//@domainObjects.3" insertable="true" updatable="true" optional="true" column="//@domainObjects.3/@databaseTable/@columns.6"/>
+    <databaseTable name="rma_type_tab" schemaName="" catalogName="">
+      <database href="project.xmi#/0/@database"/>
+      <columns name="code" length="50">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="short_text" length="100">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="comment" length="4000" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="creation_date">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.14"/>
+      </columns>
+      <columns name="last_update" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.14"/>
+      </columns>
+      <columns name="version">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.0"/>
+      </columns>
+      <columns name="mapped_to" length="50" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <primaryKey name="pk_rma_type" column="//@domainObjects.3/@databaseTable/@columns.0"/>
+      <foreignKeys name="fk_rma_type_mapped_to" column="//@domainObjects.3/@databaseTable/@columns.6" referencedColumn="//@domainObjects.3/@databaseTable/@columns.0"/>
+    </databaseTable>
+  </domainObjects>
+  <domainObjects name="RepairService" comment="Domain object for repair service objects" mappable="true" namespace="/" label="repair service" namePlural="RepairServices" labelPlural="repair services" discriminatorValue="">
+    <parent href="package-base.xmi#//@domainObjects.4"/>
+    <iDGenerator name="REPAIRSERVICE_SEQ"/>
+    <inheritance>
+      <target href="package-base.xmi#//@domainObjects.4"/>
+    </inheritance>
+    <attributes name="name" label="name" labelPlural="names" fetchTypeEager="true" displayAttribute="true" column="//@domainObjects.4/@databaseTable/@columns.6">
+      <domainAttributeValidator maxLength="50" minLength="1" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <databaseTable name="repair_service_tab" schemaName="" catalogName="">
+      <database href="project.xmi#/0/@database"/>
+      <columns name="code" length="50">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="short_text" length="100">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="comment" length="4000" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="creation_date">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.14"/>
+      </columns>
+      <columns name="last_update" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.14"/>
+      </columns>
+      <columns name="version">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.0"/>
+      </columns>
+      <columns name="name" length="50">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <primaryKey name="pk_repair_service" column="//@domainObjects.4/@databaseTable/@columns.0"/>
+      <indexes name="uk_repair_service_name" unique="true" columns="//@domainObjects.4/@databaseTable/@columns.6"/>
+    </databaseTable>
+  </domainObjects>
+  <domainObjects name="RepairErrorCode" comment="Domain object for repair error code objects" mappable="true" namespace="/" label="repair error code" namePlural="RepairErrorCodes" labelPlural="repair error codes" discriminatorValue="">
+    <parent href="package-base.xmi#//@domainObjects.5"/>
+    <iDGenerator name="REPAIRERRORCODE_SEQ"/>
+    <inheritance>
+      <target href="package-base.xmi#//@domainObjects.5"/>
+    </inheritance>
+    <attributes name="name" label="name" labelPlural="names" fetchTypeEager="true" displayAttribute="true" column="//@domainObjects.5/@databaseTable/@columns.7">
+      <domainAttributeValidator maxLength="150" minLength="1" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <attributes name="groupName" label="group name" labelPlural="group names" fetchTypeEager="true" column="//@domainObjects.5/@databaseTable/@columns.8">
+      <domainAttributeValidator maxLength="50" nullable="true" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <associations xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" name="mappedTo" owner="true" target="//@domainObjects.5" insertable="true" updatable="true" optional="true" column="//@domainObjects.5/@databaseTable/@columns.9"/>
+    <databaseTable name="repair_error_code_tab" schemaName="" catalogName="">
+      <database href="project.xmi#/0/@database"/>
+      <columns name="code" length="50">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="short_text" length="100">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="comment" length="4000" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="active">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.11"/>
+      </columns>
+      <columns name="creation_date">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.14"/>
+      </columns>
+      <columns name="last_update" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.14"/>
+      </columns>
+      <columns name="version">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.0"/>
+      </columns>
+      <columns name="name" length="150">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="group_name" length="50" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="mapped_to" length="50" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <primaryKey name="pk_repair_error_code" column="//@domainObjects.5/@databaseTable/@columns.0"/>
+      <foreignKeys name="fk_repair_error_code_mapped_to" column="//@domainObjects.5/@databaseTable/@columns.9" referencedColumn="//@domainObjects.5/@databaseTable/@columns.0"/>
+      <indexes name="uk_repair_error_code_name" unique="true" columns="//@domainObjects.5/@databaseTable/@columns.7"/>
+    </databaseTable>
+  </domainObjects>
+  <domainObjects name="RepairState" comment="Domain object for repair state objects" mappable="true" namespace="/" label="repair state" namePlural="RepairStates" labelPlural="repair states" discriminatorValue="">
+    <parent href="package-base.xmi#//@domainObjects.4"/>
+    <iDGenerator name="REPAIRSTATE_SEQ"/>
+    <inheritance>
+      <target href="package-base.xmi#//@domainObjects.4"/>
+    </inheritance>
+    <attributes name="name" label="name" labelPlural="names" fetchTypeEager="true" displayAttribute="true" column="//@domainObjects.6/@databaseTable/@columns.6">
+      <domainAttributeValidator maxLength="50" minLength="1" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <databaseTable name="repair_state_tab" schemaName="" catalogName="">
+      <database href="project.xmi#/0/@database"/>
+      <columns name="code" length="50">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="short_text" length="100">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="comment" length="4000" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="creation_date">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.14"/>
+      </columns>
+      <columns name="last_update" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.14"/>
+      </columns>
+      <columns name="version">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.0"/>
+      </columns>
+      <columns name="name" length="50">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <primaryKey name="pk_repair_state" column="//@domainObjects.6/@databaseTable/@columns.0"/>
+      <indexes name="uk_repair_state_name" unique="true" columns="//@domainObjects.6/@databaseTable/@columns.6"/>
+    </databaseTable>
+  </domainObjects>
+  <domainObjects name="RepairTask" comment="Domain object for repair task objects" mappable="true" namespace="/" label="repair task" namePlural="RepairTasks" labelPlural="repair tasks" discriminatorValue="">
+    <parent href="package-base.xmi#//@domainObjects.4"/>
+    <iDGenerator name="REPAIRTASK_SEQ"/>
+    <inheritance>
+      <target href="package-base.xmi#//@domainObjects.4"/>
+    </inheritance>
+    <associations xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" name="mappedTo" owner="true" target="//@domainObjects.7" insertable="true" updatable="true" optional="true" column="//@domainObjects.7/@databaseTable/@columns.6"/>
+    <databaseTable name="repair_task_tab" schemaName="" catalogName="">
+      <database href="project.xmi#/0/@database"/>
+      <columns name="code" length="50">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="short_text" length="100">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="comment" length="4000" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="creation_date">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.14"/>
+      </columns>
+      <columns name="last_update" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.14"/>
+      </columns>
+      <columns name="version">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.0"/>
+      </columns>
+      <columns name="mapped_to" length="50" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <primaryKey name="pk_repair_task" column="//@domainObjects.7/@databaseTable/@columns.0"/>
+      <foreignKeys name="fk_repair_task_mapped_to" column="//@domainObjects.7/@databaseTable/@columns.6" referencedColumn="//@domainObjects.7/@databaseTable/@columns.0"/>
+    </databaseTable>
+  </domainObjects>
+  <domainObjects name="FaultAnalysis" comment="Domain object for fault analysis objects" mappable="true" namespace="/" label="fault analysis" namePlural="FaultAnalyses" labelPlural="fault analyses" discriminatorValue="">
+    <parent href="package-base.xmi#//@domainObjects.4"/>
+    <iDGenerator name="FAULTANALYSIS_SEQ"/>
+    <inheritance>
+      <target href="package-base.xmi#//@domainObjects.4"/>
+    </inheritance>
+    <associations xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" name="mappedTo" owner="true" target="//@domainObjects.8" insertable="true" updatable="true" optional="true" column="//@domainObjects.8/@databaseTable/@columns.6"/>
+    <databaseTable name="fault_analysis_tab" schemaName="" catalogName="">
+      <database href="project.xmi#/0/@database"/>
+      <columns name="code" length="50">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="short_text" length="100">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="comment" length="4000" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="creation_date">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.14"/>
+      </columns>
+      <columns name="last_update" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.14"/>
+      </columns>
+      <columns name="version">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.0"/>
+      </columns>
+      <columns name="mapped_to" length="50" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <primaryKey name="pk_fault_analysis" column="//@domainObjects.8/@databaseTable/@columns.0"/>
+      <foreignKeys name="fk_fault_analysis_mapped_to" column="//@domainObjects.8/@databaseTable/@columns.6" referencedColumn="//@domainObjects.8/@databaseTable/@columns.0"/>
     </databaseTable>
   </domainObjects>
 </net.sourceforge.net.model.domain:DomainNamespace>

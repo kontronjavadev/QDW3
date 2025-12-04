@@ -1,7 +1,7 @@
 package com.kontron.qdw.domain.service;
 
-import jakarta.persistence.metamodel.*;
 import com.kontron.qdw.domain.mv.*;
+import jakarta.persistence.metamodel.*;
 import java.time.*;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
 import com.kontron.qdw.domain.base.*;
