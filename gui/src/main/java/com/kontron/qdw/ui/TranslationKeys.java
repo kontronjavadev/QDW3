@@ -19,6 +19,17 @@ public interface TranslationKeys {
     String APPLICATION_TAB_TITLE = "application_tab_title";
     String APPLICATION_TITLE = "application_title";
     String APPLICATION_TITLE_ENVIRONMENT = "application_title_environment";
+    String COL_AGGREGATEDARRIVALVIEW_COUNTRYNAME = "col_aggregatedarrivalview_countryname";
+    String COL_AGGREGATEDARRIVALVIEW_MATREVMATCLASSCODE = "col_aggregatedarrivalview_matrevmatclasscode";
+    String COL_AGGREGATEDARRIVALVIEW_MATREVMATMATERIALNUMBER = "col_aggregatedarrivalview_matrevmatmaterialnumber";
+    String COL_AGGREGATEDARRIVALVIEW_MATREVMATOWNERLOCATIONCODE = "col_aggregatedarrivalview_matrevmatownerlocationcode";
+    String COL_AGGREGATEDARRIVALVIEW_MATREVMATSAPNUMBER = "col_aggregatedarrivalview_matrevmatsapnumber";
+    String COL_AGGREGATEDARRIVALVIEW_MATREVMATSHORTTEXT = "col_aggregatedarrivalview_matrevmatshorttext";
+    String COL_AGGREGATEDARRIVALVIEW_MATREVMATTYPECODE = "col_aggregatedarrivalview_matrevmattypecode";
+    String COL_AGGREGATEDARRIVALVIEW_MATREVREVISIONNUMBER = "col_aggregatedarrivalview_matrevrevisionnumber";
+    String COL_AGGREGATEDARRIVALVIEW_MOVEMENTTYPECODE = "col_aggregatedarrivalview_movementtypecode";
+    String COL_AGGREGATEDARRIVALVIEW_PLANTCODE = "col_aggregatedarrivalview_plantcode";
+    String COL_AGGREGATEDARRIVALVIEW_SUPPLIERNAME = "col_aggregatedarrivalview_suppliername";
     String COL_CUSTOMERVIEW_COUNTRYNAME = "col_customerview_countryname";
     String COL_MATERIALREVISIONBOMITEMSPANEL_MATERIALCLASSCODE = "col_materialrevisionbomitemspanel_materialclasscode";
     String COL_MATERIALREVISIONBOMITEMSPANEL_MATERIALMATERIALNUMBER = "col_materialrevisionbomitemspanel_materialmaterialnumber";
@@ -76,6 +87,7 @@ public interface TranslationKeys {
     String FG_TOP_ADMINISTRATION = "fg_top_administration";
     String FG_TOP_MASTER_DATA = "fg_top_master_data";
     String FG_TOP_MATERIAL = "fg_top_material";
+    String FG_TOP_SERIAL_OBJECT = "fg_top_serial_object";
     String FIELD_CHANGEPASSWORDDIALOG_TXTNEWPASSWORD = "field_changepassworddialog_txtnewpassword";
     String FIELD_CHANGEPASSWORDDIALOG_TXTNEWPASSWORDCONFIRM = "field_changepassworddialog_txtnewpasswordconfirm";
     String FIELD_CHANGEPASSWORDDIALOG_TXTOLDPASSWORD = "field_changepassworddialog_txtoldpassword";
@@ -104,6 +116,7 @@ public interface TranslationKeys {
     String FIELD_VIEWMATERIALREVISIONDIALOG_TXTALTERNATIVENUMBER = "field_viewmaterialrevisiondialog_txtalternativenumber";
     String FIELD_VIEWMATERIALREVISIONDIALOG_TXTREVISIONNUMBER = "field_viewmaterialrevisiondialog_txtrevisionnumber";
     String FORM_ADDBOMITEMDIALOG_TITLE = "form_addbomitemdialog_title";
+    String FORM_AGGREGATEDARRIVALVIEW_TITLE = "form_aggregatedarrivalview_title";
     String FORM_BUSINESSUNITVIEW_TITLE = "form_businessunitview_title";
     String FORM_CHANGEPASSWORDDIALOG_TITLE = "form_changepassworddialog_title";
     String FORM_COUNTRYVIEW_TITLE = "form_countryview_title";
@@ -168,6 +181,8 @@ public interface TranslationKeys {
     String LBL_ASSOC_MATERIALREVISION_PLANT = "lbl_assoc_materialrevision_plant";
     String LBL_ASSOC_SUPPLIER_COUNTRY = "lbl_assoc_supplier_country";
     String LBL_ASSOC_VERTICALSECTOR_BUSINESSUNIT = "lbl_assoc_verticalsector_businessunit";
+    String LBL_ATTR_ABSTRACTAGGREGATEDBASE_MONTH = "lbl_attr_abstractaggregatedbase_month";
+    String LBL_ATTR_ABSTRACTAGGREGATEDBASE_YEAR = "lbl_attr_abstractaggregatedbase_year";
     String LBL_ATTR_ABSTRACTENTITYWITHID_CREATIONDATE = "lbl_attr_abstractentitywithid_creationdate";
     String LBL_ATTR_ABSTRACTENTITYWITHID_ID = "lbl_attr_abstractentitywithid_id";
     String LBL_ATTR_ABSTRACTENTITYWITHID_LASTUPDATE = "lbl_attr_abstractentitywithid_lastupdate";
@@ -185,6 +200,7 @@ public interface TranslationKeys {
     String LBL_ATTR_ABSTRACTFUNTIONALENTITY_LASTUPDATE = "lbl_attr_abstractfuntionalentity_lastupdate";
     String LBL_ATTR_ABSTRACTFUNTIONALENTITY_SHORTTEXT = "lbl_attr_abstractfuntionalentity_shorttext";
     String LBL_ATTR_ABSTRACTFUNTIONALENTITY_VERSION = "lbl_attr_abstractfuntionalentity_version";
+    String LBL_ATTR_AGGREGATEDARRIVAL_ARRIVALS = "lbl_attr_aggregatedarrival_arrivals";
     String LBL_ATTR_BOMITEM_LABEL = "lbl_attr_bomitem_label";
     String LBL_ATTR_BOMITEM_POSITION = "lbl_attr_bomitem_position";
     String LBL_ATTR_BOMITEM_QUANTITY = "lbl_attr_bomitem_quantity";
