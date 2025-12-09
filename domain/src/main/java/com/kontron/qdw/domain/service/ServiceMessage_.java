@@ -73,4 +73,6 @@ public class ServiceMessage_ extends AbstractEntityWithId_ {
     public static volatile SingularAttribute<ServiceMessage, RepairState> repairState;
     @Generated
     public static volatile SingularAttribute<ServiceMessage, RepairTask> repairTask;
+    @Generated
+    public static volatile CollectionAttribute<ServiceMessage, X2Message> x2Messages;
 }

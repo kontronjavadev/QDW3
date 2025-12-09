@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<net.sourceforge.net.model.domain:DomainNamespace xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:net.sourceforge.net.model.domain="http:///net/sourceforge/jbizmo/model/domain.ecore" name="service" javaTypes="//@domainObjects.0 //@domainObjects.1 //@domainObjects.2 //@domainObjects.3 //@domainObjects.4 //@domainObjects.5 //@domainObjects.6 //@domainObjects.7 //@domainObjects.8">
+<net.sourceforge.net.model.domain:DomainNamespace xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:net.sourceforge.net.model.domain="http:///net/sourceforge/jbizmo/model/domain.ecore" name="service" javaTypes="//@domainObjects.0 //@domainObjects.1 //@domainObjects.2 //@domainObjects.3 //@domainObjects.4 //@domainObjects.5 //@domainObjects.6 //@domainObjects.7 //@domainObjects.8 //@domainObjects.9">
   <parent href="project.xmi#/0/@domainNamespace"/>
   <project href="project.xmi#/0"/>
   <domainObjects name="ServiceOrder" comment="Domain object for service order objects" mappable="true" namespace="/" label="service order" namePlural="ServiceOrders" labelPlural="service orders" discriminatorValue="">
@@ -190,6 +190,7 @@
     <associations xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" name="repairService" owner="true" target="//@domainObjects.4" insertable="true" updatable="true" optional="true" column="//@domainObjects.1/@databaseTable/@columns.32"/>
     <associations xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" name="repairState" owner="true" target="//@domainObjects.6" insertable="true" updatable="true" column="//@domainObjects.1/@databaseTable/@columns.33"/>
     <associations xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" name="repairTask" owner="true" target="//@domainObjects.7" insertable="true" updatable="true" optional="true" column="//@domainObjects.1/@databaseTable/@columns.34"/>
+    <associations xsi:type="net.sourceforge.net.model.domain:OneToManyAssociation" name="x2Messages" owner="true" cascadePersist="true" cascadeMerge="true" cascadeRemove="true" cascadeRefresh="true" target="//@domainObjects.9" reverseAssociation="//@domainObjects.9/@associations.7"/>
     <databaseTable name="service_message_tab" schemaName="" catalogName="">
       <database href="project.xmi#/0/@database"/>
       <columns name="id">
@@ -576,6 +577,123 @@
       </columns>
       <primaryKey name="pk_fault_analysis" column="//@domainObjects.8/@databaseTable/@columns.0"/>
       <foreignKeys name="fk_fault_analysis_mapped_to" column="//@domainObjects.8/@databaseTable/@columns.6" referencedColumn="//@domainObjects.8/@databaseTable/@columns.0"/>
+    </databaseTable>
+  </domainObjects>
+  <domainObjects name="X2Message" comment="Domain object for X2 message objects" mappable="true" namespace="/" label="X2 message" namePlural="X2Messages" labelPlural="X2 messages" discriminatorValue="">
+    <parent href="package-base.xmi#//@domainObjects.0"/>
+    <iDGenerator name="X2MESSAGE_SEQ" generatorType="IDENTITY"/>
+    <inheritance>
+      <target href="package-base.xmi#//@domainObjects.0"/>
+    </inheritance>
+    <attributes name="analysisText" label="analysis text" labelPlural="analysis texts" fetchTypeEager="true" column="//@domainObjects.9/@databaseTable/@columns.4">
+      <domainAttributeValidator maxLength="100" nullable="true" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <attributes name="causeText" label="cause text" labelPlural="cause texts" fetchTypeEager="true" column="//@domainObjects.9/@databaseTable/@columns.5">
+      <domainAttributeValidator maxLength="4000" nullable="true" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <attributes name="customerReport" label="customer report" labelPlural="customer reports" fetchTypeEager="true" column="//@domainObjects.9/@databaseTable/@columns.6">
+      <domainAttributeValidator maxLength="4000" nullable="true" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <attributes name="defectComponent" label="defect component" labelPlural="defect components" fetchTypeEager="true" column="//@domainObjects.9/@databaseTable/@columns.7">
+      <domainAttributeValidator maxLength="100" nullable="true" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <attributes name="designator" label="designator" labelPlural="designators" fetchTypeEager="true" column="//@domainObjects.9/@databaseTable/@columns.8">
+      <domainAttributeValidator maxLength="50" nullable="true" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <attributes name="workCenter" label="work center" labelPlural="work centers" fetchTypeEager="true" column="//@domainObjects.9/@databaseTable/@columns.9">
+      <domainAttributeValidator maxLength="50" nullable="true" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <associations xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" name="defectMaterial" owner="true" insertable="true" updatable="true" optional="true" column="//@domainObjects.9/@databaseTable/@columns.10">
+      <target href="package-material.xmi#//@domainObjects.2"/>
+    </associations>
+    <associations xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" name="faultAnalysis" owner="true" target="//@domainObjects.8" insertable="true" updatable="true" optional="true" column="//@domainObjects.9/@databaseTable/@columns.11"/>
+    <associations xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" name="materialRevision" owner="true" insertable="true" updatable="true" column="//@domainObjects.9/@databaseTable/@columns.12">
+      <target href="package-material.xmi#//@domainObjects.3"/>
+    </associations>
+    <associations xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" name="repairErrorCode" owner="true" target="//@domainObjects.5" insertable="true" updatable="true" optional="true" column="//@domainObjects.9/@databaseTable/@columns.13"/>
+    <associations xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" name="repairState" owner="true" target="//@domainObjects.6" insertable="true" updatable="true" column="//@domainObjects.9/@databaseTable/@columns.14"/>
+    <associations xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" name="repairTask" owner="true" target="//@domainObjects.7" insertable="true" updatable="true" optional="true" column="//@domainObjects.9/@databaseTable/@columns.15"/>
+    <associations xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" name="serialObject" owner="true" insertable="true" updatable="true" column="//@domainObjects.9/@databaseTable/@columns.16">
+      <target href="package-serial.xmi#//@domainObjects.0"/>
+    </associations>
+    <associations xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" name="serviceMessage" target="//@domainObjects.1" reverseAssociation="//@domainObjects.1/@associations.13" insertable="true" updatable="true" column="//@domainObjects.9/@databaseTable/@columns.17"/>
+    <databaseTable name="x_2_message_tab" schemaName="" catalogName="">
+      <database href="project.xmi#/0/@database"/>
+      <columns name="id">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.1"/>
+      </columns>
+      <columns name="version">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.0"/>
+      </columns>
+      <columns name="creation_date">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.14"/>
+      </columns>
+      <columns name="last_update" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.14"/>
+      </columns>
+      <columns name="analysis_text" length="100" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="cause_text" length="4000" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="customer_report" length="4000" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="defect_component" length="100" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="designator" length="50" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="work_center" length="50" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="defect_material" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.1"/>
+      </columns>
+      <columns name="fault_analysis" length="50" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="material_revision">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.1"/>
+      </columns>
+      <columns name="repair_error_code" length="50" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="repair_state" length="50">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="repair_task" length="50" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="serial_object">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.1"/>
+      </columns>
+      <columns name="service_message">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.1"/>
+      </columns>
+      <primaryKey name="pk_x_2_message" column="//@domainObjects.9/@databaseTable/@columns.0"/>
+      <foreignKeys name="fk_x_2_message_fault_analysis" column="//@domainObjects.9/@databaseTable/@columns.11" referencedColumn="//@domainObjects.8/@databaseTable/@columns.0"/>
+      <foreignKeys name="fk_x_2_message_material_revision" column="//@domainObjects.9/@databaseTable/@columns.12">
+        <referencedColumn href="package-material.xmi#//@domainObjects.3/@databaseTable/@columns.0"/>
+      </foreignKeys>
+      <foreignKeys name="fk_x_2_message_defect_material" column="//@domainObjects.9/@databaseTable/@columns.10">
+        <referencedColumn href="package-material.xmi#//@domainObjects.2/@databaseTable/@columns.0"/>
+      </foreignKeys>
+      <foreignKeys name="fk_x_2_message_repair_error_code" column="//@domainObjects.9/@databaseTable/@columns.13" referencedColumn="//@domainObjects.5/@databaseTable/@columns.0"/>
+      <foreignKeys name="fk_x_2_message_repair_state" column="//@domainObjects.9/@databaseTable/@columns.14" referencedColumn="//@domainObjects.6/@databaseTable/@columns.0"/>
+      <foreignKeys name="fk_x_2_message_repair_task" column="//@domainObjects.9/@databaseTable/@columns.15" referencedColumn="//@domainObjects.7/@databaseTable/@columns.0"/>
+      <foreignKeys name="fk_x_2_message_serial_object" column="//@domainObjects.9/@databaseTable/@columns.16">
+        <referencedColumn href="package-serial.xmi#//@domainObjects.0/@databaseTable/@columns.0"/>
+      </foreignKeys>
+      <foreignKeys name="fk_x_2_message_service_message" column="//@domainObjects.9/@databaseTable/@columns.17" referencedColumn="//@domainObjects.1/@databaseTable/@columns.0"/>
     </databaseTable>
   </domainObjects>
 </net.sourceforge.net.model.domain:DomainNamespace>

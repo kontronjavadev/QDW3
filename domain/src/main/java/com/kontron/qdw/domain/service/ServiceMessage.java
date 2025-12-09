@@ -24,6 +24,7 @@ import com.kontron.qdw.domain.base.*;
 @NamedQuery(name = ServiceMessage.NQ_GET_REPAIRSERVICE, query = "select b from ServiceMessage a join a.repairService b where a.id = :id")
 @NamedQuery(name = ServiceMessage.NQ_GET_REPAIRSTATE, query = "select b from ServiceMessage a join a.repairState b where a.id = :id")
 @NamedQuery(name = ServiceMessage.NQ_GET_REPAIRTASK, query = "select b from ServiceMessage a join a.repairTask b where a.id = :id")
+@NamedQuery(name = ServiceMessage.NQ_GET_X2MESSAGES, query = "select b from ServiceMessage a join a.x2Messages b where a.id = :id")
 @NamedQuery(name = ServiceMessage.NQ_DELETE_ALL, query = "delete from ServiceMessage a")
 @NamedQuery(name = ServiceMessage.NQ_DELETE, query = "delete from ServiceMessage a where a.id = :id")
 @NamedQuery(name = ServiceMessage.NQ_GET_ALL, query = "select a from ServiceMessage a")
@@ -35,6 +36,8 @@ public class ServiceMessage extends AbstractEntityWithId {
     public static final String NQ_GET_SERIALOBJECT = "ServiceMessage.getSerialObject";
     @Generated
     public static final String NQ_GET_REPAIRERRORCODE = "ServiceMessage.getRepairErrorCode";
+    @Generated
+    public static final String NQ_GET_X2MESSAGES = "ServiceMessage.getX2Messages";
     @Generated
     public static final String NQ_DELETE_ALL = "ServiceMessage.deleteAll";
     @Generated
@@ -199,6 +202,9 @@ public class ServiceMessage extends AbstractEntityWithId {
     @JoinColumn(name = "repair_task", referencedColumnName = "code", nullable = true)
     @Generated
     private RepairTask repairTask;
+    @OneToMany(targetEntity = X2Message.class, mappedBy = "serviceMessage", fetch = FetchType.LAZY, cascade = { CascadeType.ALL })
+    @Generated
+    private Collection<X2Message> x2Messages = new ArrayList<>();
 
     /**
      * Default constructor
@@ -726,6 +732,22 @@ public class ServiceMessage extends AbstractEntityWithId {
     @Generated
     public void setRepairTask(RepairTask repairTask) {
         this.repairTask = repairTask;
+    }
+
+    /**
+     * @return a collection of X2 messages
+     */
+    @Generated
+    public Collection<X2Message> getX2Messages() {
+        return this.x2Messages;
+    }
+
+    /**
+     * @param x2Messages the X2 messages to set
+     */
+    @Generated
+    public void setX2Messages(Collection<X2Message> x2Messages) {
+        this.x2Messages = x2Messages;
     }
 
     /* (non-Javadoc)
