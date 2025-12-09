@@ -79,6 +79,8 @@
       <databaseTables href="package-service.xmi#//@domainObjects.7/@databaseTable"/>
       <databaseTables href="package-service.xmi#//@domainObjects.8/@databaseTable"/>
       <databaseTables href="package-service.xmi#//@domainObjects.9/@databaseTable"/>
+      <databaseTables href="package-material.xmi#//@domainObjects.9/@databaseTable"/>
+      <databaseTables href="package-material.xmi#//@domainObjects.9/@associations.1/@table"/>
       <allSupportedColumnTypes javaTypes="/0/@allSupportedTypes.1 /0/@allSupportedTypes.6" name="INTEGER" omitSizeInformation="true"/>
       <allSupportedColumnTypes javaTypes="/0/@allSupportedTypes.2 /0/@allSupportedTypes.7" name="BIGINT" omitSizeInformation="true"/>
       <allSupportedColumnTypes javaTypes="/0/@allSupportedTypes.3 /0/@allSupportedTypes.8" name="DOUBLE" omitSizeInformation="true"/>
