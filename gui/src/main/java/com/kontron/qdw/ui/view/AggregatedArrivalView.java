@@ -17,17 +17,19 @@ import jakarta.faces.view.*;
 import java.text.*;
 import static com.kontron.qdw.ui.UserSession.*;
 import com.kontron.qdw.ui.*;
+import com.kontron.qdw.ui.view.util.SuperView;
 import com.kontron.qdw.service.*;
 import com.kontron.qdw.dto.material.*;
 import jakarta.faces.model.*;
 import jakarta.inject.*;
 import net.sourceforge.jbizmo.commons.search.dto.*;
+import net.sourceforge.jbizmo.commons.annotation.Customized;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
 import java.io.*;
 
 @Named("aggregatedArrivalView")
 @ViewScoped
-public class AggregatedArrivalView extends AbstractSearchableView implements Serializable {
+public class AggregatedArrivalView extends SuperView implements Serializable {
     @Generated
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     @Generated
@@ -90,6 +92,124 @@ public class AggregatedArrivalView extends AbstractSearchableView implements Ser
         this.countryService = countryService;
         this.materialService = materialService;
         this.queryManager = queryManager;
+    }
+
+    /**
+     * Initialize view
+     */
+    @Customized
+    public void initView() {
+        logger.debug("Initialize view");
+
+        bundle = ResourceBundle.getBundle(DEFAULT_BUNDLE_NAME, userSession.getLocale());
+
+        // Check if user is allowed to open this page!
+        if (!userSession.checkAuthorization(true, ROLE_ADMINISTRATOR, ROLE_READONLY)) {
+            return;
+        }
+
+
+        formTitle = bundle.getString(FORM_AGGREGATEDARRIVALVIEW_TITLE);
+
+        if (searchObj == null) {
+            // Check if previous search exists!
+            final SearchDTO lastSearch = queryManager.getLastQuery(userSession.getPrincipal().getId(), VIEW_ID);
+            if (lastSearch != null) {
+                searchObj = lastSearch;
+                prepareAfterLoad();
+            }
+            else {
+                initSearchObject();
+            }
+        }
+
+        initProperties();
+        fetchAggregatedArrivals();
+
+        logger.debug("View initialization finished");
+    }
+
+    /**
+     * Initialize search object
+     */
+    @Customized
+    public void initSearchObject() {
+        searchObj = new SearchDTO();
+        int colOrderId = -1;
+
+        // Initialize search object
+        searchObj.setMaxResult(1000);
+        searchObj.setExactFilterMatch(true);
+        searchObj.setCaseSensitive(false);
+        searchObj.setCount(true);
+
+        refreshFormatSettings();
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, AggregatedArrivalSearchDTO.SELECT_PLANTCODE,
+                bundle.getString(COL_AGGREGATEDARRIVALVIEW_PLANTCODE), SearchFieldDataTypeEnum.STRING, 100);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, AggregatedArrivalSearchDTO.SELECT_SUPPLIERNAME,
+                bundle.getString(COL_AGGREGATEDARRIVALVIEW_SUPPLIERNAME), SearchFieldDataTypeEnum.STRING, 200);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, AggregatedArrivalSearchDTO.SELECT_COUNTRYNAME,
+                bundle.getString(COL_AGGREGATEDARRIVALVIEW_COUNTRYNAME), SearchFieldDataTypeEnum.STRING, 150);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, AggregatedArrivalSearchDTO.SELECT_MATREVMATMATERIALNUMBER,
+                bundle.getString(COL_AGGREGATEDARRIVALVIEW_MATREVMATMATERIALNUMBER), SearchFieldDataTypeEnum.STRING, 150);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, AggregatedArrivalSearchDTO.SELECT_MATREVMATSAPNUMBER,
+                bundle.getString(COL_AGGREGATEDARRIVALVIEW_MATREVMATSAPNUMBER), SearchFieldDataTypeEnum.STRING, 150);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, AggregatedArrivalSearchDTO.SELECT_MATREVMATTYPECODE,
+                bundle.getString(COL_AGGREGATEDARRIVALVIEW_MATREVMATTYPECODE), SearchFieldDataTypeEnum.STRING, 80);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, AggregatedArrivalSearchDTO.SELECT_MATREVMATCLASSCODE,
+                bundle.getString(COL_AGGREGATEDARRIVALVIEW_MATREVMATCLASSCODE), SearchFieldDataTypeEnum.STRING, 120);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, AggregatedArrivalSearchDTO.SELECT_MATREVMATOWNERLOCATIONCODE,
+                bundle.getString(COL_AGGREGATEDARRIVALVIEW_MATREVMATOWNERLOCATIONCODE), SearchFieldDataTypeEnum.STRING, 100);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, AggregatedArrivalSearchDTO.SELECT_MATREVMATSHORTTEXT,
+                bundle.getString(COL_AGGREGATEDARRIVALVIEW_MATREVMATSHORTTEXT), SearchFieldDataTypeEnum.STRING, 250);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, AggregatedArrivalSearchDTO.SELECT_MATREVREVISIONNUMBER,
+                bundle.getString(COL_AGGREGATEDARRIVALVIEW_MATREVREVISIONNUMBER), SearchFieldDataTypeEnum.STRING, 100);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, AggregatedArrivalSearchDTO.SELECT_MOVEMENTTYPECODE,
+                bundle.getString(COL_AGGREGATEDARRIVALVIEW_MOVEMENTTYPECODE), SearchFieldDataTypeEnum.STRING, 80);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, AggregatedArrivalSearchDTO.SELECT_YEAR,
+                bundle.getString(LBL_ATTR_ABSTRACTAGGREGATEDBASE_YEAR), SearchFieldDataTypeEnum.INTEGER, 80);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, AggregatedArrivalSearchDTO.SELECT_MONTH,
+                bundle.getString(LBL_ATTR_ABSTRACTAGGREGATEDBASE_MONTH), SearchFieldDataTypeEnum.INTEGER, 80);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, AggregatedArrivalSearchDTO.SELECT_ARRIVALS,
+                bundle.getString(LBL_ATTR_AGGREGATEDARRIVAL_ARRIVALS), SearchFieldDataTypeEnum.INTEGER, 80);
+
+        visibleFields = new DualListModel<>();
+        visibleFields.setSource(new ArrayList<>());
+        visibleFields.setTarget(new ArrayList<>());
+
+        for (final SearchFieldDTO d : searchObj.getSearchFields()) {
+            if (!d.isVisible()) {
+                visibleFields.getSource().add(d);
+            }
+            else {
+                visibleFields.getTarget().add(d);
+            }
+        }
+    }
+
+    @Override
+    protected String getViewName() {
+        return VIEW_ID;
+    }
+
+    @Override
+    public void resetSearchObject() {
+        initSearchObject();
+        fetchAggregatedArrivals();
     }
 
     /**
@@ -208,6 +328,7 @@ public class AggregatedArrivalView extends AbstractSearchableView implements Ser
     /**
      * @return the name of the selected saved query
      */
+    @Override
     @Generated
     public String getSelectedSavedQuery() {
         return selectedSavedQuery;
@@ -239,106 +360,6 @@ public class AggregatedArrivalView extends AbstractSearchableView implements Ser
         searchObj.setNumberFormat(userSession.getNumberFormat());
         searchObj.setDecimalSeparator(DecimalFormatSymbols.getInstance(userSession.getLocale()).getDecimalSeparator());
         searchObj.setGroupingSeparator(DecimalFormatSymbols.getInstance(userSession.getLocale()).getGroupingSeparator());
-    }
-
-    /**
-     * Initialize search object
-     */
-    @Generated
-    public void initSearchObject() {
-        searchObj = new SearchDTO();
-        int colOrderId = -1;
-
-        // Initialize search object
-        searchObj.setMaxResult(1000);
-        searchObj.setExactFilterMatch(true);
-        searchObj.setCaseSensitive(false);
-        searchObj.setCount(false);
-
-        refreshFormatSettings();
-
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, AggregatedArrivalSearchDTO.SELECT_PLANTCODE,
-                bundle.getString(COL_AGGREGATEDARRIVALVIEW_PLANTCODE), SearchFieldDataTypeEnum.STRING, 100);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, AggregatedArrivalSearchDTO.SELECT_SUPPLIERNAME,
-                bundle.getString(COL_AGGREGATEDARRIVALVIEW_SUPPLIERNAME), SearchFieldDataTypeEnum.STRING, 200);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, AggregatedArrivalSearchDTO.SELECT_COUNTRYNAME,
-                bundle.getString(COL_AGGREGATEDARRIVALVIEW_COUNTRYNAME), SearchFieldDataTypeEnum.STRING, 150);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, AggregatedArrivalSearchDTO.SELECT_MATREVMATMATERIALNUMBER,
-                bundle.getString(COL_AGGREGATEDARRIVALVIEW_MATREVMATMATERIALNUMBER), SearchFieldDataTypeEnum.STRING, 150);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, AggregatedArrivalSearchDTO.SELECT_MATREVMATSAPNUMBER,
-                bundle.getString(COL_AGGREGATEDARRIVALVIEW_MATREVMATSAPNUMBER), SearchFieldDataTypeEnum.STRING, 150);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, AggregatedArrivalSearchDTO.SELECT_MATREVMATTYPECODE,
-                bundle.getString(COL_AGGREGATEDARRIVALVIEW_MATREVMATTYPECODE), SearchFieldDataTypeEnum.STRING, 80);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, AggregatedArrivalSearchDTO.SELECT_MATREVMATCLASSCODE,
-                bundle.getString(COL_AGGREGATEDARRIVALVIEW_MATREVMATCLASSCODE), SearchFieldDataTypeEnum.STRING, 120);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, AggregatedArrivalSearchDTO.SELECT_MATREVMATOWNERLOCATIONCODE,
-                bundle.getString(COL_AGGREGATEDARRIVALVIEW_MATREVMATOWNERLOCATIONCODE), SearchFieldDataTypeEnum.STRING, 100);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, AggregatedArrivalSearchDTO.SELECT_MATREVMATSHORTTEXT,
-                bundle.getString(COL_AGGREGATEDARRIVALVIEW_MATREVMATSHORTTEXT), SearchFieldDataTypeEnum.STRING, 250);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, AggregatedArrivalSearchDTO.SELECT_MATREVREVISIONNUMBER,
-                bundle.getString(COL_AGGREGATEDARRIVALVIEW_MATREVREVISIONNUMBER), SearchFieldDataTypeEnum.STRING, 100);
-
-        final var f11 = new JSFSearchFieldDTO(searchObj, ++colOrderId, AggregatedArrivalSearchDTO.SELECT_MOVEMENTTYPECODE,
-                bundle.getString(COL_AGGREGATEDARRIVALVIEW_MOVEMENTTYPECODE), SearchFieldDataTypeEnum.STRING, 80);
-        f11.setVisible(false);
-
-
-        final var f12 = new JSFSearchFieldDTO(searchObj, ++colOrderId, AggregatedArrivalSearchDTO.SELECT_YEAR,
-                bundle.getString(LBL_ATTR_ABSTRACTAGGREGATEDBASE_YEAR), SearchFieldDataTypeEnum.INTEGER, 80);
-        f12.setVisible(false);
-
-
-        final var f13 = new JSFSearchFieldDTO(searchObj, ++colOrderId, AggregatedArrivalSearchDTO.SELECT_MONTH,
-                bundle.getString(LBL_ATTR_ABSTRACTAGGREGATEDBASE_MONTH), SearchFieldDataTypeEnum.INTEGER, 80);
-        f13.setVisible(false);
-
-
-        final var f14 = new JSFSearchFieldDTO(searchObj, ++colOrderId, AggregatedArrivalSearchDTO.SELECT_ARRIVALS,
-                bundle.getString(LBL_ATTR_AGGREGATEDARRIVAL_ARRIVALS), SearchFieldDataTypeEnum.INTEGER, 80);
-        f14.setVisible(false);
-
-
-        visibleFields = new DualListModel<>();
-        visibleFields.setSource(new ArrayList<>());
-        visibleFields.setTarget(new ArrayList<>());
-
-        for (final SearchFieldDTO d : searchObj.getSearchFields())
-            if (!d.isVisible())
-                visibleFields.getSource().add(d);
-            else
-                visibleFields.getTarget().add(d);
-    }
-
-    /**
-     * Initialize view
-     */
-    @Generated
-    public void initView() {
-        logger.debug("Initialize view");
-
-        bundle = ResourceBundle.getBundle(DEFAULT_BUNDLE_NAME, userSession.getLocale());
-
-        // Check if user is allowed to open this page!
-        if (!userSession.checkAuthorization(true, ROLE_ADMINISTRATOR, ROLE_READONLY))
-            return;
-
-
-        formTitle = bundle.getString(FORM_AGGREGATEDARRIVALVIEW_TITLE);
-
-        // Check if previous search exists!
-        final SearchDTO lastSearch = queryManager.getLastQuery(userSession.getPrincipal().getId(), VIEW_ID);
-
-        if (lastSearch != null) {
-            searchObj = lastSearch;
-
-            prepareAfterLoad();
-        }
-        else
-            initSearchObject();
-
-        fetchAggregatedArrivals();
-
-        logger.debug("View initialization finished");
     }
 
     /**
