@@ -4250,7 +4250,7 @@
   <net.sourceforge.jbizmo.model.java:Namespace name="service" parent="/1" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="service" parent="/3" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="service" parent="/4" project="/0"/>
-  <net.sourceforge.jbizmo.model.client:Form name="AggregatedArrivalView" formType="SEARCHABLE_VIEW" formGroup="/248" title="Aggregated arrivals view" formPanels="/262" dTO="/264" roles="/0/@roles.0 /0/@roles.1" boundaryMethod="/265/@boundaryMethods.0">
+  <net.sourceforge.jbizmo.model.client:Form name="AggregatedArrivalView" formType="SEARCHABLE_VIEW" formGroup="/248" title="Aggregated arrivals" formPanels="/262" dTO="/264" roles="/0/@roles.0 /0/@roles.1" boundaryMethod="/265/@boundaryMethods.0">
     <actions name="actionDelete" description="Delete selected aggregated arrival" boundaryMethod="/265/@boundaryMethods.2" type="DELETE"/>
     <actions name="actionCopy" description="Create copy of selected aggregated arrival" boundaryMethod="/265/@boundaryMethods.3" type="COPY"/>
     <domainObject href="package-mv.xmi#//@domainObjects.8"/>
@@ -4258,7 +4258,6 @@
   <net.sourceforge.jbizmo.model.client:FormPanel name="AggregatedArrivalPanel" form="/261" formTable="/263" dTO="/264" boundaryMethod="/265/@boundaryMethods.1"/>
   <net.sourceforge.jbizmo.model.client:FormTable name="AggregatedArrivalTable" formPanel="/262">
     <fields title="Plant" dTOAttribute="/264/@attributes.4"/>
-    <fields colIndex="14" width="80" title="Arrivals" fieldType="INTEGER" dTOAttribute="/264/@attributes.0"/>
     <fields colIndex="2" width="200" title="Supplier" dTOAttribute="/264/@attributes.6"/>
     <fields colIndex="3" width="150" title="Country" dTOAttribute="/264/@attributes.10"/>
     <fields colIndex="4" width="150" title="Material no." dTOAttribute="/264/@attributes.12"/>
@@ -4271,6 +4270,7 @@
     <fields colIndex="11" width="80" title="Mvt. type" dTOAttribute="/264/@attributes.5"/>
     <fields colIndex="12" width="80" title="Year" fieldType="INTEGER" dTOAttribute="/264/@attributes.2"/>
     <fields colIndex="13" width="80" title="Month" fieldType="INTEGER" dTOAttribute="/264/@attributes.3"/>
+    <fields colIndex="14" width="80" title="Arrivals" fieldType="INTEGER" dTOAttribute="/264/@attributes.0"/>
     <fields colIndex="15" visible="false" width="80" title="Material id" fieldType="LONG" dTOAttribute="/264/@attributes.11"/>
     <fields colIndex="16" visible="false" width="80" title="Country code" dTOAttribute="/264/@attributes.9"/>
     <fields colIndex="17" visible="false" title="Supplier code" dTOAttribute="/264/@attributes.7"/>
