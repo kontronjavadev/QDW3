@@ -26,12 +26,12 @@
 		</p:ajaxStatus>
 	</h:panelGrid>
 
-	<p:growl id="growl" showDetail="true"/>
+	<p:growl id="growl" showDetail="true" skipDetailIfEqualsSummary="true" />
 
-	<p:dialog height="510" width="1000" header="#{i18n.search_input_dlg}" widgetVar="dlgSearchInput" modal="true">
+	<p:dialog height="auto" width="1000" header="#{i18n.search_input_dlg}" widgetVar="dlgSearchInput" id="dlgSearchInput" closeOnEscape="true" modal="true">
 		<p:tabView id="tabViewSearchInput" dynamic="false">
 			<p:tab title="#{i18n.search_input_filter}">
-			<p:scrollPanel style="width:100%; height:400px;" mode="native">
+			<p:scrollPanel style="width:100%; #{sizeServiceBean.searchFilterHeight()};" mode="native">
 			<h:panelGrid columns="5" cellpadding="3">
 				<h:outputText styleClass="label-field-mandatory" value="#{i18n.search_input_column}"/>
 				<h:outputText styleClass="label-field-mandatory" value="#{i18n.search_input_operator}"/>
@@ -263,6 +263,7 @@
 			</h:panelGrid>
 			</p:scrollPanel>
 			</p:tab>
+
 			<p:tab title="#{i18n.search_input_adv}">
 			<h:panelGrid columns="2">
 				<h:outputLabel value="#{i18n.search_input_case}:" styleClass="label-field-mandatory"/>
@@ -276,36 +277,65 @@
 					<f:validateLongRange minimum="1" maximum="1000000"/>
 				</p:inputText>
 				<h:outputLabel value="#{i18n.search_input_visible_fields_label}:" styleClass="label-field-mandatory"/>
-				<p:pickList value="#{aggregatedShipmentArrivalView.visibleFields}" var="savedQueryListItem" itemLabel="#{savedQueryListItem.colLabel}" itemValue="#{savedQueryListItem}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchFieldDTOConverter" addLabel="#{i18n.pick_list_add}" addAllLabel="#{i18n.pick_list_add_all}" removeLabel="#{i18n.pick_list_remove}" removeAllLabel="#{i18n.pick_list_remove_all}">
+				<p:pickList styleClass="searchdialog-picklist" value="#{aggregatedShipmentArrivalView.visibleFields}" var="savedQueryListItem" itemLabel="#{savedQueryListItem.colLabel}" itemValue="#{savedQueryListItem}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchFieldDTOConverter" addLabel="#{i18n.pick_list_add}" addAllLabel="#{i18n.pick_list_add_all}" removeLabel="#{i18n.pick_list_remove}" removeAllLabel="#{i18n.pick_list_remove_all}">
 					<f:facet name="sourceCaption">#{i18n.search_input_all_fields}</f:facet>
 					<f:facet name="targetCaption">#{i18n.search_input_visible_fields}</f:facet>
 				</p:pickList>
 			</h:panelGrid>
 			</p:tab>
+
 			<p:tab title="#{i18n.search_input_saved_query_title}">
 				<h:panelGrid columns="1">
 					<h:outputLabel styleClass="label-field-mandatory" value="#{i18n.search_input_lbl_saved_query}"/>
-					<p:selectOneListbox id="savedQueryList" value="#{aggregatedShipmentArrivalView.selectedSavedQuery}" style="height:150px; width:300px">
+					<p:selectOneListbox id="savedQueryList" value="#{aggregatedShipmentArrivalView.selectedSavedQuery}" style="#{sizeServiceBean.searchQueriesHeight()}; width:480px">
 						<f:selectItems value="#{aggregatedShipmentArrivalView.savedQueries}"/>
 					</p:selectOneListbox>
-					<h:panelGrid columns="2">
-						<p:commandButton value="#{i18n.search_input_run_saved_query}" action="#{aggregatedShipmentArrivalView.runSavedQuery}" ajax="false"/>
-						<p:commandButton value="#{i18n.search_input_delete_saved_query}" action="#{aggregatedShipmentArrivalView.deleteSavedQuery}" ajax="false"/>
+					<h:panelGrid columns="3">
+						<p:commandButton icon="pi pi-caret-right" value="#{i18n.search_input_run_saved_query}" action="#{aggregatedShipmentArrivalView.runSavedQuery}" ajax="false"/>
+						<p:commandButton icon="pi pi-pencil" value="#{i18n.search_input_rename_saved_query}" actionListener="#{aggregatedShipmentArrivalView.openRenameDialog}" ajax="true"/>
+						<p:commandButton icon="pi pi-eraser" value="#{i18n.search_input_delete_saved_query}" actionListener="#{aggregatedShipmentArrivalView.deleteSavedQuery}" update="savedQueryList" ajax="true"/>
 					</h:panelGrid>
 				</h:panelGrid>
 			</p:tab>
 		</p:tabView>
 		<br/>
-		<h:panelGrid columns="3">
-			<p:commandButton id="cmdSearch" value="#{i18n.search_input_perform_search}" action="#{aggregatedShipmentArrivalView.fetchAggregatedShipmentArrivals}" ajax="false"/>
-			<p:commandButton id="cmdReset" value="#{i18n.command_reset}" action="#{aggregatedShipmentArrivalView.initSearchObject}" onclick="PF('dlgSearchInput').hide()" ajax="false"/>
-			<p:commandButton id="cmdCount" value="#{i18n.search_input_perform_count}" actionListener="#{aggregatedShipmentArrivalView.countRecords}" onclick="PF('dlgSearchInput').hide()" update="growl" ajax="true"/>
+		<h:panelGrid columns="4">
+			<p:commandButton id="cmdSearch" value="#{i18n.search_input_perform_search}" action="#{aggregatedShipmentArrivalView.fetchCustomers}" ajax="false"/>
+			<p:commandButton id="cmdReset" value="#{i18n.command_reset}" action="#{aggregatedShipmentArrivalView.resetSearchObject}" onclick="PF('dlgSearchInput').hide()" ajax="false"/>
+			<p:commandButton id="cmdClear" value="#{i18n.command_clear}" action="#{aggregatedShipmentArrivalView.clearSearchObject}" update="tabViewSearchInput" ajax="true"/>
+			<p:commandButton id="cmdCount" value="#{i18n.search_input_perform_count}" actionListener="#{aggregatedShipmentArrivalView.countRecords}" update="growl" ajax="true"/>
 		</h:panelGrid>
 	</p:dialog>
 
+<!-- Query rename dialog -->
+	<p:dialog widgetVar="dlgQeryRename" id="dlgQeryRename" modal="true" showEffect="fade" hideEffect="fade" focus="txtNewQueryName" closeOnEscape="true">
+		<f:facet name="header">
+			<i class="pi pi-pencil"/>
+			<h:outputText value="&#160;#{i18n.query_rename_title}"/>
+		</f:facet>
+
+		<h:panelGrid columns="3">
+			<h:outputLabel value="#{i18n.query_rename_newname} *:" for="txtNewQueryName" styleClass="label-field-mandatory"/>
+			<p:inputText id="txtNewQueryName" value="#{aggregatedShipmentArrivalView.newQueryName}"/>
+			<p:tooltip for="txtNewQueryName" value=""/>
+		</h:panelGrid>
+		<p/>
+
+		<f:facet name="footer">
+			<p:commandButton id="cmdRename" icon="pi pi-save" value="#{i18n.command_rename}" ajax="true" 
+				actionListener="#{aggregatedShipmentArrivalView.renameQuery()}"
+				update="tabViewSearchInput,growl" oncomplete="PF('dlgQeryRename').hide()"/>
+
+			<p:commandButton id="cmdCancel" icon="pi pi-times" value="#{i18n.command_cancel}" onclick="PF('dlgQeryRename').hide()" />
+
+			<p:defaultCommand target="cmdRename" scope="dlgQeryRename"/>
+		</f:facet>
+	</p:dialog>
+
+
+
 	<p:menubar>
 		<p:submenu icon="pi pi-file" label="#{i18n.mnu_file}" id="panData_mniFile">
-			<p:menuitem value="#{i18n.action_search_input}" ajax="true" icon="pi pi-search" id="panData_mniSearch" onclick="PF('dlgSearchInput').show()"/>
 			<p:menuitem value="#{i18n.search_input_dlg_save_query}" icon="pi pi-save" onclick="PF('dlgSaveQuery').show()"/>
 		</p:submenu>
 		<p:submenu icon="pi pi-refresh" label="#{i18n.mnu_view}">
@@ -313,17 +343,18 @@
 		</p:submenu>
 		<p:submenu icon="pi pi-print" label="#{i18n.mnu_export}">
 			<p:menuitem value="#{i18n.action_export_xls}" ajax="false" icon="pi pi-file-excel">
-				<p:dataExporter type="xls" target="panData" fileName="AggregatedShipmentArrivalList"/>
+				<p:dataExporter type="xlsxstream" target="panData" fileName="AggregatedShipmentArrivalList"/>
 			</p:menuitem>
 			<p:menuitem value="#{i18n.action_export_pdf}" ajax="false" icon="pi pi-file-pdf">
 				<p:dataExporter type="pdf" target="panData" fileName="AggregatedShipmentArrivalList"/>
 			</p:menuitem>
 		</p:submenu>
+		<p:menuitem value="#{i18n.action_search_input}" ajax="true" icon="pi pi-search" id="panData_mniSearch" onclick="PF('dlgSearchInput').show()"/>
 	</p:menubar>
 
-	<br/>
 
-	<p:dataTable id="panData" var="aggregatedShipmentArrivalViewItem" rows="50"
+	<p:dataTable id="panData" var="aggregatedShipmentArrivalViewItem" rows="#{aggregatedShipmentArrivalView.numberRows}"
+		selectionTextDisabled="false" allowUnsorting="true" resizeMode="expand" multiViewState="true" 
 		selectionMode="single"
 		selection="#{aggregatedShipmentArrivalView.selectedObject}"
 		loadingMessage="#{i18n.action_fetch_data}"
@@ -331,10 +362,11 @@
 		paginatorPosition="top" paginatorAlwaysVisible="false" paginator="true" resizableColumns="true"
 		rowKey="#{aggregatedShipmentArrivalViewItem.id}"
 		paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-		rowsPerPageTemplate="10,50,100,500,1000">
+		rowsPerPageTemplate="50,150,400,1000">
 		<p:ajax event="rowDblselect" listener="#{aggregatedShipmentArrivalView.onDoubleClick}"/>
 
-		<p:column sortBy="#{aggregatedShipmentArrivalViewItem.plantCode}" width="100" rendered="#{aggregatedShipmentArrivalView.searchObject.searchFields[0].visible}" >
+		<p:column sortBy="#{aggregatedShipmentArrivalViewItem.plantCode}" width="100" 
+			rendered="#{aggregatedShipmentArrivalView.searchObject.searchFields[0].visible}" displayPriority="#{aggregatedShipmentArrivalView.searchObject.searchFields[0].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_aggregatedshipmentarrivalview_plantcode}"/>
 			</f:facet>
@@ -342,7 +374,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{aggregatedShipmentArrivalViewItem.customerName}" width="200" rendered="#{aggregatedShipmentArrivalView.searchObject.searchFields[1].visible}" >
+		<p:column sortBy="#{aggregatedShipmentArrivalViewItem.customerName}" width="200" 
+			rendered="#{aggregatedShipmentArrivalView.searchObject.searchFields[1].visible}" displayPriority="#{aggregatedShipmentArrivalView.searchObject.searchFields[1].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_aggregatedshipmentarrivalview_customername}"/>
 			</f:facet>
@@ -350,7 +383,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{aggregatedShipmentArrivalViewItem.custCountryName}" width="150" rendered="#{aggregatedShipmentArrivalView.searchObject.searchFields[2].visible}" >
+		<p:column sortBy="#{aggregatedShipmentArrivalViewItem.custCountryName}" width="150" 
+			rendered="#{aggregatedShipmentArrivalView.searchObject.searchFields[2].visible}" displayPriority="#{aggregatedShipmentArrivalView.searchObject.searchFields[2].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_aggregatedshipmentarrivalview_custcountryname}"/>
 			</f:facet>
@@ -358,7 +392,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{aggregatedShipmentArrivalViewItem.supplierName}" width="200" rendered="#{aggregatedShipmentArrivalView.searchObject.searchFields[3].visible}" >
+		<p:column sortBy="#{aggregatedShipmentArrivalViewItem.supplierName}" width="200" 
+			rendered="#{aggregatedShipmentArrivalView.searchObject.searchFields[3].visible}" displayPriority="#{aggregatedShipmentArrivalView.searchObject.searchFields[3].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_aggregatedshipmentarrivalview_suppliername}"/>
 			</f:facet>
@@ -366,7 +401,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{aggregatedShipmentArrivalViewItem.shipmentMovementTypeCode}" width="110" rendered="#{aggregatedShipmentArrivalView.searchObject.searchFields[4].visible}" >
+		<p:column sortBy="#{aggregatedShipmentArrivalViewItem.shipmentMovementTypeCode}" width="110" 
+			rendered="#{aggregatedShipmentArrivalView.searchObject.searchFields[4].visible}" displayPriority="#{aggregatedShipmentArrivalView.searchObject.searchFields[4].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_aggregatedshipmentarrivalview_shipmentmovementtypecode}"/>
 			</f:facet>
@@ -374,7 +410,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{aggregatedShipmentArrivalViewItem.arrivalMovementTypeCode}" width="100" rendered="#{aggregatedShipmentArrivalView.searchObject.searchFields[5].visible}" >
+		<p:column sortBy="#{aggregatedShipmentArrivalViewItem.arrivalMovementTypeCode}" width="100" 
+			rendered="#{aggregatedShipmentArrivalView.searchObject.searchFields[5].visible}" displayPriority="#{aggregatedShipmentArrivalView.searchObject.searchFields[5].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_aggregatedshipmentarrivalview_arrivalmovementtypecode}"/>
 			</f:facet>
@@ -382,7 +419,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{aggregatedShipmentArrivalViewItem.matrevMatMaterialNumber}" width="150" rendered="#{aggregatedShipmentArrivalView.searchObject.searchFields[6].visible}" >
+		<p:column sortBy="#{aggregatedShipmentArrivalViewItem.matrevMatMaterialNumber}" width="150" 
+			rendered="#{aggregatedShipmentArrivalView.searchObject.searchFields[6].visible}" displayPriority="#{aggregatedShipmentArrivalView.searchObject.searchFields[6].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_aggregatedshipmentarrivalview_matrevmatmaterialnumber}"/>
 			</f:facet>
@@ -390,7 +428,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{aggregatedShipmentArrivalViewItem.matrevMatSapNumber}" width="150" rendered="#{aggregatedShipmentArrivalView.searchObject.searchFields[7].visible}" >
+		<p:column sortBy="#{aggregatedShipmentArrivalViewItem.matrevMatSapNumber}" width="150" 
+			rendered="#{aggregatedShipmentArrivalView.searchObject.searchFields[7].visible}" displayPriority="#{aggregatedShipmentArrivalView.searchObject.searchFields[7].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_aggregatedshipmentarrivalview_matrevmatsapnumber}"/>
 			</f:facet>
@@ -398,7 +437,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{aggregatedShipmentArrivalViewItem.matrevMatShortText}" width="250" rendered="#{aggregatedShipmentArrivalView.searchObject.searchFields[8].visible}" >
+		<p:column sortBy="#{aggregatedShipmentArrivalViewItem.matrevMatShortText}" width="250" 
+			rendered="#{aggregatedShipmentArrivalView.searchObject.searchFields[8].visible}" displayPriority="#{aggregatedShipmentArrivalView.searchObject.searchFields[8].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_aggregatedshipmentarrivalview_matrevmatshorttext}"/>
 			</f:facet>
@@ -406,7 +446,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{aggregatedShipmentArrivalViewItem.matrevMatMaterialHierarchy}" width="150" rendered="#{aggregatedShipmentArrivalView.searchObject.searchFields[9].visible}" >
+		<p:column sortBy="#{aggregatedShipmentArrivalViewItem.matrevMatMaterialHierarchy}" width="150" 
+			rendered="#{aggregatedShipmentArrivalView.searchObject.searchFields[9].visible}" displayPriority="#{aggregatedShipmentArrivalView.searchObject.searchFields[9].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_material_materialhierarchy}"/>
 			</f:facet>
@@ -414,7 +455,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{aggregatedShipmentArrivalViewItem.matrevMatOwnerLocationCode}" width="100" rendered="#{aggregatedShipmentArrivalView.searchObject.searchFields[10].visible}" >
+		<p:column sortBy="#{aggregatedShipmentArrivalViewItem.matrevMatOwnerLocationCode}" width="100" 
+			rendered="#{aggregatedShipmentArrivalView.searchObject.searchFields[10].visible}" displayPriority="#{aggregatedShipmentArrivalView.searchObject.searchFields[10].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_aggregatedshipmentarrivalview_matrevmatownerlocationcode}"/>
 			</f:facet>
@@ -422,7 +464,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{aggregatedShipmentArrivalViewItem.matrevMatMaterialTypeCode}" width="80" rendered="#{aggregatedShipmentArrivalView.searchObject.searchFields[11].visible}" >
+		<p:column sortBy="#{aggregatedShipmentArrivalViewItem.matrevMatMaterialTypeCode}" width="80" 
+			rendered="#{aggregatedShipmentArrivalView.searchObject.searchFields[11].visible}" displayPriority="#{aggregatedShipmentArrivalView.searchObject.searchFields[11].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_aggregatedshipmentarrivalview_matrevmatmaterialtypecode}"/>
 			</f:facet>
@@ -430,7 +473,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{aggregatedShipmentArrivalViewItem.matrevMatMaterialClassCode}" width="100" rendered="#{aggregatedShipmentArrivalView.searchObject.searchFields[12].visible}" >
+		<p:column sortBy="#{aggregatedShipmentArrivalViewItem.matrevMatMaterialClassCode}" width="100" 
+			rendered="#{aggregatedShipmentArrivalView.searchObject.searchFields[12].visible}" displayPriority="#{aggregatedShipmentArrivalView.searchObject.searchFields[12].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_aggregatedshipmentarrivalview_matrevmatmaterialclasscode}"/>
 			</f:facet>
@@ -438,7 +482,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{aggregatedShipmentArrivalViewItem.materialRevisionRevisionNumber}" width="100" rendered="#{aggregatedShipmentArrivalView.searchObject.searchFields[13].visible}" >
+		<p:column sortBy="#{aggregatedShipmentArrivalViewItem.materialRevisionRevisionNumber}" width="100" 
+			rendered="#{aggregatedShipmentArrivalView.searchObject.searchFields[13].visible}" displayPriority="#{aggregatedShipmentArrivalView.searchObject.searchFields[13].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_aggregatedshipmentarrivalview_materialrevisionrevisionnumber}"/>
 			</f:facet>
@@ -446,7 +491,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{aggregatedShipmentArrivalViewItem.year}" width="80" rendered="#{aggregatedShipmentArrivalView.searchObject.searchFields[14].visible}" >
+		<p:column sortBy="#{aggregatedShipmentArrivalViewItem.year}" width="80" 
+			rendered="#{aggregatedShipmentArrivalView.searchObject.searchFields[14].visible}" displayPriority="#{aggregatedShipmentArrivalView.searchObject.searchFields[14].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_abstractaggregatedbase_year}"/>
 			</f:facet>
@@ -454,7 +500,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{aggregatedShipmentArrivalViewItem.month}" width="80" rendered="#{aggregatedShipmentArrivalView.searchObject.searchFields[15].visible}" >
+		<p:column sortBy="#{aggregatedShipmentArrivalViewItem.month}" width="80" 
+			rendered="#{aggregatedShipmentArrivalView.searchObject.searchFields[15].visible}" displayPriority="#{aggregatedShipmentArrivalView.searchObject.searchFields[15].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_abstractaggregatedbase_month}"/>
 			</f:facet>
@@ -462,7 +509,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{aggregatedShipmentArrivalViewItem.shipments}" width="80" rendered="#{aggregatedShipmentArrivalView.searchObject.searchFields[16].visible}" >
+		<p:column sortBy="#{aggregatedShipmentArrivalViewItem.shipments}" width="80" 
+			rendered="#{aggregatedShipmentArrivalView.searchObject.searchFields[16].visible}" displayPriority="#{aggregatedShipmentArrivalView.searchObject.searchFields[16].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_aggregatedshipmentarrival_shipments}"/>
 			</f:facet>
