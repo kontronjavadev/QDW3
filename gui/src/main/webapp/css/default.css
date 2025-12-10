@@ -90,6 +90,12 @@ body .ui-scrollpanel {
 	color: var(--text);
 }
 
+.ui-tooltip {
+	width: max-content;
+	max-width: 400px;
+	white-space: pre-wrap;
+}
+
 .navigator-scrollpanel {
     background: var(--panel) !important;
 }
@@ -1026,12 +1032,17 @@ html .ui-state-disabled {
 
 
 body .pi,
+body .ui-dialog.ui-confirm-dialog .ui-dialog-content > span.ui-icon,
 body .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content .ui-treenode-icon {
 	color: var(--text);
 }
 
 body .ui-widget .ui-icon.pi, .ui-icon.pi {
 	color: var(--textonactive);
+}
+
+body .ui-dialog.ui-confirm-dialog .ui-dialog-content {
+	padding: 1rem 1.5rem
 }
 
 
@@ -1115,42 +1126,10 @@ body .ui-widget .ui-icon.pi, .ui-icon.pi {
 	flex-shrink: 0;
 }
 
-/* Der mittlere Bereich nutzt den Restplatz dynamisch */
-.template-footer-text-middle {
-	flex: 1;
-	margin: 0 10px;
-	overflow: hidden;
-	position: relative;
-}
-
 /* Rechter Text bleibt fix */
 .template-footer-text-right {
 	white-space: nowrap;
 	flex-shrink: 0;
-}
-
-/* Der sichtbare Bereich des Tickers */
-.ticker-wrapper {
-	width: 100%;
-	overflow: hidden;
-	white-space: nowrap;
-}
-
-/* Der laufende Text */
-.ticker {
-	display: inline-block;
-	padding-left: 100%;
-	animation: ticker-scroll 15s linear infinite;
-}
-
-@keyframes ticker-scroll {
-	0%   { transform: translateX(0); }
-	100% { transform: translateX(-100%); }
-}
-
-/* (Optional:) Pause beim Hover */
-.ticker-wrapper:hover .ticker {
-	animation-play-state: paused;
 }
 
 

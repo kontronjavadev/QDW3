@@ -336,39 +336,43 @@
 		</p:column>
 
 		<p:column sortBy="#{aggregatedArrivalViewItem.supplierName}" width="200" 
-			rendered="#{aggregatedArrivalView.searchObject.searchFields[1].visible}" displayPriority="#{aggregatedArrivalView.searchObject.searchFields[1].colOrder}" >
+			rendered="#{aggregatedArrivalView.searchObject.searchFields[1].visible}" displayPriority="#{aggregatedArrivalView.searchObject.searchFields[1].colOrder}" 
+			exportValue="#{aggregatedArrivalView.supplierName}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_aggregatedarrivalview_suppliername}"/>
 			</f:facet>
-			<h:outputText value="#{aggregatedArrivalViewItem.supplierName}">
-			</h:outputText>
+			<h:outputText value="#{aggregatedArrivalViewItem.supplierName}" id="supplierName"/>
+			<p:tooltip for="supplierName" value="#{aggregatedArrivalViewItem.supplierName}" position="top" showDelay="50"/>
 		</p:column>
 
 		<p:column sortBy="#{aggregatedArrivalViewItem.countryName}" width="150" 
-			rendered="#{aggregatedArrivalView.searchObject.searchFields[2].visible}" displayPriority="#{aggregatedArrivalView.searchObject.searchFields[2].colOrder}" >
+			rendered="#{aggregatedArrivalView.searchObject.searchFields[2].visible}" displayPriority="#{aggregatedArrivalView.searchObject.searchFields[2].colOrder}" 
+			exportValue="#{aggregatedArrivalView.countryName}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_aggregatedarrivalview_countryname}"/>
 			</f:facet>
-			<h:outputText value="#{aggregatedArrivalViewItem.countryName}">
-			</h:outputText>
+			<h:outputText value="#{aggregatedArrivalViewItem.countryName}" id="countryName"/>
+			<p:tooltip for="countryName" value="#{aggregatedArrivalViewItem.countryName}" position="top" showDelay="50"/>
 		</p:column>
 
 		<p:column sortBy="#{aggregatedArrivalViewItem.matrevMatMaterialNumber}" width="150" 
-			rendered="#{aggregatedArrivalView.searchObject.searchFields[3].visible}" displayPriority="#{aggregatedArrivalView.searchObject.searchFields[3].colOrder}" >
+			rendered="#{aggregatedArrivalView.searchObject.searchFields[3].visible}" displayPriority="#{aggregatedArrivalView.searchObject.searchFields[3].colOrder}" 
+			exportValue="#{aggregatedArrivalView.matrevMatMaterialNumber}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_aggregatedarrivalview_matrevmatmaterialnumber}"/>
 			</f:facet>
-			<h:outputText value="#{aggregatedArrivalViewItem.matrevMatMaterialNumber}">
-			</h:outputText>
+			<h:outputText value="#{aggregatedArrivalViewItem.matrevMatMaterialNumber}" id="matrevMatMaterialNumber"/>
+			<p:tooltip for="matrevMatMaterialNumber" value="#{aggregatedArrivalViewItem.matrevMatMaterialNumber}" position="top" showDelay="50"/>
 		</p:column>
 
 		<p:column sortBy="#{aggregatedArrivalViewItem.matrevMatSapNumber}" width="150" 
-			rendered="#{aggregatedArrivalView.searchObject.searchFields[4].visible}" displayPriority="#{aggregatedArrivalView.searchObject.searchFields[4].colOrder}" >
+			rendered="#{aggregatedArrivalView.searchObject.searchFields[4].visible}" displayPriority="#{aggregatedArrivalView.searchObject.searchFields[4].colOrder}" 
+			exportValue="#{aggregatedArrivalView.matrevMatSapNumber}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_aggregatedarrivalview_matrevmatsapnumber}"/>
 			</f:facet>
-			<h:outputText value="#{aggregatedArrivalViewItem.matrevMatSapNumber}">
-			</h:outputText>
+			<h:outputText value="#{aggregatedArrivalViewItem.matrevMatSapNumber}" id="matrevMatSapNumber"/>
+			<p:tooltip for="matrevMatSapNumber" value="#{aggregatedArrivalViewItem.matrevMatSapNumber}" position="top" showDelay="50"/>
 		</p:column>
 
 		<p:column sortBy="#{aggregatedArrivalViewItem.matrevMatTypeCode}" width="80" 
@@ -381,12 +385,13 @@
 		</p:column>
 
 		<p:column sortBy="#{aggregatedArrivalViewItem.matrevMatClassCode}" width="120" 
-			rendered="#{aggregatedArrivalView.searchObject.searchFields[6].visible}" displayPriority="#{aggregatedArrivalView.searchObject.searchFields[6].colOrder}" >
+			rendered="#{aggregatedArrivalView.searchObject.searchFields[6].visible}" displayPriority="#{aggregatedArrivalView.searchObject.searchFields[6].colOrder}" 
+			exportValue="#{aggregatedArrivalView.matrevMatClassCode}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_aggregatedarrivalview_matrevmatclasscode}"/>
 			</f:facet>
-			<h:outputText value="#{aggregatedArrivalViewItem.matrevMatClassCode}">
-			</h:outputText>
+			<h:outputText value="#{aggregatedArrivalViewItem.matrevMatClassCode}" id="matrevMatClassCode"/>
+			<p:tooltip for="matrevMatClassCode" value="#{aggregatedArrivalViewItem.matrevMatClassCode}" position="top" showDelay="50"/>
 		</p:column>
 
 		<p:column sortBy="#{aggregatedArrivalViewItem.matrevMatOwnerLocationCode}" width="100" 
@@ -399,30 +404,33 @@
 		</p:column>
 
 		<p:column sortBy="#{aggregatedArrivalViewItem.matrevMatShortText}" width="250" 
-			rendered="#{aggregatedArrivalView.searchObject.searchFields[8].visible}" displayPriority="#{aggregatedArrivalView.searchObject.searchFields[8].colOrder}" >
+			rendered="#{aggregatedArrivalView.searchObject.searchFields[8].visible}" displayPriority="#{aggregatedArrivalView.searchObject.searchFields[8].colOrder}" 
+			exportValue="#{aggregatedArrivalView.matrevMatShortText}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_aggregatedarrivalview_matrevmatshorttext}"/>
 			</f:facet>
-			<h:outputText value="#{aggregatedArrivalViewItem.matrevMatShortText}">
-			</h:outputText>
+			<h:outputText value="#{aggregatedArrivalViewItem.matrevMatShortText}" id="matrevMatShortText"/>
+			<p:tooltip for="matrevMatShortText" value="#{aggregatedArrivalViewItem.matrevMatShortText}" position="top" showDelay="50"/>
 		</p:column>
 
 		<p:column sortBy="#{aggregatedArrivalViewItem.matrevRevisionNumber}" width="100" 
-			rendered="#{aggregatedArrivalView.searchObject.searchFields[9].visible}" displayPriority="#{aggregatedArrivalView.searchObject.searchFields[9].colOrder}" >
+			rendered="#{aggregatedArrivalView.searchObject.searchFields[9].visible}" displayPriority="#{aggregatedArrivalView.searchObject.searchFields[9].colOrder}" 
+			exportValue="#{aggregatedArrivalView.matrevRevisionNumber}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_aggregatedarrivalview_matrevrevisionnumber}"/>
 			</f:facet>
-			<h:outputText value="#{aggregatedArrivalViewItem.matrevRevisionNumber}">
-			</h:outputText>
+			<h:outputText value="#{aggregatedArrivalViewItem.matrevRevisionNumber}" id="matrevRevisionNumber"/>
+			<p:tooltip for="matrevRevisionNumber" value="#{aggregatedArrivalViewItem.matrevRevisionNumber}" position="top" showDelay="50"/>
 		</p:column>
 
 		<p:column sortBy="#{aggregatedArrivalViewItem.movementTypeCode}" width="80" 
-			rendered="#{aggregatedArrivalView.searchObject.searchFields[10].visible}" displayPriority="#{aggregatedArrivalView.searchObject.searchFields[10].colOrder}" >
+			rendered="#{aggregatedArrivalView.searchObject.searchFields[10].visible}" displayPriority="#{aggregatedArrivalView.searchObject.searchFields[10].colOrder}" 
+			exportHeaderValue="#{i18n.col_aggregatedarrivalview_movementtypecode_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_aggregatedarrivalview_movementtypecode}"/>
+				<h:outputText value="#{i18n.col_aggregatedarrivalview_movementtypecode}" id="movementtypecode"/>
+				<p:tooltip for="movementtypecode" value="#{i18n.col_aggregatedarrivalview_movementtypecode_tooltip}" position="top" showDelay="50"/>
 			</f:facet>
-			<h:outputText value="#{aggregatedArrivalViewItem.movementTypeCode}">
-			</h:outputText>
+			<h:outputText value="#{aggregatedArrivalViewItem.movementTypeCode}" />
 		</p:column>
 
 		<p:column sortBy="#{aggregatedArrivalViewItem.year}" width="80" 

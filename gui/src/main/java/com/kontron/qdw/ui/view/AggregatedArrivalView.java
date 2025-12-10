@@ -141,7 +141,7 @@ public class AggregatedArrivalView extends SuperView implements Serializable {
         searchObj.setMaxResult(1000);
         searchObj.setExactFilterMatch(true);
         searchObj.setCaseSensitive(false);
-        searchObj.setCount(true);
+        searchObj.setCount(false);
 
         refreshFormatSettings();
 
@@ -198,6 +198,43 @@ public class AggregatedArrivalView extends SuperView implements Serializable {
             else {
                 visibleFields.getTarget().add(d);
             }
+        }
+    }
+
+    /**
+     * Perform data fetch operation
+     */
+    @Customized
+    public void fetchAggregatedArrivals() {
+        logger.debug("Perform data fetch operation");
+
+        try {
+            preSearch();
+        }
+        catch (final SearchInputFieldValidationException e) {
+            MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_INFO, SEARCH_INPUT_VALIDATION, "", e.getSearchFieldName());
+            return;
+        }
+
+        refreshFormatSettings();
+        setCountFilterDependent();
+
+        try {
+            aggregatedArrivalsList = aggregatedArrivalService.searchAllAggregatedArrivals(searchObj);
+
+            if (searchObj.isCount()) {
+                countResult = aggregatedArrivalService.countAllAggregatedArrivals(searchObj);
+            }
+
+            queryManager.saveQuery(userSession.getPrincipal().getId(), VIEW_ID, null, searchObj);
+        }
+        catch (final Exception e) {
+            logger.error("Error while fetching data!", e);
+
+            MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_ERROR, OPERATION_FETCH_FAIL, e);
+        }
+        finally {
+            postSearch();
         }
     }
 
@@ -360,41 +397,6 @@ public class AggregatedArrivalView extends SuperView implements Serializable {
         searchObj.setNumberFormat(userSession.getNumberFormat());
         searchObj.setDecimalSeparator(DecimalFormatSymbols.getInstance(userSession.getLocale()).getDecimalSeparator());
         searchObj.setGroupingSeparator(DecimalFormatSymbols.getInstance(userSession.getLocale()).getGroupingSeparator());
-    }
-
-    /**
-     * Perform data fetch operation
-     */
-    @Generated
-    public void fetchAggregatedArrivals() {
-        logger.debug("Perform data fetch operation");
-
-        try {
-            preSearch();
-        }
-        catch (final SearchInputFieldValidationException e) {
-            MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_INFO, SEARCH_INPUT_VALIDATION, "", e.getSearchFieldName());
-            return;
-        }
-
-        refreshFormatSettings();
-
-        try {
-            aggregatedArrivalsList = aggregatedArrivalService.searchAllAggregatedArrivals(searchObj);
-
-            if (searchObj.isCount())
-                countResult = aggregatedArrivalService.countAllAggregatedArrivals(searchObj);
-
-            queryManager.saveQuery(userSession.getPrincipal().getId(), VIEW_ID, null, searchObj);
-        }
-        catch (final Exception e) {
-            logger.error("Error while fetching data!", e);
-
-            MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_ERROR, OPERATION_FETCH_FAIL, e);
-        }
-        finally {
-            postSearch();
-        }
     }
 
     /**
