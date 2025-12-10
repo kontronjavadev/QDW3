@@ -366,84 +366,96 @@
 		<p:ajax event="rowDblselect" listener="#{aggregatedShipmentArrivalView.onDoubleClick}"/>
 
 		<p:column sortBy="#{aggregatedShipmentArrivalViewItem.plantCode}" width="100" 
-			rendered="#{aggregatedShipmentArrivalView.searchObject.searchFields[0].visible}" displayPriority="#{aggregatedShipmentArrivalView.searchObject.searchFields[0].colOrder}" >
+			rendered="#{aggregatedShipmentArrivalView.searchObject.searchFields[0].visible}" displayPriority="#{aggregatedShipmentArrivalView.searchObject.searchFields[0].colOrder}" 
+			exportHeaderValue="#{i18n.col_aggregatedshipmentarrivalview_plantcode_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_aggregatedshipmentarrivalview_plantcode}"/>
+				<h:outputText value="#{i18n.col_aggregatedshipmentarrivalview_plantcode}" id="plantCodeHeader"/>
+				<p:tooltip for="plantCodeHeader" value="#{i18n.col_aggregatedshipmentarrivalview_plantcode_tooltip}" position="top" showDelay="50"/>
 			</f:facet>
 			<h:outputText value="#{aggregatedShipmentArrivalViewItem.plantCode}">
 			</h:outputText>
 		</p:column>
 
 		<p:column sortBy="#{aggregatedShipmentArrivalViewItem.customerName}" width="200" 
-			rendered="#{aggregatedShipmentArrivalView.searchObject.searchFields[1].visible}" displayPriority="#{aggregatedShipmentArrivalView.searchObject.searchFields[1].colOrder}" >
+			rendered="#{aggregatedShipmentArrivalView.searchObject.searchFields[1].visible}" displayPriority="#{aggregatedShipmentArrivalView.searchObject.searchFields[1].colOrder}" 
+			exportValue="#{aggregatedShipmentArrivalViewItem.customerName}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_aggregatedshipmentarrivalview_customername}"/>
 			</f:facet>
-			<h:outputText value="#{aggregatedShipmentArrivalViewItem.customerName}">
-			</h:outputText>
+			<h:outputText value="#{aggregatedShipmentArrivalViewItem.customerName}" id="customerName"/>
+			<p:tooltip for="customerName" value="#{aggregatedShipmentArrivalViewItem.customerName}" position="top" showDelay="50"/>
 		</p:column>
 
 		<p:column sortBy="#{aggregatedShipmentArrivalViewItem.custCountryName}" width="150" 
-			rendered="#{aggregatedShipmentArrivalView.searchObject.searchFields[2].visible}" displayPriority="#{aggregatedShipmentArrivalView.searchObject.searchFields[2].colOrder}" >
+			rendered="#{aggregatedShipmentArrivalView.searchObject.searchFields[2].visible}" displayPriority="#{aggregatedShipmentArrivalView.searchObject.searchFields[2].colOrder}" 
+			exportValue="#{aggregatedShipmentArrivalViewItem.custCountryName}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_aggregatedshipmentarrivalview_custcountryname}"/>
 			</f:facet>
-			<h:outputText value="#{aggregatedShipmentArrivalViewItem.custCountryName}">
-			</h:outputText>
+			<h:outputText value="#{aggregatedShipmentArrivalViewItem.custCountryName}" id="custCountryName"/>
+			<p:tooltip for="custCountryName" value="#{aggregatedShipmentArrivalViewItem.custCountryName}" position="top" showDelay="50"/>
 		</p:column>
 
 		<p:column sortBy="#{aggregatedShipmentArrivalViewItem.supplierName}" width="200" 
-			rendered="#{aggregatedShipmentArrivalView.searchObject.searchFields[3].visible}" displayPriority="#{aggregatedShipmentArrivalView.searchObject.searchFields[3].colOrder}" >
+			rendered="#{aggregatedShipmentArrivalView.searchObject.searchFields[3].visible}" displayPriority="#{aggregatedShipmentArrivalView.searchObject.searchFields[3].colOrder}" 
+			exportValue="#{aggregatedShipmentArrivalViewItem.supplierName}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_aggregatedshipmentarrivalview_suppliername}"/>
 			</f:facet>
-			<h:outputText value="#{aggregatedShipmentArrivalViewItem.supplierName}">
-			</h:outputText>
+			<h:outputText value="#{aggregatedShipmentArrivalViewItem.supplierName}" id="supplierName"/>
+			<p:tooltip for="supplierName" value="#{aggregatedShipmentArrivalViewItem.supplierName}" position="top" showDelay="50"/>
 		</p:column>
 
 		<p:column sortBy="#{aggregatedShipmentArrivalViewItem.shipmentMovementTypeCode}" width="110" 
-			rendered="#{aggregatedShipmentArrivalView.searchObject.searchFields[4].visible}" displayPriority="#{aggregatedShipmentArrivalView.searchObject.searchFields[4].colOrder}" >
+			rendered="#{aggregatedShipmentArrivalView.searchObject.searchFields[4].visible}" displayPriority="#{aggregatedShipmentArrivalView.searchObject.searchFields[4].colOrder}" 
+			exportHeaderValue="#{i18n.col_aggregatedshipmentarrivalview_shipmentmovementtypecode_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_aggregatedshipmentarrivalview_shipmentmovementtypecode}"/>
+				<h:outputText value="#{i18n.col_aggregatedshipmentarrivalview_shipmentmovementtypecode}" id="shipmentMovementTypeCodeHeader"/>
+				<p:tooltip for="shipmentMovementTypeCodeHeader" value="#{i18n.col_aggregatedshipmentarrivalview_shipmentmovementtypecode_tooltip}" position="top" showDelay="50"/>
 			</f:facet>
 			<h:outputText value="#{aggregatedShipmentArrivalViewItem.shipmentMovementTypeCode}">
 			</h:outputText>
 		</p:column>
 
 		<p:column sortBy="#{aggregatedShipmentArrivalViewItem.arrivalMovementTypeCode}" width="100" 
-			rendered="#{aggregatedShipmentArrivalView.searchObject.searchFields[5].visible}" displayPriority="#{aggregatedShipmentArrivalView.searchObject.searchFields[5].colOrder}" >
+			rendered="#{aggregatedShipmentArrivalView.searchObject.searchFields[5].visible}" displayPriority="#{aggregatedShipmentArrivalView.searchObject.searchFields[5].colOrder}" 
+			exportHeaderValue="#{i18n.col_aggregatedshipmentarrivalview_arrivalmovementtypecode_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_aggregatedshipmentarrivalview_arrivalmovementtypecode}"/>
+				<h:outputText value="#{i18n.col_aggregatedshipmentarrivalview_arrivalmovementtypecode}" id="arrivalMovementTypeCodeHeader"/>
+				<p:tooltip for="arrivalMovementTypeCodeHeader" value="#{i18n.col_aggregatedshipmentarrivalview_arrivalmovementtypecode_tooltip}" position="top" showDelay="50"/>
 			</f:facet>
 			<h:outputText value="#{aggregatedShipmentArrivalViewItem.arrivalMovementTypeCode}">
 			</h:outputText>
 		</p:column>
 
 		<p:column sortBy="#{aggregatedShipmentArrivalViewItem.matrevMatMaterialNumber}" width="150" 
-			rendered="#{aggregatedShipmentArrivalView.searchObject.searchFields[6].visible}" displayPriority="#{aggregatedShipmentArrivalView.searchObject.searchFields[6].colOrder}" >
+			rendered="#{aggregatedShipmentArrivalView.searchObject.searchFields[6].visible}" displayPriority="#{aggregatedShipmentArrivalView.searchObject.searchFields[6].colOrder}" 
+			exportValue="#{aggregatedShipmentArrivalViewItem.matrevMatMaterialNumber}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_aggregatedshipmentarrivalview_matrevmatmaterialnumber}"/>
 			</f:facet>
-			<h:outputText value="#{aggregatedShipmentArrivalViewItem.matrevMatMaterialNumber}">
-			</h:outputText>
+			<h:outputText value="#{aggregatedShipmentArrivalViewItem.matrevMatMaterialNumber}" id="matrevMatMaterialNumber"/>
+			<p:tooltip for="matrevMatMaterialNumber" value="#{aggregatedShipmentArrivalViewItem.matrevMatMaterialNumber}" position="top" showDelay="50"/>
 		</p:column>
 
 		<p:column sortBy="#{aggregatedShipmentArrivalViewItem.matrevMatSapNumber}" width="150" 
-			rendered="#{aggregatedShipmentArrivalView.searchObject.searchFields[7].visible}" displayPriority="#{aggregatedShipmentArrivalView.searchObject.searchFields[7].colOrder}" >
+			rendered="#{aggregatedShipmentArrivalView.searchObject.searchFields[7].visible}" displayPriority="#{aggregatedShipmentArrivalView.searchObject.searchFields[7].colOrder}" 
+			exportValue="#{aggregatedShipmentArrivalViewItem.matrevMatSapNumber}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_aggregatedshipmentarrivalview_matrevmatsapnumber}"/>
 			</f:facet>
-			<h:outputText value="#{aggregatedShipmentArrivalViewItem.matrevMatSapNumber}">
-			</h:outputText>
+			<h:outputText value="#{aggregatedShipmentArrivalViewItem.matrevMatSapNumber}" id="matrevMatSapNumber"/>
+			<p:tooltip for="matrevMatSapNumber" value="#{aggregatedShipmentArrivalViewItem.matrevMatSapNumber}" position="top" showDelay="50"/>
 		</p:column>
 
 		<p:column sortBy="#{aggregatedShipmentArrivalViewItem.matrevMatShortText}" width="250" 
-			rendered="#{aggregatedShipmentArrivalView.searchObject.searchFields[8].visible}" displayPriority="#{aggregatedShipmentArrivalView.searchObject.searchFields[8].colOrder}" >
+			rendered="#{aggregatedShipmentArrivalView.searchObject.searchFields[8].visible}" displayPriority="#{aggregatedShipmentArrivalView.searchObject.searchFields[8].colOrder}" 
+			exportValue="#{aggregatedShipmentArrivalViewItem.matrevMatShortText}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_aggregatedshipmentarrivalview_matrevmatshorttext}"/>
 			</f:facet>
-			<h:outputText value="#{aggregatedShipmentArrivalViewItem.matrevMatShortText}">
-			</h:outputText>
+			<h:outputText value="#{aggregatedShipmentArrivalViewItem.matrevMatShortText}" id="matrevMatShortText"/>
+			<p:tooltip for="matrevMatShortText" value="#{aggregatedShipmentArrivalViewItem.matrevMatShortText}" position="top" showDelay="50"/>
 		</p:column>
 
 		<p:column sortBy="#{aggregatedShipmentArrivalViewItem.matrevMatMaterialHierarchy}" width="150" 
@@ -474,21 +486,23 @@
 		</p:column>
 
 		<p:column sortBy="#{aggregatedShipmentArrivalViewItem.matrevMatMaterialClassCode}" width="100" 
-			rendered="#{aggregatedShipmentArrivalView.searchObject.searchFields[12].visible}" displayPriority="#{aggregatedShipmentArrivalView.searchObject.searchFields[12].colOrder}" >
+			rendered="#{aggregatedShipmentArrivalView.searchObject.searchFields[12].visible}" displayPriority="#{aggregatedShipmentArrivalView.searchObject.searchFields[12].colOrder}" 
+			exportValue="#{aggregatedShipmentArrivalView.matrevMatMaterialClassCode}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_aggregatedshipmentarrivalview_matrevmatmaterialclasscode}"/>
 			</f:facet>
-			<h:outputText value="#{aggregatedShipmentArrivalViewItem.matrevMatMaterialClassCode}">
-			</h:outputText>
+			<h:outputText value="#{aggregatedShipmentArrivalViewItem.matrevMatMaterialClassCode}" id="matrevMatMaterialClassCode"/>
+			<p:tooltip for="matrevMatMaterialClassCode" value="#{aggregatedShipmentArrivalViewItem.matrevMatMaterialClassCode}" position="top" showDelay="50"/>
 		</p:column>
 
 		<p:column sortBy="#{aggregatedShipmentArrivalViewItem.materialRevisionRevisionNumber}" width="100" 
-			rendered="#{aggregatedShipmentArrivalView.searchObject.searchFields[13].visible}" displayPriority="#{aggregatedShipmentArrivalView.searchObject.searchFields[13].colOrder}" >
+			rendered="#{aggregatedShipmentArrivalView.searchObject.searchFields[13].visible}" displayPriority="#{aggregatedShipmentArrivalView.searchObject.searchFields[13].colOrder}" 
+			exportValue="#{aggregatedShipmentArrivalViewItem.materialRevisionRevisionNumber}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_aggregatedshipmentarrivalview_materialrevisionrevisionnumber}"/>
 			</f:facet>
-			<h:outputText value="#{aggregatedShipmentArrivalViewItem.materialRevisionRevisionNumber}">
-			</h:outputText>
+			<h:outputText value="#{aggregatedShipmentArrivalViewItem.materialRevisionRevisionNumber}" id="materialRevisionRevisionNumber"/>
+			<p:tooltip for="materialRevisionRevisionNumber" value="#{aggregatedShipmentArrivalViewItem.materialRevisionRevisionNumber}" position="top" showDelay="50"/>
 		</p:column>
 
 		<p:column sortBy="#{aggregatedShipmentArrivalViewItem.year}" width="80" 
@@ -525,32 +539,45 @@
 	<h:outputText styleClass="label-field-mandatory" rendered="#{aggregatedShipmentArrivalView.searchObject.count}" value="#{aggregatedShipmentArrivalView.countResult}"/>
 	<p/>
 
-	<p:contextMenu for="panData">
+
+
+<!--Kontextmenü mit Möglichkeit, eine Zelle oder eine Zeile zu kopieren -->
+
+	<h:inputHidden id="cellText" value="#{aggregatedShipmentArrivalView.cellText}" />
+	<h:inputHidden id="rowCsv" value="#{aggregatedShipmentArrivalView.rowCsv}" />
+
+	<p:contextMenu for="panData" beforeShow="updateContextData(event)" >
 		<p:menuitem value="#{i18n.action_delete}" ajax="true" icon="pi pi-trash" id="panData_mniDelete" rendered="false" onclick="PF('deleteConfirm').show()"/>
 		<p:menuitem value="#{i18n.action_copy}" ajax="true" icon="pi pi-copy" id="panData_mniCopy" rendered="false" onclick="PF('copyConfirm').show()"/>
 		<p:menuitem value="#{i18n.action_refresh}" ajax="false" type="push" icon="pi pi-refresh" id="panData_mniRefresh" actionListener="#{aggregatedShipmentArrivalView.fetchAggregatedShipmentArrivals}"/>
+
+		<p:separator/>
+
+		<p:menuitem value="#{i18n.ctxmenu_copy_cell}" actionListener="#{aggregatedShipmentArrivalView.copyCellToClipboard}" icon="pi pi-copy" update="@none"/>
+		<p:menuitem value="#{i18n.ctxmenu_copy_row}" actionListener="#{aggregatedShipmentArrivalView.copyRowToClipboard}" icon="pi pi-copy" update="@none"/>
 	</p:contextMenu>
 
-	<p:confirmDialog modal="true" message="#{i18n.dialog_delete_question}" header="#{i18n.dialog_delete_title}" severity="alert" widgetVar="deleteConfirm">
+	<p:confirmDialog modal="true" closeOnEscape="true" message="#{i18n.dialog_delete_question}" header="#{i18n.dialog_delete_title}" severity="warn" widgetVar="deleteConfirm">
 		<p:commandButton value="#{i18n.command_yes}" oncomplete="PF('deleteConfirm').hide()" actionListener="#{aggregatedShipmentArrivalView.deleteAggregatedShipmentArrival}" id="panData_cmdYesDelete" ajax="false"/>
 		<p:commandButton value="#{i18n.command_no}" onclick="PF('deleteConfirm').hide()" type="button"/>
 	</p:confirmDialog>
 
-	<p:confirmDialog modal="true" message="#{i18n.dialog_copy_question}" header="#{i18n.dialog_copy_title}" severity="info" widgetVar="copyConfirm">
+	<p:confirmDialog modal="true" closeOnEscape="true" message="#{i18n.dialog_copy_question}" header="#{i18n.dialog_copy_title}" severity="info" widgetVar="copyConfirm">
 		<p:commandButton value="#{i18n.command_yes}" oncomplete="PF('copyConfirm').hide()" action="#{aggregatedShipmentArrivalView.copy}" id="panData_cmdYesCopy" ajax="false"/>
 		<p:commandButton value="#{i18n.command_no}" onclick="PF('copyConfirm').hide()" type="button"/>
 	</p:confirmDialog>
 
-	<p:dialog header="#{i18n.search_input_dlg_save_query}" widgetVar="dlgSaveQuery" modal="true" height="100">
+	<p:dialog header="#{i18n.search_input_dlg_save_query}" widgetVar="dlgSaveQuery" id="dlgSaveQuery" closeOnEscape="true" modal="true" height="100">
 		<h:panelGrid columns="3">
 			<h:outputLabel value="#{i18n.search_input_lbl_save_query}" styleClass="label-field-mandatory"/>
 			<p:inputText id="txtQueryName" value="#{aggregatedShipmentArrivalView.savedQueryName}">
 			</p:inputText>
-			<p:commandButton value="#{i18n.command_save}" action="#{aggregatedShipmentArrivalView.saveNewQuery}" ajax="false" onclick="PF('dlgSaveQuery').hide()"/>
+			<p:commandButton id="saveQuery" value="#{i18n.command_save}" action="#{aggregatedShipmentArrivalView.saveNewQuery}" ajax="false" onclick="PF('dlgSaveQuery').hide()"/>
+			<p:defaultCommand target="saveQuery" scope="dlgSaveQuery"/>
 		</h:panelGrid>
 	</p:dialog>
 
-	<p:defaultCommand target=":form:cmdSearch"/>
+	<p:defaultCommand target=":form:cmdSearch" scope="dlgSearchInput" />
 
 </ui:define>
 </ui:composition>
