@@ -166,11 +166,15 @@ public class NavigatorView implements Serializable {
         if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY)) {
             // Form group: Serial object
             final var itemGroup0004 = new DefaultTreeNode<>(FOLDER_TYPE, new TreeNavigatorItem(bundle.getString(FG_TOP_SERIAL_OBJECT)), root);
-            itemGroup0004.setExpanded(false);
+            itemGroup0004.setExpanded(true);
 
             if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY))
                 new DefaultTreeNode<>(VIEW_TYPE, new TreeNavigatorItem(bundle.getString(FORM_AGGREGATEDARRIVALVIEW_TITLE),
                         req.getContextPath() + "/view/AggregatedArrivalView.jsf"), itemGroup0004);
+
+            if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY))
+                new DefaultTreeNode<>(VIEW_TYPE, new TreeNavigatorItem(bundle.getString(FORM_AGGREGATEDSHIPMENTARRIVALVIEW_TITLE),
+                        req.getContextPath() + "/view/AggregatedShipmentArrivalView.jsf"), itemGroup0004);
         }
     }
 
