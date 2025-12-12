@@ -58,6 +58,20 @@ public class CreateNewNotificationDialog implements Serializable {
         this.userSession = userSession;
     }
 
+    public void onStartDateChange() {
+        if (notification.getNotificationEnd() != null && notification.getNotificationStart() != null
+                && notification.getNotificationEnd().isBefore(notification.getNotificationStart())) {
+            notification.setNotificationEnd(notification.getNotificationStart());
+        }
+    }
+
+    public void onEndDateChange() {
+        if (notification.getNotificationEnd() != null && notification.getNotificationStart() != null
+                && notification.getNotificationEnd().isBefore(notification.getNotificationStart())) {
+            notification.setNotificationStart(notification.getNotificationEnd());
+        }
+    }
+    
     /**
      * @return the model object
      */

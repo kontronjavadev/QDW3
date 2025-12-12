@@ -95,6 +95,11 @@ public class UserSession implements Serializable {
     private final transient SecurityContext securityContext;
     private final transient PasswordResetBoundaryService passwordResetService;
 
+    private String integerFormat = "###,##0";
+    private String timeFormat = "HH:mm:ss";
+    private String shortTimeFormat = "HH:mm";
+    private String shortDateTimeFormat = "dd.MM.yyyy HH:mm";
+
     /**
      * Default constructor
      */
@@ -195,6 +200,22 @@ public class UserSession implements Serializable {
             logger.error("Error while performing reset password operation!", e);
             MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_ERROR, OPERATION_RESETPW_FAIL, e);
         }
+    }
+
+    public String getIntegerFormat() {
+        return integerFormat;
+    }
+
+    public String getTimeFormat() {
+        return timeFormat;
+    }
+
+    public String getShortTimeFormat() {
+        return shortTimeFormat;
+    }
+
+    public String getShortDateTimeFormat() {
+        return shortDateTimeFormat;
     }
 
     /**

@@ -54,13 +54,21 @@
 		<h:outputLabel/>
 
 		<h:outputLabel value="#{i18n.lbl_attr_notification_notificationstart} *:" for="txtNotificationStart" styleClass="label-field-mandatory"/>
-		<p:datePicker id="txtNotificationStart" value="#{editNotificationDialog.notification.notificationStart}" pattern="#{userSession.dateTimeFormat}" showButtonBar="true" showIcon="true" showOnFocus="false">
+		<p:datePicker id="txtNotificationStart" value="#{editNotificationDialog.notification.notificationStart}" pattern="#{userSession.shortDateTimeFormat}" 
+			stepMinute="15" showButtonBar="true" showIcon="true" showOnFocus="false">
 			<f:validateRequired/>
+			<!-- Ajax-Call, um das Datum an die Bean zu übermitteln und den zweiten Datepicker zu aktualisieren (minDate-Validierung) -->
+			<p:ajax event="dateSelect" listener="#{editNotificationDialog.onStartDateChange}" update="txtNotificationEnd" process="@this"/>
+			<p:ajax event="blur"       listener="#{editNotificationDialog.onStartDateChange}" update="txtNotificationEnd" process="@this" />
 		</p:datePicker>
 		<p:tooltip for="txtNotificationStart" value=""/>
 
 		<h:outputLabel value="#{i18n.lbl_attr_notification_notificationend}:" for="txtNotificationEnd" styleClass="label-field-optional"/>
-		<p:datePicker id="txtNotificationEnd" value="#{editNotificationDialog.notification.notificationEnd}" pattern="#{userSession.dateTimeFormat}" showButtonBar="true" showIcon="true" showOnFocus="false">
+		<p:datePicker id="txtNotificationEnd" value="#{editNotificationDialog.notification.notificationEnd}" pattern="#{userSession.shortDateTimeFormat}" 
+			stepMinute="15" showButtonBar="true" showIcon="true" showOnFocus="false">
+			<!-- Ajax-Call, um das Datum an die Bean zu übermitteln und den ersten Datepicker zu aktualisieren (minDate-Validierung) -->
+			<p:ajax event="dateSelect" listener="#{editNotificationDialog.onEndDateChange}" update="txtNotificationStart" process="@this"/>
+			<p:ajax event="blur"       listener="#{editNotificationDialog.onEndDateChange}" update="txtNotificationStart" process="@this" />
 		</p:datePicker>
 		<p:tooltip for="txtNotificationEnd" value=""/>
 
@@ -106,8 +114,8 @@
 	<p/>
 
 	<h:panelGrid columns="2">
-		<p:commandButton id="cmdSave" action="#{editNotificationDialog.save}" value="#{i18n.command_save}" ajax="false"/>
-		<p:commandButton id="cmdBack" value="#{i18n.command_back}" action="#{userSession.getLastPage}" immediate="true" ajax="false"/>
+		<p:commandButton id="cmdSave" icon="pi pi-save" action="#{editNotificationDialog.save}" value="#{i18n.command_save}" ajax="false"/>
+		<p:commandButton id="cmdBack" icon="pi pi-caret-left" value="#{i18n.command_back}" action="#{userSession.getLastPage}" immediate="true" ajax="false"/>
 	</h:panelGrid>
 
 </ui:define>

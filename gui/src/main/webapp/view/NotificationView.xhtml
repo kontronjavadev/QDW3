@@ -248,9 +248,15 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_notificationview_notificationstart}"/>
 			</f:facet>
-			<h:outputText value="#{notificationViewItem.notificationStart}">
-				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateTimeConverter"/>
-				<f:attribute name="pattern" value="#{userSession.dateTimeFormat}"/>
+			<h:outputText value="#{notificationView.getDatePart(notificationViewItem.notificationStart)}">
+				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateConverter"/>
+				<f:attribute name="pattern" value="#{userSession.dateFormat}"/>
+				<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
+			</h:outputText>
+			<h:outputText value=" "/>
+			<h:outputText value="#{notificationView.getTimePart(notificationViewItem.notificationStart)}" style="opacity: 0.5;">
+				<f:converter converterId="com.kontron.gpe.intern.ui.converter.LocalTimeConverter"/>
+				<f:attribute name="pattern" value="#{userSession.shortTimeFormat}"/>
 				<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
 			</h:outputText>
 		</p:column>
@@ -260,9 +266,15 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_notificationview_notificationend}"/>
 			</f:facet>
-			<h:outputText value="#{notificationViewItem.notificationEnd}">
-				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateTimeConverter"/>
-				<f:attribute name="pattern" value="#{userSession.dateTimeFormat}"/>
+			<h:outputText value="#{notificationView.getDatePart(notificationViewItem.notificationEnd)}">
+				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateConverter"/>
+				<f:attribute name="pattern" value="#{userSession.dateFormat}"/>
+				<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
+			</h:outputText>
+			<h:outputText value=" "/>
+			<h:outputText value="#{notificationView.getTimePart(notificationViewItem.notificationEnd)}" style="opacity: 0.5;">
+				<f:converter converterId="com.kontron.gpe.intern.ui.converter.LocalTimeConverter"/>
+				<f:attribute name="pattern" value="#{userSession.shortTimeFormat}"/>
 				<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
 			</h:outputText>
 		</p:column>
