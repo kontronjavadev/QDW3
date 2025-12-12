@@ -4,6 +4,15 @@
 	xmlns:f="jakarta.faces.core"
 	xmlns:p="http://primefaces.org/ui">
 
+	<p:panel id="treenotification" styleClass="ui-backgroundpanel" style="padding-top:0.5rem; padding-bottom:0.25rem; border-bottom:1px dashed" rendered="#{notificationServiceBean.hasNotifications()}" >
+		<p:badge severity="danger" visible="#{notificationServiceBean.hasNewNotifications()}" >
+			<i class="pi pi-info-circle" style="padding-left: 1rem;" />
+		</p:badge>
+		<h:outputLink styleClass="ui-treenode-content-link" style="padding-left: 0.5rem;" value="#{request.contextPath}/view/NotificationUserRelView.jsf" >
+			<h:outputText value="#{i18n.form_notificationuserrelview_title}" />
+		</h:outputLink>
+	</p:panel>
+
 	<p:tree style="width:100%; border:none;" highlight="true" 
 		value="#{navigatorView.root}" var="navigatorItem" onNodeClick="$(node).find('.ui-tree-toggler').click();" 
 		dynamic="true" class="navigation-tree" cache="false" animate="true" >

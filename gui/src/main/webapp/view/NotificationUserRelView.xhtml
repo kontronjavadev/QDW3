@@ -1,0 +1,71 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:h="jakarta.faces.html"
+	xmlns:f="jakarta.faces.core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/templates/ui.xhtml">
+
+<f:metadata>
+	<f:viewAction action="#{notificationUserRelView.fetchNotifications()}"/>
+</f:metadata>
+
+<ui:define name="title">#{notificationUserRelView.formTitle}</ui:define>
+
+<ui:define name="content">
+	<h:panelGrid columns="3">
+		<div class="pi pi-list" style="font-size: 2em"/>
+		<h:outputText id="lblFormTitle" value="&#160;#{notificationUserRelView.formTitle}" styleClass="label-form-title"/>
+		<p:ajaxStatus style="width:16px;height:16px;">
+			<f:facet name="start">
+				<h:graphicImage value="/images/ajaxloading.gif"/>
+			</f:facet>
+
+			<f:facet name="complete">
+				<h:outputText value=""/>
+			</f:facet>
+		</p:ajaxStatus>
+	</h:panelGrid>
+
+	<p:growl id="growl" showDetail="true"/>
+
+	<p:menubar>
+		<p:menuitem value="#{i18n.action_refresh}" ajax="false" icon="pi pi-refresh" actionListener="#{notificationUserRelView.fetchNotifications}"/>
+	</p:menubar>
+
+
+	<p:dataTable id="panData" var="notificationUserRelViewItem"
+		selectionMode="single" selectionTextDisabled="false"
+		selection="#{notificationUserRelView.selectedObject}"
+		loadingMessage="#{i18n.action_fetch_data}"
+		value="#{notificationUserRelView.notificationsList}" 
+		scrollable="true" styleClass="viewScrollable" 
+		resizableColumns="true" resizeMode="expand" 
+		rowKey="#{notificationUserRelViewItem.id}">
+
+		<p:columnGroup type="header">
+	        <p:row>
+				<p:column headerText="#{i18n.lbl_attr_notification_header}" width="120" />
+
+				<p:column headerText="#{i18n.lbl_attr_notification_notification}" width="500" />
+	        </p:row>
+        </p:columnGroup>
+
+		<p:column sortBy="#{notificationUserRelViewItem.header}" rendered="#{!notificationUserRelViewItem.read}" style="background: var(--backgroundmarkgreen);" >
+			<h:outputText value="#{notificationUserRelViewItem.header}" />
+		</p:column>
+		<p:column sortBy="#{notificationUserRelViewItem.header}" rendered="#{notificationUserRelViewItem.read}" >
+			<h:outputText value="#{notificationUserRelViewItem.header}" />
+		</p:column>
+
+		<p:column sortBy="#{notificationUserRelViewItem.notification}" >
+			<h:outputText value="#{notificationUserRelViewItem.notification}" />
+		</p:column>
+	</p:dataTable>
+	<p/>
+
+	<p:contextMenu for="panData">
+		<p:menuitem value="#{i18n.action_refresh}" ajax="false" type="push" icon="pi pi-refresh" id="panData_mniRefresh" actionListener="#{notificationUserRelView.fetchNotifications}"/>
+	</p:contextMenu>
+
+</ui:define>
+</ui:composition>

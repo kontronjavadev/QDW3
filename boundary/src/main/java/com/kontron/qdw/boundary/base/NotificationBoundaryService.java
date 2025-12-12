@@ -1,7 +1,12 @@
 package com.kontron.qdw.boundary.base;
 
 import jakarta.validation.ConstraintViolationException;
+
+import java.time.LocalDateTime;
 import java.util.*;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+
 import com.kontron.qdw.repository.base.*;
 import jakarta.inject.*;
 import jakarta.ejb.*;
@@ -16,13 +21,15 @@ import com.kontron.qdw.domain.base.*;
 public class NotificationBoundaryService {
     @Generated
     private final NotificationRepository repository;
+    private final UserRepository userRepository;
 
     /**
      * Default constructor
      */
     @Generated
     public NotificationBoundaryService() {
-        this.repository = null;
+        repository = null;
+        userRepository = null;
     }
 
     /**
@@ -31,8 +38,54 @@ public class NotificationBoundaryService {
      */
     @Inject
     @Generated
-    public NotificationBoundaryService(NotificationRepository repository) {
+    public NotificationBoundaryService(NotificationRepository repository, UserRepository userRepository) {
         this.repository = repository;
+        this.userRepository = userRepository;
+    }
+
+    /**
+     * Gibt die aktuellen {@link com.kontron.qdw.domain.base.Notification Notification}s zurück,
+     * plus der zusätzlichen Information, ob der Anwender diese Nachricht bereit gelesen hat.
+     *
+     * @param userId ID des Anwenders, zu dem geprüft wird, ob er die Nachricht gelesen hat
+     * @return Benachrichtigungen
+     */
+    @SuppressWarnings("resource")
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public List<NotificationUserRelDTO> getActiveNotifications(long userId, boolean markAsRead) {
+        String stmt = "select a "
+                + "from Notification a "
+                + "join a.initiator b "
+                + "where " + NotificationUserRelDTO.SELECT_NOTIFICATIONSTART + " <= :now "
+                + "and (" + NotificationUserRelDTO.SELECT_NOTIFICATIONEND + " is null "
+                + "  or " + NotificationUserRelDTO.SELECT_NOTIFICATIONEND + " >= :now) "
+                + "order by " + NotificationUserRelDTO.SELECT_NOTIFICATIONSTART + " desc, " + NotificationUserRelDTO.SELECT_LASTUPDATE + " desc";
+
+        LocalDateTime now = LocalDateTime.now();
+        List<Notification> dbResult = repository.getEntityManager().createQuery(stmt, Notification.class)
+                .setParameter("now", now)
+                .getResultList();
+
+        List<NotificationUserRelDTO> reqResult = dbResult.stream()
+                .map(note -> new NotificationUserRelDTO(note.getId(), note.getHeader(), note.getNotification(), note.getNotificationStart(),
+                        note.getNotificationEnd(), note.getInitiator().getName(), note.getGelesen().stream()
+                                .map(User::getId)
+                                .anyMatch(id -> id == userId)))
+                .collect(Collectors.toList());
+
+        if (markAsRead) {
+            List<Long> unreadNotificationIds = reqResult.stream()
+                    .filter(Predicate.not(NotificationUserRelDTO::isRead))
+                    .map(NotificationUserRelDTO::getId)
+                    .collect(Collectors.toList());
+            if (!unreadNotificationIds.isEmpty()) {
+                User user = userRepository.findById(userId);
+                unreadNotificationIds.forEach(id -> repository.addUserToGelesen(id, user));
+            }
+        }
+
+        return reqResult;
     }
 
     /**

@@ -6,6 +6,7 @@ import net.sourceforge.jbizmo.commons.jpa.*;
 import jakarta.ejb.*;
 import jakarta.validation.*;
 import net.sourceforge.jbizmo.commons.repository.*;
+import net.sourceforge.jbizmo.commons.annotation.Customized;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
 import com.kontron.qdw.domain.base.*;
 
@@ -32,7 +33,7 @@ public class NotificationRepository extends AbstractRepository<Notification, Lon
      * @throws ConstraintViolationException if the validation of the persistent attributes has failed
      * @return the new notification
      */
-    @Generated
+    @Customized
     public Notification copy(Notification sourceObject, Notification targetObject, long loggedOnUserId) {
         boolean flushAndRefresh = false;
 
@@ -49,9 +50,6 @@ public class NotificationRepository extends AbstractRepository<Notification, Lon
         targetObject.setInitiator(getReference(User.class, loggedOnUserId));
 
         targetObject = persist(targetObject, false, false);
-
-        for (final User user : sourceObject.getGelesen())
-            targetObject.getGelesen().add(user);
 
         if (flushAndRefresh) {
             // Call the flush() method in order to force the database insert immediately!
