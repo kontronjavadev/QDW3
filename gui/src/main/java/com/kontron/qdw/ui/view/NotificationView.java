@@ -6,6 +6,8 @@ import java.lang.invoke.*;
 import org.primefaces.model.DualListModel;
 import net.sourceforge.jbizmo.commons.webclient.primefaces.search.*;
 import com.kontron.qdw.ui.dialog.*;
+import com.kontron.qdw.ui.view.util.SuperView;
+
 import static com.kontron.qdw.ui.TranslationKeys.*;
 import net.sourceforge.jbizmo.commons.webclient.primefaces.util.*;
 import com.kontron.qdw.dto.base.*;
@@ -19,12 +21,13 @@ import com.kontron.qdw.service.*;
 import jakarta.faces.model.*;
 import jakarta.inject.*;
 import net.sourceforge.jbizmo.commons.search.dto.*;
+import net.sourceforge.jbizmo.commons.annotation.Customized;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
 import java.io.*;
 
 @Named("notificationView")
 @ViewScoped
-public class NotificationView extends AbstractSearchableView implements Serializable {
+public class NotificationView extends SuperView implements Serializable {
     @Generated
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     @Generated
@@ -82,6 +85,91 @@ public class NotificationView extends AbstractSearchableView implements Serializ
         this.notificationService = notificationService;
         this.userService = userService;
         this.queryManager = queryManager;
+    }
+
+    /**
+     * Initialize view
+     */
+    @Customized
+    public void initView() {
+        logger.debug("Initialize view");
+
+        bundle = ResourceBundle.getBundle(DEFAULT_BUNDLE_NAME, userSession.getLocale());
+
+        // Check if user is allowed to open this page!
+        if (!userSession.checkAuthorization(true, ROLE_ADMINISTRATOR, ROLE_MAINTAINER)) {
+            return;
+        }
+
+
+        formTitle = bundle.getString(FORM_NOTIFICATIONVIEW_TITLE);
+
+        if (searchObj == null) {
+            // Check if previous search exists!
+            final SearchDTO lastSearch = queryManager.getLastQuery(userSession.getPrincipal().getId(), VIEW_ID);
+            if (lastSearch != null) {
+                searchObj = lastSearch;
+                prepareAfterLoad();
+            }
+            else {
+                initSearchObject();
+            }
+        }
+
+        initProperties();
+        fetchNotifications();
+
+        logger.debug("View initialization finished");
+    }
+
+    /**
+     * Initialize search object
+     */
+    @Customized
+    public void initSearchObject() {
+        searchObj = new SearchDTO();
+        int colOrderId = -1;
+
+        // Initialize search object
+        searchObj.setMaxResult(1000);
+        searchObj.setExactFilterMatch(true);
+        searchObj.setCaseSensitive(false);
+        searchObj.setCount(true);
+
+        refreshFormatSettings();
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, NotificationSearchDTO.SELECT_HEADER,
+                bundle.getString(LBL_ATTR_NOTIFICATION_HEADER), SearchFieldDataTypeEnum.STRING, 100);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, NotificationSearchDTO.SELECT_NOTIFICATION,
+                bundle.getString(LBL_ATTR_NOTIFICATION_NOTIFICATION), SearchFieldDataTypeEnum.STRING, 350);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, NotificationSearchDTO.SELECT_NOTIFICATIONSTART,
+                bundle.getString(COL_NOTIFICATIONVIEW_NOTIFICATIONSTART), SearchFieldDataTypeEnum.LOCAL_DATE_TIME, 120);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, NotificationSearchDTO.SELECT_NOTIFICATIONEND,
+                bundle.getString(COL_NOTIFICATIONVIEW_NOTIFICATIONEND), SearchFieldDataTypeEnum.LOCAL_DATE_TIME, 120);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, NotificationSearchDTO.SELECT_INITIATORNAME,
+                bundle.getString(COL_NOTIFICATIONVIEW_INITIATORNAME), SearchFieldDataTypeEnum.STRING, 100);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, NotificationSearchDTO.SELECT_LASTUPDATE,
+                bundle.getString(LBL_ATTR_ABSTRACTENTITYWITHID_LASTUPDATE), SearchFieldDataTypeEnum.LOCAL_DATE_TIME, 120);
+
+        visibleFields = new DualListModel<>();
+        visibleFields.setSource(new ArrayList<>());
+        visibleFields.setTarget(searchObj.getSearchFields());
+    }
+
+    @Override
+    protected String getViewName() {
+        return VIEW_ID;
+    }
+
+    @Override
+    public void resetSearchObject() {
+        initSearchObject();
+        fetchNotifications();
     }
 
     /**
@@ -267,72 +355,6 @@ public class NotificationView extends AbstractSearchableView implements Serializ
         searchObj.setNumberFormat(userSession.getNumberFormat());
         searchObj.setDecimalSeparator(DecimalFormatSymbols.getInstance(userSession.getLocale()).getDecimalSeparator());
         searchObj.setGroupingSeparator(DecimalFormatSymbols.getInstance(userSession.getLocale()).getGroupingSeparator());
-    }
-
-    /**
-     * Initialize search object
-     */
-    @Generated
-    public void initSearchObject() {
-        searchObj = new SearchDTO();
-        int colOrderId = -1;
-
-        // Initialize search object
-        searchObj.setMaxResult(1000);
-        searchObj.setExactFilterMatch(true);
-        searchObj.setCaseSensitive(false);
-        searchObj.setCount(false);
-
-        refreshFormatSettings();
-
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, NotificationSearchDTO.SELECT_HEADER, bundle.getString(LBL_ATTR_NOTIFICATION_HEADER),
-                SearchFieldDataTypeEnum.STRING, 100);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, NotificationSearchDTO.SELECT_NOTIFICATION,
-                bundle.getString(LBL_ATTR_NOTIFICATION_NOTIFICATION), SearchFieldDataTypeEnum.STRING, 350);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, NotificationSearchDTO.SELECT_NOTIFICATIONSTART,
-                bundle.getString(COL_NOTIFICATIONVIEW_NOTIFICATIONSTART), SearchFieldDataTypeEnum.LOCAL_DATE_TIME, 120);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, NotificationSearchDTO.SELECT_NOTIFICATIONEND,
-                bundle.getString(COL_NOTIFICATIONVIEW_NOTIFICATIONEND), SearchFieldDataTypeEnum.LOCAL_DATE_TIME, 120);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, NotificationSearchDTO.SELECT_INITIATORNAME,
-                bundle.getString(COL_NOTIFICATIONVIEW_INITIATORNAME), SearchFieldDataTypeEnum.STRING, 100);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, NotificationSearchDTO.SELECT_LASTUPDATE,
-                bundle.getString(LBL_ATTR_ABSTRACTENTITYWITHID_LASTUPDATE), SearchFieldDataTypeEnum.LOCAL_DATE_TIME, 120);
-
-        visibleFields = new DualListModel<>();
-        visibleFields.setSource(new ArrayList<>());
-        visibleFields.setTarget(searchObj.getSearchFields());
-    }
-
-    /**
-     * Initialize view
-     */
-    @Generated
-    public void initView() {
-        logger.debug("Initialize view");
-
-        bundle = ResourceBundle.getBundle(DEFAULT_BUNDLE_NAME, userSession.getLocale());
-
-        // Check if user is allowed to open this page!
-        if (!userSession.checkAuthorization(true, ROLE_ADMINISTRATOR, ROLE_MAINTAINER))
-            return;
-
-
-        formTitle = bundle.getString(FORM_NOTIFICATIONVIEW_TITLE);
-
-        // Check if previous search exists!
-        final SearchDTO lastSearch = queryManager.getLastQuery(userSession.getPrincipal().getId(), VIEW_ID);
-
-        if (lastSearch != null) {
-            searchObj = lastSearch;
-
-            prepareAfterLoad();
-        }
-        else
-            initSearchObject();
-
-        fetchNotifications();
-
-        logger.debug("View initialization finished");
     }
 
     /**

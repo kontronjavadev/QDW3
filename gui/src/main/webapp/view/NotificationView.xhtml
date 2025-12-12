@@ -26,12 +26,12 @@
 		</p:ajaxStatus>
 	</h:panelGrid>
 
-	<p:growl id="growl" showDetail="true"/>
+	<p:growl id="growl" showDetail="true" skipDetailIfEqualsSummary="true" />
 
-	<p:dialog height="510" width="1000" header="#{i18n.search_input_dlg}" widgetVar="dlgSearchInput" modal="true">
+	<p:dialog height="auto" width="1000" header="#{i18n.search_input_dlg}" widgetVar="dlgSearchInput" id="dlgSearchInput" closeOnEscape="true" modal="true">
 		<p:tabView id="tabViewSearchInput" dynamic="false">
 			<p:tab title="#{i18n.search_input_filter}">
-			<p:scrollPanel style="width:100%; height:400px;" mode="native">
+			<p:scrollPanel style="width:100%; #{sizeServiceBean.searchFilterHeight()};" mode="native">
 			<h:panelGrid columns="5" cellpadding="3">
 				<h:outputText styleClass="label-field-mandatory" value="#{i18n.search_input_column}"/>
 				<h:outputText styleClass="label-field-mandatory" value="#{i18n.search_input_operator}"/>
@@ -120,6 +120,7 @@
 			</h:panelGrid>
 			</p:scrollPanel>
 			</p:tab>
+
 			<p:tab title="#{i18n.search_input_adv}">
 			<h:panelGrid columns="2">
 				<h:outputLabel value="#{i18n.search_input_case}:" styleClass="label-field-mandatory"/>
@@ -133,11 +134,12 @@
 					<f:validateLongRange minimum="1" maximum="1000000"/>
 				</p:inputText>
 				<h:outputLabel value="#{i18n.search_input_visible_fields_label}:" styleClass="label-field-mandatory"/>
-				<p:pickList value="#{notificationView.visibleFields}" var="savedQueryListItem" itemLabel="#{savedQueryListItem.colLabel}" itemValue="#{savedQueryListItem}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchFieldDTOConverter" addLabel="#{i18n.pick_list_add}" addAllLabel="#{i18n.pick_list_add_all}" removeLabel="#{i18n.pick_list_remove}" removeAllLabel="#{i18n.pick_list_remove_all}">
+				<p:pickList styleClass="searchdialog-picklist" value="#{notificationView.visibleFields}" var="savedQueryListItem" itemLabel="#{savedQueryListItem.colLabel}" itemValue="#{savedQueryListItem}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchFieldDTOConverter" addLabel="#{i18n.pick_list_add}" addAllLabel="#{i18n.pick_list_add_all}" removeLabel="#{i18n.pick_list_remove}" removeAllLabel="#{i18n.pick_list_remove_all}">
 					<f:facet name="sourceCaption">#{i18n.search_input_all_fields}</f:facet>
 					<f:facet name="targetCaption">#{i18n.search_input_visible_fields}</f:facet>
 				</p:pickList>
 			</h:panelGrid>
+
 			</p:tab>
 			<p:tab title="#{i18n.search_input_saved_query_title}">
 				<h:panelGrid columns="1">
@@ -145,27 +147,55 @@
 					<p:selectOneListbox id="savedQueryList" value="#{notificationView.selectedSavedQuery}" style="height:150px; width:300px">
 						<f:selectItems value="#{notificationView.savedQueries}"/>
 					</p:selectOneListbox>
-					<h:panelGrid columns="2">
-						<p:commandButton value="#{i18n.search_input_run_saved_query}" action="#{notificationView.runSavedQuery}" ajax="false"/>
-						<p:commandButton value="#{i18n.search_input_delete_saved_query}" action="#{notificationView.deleteSavedQuery}" ajax="false"/>
+					<h:panelGrid columns="3">
+						<p:commandButton icon="pi pi-caret-right" value="#{i18n.search_input_run_saved_query}" action="#{notificationView.runSavedQuery}" ajax="false"/>
+						<p:commandButton icon="pi pi-pencil" value="#{i18n.search_input_rename_saved_query}" actionListener="#{notificationView.openRenameDialog}" ajax="true"/>
+						<p:commandButton icon="pi pi-eraser" value="#{i18n.search_input_delete_saved_query}" actionListener="#{notificationView.deleteSavedQuery}" update="savedQueryList" ajax="true"/>
 					</h:panelGrid>
 				</h:panelGrid>
 			</p:tab>
 		</p:tabView>
 		<br/>
-		<h:panelGrid columns="3">
-			<p:commandButton id="cmdSearch" value="#{i18n.search_input_perform_search}" action="#{notificationView.fetchNotifications}" ajax="false"/>
-			<p:commandButton id="cmdReset" value="#{i18n.command_reset}" action="#{notificationView.initSearchObject}" onclick="PF('dlgSearchInput').hide()" ajax="false"/>
-			<p:commandButton id="cmdCount" value="#{i18n.search_input_perform_count}" actionListener="#{notificationView.countRecords}" onclick="PF('dlgSearchInput').hide()" update="growl" ajax="true"/>
+		<h:panelGrid columns="4">
+			<p:commandButton id="cmdSearch" value="#{i18n.search_input_perform_search}" action="#{notificationView.fetchCustomers}" ajax="false"/>
+			<p:commandButton id="cmdReset" value="#{i18n.command_reset}" action="#{notificationView.resetSearchObject}" onclick="PF('dlgSearchInput').hide()" ajax="false"/>
+			<p:commandButton id="cmdClear" value="#{i18n.command_clear}" action="#{notificationView.clearSearchObject}" update="tabViewSearchInput" ajax="true"/>
+			<p:commandButton id="cmdCount" value="#{i18n.search_input_perform_count}" actionListener="#{notificationView.countRecords}" update="growl" ajax="true"/>
 		</h:panelGrid>
 	</p:dialog>
+
+<!-- Query rename dialog -->
+	<p:dialog widgetVar="dlgQeryRename" id="dlgQeryRename" modal="true" showEffect="fade" hideEffect="fade" focus="txtNewQueryName" closeOnEscape="true">
+		<f:facet name="header">
+			<i class="pi pi-pencil"/>
+			<h:outputText value="&#160;#{i18n.query_rename_title}"/>
+		</f:facet>
+
+		<h:panelGrid columns="3">
+			<h:outputLabel value="#{i18n.query_rename_newname} *:" for="txtNewQueryName" styleClass="label-field-mandatory"/>
+			<p:inputText id="txtNewQueryName" value="#{notificationView.newQueryName}"/>
+			<p:tooltip for="txtNewQueryName" value=""/>
+		</h:panelGrid>
+		<p/>
+
+		<f:facet name="footer">
+			<p:commandButton id="cmdRename" icon="pi pi-save" value="#{i18n.command_rename}" ajax="true" 
+				actionListener="#{notificationView.renameQuery()}"
+				update="tabViewSearchInput,growl" oncomplete="PF('dlgQeryRename').hide()"/>
+
+			<p:commandButton id="cmdCancel" icon="pi pi-times" value="#{i18n.command_cancel}" onclick="PF('dlgQeryRename').hide()" />
+
+			<p:defaultCommand target="cmdRename" scope="dlgQeryRename"/>
+		</f:facet>
+	</p:dialog>
+
+
 
 	<p:menubar>
 		<p:submenu icon="pi pi-file" label="#{i18n.mnu_file}" id="panData_mniFile">
 			<p:menuitem value="#{i18n.action_create}" ajax="true" id="panData_mniCreate" icon="pi pi-plus" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;MAINTAINER')}" action="#{notificationView.openCreateNewNotificationDialog}">
 				<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{notificationView.currentPageURL}"/>
 			</p:menuitem>
-			<p:menuitem value="#{i18n.action_search_input}" ajax="true" icon="pi pi-search" id="panData_mniSearch" onclick="PF('dlgSearchInput').show()"/>
 			<p:menuitem value="#{i18n.search_input_dlg_save_query}" icon="pi pi-save" onclick="PF('dlgSaveQuery').show()"/>
 		</p:submenu>
 		<p:submenu icon="pi pi-refresh" label="#{i18n.mnu_view}">
@@ -173,17 +203,18 @@
 		</p:submenu>
 		<p:submenu icon="pi pi-print" label="#{i18n.mnu_export}">
 			<p:menuitem value="#{i18n.action_export_xls}" ajax="false" icon="pi pi-file-excel">
-				<p:dataExporter type="xls" target="panData" fileName="NotificationList"/>
+				<p:dataExporter type="xlsxstream" target="panData" fileName="NotificationList"/>
 			</p:menuitem>
 			<p:menuitem value="#{i18n.action_export_pdf}" ajax="false" icon="pi pi-file-pdf">
 				<p:dataExporter type="pdf" target="panData" fileName="NotificationList"/>
 			</p:menuitem>
 		</p:submenu>
+		<p:menuitem value="#{i18n.action_search_input}" ajax="true" icon="pi pi-search" id="panData_mniSearch" onclick="PF('dlgSearchInput').show()"/>
 	</p:menubar>
 
-	<br/>
 
-	<p:dataTable id="panData" var="notificationViewItem" rows="50"
+	<p:dataTable id="panData" var="notificationViewItem" rows="#{notificationView.numberRows}"
+		selectionTextDisabled="false" allowUnsorting="true" resizeMode="expand" multiViewState="true" 
 		selectionMode="single"
 		selection="#{notificationView.selectedObject}"
 		loadingMessage="#{i18n.action_fetch_data}"
@@ -191,10 +222,11 @@
 		paginatorPosition="top" paginatorAlwaysVisible="false" paginator="true" resizableColumns="true"
 		rowKey="#{notificationViewItem.id}"
 		paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-		rowsPerPageTemplate="10,50,100,500,1000">
+		rowsPerPageTemplate="50,150,400,1000">
 		<p:ajax event="rowDblselect" listener="#{notificationView.onDoubleClick}"/>
 
-		<p:column sortBy="#{notificationViewItem.header}" width="100" rendered="#{notificationView.searchObject.searchFields[0].visible}" >
+		<p:column sortBy="#{notificationViewItem.header}" width="100" 
+			rendered="#{notificationView.searchObject.searchFields[0].visible}" displayPriority="#{notificationView.searchObject.searchFields[0].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_notification_header}"/>
 			</f:facet>
@@ -202,7 +234,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{notificationViewItem.notification}" width="350" rendered="#{notificationView.searchObject.searchFields[1].visible}" >
+		<p:column sortBy="#{notificationViewItem.notification}" width="350" 
+			rendered="#{notificationView.searchObject.searchFields[1].visible}" displayPriority="#{notificationView.searchObject.searchFields[1].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_notification_notification}"/>
 			</f:facet>
@@ -210,7 +243,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{notificationViewItem.notificationStart}" width="120" rendered="#{notificationView.searchObject.searchFields[2].visible}" >
+		<p:column sortBy="#{notificationViewItem.notificationStart}" width="120" 
+			rendered="#{notificationView.searchObject.searchFields[2].visible}" displayPriority="#{notificationView.searchObject.searchFields[2].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_notificationview_notificationstart}"/>
 			</f:facet>
@@ -221,7 +255,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{notificationViewItem.notificationEnd}" width="120" rendered="#{notificationView.searchObject.searchFields[3].visible}" >
+		<p:column sortBy="#{notificationViewItem.notificationEnd}" width="120" 
+			rendered="#{notificationView.searchObject.searchFields[3].visible}" displayPriority="#{notificationView.searchObject.searchFields[3].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_notificationview_notificationend}"/>
 			</f:facet>
@@ -232,7 +267,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{notificationViewItem.initiatorName}" width="100" rendered="#{notificationView.searchObject.searchFields[4].visible}" >
+		<p:column sortBy="#{notificationViewItem.initiatorName}" width="100" 
+			rendered="#{notificationView.searchObject.searchFields[4].visible}" displayPriority="#{notificationView.searchObject.searchFields[4].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_notificationview_initiatorname}"/>
 			</f:facet>
@@ -240,7 +276,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{notificationViewItem.lastUpdate}" width="120" rendered="#{notificationView.searchObject.searchFields[5].visible}" >
+		<p:column sortBy="#{notificationViewItem.lastUpdate}" width="120" 
+			rendered="#{notificationView.searchObject.searchFields[5].visible}" displayPriority="#{notificationView.searchObject.searchFields[5].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_abstractentitywithid_lastupdate}"/>
 			</f:facet>
@@ -258,7 +295,14 @@
 	<h:outputText styleClass="label-field-mandatory" rendered="#{notificationView.searchObject.count}" value="#{notificationView.countResult}"/>
 	<p/>
 
-	<p:contextMenu for="panData">
+
+
+<!--Kontextmenü mit Möglichkeit, eine Zelle oder eine Zeile zu kopieren -->
+
+	<h:inputHidden id="cellText" value="#{notificationView.cellText}" />
+	<h:inputHidden id="rowCsv" value="#{notificationView.rowCsv}" />
+
+	<p:contextMenu for="panData" beforeShow="updateContextData(event)" >
 		<p:menuitem value="#{i18n.action_delete}" ajax="true" icon="pi pi-trash" id="panData_mniDelete" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;MAINTAINER')}" onclick="PF('deleteConfirm').show()"/>
 		<p:menuitem value="#{i18n.action_create}" ajax="true" icon="pi pi-plus" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;MAINTAINER')}" action="#{notificationView.openCreateNewNotificationDialog}">
 			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{notificationView.currentPageURL}"/>
@@ -268,28 +312,34 @@
 		</p:menuitem>
 		<p:menuitem value="#{i18n.action_copy}" ajax="true" icon="pi pi-copy" id="panData_mniCopy" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;MAINTAINER')}" onclick="PF('copyConfirm').show()"/>
 		<p:menuitem value="#{i18n.action_refresh}" ajax="false" type="push" icon="pi pi-refresh" id="panData_mniRefresh" actionListener="#{notificationView.fetchNotifications}"/>
+
+		<p:separator/>
+
+		<p:menuitem value="#{i18n.ctxmenu_copy_cell}" actionListener="#{notificationView.copyCellToClipboard}" icon="pi pi-copy" update="@none"/>
+		<p:menuitem value="#{i18n.ctxmenu_copy_row}" actionListener="#{notificationView.copyRowToClipboard}" icon="pi pi-copy" update="@none"/>
 	</p:contextMenu>
 
-	<p:confirmDialog modal="true" message="#{i18n.dialog_delete_question}" header="#{i18n.dialog_delete_title}" severity="alert" widgetVar="deleteConfirm">
+	<p:confirmDialog modal="true" closeOnEscape="true" message="#{i18n.dialog_delete_question}" header="#{i18n.dialog_delete_title}" severity="warn" widgetVar="deleteConfirm">
 		<p:commandButton value="#{i18n.command_yes}" oncomplete="PF('deleteConfirm').hide()" actionListener="#{notificationView.deleteNotification}" id="panData_cmdYesDelete" ajax="false"/>
 		<p:commandButton value="#{i18n.command_no}" onclick="PF('deleteConfirm').hide()" type="button"/>
 	</p:confirmDialog>
 
-	<p:confirmDialog modal="true" message="#{i18n.dialog_copy_question}" header="#{i18n.dialog_copy_title}" severity="info" widgetVar="copyConfirm">
+	<p:confirmDialog modal="true" closeOnEscape="true" message="#{i18n.dialog_copy_question}" header="#{i18n.dialog_copy_title}" severity="info" widgetVar="copyConfirm">
 		<p:commandButton value="#{i18n.command_yes}" oncomplete="PF('copyConfirm').hide()" action="#{notificationView.copy}" id="panData_cmdYesCopy" ajax="false"/>
 		<p:commandButton value="#{i18n.command_no}" onclick="PF('copyConfirm').hide()" type="button"/>
 	</p:confirmDialog>
 
-	<p:dialog header="#{i18n.search_input_dlg_save_query}" widgetVar="dlgSaveQuery" modal="true" height="100">
+	<p:dialog header="#{i18n.search_input_dlg_save_query}" widgetVar="dlgSaveQuery" id="dlgSaveQuery" closeOnEscape="true" modal="true" height="100">
 		<h:panelGrid columns="3">
 			<h:outputLabel value="#{i18n.search_input_lbl_save_query}" styleClass="label-field-mandatory"/>
 			<p:inputText id="txtQueryName" value="#{notificationView.savedQueryName}">
 			</p:inputText>
-			<p:commandButton value="#{i18n.command_save}" action="#{notificationView.saveNewQuery}" ajax="false" onclick="PF('dlgSaveQuery').hide()"/>
+			<p:commandButton id="saveQuery" value="#{i18n.command_save}" action="#{notificationView.saveNewQuery}" ajax="false" onclick="PF('dlgSaveQuery').hide()"/>
+			<p:defaultCommand target="saveQuery" scope="dlgSaveQuery"/>
 		</h:panelGrid>
 	</p:dialog>
 
-	<p:defaultCommand target=":form:cmdSearch"/>
+	<p:defaultCommand target=":form:cmdSearch" scope="dlgSearchInput" />
 
 </ui:define>
 </ui:composition>
