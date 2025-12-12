@@ -4,23 +4,24 @@ import com.kontron.qdw.boundary.util.MailServiceFacade;
 import com.kontron.qdw.repository.base.*;
 import com.kontron.qdw.boundary.util.Constants;
 import net.sourceforge.jbizmo.commons.search.exception.*;
+import static net.sourceforge.jbizmo.commons.jpa.AbstractRepository.WILDCARD;
 import com.kontron.qdw.dto.base.*;
 import com.kontron.qdw.domain.base.*;
 import com.kontron.util.cipher.PasswordGenerator;
 import java.util.*;
-import java.util.stream.Collectors;
-
 import jakarta.validation.ConstraintViolationException;
 import java.security.NoSuchAlgorithmException;
+import java.util.stream.Collectors;
 import net.sourceforge.jbizmo.commons.crypto.*;
 import jakarta.inject.*;
-import jakarta.persistence.TypedQuery;
 import jakarta.ejb.*;
 import jakarta.annotation.security.*;
 import net.sourceforge.jbizmo.commons.annotation.Customized;
+import jakarta.persistence.TypedQuery;
 import net.sourceforge.jbizmo.commons.search.dto.*;
 import net.sourceforge.jbizmo.commons.repository.*;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
+import static net.sourceforge.jbizmo.commons.jpa.AbstractRepository.SMALL_LIST_SIZE;
 
 @Stateless
 public class UserBoundaryService {
@@ -363,6 +364,48 @@ public class UserBoundaryService {
         }
 
         return resultList;
+    }
+
+    /**
+     * Search for user objects
+     * @param filter
+     * @return a list of user objects
+     * @throws GeneralSearchException if the search operation has failed
+     */
+    @Generated
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public List<UserListDTO> findUsers(String filter) {
+        // Collect the select tokens of all fields that should be fetched
+        final var selectTokens = new ArrayList<String>();
+
+        // Initialize the search object
+        final var searchObj = new SearchDTO();
+        searchObj.setExactFilterMatch(true);
+        searchObj.setCaseSensitive(true);
+        searchObj.setMaxResult(SMALL_LIST_SIZE);
+        searchObj.setFromClause("from User a");
+
+        return repository.search(searchObj, UserListDTO.class, selectTokens);
+    }
+
+    /**
+     * Find user by its ID
+     * @param id
+     * @return the user object
+     */
+    @Generated
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public UserListDTO findListUser(long id) {
+        // Find persistent object
+        final User user = repository.findById(id, true);
+
+        final var dto = new UserListDTO();
+        dto.setId(user.getId());
+        dto.setName(user.getName());
+
+        return dto;
     }
 
 }

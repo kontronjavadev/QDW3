@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<net.sourceforge.net.model.domain:DomainNamespace xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:net.sourceforge.net.model.domain="http:///net/sourceforge/jbizmo/model/domain.ecore" name="base" javaTypes="//@domainObjects.0 //@domainObjects.1 //@domainObjects.2 //@domainObjects.3 //@domainObjects.4 //@domainObjects.5 //@domainObjects.6 //@domainObjects.7 //@domainObjects.8 //@domainObjects.9 //@domainObjects.10 //@domainObjects.11 //@domainObjects.12 //@domainObjects.13 //@domainObjects.14 //@domainObjects.15">
+<net.sourceforge.net.model.domain:DomainNamespace xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:net.sourceforge.net.model.domain="http:///net/sourceforge/jbizmo/model/domain.ecore" name="base" javaTypes="//@domainObjects.0 //@domainObjects.1 //@domainObjects.2 //@domainObjects.3 //@domainObjects.4 //@domainObjects.5 //@domainObjects.6 //@domainObjects.7 //@domainObjects.8 //@domainObjects.9 //@domainObjects.10 //@domainObjects.11 //@domainObjects.12 //@domainObjects.13 //@domainObjects.14 //@domainObjects.15 //@domainObjects.16">
   <parent href="project.xmi#/0/@domainNamespace"/>
   <project href="project.xmi#/0"/>
   <domainObjects name="AbstractEntityWithId" comment="Domain object for abstract entity with id objects" mappable="true" namespace="/" label="abstract entity with id" namePlural="AbstractEntityWithIds" labelPlural="abstract entity with ids" discriminatorValue="" mappedSuperClass="true">
@@ -38,6 +38,7 @@
     <targetInheritances href="package-service.xmi#//@domainObjects.1/@inheritance"/>
     <targetInheritances href="package-service.xmi#//@domainObjects.9/@inheritance"/>
     <targetInheritances href="package-material.xmi#//@domainObjects.9/@inheritance"/>
+    <targetInheritances href="#//@domainObjects.16/@inheritance"/>
     <databaseTable name="abstract_entity_with_id_tab" schemaName="" catalogName="">
       <database href="project.xmi#/0/@database"/>
       <columns name="id">
@@ -702,6 +703,73 @@
       <foreignKeys name="fk_password_reset_user" column="//@domainObjects.15/@databaseTable/@columns.4" referencedColumn="//@domainObjects.1/@databaseTable/@columns.4"/>
       <indexes name="uk_password_reset_user" unique="true" columns="//@domainObjects.15/@databaseTable/@columns.4"/>
       <indexes name="uk_password_reset_uuid" unique="true" columns="//@domainObjects.15/@databaseTable/@columns.5"/>
+    </databaseTable>
+  </domainObjects>
+  <domainObjects name="Notification" comment="Domain object for notification objects" mappable="true" namespace="/" label="notification" namePlural="Notifications" labelPlural="notifications" discriminatorValue="" parent="//@domainObjects.0">
+    <iDGenerator name="NOTIFICATION_SEQ" generatorType="IDENTITY"/>
+    <inheritance target="//@domainObjects.0"/>
+    <attributes name="header" label="header" labelPlural="headers" fetchTypeEager="true" column="//@domainObjects.16/@databaseTable/@columns.4" removeWhitespaceCharacters="true">
+      <domainAttributeValidator maxLength="50" minLength="0" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <attributes name="notification" label="notification" labelPlural="notifications" fetchTypeEager="true" column="//@domainObjects.16/@databaseTable/@columns.5" removeWhitespaceCharacters="true">
+      <domainAttributeValidator maxLength="500" minLength="0" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
+    </attributes>
+    <attributes name="notificationStart" label="notification start" labelPlural="notification starts" fetchTypeEager="true" column="//@domainObjects.16/@databaseTable/@columns.6">
+      <domainAttributeValidator maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.17"/>
+    </attributes>
+    <attributes name="notificationEnd" label="notification end" labelPlural="notification ends" fetchTypeEager="true" column="//@domainObjects.16/@databaseTable/@columns.7">
+      <domainAttributeValidator nullable="true" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.17"/>
+    </attributes>
+    <associations xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" name="initiator" owner="true" fetchTypeEager="true" target="//@domainObjects.1" internalComment="" userComment="" insertable="true" updatable="true" column="//@domainObjects.16/@databaseTable/@columns.8"/>
+    <associations xsi:type="net.sourceforge.net.model.domain:ManyToManyAssociation" name="gelesen" owner="true" target="//@domainObjects.1" internalComment="" userComment="">
+      <table name="notification_users_tab" schemaName="" catalogName="">
+        <database href="project.xmi#/0/@database"/>
+        <columns name="notification_pk">
+          <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.1"/>
+        </columns>
+        <columns name="user_pk">
+          <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.1"/>
+        </columns>
+        <foreignKeys name="fk_notification_users_notification_pk" column="//@domainObjects.16/@associations.1/@table/@columns.0" referencedColumn="//@domainObjects.16/@databaseTable/@columns.0"/>
+        <foreignKeys name="fk_notification_users_user_pk" column="//@domainObjects.16/@associations.1/@table/@columns.1" referencedColumn="//@domainObjects.1/@databaseTable/@columns.4"/>
+        <indexes name="uk_notification_users" unique="true" columns="//@domainObjects.16/@associations.1/@table/@columns.0 //@domainObjects.16/@associations.1/@table/@columns.1"/>
+      </table>
+    </associations>
+    <databaseTable name="notification_tab" schemaName="" catalogName="">
+      <database href="project.xmi#/0/@database"/>
+      <columns name="id">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.1"/>
+      </columns>
+      <columns name="version">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.0"/>
+      </columns>
+      <columns name="creation_date">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.14"/>
+      </columns>
+      <columns name="last_update" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.14"/>
+      </columns>
+      <columns name="header" length="50">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="notification" length="500">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
+      <columns name="notification_start">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.14"/>
+      </columns>
+      <columns name="notification_end" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.14"/>
+      </columns>
+      <columns name="initiator">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.1"/>
+      </columns>
+      <primaryKey name="pk_notification" column="//@domainObjects.16/@databaseTable/@columns.0"/>
+      <foreignKeys name="fk_notification_initiator" column="//@domainObjects.16/@databaseTable/@columns.8" referencedColumn="//@domainObjects.1/@databaseTable/@columns.4"/>
     </databaseTable>
   </domainObjects>
 </net.sourceforge.net.model.domain:DomainNamespace>

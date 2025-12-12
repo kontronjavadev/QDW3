@@ -1,0 +1,295 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:h="jakarta.faces.html"
+	xmlns:f="jakarta.faces.core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/templates/ui.xhtml">
+
+<f:metadata>
+	<f:viewAction action="#{notificationView.initView()}"/>
+</f:metadata>
+
+<ui:define name="title">#{notificationView.formTitle}</ui:define>
+
+<ui:define name="content">
+	<h:panelGrid columns="3">
+		<div class="pi pi-list" style="font-size: 2em"/>
+		<h:outputText id="lblFormTitle" value="&#160;#{notificationView.formTitle}" styleClass="label-form-title"/>
+		<p:ajaxStatus style="width:16px;height:16px;">
+			<f:facet name="start">
+				<h:graphicImage value="/images/ajaxloading.gif"/>
+			</f:facet>
+
+			<f:facet name="complete">
+				<h:outputText value=""/>
+			</f:facet>
+		</p:ajaxStatus>
+	</h:panelGrid>
+
+	<p:growl id="growl" showDetail="true"/>
+
+	<p:dialog height="510" width="1000" header="#{i18n.search_input_dlg}" widgetVar="dlgSearchInput" modal="true">
+		<p:tabView id="tabViewSearchInput" dynamic="false">
+			<p:tab title="#{i18n.search_input_filter}">
+			<p:scrollPanel style="width:100%; height:400px;" mode="native">
+			<h:panelGrid columns="5" cellpadding="3">
+				<h:outputText styleClass="label-field-mandatory" value="#{i18n.search_input_column}"/>
+				<h:outputText styleClass="label-field-mandatory" value="#{i18n.search_input_operator}"/>
+				<h:outputText styleClass="label-field-mandatory" value="#{i18n.search_input_sort}"/>
+				<h:outputText styleClass="label-field-mandatory" value="#{i18n.search_input_filter_input}"/>
+				<h:outputText styleClass="label-field-mandatory" value="#{i18n.search_input_and}"/>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_0" value="#{notificationView.searchObject.searchFields[0].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{notificationView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_0" value="#{notificationView.searchObject.searchFields[0].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_0" value="#{notificationView.textOperators}" var="advInputItem0" itemValue="#{advInputItem0}" itemLabel="#{advInputItem0.description}"/>
+					<f:ajax render="p_0"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_0" id="s_0" value="#{notificationView.searchObject.searchFields[0].sortOrder}">
+					<f:selectItems value="#{notificationView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_0" value="#{notificationView.searchObject.searchFields[0].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_0">
+					<p:inputText id="b_0" rendered="#{notificationView.searchObject.searchFields[0].between}" value="#{notificationView.searchObject.searchFields[0].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_1" value="#{notificationView.searchObject.searchFields[1].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{notificationView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_1" value="#{notificationView.searchObject.searchFields[1].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_1" value="#{notificationView.textOperators}" var="advInputItem1" itemValue="#{advInputItem1}" itemLabel="#{advInputItem1.description}"/>
+					<f:ajax render="p_1"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_1" id="s_1" value="#{notificationView.searchObject.searchFields[1].sortOrder}">
+					<f:selectItems value="#{notificationView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_1" value="#{notificationView.searchObject.searchFields[1].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_1">
+					<p:inputText id="b_1" rendered="#{notificationView.searchObject.searchFields[1].between}" value="#{notificationView.searchObject.searchFields[1].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_2" value="#{notificationView.searchObject.searchFields[2].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{notificationView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_2" value="#{notificationView.searchObject.searchFields[2].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_2" value="#{notificationView.dateOperators}" var="advInputItem2" itemValue="#{advInputItem2}" itemLabel="#{advInputItem2.description}"/>
+					<f:ajax render="p_2"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_2" id="s_2" value="#{notificationView.searchObject.searchFields[2].sortOrder}">
+					<f:selectItems value="#{notificationView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:datePicker id="fi_2" value="#{notificationView.searchObject.searchFields[2].dateCriterion}" pattern="#{userSession.dateTimeFormat}" size="20" showButtonBar="true" showIcon="true" showTime="true"/>
+				<h:panelGroup id="p_2">
+					<p:datePicker id="fb_2" value="#{notificationView.searchObject.searchFields[2].dateBetweenCriterion}" pattern="#{userSession.dateTimeFormat}" size="20" showButtonBar="true" showIcon="true" rendered="#{notificationView.searchObject.searchFields[2].between}" showTime="true"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_3" value="#{notificationView.searchObject.searchFields[3].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{notificationView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_3" value="#{notificationView.searchObject.searchFields[3].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_3" value="#{notificationView.dateOperators}" var="advInputItem3" itemValue="#{advInputItem3}" itemLabel="#{advInputItem3.description}"/>
+					<f:ajax render="p_3"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_3" id="s_3" value="#{notificationView.searchObject.searchFields[3].sortOrder}">
+					<f:selectItems value="#{notificationView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:datePicker id="fi_3" value="#{notificationView.searchObject.searchFields[3].dateCriterion}" pattern="#{userSession.dateTimeFormat}" size="20" showButtonBar="true" showIcon="true" showTime="true"/>
+				<h:panelGroup id="p_3">
+					<p:datePicker id="fb_3" value="#{notificationView.searchObject.searchFields[3].dateBetweenCriterion}" pattern="#{userSession.dateTimeFormat}" size="20" showButtonBar="true" showIcon="true" rendered="#{notificationView.searchObject.searchFields[3].between}" showTime="true"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_4" value="#{notificationView.searchObject.searchFields[4].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{notificationView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_4" value="#{notificationView.searchObject.searchFields[4].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_4" value="#{notificationView.textOperators}" var="advInputItem4" itemValue="#{advInputItem4}" itemLabel="#{advInputItem4.description}"/>
+					<f:ajax render="p_4"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_4" id="s_4" value="#{notificationView.searchObject.searchFields[4].sortOrder}">
+					<f:selectItems value="#{notificationView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:autoComplete minQueryLength="2" maxResults="10" completeMethod="#{notificationView.onCompleteUserName}" id="fi_4" value="#{notificationView.searchObject.searchFields[4].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_4">
+				<p:autoComplete minQueryLength="2" rendered="#{notificationView.searchObject.searchFields[4].between}" maxResults="10" completeMethod="#{notificationView.onCompleteUserName}" id="b_4" value="#{notificationView.searchObject.searchFields[4].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_5" value="#{notificationView.searchObject.searchFields[5].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{notificationView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_5" value="#{notificationView.searchObject.searchFields[5].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_5" value="#{notificationView.dateOperators}" var="advInputItem5" itemValue="#{advInputItem5}" itemLabel="#{advInputItem5.description}"/>
+					<f:ajax render="p_5"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_5" id="s_5" value="#{notificationView.searchObject.searchFields[5].sortOrder}">
+					<f:selectItems value="#{notificationView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:datePicker id="fi_5" value="#{notificationView.searchObject.searchFields[5].dateCriterion}" pattern="#{userSession.dateTimeFormat}" size="20" showButtonBar="true" showIcon="true" showTime="true"/>
+				<h:panelGroup id="p_5">
+					<p:datePicker id="fb_5" value="#{notificationView.searchObject.searchFields[5].dateBetweenCriterion}" pattern="#{userSession.dateTimeFormat}" size="20" showButtonBar="true" showIcon="true" rendered="#{notificationView.searchObject.searchFields[5].between}" showTime="true"/>
+				</h:panelGroup>
+
+			</h:panelGrid>
+			</p:scrollPanel>
+			</p:tab>
+			<p:tab title="#{i18n.search_input_adv}">
+			<h:panelGrid columns="2">
+				<h:outputLabel value="#{i18n.search_input_case}:" styleClass="label-field-mandatory"/>
+				<p:selectBooleanCheckbox value="#{notificationView.searchObject.caseSensitive}"/>
+				<h:outputLabel value="#{i18n.search_input_count}:" styleClass="label-field-mandatory"/>
+				<p:selectBooleanCheckbox value="#{notificationView.searchObject.count}"/>
+				<h:outputLabel value="#{i18n.search_input_filter_match}:" styleClass="label-field-mandatory"/>
+				<p:selectBooleanCheckbox value="#{notificationView.searchObject.exactFilterMatch}"/>
+				<h:outputLabel value="#{i18n.search_input_filter_fetch_size}:" styleClass="label-field-mandatory"/>
+				<p:inputText value="#{notificationView.searchObject.maxResult}" size="5">
+					<f:validateLongRange minimum="1" maximum="1000000"/>
+				</p:inputText>
+				<h:outputLabel value="#{i18n.search_input_visible_fields_label}:" styleClass="label-field-mandatory"/>
+				<p:pickList value="#{notificationView.visibleFields}" var="savedQueryListItem" itemLabel="#{savedQueryListItem.colLabel}" itemValue="#{savedQueryListItem}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchFieldDTOConverter" addLabel="#{i18n.pick_list_add}" addAllLabel="#{i18n.pick_list_add_all}" removeLabel="#{i18n.pick_list_remove}" removeAllLabel="#{i18n.pick_list_remove_all}">
+					<f:facet name="sourceCaption">#{i18n.search_input_all_fields}</f:facet>
+					<f:facet name="targetCaption">#{i18n.search_input_visible_fields}</f:facet>
+				</p:pickList>
+			</h:panelGrid>
+			</p:tab>
+			<p:tab title="#{i18n.search_input_saved_query_title}">
+				<h:panelGrid columns="1">
+					<h:outputLabel styleClass="label-field-mandatory" value="#{i18n.search_input_lbl_saved_query}"/>
+					<p:selectOneListbox id="savedQueryList" value="#{notificationView.selectedSavedQuery}" style="height:150px; width:300px">
+						<f:selectItems value="#{notificationView.savedQueries}"/>
+					</p:selectOneListbox>
+					<h:panelGrid columns="2">
+						<p:commandButton value="#{i18n.search_input_run_saved_query}" action="#{notificationView.runSavedQuery}" ajax="false"/>
+						<p:commandButton value="#{i18n.search_input_delete_saved_query}" action="#{notificationView.deleteSavedQuery}" ajax="false"/>
+					</h:panelGrid>
+				</h:panelGrid>
+			</p:tab>
+		</p:tabView>
+		<br/>
+		<h:panelGrid columns="3">
+			<p:commandButton id="cmdSearch" value="#{i18n.search_input_perform_search}" action="#{notificationView.fetchNotifications}" ajax="false"/>
+			<p:commandButton id="cmdReset" value="#{i18n.command_reset}" action="#{notificationView.initSearchObject}" onclick="PF('dlgSearchInput').hide()" ajax="false"/>
+			<p:commandButton id="cmdCount" value="#{i18n.search_input_perform_count}" actionListener="#{notificationView.countRecords}" onclick="PF('dlgSearchInput').hide()" update="growl" ajax="true"/>
+		</h:panelGrid>
+	</p:dialog>
+
+	<p:menubar>
+		<p:submenu icon="pi pi-file" label="#{i18n.mnu_file}" id="panData_mniFile">
+			<p:menuitem value="#{i18n.action_create}" ajax="true" id="panData_mniCreate" icon="pi pi-plus" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;MAINTAINER')}" action="#{notificationView.openCreateNewNotificationDialog}">
+				<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{notificationView.currentPageURL}"/>
+			</p:menuitem>
+			<p:menuitem value="#{i18n.action_search_input}" ajax="true" icon="pi pi-search" id="panData_mniSearch" onclick="PF('dlgSearchInput').show()"/>
+			<p:menuitem value="#{i18n.search_input_dlg_save_query}" icon="pi pi-save" onclick="PF('dlgSaveQuery').show()"/>
+		</p:submenu>
+		<p:submenu icon="pi pi-refresh" label="#{i18n.mnu_view}">
+			<p:menuitem value="#{i18n.action_refresh}" ajax="false" icon="pi pi-refresh" actionListener="#{notificationView.fetchNotifications}"/>
+		</p:submenu>
+		<p:submenu icon="pi pi-print" label="#{i18n.mnu_export}">
+			<p:menuitem value="#{i18n.action_export_xls}" ajax="false" icon="pi pi-file-excel">
+				<p:dataExporter type="xls" target="panData" fileName="NotificationList"/>
+			</p:menuitem>
+			<p:menuitem value="#{i18n.action_export_pdf}" ajax="false" icon="pi pi-file-pdf">
+				<p:dataExporter type="pdf" target="panData" fileName="NotificationList"/>
+			</p:menuitem>
+		</p:submenu>
+	</p:menubar>
+
+	<br/>
+
+	<p:dataTable id="panData" var="notificationViewItem" rows="50"
+		selectionMode="single"
+		selection="#{notificationView.selectedObject}"
+		loadingMessage="#{i18n.action_fetch_data}"
+		value="#{notificationView.notificationsList}" scrollable="false"
+		paginatorPosition="top" paginatorAlwaysVisible="false" paginator="true" resizableColumns="true"
+		rowKey="#{notificationViewItem.id}"
+		paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+		rowsPerPageTemplate="10,50,100,500,1000">
+		<p:ajax event="rowDblselect" listener="#{notificationView.onDoubleClick}"/>
+
+		<p:column sortBy="#{notificationViewItem.header}" width="100" rendered="#{notificationView.searchObject.searchFields[0].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_notification_header}"/>
+			</f:facet>
+			<h:outputText value="#{notificationViewItem.header}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{notificationViewItem.notification}" width="350" rendered="#{notificationView.searchObject.searchFields[1].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_notification_notification}"/>
+			</f:facet>
+			<h:outputText value="#{notificationViewItem.notification}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{notificationViewItem.notificationStart}" width="120" rendered="#{notificationView.searchObject.searchFields[2].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_notificationview_notificationstart}"/>
+			</f:facet>
+			<h:outputText value="#{notificationViewItem.notificationStart}">
+				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateTimeConverter"/>
+				<f:attribute name="pattern" value="#{userSession.dateTimeFormat}"/>
+				<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{notificationViewItem.notificationEnd}" width="120" rendered="#{notificationView.searchObject.searchFields[3].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_notificationview_notificationend}"/>
+			</f:facet>
+			<h:outputText value="#{notificationViewItem.notificationEnd}">
+				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateTimeConverter"/>
+				<f:attribute name="pattern" value="#{userSession.dateTimeFormat}"/>
+				<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{notificationViewItem.initiatorName}" width="100" rendered="#{notificationView.searchObject.searchFields[4].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_notificationview_initiatorname}"/>
+			</f:facet>
+			<h:outputText value="#{notificationViewItem.initiatorName}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{notificationViewItem.lastUpdate}" width="120" rendered="#{notificationView.searchObject.searchFields[5].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_abstractentitywithid_lastupdate}"/>
+			</f:facet>
+			<h:outputText value="#{notificationViewItem.lastUpdate}">
+				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateTimeConverter"/>
+				<f:attribute name="pattern" value="#{userSession.dateTimeFormat}"/>
+				<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
+			</h:outputText>
+		</p:column>
+	</p:dataTable>
+	<p/>
+
+	<h:outputText styleClass="label-field-mandatory" value="#{i18n.result_total_number_records} #{notificationView.notificationsList.size()}"/>
+	<h:outputText styleClass="label-field-mandatory" rendered="#{notificationView.searchObject.count}" value="&#160;#{i18n.search_input_count_of}&#160;"/>
+	<h:outputText styleClass="label-field-mandatory" rendered="#{notificationView.searchObject.count}" value="#{notificationView.countResult}"/>
+	<p/>
+
+	<p:contextMenu for="panData">
+		<p:menuitem value="#{i18n.action_delete}" ajax="true" icon="pi pi-trash" id="panData_mniDelete" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;MAINTAINER')}" onclick="PF('deleteConfirm').show()"/>
+		<p:menuitem value="#{i18n.action_create}" ajax="true" icon="pi pi-plus" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;MAINTAINER')}" action="#{notificationView.openCreateNewNotificationDialog}">
+			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{notificationView.currentPageURL}"/>
+		</p:menuitem>
+		<p:menuitem value="#{i18n.action_edit}" ajax="true" icon="pi pi-pencil" id="panData_mniUpdate" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;MAINTAINER')}" action="#{notificationView.openEditNotificationDialog}">
+			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{notificationView.currentPageURL}"/>
+		</p:menuitem>
+		<p:menuitem value="#{i18n.action_copy}" ajax="true" icon="pi pi-copy" id="panData_mniCopy" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;MAINTAINER')}" onclick="PF('copyConfirm').show()"/>
+		<p:menuitem value="#{i18n.action_refresh}" ajax="false" type="push" icon="pi pi-refresh" id="panData_mniRefresh" actionListener="#{notificationView.fetchNotifications}"/>
+	</p:contextMenu>
+
+	<p:confirmDialog modal="true" message="#{i18n.dialog_delete_question}" header="#{i18n.dialog_delete_title}" severity="alert" widgetVar="deleteConfirm">
+		<p:commandButton value="#{i18n.command_yes}" oncomplete="PF('deleteConfirm').hide()" actionListener="#{notificationView.deleteNotification}" id="panData_cmdYesDelete" ajax="false"/>
+		<p:commandButton value="#{i18n.command_no}" onclick="PF('deleteConfirm').hide()" type="button"/>
+	</p:confirmDialog>
+
+	<p:confirmDialog modal="true" message="#{i18n.dialog_copy_question}" header="#{i18n.dialog_copy_title}" severity="info" widgetVar="copyConfirm">
+		<p:commandButton value="#{i18n.command_yes}" oncomplete="PF('copyConfirm').hide()" action="#{notificationView.copy}" id="panData_cmdYesCopy" ajax="false"/>
+		<p:commandButton value="#{i18n.command_no}" onclick="PF('copyConfirm').hide()" type="button"/>
+	</p:confirmDialog>
+
+	<p:dialog header="#{i18n.search_input_dlg_save_query}" widgetVar="dlgSaveQuery" modal="true" height="100">
+		<h:panelGrid columns="3">
+			<h:outputLabel value="#{i18n.search_input_lbl_save_query}" styleClass="label-field-mandatory"/>
+			<p:inputText id="txtQueryName" value="#{notificationView.savedQueryName}">
+			</p:inputText>
+			<p:commandButton value="#{i18n.command_save}" action="#{notificationView.saveNewQuery}" ajax="false" onclick="PF('dlgSaveQuery').hide()"/>
+		</h:panelGrid>
+	</p:dialog>
+
+	<p:defaultCommand target=":form:cmdSearch"/>
+
+</ui:define>
+</ui:composition>

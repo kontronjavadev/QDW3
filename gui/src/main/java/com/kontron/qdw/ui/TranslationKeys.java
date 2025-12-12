@@ -32,6 +32,7 @@ public interface TranslationKeys {
     String COL_AGGREGATEDARRIVALVIEW_PLANTCODE = "col_aggregatedarrivalview_plantcode";
     String COL_AGGREGATEDARRIVALVIEW_SUPPLIERNAME = "col_aggregatedarrivalview_suppliername";
     String COL_AGGREGATEDSHIPMENTARRIVALVIEW_ARRIVALMOVEMENTTYPECODE = "col_aggregatedshipmentarrivalview_arrivalmovementtypecode";
+    String COL_AGGREGATEDSHIPMENTARRIVALVIEW_ARRIVALMOVEMENTTYPECODE_TOOLTIP = "col_aggregatedshipmentarrivalview_arrivalmovementtypecode_tooltip";
     String COL_AGGREGATEDSHIPMENTARRIVALVIEW_CUSTCOUNTRYNAME = "col_aggregatedshipmentarrivalview_custcountryname";
     String COL_AGGREGATEDSHIPMENTARRIVALVIEW_CUSTOMERNAME = "col_aggregatedshipmentarrivalview_customername";
     String COL_AGGREGATEDSHIPMENTARRIVALVIEW_MATERIALREVISIONREVISIONNUMBER = "col_aggregatedshipmentarrivalview_materialrevisionrevisionnumber";
@@ -42,7 +43,9 @@ public interface TranslationKeys {
     String COL_AGGREGATEDSHIPMENTARRIVALVIEW_MATREVMATSAPNUMBER = "col_aggregatedshipmentarrivalview_matrevmatsapnumber";
     String COL_AGGREGATEDSHIPMENTARRIVALVIEW_MATREVMATSHORTTEXT = "col_aggregatedshipmentarrivalview_matrevmatshorttext";
     String COL_AGGREGATEDSHIPMENTARRIVALVIEW_PLANTCODE = "col_aggregatedshipmentarrivalview_plantcode";
+    String COL_AGGREGATEDSHIPMENTARRIVALVIEW_PLANTCODE_TOOLTIP = "col_aggregatedshipmentarrivalview_plantcode_tooltip";
     String COL_AGGREGATEDSHIPMENTARRIVALVIEW_SHIPMENTMOVEMENTTYPECODE = "col_aggregatedshipmentarrivalview_shipmentmovementtypecode";
+    String COL_AGGREGATEDSHIPMENTARRIVALVIEW_SHIPMENTMOVEMENTTYPECODE_TOOLTIP = "col_aggregatedshipmentarrivalview_shipmentmovementtypecode_tooltip";
     String COL_AGGREGATEDSHIPMENTARRIVALVIEW_SUPPLIERNAME = "col_aggregatedshipmentarrivalview_suppliername";
     String COL_CUSTOMERVIEW_COUNTRYNAME = "col_customerview_countryname";
     String COL_MATERIALREVISIONBOMITEMSPANEL_MATERIALCLASSCODE = "col_materialrevisionbomitemspanel_materialclasscode";
@@ -68,6 +71,9 @@ public interface TranslationKeys {
     String COL_MATERIALVIEW_SAPNUMBER = "col_materialview_sapnumber";
     String COL_MATERIALVIEW_SEARCHSUBASSEMBLIES = "col_materialview_searchsubassemblies";
     String COL_MATERIALVIEW_SEARCHSUBASSEMBLIES_TOOLTIP = "col_materialview_searchsubassemblies_tooltip";
+    String COL_NOTIFICATIONVIEW_INITIATORNAME = "col_notificationview_initiatorname";
+    String COL_NOTIFICATIONVIEW_NOTIFICATIONEND = "col_notificationview_notificationend";
+    String COL_NOTIFICATIONVIEW_NOTIFICATIONSTART = "col_notificationview_notificationstart";
     String COL_SUPPLIERVIEW_COUNTRYNAME = "col_supplierview_countryname";
     String COL_VERTICALSECTORVIEW_BUSINESSUNITCODE = "col_verticalsectorview_businessunitcode";
     String COMMAND_BACK = "command_back";
@@ -143,6 +149,7 @@ public interface TranslationKeys {
     String FORM_CREATENEWMATERIALDIALOG_TITLE = "form_createnewmaterialdialog_title";
     String FORM_CREATENEWMATERIALTYPEDIALOG_TITLE = "form_createnewmaterialtypedialog_title";
     String FORM_CREATENEWMOVEMENTTYPEDIALOG_TITLE = "form_createnewmovementtypedialog_title";
+    String FORM_CREATENEWNOTIFICATIONDIALOG_TITLE = "form_createnewnotificationdialog_title";
     String FORM_CREATENEWPLANTDIALOG_TITLE = "form_createnewplantdialog_title";
     String FORM_CREATENEWROLEDIALOG_TITLE = "form_createnewroledialog_title";
     String FORM_CREATENEWSUPPLIERDIALOG_TITLE = "form_createnewsupplierdialog_title";
@@ -159,6 +166,7 @@ public interface TranslationKeys {
     String FORM_EDITMATERIALREVISIONDIALOG_TITLE = "form_editmaterialrevisiondialog_title";
     String FORM_EDITMATERIALTYPEDIALOG_TITLE = "form_editmaterialtypedialog_title";
     String FORM_EDITMOVEMENTTYPEDIALOG_TITLE = "form_editmovementtypedialog_title";
+    String FORM_EDITNOTIFICATIONDIALOG_TITLE = "form_editnotificationdialog_title";
     String FORM_EDITPLANTDIALOG_TITLE = "form_editplantdialog_title";
     String FORM_EDITSUPPLIERDIALOG_TITLE = "form_editsupplierdialog_title";
     String FORM_EDITUSERDIALOG_TITLE = "form_edituserdialog_title";
@@ -170,6 +178,7 @@ public interface TranslationKeys {
     String FORM_MATERIALTYPEVIEW_TITLE = "form_materialtypeview_title";
     String FORM_MATERIALVIEW_TITLE = "form_materialview_title";
     String FORM_MOVEMENTTYPEVIEW_TITLE = "form_movementtypeview_title";
+    String FORM_NOTIFICATIONVIEW_TITLE = "form_notificationview_title";
     String FORM_PLANTVIEW_TITLE = "form_plantview_title";
     String FORM_RESETPASSWORDDIALOG_INVALIDLINK = "form_resetpassworddialog_invalidlink";
     String FORM_RESETPASSWORDDIALOG_TITLE = "form_resetpassworddialog_title";
@@ -194,6 +203,7 @@ public interface TranslationKeys {
     String LBL_ASSOC_MATERIAL_OWNERLOCATION = "lbl_assoc_material_ownerlocation";
     String LBL_ASSOC_MATERIALREVISION_MATERIAL = "lbl_assoc_materialrevision_material";
     String LBL_ASSOC_MATERIALREVISION_PLANT = "lbl_assoc_materialrevision_plant";
+    String LBL_ASSOC_NOTIFICATION_INITIATOR = "lbl_assoc_notification_initiator";
     String LBL_ASSOC_SUPPLIER_COUNTRY = "lbl_assoc_supplier_country";
     String LBL_ASSOC_VERTICALSECTOR_BUSINESSUNIT = "lbl_assoc_verticalsector_businessunit";
     String LBL_ATTR_ABSTRACTAGGREGATEDBASE_MONTH = "lbl_attr_abstractaggregatedbase_month";
@@ -238,6 +248,10 @@ public interface TranslationKeys {
     String LBL_ATTR_MATERIALREVISION_REV2 = "lbl_attr_materialrevision_rev2";
     String LBL_ATTR_MATERIALREVISION_REV6 = "lbl_attr_materialrevision_rev6";
     String LBL_ATTR_MATERIALREVISION_REVISIONNUMBER = "lbl_attr_materialrevision_revisionnumber";
+    String LBL_ATTR_NOTIFICATION_HEADER = "lbl_attr_notification_header";
+    String LBL_ATTR_NOTIFICATION_NOTIFICATION = "lbl_attr_notification_notification";
+    String LBL_ATTR_NOTIFICATION_NOTIFICATIONEND = "lbl_attr_notification_notificationend";
+    String LBL_ATTR_NOTIFICATION_NOTIFICATIONSTART = "lbl_attr_notification_notificationstart";
     String LBL_ATTR_ROLE_NAME = "lbl_attr_role_name";
     String LBL_ATTR_SUPPLIER_CITY = "lbl_attr_supplier_city";
     String LBL_ATTR_SUPPLIER_NAME = "lbl_attr_supplier_name";

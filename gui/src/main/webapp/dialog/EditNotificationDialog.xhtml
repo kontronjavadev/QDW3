@@ -1,0 +1,114 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:h="jakarta.faces.html"
+	xmlns:f="jakarta.faces.core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/templates/ui.xhtml">
+
+<f:metadata>
+	<f:viewAction action="#{editNotificationDialog.initView()}"/>
+	<f:viewParam name="selectedObjectId" value="#{editNotificationDialog.selectedObjectId}"/>
+</f:metadata>
+
+<ui:define name="title">#{editNotificationDialog.formTitle}</ui:define>
+
+<ui:define name="content">
+	<p:dialog header="#{i18n.feedback_dialog_header}" modal="true" widgetVar="msgBox" visible="#{(not empty facesContext.messageList)}">
+		<p:messages id="messages" showDetail="true" showSummary="true"/>
+	</p:dialog>
+
+	<h:panelGrid columns="3">
+		<div class="pi pi-file-edit" style="font-size: 2em"/>
+		<h:outputText id="lblFormTitle" value="&#160;#{editNotificationDialog.formTitle}" styleClass="label-form-title"/>
+		<p:ajaxStatus style="width:16px;height:16px;">
+			<f:facet name="start">
+				<h:graphicImage value="/images/ajaxloading.gif"/>
+			</f:facet>
+
+			<f:facet name="complete">
+				<h:outputText value=""/>
+			</f:facet>
+		</p:ajaxStatus>
+	</h:panelGrid>
+
+	<p:tabView id="tabview1" dynamic="true" effect="fade" effectDuration="fast">
+	<p:tab id="tabPanNotification" title="#{i18n.panel_basic_title}">
+	<h:panelGrid columns="6">
+
+		<h:outputLabel value="#{i18n.lbl_attr_notification_header}:" for="txtHeader" styleClass="label-field-optional"/>
+		<p:inputText id="txtHeader" value="#{editNotificationDialog.notification.header}">
+			<f:validateLength maximum="50"/>
+		</p:inputText>
+		<p:tooltip for="txtHeader" value=""/>
+		<h:outputLabel/>
+		<h:outputLabel/>
+		<h:outputLabel/>
+
+		<h:outputLabel value="#{i18n.lbl_attr_notification_notification}:" for="txtNotification" styleClass="label-field-optional"/>
+		<p:inputTextarea style="width:200px;height:80px;" id="txtNotification" value="#{editNotificationDialog.notification.notification}">
+			<f:validateLength maximum="500"/>
+		</p:inputTextarea>
+		<p:tooltip for="txtNotification" value=""/>
+		<h:outputLabel/>
+		<h:outputLabel/>
+		<h:outputLabel/>
+
+		<h:outputLabel value="#{i18n.lbl_attr_notification_notificationstart} *:" for="txtNotificationStart" styleClass="label-field-mandatory"/>
+		<p:datePicker id="txtNotificationStart" value="#{editNotificationDialog.notification.notificationStart}" pattern="#{userSession.dateTimeFormat}" showButtonBar="true" showIcon="true" showOnFocus="false">
+			<f:validateRequired/>
+		</p:datePicker>
+		<p:tooltip for="txtNotificationStart" value=""/>
+
+		<h:outputLabel value="#{i18n.lbl_attr_notification_notificationend}:" for="txtNotificationEnd" styleClass="label-field-optional"/>
+		<p:datePicker id="txtNotificationEnd" value="#{editNotificationDialog.notification.notificationEnd}" pattern="#{userSession.dateTimeFormat}" showButtonBar="true" showIcon="true" showOnFocus="false">
+		</p:datePicker>
+		<p:tooltip for="txtNotificationEnd" value=""/>
+
+	</h:panelGrid>
+	</p:tab>
+	<p:tab id="tabPanAdministration" title="#{i18n.panel_admin_title}">
+	<h:panelGrid columns="3">
+
+		<h:outputLabel value="#{i18n.lbl_attr_abstractentitywithid_id}:" for="txtId" styleClass="label-field-optional"/>
+		<p:inputText id="txtId" value="#{editNotificationDialog.notification.id}" readonly="true">
+		</p:inputText>
+		<p:tooltip for="txtId" value=""/>
+
+		<h:outputLabel value="#{i18n.lbl_attr_abstractentitywithid_version}:" for="txtVersion" styleClass="label-field-optional"/>
+		<p:inputText id="txtVersion" value="#{editNotificationDialog.notification.version}" readonly="true">
+		</p:inputText>
+		<p:tooltip for="txtVersion" value=""/>
+
+		<h:outputLabel value="#{i18n.lbl_attr_abstractentitywithid_creationdate}:" for="txtCreationDate" styleClass="label-field-optional"/>
+		<p:inputText id="txtCreationDate" value="#{editNotificationDialog.notification.creationDate}" readonly="true">
+			<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateTimeConverter"/>
+			<f:attribute name="pattern" value="#{userSession.dateTimeFormat}"/>
+			<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
+		</p:inputText>
+		<p:tooltip for="txtCreationDate" value=""/>
+
+		<h:outputLabel value="#{i18n.lbl_attr_abstractentitywithid_lastupdate}:" for="txtLastUpdate" styleClass="label-field-optional"/>
+		<p:inputText id="txtLastUpdate" value="#{editNotificationDialog.notification.lastUpdate}" readonly="true">
+			<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateTimeConverter"/>
+			<f:attribute name="pattern" value="#{userSession.dateTimeFormat}"/>
+			<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
+		</p:inputText>
+		<p:tooltip for="txtLastUpdate" value=""/>
+
+		<h:outputLabel value="#{i18n.lbl_assoc_notification_initiator}:" for="cboInitiator" styleClass="label-field-optional"/>
+		<h:outputText styleClass="label-field-value" id="cboInitiator" value="#{editNotificationDialog.notification.initiator.name}"/>
+		<p:tooltip for="cboInitiator" value=""/>
+
+	</h:panelGrid>
+	</p:tab>
+	</p:tabView>
+
+	<p/>
+
+	<h:panelGrid columns="2">
+		<p:commandButton id="cmdSave" action="#{editNotificationDialog.save}" value="#{i18n.command_save}" ajax="false"/>
+		<p:commandButton id="cmdBack" value="#{i18n.command_back}" action="#{userSession.getLastPage}" immediate="true" ajax="false"/>
+	</h:panelGrid>
+
+</ui:define>
+</ui:composition>

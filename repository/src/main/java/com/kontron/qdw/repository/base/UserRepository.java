@@ -13,9 +13,9 @@ import com.kontron.qdw.domain.base.*;
 public class UserRepository extends AbstractRepository<User, Long> {
     @Generated
     private static final String PARAM_NAME = "name";
-    private static final String PARAM_EMAIL = "email";
     @Generated
     private static final String PARAM_ID = "id";
+    private static final String PARAM_EMAIL = "email";
 
     /**
      * Find a persistent user object by using the provided parameters

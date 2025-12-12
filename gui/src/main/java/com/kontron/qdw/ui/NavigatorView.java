@@ -91,6 +91,11 @@ public class NavigatorView implements Serializable {
             if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_USER_ADMINISTRATOR))
                 new DefaultTreeNode<>(VIEW_TYPE,
                         new TreeNavigatorItem(bundle.getString(FORM_ROLEVIEW_TITLE), req.getContextPath() + "/view/RoleView.jsf"), itemGroup0001);
+
+            if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_MAINTAINER))
+                new DefaultTreeNode<>(VIEW_TYPE,
+                        new TreeNavigatorItem(bundle.getString(FORM_NOTIFICATIONVIEW_TITLE), req.getContextPath() + "/view/NotificationView.jsf"),
+                        itemGroup0001);
         }
 
         if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR)) {
