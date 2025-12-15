@@ -17,17 +17,19 @@ import jakarta.faces.view.*;
 import java.text.*;
 import static com.kontron.qdw.ui.UserSession.*;
 import com.kontron.qdw.ui.*;
+import com.kontron.qdw.ui.view.util.SuperView;
 import com.kontron.qdw.service.*;
 import com.kontron.qdw.dto.material.*;
 import jakarta.faces.model.*;
 import jakarta.inject.*;
 import net.sourceforge.jbizmo.commons.search.dto.*;
+import net.sourceforge.jbizmo.commons.annotation.Customized;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
 import java.io.*;
 
 @Named("aggregatedShipmentView")
 @ViewScoped
-public class AggregatedShipmentView extends AbstractSearchableView implements Serializable {
+public class AggregatedShipmentView extends SuperView implements Serializable {
     @Generated
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     @Generated
@@ -90,6 +92,165 @@ public class AggregatedShipmentView extends AbstractSearchableView implements Se
         this.countryService = countryService;
         this.materialService = materialService;
         this.queryManager = queryManager;
+    }
+
+    /**
+     * Initialize view
+     */
+    @Customized
+    public void initView() {
+        logger.debug("Initialize view");
+
+        bundle = ResourceBundle.getBundle(DEFAULT_BUNDLE_NAME, userSession.getLocale());
+
+        // Check if user is allowed to open this page!
+        if (!userSession.checkAuthorization(true, ROLE_ADMINISTRATOR, ROLE_READONLY)) {
+            return;
+        }
+
+
+        formTitle = bundle.getString(FORM_AGGREGATEDSHIPMENTVIEW_TITLE);
+
+        if (searchObj == null) {
+            // Check if previous search exists!
+            final SearchDTO lastSearch = queryManager.getLastQuery(userSession.getPrincipal().getId(), VIEW_ID);
+            if (lastSearch != null) {
+                searchObj = lastSearch;
+                prepareAfterLoad();
+            }
+            else {
+                initSearchObject();
+            }
+        }
+
+        initProperties();
+        fetchAggregatedShipments();
+
+        logger.debug("View initialization finished");
+    }
+
+    /**
+     * Initialize search object
+     */
+    @Customized
+    public void initSearchObject() {
+        searchObj = new SearchDTO();
+        int colOrderId = -1;
+
+        // Initialize search object
+        searchObj.setMaxResult(1000);
+        searchObj.setExactFilterMatch(true);
+        searchObj.setCaseSensitive(false);
+        searchObj.setCount(false);
+
+        refreshFormatSettings();
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, AggregatedShipmentSearchDTO.SELECT_PLANTCODE,
+                bundle.getString(COL_AGGREGATEDSHIPMENTVIEW_PLANTCODE), SearchFieldDataTypeEnum.STRING, 80);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, AggregatedShipmentSearchDTO.SELECT_MOVEMENTTYPECODE,
+                bundle.getString(COL_AGGREGATEDSHIPMENTVIEW_MOVEMENTTYPECODE), SearchFieldDataTypeEnum.STRING, 80);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, AggregatedShipmentSearchDTO.SELECT_CUSTOMERNAME,
+                bundle.getString(COL_AGGREGATEDSHIPMENTVIEW_CUSTOMERNAME), SearchFieldDataTypeEnum.STRING, 200);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, AggregatedShipmentSearchDTO.SELECT_CUSTCOUNTRYNAME,
+                bundle.getString(COL_AGGREGATEDSHIPMENTVIEW_CUSTCOUNTRYNAME), SearchFieldDataTypeEnum.STRING, 150);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, AggregatedShipmentSearchDTO.SELECT_MATREVMATLMATERIALNUMBER,
+                bundle.getString(COL_AGGREGATEDSHIPMENTVIEW_MATREVMATLMATERIALNUMBER), SearchFieldDataTypeEnum.STRING, 150);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, AggregatedShipmentSearchDTO.SELECT_MATREVMATSAPNUMBER,
+                bundle.getString(COL_AGGREGATEDSHIPMENTVIEW_MATREVMATSAPNUMBER), SearchFieldDataTypeEnum.STRING, 150);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, AggregatedShipmentSearchDTO.SELECT_MATREVMATSHORTTEXT,
+                bundle.getString(COL_AGGREGATEDSHIPMENTVIEW_MATREVMATSHORTTEXT), SearchFieldDataTypeEnum.STRING, 250);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, AggregatedShipmentSearchDTO.SELECT_MATREVMATMATERIALTYPECODE,
+                bundle.getString(COL_AGGREGATEDSHIPMENTVIEW_MATREVMATMATERIALTYPECODE), SearchFieldDataTypeEnum.STRING, 80);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, AggregatedShipmentSearchDTO.SELECT_MATREVMATMATERIALCLASSCODE,
+                bundle.getString(COL_AGGREGATEDSHIPMENTVIEW_MATREVMATMATERIALCLASSCODE), SearchFieldDataTypeEnum.STRING, 120);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, AggregatedShipmentSearchDTO.SELECT_MATREVMATMATERIALHIERARCHY,
+                bundle.getString(LBL_ATTR_MATERIAL_MATERIALHIERARCHY), SearchFieldDataTypeEnum.STRING, 150);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, AggregatedShipmentSearchDTO.SELECT_MATREVMATOWNERLOCATIONCODE,
+                bundle.getString(COL_AGGREGATEDSHIPMENTVIEW_MATREVMATOWNERLOCATIONCODE), SearchFieldDataTypeEnum.STRING, 100);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, AggregatedShipmentSearchDTO.SELECT_MATREVREVISIONNUMBER,
+                bundle.getString(COL_AGGREGATEDSHIPMENTVIEW_MATREVREVISIONNUMBER), SearchFieldDataTypeEnum.STRING, 150);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, AggregatedShipmentSearchDTO.SELECT_YEAR,
+                bundle.getString(LBL_ATTR_ABSTRACTAGGREGATEDBASE_YEAR), SearchFieldDataTypeEnum.INTEGER, 80);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, AggregatedShipmentSearchDTO.SELECT_MONTH,
+                bundle.getString(LBL_ATTR_ABSTRACTAGGREGATEDBASE_MONTH), SearchFieldDataTypeEnum.INTEGER, 80);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, AggregatedShipmentSearchDTO.SELECT_SHIPMENTS,
+                bundle.getString(LBL_ATTR_AGGREGATEDSHIPMENT_SHIPMENTS), SearchFieldDataTypeEnum.INTEGER, 80);
+
+
+        visibleFields = new DualListModel<>();
+        visibleFields.setSource(new ArrayList<>());
+        visibleFields.setTarget(new ArrayList<>());
+
+        for (final SearchFieldDTO d : searchObj.getSearchFields()) {
+            if (!d.isVisible()) {
+                visibleFields.getSource().add(d);
+            }
+            else {
+                visibleFields.getTarget().add(d);
+            }
+        }
+    }
+
+    /**
+     * Perform data fetch operation
+     */
+    @Customized
+    public void fetchAggregatedShipments() {
+        logger.debug("Perform data fetch operation");
+
+        try {
+            preSearch();
+        }
+        catch (final SearchInputFieldValidationException e) {
+            MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_INFO, SEARCH_INPUT_VALIDATION, "", e.getSearchFieldName());
+            return;
+        }
+
+        refreshFormatSettings();
+        setCountFilterDependent();
+
+        try {
+            aggregatedShipmentsList = aggregatedShipmentService.searchAllAggregatedShipments(searchObj);
+
+            if (searchObj.isCount()) {
+                countResult = aggregatedShipmentService.countAllAggregatedShipments(searchObj);
+            }
+
+            queryManager.saveQuery(userSession.getPrincipal().getId(), VIEW_ID, null, searchObj);
+        }
+        catch (final Exception e) {
+            logger.error("Error while fetching data!", e);
+
+            MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_ERROR, OPERATION_FETCH_FAIL, e);
+        }
+        finally {
+            postSearch();
+        }
+    }
+
+    @Override
+    protected String getViewName() {
+        return VIEW_ID;
+    }
+
+    @Override
+    public void resetSearchObject() {
+        initSearchObject();
+        fetchAggregatedShipments();
     }
 
     /**
@@ -208,6 +369,7 @@ public class AggregatedShipmentView extends AbstractSearchableView implements Se
     /**
      * @return the name of the selected saved query
      */
+    @Override
     @Generated
     public String getSelectedSavedQuery() {
         return selectedSavedQuery;
@@ -239,146 +401,6 @@ public class AggregatedShipmentView extends AbstractSearchableView implements Se
         searchObj.setNumberFormat(userSession.getNumberFormat());
         searchObj.setDecimalSeparator(DecimalFormatSymbols.getInstance(userSession.getLocale()).getDecimalSeparator());
         searchObj.setGroupingSeparator(DecimalFormatSymbols.getInstance(userSession.getLocale()).getGroupingSeparator());
-    }
-
-    /**
-     * Initialize search object
-     */
-    @Generated
-    public void initSearchObject() {
-        searchObj = new SearchDTO();
-        int colOrderId = -1;
-
-        // Initialize search object
-        searchObj.setMaxResult(1000);
-        searchObj.setExactFilterMatch(true);
-        searchObj.setCaseSensitive(false);
-        searchObj.setCount(false);
-
-        refreshFormatSettings();
-
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, AggregatedShipmentSearchDTO.SELECT_PLANTCODE,
-                bundle.getString(COL_AGGREGATEDSHIPMENTVIEW_PLANTCODE), SearchFieldDataTypeEnum.STRING, 80);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, AggregatedShipmentSearchDTO.SELECT_MOVEMENTTYPECODE,
-                bundle.getString(COL_AGGREGATEDSHIPMENTVIEW_MOVEMENTTYPECODE), SearchFieldDataTypeEnum.STRING, 80);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, AggregatedShipmentSearchDTO.SELECT_CUSTOMERNAME,
-                bundle.getString(COL_AGGREGATEDSHIPMENTVIEW_CUSTOMERNAME), SearchFieldDataTypeEnum.STRING, 200);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, AggregatedShipmentSearchDTO.SELECT_CUSTCOUNTRYNAME,
-                bundle.getString(COL_AGGREGATEDSHIPMENTVIEW_CUSTCOUNTRYNAME), SearchFieldDataTypeEnum.STRING, 150);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, AggregatedShipmentSearchDTO.SELECT_MATREVMATLMATERIALNUMBER,
-                bundle.getString(COL_AGGREGATEDSHIPMENTVIEW_MATREVMATLMATERIALNUMBER), SearchFieldDataTypeEnum.STRING, 150);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, AggregatedShipmentSearchDTO.SELECT_MATREVMATSAPNUMBER,
-                bundle.getString(COL_AGGREGATEDSHIPMENTVIEW_MATREVMATSAPNUMBER), SearchFieldDataTypeEnum.STRING, 150);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, AggregatedShipmentSearchDTO.SELECT_MATREVMATSHORTTEXT,
-                bundle.getString(COL_AGGREGATEDSHIPMENTVIEW_MATREVMATSHORTTEXT), SearchFieldDataTypeEnum.STRING, 250);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, AggregatedShipmentSearchDTO.SELECT_MATREVMATMATERIALTYPECODE,
-                bundle.getString(COL_AGGREGATEDSHIPMENTVIEW_MATREVMATMATERIALTYPECODE), SearchFieldDataTypeEnum.STRING, 80);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, AggregatedShipmentSearchDTO.SELECT_MATREVMATMATERIALCLASSCODE,
-                bundle.getString(COL_AGGREGATEDSHIPMENTVIEW_MATREVMATMATERIALCLASSCODE), SearchFieldDataTypeEnum.STRING, 120);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, AggregatedShipmentSearchDTO.SELECT_MATREVMATMATERIALHIERARCHY,
-                bundle.getString(LBL_ATTR_MATERIAL_MATERIALHIERARCHY), SearchFieldDataTypeEnum.STRING, 150);
-
-        final var f11 = new JSFSearchFieldDTO(searchObj, ++colOrderId, AggregatedShipmentSearchDTO.SELECT_MATREVMATOWNERLOCATIONCODE,
-                bundle.getString(COL_AGGREGATEDSHIPMENTVIEW_MATREVMATOWNERLOCATIONCODE), SearchFieldDataTypeEnum.STRING, 100);
-        f11.setVisible(false);
-
-
-        final var f12 = new JSFSearchFieldDTO(searchObj, ++colOrderId, AggregatedShipmentSearchDTO.SELECT_MATREVREVISIONNUMBER,
-                bundle.getString(COL_AGGREGATEDSHIPMENTVIEW_MATREVREVISIONNUMBER), SearchFieldDataTypeEnum.STRING, 150);
-        f12.setVisible(false);
-
-
-        final var f13 = new JSFSearchFieldDTO(searchObj, ++colOrderId, AggregatedShipmentSearchDTO.SELECT_YEAR,
-                bundle.getString(LBL_ATTR_ABSTRACTAGGREGATEDBASE_YEAR), SearchFieldDataTypeEnum.INTEGER, 80);
-        f13.setVisible(false);
-
-
-        final var f14 = new JSFSearchFieldDTO(searchObj, ++colOrderId, AggregatedShipmentSearchDTO.SELECT_MONTH,
-                bundle.getString(LBL_ATTR_ABSTRACTAGGREGATEDBASE_MONTH), SearchFieldDataTypeEnum.INTEGER, 80);
-        f14.setVisible(false);
-
-
-        final var f15 = new JSFSearchFieldDTO(searchObj, ++colOrderId, AggregatedShipmentSearchDTO.SELECT_SHIPMENTS,
-                bundle.getString(LBL_ATTR_AGGREGATEDSHIPMENT_SHIPMENTS), SearchFieldDataTypeEnum.INTEGER, 80);
-        f15.setVisible(false);
-
-
-        visibleFields = new DualListModel<>();
-        visibleFields.setSource(new ArrayList<>());
-        visibleFields.setTarget(new ArrayList<>());
-
-        for (final SearchFieldDTO d : searchObj.getSearchFields())
-            if (!d.isVisible())
-                visibleFields.getSource().add(d);
-            else
-                visibleFields.getTarget().add(d);
-    }
-
-    /**
-     * Initialize view
-     */
-    @Generated
-    public void initView() {
-        logger.debug("Initialize view");
-
-        bundle = ResourceBundle.getBundle(DEFAULT_BUNDLE_NAME, userSession.getLocale());
-
-        // Check if user is allowed to open this page!
-        if (!userSession.checkAuthorization(true, ROLE_ADMINISTRATOR, ROLE_READONLY))
-            return;
-
-
-        formTitle = bundle.getString(FORM_AGGREGATEDSHIPMENTVIEW_TITLE);
-
-        // Check if previous search exists!
-        final SearchDTO lastSearch = queryManager.getLastQuery(userSession.getPrincipal().getId(), VIEW_ID);
-
-        if (lastSearch != null) {
-            searchObj = lastSearch;
-
-            prepareAfterLoad();
-        }
-        else
-            initSearchObject();
-
-        fetchAggregatedShipments();
-
-        logger.debug("View initialization finished");
-    }
-
-    /**
-     * Perform data fetch operation
-     */
-    @Generated
-    public void fetchAggregatedShipments() {
-        logger.debug("Perform data fetch operation");
-
-        try {
-            preSearch();
-        }
-        catch (final SearchInputFieldValidationException e) {
-            MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_INFO, SEARCH_INPUT_VALIDATION, "", e.getSearchFieldName());
-            return;
-        }
-
-        refreshFormatSettings();
-
-        try {
-            aggregatedShipmentsList = aggregatedShipmentService.searchAllAggregatedShipments(searchObj);
-
-            if (searchObj.isCount())
-                countResult = aggregatedShipmentService.countAllAggregatedShipments(searchObj);
-
-            queryManager.saveQuery(userSession.getPrincipal().getId(), VIEW_ID, null, searchObj);
-        }
-        catch (final Exception e) {
-            logger.error("Error while fetching data!", e);
-
-            MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_ERROR, OPERATION_FETCH_FAIL, e);
-        }
-        finally {
-            postSearch();
-        }
     }
 
     /**
