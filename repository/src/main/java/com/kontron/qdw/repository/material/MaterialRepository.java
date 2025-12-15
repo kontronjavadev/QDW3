@@ -369,4 +369,64 @@ public class MaterialRepository extends AbstractRepository<Material, Long> {
         bean.setMaterialType(materialType);
     }
 
+    /**
+     * Get all product lines of this material
+     * @param id
+     * @return a list of product lines of this material
+     */
+    @Generated
+    public List<ProductLine> getProductLines(long id) {
+        final TypedQuery<ProductLine> query = em.createNamedQuery(Material.NQ_GET_PRODUCTLINES, ProductLine.class);
+        query.setParameter(PARAM_ID, id);
+
+        return query.getResultList();
+    }
+
+    /**
+     * Get all material number sets of this material
+     * @param id
+     * @return a list of material number sets of this material
+     */
+    @Generated
+    public List<MaterialNumberSet> getMaterialNumberSets(long id) {
+        final TypedQuery<MaterialNumberSet> query = em.createNamedQuery(Material.NQ_GET_MATERIALNUMBERSETS, MaterialNumberSet.class);
+        query.setParameter(PARAM_ID, id);
+
+        return query.getResultList();
+    }
+
+    /**
+     * Remove the persistent product line object from the corresponding list of this material
+     * @param id
+     * @param productLine
+     */
+    @Generated
+    public void removeProductLineFromProductLines(long id, ProductLine productLine) {
+        final Material bean = findById(id, true);
+
+        for (final ProductLine item : bean.getProductLines())
+            if (productLine.getId() == item.getId()) {
+                bean.getProductLines().remove(item);
+                return;
+            }
+    }
+
+    /**
+     * Add the persistent product line object to the corresponding list of this material
+     * @param id
+     * @param productLine
+     * @throws DuplicateCollectionEntryException if the caller tries to add an element to the collection twice
+     */
+    @Generated
+    public void addProductLineToProductLines(long id, ProductLine productLine) {
+        final Material bean = findById(id, true);
+
+        // Prevent duplicate entries
+        for (final ProductLine item : bean.getProductLines())
+            if (productLine.getId() == item.getId())
+                throw new DuplicateCollectionEntryException("Entry already exists in this collection!");
+
+        bean.getProductLines().add(productLine);
+    }
+
 }

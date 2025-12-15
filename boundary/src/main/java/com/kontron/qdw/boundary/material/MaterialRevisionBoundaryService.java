@@ -286,4 +286,24 @@ public class MaterialRevisionBoundaryService {
         return targetObject.getId();
     }
 
+    /**
+     * Find material revision by its ID
+     * @param id
+     * @return the material revision object
+     */
+    @Generated
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public MaterialRevisionListDTO findListMaterialRevision(long id) {
+        // Find persistent object
+        final MaterialRevision materialRevision = repository.findById(id, true);
+
+        final var dto = new MaterialRevisionListDTO();
+        dto.setId(materialRevision.getId());
+        dto.setRevisionNumber(materialRevision.getRevisionNumber());
+        dto.setPlantCode(materialRevision.getPlant().getCode());
+
+        return dto;
+    }
+
 }

@@ -1,16 +1,18 @@
 package com.kontron.qdw.boundary.base;
 
+import com.kontron.qdw.repository.base.*;
+import net.sourceforge.jbizmo.commons.search.exception.*;
+import static net.sourceforge.jbizmo.commons.jpa.AbstractRepository.WILDCARD;
+import com.kontron.qdw.dto.base.*;
+import com.kontron.qdw.domain.base.*;
 import jakarta.validation.ConstraintViolationException;
 import java.util.*;
-import com.kontron.qdw.repository.base.*;
 import jakarta.inject.*;
 import jakarta.ejb.*;
 import jakarta.annotation.security.*;
-import net.sourceforge.jbizmo.commons.search.exception.*;
 import net.sourceforge.jbizmo.commons.search.dto.*;
-import com.kontron.qdw.dto.base.*;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
-import com.kontron.qdw.domain.base.*;
+import static net.sourceforge.jbizmo.commons.jpa.AbstractRepository.SMALL_LIST_SIZE;
 
 @Stateless
 public class MovementTypeBoundaryService {
@@ -154,6 +156,37 @@ public class MovementTypeBoundaryService {
         final MovementType targetObject = repository.copy(sourceObject, null, loggedOnUserId);
 
         return targetObject.getCode();
+    }
+
+    /**
+     * Search for movement type objects
+     * @param filter
+     * @return a list of movement type objects
+     * @throws GeneralSearchException if the search operation has failed
+     */
+    @Generated
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public List<MovementTypeListDTO> findMovementTypes(String filter) {
+        // Collect the select tokens of all fields that should be fetched
+        final var selectTokens = new ArrayList<String>();
+        selectTokens.add(MovementTypeListDTO.SELECT_CODE);
+
+        // Initialize the search object
+        final var searchObj = new SearchDTO();
+        searchObj.setExactFilterMatch(true);
+        searchObj.setCaseSensitive(true);
+        searchObj.setMaxResult(SMALL_LIST_SIZE);
+        searchObj.setFromClause("from MovementType a");
+
+        if (filter != null && !filter.isEmpty() && !filter.equals(WILDCARD)) {
+            final var filterField = searchObj.addSearchField(MovementTypeListDTO.SELECT_CODE, SearchFieldDataTypeEnum.STRING);
+            filterField.setFilterCriteria(filter + WILDCARD);
+            filterField.setSortIndex(1);
+            filterField.setSortOrder(SortDirectionEnum.ASC);
+        }
+
+        return repository.search(searchObj, MovementTypeListDTO.class, selectTokens);
     }
 
 }

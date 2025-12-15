@@ -1,0 +1,161 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:h="jakarta.faces.html"
+	xmlns:f="jakarta.faces.core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/templates/ui.xhtml">
+
+<f:metadata>
+	<f:viewAction action="#{viewArrivalDialog.initView()}"/>
+	<f:viewParam name="selectedObjectId" value="#{viewArrivalDialog.selectedObjectId}"/>
+</f:metadata>
+
+<ui:define name="title">#{viewArrivalDialog.formTitle}</ui:define>
+
+<ui:define name="content">
+	<p:dialog header="#{i18n.feedback_dialog_header}" modal="true" widgetVar="msgBox" visible="#{(not empty facesContext.messageList)}">
+		<p:messages id="messages" showDetail="true" showSummary="true"/>
+	</p:dialog>
+
+	<h:panelGrid columns="3">
+		<div class="pi pi-file" style="font-size: 2em"/>
+		<h:outputText id="lblFormTitle" value="&#160;#{viewArrivalDialog.formTitle}" styleClass="label-form-title"/>
+		<p:ajaxStatus style="width:16px;height:16px;">
+			<f:facet name="start">
+				<h:graphicImage value="/images/ajaxloading.gif"/>
+			</f:facet>
+
+			<f:facet name="complete">
+				<h:outputText value=""/>
+			</f:facet>
+		</p:ajaxStatus>
+	</h:panelGrid>
+
+	<p:tabView id="tabview1" dynamic="true" effect="fade" effectDuration="fast">
+	<p:tab id="tabPanArrival" title="#{i18n.panel_basic_title}">
+	<h:panelGrid columns="6">
+
+		<h:outputLabel value="#{i18n.lbl_assoc_arrival_plant}:" for="cboPlant" styleClass="label-field-optional"/>
+		<h:outputText styleClass="label-field-value" id="cboPlant" value="#{viewArrivalDialog.arrival.plant.code}"/>
+		<p:tooltip for="cboPlant" value=""/>
+
+		<h:outputLabel value="#{i18n.lbl_assoc_arrival_supplier}:" for="cboSupplier" styleClass="label-field-optional"/>
+		<h:outputText styleClass="label-field-value" id="cboSupplier" value="#{viewArrivalDialog.arrival.supplier.name}"/>
+		<p:tooltip for="cboSupplier" value=""/>
+
+		<h:outputLabel value="#{i18n.lbl_attr_serialobject_serialnumber}:" for="txtSerialObjectSerialNumber" styleClass="label-field-optional"/>
+		<p:inputText id="txtSerialObjectSerialNumber" value="#{viewArrivalDialog.arrival.serialObjectSerialNumber}" readonly="true">
+		</p:inputText>
+		<p:tooltip for="txtSerialObjectSerialNumber" value=""/>
+
+		<h:outputLabel value="#{i18n.lbl_assoc_arrival_serialobject}:" for="cboSerialObject" styleClass="label-field-optional"/>
+		<h:outputText styleClass="label-field-value" id="cboSerialObject" value="#{viewArrivalDialog.arrival.serialObject.id}"/>
+		<p:tooltip for="cboSerialObject" value=""/>
+
+		<h:outputLabel value="#{i18n.lbl_attr_arrival_arrivaldate}:" for="txtArrivalDate" styleClass="label-field-optional"/>
+		<p:inputText id="txtArrivalDate" value="#{viewArrivalDialog.arrival.arrivalDate}" readonly="true">
+			<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateConverter"/>
+			<f:attribute name="pattern" value="#{userSession.dateFormat}"/>
+			<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
+		</p:inputText>
+		<p:tooltip for="txtArrivalDate" value=""/>
+
+		<h:outputLabel value="#{i18n.field_viewarrivaldialog_txtordernumber}:" for="txtOrderNumber" styleClass="label-field-optional"/>
+		<p:inputText id="txtOrderNumber" value="#{viewArrivalDialog.arrival.orderNumber}" readonly="true">
+		</p:inputText>
+		<p:tooltip for="txtOrderNumber" value=""/>
+
+		<h:outputLabel value="#{i18n.lbl_assoc_materialrevision_material}:" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;SUPERUSER')}" for="cboMaterialRevisionMaterial" styleClass="label-field-optional"/>
+		<p:commandLink rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;SUPERUSER')}" id="cboMaterialRevisionMaterial" style="font-weight: bold;color: #0063ac" action="#{viewArrivalDialog.openViewMaterialDialogLink}">
+			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{viewArrivalDialog.currentPageURL}"/>
+			<h:outputText value="#{viewArrivalDialog.arrival.materialRevisionMaterial.materialNumber}"/>
+		</p:commandLink>
+		<h:outputLabel value="#{i18n.lbl_assoc_materialrevision_material}:" rendered="#{!userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;SUPERUSER')}" for="cboMaterialRevisionMaterialAltLbl" styleClass="label-field-optional"/>
+		<h:outputText styleClass="label-field-value" rendered="#{!userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;SUPERUSER')}" id="cboMaterialRevisionMaterialAltLbl" value="#{viewArrivalDialog.arrival.materialRevisionMaterial.materialNumber}"/>
+		<p:tooltip for="cboMaterialRevisionMaterial" value=""/>
+
+		<h:outputLabel value="#{i18n.field_viewarrivaldialog_txtmaterialsapnumber}:" for="txtMaterialSapNumber" styleClass="label-field-optional"/>
+		<p:inputText id="txtMaterialSapNumber" value="#{viewArrivalDialog.arrival.materialSapNumber}" readonly="true">
+		</p:inputText>
+		<p:tooltip for="txtMaterialSapNumber" value=""/>
+
+		<h:outputLabel value="#{i18n.field_viewarrivaldialog_cbomaterialrevision}:" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;SUPERUSER')}" for="cboMaterialRevision" styleClass="label-field-optional"/>
+		<p:commandLink rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;SUPERUSER')}" id="cboMaterialRevision" style="font-weight: bold;color: #0063ac" action="#{viewArrivalDialog.openViewMaterialRevisionDialogLink}">
+			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{viewArrivalDialog.currentPageURL}"/>
+			<h:outputText value="#{viewArrivalDialog.arrival.materialRevision.id}"/>
+		</p:commandLink>
+		<h:outputLabel value="#{i18n.field_viewarrivaldialog_cbomaterialrevision}:" rendered="#{!userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;SUPERUSER')}" for="cboMaterialRevisionAltLbl" styleClass="label-field-optional"/>
+		<h:outputText styleClass="label-field-value" rendered="#{!userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;SUPERUSER')}" id="cboMaterialRevisionAltLbl" value="#{viewArrivalDialog.arrival.materialRevision.id}"/>
+		<p:tooltip for="cboMaterialRevision" value=""/>
+		<h:outputLabel/>
+		<h:outputLabel/>
+		<h:outputLabel/>
+
+		<h:outputLabel value="#{i18n.lbl_attr_material_shorttext}:" for="txtMaterialShortText" styleClass="label-field-optional"/>
+		<p:inputText id="txtMaterialShortText" value="#{viewArrivalDialog.arrival.materialShortText}" readonly="true">
+		</p:inputText>
+		<p:tooltip for="txtMaterialShortText" value=""/>
+		<h:outputLabel/>
+		<h:outputLabel/>
+		<h:outputLabel/>
+
+		<h:outputLabel value="#{i18n.lbl_assoc_material_materialtype}:" for="cboMaterialRevisionMaterialType" styleClass="label-field-optional"/>
+		<h:outputText styleClass="label-field-value" id="cboMaterialRevisionMaterialType" value="#{viewArrivalDialog.arrival.materialRevisionMaterialType.code}"/>
+		<p:tooltip for="cboMaterialRevisionMaterialType" value=""/>
+
+		<h:outputLabel value="#{i18n.lbl_assoc_material_materialclass}:" for="cboMaterialRevisionMaterialClass" styleClass="label-field-optional"/>
+		<h:outputText styleClass="label-field-value" id="cboMaterialRevisionMaterialClass" value="#{viewArrivalDialog.arrival.materialRevisionMaterialClass.code}"/>
+		<p:tooltip for="cboMaterialRevisionMaterialClass" value=""/>
+
+		<h:outputLabel value="#{i18n.lbl_assoc_arrival_movementtype}:" for="cboMovementType" styleClass="label-field-optional"/>
+		<h:outputText styleClass="label-field-value" id="cboMovementType" value="#{viewArrivalDialog.arrival.movementType.code}"/>
+		<p:tooltip for="cboMovementType" value=""/>
+		<h:outputLabel/>
+		<h:outputLabel/>
+		<h:outputLabel/>
+
+	</h:panelGrid>
+	</p:tab>
+	<p:tab id="tabPanAdministration" title="#{i18n.panel_admin_title}">
+	<h:panelGrid columns="3">
+
+		<h:outputLabel value="#{i18n.lbl_attr_abstractentitywithid_id}:" for="txtId" styleClass="label-field-optional"/>
+		<p:inputText id="txtId" value="#{viewArrivalDialog.arrival.id}" readonly="true">
+		</p:inputText>
+		<p:tooltip for="txtId" value=""/>
+
+		<h:outputLabel value="#{i18n.lbl_attr_abstractentitywithid_version}:" for="txtVersion" styleClass="label-field-optional"/>
+		<p:inputText id="txtVersion" value="#{viewArrivalDialog.arrival.version}" readonly="true">
+		</p:inputText>
+		<p:tooltip for="txtVersion" value=""/>
+
+		<h:outputLabel value="#{i18n.lbl_attr_abstractentitywithid_creationdate}:" for="txtCreationDate" styleClass="label-field-optional"/>
+		<p:inputText id="txtCreationDate" value="#{viewArrivalDialog.arrival.creationDate}" readonly="true">
+			<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateTimeConverter"/>
+			<f:attribute name="pattern" value="#{userSession.dateTimeFormat}"/>
+			<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
+		</p:inputText>
+		<p:tooltip for="txtCreationDate" value=""/>
+
+		<h:outputLabel value="#{i18n.lbl_attr_abstractentitywithid_lastupdate}:" for="txtLastUpdate" styleClass="label-field-optional"/>
+		<p:inputText id="txtLastUpdate" value="#{viewArrivalDialog.arrival.lastUpdate}" readonly="true">
+			<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateTimeConverter"/>
+			<f:attribute name="pattern" value="#{userSession.dateTimeFormat}"/>
+			<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
+		</p:inputText>
+		<p:tooltip for="txtLastUpdate" value=""/>
+
+	</h:panelGrid>
+	</p:tab>
+	</p:tabView>
+
+	<p/>
+
+	<h:panelGrid columns="1">
+		<p:commandButton id="cmdBack" icon="pi pi-caret-left" value="#{i18n.command_back}" action="#{userSession.getLastPage}" immediate="true" ajax="false"/>
+	</h:panelGrid>
+
+	<p:defaultCommand target=":form:cmdBack"/>
+
+</ui:define>
+</ui:composition>

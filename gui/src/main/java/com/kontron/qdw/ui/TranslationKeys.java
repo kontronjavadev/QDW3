@@ -57,6 +57,7 @@ public interface TranslationKeys {
     String COL_AGGREGATEDSHIPMENTVIEW_MATREVMATSHORTTEXT = "col_aggregatedshipmentview_matrevmatshorttext";
     String COL_AGGREGATEDSHIPMENTVIEW_MATREVREVISIONNUMBER = "col_aggregatedshipmentview_matrevrevisionnumber";
     String COL_AGGREGATEDSHIPMENTVIEW_MOVEMENTTYPECODE = "col_aggregatedshipmentview_movementtypecode";
+    String COL_AGGREGATEDSHIPMENTVIEW_MOVEMENTTYPECODE_TOOLTIP = "col_aggregatedshipmentview_movementtypecode_tooltip";
     String COL_AGGREGATEDSHIPMENTVIEW_PLANTCODE = "col_aggregatedshipmentview_plantcode";
     String COL_CUSTOMERVIEW_COUNTRYNAME = "col_customerview_countryname";
     String COL_MATERIALREVISIONBOMITEMSPANEL_MATERIALCLASSCODE = "col_materialrevisionbomitemspanel_materialclasscode";
@@ -140,6 +141,9 @@ public interface TranslationKeys {
     String FIELD_ERRORPAGE_DESCRIPTION = "field_errorpage_description";
     String FIELD_ERRORPAGE_TYPE = "field_errorpage_type";
     String FIELD_ERRORPAGE_URI = "field_errorpage_uri";
+    String FIELD_VIEWARRIVALDIALOG_CBOMATERIALREVISION = "field_viewarrivaldialog_cbomaterialrevision";
+    String FIELD_VIEWARRIVALDIALOG_TXTMATERIALSAPNUMBER = "field_viewarrivaldialog_txtmaterialsapnumber";
+    String FIELD_VIEWARRIVALDIALOG_TXTORDERNUMBER = "field_viewarrivaldialog_txtordernumber";
     String FIELD_VIEWBOMITEMDIALOG_CBOMATERIALREVISION = "field_viewbomitemdialog_cbomaterialrevision";
     String FIELD_VIEWBOMITEMDIALOG_CBOMATERIALREVISIONMATERIAL = "field_viewbomitemdialog_cbomaterialrevisionmaterial";
     String FIELD_VIEWMATERIALDIALOG_TXTMATERIALNUMBER = "field_viewmaterialdialog_txtmaterialnumber";
@@ -199,6 +203,7 @@ public interface TranslationKeys {
     String FORM_SUPPLIERVIEW_TITLE = "form_supplierview_title";
     String FORM_USERVIEW_TITLE = "form_userview_title";
     String FORM_VERTICALSECTORVIEW_TITLE = "form_verticalsectorview_title";
+    String FORM_VIEWARRIVALDIALOG_TITLE = "form_viewarrivaldialog_title";
     String FORM_VIEWBOMITEMDIALOG_TITLE = "form_viewbomitemdialog_title";
     String FORM_VIEWMATERIALDIALOG_TITLE = "form_viewmaterialdialog_title";
     String FORM_VIEWMATERIALREVISIONDIALOG_TITLE = "form_viewmaterialrevisiondialog_title";
@@ -207,6 +212,11 @@ public interface TranslationKeys {
     String INVALID_MAIL_ADDRESS = "invalid_mail_address";
     String LABEL_LIST_ENTER_FILTER = "label_list_enter_filter";
     String LABEL_LOOKUP = "label_lookup";
+    String LBL_ASSOC_ARRIVAL_MATERIALREVISION = "lbl_assoc_arrival_materialrevision";
+    String LBL_ASSOC_ARRIVAL_MOVEMENTTYPE = "lbl_assoc_arrival_movementtype";
+    String LBL_ASSOC_ARRIVAL_PLANT = "lbl_assoc_arrival_plant";
+    String LBL_ASSOC_ARRIVAL_SERIALOBJECT = "lbl_assoc_arrival_serialobject";
+    String LBL_ASSOC_ARRIVAL_SUPPLIER = "lbl_assoc_arrival_supplier";
     String LBL_ASSOC_BOMITEM_MATERIAL = "lbl_assoc_bomitem_material";
     String LBL_ASSOC_BOMITEM_MATERIALREVISION = "lbl_assoc_bomitem_materialrevision";
     String LBL_ASSOC_CUSTOMER_COUNTRY = "lbl_assoc_customer_country";
@@ -241,6 +251,8 @@ public interface TranslationKeys {
     String LBL_ATTR_AGGREGATEDARRIVAL_ARRIVALS = "lbl_attr_aggregatedarrival_arrivals";
     String LBL_ATTR_AGGREGATEDSHIPMENT_SHIPMENTS = "lbl_attr_aggregatedshipment_shipments";
     String LBL_ATTR_AGGREGATEDSHIPMENTARRIVAL_SHIPMENTS = "lbl_attr_aggregatedshipmentarrival_shipments";
+    String LBL_ATTR_ARRIVAL_ARRIVALDATE = "lbl_attr_arrival_arrivaldate";
+    String LBL_ATTR_ARRIVAL_ORDERNUMBER = "lbl_attr_arrival_ordernumber";
     String LBL_ATTR_BOMITEM_LABEL = "lbl_attr_bomitem_label";
     String LBL_ATTR_BOMITEM_POSITION = "lbl_attr_bomitem_position";
     String LBL_ATTR_BOMITEM_QUANTITY = "lbl_attr_bomitem_quantity";
@@ -267,6 +279,7 @@ public interface TranslationKeys {
     String LBL_ATTR_NOTIFICATION_NOTIFICATIONEND = "lbl_attr_notification_notificationend";
     String LBL_ATTR_NOTIFICATION_NOTIFICATIONSTART = "lbl_attr_notification_notificationstart";
     String LBL_ATTR_ROLE_NAME = "lbl_attr_role_name";
+    String LBL_ATTR_SERIALOBJECT_SERIALNUMBER = "lbl_attr_serialobject_serialnumber";
     String LBL_ATTR_SUPPLIER_CITY = "lbl_attr_supplier_city";
     String LBL_ATTR_SUPPLIER_NAME = "lbl_attr_supplier_name";
     String LBL_ATTR_SUPPLIER_STREET = "lbl_attr_supplier_street";

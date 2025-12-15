@@ -1,17 +1,19 @@
 package com.kontron.qdw.boundary.base;
 
+import com.kontron.qdw.repository.base.*;
+import net.sourceforge.jbizmo.commons.search.exception.*;
+import static net.sourceforge.jbizmo.commons.jpa.AbstractRepository.WILDCARD;
+import com.kontron.qdw.dto.base.*;
+import com.kontron.qdw.domain.base.*;
 import jakarta.validation.ConstraintViolationException;
 import java.util.*;
-import com.kontron.qdw.repository.base.*;
 import jakarta.inject.*;
 import jakarta.ejb.*;
 import jakarta.annotation.security.*;
-import net.sourceforge.jbizmo.commons.search.exception.*;
 import net.sourceforge.jbizmo.commons.repository.*;
 import net.sourceforge.jbizmo.commons.search.dto.*;
-import com.kontron.qdw.dto.base.*;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
-import com.kontron.qdw.domain.base.*;
+import static net.sourceforge.jbizmo.commons.jpa.AbstractRepository.SMALL_LIST_SIZE;
 
 @Stateless
 public class SupplierBoundaryService {
@@ -192,6 +194,57 @@ public class SupplierBoundaryService {
         final Supplier targetObject = repository.copy(sourceObject, null, loggedOnUserId);
 
         return targetObject.getCode();
+    }
+
+    /**
+     * Search for supplier objects
+     * @param filter
+     * @return a list of supplier objects
+     * @throws GeneralSearchException if the search operation has failed
+     */
+    @Generated
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public List<SupplierListDTO> findSuppliers(String filter) {
+        // Collect the select tokens of all fields that should be fetched
+        final var selectTokens = new ArrayList<String>();
+        selectTokens.add(SupplierListDTO.SELECT_CODE);
+        selectTokens.add(SupplierListDTO.SELECT_NAME);
+
+        // Initialize the search object
+        final var searchObj = new SearchDTO();
+        searchObj.setExactFilterMatch(true);
+        searchObj.setCaseSensitive(true);
+        searchObj.setMaxResult(SMALL_LIST_SIZE);
+        searchObj.setFromClause("from Supplier a");
+
+        if (filter != null && !filter.isEmpty() && !filter.equals(WILDCARD)) {
+            final var filterField = searchObj.addSearchField(SupplierListDTO.SELECT_NAME, SearchFieldDataTypeEnum.STRING);
+            filterField.setFilterCriteria(filter + WILDCARD);
+            filterField.setSortIndex(1);
+            filterField.setSortOrder(SortDirectionEnum.ASC);
+        }
+
+        return repository.search(searchObj, SupplierListDTO.class, selectTokens);
+    }
+
+    /**
+     * Find supplier by its ID
+     * @param id
+     * @return the supplier object
+     */
+    @Generated
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public SupplierListDTO findListSupplier(String id) {
+        // Find persistent object
+        final Supplier supplier = repository.findById(id, true);
+
+        final var dto = new SupplierListDTO();
+        dto.setCode(supplier.getCode());
+        dto.setName(supplier.getName());
+
+        return dto;
     }
 
 }
