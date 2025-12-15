@@ -59,6 +59,19 @@ public interface TranslationKeys {
     String COL_AGGREGATEDSHIPMENTVIEW_MOVEMENTTYPECODE = "col_aggregatedshipmentview_movementtypecode";
     String COL_AGGREGATEDSHIPMENTVIEW_MOVEMENTTYPECODE_TOOLTIP = "col_aggregatedshipmentview_movementtypecode_tooltip";
     String COL_AGGREGATEDSHIPMENTVIEW_PLANTCODE = "col_aggregatedshipmentview_plantcode";
+    String COL_ARRIVALLASTVIEW_ID = "col_arrivallastview_id";
+    String COL_ARRIVALLASTVIEW_MATREVMATLSHORTTEXT = "col_arrivallastview_matrevmatlshorttext";
+    String COL_ARRIVALLASTVIEW_MATREVMATMATERIALCLASSCODE = "col_arrivallastview_matrevmatmaterialclasscode";
+    String COL_ARRIVALLASTVIEW_MATREVMATMATERIALNUMBER = "col_arrivallastview_matrevmatmaterialnumber";
+    String COL_ARRIVALLASTVIEW_MATREVMATMATERIALTYPECODE = "col_arrivallastview_matrevmatmaterialtypecode";
+    String COL_ARRIVALLASTVIEW_MATREVMATOWNERLOCATIONCODE = "col_arrivallastview_matrevmatownerlocationcode";
+    String COL_ARRIVALLASTVIEW_MATREVMATSAPNUMBER = "col_arrivallastview_matrevmatsapnumber";
+    String COL_ARRIVALLASTVIEW_MATREVREVISIONNUMBER = "col_arrivallastview_matrevrevisionnumber";
+    String COL_ARRIVALLASTVIEW_MOVEMENTTYPECODE = "col_arrivallastview_movementtypecode";
+    String COL_ARRIVALLASTVIEW_ORDERNUMBER = "col_arrivallastview_ordernumber";
+    String COL_ARRIVALLASTVIEW_PLANTCODE = "col_arrivallastview_plantcode";
+    String COL_ARRIVALLASTVIEW_SERIALOBJECTSERIALNUMBER = "col_arrivallastview_serialobjectserialnumber";
+    String COL_ARRIVALLASTVIEW_SUPPLIERNAME = "col_arrivallastview_suppliername";
     String COL_CUSTOMERVIEW_COUNTRYNAME = "col_customerview_countryname";
     String COL_MATERIALREVISIONBOMITEMSPANEL_MATERIALCLASSCODE = "col_materialrevisionbomitemspanel_materialclasscode";
     String COL_MATERIALREVISIONBOMITEMSPANEL_MATERIALMATERIALNUMBER = "col_materialrevisionbomitemspanel_materialmaterialnumber";
@@ -154,6 +167,7 @@ public interface TranslationKeys {
     String FORM_AGGREGATEDARRIVALVIEW_TITLE = "form_aggregatedarrivalview_title";
     String FORM_AGGREGATEDSHIPMENTARRIVALVIEW_TITLE = "form_aggregatedshipmentarrivalview_title";
     String FORM_AGGREGATEDSHIPMENTVIEW_TITLE = "form_aggregatedshipmentview_title";
+    String FORM_ARRIVALLASTVIEW_TITLE = "form_arrivallastview_title";
     String FORM_BUSINESSUNITVIEW_TITLE = "form_businessunitview_title";
     String FORM_CHANGEPASSWORDDIALOG_TITLE = "form_changepassworddialog_title";
     String FORM_COUNTRYVIEW_TITLE = "form_countryview_title";

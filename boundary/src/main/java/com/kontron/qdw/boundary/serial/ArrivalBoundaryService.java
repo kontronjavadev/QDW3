@@ -1,13 +1,17 @@
 package com.kontron.qdw.boundary.serial;
 
 import com.kontron.qdw.domain.serial.*;
+import net.sourceforge.jbizmo.commons.search.exception.*;
+import com.kontron.qdw.dto.base.*;
+import java.util.*;
+import jakarta.validation.ConstraintViolationException;
 import com.kontron.qdw.dto.serial.*;
 import com.kontron.qdw.dto.material.*;
 import jakarta.inject.*;
 import jakarta.ejb.*;
 import jakarta.annotation.security.*;
 import com.kontron.qdw.repository.serial.*;
-import com.kontron.qdw.dto.base.*;
+import net.sourceforge.jbizmo.commons.search.dto.*;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
 
 @Stateless
@@ -76,6 +80,90 @@ public class ArrivalBoundaryService {
         dto.setMaterialShortText(arrival.getMaterialRevision().getMaterial().getShortText());
 
         return dto;
+    }
+
+    /**
+     * Search for arrival objects
+     * @param searchObj a generic container that holds filter criteria
+     * @return a list of arrival objects
+     * @throws GeneralSearchException if the search operation has failed
+     */
+    @Generated
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public List<ArrivalLastSearchDTO> searchAllArrivalsLast(SearchDTO searchObj) {
+        // Collect the select tokens of all fields that should be fetched
+        final var selectTokens = new ArrayList<String>();
+        selectTokens.add(ArrivalLastSearchDTO.SELECT_ARRIVALDATE);
+        selectTokens.add(ArrivalLastSearchDTO.SELECT_ORDERNUMBER);
+        selectTokens.add(ArrivalLastSearchDTO.SELECT_ID);
+        selectTokens.add(ArrivalLastSearchDTO.SELECT_CREATIONDATE);
+        selectTokens.add(ArrivalLastSearchDTO.SELECT_LASTUPDATE);
+        selectTokens.add(ArrivalLastSearchDTO.SELECT_MOVEMENTTYPECODE);
+        selectTokens.add(ArrivalLastSearchDTO.SELECT_PLANTCODE);
+        selectTokens.add(ArrivalLastSearchDTO.SELECT_SUPPLIERNAME);
+        selectTokens.add(ArrivalLastSearchDTO.SELECT_SUPPLIERCODE);
+        selectTokens.add(ArrivalLastSearchDTO.SELECT_MATERIALREVISIONID);
+        selectTokens.add(ArrivalLastSearchDTO.SELECT_SERIALOBJECTID);
+        selectTokens.add(ArrivalLastSearchDTO.SELECT_SERIALOBJECTSERIALNUMBER);
+        selectTokens.add(ArrivalLastSearchDTO.SELECT_MATREVMATERIALID);
+        selectTokens.add(ArrivalLastSearchDTO.SELECT_MATREVMATMATERIALNUMBER);
+        selectTokens.add(ArrivalLastSearchDTO.SELECT_MATREVMATSAPNUMBER);
+        selectTokens.add(ArrivalLastSearchDTO.SELECT_MATREVMATLSHORTTEXT);
+        selectTokens.add(ArrivalLastSearchDTO.SELECT_MATREVMATOWNERLOCATIONCODE);
+        selectTokens.add(ArrivalLastSearchDTO.SELECT_MATREVMATMATERIALTYPECODE);
+        selectTokens.add(ArrivalLastSearchDTO.SELECT_MATREVMATMATERIALCLASSCODE);
+        selectTokens.add(ArrivalLastSearchDTO.SELECT_MATREVMATMATERIALHIERARCHY);
+        selectTokens.add(ArrivalLastSearchDTO.SELECT_MATREVREVISIONNUMBER);
+
+        searchObj.setFromClause(
+                "from Arrival a join a.materialRevision b join a.movementType c join a.plant d join a.serialObject e join a.supplier f join b.material l join l.ownerLocation o join l.materialClass p join l.materialType q where a.arrivalDate = (select max(la.arrivalDate) from Arrival la join la.serialObject lc where lc.id = b.id)");
+
+        return repository.search(searchObj, ArrivalLastSearchDTO.class, selectTokens);
+    }
+
+    /**
+     * Count arrival objects
+     * @param searchObj the query criteria
+     * @return the number of objects a query would return
+     * @throws GeneralSearchException if the count operation has failed
+     */
+    @Generated
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public long countAllArrivalslast(SearchDTO searchObj) {
+        searchObj.setFromClause(
+                "from Arrival a join a.materialRevision b join a.movementType c join a.plant d join a.serialObject e join a.supplier f join b.material l join l.ownerLocation o join l.materialClass p join l.materialType q where a.arrivalDate = (select max(la.arrivalDate) from Arrival la join la.serialObject lc where lc.id = b.id)");
+
+        return repository.count(searchObj);
+    }
+
+    /**
+     * Delete existing arrival
+     * @param id the ID of the object to be deleted
+     */
+    @Generated
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public void deleteArrival(long id) {
+        repository.delete(id);
+    }
+
+    /**
+     * Create copy of selected arrival
+     * @param sourceObjectId
+     * @param loggedOnUserId
+     * @throws ConstraintViolationException if the validation of one or more persistent attribute values has failed
+     * @return the id of the new object
+     */
+    @Generated
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public long copy(long sourceObjectId, long loggedOnUserId) {
+        final Arrival sourceObject = repository.findById(sourceObjectId);
+        final Arrival targetObject = repository.copy(sourceObject, null, loggedOnUserId);
+
+        return targetObject.getId();
     }
 
 }
