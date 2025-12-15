@@ -17,6 +17,8 @@ import org.slf4j.*;
 import com.kontron.qdw.boundary.material.*;
 import java.lang.invoke.*;
 import com.kontron.qdw.ui.dialog.*;
+import com.kontron.qdw.ui.view.util.SuperView;
+
 import net.sourceforge.jbizmo.commons.webclient.primefaces.util.*;
 import jakarta.faces.application.FacesMessage;
 import java.util.*;
@@ -24,11 +26,13 @@ import jakarta.faces.view.*;
 import com.kontron.qdw.ui.*;
 import com.kontron.qdw.service.*;
 import com.kontron.qdw.dto.material.*;
+
+import net.sourceforge.jbizmo.commons.annotation.Customized;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
 
 @Named("arrivalLastView")
 @ViewScoped
-public class ArrivalLastView extends AbstractSearchableView implements Serializable {
+public class ArrivalLastView extends SuperView implements Serializable {
     @Generated
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     @Generated
@@ -91,6 +95,134 @@ public class ArrivalLastView extends AbstractSearchableView implements Serializa
         this.supplierService = supplierService;
         this.materialService = materialService;
         this.queryManager = queryManager;
+    }
+
+    /**
+     * Initialize view
+     */
+    @Customized
+    public void initView() {
+        logger.debug("Initialize view");
+
+        bundle = ResourceBundle.getBundle(DEFAULT_BUNDLE_NAME, userSession.getLocale());
+
+        // Check if user is allowed to open this page!
+        if (!userSession.checkAuthorization(true, ROLE_ADMINISTRATOR, ROLE_READONLY)) {
+            return;
+        }
+
+
+        formTitle = bundle.getString(FORM_ARRIVALLASTVIEW_TITLE);
+
+        if (searchObj == null) {
+            // Check if previous search exists!
+            final SearchDTO lastSearch = queryManager.getLastQuery(userSession.getPrincipal().getId(), VIEW_ID);
+            if (lastSearch != null) {
+                searchObj = lastSearch;
+                prepareAfterLoad();
+            }
+            else {
+                initSearchObject();
+            }
+        }
+
+        initProperties();
+        fetchArrivals();
+
+        logger.debug("View initialization finished");
+    }
+
+    /**
+     * Initialize search object
+     */
+    @Customized
+    public void initSearchObject() {
+        searchObj = new SearchDTO();
+        int colOrderId = -1;
+
+        // Initialize search object
+        searchObj.setMaxResult(1000);
+        searchObj.setExactFilterMatch(true);
+        searchObj.setCaseSensitive(false);
+        searchObj.setCount(false);
+
+        refreshFormatSettings();
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, ArrivalLastSearchDTO.SELECT_ID,
+                bundle.getString(COL_ARRIVALLASTVIEW_ID), SearchFieldDataTypeEnum.LONG, 100);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, ArrivalLastSearchDTO.SELECT_PLANTCODE,
+                bundle.getString(COL_ARRIVALLASTVIEW_PLANTCODE), SearchFieldDataTypeEnum.STRING, 80);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, ArrivalLastSearchDTO.SELECT_ORDERNUMBER,
+                bundle.getString(COL_ARRIVALLASTVIEW_ORDERNUMBER), SearchFieldDataTypeEnum.STRING, 100);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, ArrivalLastSearchDTO.SELECT_MOVEMENTTYPECODE,
+                bundle.getString(COL_ARRIVALLASTVIEW_MOVEMENTTYPECODE), SearchFieldDataTypeEnum.STRING, 80);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, ArrivalLastSearchDTO.SELECT_ARRIVALDATE,
+                bundle.getString(LBL_ATTR_ARRIVAL_ARRIVALDATE), SearchFieldDataTypeEnum.LOCAL_DATE, 100, false);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, ArrivalLastSearchDTO.SELECT_SERIALOBJECTSERIALNUMBER,
+                bundle.getString(COL_ARRIVALLASTVIEW_SERIALOBJECTSERIALNUMBER), SearchFieldDataTypeEnum.STRING, 100);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, ArrivalLastSearchDTO.SELECT_SUPPLIERNAME,
+                bundle.getString(COL_ARRIVALLASTVIEW_SUPPLIERNAME), SearchFieldDataTypeEnum.STRING, 150);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, ArrivalLastSearchDTO.SELECT_MATREVMATMATERIALNUMBER,
+                bundle.getString(COL_ARRIVALLASTVIEW_MATREVMATMATERIALNUMBER), SearchFieldDataTypeEnum.STRING, 150);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, ArrivalLastSearchDTO.SELECT_MATREVMATSAPNUMBER,
+                bundle.getString(COL_ARRIVALLASTVIEW_MATREVMATSAPNUMBER), SearchFieldDataTypeEnum.STRING, 150);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, ArrivalLastSearchDTO.SELECT_MATREVMATLSHORTTEXT,
+                bundle.getString(COL_ARRIVALLASTVIEW_MATREVMATLSHORTTEXT), SearchFieldDataTypeEnum.STRING, 250);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, ArrivalLastSearchDTO.SELECT_MATREVMATOWNERLOCATIONCODE,
+                bundle.getString(COL_ARRIVALLASTVIEW_MATREVMATOWNERLOCATIONCODE), SearchFieldDataTypeEnum.STRING, 100);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, ArrivalLastSearchDTO.SELECT_MATREVMATMATERIALTYPECODE,
+                bundle.getString(COL_ARRIVALLASTVIEW_MATREVMATMATERIALTYPECODE), SearchFieldDataTypeEnum.STRING, 80);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, ArrivalLastSearchDTO.SELECT_MATREVMATMATERIALCLASSCODE,
+                bundle.getString(COL_ARRIVALLASTVIEW_MATREVMATMATERIALCLASSCODE), SearchFieldDataTypeEnum.STRING, 120);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, ArrivalLastSearchDTO.SELECT_MATREVMATMATERIALHIERARCHY,
+                bundle.getString(LBL_ATTR_MATERIAL_MATERIALHIERARCHY), SearchFieldDataTypeEnum.STRING, 150);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, ArrivalLastSearchDTO.SELECT_MATREVREVISIONNUMBER,
+                bundle.getString(COL_ARRIVALLASTVIEW_MATREVREVISIONNUMBER), SearchFieldDataTypeEnum.STRING, 150);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, ArrivalLastSearchDTO.SELECT_CREATIONDATE,
+                bundle.getString(LBL_ATTR_ABSTRACTENTITYWITHID_CREATIONDATE), SearchFieldDataTypeEnum.LOCAL_DATE_TIME, 120);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, ArrivalLastSearchDTO.SELECT_LASTUPDATE,
+                bundle.getString(LBL_ATTR_ABSTRACTENTITYWITHID_LASTUPDATE), SearchFieldDataTypeEnum.LOCAL_DATE_TIME, 120);
+
+
+        visibleFields = new DualListModel<>();
+        visibleFields.setSource(new ArrayList<>());
+        visibleFields.setTarget(new ArrayList<>());
+
+        for (final SearchFieldDTO d : searchObj.getSearchFields()) {
+            if (!d.isVisible()) {
+                visibleFields.getSource().add(d);
+            }
+            else {
+                visibleFields.getTarget().add(d);
+            }
+        }
+    }
+
+    @Override
+    protected String getViewName() {
+        return VIEW_ID;
+    }
+
+    @Override
+    public void resetSearchObject() {
+        initSearchObject();
+        fetchArrivals();
     }
 
     /**
@@ -256,121 +388,6 @@ public class ArrivalLastView extends AbstractSearchableView implements Serializa
         searchObj.setNumberFormat(userSession.getNumberFormat());
         searchObj.setDecimalSeparator(DecimalFormatSymbols.getInstance(userSession.getLocale()).getDecimalSeparator());
         searchObj.setGroupingSeparator(DecimalFormatSymbols.getInstance(userSession.getLocale()).getGroupingSeparator());
-    }
-
-    /**
-     * Initialize search object
-     */
-    @Generated
-    public void initSearchObject() {
-        searchObj = new SearchDTO();
-        int colOrderId = -1;
-
-        // Initialize search object
-        searchObj.setMaxResult(1000);
-        searchObj.setExactFilterMatch(true);
-        searchObj.setCaseSensitive(false);
-        searchObj.setCount(false);
-
-        refreshFormatSettings();
-
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, ArrivalLastSearchDTO.SELECT_ID, bundle.getString(COL_ARRIVALLASTVIEW_ID),
-                SearchFieldDataTypeEnum.LONG, 100);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, ArrivalLastSearchDTO.SELECT_PLANTCODE, bundle.getString(COL_ARRIVALLASTVIEW_PLANTCODE),
-                SearchFieldDataTypeEnum.STRING, 80);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, ArrivalLastSearchDTO.SELECT_ORDERNUMBER, bundle.getString(COL_ARRIVALLASTVIEW_ORDERNUMBER),
-                SearchFieldDataTypeEnum.STRING, 100);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, ArrivalLastSearchDTO.SELECT_MOVEMENTTYPECODE,
-                bundle.getString(COL_ARRIVALLASTVIEW_MOVEMENTTYPECODE), SearchFieldDataTypeEnum.STRING, 80);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, ArrivalLastSearchDTO.SELECT_ARRIVALDATE, bundle.getString(LBL_ATTR_ARRIVAL_ARRIVALDATE),
-                SearchFieldDataTypeEnum.LOCAL_DATE, 100, false);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, ArrivalLastSearchDTO.SELECT_SERIALOBJECTSERIALNUMBER,
-                bundle.getString(COL_ARRIVALLASTVIEW_SERIALOBJECTSERIALNUMBER), SearchFieldDataTypeEnum.STRING, 100);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, ArrivalLastSearchDTO.SELECT_SUPPLIERNAME, bundle.getString(COL_ARRIVALLASTVIEW_SUPPLIERNAME),
-                SearchFieldDataTypeEnum.STRING, 150);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, ArrivalLastSearchDTO.SELECT_MATREVMATMATERIALNUMBER,
-                bundle.getString(COL_ARRIVALLASTVIEW_MATREVMATMATERIALNUMBER), SearchFieldDataTypeEnum.STRING, 150);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, ArrivalLastSearchDTO.SELECT_MATREVMATSAPNUMBER,
-                bundle.getString(COL_ARRIVALLASTVIEW_MATREVMATSAPNUMBER), SearchFieldDataTypeEnum.STRING, 150);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, ArrivalLastSearchDTO.SELECT_MATREVMATLSHORTTEXT,
-                bundle.getString(COL_ARRIVALLASTVIEW_MATREVMATLSHORTTEXT), SearchFieldDataTypeEnum.STRING, 250);
-
-        final var f11 = new JSFSearchFieldDTO(searchObj, ++colOrderId, ArrivalLastSearchDTO.SELECT_MATREVMATOWNERLOCATIONCODE,
-                bundle.getString(COL_ARRIVALLASTVIEW_MATREVMATOWNERLOCATIONCODE), SearchFieldDataTypeEnum.STRING, 100);
-        f11.setVisible(false);
-
-
-        final var f12 = new JSFSearchFieldDTO(searchObj, ++colOrderId, ArrivalLastSearchDTO.SELECT_MATREVMATMATERIALTYPECODE,
-                bundle.getString(COL_ARRIVALLASTVIEW_MATREVMATMATERIALTYPECODE), SearchFieldDataTypeEnum.STRING, 80);
-        f12.setVisible(false);
-
-
-        final var f13 = new JSFSearchFieldDTO(searchObj, ++colOrderId, ArrivalLastSearchDTO.SELECT_MATREVMATMATERIALCLASSCODE,
-                bundle.getString(COL_ARRIVALLASTVIEW_MATREVMATMATERIALCLASSCODE), SearchFieldDataTypeEnum.STRING, 120);
-        f13.setVisible(false);
-
-
-        final var f14 = new JSFSearchFieldDTO(searchObj, ++colOrderId, ArrivalLastSearchDTO.SELECT_MATREVMATMATERIALHIERARCHY,
-                bundle.getString(LBL_ATTR_MATERIAL_MATERIALHIERARCHY), SearchFieldDataTypeEnum.STRING, 150);
-        f14.setVisible(false);
-
-
-        final var f15 = new JSFSearchFieldDTO(searchObj, ++colOrderId, ArrivalLastSearchDTO.SELECT_MATREVREVISIONNUMBER,
-                bundle.getString(COL_ARRIVALLASTVIEW_MATREVREVISIONNUMBER), SearchFieldDataTypeEnum.STRING, 150);
-        f15.setVisible(false);
-
-
-        final var f16 = new JSFSearchFieldDTO(searchObj, ++colOrderId, ArrivalLastSearchDTO.SELECT_CREATIONDATE,
-                bundle.getString(LBL_ATTR_ABSTRACTENTITYWITHID_CREATIONDATE), SearchFieldDataTypeEnum.LOCAL_DATE_TIME, 120);
-        f16.setVisible(false);
-
-
-        final var f17 = new JSFSearchFieldDTO(searchObj, ++colOrderId, ArrivalLastSearchDTO.SELECT_LASTUPDATE,
-                bundle.getString(LBL_ATTR_ABSTRACTENTITYWITHID_LASTUPDATE), SearchFieldDataTypeEnum.LOCAL_DATE_TIME, 120);
-        f17.setVisible(false);
-
-
-        visibleFields = new DualListModel<>();
-        visibleFields.setSource(new ArrayList<>());
-        visibleFields.setTarget(new ArrayList<>());
-
-        for (final SearchFieldDTO d : searchObj.getSearchFields())
-            if (!d.isVisible())
-                visibleFields.getSource().add(d);
-            else
-                visibleFields.getTarget().add(d);
-    }
-
-    /**
-     * Initialize view
-     */
-    @Generated
-    public void initView() {
-        logger.debug("Initialize view");
-
-        bundle = ResourceBundle.getBundle(DEFAULT_BUNDLE_NAME, userSession.getLocale());
-
-        // Check if user is allowed to open this page!
-        if (!userSession.checkAuthorization(true, ROLE_ADMINISTRATOR, ROLE_READONLY))
-            return;
-
-
-        formTitle = bundle.getString(FORM_ARRIVALLASTVIEW_TITLE);
-
-        // Check if previous search exists!
-        final SearchDTO lastSearch = queryManager.getLastQuery(userSession.getPrincipal().getId(), VIEW_ID);
-
-        if (lastSearch != null) {
-            searchObj = lastSearch;
-
-            prepareAfterLoad();
-        }
-        else
-            initSearchObject();
-
-        fetchArrivals();
-
-        logger.debug("View initialization finished");
     }
 
     /**
