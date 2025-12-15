@@ -26,12 +26,12 @@
 		</p:ajaxStatus>
 	</h:panelGrid>
 
-	<p:growl id="growl" showDetail="true"/>
+	<p:growl id="growl" showDetail="true" skipDetailIfEqualsSummary="true" />
 
-	<p:dialog height="510" width="1000" header="#{i18n.search_input_dlg}" widgetVar="dlgSearchInput" modal="true">
+	<p:dialog height="auto" width="1000" header="#{i18n.search_input_dlg}" widgetVar="dlgSearchInput" id="dlgSearchInput" closeOnEscape="true" modal="true">
 		<p:tabView id="tabViewSearchInput" dynamic="false">
 			<p:tab title="#{i18n.search_input_filter}">
-			<p:scrollPanel style="width:100%; height:400px;" mode="native">
+			<p:scrollPanel style="width:100%; #{sizeServiceBean.searchFilterHeight()};" mode="native">
 			<h:panelGrid columns="5" cellpadding="3">
 				<h:outputText styleClass="label-field-mandatory" value="#{i18n.search_input_column}"/>
 				<h:outputText styleClass="label-field-mandatory" value="#{i18n.search_input_operator}"/>
@@ -263,6 +263,7 @@
 			</h:panelGrid>
 			</p:scrollPanel>
 			</p:tab>
+
 			<p:tab title="#{i18n.search_input_adv}">
 			<h:panelGrid columns="2">
 				<h:outputLabel value="#{i18n.search_input_case}:" styleClass="label-field-mandatory"/>
@@ -276,36 +277,65 @@
 					<f:validateLongRange minimum="1" maximum="1000000"/>
 				</p:inputText>
 				<h:outputLabel value="#{i18n.search_input_visible_fields_label}:" styleClass="label-field-mandatory"/>
-				<p:pickList value="#{arrivalView.visibleFields}" var="savedQueryListItem" itemLabel="#{savedQueryListItem.colLabel}" itemValue="#{savedQueryListItem}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchFieldDTOConverter" addLabel="#{i18n.pick_list_add}" addAllLabel="#{i18n.pick_list_add_all}" removeLabel="#{i18n.pick_list_remove}" removeAllLabel="#{i18n.pick_list_remove_all}">
+				<p:pickList styleClass="searchdialog-picklist" value="#{arrivalView.visibleFields}" var="savedQueryListItem" itemLabel="#{savedQueryListItem.colLabel}" itemValue="#{savedQueryListItem}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchFieldDTOConverter" addLabel="#{i18n.pick_list_add}" addAllLabel="#{i18n.pick_list_add_all}" removeLabel="#{i18n.pick_list_remove}" removeAllLabel="#{i18n.pick_list_remove_all}">
 					<f:facet name="sourceCaption">#{i18n.search_input_all_fields}</f:facet>
 					<f:facet name="targetCaption">#{i18n.search_input_visible_fields}</f:facet>
 				</p:pickList>
 			</h:panelGrid>
 			</p:tab>
+
 			<p:tab title="#{i18n.search_input_saved_query_title}">
 				<h:panelGrid columns="1">
 					<h:outputLabel styleClass="label-field-mandatory" value="#{i18n.search_input_lbl_saved_query}"/>
-					<p:selectOneListbox id="savedQueryList" value="#{arrivalView.selectedSavedQuery}" style="height:150px; width:300px">
+					<p:selectOneListbox id="savedQueryList" value="#{arrivalView.selectedSavedQuery}" style="#{sizeServiceBean.searchQueriesHeight()}; width:480px">
 						<f:selectItems value="#{arrivalView.savedQueries}"/>
 					</p:selectOneListbox>
-					<h:panelGrid columns="2">
-						<p:commandButton value="#{i18n.search_input_run_saved_query}" action="#{arrivalView.runSavedQuery}" ajax="false"/>
-						<p:commandButton value="#{i18n.search_input_delete_saved_query}" action="#{arrivalView.deleteSavedQuery}" ajax="false"/>
+					<h:panelGrid columns="3">
+						<p:commandButton icon="pi pi-caret-right" value="#{i18n.search_input_run_saved_query}" action="#{arrivalView.runSavedQuery}" ajax="false"/>
+						<p:commandButton icon="pi pi-pencil" value="#{i18n.search_input_rename_saved_query}" actionListener="#{arrivalView.openRenameDialog}" ajax="true"/>
+						<p:commandButton icon="pi pi-eraser" value="#{i18n.search_input_delete_saved_query}" actionListener="#{arrivalView.deleteSavedQuery}" update="savedQueryList" ajax="true"/>
 					</h:panelGrid>
 				</h:panelGrid>
 			</p:tab>
 		</p:tabView>
 		<br/>
-		<h:panelGrid columns="3">
+		<h:panelGrid columns="4">
 			<p:commandButton id="cmdSearch" value="#{i18n.search_input_perform_search}" action="#{arrivalView.fetchArrivals}" ajax="false"/>
-			<p:commandButton id="cmdReset" value="#{i18n.command_reset}" action="#{arrivalView.initSearchObject}" onclick="PF('dlgSearchInput').hide()" ajax="false"/>
-			<p:commandButton id="cmdCount" value="#{i18n.search_input_perform_count}" actionListener="#{arrivalView.countRecords}" onclick="PF('dlgSearchInput').hide()" update="growl" ajax="true"/>
+			<p:commandButton id="cmdReset" value="#{i18n.command_reset}" action="#{arrivalView.resetSearchObject}" onclick="PF('dlgSearchInput').hide()" ajax="false"/>
+			<p:commandButton id="cmdClear" value="#{i18n.command_clear}" action="#{arrivalView.clearSearchObject}" update="tabViewSearchInput" ajax="true"/>
+			<p:commandButton id="cmdCount" value="#{i18n.search_input_perform_count}" actionListener="#{arrivalView.countRecords}" update="growl" ajax="true"/>
 		</h:panelGrid>
 	</p:dialog>
 
+<!-- Query rename dialog -->
+	<p:dialog widgetVar="dlgQeryRename" id="dlgQeryRename" modal="true" showEffect="fade" hideEffect="fade" focus="txtNewQueryName" closeOnEscape="true">
+		<f:facet name="header">
+			<i class="pi pi-pencil"/>
+			<h:outputText value="&#160;#{i18n.query_rename_title}"/>
+		</f:facet>
+
+		<h:panelGrid columns="3">
+			<h:outputLabel value="#{i18n.query_rename_newname} *:" for="txtNewQueryName" styleClass="label-field-mandatory"/>
+			<p:inputText id="txtNewQueryName" value="#{arrivalView.newQueryName}"/>
+			<p:tooltip for="txtNewQueryName" value=""/>
+		</h:panelGrid>
+		<p/>
+
+		<f:facet name="footer">
+			<p:commandButton id="cmdRename" icon="pi pi-save" value="#{i18n.command_rename}" ajax="true" 
+				actionListener="#{arrivalView.renameQuery()}"
+				update="tabViewSearchInput,growl" oncomplete="PF('dlgQeryRename').hide()"/>
+
+			<p:commandButton id="cmdCancel" icon="pi pi-times" value="#{i18n.command_cancel}" onclick="PF('dlgQeryRename').hide()" />
+
+			<p:defaultCommand target="cmdRename" scope="dlgQeryRename"/>
+		</f:facet>
+	</p:dialog>
+
+
+
 	<p:menubar>
 		<p:submenu icon="pi pi-file" label="#{i18n.mnu_file}" id="panData_mniFile">
-			<p:menuitem value="#{i18n.action_search_input}" ajax="true" icon="pi pi-search" id="panData_mniSearch" onclick="PF('dlgSearchInput').show()"/>
 			<p:menuitem value="#{i18n.search_input_dlg_save_query}" icon="pi pi-save" onclick="PF('dlgSaveQuery').show()"/>
 		</p:submenu>
 		<p:submenu icon="pi pi-refresh" label="#{i18n.mnu_view}">
@@ -313,17 +343,18 @@
 		</p:submenu>
 		<p:submenu icon="pi pi-print" label="#{i18n.mnu_export}">
 			<p:menuitem value="#{i18n.action_export_xls}" ajax="false" icon="pi pi-file-excel">
-				<p:dataExporter type="xls" target="panData" fileName="ArrivalList"/>
+				<p:dataExporter type="xlsxstream" target="panData" fileName="ArrivalList"/>
 			</p:menuitem>
 			<p:menuitem value="#{i18n.action_export_pdf}" ajax="false" icon="pi pi-file-pdf">
 				<p:dataExporter type="pdf" target="panData" fileName="ArrivalList"/>
 			</p:menuitem>
 		</p:submenu>
+		<p:menuitem value="#{i18n.action_search_input}" ajax="true" icon="pi pi-search" id="panData_mniSearch" onclick="PF('dlgSearchInput').show()"/>
 	</p:menubar>
 
 	<br/>
 
-	<p:dataTable id="panData" var="arrivalViewItem" rows="50"
+	<p:dataTable id="panData" var="arrivalViewItem" rows="#{arrivalView.numberRows}"
 		selectionMode="single"
 		selection="#{arrivalView.selectedObject}"
 		loadingMessage="#{i18n.action_fetch_data}"
@@ -334,7 +365,8 @@
 		rowsPerPageTemplate="10,50,100,500,1000">
 		<p:ajax event="rowDblselect" listener="#{arrivalView.onDoubleClick}"/>
 
-		<p:column sortBy="#{arrivalViewItem.id}" width="100" rendered="#{arrivalView.searchObject.searchFields[0].visible}" >
+		<p:column sortBy="#{arrivalViewItem.id}" width="100" 
+			rendered="#{arrivalView.searchObject.searchFields[0].visible}" displayPriority="#{arrivalView.searchObject.searchFields[0].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_arrivalview_id}"/>
 			</f:facet>
@@ -342,7 +374,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{arrivalViewItem.plantCode}" width="80" rendered="#{arrivalView.searchObject.searchFields[1].visible}" >
+		<p:column sortBy="#{arrivalViewItem.plantCode}" width="80" 
+			rendered="#{arrivalView.searchObject.searchFields[1].visible}" displayPriority="#{arrivalView.searchObject.searchFields[1].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_arrivalview_plantcode}"/>
 			</f:facet>
@@ -350,7 +383,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{arrivalViewItem.orderNumber}" width="100" rendered="#{arrivalView.searchObject.searchFields[2].visible}" >
+		<p:column sortBy="#{arrivalViewItem.orderNumber}" width="100" 
+			rendered="#{arrivalView.searchObject.searchFields[2].visible}" displayPriority="#{arrivalView.searchObject.searchFields[2].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_arrivalview_ordernumber}"/>
 			</f:facet>
@@ -358,7 +392,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{arrivalViewItem.movementTypeCode}" width="80" rendered="#{arrivalView.searchObject.searchFields[3].visible}" >
+		<p:column sortBy="#{arrivalViewItem.movementTypeCode}" width="80" 
+			rendered="#{arrivalView.searchObject.searchFields[3].visible}" displayPriority="#{arrivalView.searchObject.searchFields[3].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_arrivalview_movementtypecode}"/>
 			</f:facet>
@@ -366,7 +401,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{arrivalViewItem.arrivalDate}" width="80" rendered="#{arrivalView.searchObject.searchFields[4].visible}" >
+		<p:column sortBy="#{arrivalViewItem.arrivalDate}" width="80" 
+			rendered="#{arrivalView.searchObject.searchFields[4].visible}" displayPriority="#{arrivalView.searchObject.searchFields[4].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_arrival_arrivaldate}"/>
 			</f:facet>
@@ -377,7 +413,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{arrivalViewItem.serialObjectSerialNumber}" width="150" rendered="#{arrivalView.searchObject.searchFields[5].visible}" >
+		<p:column sortBy="#{arrivalViewItem.serialObjectSerialNumber}" width="150" 
+			rendered="#{arrivalView.searchObject.searchFields[5].visible}" displayPriority="#{arrivalView.searchObject.searchFields[5].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_arrivalview_serialobjectserialnumber}"/>
 			</f:facet>
@@ -385,7 +422,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{arrivalViewItem.supplierName}" width="150" rendered="#{arrivalView.searchObject.searchFields[6].visible}" >
+		<p:column sortBy="#{arrivalViewItem.supplierName}" width="150" 
+			rendered="#{arrivalView.searchObject.searchFields[6].visible}" displayPriority="#{arrivalView.searchObject.searchFields[6].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_arrivalview_suppliername}"/>
 			</f:facet>
@@ -393,7 +431,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{arrivalViewItem.matrevMatMaterialNumber}" width="150" rendered="#{arrivalView.searchObject.searchFields[7].visible}" >
+		<p:column sortBy="#{arrivalViewItem.matrevMatMaterialNumber}" width="150" 
+			rendered="#{arrivalView.searchObject.searchFields[7].visible}" displayPriority="#{arrivalView.searchObject.searchFields[7].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_arrivalview_matrevmatmaterialnumber}"/>
 			</f:facet>
@@ -401,7 +440,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{arrivalViewItem.matrevMatSapNumber}" width="150" rendered="#{arrivalView.searchObject.searchFields[8].visible}" >
+		<p:column sortBy="#{arrivalViewItem.matrevMatSapNumber}" width="150" 
+			rendered="#{arrivalView.searchObject.searchFields[8].visible}" displayPriority="#{arrivalView.searchObject.searchFields[8].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_arrivalview_matrevmatsapnumber}"/>
 			</f:facet>
@@ -409,7 +449,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{arrivalViewItem.matrevMatShortText}" width="250" rendered="#{arrivalView.searchObject.searchFields[9].visible}" >
+		<p:column sortBy="#{arrivalViewItem.matrevMatShortText}" width="250" 
+			rendered="#{arrivalView.searchObject.searchFields[9].visible}" displayPriority="#{arrivalView.searchObject.searchFields[9].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_arrivalview_matrevmatshorttext}"/>
 			</f:facet>
@@ -417,7 +458,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{arrivalViewItem.matrevMatOwnerLocationCode}" width="120" rendered="#{arrivalView.searchObject.searchFields[10].visible}" >
+		<p:column sortBy="#{arrivalViewItem.matrevMatOwnerLocationCode}" width="120" 
+			rendered="#{arrivalView.searchObject.searchFields[10].visible}" displayPriority="#{arrivalView.searchObject.searchFields[10].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_arrivalview_matrevmatownerlocationcode}"/>
 			</f:facet>
@@ -425,7 +467,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{arrivalViewItem.matrevMatMaterialTypeCode}" width="80" rendered="#{arrivalView.searchObject.searchFields[11].visible}" >
+		<p:column sortBy="#{arrivalViewItem.matrevMatMaterialTypeCode}" width="80" 
+			rendered="#{arrivalView.searchObject.searchFields[11].visible}" displayPriority="#{arrivalView.searchObject.searchFields[11].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_arrivalview_matrevmatmaterialtypecode}"/>
 			</f:facet>
@@ -433,7 +476,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{arrivalViewItem.matrevMatMaterialClassCode}" width="120" rendered="#{arrivalView.searchObject.searchFields[12].visible}" >
+		<p:column sortBy="#{arrivalViewItem.matrevMatMaterialClassCode}" width="120" 
+			rendered="#{arrivalView.searchObject.searchFields[12].visible}" displayPriority="#{arrivalView.searchObject.searchFields[12].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_arrivalview_matrevmatmaterialclasscode}"/>
 			</f:facet>
@@ -441,7 +485,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{arrivalViewItem.matrevMatMaterialHierarchy}" width="150" rendered="#{arrivalView.searchObject.searchFields[13].visible}" >
+		<p:column sortBy="#{arrivalViewItem.matrevMatMaterialHierarchy}" width="150" 
+			rendered="#{arrivalView.searchObject.searchFields[13].visible}" displayPriority="#{arrivalView.searchObject.searchFields[13].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_material_materialhierarchy}"/>
 			</f:facet>
@@ -449,7 +494,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{arrivalViewItem.matrevRevisionNumber}" width="150" rendered="#{arrivalView.searchObject.searchFields[14].visible}" >
+		<p:column sortBy="#{arrivalViewItem.matrevRevisionNumber}" width="150" 
+			rendered="#{arrivalView.searchObject.searchFields[14].visible}" displayPriority="#{arrivalView.searchObject.searchFields[14].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_arrivalview_matrevrevisionnumber}"/>
 			</f:facet>
@@ -457,7 +503,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{arrivalViewItem.creationDate}" width="120" rendered="#{arrivalView.searchObject.searchFields[15].visible}" >
+		<p:column sortBy="#{arrivalViewItem.creationDate}" width="120" 
+			rendered="#{arrivalView.searchObject.searchFields[15].visible}" displayPriority="#{arrivalView.searchObject.searchFields[15].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_abstractentitywithid_creationdate}"/>
 			</f:facet>
@@ -468,7 +515,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{arrivalViewItem.lastUpdate}" width="120" rendered="#{arrivalView.searchObject.searchFields[16].visible}" >
+		<p:column sortBy="#{arrivalViewItem.lastUpdate}" width="120" 
+			rendered="#{arrivalView.searchObject.searchFields[16].visible}" displayPriority="#{arrivalView.searchObject.searchFields[16].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_abstractentitywithid_lastupdate}"/>
 			</f:facet>
@@ -486,35 +534,48 @@
 	<h:outputText styleClass="label-field-mandatory" rendered="#{arrivalView.searchObject.count}" value="#{arrivalView.countResult}"/>
 	<p/>
 
-	<p:contextMenu for="panData">
+
+
+<!--Kontextmenü mit Möglichkeit, eine Zelle oder eine Zeile zu kopieren -->
+
+	<h:inputHidden id="cellText" value="#{arrivalView.cellText}" />
+	<h:inputHidden id="rowCsv" value="#{arrivalView.rowCsv}" />
+
+	<p:contextMenu for="panData" beforeShow="updateContextData(event)" >
 		<p:menuitem value="#{i18n.action_delete}" ajax="true" icon="pi pi-trash" id="panData_mniDelete" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR')}" onclick="PF('deleteConfirm').show()"/>
 		<p:menuitem value="#{i18n.action_view}" ajax="true" icon="pi pi-file" id="panData_mniView" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY')}" action="#{arrivalView.openViewArrivalDialog}">
 			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{arrivalView.currentPageURL}"/>
 		</p:menuitem>
 		<p:menuitem value="#{i18n.action_copy}" ajax="true" icon="pi pi-copy" id="panData_mniCopy" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR')}" onclick="PF('copyConfirm').show()"/>
 		<p:menuitem value="#{i18n.action_refresh}" ajax="false" type="push" icon="pi pi-refresh" id="panData_mniRefresh" actionListener="#{arrivalView.fetchArrivals}"/>
+
+		<p:separator/>
+
+		<p:menuitem value="#{i18n.ctxmenu_copy_cell}" actionListener="#{arrivalView.copyCellToClipboard}" icon="pi pi-copy" update="@none"/>
+		<p:menuitem value="#{i18n.ctxmenu_copy_row}" actionListener="#{arrivalView.copyRowToClipboard}" icon="pi pi-copy" update="@none"/>
 	</p:contextMenu>
 
-	<p:confirmDialog modal="true" message="#{i18n.dialog_delete_question}" header="#{i18n.dialog_delete_title}" severity="alert" widgetVar="deleteConfirm">
+	<p:confirmDialog modal="true" closeOnEscape="true" message="#{i18n.dialog_delete_question}" header="#{i18n.dialog_delete_title}" severity="warn" widgetVar="deleteConfirm">
 		<p:commandButton value="#{i18n.command_yes}" oncomplete="PF('deleteConfirm').hide()" actionListener="#{arrivalView.deleteArrival}" id="panData_cmdYesDelete" ajax="false"/>
 		<p:commandButton value="#{i18n.command_no}" onclick="PF('deleteConfirm').hide()" type="button"/>
 	</p:confirmDialog>
 
-	<p:confirmDialog modal="true" message="#{i18n.dialog_copy_question}" header="#{i18n.dialog_copy_title}" severity="info" widgetVar="copyConfirm">
+	<p:confirmDialog modal="true" closeOnEscape="true" message="#{i18n.dialog_copy_question}" header="#{i18n.dialog_copy_title}" severity="info" widgetVar="copyConfirm">
 		<p:commandButton value="#{i18n.command_yes}" oncomplete="PF('copyConfirm').hide()" action="#{arrivalView.copy}" id="panData_cmdYesCopy" ajax="false"/>
 		<p:commandButton value="#{i18n.command_no}" onclick="PF('copyConfirm').hide()" type="button"/>
 	</p:confirmDialog>
 
-	<p:dialog header="#{i18n.search_input_dlg_save_query}" widgetVar="dlgSaveQuery" modal="true" height="100">
+	<p:dialog header="#{i18n.search_input_dlg_save_query}" widgetVar="dlgSaveQuery" id="dlgSaveQuery" closeOnEscape="true" modal="true" height="100">
 		<h:panelGrid columns="3">
 			<h:outputLabel value="#{i18n.search_input_lbl_save_query}" styleClass="label-field-mandatory"/>
 			<p:inputText id="txtQueryName" value="#{arrivalView.savedQueryName}">
 			</p:inputText>
-			<p:commandButton value="#{i18n.command_save}" action="#{arrivalView.saveNewQuery}" ajax="false" onclick="PF('dlgSaveQuery').hide()"/>
+			<p:commandButton id="saveQuery" value="#{i18n.command_save}" action="#{arrivalView.saveNewQuery}" ajax="false" onclick="PF('dlgSaveQuery').hide()"/>
+			<p:defaultCommand target="saveQuery" scope="dlgSaveQuery"/>
 		</h:panelGrid>
 	</p:dialog>
 
-	<p:defaultCommand target=":form:cmdSearch"/>
+	<p:defaultCommand target=":form:cmdSearch" scope="dlgSearchInput" />
 
 </ui:define>
 </ui:composition>
