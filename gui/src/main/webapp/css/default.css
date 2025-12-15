@@ -90,12 +90,12 @@ body .ui-scrollpanel {
 	color: var(--text);
 }
 
-.navigator-scrollpanel {
-    background: var(--panel) !important;
-    padding: 0rem;
+body .navigator-scrollpanel {
+	background: var(--panel);
+	padding: 0rem;
 }
 
-.navigator-scrollpanel > .ui-panel-content.ui-widget-content {
+body .navigator-scrollpanel > .ui-panel-content.ui-widget-content {
 	padding: 0rem;
 }
 
