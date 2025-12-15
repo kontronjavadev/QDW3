@@ -60,12 +60,12 @@ public interface TranslationKeys {
     String COL_AGGREGATEDSHIPMENTVIEW_MOVEMENTTYPECODE_TOOLTIP = "col_aggregatedshipmentview_movementtypecode_tooltip";
     String COL_AGGREGATEDSHIPMENTVIEW_PLANTCODE = "col_aggregatedshipmentview_plantcode";
     String COL_ARRIVALLASTVIEW_ID = "col_arrivallastview_id";
-    String COL_ARRIVALLASTVIEW_MATREVMATLSHORTTEXT = "col_arrivallastview_matrevmatlshorttext";
     String COL_ARRIVALLASTVIEW_MATREVMATMATERIALCLASSCODE = "col_arrivallastview_matrevmatmaterialclasscode";
     String COL_ARRIVALLASTVIEW_MATREVMATMATERIALNUMBER = "col_arrivallastview_matrevmatmaterialnumber";
     String COL_ARRIVALLASTVIEW_MATREVMATMATERIALTYPECODE = "col_arrivallastview_matrevmatmaterialtypecode";
     String COL_ARRIVALLASTVIEW_MATREVMATOWNERLOCATIONCODE = "col_arrivallastview_matrevmatownerlocationcode";
     String COL_ARRIVALLASTVIEW_MATREVMATSAPNUMBER = "col_arrivallastview_matrevmatsapnumber";
+    String COL_ARRIVALLASTVIEW_MATREVMATSHORTTEXT = "col_arrivallastview_matrevmatshorttext";
     String COL_ARRIVALLASTVIEW_MATREVREVISIONNUMBER = "col_arrivallastview_matrevrevisionnumber";
     String COL_ARRIVALLASTVIEW_MOVEMENTTYPECODE = "col_arrivallastview_movementtypecode";
     String COL_ARRIVALLASTVIEW_ORDERNUMBER = "col_arrivallastview_ordernumber";

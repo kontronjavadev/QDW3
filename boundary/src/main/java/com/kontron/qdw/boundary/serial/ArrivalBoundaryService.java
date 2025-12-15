@@ -83,62 +83,6 @@ public class ArrivalBoundaryService {
     }
 
     /**
-     * Search for arrival objects
-     * @param searchObj a generic container that holds filter criteria
-     * @return a list of arrival objects
-     * @throws GeneralSearchException if the search operation has failed
-     */
-    @Generated
-    @PermitAll
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public List<ArrivalLastSearchDTO> searchAllArrivalsLast(SearchDTO searchObj) {
-        // Collect the select tokens of all fields that should be fetched
-        final var selectTokens = new ArrayList<String>();
-        selectTokens.add(ArrivalLastSearchDTO.SELECT_ARRIVALDATE);
-        selectTokens.add(ArrivalLastSearchDTO.SELECT_ORDERNUMBER);
-        selectTokens.add(ArrivalLastSearchDTO.SELECT_ID);
-        selectTokens.add(ArrivalLastSearchDTO.SELECT_CREATIONDATE);
-        selectTokens.add(ArrivalLastSearchDTO.SELECT_LASTUPDATE);
-        selectTokens.add(ArrivalLastSearchDTO.SELECT_MOVEMENTTYPECODE);
-        selectTokens.add(ArrivalLastSearchDTO.SELECT_PLANTCODE);
-        selectTokens.add(ArrivalLastSearchDTO.SELECT_SUPPLIERNAME);
-        selectTokens.add(ArrivalLastSearchDTO.SELECT_SUPPLIERCODE);
-        selectTokens.add(ArrivalLastSearchDTO.SELECT_MATERIALREVISIONID);
-        selectTokens.add(ArrivalLastSearchDTO.SELECT_SERIALOBJECTID);
-        selectTokens.add(ArrivalLastSearchDTO.SELECT_SERIALOBJECTSERIALNUMBER);
-        selectTokens.add(ArrivalLastSearchDTO.SELECT_MATREVMATERIALID);
-        selectTokens.add(ArrivalLastSearchDTO.SELECT_MATREVMATMATERIALNUMBER);
-        selectTokens.add(ArrivalLastSearchDTO.SELECT_MATREVMATSAPNUMBER);
-        selectTokens.add(ArrivalLastSearchDTO.SELECT_MATREVMATLSHORTTEXT);
-        selectTokens.add(ArrivalLastSearchDTO.SELECT_MATREVMATOWNERLOCATIONCODE);
-        selectTokens.add(ArrivalLastSearchDTO.SELECT_MATREVMATMATERIALTYPECODE);
-        selectTokens.add(ArrivalLastSearchDTO.SELECT_MATREVMATMATERIALCLASSCODE);
-        selectTokens.add(ArrivalLastSearchDTO.SELECT_MATREVMATMATERIALHIERARCHY);
-        selectTokens.add(ArrivalLastSearchDTO.SELECT_MATREVREVISIONNUMBER);
-
-        searchObj.setFromClause(
-                "from Arrival a join a.materialRevision b join a.movementType c join a.plant d join a.serialObject e join a.supplier f join b.material l join l.ownerLocation o join l.materialClass p join l.materialType q where a.arrivalDate = (select max(la.arrivalDate) from Arrival la join la.serialObject lc where lc.id = b.id)");
-
-        return repository.search(searchObj, ArrivalLastSearchDTO.class, selectTokens);
-    }
-
-    /**
-     * Count arrival objects
-     * @param searchObj the query criteria
-     * @return the number of objects a query would return
-     * @throws GeneralSearchException if the count operation has failed
-     */
-    @Generated
-    @PermitAll
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public long countAllArrivalslast(SearchDTO searchObj) {
-        searchObj.setFromClause(
-                "from Arrival a join a.materialRevision b join a.movementType c join a.plant d join a.serialObject e join a.supplier f join b.material l join l.ownerLocation o join l.materialClass p join l.materialType q where a.arrivalDate = (select max(la.arrivalDate) from Arrival la join la.serialObject lc where lc.id = b.id)");
-
-        return repository.count(searchObj);
-    }
-
-    /**
      * Delete existing arrival
      * @param id the ID of the object to be deleted
      */
@@ -218,6 +162,62 @@ public class ArrivalBoundaryService {
     public long countAllArrivals(SearchDTO searchObj) {
         searchObj.setFromClause(
                 "from Arrival a join a.materialRevision b join a.movementType c join a.plant d join a.serialObject e join a.supplier f join b.material l join l.ownerLocation o join l.materialClass p join l.materialType q");
+
+        return repository.count(searchObj);
+    }
+
+    /**
+     * Search for arrival objects
+     * @param searchObj a generic container that holds filter criteria
+     * @return a list of arrival objects
+     * @throws GeneralSearchException if the search operation has failed
+     */
+    @Generated
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public List<ArrivalLastSearchDTO> searchAllArrivalsLast(SearchDTO searchObj) {
+        // Collect the select tokens of all fields that should be fetched
+        final var selectTokens = new ArrayList<String>();
+        selectTokens.add(ArrivalLastSearchDTO.SELECT_ARRIVALDATE);
+        selectTokens.add(ArrivalLastSearchDTO.SELECT_ORDERNUMBER);
+        selectTokens.add(ArrivalLastSearchDTO.SELECT_ID);
+        selectTokens.add(ArrivalLastSearchDTO.SELECT_CREATIONDATE);
+        selectTokens.add(ArrivalLastSearchDTO.SELECT_LASTUPDATE);
+        selectTokens.add(ArrivalLastSearchDTO.SELECT_MOVEMENTTYPECODE);
+        selectTokens.add(ArrivalLastSearchDTO.SELECT_PLANTCODE);
+        selectTokens.add(ArrivalLastSearchDTO.SELECT_SUPPLIERNAME);
+        selectTokens.add(ArrivalLastSearchDTO.SELECT_SUPPLIERCODE);
+        selectTokens.add(ArrivalLastSearchDTO.SELECT_MATERIALREVISIONID);
+        selectTokens.add(ArrivalLastSearchDTO.SELECT_SERIALOBJECTID);
+        selectTokens.add(ArrivalLastSearchDTO.SELECT_SERIALOBJECTSERIALNUMBER);
+        selectTokens.add(ArrivalLastSearchDTO.SELECT_MATREVMATID);
+        selectTokens.add(ArrivalLastSearchDTO.SELECT_MATREVMATMATERIALNUMBER);
+        selectTokens.add(ArrivalLastSearchDTO.SELECT_MATREVMATSAPNUMBER);
+        selectTokens.add(ArrivalLastSearchDTO.SELECT_MATREVMATSHORTTEXT);
+        selectTokens.add(ArrivalLastSearchDTO.SELECT_MATREVMATOWNERLOCATIONCODE);
+        selectTokens.add(ArrivalLastSearchDTO.SELECT_MATREVMATMATERIALTYPECODE);
+        selectTokens.add(ArrivalLastSearchDTO.SELECT_MATREVMATMATERIALCLASSCODE);
+        selectTokens.add(ArrivalLastSearchDTO.SELECT_MATREVMATMATERIALHIERARCHY);
+        selectTokens.add(ArrivalLastSearchDTO.SELECT_MATREVREVISIONNUMBER);
+
+        searchObj.setFromClause(
+                "from Arrival a join a.materialRevision b join a.movementType c join a.plant d join a.serialObject e join a.supplier f join b.material l join l.ownerLocation o join l.materialClass p join l.materialType q where a.arrivalDate = (select max(la.arrivalDate) from Arrival la join la.serialObject lc where lc.id = b.id)");
+
+        return repository.search(searchObj, ArrivalLastSearchDTO.class, selectTokens);
+    }
+
+    /**
+     * Count arrival objects
+     * @param searchObj the query criteria
+     * @return the number of objects a query would return
+     * @throws GeneralSearchException if the count operation has failed
+     */
+    @Generated
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public long countAllArrivalsLast(SearchDTO searchObj) {
+        searchObj.setFromClause(
+                "from Arrival a join a.materialRevision b join a.movementType c join a.plant d join a.serialObject e join a.supplier f join b.material l join l.ownerLocation o join l.materialClass p join l.materialType q where a.arrivalDate = (select max(la.arrivalDate) from Arrival la join la.serialObject lc where lc.id = b.id)");
 
         return repository.count(searchObj);
     }

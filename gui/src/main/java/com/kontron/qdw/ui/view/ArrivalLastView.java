@@ -175,8 +175,8 @@ public class ArrivalLastView extends SuperView implements Serializable {
         new JSFSearchFieldDTO(searchObj, ++colOrderId, ArrivalLastSearchDTO.SELECT_MATREVMATSAPNUMBER,
                 bundle.getString(COL_ARRIVALLASTVIEW_MATREVMATSAPNUMBER), SearchFieldDataTypeEnum.STRING, 150);
 
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, ArrivalLastSearchDTO.SELECT_MATREVMATLSHORTTEXT,
-                bundle.getString(COL_ARRIVALLASTVIEW_MATREVMATLSHORTTEXT), SearchFieldDataTypeEnum.STRING, 250);
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, ArrivalLastSearchDTO.SELECT_MATREVMATSHORTTEXT,
+                bundle.getString(COL_ARRIVALLASTVIEW_MATREVMATSHORTTEXT), SearchFieldDataTypeEnum.STRING, 250);
 
         new JSFSearchFieldDTO(searchObj, ++colOrderId, ArrivalLastSearchDTO.SELECT_MATREVMATOWNERLOCATIONCODE,
                 bundle.getString(COL_ARRIVALLASTVIEW_MATREVMATOWNERLOCATIONCODE), SearchFieldDataTypeEnum.STRING, 100);
@@ -411,7 +411,7 @@ public class ArrivalLastView extends SuperView implements Serializable {
             arrivalsList = arrivalService.searchAllArrivalsLast(searchObj);
 
             if (searchObj.isCount())
-                countResult = arrivalService.countAllArrivalslast(searchObj);
+                countResult = arrivalService.countAllArrivalsLast(searchObj);
 
             queryManager.saveQuery(userSession.getPrincipal().getId(), VIEW_ID, null, searchObj);
         }
@@ -443,7 +443,7 @@ public class ArrivalLastView extends SuperView implements Serializable {
         refreshFormatSettings();
 
         try {
-            countResult = arrivalService.countAllArrivalslast(searchObj);
+            countResult = arrivalService.countAllArrivalsLast(searchObj);
 
             MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_INFO, OPERATION_COUNT_RESULT, "", countResult);
         }

@@ -32,15 +32,15 @@ public class ArrivalLastSearchDTO implements Serializable {
     @Generated
     public static final String ATTR_SERIALOBJECTSERIALNUMBER = "serialObjectSerialNumber";
     @Generated
-    public static final String ATTR_MATREVMATERIALID = "matrevMaterialId";
+    public static final String ATTR_MATREVMATID = "matrevMatId";
     @Generated
     public static final String ATTR_MATREVMATMATERIALNUMBER = "matrevMatMaterialNumber";
     @Generated
     public static final String ATTR_MATREVMATSAPNUMBER = "matrevMatSapNumber";
     @Generated
-    public static final String ATTR_MATREVMATLSHORTTEXT = "matrevMatlShortText";
+    public static final String ATTR_MATREVMATSHORTTEXT = "matrevMatShortText";
     @Generated
-    public static final String ATTR_MATREVMATOWNERLOCATIONCODE = "matrevMatownerLocationCode";
+    public static final String ATTR_MATREVMATOWNERLOCATIONCODE = "matrevMatOwnerLocationCode";
     @Generated
     public static final String ATTR_MATREVMATMATERIALTYPECODE = "matrevMatMaterialTypeCode";
     @Generated
@@ -74,13 +74,13 @@ public class ArrivalLastSearchDTO implements Serializable {
     @Generated
     public static final String SELECT_SERIALOBJECTSERIALNUMBER = "e.serialNumber";
     @Generated
-    public static final String SELECT_MATREVMATERIALID = "l.id";
+    public static final String SELECT_MATREVMATID = "l.id";
     @Generated
     public static final String SELECT_MATREVMATMATERIALNUMBER = "l.materialNumber";
     @Generated
     public static final String SELECT_MATREVMATSAPNUMBER = "l.sapNumber";
     @Generated
-    public static final String SELECT_MATREVMATLSHORTTEXT = "l.shortText";
+    public static final String SELECT_MATREVMATSHORTTEXT = "l.shortText";
     @Generated
     public static final String SELECT_MATREVMATOWNERLOCATIONCODE = "o.code";
     @Generated
@@ -116,15 +116,15 @@ public class ArrivalLastSearchDTO implements Serializable {
     @Generated
     private String serialObjectSerialNumber;
     @Generated
-    private long matrevMaterialId;
+    private long matrevMatId;
     @Generated
     private String matrevMatMaterialNumber;
     @Generated
     private String matrevMatSapNumber;
     @Generated
-    private String matrevMatlShortText;
+    private String matrevMatShortText;
     @Generated
-    private String matrevMatownerLocationCode;
+    private String matrevMatOwnerLocationCode;
     @Generated
     private String matrevMatMaterialTypeCode;
     @Generated
@@ -164,11 +164,11 @@ public class ArrivalLastSearchDTO implements Serializable {
      * @param materialRevisionId
      * @param serialObjectId
      * @param serialObjectSerialNumber
-     * @param matrevMaterialId
+     * @param matrevMatId
      * @param matrevMatMaterialNumber
      * @param matrevMatSapNumber
-     * @param matrevMatlShortText
-     * @param matrevMatownerLocationCode
+     * @param matrevMatShortText
+     * @param matrevMatOwnerLocationCode
      * @param matrevMatMaterialTypeCode
      * @param matrevMatMaterialClassCode
      * @param matrevMatMaterialHierarchy
@@ -177,9 +177,9 @@ public class ArrivalLastSearchDTO implements Serializable {
     @Generated
     public ArrivalLastSearchDTO(LocalDate arrivalDate, String orderNumber, long id, LocalDateTime creationDate, LocalDateTime lastUpdate,
             String movementTypeCode, String plantCode, String supplierName, String supplierCode, long materialRevisionId, long serialObjectId,
-            String serialObjectSerialNumber, long matrevMaterialId, String matrevMatMaterialNumber, String matrevMatSapNumber,
-            String matrevMatlShortText, String matrevMatownerLocationCode, String matrevMatMaterialTypeCode, String matrevMatMaterialClassCode,
-            String matrevMatMaterialHierarchy, String matrevRevisionNumber) {
+            String serialObjectSerialNumber, long matrevMatId, String matrevMatMaterialNumber, String matrevMatSapNumber, String matrevMatShortText,
+            String matrevMatOwnerLocationCode, String matrevMatMaterialTypeCode, String matrevMatMaterialClassCode, String matrevMatMaterialHierarchy,
+            String matrevRevisionNumber) {
         this.arrivalDate = arrivalDate;
         this.orderNumber = orderNumber;
         this.id = id;
@@ -192,11 +192,11 @@ public class ArrivalLastSearchDTO implements Serializable {
         this.materialRevisionId = materialRevisionId;
         this.serialObjectId = serialObjectId;
         this.serialObjectSerialNumber = serialObjectSerialNumber;
-        this.matrevMaterialId = matrevMaterialId;
+        this.matrevMatId = matrevMatId;
         this.matrevMatMaterialNumber = matrevMatMaterialNumber;
         this.matrevMatSapNumber = matrevMatSapNumber;
-        this.matrevMatlShortText = matrevMatlShortText;
-        this.matrevMatownerLocationCode = matrevMatownerLocationCode;
+        this.matrevMatShortText = matrevMatShortText;
+        this.matrevMatOwnerLocationCode = matrevMatOwnerLocationCode;
         this.matrevMatMaterialTypeCode = matrevMatMaterialTypeCode;
         this.matrevMatMaterialClassCode = matrevMatMaterialClassCode;
         this.matrevMatMaterialHierarchy = matrevMatMaterialHierarchy;
@@ -399,16 +399,16 @@ public class ArrivalLastSearchDTO implements Serializable {
      * @return the id of the material
      */
     @Generated
-    public long getMatrevMaterialId() {
-        return this.matrevMaterialId;
+    public long getMatrevMatId() {
+        return this.matrevMatId;
     }
 
     /**
-     * @param matrevMaterialId the id of the material to set
+     * @param matrevMatId the id of the material to set
      */
     @Generated
-    public void setMatrevMaterialId(long matrevMaterialId) {
-        this.matrevMaterialId = matrevMaterialId;
+    public void setMatrevMatId(long matrevMatId) {
+        this.matrevMatId = matrevMatId;
     }
 
     /**
@@ -447,32 +447,32 @@ public class ArrivalLastSearchDTO implements Serializable {
      * @return the short text of the material
      */
     @Generated
-    public String getMatrevMatlShortText() {
-        return this.matrevMatlShortText;
+    public String getMatrevMatShortText() {
+        return this.matrevMatShortText;
     }
 
     /**
-     * @param matrevMatlShortText the short text of the material to set
+     * @param matrevMatShortText the short text of the material to set
      */
     @Generated
-    public void setMatrevMatlShortText(String matrevMatlShortText) {
-        this.matrevMatlShortText = matrevMatlShortText;
+    public void setMatrevMatShortText(String matrevMatShortText) {
+        this.matrevMatShortText = matrevMatShortText;
     }
 
     /**
      * @return the code of the location
      */
     @Generated
-    public String getMatrevMatownerLocationCode() {
-        return this.matrevMatownerLocationCode;
+    public String getMatrevMatOwnerLocationCode() {
+        return this.matrevMatOwnerLocationCode;
     }
 
     /**
-     * @param matrevMatownerLocationCode the code of the location to set
+     * @param matrevMatOwnerLocationCode the code of the location to set
      */
     @Generated
-    public void setMatrevMatownerLocationCode(String matrevMatownerLocationCode) {
-        this.matrevMatownerLocationCode = matrevMatownerLocationCode;
+    public void setMatrevMatOwnerLocationCode(String matrevMatOwnerLocationCode) {
+        this.matrevMatOwnerLocationCode = matrevMatOwnerLocationCode;
     }
 
     /**
