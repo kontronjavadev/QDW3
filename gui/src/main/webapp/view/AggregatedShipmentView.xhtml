@@ -350,21 +350,23 @@
 		</p:column>
 
 		<p:column sortBy="#{aggregatedShipmentViewItem.movementTypeCode}" width="80" 
-			rendered="#{aggregatedShipmentView.searchObject.searchFields[1].visible}" displayPriority="#{aggregatedShipmentView.searchObject.searchFields[1].colOrder}" >
+			rendered="#{aggregatedShipmentView.searchObject.searchFields[1].visible}" displayPriority="#{aggregatedShipmentView.searchObject.searchFields[1].colOrder}" 
+			exportHeaderValue="#{i18n.col_aggregatedshipmentview_movementtypecode_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_aggregatedshipmentview_movementtypecode}"/>
+				<h:outputText value="#{i18n.col_aggregatedshipmentview_movementtypecode}" id="movementTypeCodeHeader"/>
+				<p:tooltip for="movementTypeCodeHeader" value="#{i18n.col_aggregatedshipmentview_movementtypecode_tooltip}" position="top" showDelay="50"/>
 			</f:facet>
-			<h:outputText value="#{aggregatedShipmentViewItem.movementTypeCode}">
-			</h:outputText>
+			<h:outputText value="#{aggregatedShipmentViewItem.movementTypeCode}"/>
 		</p:column>
 
 		<p:column sortBy="#{aggregatedShipmentViewItem.customerName}" width="200" 
-			rendered="#{aggregatedShipmentView.searchObject.searchFields[2].visible}" displayPriority="#{aggregatedShipmentView.searchObject.searchFields[2].colOrder}" >
+			rendered="#{aggregatedShipmentView.searchObject.searchFields[2].visible}" displayPriority="#{aggregatedShipmentView.searchObject.searchFields[2].colOrder}" 
+			exportValue="#{aggregatedShipmentViewItem.customerName}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_aggregatedshipmentview_customername}"/>
 			</f:facet>
-			<h:outputText value="#{aggregatedShipmentViewItem.customerName}">
-			</h:outputText>
+			<h:outputText value="#{aggregatedShipmentViewItem.customerName}" id="customerName"/>
+			<p:tooltip for="customerName" value="#{aggregatedShipmentViewItem.customerName}" position="top" showDelay="50"/>
 		</p:column>
 
 		<p:column sortBy="#{aggregatedShipmentViewItem.custCountryName}" width="150" 
@@ -377,30 +379,33 @@
 		</p:column>
 
 		<p:column sortBy="#{aggregatedShipmentViewItem.matrevMatlMaterialNumber}" width="150" 
-			rendered="#{aggregatedShipmentView.searchObject.searchFields[4].visible}" displayPriority="#{aggregatedShipmentView.searchObject.searchFields[4].colOrder}" >
+			rendered="#{aggregatedShipmentView.searchObject.searchFields[4].visible}" displayPriority="#{aggregatedShipmentView.searchObject.searchFields[4].colOrder}" 
+			exportValue="#{aggregatedShipmentViewItem.matrevMatlMaterialNumber}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_aggregatedshipmentview_matrevmatlmaterialnumber}"/>
 			</f:facet>
-			<h:outputText value="#{aggregatedShipmentViewItem.matrevMatlMaterialNumber}">
-			</h:outputText>
+			<h:outputText value="#{aggregatedShipmentViewItem.matrevMatlMaterialNumber}" id="matrevMatlMaterialNumber"/>
+			<p:tooltip for="matrevMatlMaterialNumber" value="#{aggregatedShipmentViewItem.matrevMatlMaterialNumber}" position="top" showDelay="50"/>
 		</p:column>
 
 		<p:column sortBy="#{aggregatedShipmentViewItem.matrevMatSapNumber}" width="150" 
-			rendered="#{aggregatedShipmentView.searchObject.searchFields[5].visible}" displayPriority="#{aggregatedShipmentView.searchObject.searchFields[5].colOrder}" >
+			rendered="#{aggregatedShipmentView.searchObject.searchFields[5].visible}" displayPriority="#{aggregatedShipmentView.searchObject.searchFields[5].colOrder}" 
+			exportValue="#{aggregatedShipmentViewItem.matrevMatSapNumber}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_aggregatedshipmentview_matrevmatsapnumber}"/>
 			</f:facet>
-			<h:outputText value="#{aggregatedShipmentViewItem.matrevMatSapNumber}">
-			</h:outputText>
+			<h:outputText value="#{aggregatedShipmentViewItem.matrevMatSapNumber}" id="matrevMatSapNumber"/>
+			<p:tooltip for="matrevMatSapNumber" value="#{aggregatedShipmentViewItem.matrevMatSapNumber}" position="top" showDelay="50"/>
 		</p:column>
 
 		<p:column sortBy="#{aggregatedShipmentViewItem.matrevMatShortText}" width="250" 
-			rendered="#{aggregatedShipmentView.searchObject.searchFields[6].visible}" displayPriority="#{aggregatedShipmentView.searchObject.searchFields[6].colOrder}" >
+			rendered="#{aggregatedShipmentView.searchObject.searchFields[6].visible}" displayPriority="#{aggregatedShipmentView.searchObject.searchFields[6].colOrder}" 
+			exportValue="#{aggregatedShipmentViewItem.matrevMatShortText}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_aggregatedshipmentview_matrevmatshorttext}"/>
 			</f:facet>
-			<h:outputText value="#{aggregatedShipmentViewItem.matrevMatShortText}">
-			</h:outputText>
+			<h:outputText value="#{aggregatedShipmentViewItem.matrevMatShortText}" id="matrevMatShortText"/>
+			<p:tooltip for="matrevMatShortText" value="#{aggregatedShipmentViewItem.matrevMatShortText}" position="top" showDelay="50"/>
 		</p:column>
 
 		<p:column sortBy="#{aggregatedShipmentViewItem.matrevMatMaterialTypeCode}" width="80" 
@@ -413,12 +418,13 @@
 		</p:column>
 
 		<p:column sortBy="#{aggregatedShipmentViewItem.matrevMatMaterialClassCode}" width="120" 
-			rendered="#{aggregatedShipmentView.searchObject.searchFields[8].visible}" displayPriority="#{aggregatedShipmentView.searchObject.searchFields[8].colOrder}" >
+			rendered="#{aggregatedShipmentView.searchObject.searchFields[8].visible}" displayPriority="#{aggregatedShipmentView.searchObject.searchFields[8].colOrder}" 
+			exportValue="#{aggregatedShipmentViewItem.matrevMatMaterialClassCode}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_aggregatedshipmentview_matrevmatmaterialclasscode}"/>
 			</f:facet>
-			<h:outputText value="#{aggregatedShipmentViewItem.matrevMatMaterialClassCode}">
-			</h:outputText>
+			<h:outputText value="#{aggregatedShipmentViewItem.matrevMatMaterialClassCode}" id="matrevMatMaterialClassCode"/>
+			<p:tooltip for="matrevMatMaterialClassCode" value="#{aggregatedShipmentViewItem.matrevMatMaterialClassCode}" position="top" showDelay="50"/>
 		</p:column>
 
 		<p:column sortBy="#{aggregatedShipmentViewItem.matrevMatMaterialHierarchy}" width="150" 
@@ -440,12 +446,13 @@
 		</p:column>
 
 		<p:column sortBy="#{aggregatedShipmentViewItem.matrevRevisionNumber}" width="150" 
-			rendered="#{aggregatedShipmentView.searchObject.searchFields[11].visible}" displayPriority="#{aggregatedShipmentView.searchObject.searchFields[11].colOrder}" >
+			rendered="#{aggregatedShipmentView.searchObject.searchFields[11].visible}" displayPriority="#{aggregatedShipmentView.searchObject.searchFields[11].colOrder}" 
+			exportValue="#{aggregatedShipmentViewItem.matrevRevisionNumber}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_aggregatedshipmentview_matrevrevisionnumber}"/>
 			</f:facet>
-			<h:outputText value="#{aggregatedShipmentViewItem.matrevRevisionNumber}">
-			</h:outputText>
+			<h:outputText value="#{aggregatedShipmentViewItem.matrevRevisionNumber}" id="matrevRevisionNumber"/>
+			<p:tooltip for="matrevRevisionNumber" value="#{aggregatedShipmentViewItem.matrevRevisionNumber}" position="top" showDelay="50"/>
 		</p:column>
 
 		<p:column sortBy="#{aggregatedShipmentViewItem.year}" width="80" 
