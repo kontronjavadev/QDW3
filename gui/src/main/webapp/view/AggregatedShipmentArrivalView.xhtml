@@ -300,7 +300,7 @@
 		</p:tabView>
 		<br/>
 		<h:panelGrid columns="4">
-			<p:commandButton id="cmdSearch" value="#{i18n.search_input_perform_search}" action="#{aggregatedShipmentArrivalView.fetchCustomers}" ajax="false"/>
+			<p:commandButton id="cmdSearch" value="#{i18n.search_input_perform_search}" action="#{aggregatedShipmentArrivalView.fetchAggregatedShipmentArrivals}" ajax="false"/>
 			<p:commandButton id="cmdReset" value="#{i18n.command_reset}" action="#{aggregatedShipmentArrivalView.resetSearchObject}" onclick="PF('dlgSearchInput').hide()" ajax="false"/>
 			<p:commandButton id="cmdClear" value="#{i18n.command_clear}" action="#{aggregatedShipmentArrivalView.clearSearchObject}" update="tabViewSearchInput" ajax="true"/>
 			<p:commandButton id="cmdCount" value="#{i18n.search_input_perform_count}" actionListener="#{aggregatedShipmentArrivalView.countRecords}" update="growl" ajax="true"/>
