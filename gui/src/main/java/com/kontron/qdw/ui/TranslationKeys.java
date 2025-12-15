@@ -72,6 +72,19 @@ public interface TranslationKeys {
     String COL_ARRIVALLASTVIEW_PLANTCODE = "col_arrivallastview_plantcode";
     String COL_ARRIVALLASTVIEW_SERIALOBJECTSERIALNUMBER = "col_arrivallastview_serialobjectserialnumber";
     String COL_ARRIVALLASTVIEW_SUPPLIERNAME = "col_arrivallastview_suppliername";
+    String COL_ARRIVALVIEW_ID = "col_arrivalview_id";
+    String COL_ARRIVALVIEW_MATREVMATMATERIALCLASSCODE = "col_arrivalview_matrevmatmaterialclasscode";
+    String COL_ARRIVALVIEW_MATREVMATMATERIALNUMBER = "col_arrivalview_matrevmatmaterialnumber";
+    String COL_ARRIVALVIEW_MATREVMATMATERIALTYPECODE = "col_arrivalview_matrevmatmaterialtypecode";
+    String COL_ARRIVALVIEW_MATREVMATOWNERLOCATIONCODE = "col_arrivalview_matrevmatownerlocationcode";
+    String COL_ARRIVALVIEW_MATREVMATSAPNUMBER = "col_arrivalview_matrevmatsapnumber";
+    String COL_ARRIVALVIEW_MATREVMATSHORTTEXT = "col_arrivalview_matrevmatshorttext";
+    String COL_ARRIVALVIEW_MATREVREVISIONNUMBER = "col_arrivalview_matrevrevisionnumber";
+    String COL_ARRIVALVIEW_MOVEMENTTYPECODE = "col_arrivalview_movementtypecode";
+    String COL_ARRIVALVIEW_ORDERNUMBER = "col_arrivalview_ordernumber";
+    String COL_ARRIVALVIEW_PLANTCODE = "col_arrivalview_plantcode";
+    String COL_ARRIVALVIEW_SERIALOBJECTSERIALNUMBER = "col_arrivalview_serialobjectserialnumber";
+    String COL_ARRIVALVIEW_SUPPLIERNAME = "col_arrivalview_suppliername";
     String COL_CUSTOMERVIEW_COUNTRYNAME = "col_customerview_countryname";
     String COL_MATERIALREVISIONBOMITEMSPANEL_MATERIALCLASSCODE = "col_materialrevisionbomitemspanel_materialclasscode";
     String COL_MATERIALREVISIONBOMITEMSPANEL_MATERIALMATERIALNUMBER = "col_materialrevisionbomitemspanel_materialmaterialnumber";
@@ -168,6 +181,7 @@ public interface TranslationKeys {
     String FORM_AGGREGATEDSHIPMENTARRIVALVIEW_TITLE = "form_aggregatedshipmentarrivalview_title";
     String FORM_AGGREGATEDSHIPMENTVIEW_TITLE = "form_aggregatedshipmentview_title";
     String FORM_ARRIVALLASTVIEW_TITLE = "form_arrivallastview_title";
+    String FORM_ARRIVALVIEW_TITLE = "form_arrivalview_title";
     String FORM_BUSINESSUNITVIEW_TITLE = "form_businessunitview_title";
     String FORM_CHANGEPASSWORDDIALOG_TITLE = "form_changepassworddialog_title";
     String FORM_COUNTRYVIEW_TITLE = "form_countryview_title";
