@@ -180,6 +180,10 @@ public class NavigatorView implements Serializable {
             if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY))
                 new DefaultTreeNode<>(VIEW_TYPE, new TreeNavigatorItem(bundle.getString(FORM_AGGREGATEDSHIPMENTARRIVALVIEW_TITLE),
                         req.getContextPath() + "/view/AggregatedShipmentArrivalView.jsf"), itemGroup0004);
+
+            if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY))
+                new DefaultTreeNode<>(VIEW_TYPE, new TreeNavigatorItem(bundle.getString(FORM_AGGREGATEDSHIPMENTVIEW_TITLE),
+                        req.getContextPath() + "/view/AggregatedShipmentView.jsf"), itemGroup0004);
         }
     }
 

@@ -47,6 +47,17 @@ public interface TranslationKeys {
     String COL_AGGREGATEDSHIPMENTARRIVALVIEW_SHIPMENTMOVEMENTTYPECODE = "col_aggregatedshipmentarrivalview_shipmentmovementtypecode";
     String COL_AGGREGATEDSHIPMENTARRIVALVIEW_SHIPMENTMOVEMENTTYPECODE_TOOLTIP = "col_aggregatedshipmentarrivalview_shipmentmovementtypecode_tooltip";
     String COL_AGGREGATEDSHIPMENTARRIVALVIEW_SUPPLIERNAME = "col_aggregatedshipmentarrivalview_suppliername";
+    String COL_AGGREGATEDSHIPMENTVIEW_CUSTCOUNTRYNAME = "col_aggregatedshipmentview_custcountryname";
+    String COL_AGGREGATEDSHIPMENTVIEW_CUSTOMERNAME = "col_aggregatedshipmentview_customername";
+    String COL_AGGREGATEDSHIPMENTVIEW_MATREVMATLMATERIALNUMBER = "col_aggregatedshipmentview_matrevmatlmaterialnumber";
+    String COL_AGGREGATEDSHIPMENTVIEW_MATREVMATMATERIALCLASSCODE = "col_aggregatedshipmentview_matrevmatmaterialclasscode";
+    String COL_AGGREGATEDSHIPMENTVIEW_MATREVMATMATERIALTYPECODE = "col_aggregatedshipmentview_matrevmatmaterialtypecode";
+    String COL_AGGREGATEDSHIPMENTVIEW_MATREVMATOWNERLOCATIONCODE = "col_aggregatedshipmentview_matrevmatownerlocationcode";
+    String COL_AGGREGATEDSHIPMENTVIEW_MATREVMATSAPNUMBER = "col_aggregatedshipmentview_matrevmatsapnumber";
+    String COL_AGGREGATEDSHIPMENTVIEW_MATREVMATSHORTTEXT = "col_aggregatedshipmentview_matrevmatshorttext";
+    String COL_AGGREGATEDSHIPMENTVIEW_MATREVREVISIONNUMBER = "col_aggregatedshipmentview_matrevrevisionnumber";
+    String COL_AGGREGATEDSHIPMENTVIEW_MOVEMENTTYPECODE = "col_aggregatedshipmentview_movementtypecode";
+    String COL_AGGREGATEDSHIPMENTVIEW_PLANTCODE = "col_aggregatedshipmentview_plantcode";
     String COL_CUSTOMERVIEW_COUNTRYNAME = "col_customerview_countryname";
     String COL_MATERIALREVISIONBOMITEMSPANEL_MATERIALCLASSCODE = "col_materialrevisionbomitemspanel_materialclasscode";
     String COL_MATERIALREVISIONBOMITEMSPANEL_MATERIALMATERIALNUMBER = "col_materialrevisionbomitemspanel_materialmaterialnumber";
@@ -138,6 +149,7 @@ public interface TranslationKeys {
     String FORM_ADDBOMITEMDIALOG_TITLE = "form_addbomitemdialog_title";
     String FORM_AGGREGATEDARRIVALVIEW_TITLE = "form_aggregatedarrivalview_title";
     String FORM_AGGREGATEDSHIPMENTARRIVALVIEW_TITLE = "form_aggregatedshipmentarrivalview_title";
+    String FORM_AGGREGATEDSHIPMENTVIEW_TITLE = "form_aggregatedshipmentview_title";
     String FORM_BUSINESSUNITVIEW_TITLE = "form_businessunitview_title";
     String FORM_CHANGEPASSWORDDIALOG_TITLE = "form_changepassworddialog_title";
     String FORM_COUNTRYVIEW_TITLE = "form_countryview_title";
@@ -227,6 +239,7 @@ public interface TranslationKeys {
     String LBL_ATTR_ABSTRACTFUNTIONALENTITY_SHORTTEXT = "lbl_attr_abstractfuntionalentity_shorttext";
     String LBL_ATTR_ABSTRACTFUNTIONALENTITY_VERSION = "lbl_attr_abstractfuntionalentity_version";
     String LBL_ATTR_AGGREGATEDARRIVAL_ARRIVALS = "lbl_attr_aggregatedarrival_arrivals";
+    String LBL_ATTR_AGGREGATEDSHIPMENT_SHIPMENTS = "lbl_attr_aggregatedshipment_shipments";
     String LBL_ATTR_AGGREGATEDSHIPMENTARRIVAL_SHIPMENTS = "lbl_attr_aggregatedshipmentarrival_shipments";
     String LBL_ATTR_BOMITEM_LABEL = "lbl_attr_bomitem_label";
     String LBL_ATTR_BOMITEM_POSITION = "lbl_attr_bomitem_position";

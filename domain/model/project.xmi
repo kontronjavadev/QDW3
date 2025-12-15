@@ -4236,10 +4236,10 @@
       <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.0"/>
     </attributes>
   </net.sourceforge.jbizmo.model.dto:DTOBean>
-  <net.sourceforge.jbizmo.model.client:FormGroup name="Serial object" groupOrder="4" forms="/260 /266" roles="/0/@roles.0 /0/@roles.1" project="/0"/>
-  <net.sourceforge.jbizmo.model.java:Namespace name="mv" parent="/2" javaTypes="/265 /271" project="/0"/>
-  <net.sourceforge.jbizmo.model.java:Namespace name="mv" parent="/1" javaTypes="/264 /270" project="/0"/>
-  <net.sourceforge.jbizmo.model.java:Namespace name="mv" parent="/3" javaTypes="/263 /269" project="/0"/>
+  <net.sourceforge.jbizmo.model.client:FormGroup name="Serial object" groupOrder="4" forms="/260 /266 /286" roles="/0/@roles.0 /0/@roles.1" project="/0"/>
+  <net.sourceforge.jbizmo.model.java:Namespace name="mv" parent="/2" javaTypes="/265 /271 /291" project="/0"/>
+  <net.sourceforge.jbizmo.model.java:Namespace name="mv" parent="/1" javaTypes="/264 /270 /290" project="/0"/>
+  <net.sourceforge.jbizmo.model.java:Namespace name="mv" parent="/3" javaTypes="/263 /269 /289" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="mv" parent="/4" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="serial" parent="/2" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="serial" parent="/1" project="/0"/>
@@ -5007,4 +5007,241 @@
       <domainAttribute href="package-base.xmi#//@domainObjects.0/@attributes.0"/>
     </attributes>
   </net.sourceforge.jbizmo.model.dto:DTOBean>
+  <net.sourceforge.jbizmo.model.client:Form name="AggregatedShipmentView" formType="SEARCHABLE_VIEW" formGroup="/247" title="Aggregated shipments" formPanels="/287" dTO="/289" roles="/0/@roles.0 /0/@roles.1" boundaryMethod="/290/@boundaryMethods.0">
+    <actions name="actionDelete" description="Delete selected aggregated shipment" boundaryMethod="/290/@boundaryMethods.2" roles="/0/@roles.0" type="DELETE"/>
+    <actions name="actionCopy" description="Create copy of selected aggregated shipment" boundaryMethod="/290/@boundaryMethods.3" roles="/0/@roles.0" type="COPY"/>
+    <domainObject href="package-mv.xmi#//@domainObjects.6"/>
+  </net.sourceforge.jbizmo.model.client:Form>
+  <net.sourceforge.jbizmo.model.client:FormPanel name="AggregatedShipmentPanel" form="/286" formTable="/288" dTO="/289" boundaryMethod="/290/@boundaryMethods.1"/>
+  <net.sourceforge.jbizmo.model.client:FormTable name="AggregatedShipmentTable" formPanel="/287">
+    <fields width="80" title="Plant" dTOAttribute="/289/@attributes.4"/>
+    <fields colIndex="2" width="80" title="Mvt. type" dTOAttribute="/289/@attributes.7"/>
+    <fields colIndex="3" width="200" title="Customer" dTOAttribute="/289/@attributes.5"/>
+    <fields colIndex="4" width="150" title="Country" dTOAttribute="/289/@attributes.10"/>
+    <fields colIndex="5" width="150" title="Material no." dTOAttribute="/289/@attributes.12"/>
+    <fields colIndex="6" width="150" title="SAP no." dTOAttribute="/289/@attributes.13"/>
+    <fields colIndex="7" width="250" title="Material short text" dTOAttribute="/289/@attributes.14"/>
+    <fields colIndex="8" width="80" title="Mat. type" dTOAttribute="/289/@attributes.15"/>
+    <fields colIndex="9" width="120" title="Material class" dTOAttribute="/289/@attributes.16"/>
+    <fields colIndex="10" width="150" title="Material hierarchy" dTOAttribute="/289/@attributes.17"/>
+    <fields colIndex="11" title="Owner location" dTOAttribute="/289/@attributes.18"/>
+    <fields colIndex="12" width="150" title="Revision no." dTOAttribute="/289/@attributes.19"/>
+    <fields colIndex="13" width="80" title="Year" fieldType="INTEGER" dTOAttribute="/289/@attributes.2"/>
+    <fields colIndex="14" width="80" title="Month" fieldType="INTEGER" dTOAttribute="/289/@attributes.3"/>
+    <fields colIndex="15" width="80" title="Shipments" fieldType="INTEGER" dTOAttribute="/289/@attributes.0"/>
+    <fields colIndex="16" visible="false" width="80" title="Material id" fieldType="LONG" dTOAttribute="/289/@attributes.11"/>
+    <fields colIndex="17" visible="false" title="Customer code" dTOAttribute="/289/@attributes.6"/>
+    <fields colIndex="18" visible="false" width="80" title="Country code" dTOAttribute="/289/@attributes.9"/>
+    <fields colIndex="19" visible="false" identifier="true" width="80" title="Id" fieldType="LONG" dTOAttribute="/289/@attributes.1"/>
+    <fields colIndex="20" visible="false" width="140" title="Material revision id" fieldType="LONG" dTOAttribute="/289/@attributes.8"/>
+  </net.sourceforge.jbizmo.model.client:FormTable>
+  <net.sourceforge.jbizmo.model.dto:DTOBean name="AggregatedShipmentSearchDTO" comment="DTO for aggregated shipment objects" namespace="/250">
+    <domainObject href="package-mv.xmi#//@domainObjects.6"/>
+    <attributes name="shipments" selectToken="a.shipments">
+      <domainAttribute href="package-mv.xmi#//@domainObjects.6/@attributes.0"/>
+    </attributes>
+    <attributes name="id" selectToken="a.id">
+      <domainAttribute href="package-mv.xmi#//@domainObjects.5/@attributes.0"/>
+    </attributes>
+    <attributes name="year" selectToken="a.year">
+      <domainAttribute href="package-mv.xmi#//@domainObjects.5/@attributes.1"/>
+    </attributes>
+    <attributes name="month" selectToken="a.month">
+      <domainAttribute href="package-mv.xmi#//@domainObjects.5/@attributes.2"/>
+    </attributes>
+    <attributes name="plantCode" selectToken="c.code">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-mv.xmi#//@domainObjects.6/@associations.1"/>
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.0"/>
+    </attributes>
+    <attributes name="customerName" selectToken="d.name">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-mv.xmi#//@domainObjects.6/@associations.2"/>
+      <domainAttribute href="package-base.xmi#//@domainObjects.12/@attributes.0"/>
+    </attributes>
+    <attributes name="customerCode" selectToken="d.code">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-mv.xmi#//@domainObjects.6/@associations.2"/>
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.0"/>
+    </attributes>
+    <attributes name="movementTypeCode" selectToken="e.code">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-mv.xmi#//@domainObjects.6/@associations.3"/>
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.0"/>
+    </attributes>
+    <attributes name="materialRevisionId" selectToken="b.id">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-mv.xmi#//@domainObjects.6/@associations.0"/>
+      <domainAttribute href="package-base.xmi#//@domainObjects.0/@attributes.0"/>
+    </attributes>
+    <attributes name="custCountryCode" selectToken="f.code">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-base.xmi#//@domainObjects.12/@associations.0"/>
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.0"/>
+      <associationList xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-mv.xmi#//@domainObjects.6/@associations.2"/>
+    </attributes>
+    <attributes name="custCountryName" selectToken="f.name">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-base.xmi#//@domainObjects.12/@associations.0"/>
+      <domainAttribute href="package-base.xmi#//@domainObjects.11/@attributes.0"/>
+      <associationList xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-mv.xmi#//@domainObjects.6/@associations.2"/>
+    </attributes>
+    <attributes name="matrevMaterialId" selectToken="h.id">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-material.xmi#//@domainObjects.3/@associations.0"/>
+      <domainAttribute href="package-base.xmi#//@domainObjects.0/@attributes.0"/>
+      <associationList xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-mv.xmi#//@domainObjects.6/@associations.0"/>
+    </attributes>
+    <attributes name="matrevMatlMaterialNumber" selectToken="h.materialNumber">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-material.xmi#//@domainObjects.3/@associations.0"/>
+      <domainAttribute href="package-material.xmi#//@domainObjects.2/@attributes.0"/>
+      <associationList xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-mv.xmi#//@domainObjects.6/@associations.0"/>
+    </attributes>
+    <attributes name="matrevMatSapNumber" selectToken="h.sapNumber">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-material.xmi#//@domainObjects.3/@associations.0"/>
+      <domainAttribute href="package-material.xmi#//@domainObjects.2/@attributes.1"/>
+      <associationList xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-mv.xmi#//@domainObjects.6/@associations.0"/>
+    </attributes>
+    <attributes name="matrevMatShortText" selectToken="h.shortText">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-material.xmi#//@domainObjects.3/@associations.0"/>
+      <domainAttribute href="package-material.xmi#//@domainObjects.2/@attributes.2"/>
+      <associationList xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-mv.xmi#//@domainObjects.6/@associations.0"/>
+    </attributes>
+    <attributes name="matrevMatMaterialTypeCode" selectToken="m.code">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-material.xmi#//@domainObjects.2/@associations.2"/>
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.0"/>
+      <associationList xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-material.xmi#//@domainObjects.3/@associations.0"/>
+      <associationList xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-mv.xmi#//@domainObjects.6/@associations.0"/>
+    </attributes>
+    <attributes name="matrevMatMaterialClassCode" selectToken="l.code">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-material.xmi#//@domainObjects.2/@associations.1"/>
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.0"/>
+      <associationList xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-material.xmi#//@domainObjects.3/@associations.0"/>
+      <associationList xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-mv.xmi#//@domainObjects.6/@associations.0"/>
+    </attributes>
+    <attributes name="matrevMatMaterialHierarchy" selectToken="h.materialHierarchy">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-material.xmi#//@domainObjects.3/@associations.0"/>
+      <domainAttribute href="package-material.xmi#//@domainObjects.2/@attributes.5"/>
+      <associationList xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-mv.xmi#//@domainObjects.6/@associations.0"/>
+    </attributes>
+    <attributes name="matrevMatOwnerLocationCode" selectToken="k.code">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-material.xmi#//@domainObjects.2/@associations.0"/>
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.0"/>
+      <associationList xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-material.xmi#//@domainObjects.3/@associations.0"/>
+      <associationList xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-mv.xmi#//@domainObjects.6/@associations.0"/>
+    </attributes>
+    <attributes name="matrevRevisionNumber" selectToken="b.revisionNumber">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-mv.xmi#//@domainObjects.6/@associations.0"/>
+      <domainAttribute href="package-material.xmi#//@domainObjects.3/@attributes.0"/>
+    </attributes>
+  </net.sourceforge.jbizmo.model.dto:DTOBean>
+  <net.sourceforge.jbizmo.model.boundary:BoundaryBean name="AggregatedShipmentBoundaryServiceBean" comment="Boundary service for aggregated shipment objects" namespace="/249" interfaceName="AggregatedShipmentBoundaryService" repository="/291">
+    <domainObject href="package-mv.xmi#//@domainObjects.6"/>
+    <boundaryMethods name="searchAllAggregatedShipments" comment="Search for aggregated shipment objects" returnType="/289" returnTypeModifier="List" queryStatement="from AggregatedShipment a join a.materialRevision b join a.plant c join a.customer d join a.movementType e join d.country f join b.material h join h.ownerLocation k join h.materialClass l join h.materialType m" customStatement="" methodType="SEARCH" serviceMethod="/291/@repositoryMethods.11"/>
+    <boundaryMethods name="countAllAggregatedShipments" comment="Count aggregated shipment objects" returnType="/0/@allSupportedTypes.2" queryStatement="from AggregatedShipment a join a.materialRevision b join a.plant c join a.customer d join a.movementType e join d.country f join b.material h join h.ownerLocation k join h.materialClass l join h.materialType m" customStatement="" methodType="COUNT" serviceMethod="/291/@repositoryMethods.12"/>
+    <boundaryMethods name="deleteAggregatedShipment" comment="Delete existing aggregated shipment" returnType="/0/@allSupportedTypes.0" serviceMethod="/291/@repositoryMethods.7">
+      <methodParameters name="id" type="/0/@allSupportedTypes.2"/>
+    </boundaryMethods>
+    <boundaryMethods name="copy" comment="Create copy of selected aggregated shipment" returnType="/0/@allSupportedTypes.2" methodType="COPY" serviceMethod="/291/@repositoryMethods.6">
+      <methodParameters name="sourceObjectId" type="/0/@allSupportedTypes.2"/>
+    </boundaryMethods>
+  </net.sourceforge.jbizmo.model.boundary:BoundaryBean>
+  <net.sourceforge.jbizmo.model.repository:Repository name="AggregatedShipmentRepository" comment="Create, read, update and delete services for aggregated shipment objects." namespace="/248">
+    <domainObject href="package-mv.xmi#//@domainObjects.6"/>
+    <repositoryMethods name="findById" javaType="/291" transactionType="REQUIRED" methodType="FIND_BY_ID">
+      <returnType href="package-mv.xmi#//@domainObjects.6"/>
+      <methodParameters name="id" type="/0/@allSupportedTypes.2"/>
+    </repositoryMethods>
+    <repositoryMethods name="findById" javaType="/291" transactionType="REQUIRED" methodType="FIND_EXISTING">
+      <returnType href="package-mv.xmi#//@domainObjects.6"/>
+      <methodParameters name="id" type="/0/@allSupportedTypes.2"/>
+      <methodParameters name="mustExist" type="/0/@allSupportedTypes.4"/>
+    </repositoryMethods>
+    <repositoryMethods name="findById" javaType="/291" transactionType="REQUIRED" methodType="FIND_BY_OBJECT">
+      <returnType href="package-mv.xmi#//@domainObjects.6"/>
+      <methodParameters name="aggregatedShipment">
+        <type href="package-mv.xmi#//@domainObjects.6"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="deleteAll" javaType="/291" returnType="/0/@allSupportedTypes.0" transactionType="REQUIRED" methodType="DELETE_ALL"/>
+    <repositoryMethods name="merge" javaType="/291" transactionType="REQUIRED" methodType="MERGE">
+      <returnType href="package-mv.xmi#//@domainObjects.6"/>
+      <methodParameters name="aggregatedShipment">
+        <type href="package-mv.xmi#//@domainObjects.6"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="persist" javaType="/291" transactionType="REQUIRED" methodType="PERSIST">
+      <returnType href="package-mv.xmi#//@domainObjects.6"/>
+      <methodParameters name="aggregatedShipment">
+        <type href="package-mv.xmi#//@domainObjects.6"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="copy" javaType="/291" transactionType="REQUIRED" methodType="COPY">
+      <returnType href="package-mv.xmi#//@domainObjects.6"/>
+      <methodParameters name="sourceObject">
+        <type href="package-mv.xmi#//@domainObjects.6"/>
+      </methodParameters>
+      <methodParameters name="targetObject">
+        <type href="package-mv.xmi#//@domainObjects.6"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="delete" javaType="/291" returnType="/0/@allSupportedTypes.0" transactionType="REQUIRED" methodType="DELETE">
+      <methodParameters name="id" type="/0/@allSupportedTypes.2"/>
+    </repositoryMethods>
+    <repositoryMethods name="findAll" javaType="/291" returnTypeModifier="List" transactionType="REQUIRED">
+      <returnType href="package-mv.xmi#//@domainObjects.6"/>
+    </repositoryMethods>
+    <repositoryMethods name="existsById" javaType="/291" returnType="/0/@allSupportedTypes.4" transactionType="REQUIRED" methodType="EXISTS_BY_ID">
+      <methodParameters name="id" type="/0/@allSupportedTypes.2"/>
+    </repositoryMethods>
+    <repositoryMethods name="count" javaType="/291" returnType="/0/@allSupportedTypes.7" transactionType="REQUIRED" methodType="COUNT_ALL"/>
+    <repositoryMethods name="search" javaType="/291" returnTypeModifier="List" transactionType="REQUIRED" methodType="SEARCH">
+      <returnType href="package-mv.xmi#//@domainObjects.6"/>
+    </repositoryMethods>
+    <repositoryMethods name="count" javaType="/291" returnType="/0/@allSupportedTypes.7" transactionType="REQUIRED" methodType="COUNT"/>
+    <repositoryMethods name="getMaterialRevision" javaType="/291" transactionType="REQUIRED" methodType="GET_ASSOCIATION" hint="NQ_GET_MATERIALREVISION">
+      <returnType href="package-material.xmi#//@domainObjects.3"/>
+      <methodParameters xsi:type="net.sourceforge.jbizmo.model.repository:RepositoryMethodParameter" name="id" type="/0/@allSupportedTypes.2">
+        <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-mv.xmi#//@domainObjects.6/@associations.0"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="getPlant" javaType="/291" transactionType="REQUIRED" methodType="GET_ASSOCIATION" hint="NQ_GET_PLANT">
+      <returnType href="package-base.xmi#//@domainObjects.7"/>
+      <methodParameters xsi:type="net.sourceforge.jbizmo.model.repository:RepositoryMethodParameter" name="id" type="/0/@allSupportedTypes.2">
+        <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-mv.xmi#//@domainObjects.6/@associations.1"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="getCustomer" javaType="/291" transactionType="REQUIRED" methodType="GET_ASSOCIATION" hint="NQ_GET_CUSTOMER">
+      <returnType href="package-base.xmi#//@domainObjects.12"/>
+      <methodParameters xsi:type="net.sourceforge.jbizmo.model.repository:RepositoryMethodParameter" name="id" type="/0/@allSupportedTypes.2">
+        <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-mv.xmi#//@domainObjects.6/@associations.2"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="getMovementType" javaType="/291" transactionType="REQUIRED" methodType="GET_ASSOCIATION" hint="NQ_GET_MOVEMENTTYPE">
+      <returnType href="package-base.xmi#//@domainObjects.8"/>
+      <methodParameters xsi:type="net.sourceforge.jbizmo.model.repository:RepositoryMethodParameter" name="id" type="/0/@allSupportedTypes.2">
+        <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-mv.xmi#//@domainObjects.6/@associations.3"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="setMaterialRevision" javaType="/291" returnType="/0/@allSupportedTypes.0" transactionType="REQUIRED" methodType="CHANGE_PARENT">
+      <methodParameters name="id" type="/0/@allSupportedTypes.2"/>
+      <methodParameters xsi:type="net.sourceforge.jbizmo.model.repository:RepositoryMethodParameter" name="materialRevision">
+        <type href="package-material.xmi#//@domainObjects.3"/>
+        <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-mv.xmi#//@domainObjects.6/@associations.0"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="setPlant" javaType="/291" returnType="/0/@allSupportedTypes.0" transactionType="REQUIRED" methodType="CHANGE_PARENT">
+      <methodParameters name="id" type="/0/@allSupportedTypes.2"/>
+      <methodParameters xsi:type="net.sourceforge.jbizmo.model.repository:RepositoryMethodParameter" name="plant">
+        <type href="package-base.xmi#//@domainObjects.7"/>
+        <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-mv.xmi#//@domainObjects.6/@associations.1"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="setCustomer" javaType="/291" returnType="/0/@allSupportedTypes.0" transactionType="REQUIRED" methodType="CHANGE_PARENT">
+      <methodParameters name="id" type="/0/@allSupportedTypes.2"/>
+      <methodParameters xsi:type="net.sourceforge.jbizmo.model.repository:RepositoryMethodParameter" name="customer">
+        <type href="package-base.xmi#//@domainObjects.12"/>
+        <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-mv.xmi#//@domainObjects.6/@associations.2"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="setMovementType" javaType="/291" returnType="/0/@allSupportedTypes.0" transactionType="REQUIRED" methodType="CHANGE_PARENT">
+      <methodParameters name="id" type="/0/@allSupportedTypes.2"/>
+      <methodParameters xsi:type="net.sourceforge.jbizmo.model.repository:RepositoryMethodParameter" name="movementType">
+        <type href="package-base.xmi#//@domainObjects.8"/>
+        <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-mv.xmi#//@domainObjects.6/@associations.3"/>
+      </methodParameters>
+    </repositoryMethods>
+  </net.sourceforge.jbizmo.model.repository:Repository>
 </xmi:XMI>
