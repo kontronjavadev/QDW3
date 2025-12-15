@@ -4480,7 +4480,7 @@
       </methodParameters>
     </repositoryMethods>
   </net.sourceforge.jbizmo.model.repository:Repository>
-  <net.sourceforge.jbizmo.model.client:Form name="AggregatedShipmentArrivalView" formType="SEARCHABLE_VIEW" formGroup="/247" title="Aggregated shipment &amp; arrivals" formPanels="/267" dTO="/269" roles="/0/@roles.0 /0/@roles.1" boundaryMethod="/270/@boundaryMethods.0">
+  <net.sourceforge.jbizmo.model.client:Form name="AggregatedShipmentArrivalView" formType="SEARCHABLE_VIEW" formGroup="/247" title="Aggr. shipment &amp; arrivals" formPanels="/267" dTO="/269" roles="/0/@roles.0 /0/@roles.1" boundaryMethod="/270/@boundaryMethods.0">
     <actions name="actionDelete" description="Delete selected aggregated shipment arrival" boundaryMethod="/270/@boundaryMethods.2" type="DELETE"/>
     <actions name="actionCopy" description="Create copy of selected aggregated shipment arrival" boundaryMethod="/270/@boundaryMethods.3" type="COPY"/>
     <domainObject href="package-mv.xmi#//@domainObjects.7"/>

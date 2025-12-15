@@ -178,6 +178,7 @@ public interface TranslationKeys {
     String FORM_MATERIALTYPEVIEW_TITLE = "form_materialtypeview_title";
     String FORM_MATERIALVIEW_TITLE = "form_materialview_title";
     String FORM_MOVEMENTTYPEVIEW_TITLE = "form_movementtypeview_title";
+    String FORM_NOTIFICATIONUSERRELVIEW_TITLE = "form_notificationuserrelview_title";
     String FORM_NOTIFICATIONVIEW_TITLE = "form_notificationview_title";
     String FORM_PLANTVIEW_TITLE = "form_plantview_title";
     String FORM_RESETPASSWORDDIALOG_INVALIDLINK = "form_resetpassworddialog_invalidlink";
@@ -349,5 +350,4 @@ public interface TranslationKeys {
     String SEARCH_INPUT_VALIDATION = "search_input_validation";
     String SEARCH_INPUT_VISIBLE_FIELDS = "search_input_visible_fields";
     String SEARCH_INPUT_VISIBLE_FIELDS_LABEL = "search_input_visible_fields_label";
-    String FORM_NOTIFICATIONUSERRELVIEW_TITLE = "form_notificationuserrelview_title";
 }

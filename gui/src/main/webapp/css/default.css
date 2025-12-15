@@ -90,14 +90,19 @@ body .ui-scrollpanel {
 	color: var(--text);
 }
 
+.navigator-scrollpanel {
+    background: var(--panel) !important;
+    padding: 0rem;
+}
+
+.navigator-scrollpanel > .ui-panel-content.ui-widget-content {
+	padding: 0rem;
+}
+
 .ui-tooltip {
 	width: max-content;
 	max-width: 400px;
 	white-space: pre-wrap;
-}
-
-.navigator-scrollpanel {
-    background: var(--panel) !important;
 }
 
 .ui-widget,.ui-widget .ui-widget {
