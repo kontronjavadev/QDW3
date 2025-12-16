@@ -149,7 +149,7 @@ public class ArrivalLastView extends SuperView implements Serializable {
         refreshFormatSettings();
 
         new JSFSearchFieldDTO(searchObj, ++colOrderId, ArrivalLastSearchDTO.SELECT_ID,
-                bundle.getString(COL_ARRIVALLASTVIEW_ID), SearchFieldDataTypeEnum.LONG, 100);
+                bundle.getString(COL_ARRIVALLASTVIEW_ID), SearchFieldDataTypeEnum.LONG, 120);
 
         new JSFSearchFieldDTO(searchObj, ++colOrderId, ArrivalLastSearchDTO.SELECT_PLANTCODE,
                 bundle.getString(COL_ARRIVALLASTVIEW_PLANTCODE), SearchFieldDataTypeEnum.STRING, 80);
@@ -161,7 +161,7 @@ public class ArrivalLastView extends SuperView implements Serializable {
                 bundle.getString(COL_ARRIVALLASTVIEW_MOVEMENTTYPECODE), SearchFieldDataTypeEnum.STRING, 80);
 
         new JSFSearchFieldDTO(searchObj, ++colOrderId, ArrivalLastSearchDTO.SELECT_ARRIVALDATE,
-                bundle.getString(LBL_ATTR_ARRIVAL_ARRIVALDATE), SearchFieldDataTypeEnum.LOCAL_DATE, 100, false);
+                bundle.getString(LBL_ATTR_ARRIVAL_ARRIVALDATE), SearchFieldDataTypeEnum.LOCAL_DATE, 80, false);
 
         new JSFSearchFieldDTO(searchObj, ++colOrderId, ArrivalLastSearchDTO.SELECT_SERIALOBJECTSERIALNUMBER,
                 bundle.getString(COL_ARRIVALLASTVIEW_SERIALOBJECTSERIALNUMBER), SearchFieldDataTypeEnum.STRING, 100);
@@ -357,6 +357,7 @@ public class ArrivalLastView extends SuperView implements Serializable {
     /**
      * @return the name of the selected saved query
      */
+    @Override
     @Generated
     public String getSelectedSavedQuery() {
         return selectedSavedQuery;

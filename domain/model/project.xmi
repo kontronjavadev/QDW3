@@ -5703,17 +5703,17 @@
   </net.sourceforge.jbizmo.model.client:Form>
   <net.sourceforge.jbizmo.model.client:FormPanel name="ArrivalPanel" form="/303" formTable="/305" dTO="/306" boundaryMethod="/299/@boundaryMethods.4"/>
   <net.sourceforge.jbizmo.model.client:FormTable name="ArrivalTable" formPanel="/304">
-    <fields identifier="true" title="Transact. Id" fieldType="LONG" dTOAttribute="/306/@attributes.2"/>
+    <fields identifier="true" width="120" title="Transact. Id" fieldType="LONG" dTOAttribute="/306/@attributes.2"/>
     <fields colIndex="2" width="80" title="Plant" dTOAttribute="/306/@attributes.6"/>
     <fields colIndex="3" title="Order no." dTOAttribute="/306/@attributes.1"/>
     <fields colIndex="4" width="80" title="Mvt. type" dTOAttribute="/306/@attributes.5"/>
     <fields colIndex="5" width="80" title="Arrival date" fieldType="LOCAL_DATE" dTOAttribute="/306/@attributes.0"/>
-    <fields colIndex="6" width="150" title="Serial no." dTOAttribute="/306/@attributes.11"/>
+    <fields colIndex="6" title="Serial no." dTOAttribute="/306/@attributes.11"/>
     <fields colIndex="7" width="150" title="Supplier" dTOAttribute="/306/@attributes.7"/>
     <fields colIndex="8" width="150" title="Material no." dTOAttribute="/306/@attributes.13"/>
     <fields colIndex="9" width="150" title="SAP no." dTOAttribute="/306/@attributes.14"/>
     <fields colIndex="10" width="250" title="Material short text" dTOAttribute="/306/@attributes.15"/>
-    <fields colIndex="11" width="120" title="Owner location " dTOAttribute="/306/@attributes.18"/>
+    <fields colIndex="11" title="Owner location " dTOAttribute="/306/@attributes.18"/>
     <fields colIndex="12" width="80" title="Mat. type" dTOAttribute="/306/@attributes.16"/>
     <fields colIndex="13" width="120" title="Material class" dTOAttribute="/306/@attributes.17"/>
     <fields colIndex="14" width="150" title="Material hierarchy" dTOAttribute="/306/@attributes.19"/>
@@ -5826,13 +5826,12 @@
   </net.sourceforge.jbizmo.model.client:Form>
   <net.sourceforge.jbizmo.model.client:FormPanel name="ArrivalPanel" form="/307" formTable="/309" dTO="/310" boundaryMethod="/299/@boundaryMethods.6"/>
   <net.sourceforge.jbizmo.model.client:FormTable name="ArrivalTable" formPanel="/308">
-    <fields colIndex="15" width="150" title="Revision no." dTOAttribute="/310/@attributes.20"/>
-    <fields identifier="true" title="Transact. Id" fieldType="LONG" dTOAttribute="/310/@attributes.2"/>
+    <fields identifier="true" width="120" title="Transact. Id" fieldType="LONG" dTOAttribute="/310/@attributes.2"/>
     <fields colIndex="2" width="80" title="Plant" dTOAttribute="/310/@attributes.6"/>
     <fields colIndex="3" title="Order no." dTOAttribute="/310/@attributes.1"/>
     <fields colIndex="4" width="80" title="Mvt. type" dTOAttribute="/310/@attributes.5"/>
-    <fields colIndex="5" width="84" title="Arrival date" fieldType="LOCAL_DATE" dTOAttribute="/310/@attributes.0"/>
-    <fields colIndex="6" width="150" title="Serial no." dTOAttribute="/310/@attributes.11"/>
+    <fields colIndex="5" width="80" title="Arrival date" fieldType="LOCAL_DATE" dTOAttribute="/310/@attributes.0"/>
+    <fields colIndex="6" title="Serial no." dTOAttribute="/310/@attributes.11"/>
     <fields colIndex="7" width="150" title="Supplier" dTOAttribute="/310/@attributes.7"/>
     <fields colIndex="8" width="150" title="Material no." dTOAttribute="/310/@attributes.13"/>
     <fields colIndex="9" width="150" title="SAP no." dTOAttribute="/310/@attributes.14"/>
@@ -5841,6 +5840,7 @@
     <fields colIndex="12" width="120" title="Material class" dTOAttribute="/310/@attributes.18"/>
     <fields colIndex="13" title="Owner location" dTOAttribute="/310/@attributes.16"/>
     <fields colIndex="14" width="150" title="Material hierarchy" dTOAttribute="/310/@attributes.19"/>
+    <fields colIndex="15" width="150" title="Revision no." dTOAttribute="/310/@attributes.20"/>
     <fields colIndex="16" width="120" title="Creation date" fieldType="LOCAL_DATE_TIME" dTOAttribute="/310/@attributes.3"/>
     <fields colIndex="17" width="120" title="Last update" fieldType="LOCAL_DATE_TIME" dTOAttribute="/310/@attributes.4"/>
     <fields colIndex="18" visible="false" width="80" title="Material id" fieldType="LONG" dTOAttribute="/310/@attributes.12"/>

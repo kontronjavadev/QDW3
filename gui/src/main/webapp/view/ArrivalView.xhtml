@@ -366,7 +366,7 @@
 		rowsPerPageTemplate="50,150,400,1000">
 		<p:ajax event="rowDblselect" listener="#{arrivalView.onDoubleClick}"/>
 
-		<p:column sortBy="#{arrivalViewItem.id}" width="100" 
+		<p:column sortBy="#{arrivalViewItem.id}" width="120" 
 			rendered="#{arrivalView.searchObject.searchFields[0].visible}" displayPriority="#{arrivalView.searchObject.searchFields[0].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_arrivalview_id}"/>
@@ -414,7 +414,7 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{arrivalViewItem.serialObjectSerialNumber}" width="150" 
+		<p:column sortBy="#{arrivalViewItem.serialObjectSerialNumber}" width="100" 
 			rendered="#{arrivalView.searchObject.searchFields[5].visible}" displayPriority="#{arrivalView.searchObject.searchFields[5].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_arrivalview_serialobjectserialnumber}"/>
@@ -459,7 +459,7 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{arrivalViewItem.matrevMatOwnerLocationCode}" width="120" 
+		<p:column sortBy="#{arrivalViewItem.matrevMatOwnerLocationCode}" width="100" 
 			rendered="#{arrivalView.searchObject.searchFields[10].visible}" displayPriority="#{arrivalView.searchObject.searchFields[10].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_arrivalview_matrevmatownerlocationcode}"/>

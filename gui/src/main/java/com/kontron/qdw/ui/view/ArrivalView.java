@@ -149,7 +149,7 @@ public class ArrivalView extends SuperView implements Serializable {
         refreshFormatSettings();
 
         new JSFSearchFieldDTO(searchObj, ++colOrderId, ArrivalSearchDTO.SELECT_ID,
-                bundle.getString(COL_ARRIVALVIEW_ID), SearchFieldDataTypeEnum.LONG, 100);
+                bundle.getString(COL_ARRIVALVIEW_ID), SearchFieldDataTypeEnum.LONG, 120);
 
         new JSFSearchFieldDTO(searchObj, ++colOrderId, ArrivalSearchDTO.SELECT_PLANTCODE,
                 bundle.getString(COL_ARRIVALVIEW_PLANTCODE), SearchFieldDataTypeEnum.STRING, 80);
@@ -164,7 +164,7 @@ public class ArrivalView extends SuperView implements Serializable {
                 bundle.getString(LBL_ATTR_ARRIVAL_ARRIVALDATE), SearchFieldDataTypeEnum.LOCAL_DATE, 80, false);
 
         new JSFSearchFieldDTO(searchObj, ++colOrderId, ArrivalSearchDTO.SELECT_SERIALOBJECTSERIALNUMBER,
-                bundle.getString(COL_ARRIVALVIEW_SERIALOBJECTSERIALNUMBER), SearchFieldDataTypeEnum.STRING, 150);
+                bundle.getString(COL_ARRIVALVIEW_SERIALOBJECTSERIALNUMBER), SearchFieldDataTypeEnum.STRING, 100);
 
         new JSFSearchFieldDTO(searchObj, ++colOrderId, ArrivalSearchDTO.SELECT_SUPPLIERNAME,
                 bundle.getString(COL_ARRIVALVIEW_SUPPLIERNAME), SearchFieldDataTypeEnum.STRING, 150);
@@ -179,7 +179,7 @@ public class ArrivalView extends SuperView implements Serializable {
                 bundle.getString(COL_ARRIVALVIEW_MATREVMATSHORTTEXT), SearchFieldDataTypeEnum.STRING, 250);
 
         new JSFSearchFieldDTO(searchObj, ++colOrderId, ArrivalSearchDTO.SELECT_MATREVMATOWNERLOCATIONCODE,
-                bundle.getString(COL_ARRIVALVIEW_MATREVMATOWNERLOCATIONCODE), SearchFieldDataTypeEnum.STRING, 120);
+                bundle.getString(COL_ARRIVALVIEW_MATREVMATOWNERLOCATIONCODE), SearchFieldDataTypeEnum.STRING, 100);
 
         new JSFSearchFieldDTO(searchObj, ++colOrderId, ArrivalSearchDTO.SELECT_MATREVMATMATERIALTYPECODE,
                 bundle.getString(COL_ARRIVALVIEW_MATREVMATMATERIALTYPECODE), SearchFieldDataTypeEnum.STRING, 80);

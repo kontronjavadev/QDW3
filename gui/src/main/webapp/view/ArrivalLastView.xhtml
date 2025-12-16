@@ -365,7 +365,7 @@
 		rowsPerPageTemplate="50,150,400,1000">
 		<p:ajax event="rowDblselect" listener="#{arrivalLastView.onDoubleClick}"/>
 
-		<p:column sortBy="#{arrivalLastViewItem.id}" width="100" 
+		<p:column sortBy="#{arrivalLastViewItem.id}" width="120" 
 			rendered="#{arrivalLastView.searchObject.searchFields[0].visible}" displayPriority="#{arrivalLastView.searchObject.searchFields[0].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_arrivallastview_id}"/>
@@ -401,7 +401,7 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{arrivalLastViewItem.arrivalDate}" width="100" 
+		<p:column sortBy="#{arrivalLastViewItem.arrivalDate}" width="80" 
 			rendered="#{arrivalLastView.searchObject.searchFields[4].visible}" displayPriority="#{arrivalLastView.searchObject.searchFields[4].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_arrival_arrivaldate}"/>
@@ -461,7 +461,7 @@
 		<p:column sortBy="#{arrivalLastViewItem.matrevMatOwnerLocationCode}" width="100" 
 			rendered="#{arrivalLastView.searchObject.searchFields[10].visible}" displayPriority="#{arrivalLastView.searchObject.searchFields[10].colOrder}" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_arrivallastview_matrevmatownerLocationcode}"/>
+				<h:outputText value="#{i18n.col_arrivallastview_matrevmatownerlocationcode}"/>
 			</f:facet>
 			<h:outputText value="#{arrivalLastViewItem.matrevMatOwnerLocationCode}">
 			</h:outputText>
