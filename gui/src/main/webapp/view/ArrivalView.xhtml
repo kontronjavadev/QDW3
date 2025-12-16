@@ -424,39 +424,43 @@
 		</p:column>
 
 		<p:column sortBy="#{arrivalViewItem.supplierName}" width="150" 
-			rendered="#{arrivalView.searchObject.searchFields[6].visible}" displayPriority="#{arrivalView.searchObject.searchFields[6].colOrder}" >
+			rendered="#{arrivalView.searchObject.searchFields[6].visible}" displayPriority="#{arrivalView.searchObject.searchFields[6].colOrder}" 
+			exportValue="#{arrivalViewItem.supplierName}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_arrivalview_suppliername}"/>
 			</f:facet>
-			<h:outputText value="#{arrivalViewItem.supplierName}">
-			</h:outputText>
+			<h:outputText value="#{arrivalViewItem.supplierName}" id="supplierName" />
+			<p:tooltip for="supplierName" value="#{arrivalViewItem.supplierName}" position="top" showDelay="50"/>
 		</p:column>
 
 		<p:column sortBy="#{arrivalViewItem.matrevMatMaterialNumber}" width="150" 
-			rendered="#{arrivalView.searchObject.searchFields[7].visible}" displayPriority="#{arrivalView.searchObject.searchFields[7].colOrder}" >
+			rendered="#{arrivalView.searchObject.searchFields[7].visible}" displayPriority="#{arrivalView.searchObject.searchFields[7].colOrder}" 
+			exportValue="#{arrivalViewItem.matrevMatMaterialNumber}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_arrivalview_matrevmatmaterialnumber}"/>
 			</f:facet>
-			<h:outputText value="#{arrivalViewItem.matrevMatMaterialNumber}">
-			</h:outputText>
+			<h:outputText value="#{arrivalViewItem.matrevMatMaterialNumber}" id="matrevMatMaterialNumber" />
+			<p:tooltip for="matrevMatMaterialNumber" value="#{arrivalViewItem.matrevMatMaterialNumber}" position="top" showDelay="50"/>
 		</p:column>
 
 		<p:column sortBy="#{arrivalViewItem.matrevMatSapNumber}" width="150" 
-			rendered="#{arrivalView.searchObject.searchFields[8].visible}" displayPriority="#{arrivalView.searchObject.searchFields[8].colOrder}" >
+			rendered="#{arrivalView.searchObject.searchFields[8].visible}" displayPriority="#{arrivalView.searchObject.searchFields[8].colOrder}" 
+			exportValue="#{arrivalViewItem.matrevMatSapNumber}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_arrivalview_matrevmatsapnumber}"/>
 			</f:facet>
-			<h:outputText value="#{arrivalViewItem.matrevMatSapNumber}">
-			</h:outputText>
+			<h:outputText value="#{arrivalViewItem.matrevMatSapNumber}" id="matrevMatSapNumber" />
+			<p:tooltip for="matrevMatSapNumber" value="#{arrivalViewItem.matrevMatSapNumber}" position="top" showDelay="50"/>
 		</p:column>
 
 		<p:column sortBy="#{arrivalViewItem.matrevMatShortText}" width="250" 
-			rendered="#{arrivalView.searchObject.searchFields[9].visible}" displayPriority="#{arrivalView.searchObject.searchFields[9].colOrder}" >
+			rendered="#{arrivalView.searchObject.searchFields[9].visible}" displayPriority="#{arrivalView.searchObject.searchFields[9].colOrder}" 
+			exportValue="#{arrivalViewItem.matrevMatShortText}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_arrivalview_matrevmatshorttext}"/>
 			</f:facet>
-			<h:outputText value="#{arrivalViewItem.matrevMatShortText}">
-			</h:outputText>
+			<h:outputText value="#{arrivalViewItem.matrevMatShortText}" id="matrevMatShortText" />
+			<p:tooltip for="matrevMatShortText" value="#{arrivalViewItem.matrevMatShortText}" position="top" showDelay="50"/>
 		</p:column>
 
 		<p:column sortBy="#{arrivalViewItem.matrevMatOwnerLocationCode}" width="100" 
@@ -478,12 +482,13 @@
 		</p:column>
 
 		<p:column sortBy="#{arrivalViewItem.matrevMatMaterialClassCode}" width="120" 
-			rendered="#{arrivalView.searchObject.searchFields[12].visible}" displayPriority="#{arrivalView.searchObject.searchFields[12].colOrder}" >
+			rendered="#{arrivalView.searchObject.searchFields[12].visible}" displayPriority="#{arrivalView.searchObject.searchFields[12].colOrder}" 
+			exportValue="#{arrivalViewItem.matrevMatMaterialClassCode}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_arrivalview_matrevmatmaterialclasscode}"/>
 			</f:facet>
-			<h:outputText value="#{arrivalViewItem.matrevMatMaterialClassCode}">
-			</h:outputText>
+			<h:outputText value="#{arrivalViewItem.matrevMatMaterialClassCode}" id="matrevMatMaterialClassCode" />
+			<p:tooltip for="matrevMatMaterialClassCode" value="#{arrivalViewItem.matrevMatMaterialClassCode}" position="top" showDelay="50"/>
 		</p:column>
 
 		<p:column sortBy="#{arrivalViewItem.matrevMatMaterialHierarchy}" width="150" 
@@ -496,12 +501,13 @@
 		</p:column>
 
 		<p:column sortBy="#{arrivalViewItem.matrevRevisionNumber}" width="150" 
-			rendered="#{arrivalView.searchObject.searchFields[14].visible}" displayPriority="#{arrivalView.searchObject.searchFields[14].colOrder}" >
+			rendered="#{arrivalView.searchObject.searchFields[14].visible}" displayPriority="#{arrivalView.searchObject.searchFields[14].colOrder}" 
+			exportValue="#{arrivalViewItem.matrevRevisionNumber}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_arrivalview_matrevrevisionnumber}"/>
 			</f:facet>
-			<h:outputText value="#{arrivalViewItem.matrevRevisionNumber}">
-			</h:outputText>
+			<h:outputText value="#{arrivalViewItem.matrevRevisionNumber}" id="matrevRevisionNumber" />
+			<p:tooltip for="matrevRevisionNumber" value="#{arrivalViewItem.matrevRevisionNumber}" position="top" showDelay="50"/>
 		</p:column>
 
 		<p:column sortBy="#{arrivalViewItem.creationDate}" width="120" 
