@@ -133,10 +133,10 @@
       <columns name="parent_sap_no" length="20" nullable="true">
         <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
       </columns>
-      <columns name="material_hierarchy" length="255" nullable="true">
+      <columns name="material_hierarchy" length="250" nullable="true">
         <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
       </columns>
-      <columns name="parent_material_hierarchy" length="255" nullable="true">
+      <columns name="parent_material_hierarchy" length="250" nullable="true">
         <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
       </columns>
       <columns name="revision_id">
@@ -273,10 +273,10 @@
       <columns name="parent_sap_no" length="20" nullable="true">
         <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
       </columns>
-      <columns name="material_hierarchy" length="255" nullable="true">
+      <columns name="material_hierarchy" length="250" nullable="true">
         <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
       </columns>
-      <columns name="parent_material_hierarchy" length="255" nullable="true">
+      <columns name="parent_material_hierarchy" length="250" nullable="true">
         <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
       </columns>
       <columns name="revision_id">
@@ -477,10 +477,10 @@
       <columns name="parent_sap_no" length="20" nullable="true">
         <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
       </columns>
-      <columns name="material_hierarchy" length="255" nullable="true">
+      <columns name="material_hierarchy" length="250" nullable="true">
         <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
       </columns>
-      <columns name="parent_material_hierarchy" length="255" nullable="true">
+      <columns name="parent_material_hierarchy" length="250" nullable="true">
         <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
       </columns>
       <columns name="revision_id">
@@ -679,10 +679,10 @@
       <columns name="parent_sap_no" length="20" nullable="true">
         <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
       </columns>
-      <columns name="material_hierarchy" length="255" nullable="true">
+      <columns name="material_hierarchy" length="250" nullable="true">
         <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
       </columns>
-      <columns name="parent_material_hierarchy" length="255" nullable="true">
+      <columns name="parent_material_hierarchy" length="250" nullable="true">
         <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
       </columns>
       <columns name="revision_id">
@@ -987,10 +987,10 @@
       <columns name="parent_sap_no" length="20" nullable="true">
         <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
       </columns>
-      <columns name="material_hierarchy" length="255" nullable="true">
+      <columns name="material_hierarchy" length="250" nullable="true">
         <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
       </columns>
-      <columns name="parent_material_hierarchy" length="255" nullable="true">
+      <columns name="parent_material_hierarchy" length="250" nullable="true">
         <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
       </columns>
       <columns name="revision_id">

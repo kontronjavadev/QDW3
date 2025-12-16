@@ -4272,7 +4272,7 @@
       <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.0"/>
     </attributes>
   </net.sourceforge.jbizmo.model.dto:DTOBean>
-  <net.sourceforge.jbizmo.model.client:FormGroup name="Serial object" groupOrder="4" forms="/260 /266 /286 /303 /292 /307" roles="/0/@roles.0 /0/@roles.1" project="/0"/>
+  <net.sourceforge.jbizmo.model.client:FormGroup name="Serial object" groupOrder="4" forms="/260 /266 /286 /307 /303 /292" roles="/0/@roles.0 /0/@roles.1" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="mv" parent="/2" javaTypes="/265 /271 /291" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="mv" parent="/1" javaTypes="/264 /270 /290" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="mv" parent="/3" javaTypes="/263 /269 /289" project="/0"/>
@@ -5695,7 +5695,7 @@
       </methodParameters>
     </repositoryMethods>
   </net.sourceforge.jbizmo.model.repository:Repository>
-  <net.sourceforge.jbizmo.model.client:Form name="ArrivalView" formType="SEARCHABLE_VIEW" formGroup="/247" title="Arrivals (standard=" formPanels="/304" dTO="/306" roles="/0/@roles.0 /0/@roles.1" boundaryMethod="/299/@boundaryMethods.3">
+  <net.sourceforge.jbizmo.model.client:Form name="ArrivalView" formType="SEARCHABLE_VIEW" formGroup="/247" title="Arrivals (standard)" formPanels="/304" dTO="/306" roles="/0/@roles.0 /0/@roles.1" boundaryMethod="/299/@boundaryMethods.3">
     <actions name="actionDelete" description="Delete selected arrival" boundaryMethod="/299/@boundaryMethods.1" roles="/0/@roles.0" type="DELETE"/>
     <actions name="actionGet" description="View arrival" targetForm="/292" roles="/0/@roles.0 /0/@roles.1" type="READ"/>
     <actions name="actionCopy" description="Create copy of selected arrival" boundaryMethod="/299/@boundaryMethods.2" roles="/0/@roles.0" type="COPY"/>

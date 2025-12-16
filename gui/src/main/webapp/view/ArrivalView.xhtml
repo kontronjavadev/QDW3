@@ -355,6 +355,7 @@
 	<br/>
 
 	<p:dataTable id="panData" var="arrivalViewItem" rows="#{arrivalView.numberRows}"
+		selectionTextDisabled="false" allowUnsorting="true" resizeMode="expand" multiViewState="true" 
 		selectionMode="single"
 		selection="#{arrivalView.selectedObject}"
 		loadingMessage="#{i18n.action_fetch_data}"
@@ -362,7 +363,7 @@
 		paginatorPosition="top" paginatorAlwaysVisible="false" paginator="true" resizableColumns="true"
 		rowKey="#{arrivalViewItem.id}"
 		paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-		rowsPerPageTemplate="10,50,100,500,1000">
+		rowsPerPageTemplate="50,150,400,1000">
 		<p:ajax event="rowDblselect" listener="#{arrivalView.onDoubleClick}"/>
 
 		<p:column sortBy="#{arrivalViewItem.id}" width="100" 

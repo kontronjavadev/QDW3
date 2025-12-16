@@ -438,22 +438,22 @@
     <inheritance>
       <target href="package-base.xmi#//@domainObjects.0"/>
     </inheritance>
-    <attributes name="type" label="type" labelPlural="types" fetchTypeEager="true" javaType="//@enumerations.0" column="//@domainObjects.9/@databaseTable/@columns.4" internalComment="" userComment="">
-      <domainAttributeValidator maxLength="255" minLength="-1" maxValue="" minValue="" regularExpression=""/>
-    </attributes>
-    <attributes name="threshold" label="threshold" labelPlural="thresholds" fetchTypeEager="true" column="//@domainObjects.9/@databaseTable/@columns.6">
+    <attributes name="threshold" label="threshold" labelPlural="thresholds" fetchTypeEager="true" column="//@domainObjects.9/@databaseTable/@columns.5">
       <domainAttributeValidator maxValue="" minValue="" regularExpression=""/>
       <javaType href="project.xmi#/0/@allSupportedTypes.3"/>
     </attributes>
-    <attributes name="boardOrSystem" label="board or system" labelPlural="board or systems" fetchTypeEager="true" column="//@domainObjects.9/@databaseTable/@columns.7">
+    <attributes name="boardOrSystem" label="board or system" labelPlural="board or systems" fetchTypeEager="true" column="//@domainObjects.9/@databaseTable/@columns.6">
       <domainAttributeValidator maxValue="" minValue="" regularExpression=""/>
       <javaType href="project.xmi#/0/@allSupportedTypes.4"/>
     </attributes>
-    <attributes name="filterCriterion" label="filter criterion" labelPlural="filter criterions" fetchTypeEager="true" column="//@domainObjects.9/@databaseTable/@columns.8" removeWhitespaceCharacters="true">
+    <attributes name="filterCriterion" label="filter criterion" labelPlural="filter criterions" fetchTypeEager="true" column="//@domainObjects.9/@databaseTable/@columns.7" removeWhitespaceCharacters="true">
       <domainAttributeValidator maxLength="1000" minLength="0" nullable="true" maxValue="" minValue="" regularExpression=""/>
       <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
     </attributes>
-    <associations xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" name="material" owner="true" fetchTypeEager="true" target="//@domainObjects.2" internalComment="" userComment="" insertable="true" updatable="true" column="//@domainObjects.9/@databaseTable/@columns.5"/>
+    <attributes name="type" label="type" labelPlural="types" fetchTypeEager="true" javaType="//@enumerations.0" column="//@domainObjects.9/@databaseTable/@columns.8" internalComment="" userComment="">
+      <domainAttributeValidator maxLength="255" minLength="-1" maxValue="" minValue="" regularExpression=""/>
+    </attributes>
+    <associations xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" name="material" owner="true" fetchTypeEager="true" target="//@domainObjects.2" internalComment="" userComment="" insertable="true" updatable="true" column="//@domainObjects.9/@databaseTable/@columns.4"/>
     <associations xsi:type="net.sourceforge.net.model.domain:ManyToManyAssociation" name="receivers" owner="true" internalComment="" userComment="">
       <target href="package-base.xmi#//@domainObjects.1"/>
       <table name="ews_entry_users_tab" schemaName="" catalogName="">
@@ -471,7 +471,7 @@
         <indexes name="uk_ews_entry_users" unique="true" columns="//@domainObjects.9/@associations.1/@table/@columns.0 //@domainObjects.9/@associations.1/@table/@columns.1"/>
       </table>
     </associations>
-    <enumAssociations target="//@enumerations.0" domainAttribute="//@domainObjects.9/@attributes.0"/>
+    <enumAssociations target="//@enumerations.0" domainAttribute="//@domainObjects.9/@attributes.3"/>
     <databaseTable name="ews_entry_tab" schemaName="" catalogName="">
       <database href="project.xmi#/0/@database"/>
       <columns name="id">
@@ -486,9 +486,6 @@
       <columns name="last_update" nullable="true">
         <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.14"/>
       </columns>
-      <columns name="type" length="255">
-        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
-      </columns>
       <columns name="material">
         <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.1"/>
       </columns>
@@ -501,8 +498,11 @@
       <columns name="filter_criterion" length="1000" nullable="true">
         <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
       </columns>
+      <columns name="ews_type" length="255">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.4"/>
+      </columns>
       <primaryKey name="pk_ews_entry" column="//@domainObjects.9/@databaseTable/@columns.0"/>
-      <foreignKeys name="fk_ews_entry_material" column="//@domainObjects.9/@databaseTable/@columns.5" referencedColumn="//@domainObjects.2/@databaseTable/@columns.0"/>
+      <foreignKeys name="fk_ews_entry_material" column="//@domainObjects.9/@databaseTable/@columns.4" referencedColumn="//@domainObjects.2/@databaseTable/@columns.0"/>
     </databaseTable>
   </domainObjects>
   <enumerations name="EWSType" comment="" mappable="true" namespace="/">

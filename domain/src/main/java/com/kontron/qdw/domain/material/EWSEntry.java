@@ -33,12 +33,6 @@ public class EWSEntry extends AbstractEntityWithId {
     public static final String NQ_CHECK = "EWSEntry.check";
     @Generated
     public static final String NQ_FIND = "EWSEntry.find";
-    @Enumerated(EnumType.STRING)
-    @Basic(optional = false)
-    @Column(name = "type", nullable = false, updatable = true, insertable = true)
-    @NotNull(message = "Field \"type\" must not be null!")
-    @Generated
-    private EWSType type;
     @Basic(optional = false)
     @Column(name = "threshold", nullable = false, updatable = true, insertable = true)
     @Generated
@@ -51,6 +45,12 @@ public class EWSEntry extends AbstractEntityWithId {
     @Size(max = 1000, message = "Length of field \"filterCriterion\" is illegal!")
     @Generated
     private String filterCriterion;
+    @Enumerated(EnumType.STRING)
+    @Basic(optional = false)
+    @Column(name = "ews_type", nullable = false, updatable = true, insertable = true)
+    @NotNull(message = "Field \"type\" must not be null!")
+    @Generated
+    private EWSType type;
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "material", referencedColumnName = "id", nullable = false)
     @NotNull(message = "Field \"material\" must not be null!")
@@ -76,22 +76,6 @@ public class EWSEntry extends AbstractEntityWithId {
     @Generated
     public EWSEntry(long id) {
         super(id);
-    }
-
-    /**
-     * @return the type
-     */
-    @Generated
-    public EWSType getType() {
-        return this.type;
-    }
-
-    /**
-     * @param type the type to set
-     */
-    @Generated
-    public void setType(EWSType type) {
-        this.type = type;
     }
 
     /**
@@ -140,6 +124,22 @@ public class EWSEntry extends AbstractEntityWithId {
     @Generated
     public void setFilterCriterion(String filterCriterion) {
         this.filterCriterion = filterCriterion;
+    }
+
+    /**
+     * @return the type
+     */
+    @Generated
+    public EWSType getType() {
+        return this.type;
+    }
+
+    /**
+     * @param type the type to set
+     */
+    @Generated
+    public void setType(EWSType type) {
+        this.type = type;
     }
 
     /**
