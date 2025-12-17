@@ -304,6 +304,7 @@
 			<p:commandButton id="cmdReset" value="#{i18n.command_reset}" action="#{arrivalLastView.resetSearchObject}" onclick="PF('dlgSearchInput').hide()" ajax="false"/>
 			<p:commandButton id="cmdClear" value="#{i18n.command_clear}" action="#{arrivalLastView.clearSearchObject}" update="tabViewSearchInput" ajax="true"/>
 			<p:commandButton id="cmdCount" value="#{i18n.search_input_perform_count}" actionListener="#{arrivalLastView.countRecords}" update="growl" ajax="true"/>
+			<p:tooltip for="cmdCount" value="Time consuming without filtering (takes several minutes)!" showDelay="0"/>
 		</h:panelGrid>
 	</p:dialog>
 
