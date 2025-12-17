@@ -2,6 +2,10 @@ package com.kontron.qdw.dto.serial;
 
 import java.time.*;
 import java.io.Serializable;
+import java.sql.Date;
+import java.sql.Timestamp;
+
+import net.sourceforge.jbizmo.commons.annotation.Customized;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
 
 public class ArrivalSearchDTO implements Serializable {
@@ -49,20 +53,20 @@ public class ArrivalSearchDTO implements Serializable {
     public static final String ATTR_MATREVMATMATERIALHIERARCHY = "matrevMatMaterialHierarchy";
     @Generated
     public static final String ATTR_MATREVREVISIONNUMBER = "matrevRevisionNumber";
-    @Generated
-    public static final String SELECT_ARRIVALDATE = "a.arrivalDate";
-    @Generated
-    public static final String SELECT_ORDERNUMBER = "a.orderNumber";
+    @Customized
+    public static final String SELECT_ARRIVALDATE = "a.arrival_date";
+    @Customized
+    public static final String SELECT_ORDERNUMBER = "a.order_number";
     @Generated
     public static final String SELECT_ID = "a.id";
+    @Customized
+    public static final String SELECT_CREATIONDATE = "a.creation_date";
+    @Customized
+    public static final String SELECT_LASTUPDATE = "a.last_update";
+    @Customized
+    public static final String SELECT_MOVEMENTTYPECODE = "a.movement_type";
     @Generated
-    public static final String SELECT_CREATIONDATE = "a.creationDate";
-    @Generated
-    public static final String SELECT_LASTUPDATE = "a.lastUpdate";
-    @Generated
-    public static final String SELECT_MOVEMENTTYPECODE = "c.code";
-    @Generated
-    public static final String SELECT_PLANTCODE = "d.code";
+    public static final String SELECT_PLANTCODE = "a.plant";
     @Generated
     public static final String SELECT_SUPPLIERNAME = "f.name";
     @Generated
@@ -71,26 +75,26 @@ public class ArrivalSearchDTO implements Serializable {
     public static final String SELECT_MATERIALREVISIONID = "b.id";
     @Generated
     public static final String SELECT_SERIALOBJECTID = "e.id";
-    @Generated
-    public static final String SELECT_SERIALOBJECTSERIALNUMBER = "e.serialNumber";
+    @Customized
+    public static final String SELECT_SERIALOBJECTSERIALNUMBER = "e.serial_number";
     @Generated
     public static final String SELECT_MATREVMATID = "l.id";
-    @Generated
-    public static final String SELECT_MATREVMATMATERIALNUMBER = "l.materialNumber";
-    @Generated
-    public static final String SELECT_MATREVMATSAPNUMBER = "l.sapNumber";
-    @Generated
-    public static final String SELECT_MATREVMATSHORTTEXT = "l.shortText";
-    @Generated
-    public static final String SELECT_MATREVMATMATERIALTYPECODE = "q.code";
-    @Generated
-    public static final String SELECT_MATREVMATMATERIALCLASSCODE = "p.code";
-    @Generated
-    public static final String SELECT_MATREVMATOWNERLOCATIONCODE = "o.code";
-    @Generated
-    public static final String SELECT_MATREVMATMATERIALHIERARCHY = "l.materialHierarchy";
-    @Generated
-    public static final String SELECT_MATREVREVISIONNUMBER = "b.revisionNumber";
+    @Customized
+    public static final String SELECT_MATREVMATMATERIALNUMBER = "l.material_number";
+    @Customized
+    public static final String SELECT_MATREVMATSAPNUMBER = "l.sap_number";
+    @Customized
+    public static final String SELECT_MATREVMATSHORTTEXT = "l.short_text";
+    @Customized
+    public static final String SELECT_MATREVMATMATERIALTYPECODE = "l.material_type";
+    @Customized
+    public static final String SELECT_MATREVMATMATERIALCLASSCODE = "l.material_class";
+    @Customized
+    public static final String SELECT_MATREVMATOWNERLOCATIONCODE = "l.owner_location";
+    @Customized
+    public static final String SELECT_MATREVMATMATERIALHIERARCHY = "l.material_hierarchy";
+    @Customized
+    public static final String SELECT_MATREVREVISIONNUMBER = "b.revision_number";
     @Generated
     private LocalDate arrivalDate;
     @Generated
@@ -174,17 +178,17 @@ public class ArrivalSearchDTO implements Serializable {
      * @param matrevMatMaterialHierarchy
      * @param matrevRevisionNumber
      */
-    @Generated
-    public ArrivalSearchDTO(LocalDate arrivalDate, String orderNumber, long id, LocalDateTime creationDate, LocalDateTime lastUpdate,
+    @Customized
+    public ArrivalSearchDTO(Date arrivalDate, String orderNumber, long id, Timestamp creationDate, Timestamp lastUpdate,
             String movementTypeCode, String plantCode, String supplierName, String supplierCode, long materialRevisionId, long serialObjectId,
             String serialObjectSerialNumber, long matrevMatId, String matrevMatMaterialNumber, String matrevMatSapNumber, String matrevMatShortText,
             String matrevMatMaterialTypeCode, String matrevMatMaterialClassCode, String matrevMatOwnerLocationCode, String matrevMatMaterialHierarchy,
             String matrevRevisionNumber) {
-        this.arrivalDate = arrivalDate;
+        this.arrivalDate = arrivalDate == null ? null : arrivalDate.toLocalDate();
         this.orderNumber = orderNumber;
         this.id = id;
-        this.creationDate = creationDate;
-        this.lastUpdate = lastUpdate;
+        this.creationDate = creationDate == null ? null : creationDate.toLocalDateTime();
+        this.lastUpdate = lastUpdate == null ? null : lastUpdate.toLocalDateTime();
         this.movementTypeCode = movementTypeCode;
         this.plantCode = plantCode;
         this.supplierName = supplierName;

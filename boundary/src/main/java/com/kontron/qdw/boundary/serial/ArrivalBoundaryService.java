@@ -10,21 +10,25 @@ import com.kontron.qdw.dto.material.*;
 import jakarta.inject.*;
 import jakarta.ejb.*;
 import jakarta.annotation.security.*;
+import com.kontron.qdw.repository.NativeQueryAbstractRepository;
 import com.kontron.qdw.repository.serial.*;
 import net.sourceforge.jbizmo.commons.search.dto.*;
+import net.sourceforge.jbizmo.commons.annotation.Customized;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
 
 @Stateless
 public class ArrivalBoundaryService {
     @Generated
     private final ArrivalRepository repository;
+    private final NativeQueryAbstractRepository nativeQueryAbstRepo;
 
     /**
      * Default constructor
      */
     @Generated
     public ArrivalBoundaryService() {
-        this.repository = null;
+        repository = null;
+        nativeQueryAbstRepo = null;
     }
 
     /**
@@ -33,8 +37,143 @@ public class ArrivalBoundaryService {
      */
     @Inject
     @Generated
-    public ArrivalBoundaryService(ArrivalRepository repository) {
+    public ArrivalBoundaryService(ArrivalRepository repository, NativeQueryAbstractRepository abstractRepository) {
         this.repository = repository;
+        this.nativeQueryAbstRepo = abstractRepository;
+    }
+
+    /**
+     * Search for arrival objects
+     * @param searchObj a generic container that holds filter criteria
+     * @return a list of arrival objects
+     * @throws GeneralSearchException if the search operation has failed
+     */
+    @Customized
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public List<ArrivalSearchDTO> searchAllArrivals(SearchDTO searchObj) {
+        // Collect the select tokens of all fields that should be fetched
+        final var selectTokens = new ArrayList<String>();
+        selectTokens.add(ArrivalSearchDTO.SELECT_ARRIVALDATE);
+        selectTokens.add(ArrivalSearchDTO.SELECT_ORDERNUMBER);
+        selectTokens.add(ArrivalSearchDTO.SELECT_ID);
+        selectTokens.add(ArrivalSearchDTO.SELECT_CREATIONDATE);
+        selectTokens.add(ArrivalSearchDTO.SELECT_LASTUPDATE);
+        selectTokens.add(ArrivalSearchDTO.SELECT_MOVEMENTTYPECODE);
+        selectTokens.add(ArrivalSearchDTO.SELECT_PLANTCODE);
+        selectTokens.add(ArrivalSearchDTO.SELECT_SUPPLIERNAME);
+        selectTokens.add(ArrivalSearchDTO.SELECT_SUPPLIERCODE);
+        selectTokens.add(ArrivalSearchDTO.SELECT_MATERIALREVISIONID);
+        selectTokens.add(ArrivalSearchDTO.SELECT_SERIALOBJECTID);
+        selectTokens.add(ArrivalSearchDTO.SELECT_SERIALOBJECTSERIALNUMBER);
+        selectTokens.add(ArrivalSearchDTO.SELECT_MATREVMATID);
+        selectTokens.add(ArrivalSearchDTO.SELECT_MATREVMATMATERIALNUMBER);
+        selectTokens.add(ArrivalSearchDTO.SELECT_MATREVMATSAPNUMBER);
+        selectTokens.add(ArrivalSearchDTO.SELECT_MATREVMATSHORTTEXT);
+        selectTokens.add(ArrivalSearchDTO.SELECT_MATREVMATMATERIALTYPECODE);
+        selectTokens.add(ArrivalSearchDTO.SELECT_MATREVMATMATERIALCLASSCODE);
+        selectTokens.add(ArrivalSearchDTO.SELECT_MATREVMATOWNERLOCATIONCODE);
+        selectTokens.add(ArrivalSearchDTO.SELECT_MATREVMATMATERIALHIERARCHY);
+        selectTokens.add(ArrivalSearchDTO.SELECT_MATREVREVISIONNUMBER);
+
+        searchObj.setFromClause("from qdw.arrival_tab a "
+                + "join qdw.material_revision_tab b on a.material_revision = b.id "
+                + "join qdw.serial_object_tab e on a.serial_object = e.id "
+                + "join qdw.supplier_tab f on a.supplier = f.code "
+                + "join qdw.material_tab l on b.material = l.id ");
+
+        return nativeQueryAbstRepo.search(searchObj, ArrivalSearchDTO.class, selectTokens);
+    }
+
+    /**
+     * Count arrival objects
+     * @param searchObj the query criteria
+     * @return the number of objects a query would return
+     * @throws GeneralSearchException if the count operation has failed
+     */
+    @Customized
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public long countAllArrivals(SearchDTO searchObj) {
+        searchObj.setFromClause("from qdw.arrival_tab a "
+                + "join qdw.material_revision_tab b on a.material_revision = b.id "
+                + "join qdw.serial_object_tab e on a.serial_object = e.id "
+                + "join qdw.supplier_tab f on a.supplier = f.code "
+                + "join qdw.material_tab l on b.material = l.id ");
+
+        return nativeQueryAbstRepo.count(searchObj);
+    }
+
+    /**
+     * Search for arrival objects
+     * @param searchObj a generic container that holds filter criteria
+     * @return a list of arrival objects
+     * @throws GeneralSearchException if the search operation has failed
+     */
+    @Customized
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public List<ArrivalLastSearchDTO> searchAllArrivalsLast(SearchDTO searchObj) {
+        // Collect the select tokens of all fields that should be fetched
+        final var selectTokens = new ArrayList<String>();
+        selectTokens.add(ArrivalLastSearchDTO.SELECT_ARRIVALDATE);
+        selectTokens.add(ArrivalLastSearchDTO.SELECT_ORDERNUMBER);
+        selectTokens.add(ArrivalLastSearchDTO.SELECT_ID);
+        selectTokens.add(ArrivalLastSearchDTO.SELECT_CREATIONDATE);
+        selectTokens.add(ArrivalLastSearchDTO.SELECT_LASTUPDATE);
+        selectTokens.add(ArrivalLastSearchDTO.SELECT_MOVEMENTTYPECODE);
+        selectTokens.add(ArrivalLastSearchDTO.SELECT_PLANTCODE);
+        selectTokens.add(ArrivalLastSearchDTO.SELECT_SUPPLIERNAME);
+        selectTokens.add(ArrivalLastSearchDTO.SELECT_SUPPLIERCODE);
+        selectTokens.add(ArrivalLastSearchDTO.SELECT_MATERIALREVISIONID);
+        selectTokens.add(ArrivalLastSearchDTO.SELECT_SERIALOBJECTID);
+        selectTokens.add(ArrivalLastSearchDTO.SELECT_SERIALOBJECTSERIALNUMBER);
+        selectTokens.add(ArrivalLastSearchDTO.SELECT_MATREVMATID);
+        selectTokens.add(ArrivalLastSearchDTO.SELECT_MATREVMATMATERIALNUMBER);
+        selectTokens.add(ArrivalLastSearchDTO.SELECT_MATREVMATSAPNUMBER);
+        selectTokens.add(ArrivalLastSearchDTO.SELECT_MATREVMATSHORTTEXT);
+        selectTokens.add(ArrivalLastSearchDTO.SELECT_MATREVMATOWNERLOCATIONCODE);
+        selectTokens.add(ArrivalLastSearchDTO.SELECT_MATREVMATMATERIALTYPECODE);
+        selectTokens.add(ArrivalLastSearchDTO.SELECT_MATREVMATMATERIALCLASSCODE);
+        selectTokens.add(ArrivalLastSearchDTO.SELECT_MATREVMATMATERIALHIERARCHY);
+        selectTokens.add(ArrivalLastSearchDTO.SELECT_MATREVREVISIONNUMBER);
+
+        searchObj.setFromClause("from qdw.arrival_tab a "
+                + "join qdw.material_revision_tab b on a.material_revision = b.id "
+                + "join qdw.serial_object_tab e on a.serial_object = e.id "
+                + "join qdw.supplier_tab f on a.supplier = f.code "
+                + "join qdw.material_tab l on b.material = l.id "
+                + "where a.arrival_date = ("
+                + "  select max(la.arrival_date) "
+                + "  from qdw.arrival_tab la "
+                + "  where la.serial_object = e.id"
+                + ")");
+
+        return nativeQueryAbstRepo.search(searchObj, ArrivalLastSearchDTO.class, selectTokens);
+    }
+
+    /**
+     * Count arrival objects
+     * @param searchObj the query criteria
+     * @return the number of objects a query would return
+     * @throws GeneralSearchException if the count operation has failed
+     */
+    @Customized
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public long countAllArrivalsLast(SearchDTO searchObj) {
+        searchObj.setFromClause("from qdw.arrival_tab a "
+                + "join qdw.material_revision_tab b on a.material_revision = b.id "
+                + "join qdw.serial_object_tab e on a.serial_object = e.id "
+                + "join qdw.supplier_tab f on a.supplier = f.code "
+                + "join qdw.material_tab l on b.material = l.id "
+                + "where a.arrival_date = ("
+                + "  select max(la.arrival_date) "
+                + "  from qdw.arrival_tab la "
+                + "  where la.serial_object = e.id"
+                + ")");
+
+        return nativeQueryAbstRepo.count(searchObj);
     }
 
     /**
@@ -108,162 +247,6 @@ public class ArrivalBoundaryService {
         final Arrival targetObject = repository.copy(sourceObject, null, loggedOnUserId);
 
         return targetObject.getId();
-    }
-
-    /**
-     * Search for arrival objects
-     * @param searchObj a generic container that holds filter criteria
-     * @return a list of arrival objects
-     * @throws GeneralSearchException if the search operation has failed
-     */
-    @Generated
-    @PermitAll
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public List<ArrivalSearchDTO> searchAllArrivals(SearchDTO searchObj) {
-        // Collect the select tokens of all fields that should be fetched
-        final var selectTokens = new ArrayList<String>();
-        selectTokens.add(ArrivalSearchDTO.SELECT_ARRIVALDATE);
-        selectTokens.add(ArrivalSearchDTO.SELECT_ORDERNUMBER);
-        selectTokens.add(ArrivalSearchDTO.SELECT_ID);
-        selectTokens.add(ArrivalSearchDTO.SELECT_CREATIONDATE);
-        selectTokens.add(ArrivalSearchDTO.SELECT_LASTUPDATE);
-        selectTokens.add(ArrivalSearchDTO.SELECT_MOVEMENTTYPECODE);
-        selectTokens.add(ArrivalSearchDTO.SELECT_PLANTCODE);
-        selectTokens.add(ArrivalSearchDTO.SELECT_SUPPLIERNAME);
-        selectTokens.add(ArrivalSearchDTO.SELECT_SUPPLIERCODE);
-        selectTokens.add(ArrivalSearchDTO.SELECT_MATERIALREVISIONID);
-        selectTokens.add(ArrivalSearchDTO.SELECT_SERIALOBJECTID);
-        selectTokens.add(ArrivalSearchDTO.SELECT_SERIALOBJECTSERIALNUMBER);
-        selectTokens.add(ArrivalSearchDTO.SELECT_MATREVMATID);
-        selectTokens.add(ArrivalSearchDTO.SELECT_MATREVMATMATERIALNUMBER);
-        selectTokens.add(ArrivalSearchDTO.SELECT_MATREVMATSAPNUMBER);
-        selectTokens.add(ArrivalSearchDTO.SELECT_MATREVMATSHORTTEXT);
-        selectTokens.add(ArrivalSearchDTO.SELECT_MATREVMATMATERIALTYPECODE);
-        selectTokens.add(ArrivalSearchDTO.SELECT_MATREVMATMATERIALCLASSCODE);
-        selectTokens.add(ArrivalSearchDTO.SELECT_MATREVMATOWNERLOCATIONCODE);
-        selectTokens.add(ArrivalSearchDTO.SELECT_MATREVMATMATERIALHIERARCHY);
-        selectTokens.add(ArrivalSearchDTO.SELECT_MATREVREVISIONNUMBER);
-
-        searchObj.setFromClause("from Arrival a "
-                + "join a.materialRevision b "
-                + "join a.movementType c "
-                + "join a.plant d "
-                + "join a.serialObject e "
-                + "join a.supplier f "
-                + "join b.material l "
-                + "join l.ownerLocation o "
-                + "join l.materialClass p "
-                + "join l.materialType q");
-
-        return repository.search(searchObj, ArrivalSearchDTO.class, selectTokens);
-    }
-
-    /**
-     * Count arrival objects
-     * @param searchObj the query criteria
-     * @return the number of objects a query would return
-     * @throws GeneralSearchException if the count operation has failed
-     */
-    @Generated
-    @PermitAll
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public long countAllArrivals(SearchDTO searchObj) {
-        searchObj.setFromClause("from Arrival a "
-                + "join a.materialRevision b "
-                + "join a.movementType c "
-                + "join a.plant d "
-                + "join a.serialObject e "
-                + "join a.supplier f "
-                + "join b.material l "
-                + "join l.ownerLocation o "
-                + "join l.materialClass p "
-                + "join l.materialType q");
-
-        return repository.count(searchObj);
-    }
-
-    /**
-     * Search for arrival objects
-     * @param searchObj a generic container that holds filter criteria
-     * @return a list of arrival objects
-     * @throws GeneralSearchException if the search operation has failed
-     */
-    @Generated
-    @PermitAll
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public List<ArrivalLastSearchDTO> searchAllArrivalsLast(SearchDTO searchObj) {
-        // Collect the select tokens of all fields that should be fetched
-        final var selectTokens = new ArrayList<String>();
-        selectTokens.add(ArrivalLastSearchDTO.SELECT_ARRIVALDATE);
-        selectTokens.add(ArrivalLastSearchDTO.SELECT_ORDERNUMBER);
-        selectTokens.add(ArrivalLastSearchDTO.SELECT_ID);
-        selectTokens.add(ArrivalLastSearchDTO.SELECT_CREATIONDATE);
-        selectTokens.add(ArrivalLastSearchDTO.SELECT_LASTUPDATE);
-        selectTokens.add(ArrivalLastSearchDTO.SELECT_MOVEMENTTYPECODE);
-        selectTokens.add(ArrivalLastSearchDTO.SELECT_PLANTCODE);
-        selectTokens.add(ArrivalLastSearchDTO.SELECT_SUPPLIERNAME);
-        selectTokens.add(ArrivalLastSearchDTO.SELECT_SUPPLIERCODE);
-        selectTokens.add(ArrivalLastSearchDTO.SELECT_MATERIALREVISIONID);
-        selectTokens.add(ArrivalLastSearchDTO.SELECT_SERIALOBJECTID);
-        selectTokens.add(ArrivalLastSearchDTO.SELECT_SERIALOBJECTSERIALNUMBER);
-        selectTokens.add(ArrivalLastSearchDTO.SELECT_MATREVMATID);
-        selectTokens.add(ArrivalLastSearchDTO.SELECT_MATREVMATMATERIALNUMBER);
-        selectTokens.add(ArrivalLastSearchDTO.SELECT_MATREVMATSAPNUMBER);
-        selectTokens.add(ArrivalLastSearchDTO.SELECT_MATREVMATSHORTTEXT);
-        selectTokens.add(ArrivalLastSearchDTO.SELECT_MATREVMATOWNERLOCATIONCODE);
-        selectTokens.add(ArrivalLastSearchDTO.SELECT_MATREVMATMATERIALTYPECODE);
-        selectTokens.add(ArrivalLastSearchDTO.SELECT_MATREVMATMATERIALCLASSCODE);
-        selectTokens.add(ArrivalLastSearchDTO.SELECT_MATREVMATMATERIALHIERARCHY);
-        selectTokens.add(ArrivalLastSearchDTO.SELECT_MATREVREVISIONNUMBER);
-
-        searchObj.setFromClause("from Arrival a "
-                + "join a.materialRevision b "
-                + "join a.movementType c "
-                + "join a.plant d "
-                + "join a.serialObject e "
-                + "join a.supplier f "
-                + "join b.material l "
-                + "join l.ownerLocation o "
-                + "join l.materialClass p "
-                + "join l.materialType q "
-                + "where a.arrivalDate = ("
-                + "  select max(la.arrivalDate) "
-                + "  from Arrival la "
-                + "  join la.serialObject le "
-                + "  where le.id = e.id"
-                + ")");
-
-        return repository.search(searchObj, ArrivalLastSearchDTO.class, selectTokens);
-    }
-
-    /**
-     * Count arrival objects
-     * @param searchObj the query criteria
-     * @return the number of objects a query would return
-     * @throws GeneralSearchException if the count operation has failed
-     */
-    @Generated
-    @PermitAll
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public long countAllArrivalsLast(SearchDTO searchObj) {
-        searchObj.setFromClause("from Arrival a "
-                + "join a.materialRevision b "
-                + "join a.movementType c "
-                + "join a.plant d "
-                + "join a.serialObject e "
-                + "join a.supplier f "
-                + "join b.material l "
-                + "join l.ownerLocation o "
-                + "join l.materialClass p "
-                + "join l.materialType q "
-                + "where a.arrivalDate = ("
-                + "  select max(la.arrivalDate) "
-                + "  from Arrival la "
-                + "  join la.serialObject le "
-                + "  where le.id = e.id"
-                + ")");
-
-        return repository.count(searchObj);
     }
 
 }
