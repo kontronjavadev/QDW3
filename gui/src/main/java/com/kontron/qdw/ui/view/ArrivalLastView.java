@@ -143,7 +143,7 @@ public class ArrivalLastView extends SuperView implements Serializable {
         // Initialize search object
         searchObj.setMaxResult(1000);
         searchObj.setExactFilterMatch(true);
-        searchObj.setCaseSensitive(false);
+        searchObj.setCaseSensitive(true);
         searchObj.setCount(false);
 
         refreshFormatSettings();
