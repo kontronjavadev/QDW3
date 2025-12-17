@@ -144,8 +144,16 @@ public class ArrivalBoundaryService {
         selectTokens.add(ArrivalSearchDTO.SELECT_MATREVMATMATERIALHIERARCHY);
         selectTokens.add(ArrivalSearchDTO.SELECT_MATREVREVISIONNUMBER);
 
-        searchObj.setFromClause(
-                "from Arrival a join a.materialRevision b join a.movementType c join a.plant d join a.serialObject e join a.supplier f join b.material l join l.ownerLocation o join l.materialClass p join l.materialType q");
+        searchObj.setFromClause("from Arrival a "
+                + "join a.materialRevision b "
+                + "join a.movementType c "
+                + "join a.plant d "
+                + "join a.serialObject e "
+                + "join a.supplier f "
+                + "join b.material l "
+                + "join l.ownerLocation o "
+                + "join l.materialClass p "
+                + "join l.materialType q");
 
         return repository.search(searchObj, ArrivalSearchDTO.class, selectTokens);
     }
@@ -200,8 +208,22 @@ public class ArrivalBoundaryService {
         selectTokens.add(ArrivalLastSearchDTO.SELECT_MATREVMATMATERIALHIERARCHY);
         selectTokens.add(ArrivalLastSearchDTO.SELECT_MATREVREVISIONNUMBER);
 
-        searchObj.setFromClause(
-                "from Arrival a join a.materialRevision b join a.movementType c join a.plant d join a.serialObject e join a.supplier f join b.material l join l.ownerLocation o join l.materialClass p join l.materialType q where a.arrivalDate = (select max(la.arrivalDate) from Arrival la join la.serialObject lc where lc.id = b.id)");
+        searchObj.setFromClause("from Arrival a "
+                + "join a.materialRevision b "
+                + "join a.movementType c "
+                + "join a.plant d "
+                + "join a.serialObject e "
+                + "join a.supplier f "
+                + "join b.material l "
+                + "join l.ownerLocation o "
+                + "join l.materialClass p "
+                + "join l.materialType q "
+                + "where a.arrivalDate = ("
+                + "  select max(la.arrivalDate) "
+                + "  from Arrival la "
+                + "  join la.serialObject lc "
+                + "  where lc.id = b.id"
+                + ")");
 
         return repository.search(searchObj, ArrivalLastSearchDTO.class, selectTokens);
     }
