@@ -168,8 +168,16 @@ public class ArrivalBoundaryService {
     @PermitAll
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public long countAllArrivals(SearchDTO searchObj) {
-        searchObj.setFromClause(
-                "from Arrival a join a.materialRevision b join a.movementType c join a.plant d join a.serialObject e join a.supplier f join b.material l join l.ownerLocation o join l.materialClass p join l.materialType q");
+        searchObj.setFromClause("from Arrival a "
+                + "join a.materialRevision b "
+                + "join a.movementType c "
+                + "join a.plant d "
+                + "join a.serialObject e "
+                + "join a.supplier f "
+                + "join b.material l "
+                + "join l.ownerLocation o "
+                + "join l.materialClass p "
+                + "join l.materialType q");
 
         return repository.count(searchObj);
     }
@@ -221,8 +229,8 @@ public class ArrivalBoundaryService {
                 + "where a.arrivalDate = ("
                 + "  select max(la.arrivalDate) "
                 + "  from Arrival la "
-                + "  join la.serialObject lc "
-                + "  where lc.id = b.id"
+                + "  join la.serialObject le "
+                + "  where le.id = e.id"
                 + ")");
 
         return repository.search(searchObj, ArrivalLastSearchDTO.class, selectTokens);
@@ -238,8 +246,22 @@ public class ArrivalBoundaryService {
     @PermitAll
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public long countAllArrivalsLast(SearchDTO searchObj) {
-        searchObj.setFromClause(
-                "from Arrival a join a.materialRevision b join a.movementType c join a.plant d join a.serialObject e join a.supplier f join b.material l join l.ownerLocation o join l.materialClass p join l.materialType q where a.arrivalDate = (select max(la.arrivalDate) from Arrival la join la.serialObject lc where lc.id = b.id)");
+        searchObj.setFromClause("from Arrival a "
+                + "join a.materialRevision b "
+                + "join a.movementType c "
+                + "join a.plant d "
+                + "join a.serialObject e "
+                + "join a.supplier f "
+                + "join b.material l "
+                + "join l.ownerLocation o "
+                + "join l.materialClass p "
+                + "join l.materialType q "
+                + "where a.arrivalDate = ("
+                + "  select max(la.arrivalDate) "
+                + "  from Arrival la "
+                + "  join la.serialObject le "
+                + "  where le.id = e.id"
+                + ")");
 
         return repository.count(searchObj);
     }
