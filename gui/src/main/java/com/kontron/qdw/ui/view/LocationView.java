@@ -207,7 +207,7 @@ public class LocationView extends CopyClipboard implements Serializable {
         // Initialize search object
         searchObj.setMaxResult(1000);
         searchObj.setExactFilterMatch(true);
-        searchObj.setCaseSensitive(false);
+        searchObj.setCaseSensitive(true);
         searchObj.setCount(false);
         searchObj.setDateFormat(userSession.getDateFormat());
         searchObj.setDateTimeFormat(userSession.getDateTimeFormat());
