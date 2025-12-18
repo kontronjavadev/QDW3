@@ -2,7 +2,7 @@ package com.kontron.qdw.boundary.material;
 
 import com.kontron.qdw.domain.material.*;
 import net.sourceforge.jbizmo.commons.search.exception.*;
-import static net.sourceforge.jbizmo.commons.jpa.AbstractRepository.DEFAULT_LIST_SIZE;
+import static net.sourceforge.jbizmo.commons.jpa.AbstractRepository.MAX_LIST_SIZE;
 import static net.sourceforge.jbizmo.commons.jpa.AbstractRepository.WILDCARD;
 import com.kontron.qdw.dto.base.*;
 import com.kontron.qdw.domain.base.*;
@@ -14,6 +14,7 @@ import jakarta.inject.*;
 import jakarta.ejb.*;
 import jakarta.annotation.security.*;
 import net.sourceforge.jbizmo.commons.search.dto.*;
+import net.sourceforge.jbizmo.commons.annotation.Customized;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
 import static net.sourceforge.jbizmo.commons.jpa.AbstractRepository.SMALL_LIST_SIZE;
 
@@ -38,6 +39,50 @@ public class MaterialRevisionBoundaryService {
     @Generated
     public MaterialRevisionBoundaryService(MaterialRevisionRepository repository) {
         this.repository = repository;
+    }
+
+    /**
+     * Get all bom items of a given material revision
+     * @param id
+     * @return a list of bom item objects
+     * @throws GeneralSearchException if the search operation has failed
+     */
+    @Customized
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public List<MaterialRevisionBoMItemsDTO> getBoMItemsOfMaterialRevision(long id) {
+        // Collect the select tokens of all fields that should be fetched
+        final var selectTokens = new ArrayList<String>();
+        selectTokens.add(MaterialRevisionBoMItemsDTO.SELECT_QUANTITY);
+        selectTokens.add(MaterialRevisionBoMItemsDTO.SELECT_LABEL);
+        selectTokens.add(MaterialRevisionBoMItemsDTO.SELECT_POSITION);
+        selectTokens.add(MaterialRevisionBoMItemsDTO.SELECT_ID);
+        selectTokens.add(MaterialRevisionBoMItemsDTO.SELECT_CREATIONDATE);
+        selectTokens.add(MaterialRevisionBoMItemsDTO.SELECT_LASTUPDATE);
+        selectTokens.add(MaterialRevisionBoMItemsDTO.SELECT_MATERIALREVISIONID);
+        selectTokens.add(MaterialRevisionBoMItemsDTO.SELECT_MATERIALID);
+        selectTokens.add(MaterialRevisionBoMItemsDTO.SELECT_MATERIALMATERIALNUMBER);
+        selectTokens.add(MaterialRevisionBoMItemsDTO.SELECT_MATERIALSAPNUMBER);
+        selectTokens.add(MaterialRevisionBoMItemsDTO.SELECT_MATERIALSHORTTEXT);
+        selectTokens.add(MaterialRevisionBoMItemsDTO.SELECT_MATERIALTYPECODE);
+        selectTokens.add(MaterialRevisionBoMItemsDTO.SELECT_MATERIALCLASSCODE);
+
+        // Initialize the search object
+        final var searchObj = new SearchDTO();
+        searchObj.setExactFilterMatch(true);
+        searchObj.setCaseSensitive(true);
+        searchObj.setMaxResult(MAX_LIST_SIZE);
+        searchObj.setFromClause("from MaterialRevision x "
+                + "join x.boMItems a "
+                + "left join a.material b "
+                + "left join a.materialRevision c "
+                + "left join b.materialClass e "
+                + "left join b.materialType f");
+
+        final var parentFilterField = searchObj.addSearchField("x.id", SearchFieldDataTypeEnum.LONG);
+        parentFilterField.setFilterCriteria(Long.toString(id));
+
+        return repository.search(searchObj, MaterialRevisionBoMItemsDTO.class, selectTokens);
     }
 
     /**
@@ -79,46 +124,6 @@ public class MaterialRevisionBoundaryService {
         }
 
         return repository.search(searchObj, MaterialRevisionListDTO.class, selectTokens);
-    }
-
-    /**
-     * Get all bom items of a given material revision
-     * @param id
-     * @return a list of bom item objects
-     * @throws GeneralSearchException if the search operation has failed
-     */
-    @Generated
-    @PermitAll
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public List<MaterialRevisionBoMItemsDTO> getBoMItemsOfMaterialRevision(long id) {
-        // Collect the select tokens of all fields that should be fetched
-        final var selectTokens = new ArrayList<String>();
-        selectTokens.add(MaterialRevisionBoMItemsDTO.SELECT_QUANTITY);
-        selectTokens.add(MaterialRevisionBoMItemsDTO.SELECT_LABEL);
-        selectTokens.add(MaterialRevisionBoMItemsDTO.SELECT_POSITION);
-        selectTokens.add(MaterialRevisionBoMItemsDTO.SELECT_ID);
-        selectTokens.add(MaterialRevisionBoMItemsDTO.SELECT_CREATIONDATE);
-        selectTokens.add(MaterialRevisionBoMItemsDTO.SELECT_LASTUPDATE);
-        selectTokens.add(MaterialRevisionBoMItemsDTO.SELECT_MATERIALREVISIONID);
-        selectTokens.add(MaterialRevisionBoMItemsDTO.SELECT_MATERIALID);
-        selectTokens.add(MaterialRevisionBoMItemsDTO.SELECT_MATERIALMATERIALNUMBER);
-        selectTokens.add(MaterialRevisionBoMItemsDTO.SELECT_MATERIALSAPNUMBER);
-        selectTokens.add(MaterialRevisionBoMItemsDTO.SELECT_MATERIALSHORTTEXT);
-        selectTokens.add(MaterialRevisionBoMItemsDTO.SELECT_MATERIALTYPECODE);
-        selectTokens.add(MaterialRevisionBoMItemsDTO.SELECT_MATERIALCLASSCODE);
-
-        // Initialize the search object
-        final var searchObj = new SearchDTO();
-        searchObj.setExactFilterMatch(true);
-        searchObj.setCaseSensitive(true);
-        searchObj.setMaxResult(DEFAULT_LIST_SIZE);
-        searchObj.setFromClause(
-                "from MaterialRevision x join x.boMItems a left join a.material b left join a.materialRevision c left join b.materialClass e left join b.materialType f");
-
-        final var parentFilterField = searchObj.addSearchField("x.id", SearchFieldDataTypeEnum.LONG);
-        parentFilterField.setFilterCriteria(Long.toString(id));
-
-        return repository.search(searchObj, MaterialRevisionBoMItemsDTO.class, selectTokens);
     }
 
     /**

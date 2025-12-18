@@ -65,6 +65,14 @@ public class MaterialRevisionListDTO implements Serializable {
                 : String.format("%s (plant %s)", getRevisionNumber(), getPlantCode());
     }
 
+    public String toRevNrString() {
+        if (getRevisionNumber() == null) {
+            // es steht wohl überhaupt nichts im DTO, mglw. vom Converter produziert, aber wir wollen trotzdem etwas sehen!
+            return "id " + getId();
+        }
+        return getRevisionNumber();
+    }
+    
     /**
      * @return the id
      */

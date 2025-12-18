@@ -82,10 +82,10 @@
 		<h:outputLabel value="#{i18n.field_viewarrivaldialog_cbomaterialrevision}:" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;SUPERUSER')}" for="cboMaterialRevision" styleClass="label-field-optional"/>
 		<p:commandLink rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;SUPERUSER')}" id="cboMaterialRevision" style="font-weight: bold;color: #0063ac" action="#{viewArrivalDialog.openViewMaterialRevisionDialogLink}">
 			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{viewArrivalDialog.currentPageURL}"/>
-			<h:outputText value="#{viewArrivalDialog.arrival.materialRevision.id}"/>
+			<h:outputText value="#{viewArrivalDialog.arrival.materialRevision.toRevNrString()}"/>
 		</p:commandLink>
 		<h:outputLabel value="#{i18n.field_viewarrivaldialog_cbomaterialrevision}:" rendered="#{!userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;SUPERUSER')}" for="cboMaterialRevisionAltLbl" styleClass="label-field-optional"/>
-		<h:outputText styleClass="label-field-value" rendered="#{!userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;SUPERUSER')}" id="cboMaterialRevisionAltLbl" value="#{viewArrivalDialog.arrival.materialRevision.id}"/>
+		<h:outputText styleClass="label-field-value" rendered="#{!userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;SUPERUSER')}" id="cboMaterialRevisionAltLbl" value="#{viewArrivalDialog.arrival.materialRevision.toRevNrString()}"/>
 		<p:tooltip for="cboMaterialRevision" value=""/>
 		<h:outputLabel/>
 		<h:outputLabel/>
