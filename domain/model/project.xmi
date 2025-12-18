@@ -157,7 +157,7 @@
   <net.sourceforge.jbizmo.model.java:Namespace name="base" parent="/1" javaTypes="/45 /67 /14 /13 /64 /72 /86 /87 /99 /141 /153 /177 /277" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="base" parent="/3" javaTypes="/16 /53 /161 /50 /44 /71 /85 /80 /76 /83 /95 /91 /98 /107 /103 /140 /149 /145 /65 /152 /214 /169 /157 /37 /40 /15 /34 /176 /185 /181 /25 /68 /63 /21 /30 /160 /84 /173 /165 /234 /276 /275 /281 /285 /297 /298 /314" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="base" parent="/4" project="/0"/>
-  <net.sourceforge.jbizmo.model.java:Namespace name="base" parent="/2" javaTypes="/46 /59 /60 /55 /57 /66 /56 /12 /54 /61 /62 /11 /58 /278" project="/0"/>
+  <net.sourceforge.jbizmo.model.java:Namespace name="base" parent="/2" javaTypes="/46 /59 /60 /55 /57 /278 /66 /56 /12 /54 /61 /62 /11 /58" project="/0"/>
   <net.sourceforge.jbizmo.model.repository:Repository name="UserRepository" comment="Create, read, update and delete services for user objects." namespace="/10">
     <domainObject href="package-base.xmi#//@domainObjects.1"/>
     <repositoryMethods name="findById" javaType="/11" transactionType="REQUIRED" methodType="FIND_BY_ID">
@@ -2136,7 +2136,7 @@
       <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.5"/>
     </attributes>
   </net.sourceforge.jbizmo.model.dto:DTOBean>
-  <net.sourceforge.jbizmo.model.java:Namespace name="material" parent="/2" javaTypes="/112 /113 /194 /196 /198" project="/0"/>
+  <net.sourceforge.jbizmo.model.java:Namespace name="material" parent="/2" javaTypes="/194 /113 /198 /196 /112" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="material" parent="/1" javaTypes="/117 /129 /193 /195 /197" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="material" parent="/3" javaTypes="/208 /202 /190 /116 /125 /121 /191 /205 /219 /192 /223 /213 /128 /137 /133 /226 /232 /233 /231 /239 /242 /246" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="material" parent="/4" project="/0"/>
@@ -4276,8 +4276,8 @@
     </attributes>
   </net.sourceforge.jbizmo.model.dto:DTOBean>
   <net.sourceforge.jbizmo.model.client:FormGroup name="Serial object" groupOrder="4" forms="/260 /266 /286 /307 /303 /292" roles="/0/@roles.0 /0/@roles.1" project="/0"/>
-  <net.sourceforge.jbizmo.model.java:Namespace name="mv" parent="/2" javaTypes="/265 /271 /291" project="/0"/>
-  <net.sourceforge.jbizmo.model.java:Namespace name="mv" parent="/1" javaTypes="/264 /270 /290" project="/0"/>
+  <net.sourceforge.jbizmo.model.java:Namespace name="mv" parent="/2" javaTypes="/265 /271 /291 /317" project="/0"/>
+  <net.sourceforge.jbizmo.model.java:Namespace name="mv" parent="/1" javaTypes="/264 /270 /290 /316" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="mv" parent="/3" javaTypes="/263 /269 /289 /315" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="mv" parent="/4" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="serial" parent="/2" javaTypes="/300 /302" project="/0"/>
@@ -6089,4 +6089,94 @@
       <domainAttribute href="package-mv.xmi#//@domainObjects.3/@attributes.3"/>
     </attributes>
   </net.sourceforge.jbizmo.model.dto:DTOBean>
+  <net.sourceforge.jbizmo.model.boundary:BoundaryBean name="MaterializedArrivalBoundaryServiceBean" comment="Boundary service for materialized arrival objects" namespace="/249" interfaceName="MaterializedArrivalBoundaryService" repository="/317">
+    <domainObject href="package-mv.xmi#//@domainObjects.3"/>
+    <boundaryMethods name="findAll" comment="" returnType="/315" returnTypeModifier="List" methodType="FIND_ALL" serviceMethod="/317/@repositoryMethods.8"/>
+    <boundaryMethods name="delete" comment="" returnType="/0/@allSupportedTypes.0" serviceMethod="/317/@repositoryMethods.7">
+      <methodParameters name="id" type="/0/@allSupportedTypes.2" hint=""/>
+    </boundaryMethods>
+    <boundaryMethods name="copy" comment="" returnType="/0/@allSupportedTypes.2" methodType="COPY" serviceMethod="/317/@repositoryMethods.6">
+      <methodParameters name="sourceObjectId" type="/0/@allSupportedTypes.2" hint=""/>
+    </boundaryMethods>
+  </net.sourceforge.jbizmo.model.boundary:BoundaryBean>
+  <net.sourceforge.jbizmo.model.repository:Repository name="MaterializedArrivalRepository" comment="Create, read, update and delete services for materialized arrival objects." namespace="/248">
+    <domainObject href="package-mv.xmi#//@domainObjects.3"/>
+    <repositoryMethods name="findById" javaType="/317" transactionType="REQUIRED" methodType="FIND_BY_ID">
+      <returnType href="package-mv.xmi#//@domainObjects.3"/>
+      <methodParameters name="id" type="/0/@allSupportedTypes.2"/>
+    </repositoryMethods>
+    <repositoryMethods name="findById" javaType="/317" transactionType="REQUIRED" methodType="FIND_EXISTING">
+      <returnType href="package-mv.xmi#//@domainObjects.3"/>
+      <methodParameters name="id" type="/0/@allSupportedTypes.2"/>
+      <methodParameters name="mustExist" type="/0/@allSupportedTypes.4"/>
+    </repositoryMethods>
+    <repositoryMethods name="findById" javaType="/317" transactionType="REQUIRED" methodType="FIND_BY_OBJECT">
+      <returnType href="package-mv.xmi#//@domainObjects.3"/>
+      <methodParameters name="materializedArrival">
+        <type href="package-mv.xmi#//@domainObjects.3"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="deleteAll" javaType="/317" returnType="/0/@allSupportedTypes.0" transactionType="REQUIRED" methodType="DELETE_ALL"/>
+    <repositoryMethods name="merge" javaType="/317" transactionType="REQUIRED" methodType="MERGE">
+      <returnType href="package-mv.xmi#//@domainObjects.3"/>
+      <methodParameters name="materializedArrival">
+        <type href="package-mv.xmi#//@domainObjects.3"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="persist" javaType="/317" transactionType="REQUIRED" methodType="PERSIST">
+      <returnType href="package-mv.xmi#//@domainObjects.3"/>
+      <methodParameters name="materializedArrival">
+        <type href="package-mv.xmi#//@domainObjects.3"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="copy" javaType="/317" transactionType="REQUIRED" methodType="COPY">
+      <returnType href="package-mv.xmi#//@domainObjects.3"/>
+      <methodParameters name="sourceObject">
+        <type href="package-mv.xmi#//@domainObjects.3"/>
+      </methodParameters>
+      <methodParameters name="targetObject">
+        <type href="package-mv.xmi#//@domainObjects.3"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="delete" javaType="/317" returnType="/0/@allSupportedTypes.0" transactionType="REQUIRED" methodType="DELETE">
+      <methodParameters name="id" type="/0/@allSupportedTypes.2"/>
+    </repositoryMethods>
+    <repositoryMethods name="findAll" javaType="/317" returnTypeModifier="List" transactionType="REQUIRED">
+      <returnType href="package-mv.xmi#//@domainObjects.3"/>
+    </repositoryMethods>
+    <repositoryMethods name="existsById" javaType="/317" returnType="/0/@allSupportedTypes.4" transactionType="REQUIRED" methodType="EXISTS_BY_ID">
+      <methodParameters name="id" type="/0/@allSupportedTypes.2"/>
+    </repositoryMethods>
+    <repositoryMethods name="count" javaType="/317" returnType="/0/@allSupportedTypes.7" transactionType="REQUIRED" methodType="COUNT_ALL"/>
+    <repositoryMethods name="search" javaType="/317" returnTypeModifier="List" transactionType="REQUIRED" methodType="SEARCH">
+      <returnType href="package-mv.xmi#//@domainObjects.3"/>
+    </repositoryMethods>
+    <repositoryMethods name="count" javaType="/317" returnType="/0/@allSupportedTypes.7" transactionType="REQUIRED" methodType="COUNT"/>
+    <repositoryMethods name="getMaterial" javaType="/317" transactionType="REQUIRED" methodType="GET_ASSOCIATION" hint="NQ_GET_MATERIAL">
+      <returnType href="package-material.xmi#//@domainObjects.2"/>
+      <methodParameters xsi:type="net.sourceforge.jbizmo.model.repository:RepositoryMethodParameter" name="id" type="/0/@allSupportedTypes.2">
+        <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-mv.xmi#//@domainObjects.3/@associations.0"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="getSerialObject" javaType="/317" transactionType="REQUIRED" methodType="GET_ASSOCIATION" hint="NQ_GET_SERIALOBJECT">
+      <returnType href="package-serial.xmi#//@domainObjects.0"/>
+      <methodParameters xsi:type="net.sourceforge.jbizmo.model.repository:RepositoryMethodParameter" name="id" type="/0/@allSupportedTypes.2">
+        <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-mv.xmi#//@domainObjects.3/@associations.1"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="setMaterial" javaType="/317" returnType="/0/@allSupportedTypes.0" transactionType="REQUIRED" methodType="CHANGE_PARENT">
+      <methodParameters name="id" type="/0/@allSupportedTypes.2"/>
+      <methodParameters xsi:type="net.sourceforge.jbizmo.model.repository:RepositoryMethodParameter" name="material">
+        <type href="package-material.xmi#//@domainObjects.2"/>
+        <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-mv.xmi#//@domainObjects.3/@associations.0"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="setSerialObject" javaType="/317" returnType="/0/@allSupportedTypes.0" transactionType="REQUIRED" methodType="CHANGE_PARENT">
+      <methodParameters name="id" type="/0/@allSupportedTypes.2"/>
+      <methodParameters xsi:type="net.sourceforge.jbizmo.model.repository:RepositoryMethodParameter" name="serialObject">
+        <type href="package-serial.xmi#//@domainObjects.0"/>
+        <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-mv.xmi#//@domainObjects.3/@associations.1"/>
+      </methodParameters>
+    </repositoryMethods>
+  </net.sourceforge.jbizmo.model.repository:Repository>
 </xmi:XMI>

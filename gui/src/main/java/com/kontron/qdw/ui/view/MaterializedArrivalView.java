@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
 
 import com.kontron.qdw.boundary.base.SupplierBoundaryService;
 import com.kontron.qdw.boundary.material.MaterialBoundaryService;
-import com.kontron.qdw.boundary.serial.ArrivalBoundaryService;
+import com.kontron.qdw.boundary.mv.MaterializedArrivalBoundaryService;
 import com.kontron.qdw.dto.base.SupplierListDTO;
 import com.kontron.qdw.dto.material.MaterialListDTO;
 import com.kontron.qdw.dto.mv.MaterializedArrivalSearchDTO;
@@ -49,7 +49,7 @@ public class MaterializedArrivalView extends SuperView implements Serializable {
 
     private transient ResourceBundle bundle;
     private final UserSession userSession;
-    private final transient ArrivalBoundaryService arrivalService;
+    private final transient MaterializedArrivalBoundaryService arrivalService;
     private final transient SupplierBoundaryService supplierService;
     private final transient MaterialBoundaryService materialService;
     private final transient SavedQueryService queryManager;
@@ -74,7 +74,8 @@ public class MaterializedArrivalView extends SuperView implements Serializable {
     }
 
     @Inject
-    public MaterializedArrivalView(UserSession userSession, ArrivalBoundaryService arrivalService, SupplierBoundaryService supplierService,
+    public MaterializedArrivalView(UserSession userSession, MaterializedArrivalBoundaryService arrivalService,
+            SupplierBoundaryService supplierService,
             MaterialBoundaryService materialService, SavedQueryService queryManager) {
         this.userSession = userSession;
         this.arrivalService = arrivalService;
@@ -292,7 +293,7 @@ public class MaterializedArrivalView extends SuperView implements Serializable {
         try {
             logger.debug("Delete selected object with id '{}'", selectedObject.getId());
 
-            arrivalService.deleteArrival(selectedObject.getId());
+            arrivalService.delete(selectedObject.getId());
         }
         catch (final Exception e) {
             logger.error("Error while deleting selected object!", e);
@@ -460,15 +461,15 @@ public class MaterializedArrivalView extends SuperView implements Serializable {
         return PAGE_URL;
     }
 
-    public Collection<ArrivalSearchDTO> getArrivalsList() {
+    public Collection<MaterializedArrivalSearchDTO> getArrivalsList() {
         return arrivalsList;
     }
 
-    public ArrivalSearchDTO getSelectedObject() {
+    public MaterializedArrivalSearchDTO getSelectedObject() {
         return selectedObject;
     }
 
-    public void setSelectedObject(ArrivalSearchDTO selectedObject) {
+    public void setSelectedObject(MaterializedArrivalSearchDTO selectedObject) {
         this.selectedObject = selectedObject;
     }
 

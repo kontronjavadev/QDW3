@@ -71,32 +71,40 @@ public class MaterializedArrivalSearchDTO implements Serializable {
 
     public static final String SELECT_ID = "a.id";
     public static final String SELECT_PLANT = "a.plant";
+
     public static final String SELECT_SERIALOBJECTID = "a.serialObjectId";
     public static final String SELECT_SERIALNUMBER = "a.serialNumber";
     public static final String SELECT_PARENTSERIALOBJECTID = "a.parentSerialObjectId";
     public static final String SELECT_PARENTSERIALNUMBER = "a.parentSerialNumber";
+
     public static final String SELECT_ORDERNUMBER = "a.orderNumber";
     public static final String SELECT_ARRIVALDATE = "a.arrivalDate";
+
     public static final String SELECT_ASSEMBLYDATE = "a.assemblyDate";
     public static final String SELECT_ASSEMBLYPO = "a.assemblyPO";
+
     public static final String SELECT_SUPPLIERCODE = "a.supplierCode";
     public static final String SELECT_SUPPLIERNAME = "a.supplierName";
     public static final String SELECT_COUNTRYCODE = "a.countryCode";
     public static final String SELECT_COUNTRYNAME = "a.countryName";
+
     public static final String SELECT_REVISIONID = "a.revisionId";
     public static final String SELECT_REVISIONNUMBER = "a.revisionNumber";
     public static final String SELECT_PARENTREVISIONID = "a.parentRevisionId";
     public static final String SELECT_PARENTREVISIONNUMBER = "a.parentRevisionNumber";
+
     public static final String SELECT_MATERIALNUMBER = "a.materialNumber";
     public static final String SELECT_SAPNUMBER = "a.sapNumber";
     public static final String SELECT_MATERIALSHORTTEXT = "a.materialShortText";
     public static final String SELECT_MATERIALHIERARCHY = "a.materialHierarchy";
     public static final String SELECT_MATERIALTYPE = "a.materialType";
+
     public static final String SELECT_PARENTMATERIALNUMBER = "a.parentMaterialNumber";
     public static final String SELECT_PARENTSAPNUMBER = "a.parentSapNumber";
     public static final String SELECT_PARENTMATERIALSHORTTEXT = "a.parentMaterialShortText";
     public static final String SELECT_PARENTMATERIALHIERARCHY = "a.parentMaterialHierarchy";
     public static final String SELECT_PARENTMATERIALTYPE = "a.parentMaterialType";
+
     public static final String SELECT_MOVEMENTTYPE = "a.movementType";
 
 
@@ -172,40 +180,50 @@ public class MaterializedArrivalSearchDTO implements Serializable {
     }
 
     @Generated
-    public MaterializedArrivalSearchDTO(long id, String plant, long serialObjectId, String serialNumber, Long parentSerialObjectId,
-            String parentSerialNumber, String orderNumber, LocalDate arrivalDate, LocalDate assemblyDate, String assemblyPO, String supplierCode,
-            String supplierName, String countryCode, String countryName, long revisionId, String revisionNumber, Long parentRevisionId,
-            String parentRevisionNumber, String materialNumber, String sapNumber, String materialShortText, String materialHierarchy,
-            String materialType, String parentMaterialNumber, String parentSapNumber, String parentMaterialShortText, String parentMaterialHierarchy,
-            String parentMaterialType, String movementType) {
+    public MaterializedArrivalSearchDTO(long id, String plant,
+            long serialObjectId, String serialNumber, Long parentSerialObjectId, String parentSerialNumber,
+            String orderNumber, LocalDate arrivalDate, LocalDate assemblyDate, String assemblyPO,
+            String supplierCode, String supplierName, String countryCode, String countryName,
+            long revisionId, String revisionNumber, Long parentRevisionId, String parentRevisionNumber,
+            String materialNumber, String sapNumber, String materialShortText, String materialHierarchy, String materialType,
+            String parentMaterialNumber, String parentSapNumber, String parentMaterialShortText, String parentMaterialHierarchy,
+            String parentMaterialType,
+            String movementType) {
         this.id = id;
         this.plant = plant;
+
         this.serialObjectId = serialObjectId;
         this.serialNumber = serialNumber;
         this.parentSerialObjectId = parentSerialObjectId;
         this.parentSerialNumber = parentSerialNumber;
+
         this.orderNumber = orderNumber;
         this.arrivalDate = arrivalDate;
         this.assemblyDate = assemblyDate;
         this.assemblyPO = assemblyPO;
+
         this.supplierCode = supplierCode;
         this.supplierName = supplierName;
         this.countryCode = countryCode;
         this.countryName = countryName;
+
         this.revisionId = revisionId;
         this.revisionNumber = revisionNumber;
         this.parentRevisionId = parentRevisionId;
         this.parentRevisionNumber = parentRevisionNumber;
+
         this.materialNumber = materialNumber;
         this.sapNumber = sapNumber;
         this.materialShortText = materialShortText;
         this.materialHierarchy = materialHierarchy;
         this.materialType = materialType;
+
         this.parentMaterialNumber = parentMaterialNumber;
         this.parentSapNumber = parentSapNumber;
         this.parentMaterialShortText = parentMaterialShortText;
         this.parentMaterialHierarchy = parentMaterialHierarchy;
         this.parentMaterialType = parentMaterialType;
+
         this.movementType = movementType;
     }
 
