@@ -271,7 +271,7 @@
 		selection="#{supplierView.selectedObject}"
 		loadingMessage="#{i18n.action_fetch_data}"
 		value="#{supplierView.suppliersList}" scrollable="false"
-		paginatorPosition="top" paginatorAlwaysVisible="false" paginator="true" resizableColumns="true"
+		paginatorPosition="top" paginatorAlwaysVisible="#{supplierView.paginatorAlwaysVisible}" paginator="true" resizableColumns="true"
 		rowKey="#{supplierViewItem.code}"
 		paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 		rowsPerPageTemplate="50,150,400,1000">

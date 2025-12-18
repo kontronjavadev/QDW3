@@ -180,7 +180,7 @@
 		selection="#{userView.selectedObject}"
 		loadingMessage="#{i18n.action_fetch_data}"
 		value="#{userView.usersList}" scrollable="false"
-		paginatorPosition="top" paginatorAlwaysVisible="false" paginator="true" resizableColumns="true"
+		paginatorPosition="top" paginatorAlwaysVisible="#{userView.paginatorAlwaysVisible}" paginator="true" resizableColumns="true"
 		rowKey="#{userViewItem.id}"
 		paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 		rowsPerPageTemplate="50,150,400,1000">

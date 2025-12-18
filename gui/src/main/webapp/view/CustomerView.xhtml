@@ -286,7 +286,7 @@
 		selection="#{customerView.selectedObject}"
 		loadingMessage="#{i18n.action_fetch_data}"
 		value="#{customerView.customersList}" scrollable="false"
-		paginatorPosition="top" paginatorAlwaysVisible="false" paginator="true" resizableColumns="true"
+		paginatorPosition="top" paginatorAlwaysVisible="#{customerView.paginatorAlwaysVisible}" paginator="true" resizableColumns="true"
 		rowKey="#{customerViewItem.code}"
 		paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 		rowsPerPageTemplate="50,150,400,1000">
