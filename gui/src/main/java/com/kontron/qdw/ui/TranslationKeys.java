@@ -182,6 +182,7 @@ public interface TranslationKeys {
     String FORM_AGGREGATEDSHIPMENTVIEW_TITLE = "form_aggregatedshipmentview_title";
     String FORM_ARRIVALLASTVIEW_TITLE = "form_arrivallastview_title";
     String FORM_ARRIVALVIEW_TITLE = "form_arrivalview_title";
+    String FORM_MATERIALIZEDARRIVALVIEW_TITLE = "form_materializedarrivalview_title";
     String FORM_BUSINESSUNITVIEW_TITLE = "form_businessunitview_title";
     String FORM_CHANGEPASSWORDDIALOG_TITLE = "form_changepassworddialog_title";
     String FORM_COUNTRYVIEW_TITLE = "form_countryview_title";
@@ -405,4 +406,18 @@ public interface TranslationKeys {
     String SEARCH_INPUT_VALIDATION = "search_input_validation";
     String SEARCH_INPUT_VISIBLE_FIELDS = "search_input_visible_fields";
     String SEARCH_INPUT_VISIBLE_FIELDS_LABEL = "search_input_visible_fields_label";
+
+    String COL_MATERIALIZEDARRIVALVIEW_ID = "col_materializedarrivalview_id";
+    String COL_MATERIALIZEDARRIVALVIEW_MATREVMATMATERIALCLASSCODE = "col_materializedarrivalview_matrevmatmaterialclasscode";
+    String COL_MATERIALIZEDARRIVALVIEW_MATREVMATMATERIALNUMBER = "col_materializedarrivalview_matrevmatmaterialnumber";
+    String COL_MATERIALIZEDARRIVALVIEW_MATREVMATMATERIALTYPECODE = "col_materializedarrivalview_matrevmatmaterialtypecode";
+    String COL_MATERIALIZEDARRIVALVIEW_MATREVMATOWNERLOCATIONCODE = "col_materializedarrivalview_matrevmatownerlocationcode";
+    String COL_MATERIALIZEDARRIVALVIEW_MATREVMATSAPNUMBER = "col_materializedarrivalview_matrevmatsapnumber";
+    String COL_MATERIALIZEDARRIVALVIEW_MATREVMATSHORTTEXT = "col_materializedarrivalview_matrevmatshorttext";
+    String COL_MATERIALIZEDARRIVALVIEW_MATREVREVISIONNUMBER = "col_materializedarrivalview_matrevrevisionnumber";
+    String COL_MATERIALIZEDARRIVALVIEW_MOVEMENTTYPECODE = "col_materializedarrivalview_movementtypecode";
+    String COL_MATERIALIZEDARRIVALVIEW_ORDERNUMBER = "col_materializedarrivalview_ordernumber";
+    String COL_MATERIALIZEDARRIVALVIEW_PLANTCODE = "col_materializedarrivalview_plantcode";
+    String COL_MATERIALIZEDARRIVALVIEW_SERIALOBJECTSERIALNUMBER = "col_materializedarrivalview_serialobjectserialnumber";
+    String COL_MATERIALIZEDARRIVALVIEW_SUPPLIERNAME = "col_materializedarrivalview_suppliername";
 }
