@@ -236,6 +236,7 @@ public interface TranslationKeys {
     String FORM_VIEWMATERIALDIALOG_TITLE = "form_viewmaterialdialog_title";
     String FORM_VIEWMATERIALREVISIONDIALOG_TITLE = "form_viewmaterialrevisiondialog_title";
     String FORM_VIEWROLEDIALOG_TITLE = "form_viewroledialog_title";
+    String FORM_VIEWSUPPLIERDIALOG_TITLE = "form_viewsupplierdialog_title";
     String ILLEGAL_ITEM_SELECTED = "illegal_item_selected";
     String INVALID_MAIL_ADDRESS = "invalid_mail_address";
     String LABEL_LIST_ENTER_FILTER = "label_list_enter_filter";

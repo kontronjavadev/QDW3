@@ -153,9 +153,9 @@
   <net.sourceforge.jbizmo.model.java:Namespace name="dto" parent="/0/@rootNamespace" childNamespaces="/8 /110 /250 /254 /258" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="exchange" parent="/0/@rootNamespace" childNamespaces="/9 /111 /251 /255 /259" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="ui.test" parent="/0/@rootNamespace" project="/0"/>
-  <net.sourceforge.jbizmo.model.client:FormGroup name="Master data" groupOrder="1" forms="/47 /77 /51 /69 /81 /96 /114 /126 /138 /150 /174 /158 /92 /41 /73 /88 /100 /118 /130 /142 /154 /178 /162 /104 /122 /134 /146 /166 /182 /170" roles="/0/@roles.0" project="/0"/>
+  <net.sourceforge.jbizmo.model.client:FormGroup name="Master data" groupOrder="1" forms="/47 /77 /51 /69 /81 /96 /114 /126 /138 /150 /174 /158 /92 /41 /73 /88 /100 /118 /130 /142 /154 /178 /162 /104 /122 /134 /146 /166 /182 /170 /311" roles="/0/@roles.0" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="base" parent="/1" javaTypes="/45 /67 /14 /13 /64 /72 /86 /87 /99 /141 /153 /177 /277" project="/0"/>
-  <net.sourceforge.jbizmo.model.java:Namespace name="base" parent="/3" javaTypes="/16 /53 /161 /50 /44 /71 /85 /80 /76 /83 /95 /91 /98 /107 /103 /140 /149 /145 /65 /152 /214 /169 /157 /37 /40 /15 /34 /176 /185 /181 /25 /68 /63 /21 /30 /160 /84 /173 /165 /234 /276 /275 /281 /285 /297 /298" project="/0"/>
+  <net.sourceforge.jbizmo.model.java:Namespace name="base" parent="/3" javaTypes="/16 /53 /161 /50 /44 /71 /85 /80 /76 /83 /95 /91 /98 /107 /103 /140 /149 /145 /65 /152 /214 /169 /157 /37 /40 /15 /34 /176 /185 /181 /25 /68 /63 /21 /30 /160 /84 /173 /165 /234 /276 /275 /281 /285 /297 /298 /314" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="base" parent="/4" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="base" parent="/2" javaTypes="/46 /59 /60 /55 /57 /66 /56 /12 /54 /61 /62 /11 /58 /278" project="/0"/>
   <net.sourceforge.jbizmo.model.repository:Repository name="UserRepository" comment="Create, read, update and delete services for user objects." namespace="/10">
@@ -2949,6 +2949,9 @@
     </boundaryMethods>
     <boundaryMethods name="findListSupplier" comment="Find supplier by its ID" returnType="/297" methodType="FIND_BY_ID" serviceMethod="/61/@repositoryMethods.0">
       <methodParameters name="id" type="/0/@allSupportedTypes.12"/>
+    </boundaryMethods>
+    <boundaryMethods name="findSupplierById" comment="Find supplier by its ID" returnType="/314" methodType="FIND_BY_ID" serviceMethod="/61/@repositoryMethods.0">
+      <methodParameters name="code" type="/0/@allSupportedTypes.12"/>
     </boundaryMethods>
   </net.sourceforge.jbizmo.model.boundary:BoundaryBean>
   <net.sourceforge.jbizmo.model.client:Form name="EditSupplierDialog" formGroup="/6" title="Edit supplier" formPanels="/179 /180" dTO="/181" roles="/0/@roles.0">
@@ -5939,6 +5942,61 @@
     <attributes name="matrevRevisionNumber" selectToken="b.revisionNumber">
       <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-serial.xmi#//@domainObjects.2/@associations.0"/>
       <domainAttribute href="package-material.xmi#//@domainObjects.3/@attributes.0"/>
+    </attributes>
+  </net.sourceforge.jbizmo.model.dto:DTOBean>
+  <net.sourceforge.jbizmo.model.client:Form name="ViewSupplierDialog" formType="READONLY" formGroup="/6" title="View supplier" formPanels="/312 /313" dTO="/314" roles="/0/@roles.0">
+    <actions name="actionGet" boundaryMethod="/177/@boundaryMethods.9" type="READ"/>
+    <domainObject href="package-base.xmi#//@domainObjects.13"/>
+  </net.sourceforge.jbizmo.model.client:Form>
+  <net.sourceforge.jbizmo.model.client:FormPanel name="panSupplier" label="Basic data" form="/311">
+    <fields name="txtCode" label="Code" readonly="true" width="140" dTOAttribute="/314/@attributes.4"/>
+    <fields name="txtName" colIndex="2" label="Name" readonly="true" mandatory="false" width="140" dTOAttribute="/314/@attributes.0"/>
+    <fields name="txtStreet" rowIndex="2" label="Street" readonly="true" mandatory="false" width="140" dTOAttribute="/314/@attributes.1"/>
+    <fields name="txtZipCode" rowIndex="3" label="Zip code" readonly="true" mandatory="false" width="140" dTOAttribute="/314/@attributes.2"/>
+    <fields name="txtCity" colIndex="2" rowIndex="3" label="City" readonly="true" mandatory="false" width="140" dTOAttribute="/314/@attributes.3"/>
+    <fields name="cboCountry" rowIndex="4" label="Country" readonly="true" fieldType="FORM_LINK" width="140" dTOAttribute="/314/@attributes.10"/>
+    <fields name="txtShortText" rowIndex="5" label="Short text" spanCols="true" readonly="true" mandatory="false" width="140" dTOAttribute="/314/@attributes.5"/>
+    <fields name="txtComment" rowIndex="6" label="Comment" spanCols="true" readonly="true" mandatory="false" fieldType="MULTI_LINE_TEXT" dTOAttribute="/314/@attributes.6"/>
+  </net.sourceforge.jbizmo.model.client:FormPanel>
+  <net.sourceforge.jbizmo.model.client:FormPanel name="panAdministration" colIndex="2" label="Administration data" form="/311">
+    <fields name="txtCreationDate" label="Creation date" readonly="true" fieldType="DATE_TIME" width="120" dTOAttribute="/314/@attributes.7"/>
+    <fields name="txtLastUpdate" rowIndex="2" label="Last update" readonly="true" mandatory="false" fieldType="DATE_TIME" width="120" dTOAttribute="/314/@attributes.8"/>
+    <fields name="txtVersion" rowIndex="3" label="Version" readonly="true" width="120" dTOAttribute="/314/@attributes.9"/>
+  </net.sourceforge.jbizmo.model.client:FormPanel>
+  <net.sourceforge.jbizmo.model.dto:DTOBean name="SupplierDTO" comment="Data transfer object for supplier objects" namespace="/8" standardConversion="true">
+    <domainObject href="package-base.xmi#//@domainObjects.13"/>
+    <attributes name="name">
+      <domainAttribute href="package-base.xmi#//@domainObjects.13/@attributes.0"/>
+    </attributes>
+    <attributes name="street">
+      <domainAttribute href="package-base.xmi#//@domainObjects.13/@attributes.1"/>
+    </attributes>
+    <attributes name="zipCode">
+      <domainAttribute href="package-base.xmi#//@domainObjects.13/@attributes.2"/>
+    </attributes>
+    <attributes name="city">
+      <domainAttribute href="package-base.xmi#//@domainObjects.13/@attributes.3"/>
+    </attributes>
+    <attributes name="code">
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.0"/>
+    </attributes>
+    <attributes name="shortText">
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.1"/>
+    </attributes>
+    <attributes name="comment">
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.2"/>
+    </attributes>
+    <attributes name="creationDate">
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.3"/>
+    </attributes>
+    <attributes name="lastUpdate">
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.4"/>
+    </attributes>
+    <attributes name="version">
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.5"/>
+    </attributes>
+    <attributes name="country" referencedDTOBean="/85">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-base.xmi#//@domainObjects.13/@associations.0"/>
     </attributes>
   </net.sourceforge.jbizmo.model.dto:DTOBean>
 </xmi:XMI>

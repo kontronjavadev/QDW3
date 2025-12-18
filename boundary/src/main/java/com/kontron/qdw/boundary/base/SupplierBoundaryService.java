@@ -247,4 +247,34 @@ public class SupplierBoundaryService {
         return dto;
     }
 
+    /**
+     * Find supplier by its ID
+     * @param code
+     * @return the supplier object
+     */
+    @Generated
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public SupplierDTO findSupplierById(String code) {
+        // Find persistent object
+        final Supplier supplier = repository.findById(code, true);
+
+        final var dto = new SupplierDTO();
+        dto.setName(supplier.getName());
+        dto.setStreet(supplier.getStreet());
+        dto.setZipCode(supplier.getZipCode());
+        dto.setCity(supplier.getCity());
+        dto.setCode(supplier.getCode());
+        dto.setShortText(supplier.getShortText());
+        dto.setComment(supplier.getComment());
+        dto.setCreationDate(supplier.getCreationDate());
+        dto.setLastUpdate(supplier.getLastUpdate());
+        dto.setVersion(supplier.getVersion());
+        dto.setCountry(new CountryListDTO());
+        dto.getCountry().setCode(supplier.getCountry().getCode());
+        dto.getCountry().setName(supplier.getCountry().getName());
+
+        return dto;
+    }
+
 }
