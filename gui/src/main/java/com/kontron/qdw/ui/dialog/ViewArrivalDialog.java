@@ -159,6 +159,15 @@ public class ViewArrivalDialog implements Serializable {
      * @return the navigation target
      */
     @Generated
+    public String openViewSupplierDialogLink() {
+        return ViewSupplierDialog.PAGE_INIT_URL
+                + java.net.URLEncoder.encode(arrival.getSupplier().getCode(), java.nio.charset.StandardCharsets.UTF_8);
+    }
+
+    /**
+     * @return the navigation target
+     */
+    @Generated
     public String openViewMaterialDialogLink() {
         return ViewMaterialDialog.PAGE_INIT_URL + arrival.getMaterialRevisionMaterial().getId();
     }

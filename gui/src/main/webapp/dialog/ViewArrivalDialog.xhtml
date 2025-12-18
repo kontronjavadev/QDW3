@@ -39,8 +39,13 @@
 		<h:outputText styleClass="label-field-value" id="cboPlant" value="#{viewArrivalDialog.arrival.plant.code}"/>
 		<p:tooltip for="cboPlant" value=""/>
 
-		<h:outputLabel value="#{i18n.lbl_assoc_arrival_supplier}:" for="cboSupplier" styleClass="label-field-optional"/>
-		<h:outputText styleClass="label-field-value" id="cboSupplier" value="#{viewArrivalDialog.arrival.supplier.name}"/>
+		<h:outputLabel value="#{i18n.lbl_assoc_arrival_supplier}:" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR')}" for="cboSupplier" styleClass="label-field-optional"/>
+		<p:commandLink rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR')}" id="cboSupplier" style="font-weight: bold;color: #0063ac" action="#{viewArrivalDialog.openViewSupplierDialogLink}">
+			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{viewArrivalDialog.currentPageURL}"/>
+			<h:outputText value="#{viewArrivalDialog.arrival.supplier.name}"/>
+		</p:commandLink>
+		<h:outputLabel value="#{i18n.lbl_assoc_arrival_supplier}:" rendered="#{!userSession.checkAuthorizationString('ADMINISTRATOR')}" for="cboSupplierAltLbl" styleClass="label-field-optional"/>
+		<h:outputText styleClass="label-field-value" rendered="#{!userSession.checkAuthorizationString('ADMINISTRATOR')}" id="cboSupplierAltLbl" value="#{viewArrivalDialog.arrival.supplier.name}"/>
 		<p:tooltip for="cboSupplier" value=""/>
 
 		<h:outputLabel value="#{i18n.lbl_attr_serialobject_serialnumber}:" for="txtSerialObjectSerialNumber" styleClass="label-field-optional"/>
