@@ -39,6 +39,7 @@
 				<h:outputText styleClass="label-field-mandatory" value="#{i18n.search_input_filter_input}"/>
 				<h:outputText styleClass="label-field-mandatory" value="#{i18n.search_input_and}"/>
 
+<!-- id -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_0" value="#{materializedArrivalView.searchObject.searchFields[0].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{materializedArrivalView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_0" value="#{materializedArrivalView.searchObject.searchFields[0].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_0" value="#{materializedArrivalView.numberOperators}" var="advInputItem0" itemValue="#{advInputItem0}" itemLabel="#{advInputItem0.description}"/>
@@ -52,6 +53,7 @@
 					<p:inputText id="b_0" rendered="#{materializedArrivalView.searchObject.searchFields[0].between}" value="#{materializedArrivalView.searchObject.searchFields[0].integerBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
+<!-- plant -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_1" value="#{materializedArrivalView.searchObject.searchFields[1].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{materializedArrivalView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_1" value="#{materializedArrivalView.searchObject.searchFields[1].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_1" value="#{materializedArrivalView.textOperators}" var="advInputItem1" itemValue="#{advInputItem1}" itemLabel="#{advInputItem1.description}"/>
@@ -65,6 +67,9 @@
 					<p:inputText id="b_1" rendered="#{materializedArrivalView.searchObject.searchFields[1].between}" value="#{materializedArrivalView.searchObject.searchFields[1].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
+
+
+<!-- serial no. -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_2" value="#{materializedArrivalView.searchObject.searchFields[2].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{materializedArrivalView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_2" value="#{materializedArrivalView.searchObject.searchFields[2].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_2" value="#{materializedArrivalView.textOperators}" var="advInputItem2" itemValue="#{advInputItem2}" itemLabel="#{advInputItem2.description}"/>
@@ -78,6 +83,7 @@
 					<p:inputText id="b_2" rendered="#{materializedArrivalView.searchObject.searchFields[2].between}" value="#{materializedArrivalView.searchObject.searchFields[2].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
+<!-- parent serial no. -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_3" value="#{materializedArrivalView.searchObject.searchFields[3].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{materializedArrivalView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_3" value="#{materializedArrivalView.searchObject.searchFields[3].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_3" value="#{materializedArrivalView.textOperators}" var="advInputItem3" itemValue="#{advInputItem3}" itemLabel="#{advInputItem3.description}"/>
@@ -91,45 +97,51 @@
 					<p:inputText id="b_3" rendered="#{materializedArrivalView.searchObject.searchFields[3].between}" value="#{materializedArrivalView.searchObject.searchFields[3].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
+
+
+<!-- order no. -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_4" value="#{materializedArrivalView.searchObject.searchFields[4].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{materializedArrivalView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_4" value="#{materializedArrivalView.searchObject.searchFields[4].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
-					<f:selectItems update="b_4" value="#{materializedArrivalView.dateOperators}" var="advInputItem4" itemValue="#{advInputItem4}" itemLabel="#{advInputItem4.description}"/>
+					<f:selectItems update="b_4" value="#{materializedArrivalView.textOperators}" var="advInputItem4" itemValue="#{advInputItem4}" itemLabel="#{advInputItem4.description}"/>
 					<f:ajax render="p_4"/>
 				</p:selectOneMenu>
 				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_4" id="s_4" value="#{materializedArrivalView.searchObject.searchFields[4].sortOrder}">
 					<f:selectItems value="#{materializedArrivalView.sortOrderList}"/>
 				</p:selectOneMenu>
-				<p:datePicker id="fi_4" value="#{materializedArrivalView.searchObject.searchFields[4].dateCriterion}" pattern="#{userSession.dateFormat}" size="20" showButtonBar="true" showIcon="true"/>
+				<p:inputText id="fi_4" value="#{materializedArrivalView.searchObject.searchFields[4].stringCriterion}" size="30"/>
 				<h:panelGroup id="p_4">
-					<p:datePicker id="fb_4" value="#{materializedArrivalView.searchObject.searchFields[4].dateBetweenCriterion}" pattern="#{userSession.dateFormat}" size="20" showButtonBar="true" showIcon="true" rendered="#{materializedArrivalView.searchObject.searchFields[4].between}"/>
+					<p:inputText id="b_4" rendered="#{materializedArrivalView.searchObject.searchFields[4].between}" value="#{materializedArrivalView.searchObject.searchFields[4].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
+<!-- arrival date -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_5" value="#{materializedArrivalView.searchObject.searchFields[5].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{materializedArrivalView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_5" value="#{materializedArrivalView.searchObject.searchFields[5].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
-					<f:selectItems update="b_5" value="#{materializedArrivalView.textOperators}" var="advInputItem5" itemValue="#{advInputItem5}" itemLabel="#{advInputItem5.description}"/>
+					<f:selectItems update="b_5" value="#{materializedArrivalView.dateOperators}" var="advInputItem5" itemValue="#{advInputItem5}" itemLabel="#{advInputItem5.description}"/>
 					<f:ajax render="p_5"/>
 				</p:selectOneMenu>
 				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_5" id="s_5" value="#{materializedArrivalView.searchObject.searchFields[5].sortOrder}">
 					<f:selectItems value="#{materializedArrivalView.sortOrderList}"/>
 				</p:selectOneMenu>
-				<p:inputText id="fi_5" value="#{materializedArrivalView.searchObject.searchFields[5].stringCriterion}" size="30"/>
+				<p:datePicker id="fi_5" value="#{materializedArrivalView.searchObject.searchFields[5].dateCriterion}" pattern="#{userSession.dateFormat}" size="20" showButtonBar="true" showIcon="true"/>
 				<h:panelGroup id="p_5">
-					<p:inputText id="b_5" rendered="#{materializedArrivalView.searchObject.searchFields[5].between}" value="#{materializedArrivalView.searchObject.searchFields[5].stringBetweenCriterion}" size="30"/>
+					<p:datePicker id="fb_5" value="#{materializedArrivalView.searchObject.searchFields[5].dateBetweenCriterion}" pattern="#{userSession.dateFormat}" size="20" showButtonBar="true" showIcon="true" rendered="#{materializedArrivalView.searchObject.searchFields[5].between}"/>
 				</h:panelGroup>
 
+<!-- assembly date -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_6" value="#{materializedArrivalView.searchObject.searchFields[6].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{materializedArrivalView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_6" value="#{materializedArrivalView.searchObject.searchFields[6].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
-					<f:selectItems update="b_6" value="#{materializedArrivalView.textOperators}" var="advInputItem6" itemValue="#{advInputItem6}" itemLabel="#{advInputItem6.description}"/>
+					<f:selectItems update="b_6" value="#{materializedArrivalView.dateOperators}" var="advInputItem6" itemValue="#{advInputItem6}" itemLabel="#{advInputItem6.description}"/>
 					<f:ajax render="p_6"/>
 				</p:selectOneMenu>
 				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_6" id="s_6" value="#{materializedArrivalView.searchObject.searchFields[6].sortOrder}">
 					<f:selectItems value="#{materializedArrivalView.sortOrderList}"/>
 				</p:selectOneMenu>
-				<p:autoComplete minQueryLength="2" maxResults="10" completeMethod="#{materializedArrivalView.onCompleteSupplierName}" id="fi_6" value="#{materializedArrivalView.searchObject.searchFields[6].stringCriterion}" size="30"/>
+				<p:datePicker id="fi_6" value="#{materializedArrivalView.searchObject.searchFields[6].dateCriterion}" pattern="#{userSession.dateFormat}" size="20" showButtonBar="true" showIcon="true"/>
 				<h:panelGroup id="p_6">
-				<p:autoComplete minQueryLength="2" rendered="#{materializedArrivalView.searchObject.searchFields[6].between}" maxResults="10" completeMethod="#{materializedArrivalView.onCompleteSupplierName}" id="b_6" value="#{materializedArrivalView.searchObject.searchFields[6].stringBetweenCriterion}" size="30"/>
+					<p:datePicker id="fb_6" value="#{materializedArrivalView.searchObject.searchFields[6].dateBetweenCriterion}" pattern="#{userSession.dateFormat}" size="20" showButtonBar="true" showIcon="true" rendered="#{materializedArrivalView.searchObject.searchFields[6].between}"/>
 				</h:panelGroup>
 
+<!-- assembly po -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_7" value="#{materializedArrivalView.searchObject.searchFields[7].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{materializedArrivalView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_7" value="#{materializedArrivalView.searchObject.searchFields[7].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_7" value="#{materializedArrivalView.textOperators}" var="advInputItem7" itemValue="#{advInputItem7}" itemLabel="#{advInputItem7.description}"/>
@@ -143,6 +155,9 @@
 				<p:autoComplete minQueryLength="2" rendered="#{materializedArrivalView.searchObject.searchFields[7].between}" maxResults="10" completeMethod="#{materializedArrivalView.onCompleteMaterialMaterialNumber}" id="b_7" value="#{materializedArrivalView.searchObject.searchFields[7].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
+
+
+<!-- supplier name -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_8" value="#{materializedArrivalView.searchObject.searchFields[8].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{materializedArrivalView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_8" value="#{materializedArrivalView.searchObject.searchFields[8].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_8" value="#{materializedArrivalView.textOperators}" var="advInputItem8" itemValue="#{advInputItem8}" itemLabel="#{advInputItem8.description}"/>
@@ -156,6 +171,7 @@
 					<p:inputText id="b_8" rendered="#{materializedArrivalView.searchObject.searchFields[8].between}" value="#{materializedArrivalView.searchObject.searchFields[8].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
+<!-- country name -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_9" value="#{materializedArrivalView.searchObject.searchFields[9].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{materializedArrivalView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_9" value="#{materializedArrivalView.searchObject.searchFields[9].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_9" value="#{materializedArrivalView.textOperators}" var="advInputItem9" itemValue="#{advInputItem9}" itemLabel="#{advInputItem9.description}"/>
@@ -169,6 +185,9 @@
 					<p:inputText id="b_9" rendered="#{materializedArrivalView.searchObject.searchFields[9].between}" value="#{materializedArrivalView.searchObject.searchFields[9].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
+
+
+<!-- revision no. -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_10" value="#{materializedArrivalView.searchObject.searchFields[10].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{materializedArrivalView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_10" value="#{materializedArrivalView.searchObject.searchFields[10].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_10" value="#{materializedArrivalView.textOperators}" var="advInputItem10" itemValue="#{advInputItem10}" itemLabel="#{advInputItem10.description}"/>
@@ -182,6 +201,7 @@
 					<p:inputText id="b_10" rendered="#{materializedArrivalView.searchObject.searchFields[10].between}" value="#{materializedArrivalView.searchObject.searchFields[10].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
+<!-- parent revision no. -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_11" value="#{materializedArrivalView.searchObject.searchFields[11].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{materializedArrivalView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_11" value="#{materializedArrivalView.searchObject.searchFields[11].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_11" value="#{materializedArrivalView.textOperators}" var="advInputItem11" itemValue="#{advInputItem11}" itemLabel="#{advInputItem11.description}"/>
@@ -195,6 +215,9 @@
 					<p:inputText id="b_11" rendered="#{materializedArrivalView.searchObject.searchFields[11].between}" value="#{materializedArrivalView.searchObject.searchFields[11].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
+
+
+<!-- material no. -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_12" value="#{materializedArrivalView.searchObject.searchFields[12].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{materializedArrivalView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_12" value="#{materializedArrivalView.searchObject.searchFields[12].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_12" value="#{materializedArrivalView.textOperators}" var="advInputItem12" itemValue="#{advInputItem12}" itemLabel="#{advInputItem12.description}"/>
@@ -208,6 +231,7 @@
 					<p:inputText id="b_12" rendered="#{materializedArrivalView.searchObject.searchFields[12].between}" value="#{materializedArrivalView.searchObject.searchFields[12].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
+<!-- sap no. -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_13" value="#{materializedArrivalView.searchObject.searchFields[13].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{materializedArrivalView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_13" value="#{materializedArrivalView.searchObject.searchFields[13].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_13" value="#{materializedArrivalView.textOperators}" var="advInputItem13" itemValue="#{advInputItem13}" itemLabel="#{advInputItem13.description}"/>
@@ -221,6 +245,7 @@
 					<p:inputText id="b_13" rendered="#{materializedArrivalView.searchObject.searchFields[13].between}" value="#{materializedArrivalView.searchObject.searchFields[13].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
+<!-- short text -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_14" value="#{materializedArrivalView.searchObject.searchFields[14].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{materializedArrivalView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_14" value="#{materializedArrivalView.searchObject.searchFields[14].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_14" value="#{materializedArrivalView.textOperators}" var="advInputItem14" itemValue="#{advInputItem14}" itemLabel="#{advInputItem14.description}"/>
@@ -234,6 +259,7 @@
 					<p:inputText id="b_14" rendered="#{materializedArrivalView.searchObject.searchFields[14].between}" value="#{materializedArrivalView.searchObject.searchFields[14].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
+<!-- material hierarchy -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_15" value="#{materializedArrivalView.searchObject.searchFields[15].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{materializedArrivalView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_15" value="#{materializedArrivalView.searchObject.searchFields[15].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_15" value="#{materializedArrivalView.dateOperators}" var="advInputItem15" itemValue="#{advInputItem15}" itemLabel="#{advInputItem15.description}"/>
@@ -247,6 +273,7 @@
 					<p:datePicker id="fb_15" value="#{materializedArrivalView.searchObject.searchFields[15].dateBetweenCriterion}" pattern="#{userSession.dateTimeFormat}" size="20" showButtonBar="true" showIcon="true" rendered="#{materializedArrivalView.searchObject.searchFields[15].between}" showTime="true"/>
 				</h:panelGroup>
 
+<!-- material type -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_16" value="#{materializedArrivalView.searchObject.searchFields[16].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{materializedArrivalView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_16" value="#{materializedArrivalView.searchObject.searchFields[16].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_16" value="#{materializedArrivalView.dateOperators}" var="advInputItem16" itemValue="#{advInputItem16}" itemLabel="#{advInputItem16.description}"/>
@@ -258,6 +285,94 @@
 				<p:datePicker id="fi_16" value="#{materializedArrivalView.searchObject.searchFields[16].dateCriterion}" pattern="#{userSession.dateTimeFormat}" size="20" showButtonBar="true" showIcon="true" showTime="true"/>
 				<h:panelGroup id="p_16">
 					<p:datePicker id="fb_16" value="#{materializedArrivalView.searchObject.searchFields[16].dateBetweenCriterion}" pattern="#{userSession.dateTimeFormat}" size="20" showButtonBar="true" showIcon="true" rendered="#{materializedArrivalView.searchObject.searchFields[16].between}" showTime="true"/>
+				</h:panelGroup>
+
+
+
+<!-- parent material no. -->
+				<h:outputLabel styleClass="label-field-optional" for="fi_17" value="#{materializedArrivalView.searchObject.searchFields[17].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedArrivalView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_17" value="#{materializedArrivalView.searchObject.searchFields[17].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_17" value="#{materializedArrivalView.dateOperators}" var="advInputItem17" itemValue="#{advInputItem17}" itemLabel="#{advInputItem17.description}"/>
+					<f:ajax render="p_17"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_17" id="s_17" value="#{materializedArrivalView.searchObject.searchFields[17].sortOrder}">
+					<f:selectItems value="#{materializedArrivalView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:datePicker id="fi_17" value="#{materializedArrivalView.searchObject.searchFields[17].dateCriterion}" pattern="#{userSession.dateTimeFormat}" size="20" showButtonBar="true" showIcon="true" showTime="true"/>
+				<h:panelGroup id="p_17">
+					<p:datePicker id="fb_17" value="#{materializedArrivalView.searchObject.searchFields[17].dateBetweenCriterion}" pattern="#{userSession.dateTimeFormat}" size="20" showButtonBar="true" showIcon="true" rendered="#{materializedArrivalView.searchObject.searchFields[17].between}" showTime="true"/>
+				</h:panelGroup>
+
+<!-- parent sap no. -->
+				<h:outputLabel styleClass="label-field-optional" for="fi_18" value="#{materializedArrivalView.searchObject.searchFields[18].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedArrivalView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_18" value="#{materializedArrivalView.searchObject.searchFields[18].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_18" value="#{materializedArrivalView.dateOperators}" var="advInputItem18" itemValue="#{advInputItem18}" itemLabel="#{advInputItem18.description}"/>
+					<f:ajax render="p_18"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_18" id="s_18" value="#{materializedArrivalView.searchObject.searchFields[18].sortOrder}">
+					<f:selectItems value="#{materializedArrivalView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:datePicker id="fi_18" value="#{materializedArrivalView.searchObject.searchFields[18].dateCriterion}" pattern="#{userSession.dateTimeFormat}" size="20" showButtonBar="true" showIcon="true" showTime="true"/>
+				<h:panelGroup id="p_18">
+					<p:datePicker id="fb_18" value="#{materializedArrivalView.searchObject.searchFields[18].dateBetweenCriterion}" pattern="#{userSession.dateTimeFormat}" size="20" showButtonBar="true" showIcon="true" rendered="#{materializedArrivalView.searchObject.searchFields[18].between}" showTime="true"/>
+				</h:panelGroup>
+
+<!-- parent short text -->
+				<h:outputLabel styleClass="label-field-optional" for="fi_19" value="#{materializedArrivalView.searchObject.searchFields[19].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedArrivalView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_19" value="#{materializedArrivalView.searchObject.searchFields[19].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_19" value="#{materializedArrivalView.dateOperators}" var="advInputItem19" itemValue="#{advInputItem19}" itemLabel="#{advInputItem19.description}"/>
+					<f:ajax render="p_19"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_19" id="s_19" value="#{materializedArrivalView.searchObject.searchFields[19].sortOrder}">
+					<f:selectItems value="#{materializedArrivalView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:datePicker id="fi_19" value="#{materializedArrivalView.searchObject.searchFields[19].dateCriterion}" pattern="#{userSession.dateTimeFormat}" size="20" showButtonBar="true" showIcon="true" showTime="true"/>
+				<h:panelGroup id="p_19">
+					<p:datePicker id="fb_19" value="#{materializedArrivalView.searchObject.searchFields[19].dateBetweenCriterion}" pattern="#{userSession.dateTimeFormat}" size="20" showButtonBar="true" showIcon="true" rendered="#{materializedArrivalView.searchObject.searchFields[19].between}" showTime="true"/>
+				</h:panelGroup>
+
+<!-- parent material hierarchy -->
+				<h:outputLabel styleClass="label-field-optional" for="fi_20" value="#{materializedArrivalView.searchObject.searchFields[20].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedArrivalView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_20" value="#{materializedArrivalView.searchObject.searchFields[20].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_20" value="#{materializedArrivalView.dateOperators}" var="advInputItem20" itemValue="#{advInputItem20}" itemLabel="#{advInputItem20.description}"/>
+					<f:ajax render="p_20"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_20" id="s_20" value="#{materializedArrivalView.searchObject.searchFields[20].sortOrder}">
+					<f:selectItems value="#{materializedArrivalView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:datePicker id="fi_20" value="#{materializedArrivalView.searchObject.searchFields[20].dateCriterion}" pattern="#{userSession.dateTimeFormat}" size="20" showButtonBar="true" showIcon="true" showTime="true"/>
+				<h:panelGroup id="p_20">
+					<p:datePicker id="fb_20" value="#{materializedArrivalView.searchObject.searchFields[20].dateBetweenCriterion}" pattern="#{userSession.dateTimeFormat}" size="20" showButtonBar="true" showIcon="true" rendered="#{materializedArrivalView.searchObject.searchFields[20].between}" showTime="true"/>
+				</h:panelGroup>
+
+<!-- parent material type -->
+				<h:outputLabel styleClass="label-field-optional" for="fi_21" value="#{materializedArrivalView.searchObject.searchFields[21].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedArrivalView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_21" value="#{materializedArrivalView.searchObject.searchFields[21].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_21" value="#{materializedArrivalView.dateOperators}" var="advInputItem21" itemValue="#{advInputItem21}" itemLabel="#{advInputItem21.description}"/>
+					<f:ajax render="p_21"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_21" id="s_21" value="#{materializedArrivalView.searchObject.searchFields[21].sortOrder}">
+					<f:selectItems value="#{materializedArrivalView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:datePicker id="fi_21" value="#{materializedArrivalView.searchObject.searchFields[21].dateCriterion}" pattern="#{userSession.dateTimeFormat}" size="20" showButtonBar="true" showIcon="true" showTime="true"/>
+				<h:panelGroup id="p_21">
+					<p:datePicker id="fb_21" value="#{materializedArrivalView.searchObject.searchFields[21].dateBetweenCriterion}" pattern="#{userSession.dateTimeFormat}" size="20" showButtonBar="true" showIcon="true" rendered="#{materializedArrivalView.searchObject.searchFields[21].between}" showTime="true"/>
+				</h:panelGroup>
+
+
+
+<!-- movement type -->
+				<h:outputLabel styleClass="label-field-optional" for="fi_22" value="#{materializedArrivalView.searchObject.searchFields[22].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedArrivalView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_22" value="#{materializedArrivalView.searchObject.searchFields[22].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_22" value="#{materializedArrivalView.dateOperators}" var="advInputItem22" itemValue="#{advInputItem22}" itemLabel="#{advInputItem22.description}"/>
+					<f:ajax render="p_22"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_22" id="s_22" value="#{materializedArrivalView.searchObject.searchFields[22].sortOrder}">
+					<f:selectItems value="#{materializedArrivalView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:datePicker id="fi_22" value="#{materializedArrivalView.searchObject.searchFields[22].dateCriterion}" pattern="#{userSession.dateTimeFormat}" size="20" showButtonBar="true" showIcon="true" showTime="true"/>
+				<h:panelGroup id="p_22">
+					<p:datePicker id="fb_22" value="#{materializedArrivalView.searchObject.searchFields[22].dateBetweenCriterion}" pattern="#{userSession.dateTimeFormat}" size="20" showButtonBar="true" showIcon="true" rendered="#{materializedArrivalView.searchObject.searchFields[22].between}" showTime="true"/>
 				</h:panelGroup>
 
 			</h:panelGrid>
@@ -369,41 +484,49 @@
 		<p:column sortBy="#{arrivalViewItem.id}" width="120" 
 			rendered="#{materializedArrivalView.searchObject.searchFields[0].visible}" displayPriority="#{materializedArrivalView.searchObject.searchFields[0].colOrder}" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_arrivalview_id}"/>
+				<h:outputText value="#{i18n.col__materializedarrivalview_id}"/>
 			</f:facet>
-			<h:outputText value="#{arrivalViewItem.id}">
-			</h:outputText>
+			<h:outputText value="#{arrivalViewItem.id}"/>
 		</p:column>
 
 		<p:column sortBy="#{arrivalViewItem.plantCode}" width="80" 
 			rendered="#{materializedArrivalView.searchObject.searchFields[1].visible}" displayPriority="#{materializedArrivalView.searchObject.searchFields[1].colOrder}" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_arrivalview_plantcode}"/>
+				<h:outputText value="#{i18n.col_materializedarrivalview_plantcode}"/>
 			</f:facet>
-			<h:outputText value="#{arrivalViewItem.plantCode}">
-			</h:outputText>
+			<h:outputText value="#{arrivalViewItem.plantCode}"/>
 		</p:column>
 
-		<p:column sortBy="#{arrivalViewItem.orderNumber}" width="100" 
+
+
+		<p:column sortBy="#{arrivalViewItem.serialObjectSerialNumber}" width="100" 
 			rendered="#{materializedArrivalView.searchObject.searchFields[2].visible}" displayPriority="#{materializedArrivalView.searchObject.searchFields[2].colOrder}" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_arrivalview_ordernumber}"/>
+				<h:outputText value="#{i18n.col_materializedarrivalview_serialobjectserialnumber}"/>
 			</f:facet>
-			<h:outputText value="#{arrivalViewItem.orderNumber}">
-			</h:outputText>
+			<h:outputText value="#{arrivalViewItem.serialObjectSerialNumber}"/>
 		</p:column>
 
-		<p:column sortBy="#{arrivalViewItem.movementTypeCode}" width="80" 
+		<p:column sortBy="#{arrivalViewItem.parentSerialNumber}" width="100" 
 			rendered="#{materializedArrivalView.searchObject.searchFields[3].visible}" displayPriority="#{materializedArrivalView.searchObject.searchFields[3].colOrder}" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_arrivalview_movementtypecode}"/>
+				<h:outputText value="#{i18n.col_materializedarrivalview_parentserialobjectserialnumber}"/>
 			</f:facet>
-			<h:outputText value="#{arrivalViewItem.movementTypeCode}">
-			</h:outputText>
+			<h:outputText value="#{arrivalViewItem.parentSerialNumber}"/>
+		</p:column>
+
+
+
+		<p:column sortBy="#{arrivalViewItem.orderNumber}" width="100" 
+			rendered="#{materializedArrivalView.searchObject.searchFields[4].visible}" displayPriority="#{materializedArrivalView.searchObject.searchFields[4].colOrder}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedarrivalview_ordernumber}"/>
+			</f:facet>
+			<h:outputText value="#{arrivalViewItem.orderNumber}"/>
 		</p:column>
 
 		<p:column sortBy="#{arrivalViewItem.arrivalDate}" width="80" 
-			rendered="#{materializedArrivalView.searchObject.searchFields[4].visible}" displayPriority="#{materializedArrivalView.searchObject.searchFields[4].colOrder}" >
+			rendered="#{materializedArrivalView.searchObject.searchFields[5].visible}" displayPriority="#{materializedArrivalView.searchObject.searchFields[5].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_arrival_arrivaldate}"/>
 			</f:facet>
@@ -414,123 +537,176 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{arrivalViewItem.serialObjectSerialNumber}" width="100" 
-			rendered="#{materializedArrivalView.searchObject.searchFields[5].visible}" displayPriority="#{materializedArrivalView.searchObject.searchFields[5].colOrder}" >
+		<p:column sortBy="#{arrivalViewItem.assemblyDate}" width="80" 
+			rendered="#{materializedArrivalView.searchObject.searchFields[6].visible}" displayPriority="#{materializedArrivalView.searchObject.searchFields[6].colOrder}" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_arrivalview_serialobjectserialnumber}"/>
+				<h:outputText value="#{i18n.lbl_attr_arrival_assemblysate}"/>
 			</f:facet>
-			<h:outputText value="#{arrivalViewItem.serialObjectSerialNumber}">
+			<h:outputText value="#{arrivalViewItem.assemblyDate}">
+				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateConverter"/>
+				<f:attribute name="pattern" value="#{userSession.dateFormat}"/>
+				<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
 			</h:outputText>
 		</p:column>
 
+		<p:column sortBy="#{arrivalViewItem.assemblyPO}" width="100" 
+			rendered="#{materializedArrivalView.searchObject.searchFields[7].visible}" displayPriority="#{materializedArrivalView.searchObject.searchFields[7].colOrder}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedarrivalview_assemblypo}"/>
+			</f:facet>
+			<h:outputText value="#{arrivalViewItem.assemblyPO}"/>
+		</p:column>
+
+
+
 		<p:column sortBy="#{arrivalViewItem.supplierName}" width="150" 
-			rendered="#{materializedArrivalView.searchObject.searchFields[6].visible}" displayPriority="#{materializedArrivalView.searchObject.searchFields[6].colOrder}" 
+			rendered="#{materializedArrivalView.searchObject.searchFields[8].visible}" displayPriority="#{materializedArrivalView.searchObject.searchFields[8].colOrder}" 
 			exportValue="#{arrivalViewItem.supplierName}" class="tdnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_arrivalview_suppliername}"/>
+				<h:outputText value="#{i18n.col_materializedarrivalview_suppliername}"/>
 			</f:facet>
 			<h:outputText value="#{arrivalViewItem.supplierName}" id="supplierName" />
 			<p:tooltip for="supplierName" value="#{arrivalViewItem.supplierName}" position="top" showDelay="50"/>
 		</p:column>
 
-		<p:column sortBy="#{arrivalViewItem.matrevMatMaterialNumber}" width="150" 
-			rendered="#{materializedArrivalView.searchObject.searchFields[7].visible}" displayPriority="#{materializedArrivalView.searchObject.searchFields[7].colOrder}" 
-			exportValue="#{arrivalViewItem.matrevMatMaterialNumber}" class="tdnowrap" >
-			<f:facet name="header">
-				<h:outputText value="#{i18n.col_arrivalview_matrevmatmaterialnumber}"/>
-			</f:facet>
-			<h:outputText value="#{arrivalViewItem.matrevMatMaterialNumber}" id="matrevMatMaterialNumber" />
-			<p:tooltip for="matrevMatMaterialNumber" value="#{arrivalViewItem.matrevMatMaterialNumber}" position="top" showDelay="50"/>
-		</p:column>
-
-		<p:column sortBy="#{arrivalViewItem.matrevMatSapNumber}" width="150" 
-			rendered="#{materializedArrivalView.searchObject.searchFields[8].visible}" displayPriority="#{materializedArrivalView.searchObject.searchFields[8].colOrder}" 
-			exportValue="#{arrivalViewItem.matrevMatSapNumber}" class="tdnowrap" >
-			<f:facet name="header">
-				<h:outputText value="#{i18n.col_arrivalview_matrevmatsapnumber}"/>
-			</f:facet>
-			<h:outputText value="#{arrivalViewItem.matrevMatSapNumber}" id="matrevMatSapNumber" />
-			<p:tooltip for="matrevMatSapNumber" value="#{arrivalViewItem.matrevMatSapNumber}" position="top" showDelay="50"/>
-		</p:column>
-
-		<p:column sortBy="#{arrivalViewItem.matrevMatShortText}" width="250" 
+		<p:column sortBy="#{arrivalViewItem.countryName}" width="150" 
 			rendered="#{materializedArrivalView.searchObject.searchFields[9].visible}" displayPriority="#{materializedArrivalView.searchObject.searchFields[9].colOrder}" 
-			exportValue="#{arrivalViewItem.matrevMatShortText}" class="tdnowrap" >
+			exportValue="#{arrivalViewItem.countryName}" class="tdnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_arrivalview_matrevmatshorttext}"/>
+				<h:outputText value="#{i18n.col_materializedarrivalview_countryname}"/>
 			</f:facet>
-			<h:outputText value="#{arrivalViewItem.matrevMatShortText}" id="matrevMatShortText" />
-			<p:tooltip for="matrevMatShortText" value="#{arrivalViewItem.matrevMatShortText}" position="top" showDelay="50"/>
+			<h:outputText value="#{arrivalViewItem.countryName}" id="countryName" />
+			<p:tooltip for="countryName" value="#{arrivalViewItem.countryName}" position="top" showDelay="50"/>
 		</p:column>
 
-		<p:column sortBy="#{arrivalViewItem.matrevMatOwnerLocationCode}" width="100" 
-			rendered="#{materializedArrivalView.searchObject.searchFields[10].visible}" displayPriority="#{materializedArrivalView.searchObject.searchFields[10].colOrder}" >
+
+
+		<p:column sortBy="#{arrivalViewItem.revisionNumber}" width="150" 
+			rendered="#{materializedArrivalView.searchObject.searchFields[10].visible}" displayPriority="#{materializedArrivalView.searchObject.searchFields[10].colOrder}" 
+			exportValue="#{arrivalViewItem.revisionNumber}" class="tdnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_arrivalview_matrevmatownerlocationcode}"/>
+				<h:outputText value="#{i18n.col_materializedarrivalview_revisionnumber}"/>
 			</f:facet>
-			<h:outputText value="#{arrivalViewItem.matrevMatOwnerLocationCode}">
-			</h:outputText>
+			<h:outputText value="#{arrivalViewItem.revisionNumber}" id="revisionNumber" />
+			<p:tooltip for="revisionNumber" value="#{arrivalViewItem.revisionNumber}" position="top" showDelay="50"/>
 		</p:column>
 
-		<p:column sortBy="#{arrivalViewItem.matrevMatMaterialTypeCode}" width="80" 
-			rendered="#{materializedArrivalView.searchObject.searchFields[11].visible}" displayPriority="#{materializedArrivalView.searchObject.searchFields[11].colOrder}" >
+		<p:column sortBy="#{arrivalViewItem.parentRevisionNumber}" width="150" 
+			rendered="#{materializedArrivalView.searchObject.searchFields[11].visible}" displayPriority="#{materializedArrivalView.searchObject.searchFields[11].colOrder}" 
+			exportValue="#{arrivalViewItem.parentRevisionNumber}" class="tdnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_arrivalview_matrevmatmaterialtypecode}"/>
+				<h:outputText value="#{i18n.col_materializedarrivalview_parentrevisionnumber}"/>
 			</f:facet>
-			<h:outputText value="#{arrivalViewItem.matrevMatMaterialTypeCode}">
-			</h:outputText>
+			<h:outputText value="#{arrivalViewItem.parentRevisionNumber}" id="parentRevisionNumber" />
+			<p:tooltip for="parentRevisionNumber" value="#{arrivalViewItem.parentRevisionNumber}" position="top" showDelay="50"/>
 		</p:column>
 
-		<p:column sortBy="#{arrivalViewItem.matrevMatMaterialClassCode}" width="120" 
+
+
+		<p:column sortBy="#{arrivalViewItem.materialNumber}" width="150" 
 			rendered="#{materializedArrivalView.searchObject.searchFields[12].visible}" displayPriority="#{materializedArrivalView.searchObject.searchFields[12].colOrder}" 
-			exportValue="#{arrivalViewItem.matrevMatMaterialClassCode}" class="tdnowrap" >
+			exportValue="#{arrivalViewItem.materialNumber}" class="tdnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_arrivalview_matrevmatmaterialclasscode}"/>
+				<h:outputText value="#{i18n.col_materializedarrivalview_materialnumber}"/>
 			</f:facet>
-			<h:outputText value="#{arrivalViewItem.matrevMatMaterialClassCode}" id="matrevMatMaterialClassCode" />
-			<p:tooltip for="matrevMatMaterialClassCode" value="#{arrivalViewItem.matrevMatMaterialClassCode}" position="top" showDelay="50"/>
+			<h:outputText value="#{arrivalViewItem.materialNumber}" id="materialNumber" />
+			<p:tooltip for="materialNumber" value="#{arrivalViewItem.materialNumber}" position="top" showDelay="50"/>
 		</p:column>
 
-		<p:column sortBy="#{arrivalViewItem.matrevMatMaterialHierarchy}" width="150" 
-			rendered="#{materializedArrivalView.searchObject.searchFields[13].visible}" displayPriority="#{materializedArrivalView.searchObject.searchFields[13].colOrder}" >
+		<p:column sortBy="#{arrivalViewItem.sapNumber}" width="150" 
+			rendered="#{materializedArrivalView.searchObject.searchFields[13].visible}" displayPriority="#{materializedArrivalView.searchObject.searchFields[13].colOrder}" 
+			exportValue="#{arrivalViewItem.SapNumber}" class="tdnowrap" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedarrivalview_sapnumber}"/>
+			</f:facet>
+			<h:outputText value="#{arrivalViewItem.sapNumber}" id="sapNumber" />
+			<p:tooltip for="sapNumber" value="#{arrivalViewItem.sapNumber}" position="top" showDelay="50"/>
+		</p:column>
+
+		<p:column sortBy="#{arrivalViewItem.shortText}" width="250" 
+			rendered="#{materializedArrivalView.searchObject.searchFields[14].visible}" displayPriority="#{materializedArrivalView.searchObject.searchFields[14].colOrder}" 
+			exportValue="#{arrivalViewItem.shortText}" class="tdnowrap" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedarrivalview_shorttext}"/>
+			</f:facet>
+			<h:outputText value="#{arrivalViewItem.shortText}" id="shortText" />
+			<p:tooltip for="shortText" value="#{arrivalViewItem.shortText}" position="top" showDelay="50"/>
+		</p:column>
+
+		<p:column sortBy="#{arrivalViewItem.materialTypeCode}" width="80" 
+			rendered="#{materializedArrivalView.searchObject.searchFields[15].visible}" displayPriority="#{materializedArrivalView.searchObject.searchFields[15].colOrder}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedarrivalview_materialtypecode}"/>
+			</f:facet>
+			<h:outputText value="#{arrivalViewItem.materialTypeCode}"/>
+		</p:column>
+
+		<p:column sortBy="#{arrivalViewItem.materialHierarchy}" width="150" 
+			rendered="#{materializedArrivalView.searchObject.searchFields[16].visible}" displayPriority="#{materializedArrivalView.searchObject.searchFields[16].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_material_materialhierarchy}"/>
 			</f:facet>
-			<h:outputText value="#{arrivalViewItem.matrevMatMaterialHierarchy}">
+			<h:outputText value="#{arrivalViewItem.materialHierarchy}"/>
+		</p:column>
+
+
+
+
+		<p:column sortBy="#{arrivalViewItem.parentMaterialNumber}" width="150" 
+			rendered="#{materializedArrivalView.searchObject.searchFields[17].visible}" displayPriority="#{materializedArrivalView.searchObject.searchFields[17].colOrder}" 
+			exportValue="#{arrivalViewItem.parentMaterialNumber}" class="tdnowrap" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedarrivalview_parentmaterialnumber}"/>
+			</f:facet>
+			<h:outputText value="#{arrivalViewItem.parentMaterialNumber}" id="parentMaterialNumber" />
+			<p:tooltip for="parentMaterialNumber" value="#{arrivalViewItem.parentMaterialNumber}" position="top" showDelay="50"/>
+		</p:column>
+
+		<p:column sortBy="#{arrivalViewItem.parentSapNumber}" width="150" 
+			rendered="#{materializedArrivalView.searchObject.searchFields[18].visible}" displayPriority="#{materializedArrivalView.searchObject.searchFields[18].colOrder}" 
+			exportValue="#{arrivalViewItem.parentSapNumber}" class="tdnowrap" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedarrivalview_parentsapnumber}"/>
+			</f:facet>
+			<h:outputText value="#{arrivalViewItem.parentSapNumber}" id="parentSapNumber" />
+			<p:tooltip for="parentSapNumber" value="#{arrivalViewItem.parentSapNumber}" position="top" showDelay="50"/>
+		</p:column>
+
+		<p:column sortBy="#{arrivalViewItem.parentShortText}" width="250" 
+			rendered="#{materializedArrivalView.searchObject.searchFields[19].visible}" displayPriority="#{materializedArrivalView.searchObject.searchFields[19].colOrder}" 
+			exportValue="#{arrivalViewItem.parentShortText}" class="tdnowrap" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedarrivalview_parentshorttext}"/>
+			</f:facet>
+			<h:outputText value="#{arrivalViewItem.parentShortText}" id="parentShortText" />
+			<p:tooltip for="parentShortText" value="#{arrivalViewItem.parentShortText}" position="top" showDelay="50"/>
+		</p:column>
+
+		<p:column sortBy="#{arrivalViewItem.parentMaterialTypeCode}" width="80" 
+			rendered="#{materializedArrivalView.searchObject.searchFields[20].visible}" displayPriority="#{materializedArrivalView.searchObject.searchFields[20].colOrder}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedarrivalview_parentmaterialtypecode}"/>
+			</f:facet>
+			<h:outputText value="#{arrivalViewItem.parentMaterialTypeCode}"/>
+		</p:column>
+
+		<p:column sortBy="#{arrivalViewItem.parentMaterialHierarchy}" width="150" 
+			rendered="#{materializedArrivalView.searchObject.searchFields[21].visible}" displayPriority="#{materializedArrivalView.searchObject.searchFields[21].colOrder}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedarrivalview_parentmaterialhierarchy}"/>
+			</f:facet>
+			<h:outputText value="#{arrivalViewItem.parentMaterialHierarchy}">
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{arrivalViewItem.matrevRevisionNumber}" width="150" 
-			rendered="#{materializedArrivalView.searchObject.searchFields[14].visible}" displayPriority="#{materializedArrivalView.searchObject.searchFields[14].colOrder}" 
-			exportValue="#{arrivalViewItem.matrevRevisionNumber}" class="tdnowrap" >
-			<f:facet name="header">
-				<h:outputText value="#{i18n.col_arrivalview_matrevrevisionnumber}"/>
-			</f:facet>
-			<h:outputText value="#{arrivalViewItem.matrevRevisionNumber}" id="matrevRevisionNumber" />
-			<p:tooltip for="matrevRevisionNumber" value="#{arrivalViewItem.matrevRevisionNumber}" position="top" showDelay="50"/>
-		</p:column>
 
-		<p:column sortBy="#{arrivalViewItem.creationDate}" width="120" 
-			rendered="#{materializedArrivalView.searchObject.searchFields[15].visible}" displayPriority="#{materializedArrivalView.searchObject.searchFields[15].colOrder}" >
-			<f:facet name="header">
-				<h:outputText value="#{i18n.lbl_attr_abstractentitywithid_creationdate}"/>
-			</f:facet>
-			<h:outputText value="#{arrivalViewItem.creationDate}">
-				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateTimeConverter"/>
-				<f:attribute name="pattern" value="#{userSession.dateTimeFormat}"/>
-				<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
-			</h:outputText>
-		</p:column>
 
-		<p:column sortBy="#{arrivalViewItem.lastUpdate}" width="120" 
-			rendered="#{materializedArrivalView.searchObject.searchFields[16].visible}" displayPriority="#{materializedArrivalView.searchObject.searchFields[16].colOrder}" >
+		<p:column sortBy="#{arrivalViewItem.movementTypeCode}" width="80" 
+			rendered="#{materializedArrivalView.searchObject.searchFields[22].visible}" displayPriority="#{materializedArrivalView.searchObject.searchFields[22].colOrder}" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.lbl_attr_abstractentitywithid_lastupdate}"/>
+				<h:outputText value="#{i18n.col_materializedarrivalview_movementtypecode}"/>
 			</f:facet>
-			<h:outputText value="#{arrivalViewItem.lastUpdate}">
-				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateTimeConverter"/>
-				<f:attribute name="pattern" value="#{userSession.dateTimeFormat}"/>
-				<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
+			<h:outputText value="#{arrivalViewItem.movementTypeCode}">
 			</h:outputText>
 		</p:column>
 	</p:dataTable>

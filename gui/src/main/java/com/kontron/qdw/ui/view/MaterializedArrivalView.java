@@ -20,7 +20,7 @@ import com.kontron.qdw.boundary.material.MaterialBoundaryService;
 import com.kontron.qdw.boundary.serial.ArrivalBoundaryService;
 import com.kontron.qdw.dto.base.SupplierListDTO;
 import com.kontron.qdw.dto.material.MaterialListDTO;
-import com.kontron.qdw.dto.serial.ArrivalSearchDTO;
+import com.kontron.qdw.dto.mv.MaterializedArrivalSearchDTO;
 import com.kontron.qdw.service.SavedQueryService;
 import com.kontron.qdw.ui.UserSession;
 import com.kontron.qdw.ui.dialog.ViewArrivalDialog;
@@ -59,8 +59,8 @@ public class MaterializedArrivalView extends SuperView implements Serializable {
 
     private String formTitle = "";
 
-    private List<ArrivalSearchDTO> arrivalsList = new ArrayList<>();
-    private ArrivalSearchDTO selectedObject;
+    private List<MaterializedArrivalSearchDTO> arrivalsList = new ArrayList<>();
+    private MaterializedArrivalSearchDTO selectedObject;
     private long countResult;
 
 
@@ -128,56 +128,88 @@ public class MaterializedArrivalView extends SuperView implements Serializable {
 
         refreshFormatSettings();
 
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, ArrivalSearchDTO.SELECT_ID,
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalSearchDTO.SELECT_ID,
                 bundle.getString(COL_MATERIALIZEDARRIVALVIEW_ID), SearchFieldDataTypeEnum.LONG, 120);
 
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, ArrivalSearchDTO.SELECT_PLANTCODE,
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalSearchDTO.SELECT_PLANT,
                 bundle.getString(COL_MATERIALIZEDARRIVALVIEW_PLANTCODE), SearchFieldDataTypeEnum.STRING, 80);
 
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, ArrivalSearchDTO.SELECT_ORDERNUMBER,
-                bundle.getString(COL_MATERIALIZEDARRIVALVIEW_ORDERNUMBER), SearchFieldDataTypeEnum.STRING, 100);
 
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, ArrivalSearchDTO.SELECT_MOVEMENTTYPECODE,
-                bundle.getString(COL_MATERIALIZEDARRIVALVIEW_MOVEMENTTYPECODE), SearchFieldDataTypeEnum.STRING, 80);
 
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, ArrivalSearchDTO.SELECT_ARRIVALDATE,
-                bundle.getString(LBL_ATTR_ARRIVAL_ARRIVALDATE), SearchFieldDataTypeEnum.LOCAL_DATE, 80, false);
-
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, ArrivalSearchDTO.SELECT_SERIALOBJECTSERIALNUMBER,
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalSearchDTO.SELECT_SERIALNUMBER,
                 bundle.getString(COL_MATERIALIZEDARRIVALVIEW_SERIALOBJECTSERIALNUMBER), SearchFieldDataTypeEnum.STRING, 100);
 
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, ArrivalSearchDTO.SELECT_SUPPLIERNAME,
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalSearchDTO.SELECT_PARENTSERIALNUMBER,
+                bundle.getString(COL_MATERIALIZEDARRIVALVIEW_PARENTSERIALOBJECTSERIALNUMBER), SearchFieldDataTypeEnum.STRING, 100);
+
+
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalSearchDTO.SELECT_ORDERNUMBER,
+                bundle.getString(COL_MATERIALIZEDARRIVALVIEW_ORDERNUMBER), SearchFieldDataTypeEnum.STRING, 100);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalSearchDTO.SELECT_ARRIVALDATE,
+                bundle.getString(LBL_ATTR_ARRIVAL_ARRIVALDATE), SearchFieldDataTypeEnum.LOCAL_DATE, 80, false);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalSearchDTO.SELECT_ASSEMBLYDATE,
+                bundle.getString(COL_MATERIALIZEDARRIVALVIEW_ASSEMBLYDATE), SearchFieldDataTypeEnum.LOCAL_DATE, 80, false);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalSearchDTO.SELECT_ASSEMBLYPO,
+                bundle.getString(COL_MATERIALIZEDARRIVALVIEW_ASSEMBLYPO), SearchFieldDataTypeEnum.STRING, 100);
+
+
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalSearchDTO.SELECT_SUPPLIERNAME,
                 bundle.getString(COL_MATERIALIZEDARRIVALVIEW_SUPPLIERNAME), SearchFieldDataTypeEnum.STRING, 150);
 
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, ArrivalSearchDTO.SELECT_MATREVMATMATERIALNUMBER,
-                bundle.getString(COL_MATERIALIZEDARRIVALVIEW_MATREVMATMATERIALNUMBER), SearchFieldDataTypeEnum.STRING, 150);
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalSearchDTO.SELECT_COUNTRYNAME,
+                bundle.getString(COL_MATERIALIZEDARRIVALVIEW_COUNTRYNAME), SearchFieldDataTypeEnum.STRING, 100);
 
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, ArrivalSearchDTO.SELECT_MATREVMATSAPNUMBER,
-                bundle.getString(COL_MATERIALIZEDARRIVALVIEW_MATREVMATSAPNUMBER), SearchFieldDataTypeEnum.STRING, 150);
 
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, ArrivalSearchDTO.SELECT_MATREVMATSHORTTEXT,
-                bundle.getString(COL_MATERIALIZEDARRIVALVIEW_MATREVMATSHORTTEXT), SearchFieldDataTypeEnum.STRING, 250);
 
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, ArrivalSearchDTO.SELECT_MATREVMATOWNERLOCATIONCODE,
-                bundle.getString(COL_MATERIALIZEDARRIVALVIEW_MATREVMATOWNERLOCATIONCODE), SearchFieldDataTypeEnum.STRING, 100);
-
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, ArrivalSearchDTO.SELECT_MATREVMATMATERIALTYPECODE,
-                bundle.getString(COL_MATERIALIZEDARRIVALVIEW_MATREVMATMATERIALTYPECODE), SearchFieldDataTypeEnum.STRING, 80);
-
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, ArrivalSearchDTO.SELECT_MATREVMATMATERIALCLASSCODE,
-                bundle.getString(COL_MATERIALIZEDARRIVALVIEW_MATREVMATMATERIALCLASSCODE), SearchFieldDataTypeEnum.STRING, 120);
-
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, ArrivalSearchDTO.SELECT_MATREVMATMATERIALHIERARCHY,
-                bundle.getString(LBL_ATTR_MATERIAL_MATERIALHIERARCHY), SearchFieldDataTypeEnum.STRING, 150);
-
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, ArrivalSearchDTO.SELECT_MATREVREVISIONNUMBER,
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalSearchDTO.SELECT_REVISIONNUMBER,
                 bundle.getString(COL_MATERIALIZEDARRIVALVIEW_MATREVREVISIONNUMBER), SearchFieldDataTypeEnum.STRING, 150);
 
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, ArrivalSearchDTO.SELECT_CREATIONDATE,
-                bundle.getString(LBL_ATTR_ABSTRACTENTITYWITHID_CREATIONDATE), SearchFieldDataTypeEnum.LOCAL_DATE_TIME, 120);
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalSearchDTO.SELECT_PARENTREVISIONNUMBER,
+                bundle.getString(COL_MATERIALIZEDARRIVALVIEW_PARENTMATREVREVISIONNUMBER), SearchFieldDataTypeEnum.STRING, 150);
 
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, ArrivalSearchDTO.SELECT_LASTUPDATE,
-                bundle.getString(LBL_ATTR_ABSTRACTENTITYWITHID_LASTUPDATE), SearchFieldDataTypeEnum.LOCAL_DATE_TIME, 120);
+
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalSearchDTO.SELECT_MATERIALNUMBER,
+                bundle.getString(COL_MATERIALIZEDARRIVALVIEW_MATERIALNUMBER), SearchFieldDataTypeEnum.STRING, 150);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalSearchDTO.SELECT_SAPNUMBER,
+                bundle.getString(COL_MATERIALIZEDARRIVALVIEW_SAPNUMBER), SearchFieldDataTypeEnum.STRING, 150);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalSearchDTO.SELECT_MATERIALSHORTTEXT,
+                bundle.getString(COL_MATERIALIZEDARRIVALVIEW_SHORTTEXT), SearchFieldDataTypeEnum.STRING, 250);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalSearchDTO.SELECT_MATERIALHIERARCHY,
+                bundle.getString(LBL_ATTR_MATERIAL_MATERIALHIERARCHY), SearchFieldDataTypeEnum.STRING, 150);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalSearchDTO.SELECT_MATERIALTYPE,
+                bundle.getString(COL_MATERIALIZEDARRIVALVIEW_MATERIALTYPECODE), SearchFieldDataTypeEnum.STRING, 80);
+
+
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalSearchDTO.SELECT_PARENTMATERIALNUMBER,
+                bundle.getString(COL_MATERIALIZEDARRIVALVIEW_PARENTMATERIALNUMBER), SearchFieldDataTypeEnum.STRING, 150);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalSearchDTO.SELECT_PARENTSAPNUMBER,
+                bundle.getString(COL_MATERIALIZEDARRIVALVIEW_PARENTSAPNUMBER), SearchFieldDataTypeEnum.STRING, 150);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalSearchDTO.SELECT_PARENTMATERIALSHORTTEXT,
+                bundle.getString(COL_MATERIALIZEDARRIVALVIEW_PARENTSHORTTEXT), SearchFieldDataTypeEnum.STRING, 250);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalSearchDTO.SELECT_PARENTMATERIALHIERARCHY,
+                bundle.getString(LBL_ATTR_MATERIAL_MATERIALHIERARCHY), SearchFieldDataTypeEnum.STRING, 150);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalSearchDTO.SELECT_PARENTMATERIALTYPE,
+                bundle.getString(COL_MATERIALIZEDARRIVALVIEW_PARENTMATERIALTYPECODE), SearchFieldDataTypeEnum.STRING, 80);
+
+
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalSearchDTO.SELECT_MOVEMENTTYPE,
+                bundle.getString(COL_MATERIALIZEDARRIVALVIEW_MOVEMENTTYPECODE), SearchFieldDataTypeEnum.STRING, 80);
 
 
         visibleFields = new DualListModel<>();

@@ -4278,7 +4278,7 @@
   <net.sourceforge.jbizmo.model.client:FormGroup name="Serial object" groupOrder="4" forms="/260 /266 /286 /307 /303 /292" roles="/0/@roles.0 /0/@roles.1" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="mv" parent="/2" javaTypes="/265 /271 /291" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="mv" parent="/1" javaTypes="/264 /270 /290" project="/0"/>
-  <net.sourceforge.jbizmo.model.java:Namespace name="mv" parent="/3" javaTypes="/263 /269 /289" project="/0"/>
+  <net.sourceforge.jbizmo.model.java:Namespace name="mv" parent="/3" javaTypes="/263 /269 /289 /315" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="mv" parent="/4" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="serial" parent="/2" javaTypes="/300 /302" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="serial" parent="/1" javaTypes="/299 /301" project="/0"/>
@@ -5997,6 +5997,96 @@
     </attributes>
     <attributes name="country" referencedDTOBean="/85">
       <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-base.xmi#//@domainObjects.13/@associations.0"/>
+    </attributes>
+  </net.sourceforge.jbizmo.model.dto:DTOBean>
+  <net.sourceforge.jbizmo.model.dto:DTOBean name="MaterializedArrivalSearchDTO" comment="Instances of this class represent data transfer objects that are mapped to materialized arrival domain objects" namespace="/250" standardConversion="true" createdManually="true">
+    <domainObject href="package-mv.xmi#//@domainObjects.3"/>
+    <attributes name="id">
+      <domainAttribute href="package-mv.xmi#//@domainObjects.0/@attributes.0"/>
+    </attributes>
+    <attributes name="plant">
+      <domainAttribute href="package-mv.xmi#//@domainObjects.0/@attributes.21"/>
+    </attributes>
+    <attributes name="serialObjectId">
+      <domainAttribute href="package-mv.xmi#//@domainObjects.0/@attributes.1"/>
+    </attributes>
+    <attributes name="serialNumber">
+      <domainAttribute href="package-mv.xmi#//@domainObjects.0/@attributes.3"/>
+    </attributes>
+    <attributes name="parentSerialObjectId">
+      <domainAttribute href="package-mv.xmi#//@domainObjects.0/@attributes.2"/>
+    </attributes>
+    <attributes name="parentSerialNumber">
+      <domainAttribute href="package-mv.xmi#//@domainObjects.0/@attributes.4"/>
+    </attributes>
+    <attributes name="orderNumber">
+      <domainAttribute href="package-mv.xmi#//@domainObjects.3/@attributes.4"/>
+    </attributes>
+    <attributes name="arrivalDate">
+      <domainAttribute href="package-mv.xmi#//@domainObjects.3/@attributes.0"/>
+    </attributes>
+    <attributes name="assemblyDate">
+      <domainAttribute href="package-mv.xmi#//@domainObjects.0/@attributes.19"/>
+    </attributes>
+    <attributes name="assemblyPO">
+      <domainAttribute href="package-mv.xmi#//@domainObjects.0/@attributes.20"/>
+    </attributes>
+    <attributes name="supplierCode">
+      <domainAttribute href="package-mv.xmi#//@domainObjects.3/@attributes.1"/>
+    </attributes>
+    <attributes name="supplierName">
+      <domainAttribute href="package-mv.xmi#//@domainObjects.3/@attributes.2"/>
+    </attributes>
+    <attributes name="countryCode">
+      <domainAttribute href="package-mv.xmi#//@domainObjects.3/@attributes.5"/>
+    </attributes>
+    <attributes name="countryName">
+      <domainAttribute href="package-mv.xmi#//@domainObjects.3/@attributes.6"/>
+    </attributes>
+    <attributes name="revisionId">
+      <domainAttribute href="package-mv.xmi#//@domainObjects.0/@attributes.15"/>
+    </attributes>
+    <attributes name="revisionNumber">
+      <domainAttribute href="package-mv.xmi#//@domainObjects.0/@attributes.17"/>
+    </attributes>
+    <attributes name="parentRevisionId">
+      <domainAttribute href="package-mv.xmi#//@domainObjects.0/@attributes.16"/>
+    </attributes>
+    <attributes name="parentRevisionNumber">
+      <domainAttribute href="package-mv.xmi#//@domainObjects.0/@attributes.18"/>
+    </attributes>
+    <attributes name="materialNumber">
+      <domainAttribute href="package-mv.xmi#//@domainObjects.0/@attributes.5"/>
+    </attributes>
+    <attributes name="sapNumber">
+      <domainAttribute href="package-mv.xmi#//@domainObjects.0/@attributes.11"/>
+    </attributes>
+    <attributes name="materialShortText">
+      <domainAttribute href="package-mv.xmi#//@domainObjects.0/@attributes.9"/>
+    </attributes>
+    <attributes name="materialHierarchy">
+      <domainAttribute href="package-mv.xmi#//@domainObjects.0/@attributes.13"/>
+    </attributes>
+    <attributes name="materialType">
+      <domainAttribute href="package-mv.xmi#//@domainObjects.0/@attributes.7"/>
+    </attributes>
+    <attributes name="parentMaterialNumber">
+      <domainAttribute href="package-mv.xmi#//@domainObjects.0/@attributes.6"/>
+    </attributes>
+    <attributes name="parentSapNumber">
+      <domainAttribute href="package-mv.xmi#//@domainObjects.0/@attributes.12"/>
+    </attributes>
+    <attributes name="parentMaterialShortText">
+      <domainAttribute href="package-mv.xmi#//@domainObjects.0/@attributes.10"/>
+    </attributes>
+    <attributes name="parentMaterialHierarchy">
+      <domainAttribute href="package-mv.xmi#//@domainObjects.0/@attributes.14"/>
+    </attributes>
+    <attributes name="parentMaterialType">
+      <domainAttribute href="package-mv.xmi#//@domainObjects.0/@attributes.8"/>
+    </attributes>
+    <attributes name="movementType">
+      <domainAttribute href="package-mv.xmi#//@domainObjects.3/@attributes.3"/>
     </attributes>
   </net.sourceforge.jbizmo.model.dto:DTOBean>
 </xmi:XMI>
