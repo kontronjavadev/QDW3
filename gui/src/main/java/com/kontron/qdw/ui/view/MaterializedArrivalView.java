@@ -15,7 +15,18 @@ import org.primefaces.model.DualListModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.kontron.qdw.boundary.base.CountryBoundaryService;
+import com.kontron.qdw.boundary.base.MovementTypeBoundaryService;
+import com.kontron.qdw.boundary.base.SupplierBoundaryService;
+import com.kontron.qdw.boundary.material.MaterialBoundaryService;
+import com.kontron.qdw.boundary.material.MaterialTypeBoundaryService;
 import com.kontron.qdw.boundary.mv.MaterializedArrivalBoundaryService;
+import com.kontron.qdw.dto.base.CountryListDTO;
+import com.kontron.qdw.dto.base.MovementTypeListDTO;
+import com.kontron.qdw.dto.base.SupplierListDTO;
+import com.kontron.qdw.dto.material.MaterialListDTO;
+import com.kontron.qdw.dto.material.MaterialListSapDTO;
+import com.kontron.qdw.dto.material.MaterialTypeListDTO;
 import com.kontron.qdw.dto.mv.MaterializedArrivalSearchDTO;
 import com.kontron.qdw.service.SavedQueryService;
 import com.kontron.qdw.ui.UserSession;
@@ -50,8 +61,11 @@ public class MaterializedArrivalView extends SuperView implements Serializable {
     private final UserSession userSession;
     @Generated
     private final transient MaterializedArrivalBoundaryService materializedArrivalService;
-    // private final transient SupplierBoundaryService supplierService;
-    // private final transient MaterialBoundaryService materialService;
+    private final transient MaterialBoundaryService materialService;
+    private final transient SupplierBoundaryService supplierService;
+    private final transient CountryBoundaryService countryService;
+    private final transient MaterialTypeBoundaryService matTypeService;
+    private final transient MovementTypeBoundaryService mvtTypeService;
     private final transient SavedQueryService queryManager;
 
     private String savedQueryName;
@@ -71,9 +85,14 @@ public class MaterializedArrivalView extends SuperView implements Serializable {
      */
     @Generated
     public MaterializedArrivalView() {
-        this.userSession = null;
-        this.materializedArrivalService = null;
-        this.queryManager = null;
+        userSession = null;
+        materializedArrivalService = null;
+        queryManager = null;
+        materialService = null;
+        supplierService = null;
+        countryService = null;
+        matTypeService = null;
+        mvtTypeService = null;
     }
 
     /**
@@ -85,10 +104,16 @@ public class MaterializedArrivalView extends SuperView implements Serializable {
     @Inject
     @Generated
     public MaterializedArrivalView(UserSession userSession, MaterializedArrivalBoundaryService materializedArrivalService,
-            SavedQueryService queryManager) {
+            MaterialBoundaryService materialService, SupplierBoundaryService supplierService, CountryBoundaryService countryService,
+            MaterialTypeBoundaryService matTypeService, MovementTypeBoundaryService mvtTypeService, SavedQueryService queryManager) {
         this.userSession = userSession;
         this.materializedArrivalService = materializedArrivalService;
         this.queryManager = queryManager;
+        this.materialService = materialService;
+        this.supplierService = supplierService;
+        this.countryService = countryService;
+        this.matTypeService = matTypeService;
+        this.mvtTypeService = mvtTypeService;
     }
 
 
@@ -470,13 +495,12 @@ public class MaterializedArrivalView extends SuperView implements Serializable {
 
 
 
-    /*
     public List<String> onCompleteSupplierName(String query) {
         final var results = new ArrayList<String>();
-    
+
         try {
             final Collection<SupplierListDTO> items = supplierService.findSuppliers(query + "%");
-    
+
             for (final SupplierListDTO item : items) {
                 results.add(item.getName());
             }
@@ -484,16 +508,16 @@ public class MaterializedArrivalView extends SuperView implements Serializable {
         catch (final Exception e) {
             logger.error("Error while searching for auto-complete items by using the entered text '{}'!", query, e);
         }
-    
+
         return results;
     }
-    
-    public List<String> onCompleteMaterialMaterialNumber(String query) {
+
+    public List<String> onCompleteMaterialNumber(String query) {
         final var results = new ArrayList<String>();
-    
+
         try {
             final Collection<MaterialListDTO> items = materialService.findMaterials(query + "%");
-    
+
             for (final MaterialListDTO item : items) {
                 results.add(item.getMaterialNumber());
             }
@@ -501,10 +525,77 @@ public class MaterializedArrivalView extends SuperView implements Serializable {
         catch (final Exception e) {
             logger.error("Error while searching for auto-complete items by using the entered text '{}'!", query, e);
         }
-    
+
         return results;
     }
-    */
+
+    public List<String> onCompleteSapNumber(String query) {
+        final var results = new ArrayList<String>();
+
+        try {
+            final Collection<MaterialListSapDTO> items = materialService.findMaterialsBySapNumber(query + "%");
+
+            for (final MaterialListSapDTO item : items) {
+                results.add(item.getSapNumber());
+            }
+        }
+        catch (final Exception e) {
+            logger.error("Error while searching for auto-complete items by using the entered text '{}'!", query, e);
+        }
+
+        return results;
+    }
+
+    public List<String> onCompleteCountry(String query) {
+        final var results = new ArrayList<String>();
+
+        try {
+            final Collection<CountryListDTO> items = countryService.findCountries("%" + query + "%");
+
+            for (final CountryListDTO item : items) {
+                results.add(item.getName());
+            }
+        }
+        catch (final Exception e) {
+            logger.error("Error while searching for auto-complete items by using the entered text '{}'!", query, e);
+        }
+
+        return results;
+    }
+
+    public List<String> onCompleteMatType(String query) {
+        final var results = new ArrayList<String>();
+
+        try {
+            final Collection<MaterialTypeListDTO> items = matTypeService.findMaterialTypes("%" + query + "%");
+
+            for (final MaterialTypeListDTO item : items) {
+                results.add(item.getCode());
+            }
+        }
+        catch (final Exception e) {
+            logger.error("Error while searching for auto-complete items by using the entered text '{}'!", query, e);
+        }
+
+        return results;
+    }
+
+    public List<String> onCompleteMvtType(String query) {
+        final var results = new ArrayList<String>();
+
+        try {
+            final Collection<MovementTypeListDTO> items = mvtTypeService.findMovementTypes("%" + query + "%");
+
+            for (final MovementTypeListDTO item : items) {
+                results.add(item.getCode());
+            }
+        }
+        catch (final Exception e) {
+            logger.error("Error while searching for auto-complete items by using the entered text '{}'!", query, e);
+        }
+
+        return results;
+    }
 
 
 

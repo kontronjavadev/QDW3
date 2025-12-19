@@ -2137,8 +2137,8 @@
     </attributes>
   </net.sourceforge.jbizmo.model.dto:DTOBean>
   <net.sourceforge.jbizmo.model.java:Namespace name="material" parent="/2" javaTypes="/194 /113 /198 /196 /112" project="/0"/>
-  <net.sourceforge.jbizmo.model.java:Namespace name="material" parent="/1" javaTypes="/117 /129 /193 /195 /197" project="/0"/>
-  <net.sourceforge.jbizmo.model.java:Namespace name="material" parent="/3" javaTypes="/208 /202 /190 /116 /125 /121 /191 /205 /219 /192 /223 /213 /128 /137 /133 /226 /232 /233 /231 /239 /242 /246" project="/0"/>
+  <net.sourceforge.jbizmo.model.java:Namespace name="material" parent="/1" javaTypes="/193 /197 /117 /195 /129" project="/0"/>
+  <net.sourceforge.jbizmo.model.java:Namespace name="material" parent="/3" javaTypes="/208 /202 /190 /116 /233 /125 /121 /242 /239 /191 /205 /219 /192 /226 /223 /213 /246 /128 /232 /137 /133 /231 /321" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="material" parent="/4" project="/0"/>
   <net.sourceforge.jbizmo.model.repository:Repository name="MaterialTypeRepository" comment="Create, read, update and delete services for material type objects." namespace="/108">
     <domainObject href="package-material.xmi#//@domainObjects.0"/>
@@ -3389,6 +3389,9 @@
     </boundaryMethods>
     <boundaryMethods name="copy" comment="Create copy of selected material" returnType="/0/@allSupportedTypes.2" methodType="COPY" serviceMethod="/198/@repositoryMethods.6">
       <methodParameters name="sourceObjectId" type="/0/@allSupportedTypes.2"/>
+    </boundaryMethods>
+    <boundaryMethods name="findMaterialsBySapNumber" comment="" returnType="/321" returnTypeModifier="List" methodType="SEARCH_BY_UNIQUE_KEY" serviceMethod="/198/@repositoryMethods.15">
+      <methodParameters name="sapNumber" type="/0/@allSupportedTypes.12" hint=""/>
     </boundaryMethods>
   </net.sourceforge.jbizmo.model.boundary:BoundaryBean>
   <net.sourceforge.jbizmo.model.repository:Repository name="MaterialRepository" comment="Create, read, update and delete services for material objects." namespace="/108">
@@ -6215,6 +6218,15 @@
     </attributes>
     <attributes name="supplierCode" selectToken="a.supplierCode">
       <domainAttribute href="package-mv.xmi#//@domainObjects.3/@attributes.1"/>
+    </attributes>
+  </net.sourceforge.jbizmo.model.dto:DTOBean>
+  <net.sourceforge.jbizmo.model.dto:DTOBean name="MaterialListSapDTO" comment="Instances of this class represent data transfer objects that are mapped to material domain objects" namespace="/110" standardConversion="true" createdManually="true">
+    <domainObject href="package-material.xmi#//@domainObjects.2"/>
+    <attributes name="id">
+      <domainAttribute href="package-base.xmi#//@domainObjects.0/@attributes.0"/>
+    </attributes>
+    <attributes name="sapNumber">
+      <domainAttribute href="package-material.xmi#//@domainObjects.2/@attributes.1"/>
     </attributes>
   </net.sourceforge.jbizmo.model.dto:DTOBean>
 </xmi:XMI>

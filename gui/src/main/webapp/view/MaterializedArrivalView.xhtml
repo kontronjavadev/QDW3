@@ -166,9 +166,9 @@
 				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_8" id="s_8" value="#{materializedArrivalView.searchObject.searchFields[8].sortOrder}">
 					<f:selectItems value="#{materializedArrivalView.sortOrderList}"/>
 				</p:selectOneMenu>
-				<p:inputText id="fi_8" value="#{materializedArrivalView.searchObject.searchFields[8].stringCriterion}" size="30"/>
+				<p:autoComplete minQueryLength="2" maxResults="10" completeMethod="#{materializedArrivalView.onCompleteSupplierName}" id="fi_8" value="#{materializedArrivalView.searchObject.searchFields[8].stringCriterion}" size="30"/>
 				<h:panelGroup id="p_8">
-					<p:inputText id="b_8" rendered="#{materializedArrivalView.searchObject.searchFields[8].between}" value="#{materializedArrivalView.searchObject.searchFields[8].stringBetweenCriterion}" size="30"/>
+				<p:autoComplete minQueryLength="2" rendered="#{materializedArrivalView.searchObject.searchFields[8].between}" maxResults="10" completeMethod="#{materializedArrivalView.onCompleteSupplierName}" id="b_8" value="#{materializedArrivalView.searchObject.searchFields[8].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
 <!-- country name -->
@@ -180,9 +180,9 @@
 				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_9" id="s_9" value="#{materializedArrivalView.searchObject.searchFields[9].sortOrder}">
 					<f:selectItems value="#{materializedArrivalView.sortOrderList}"/>
 				</p:selectOneMenu>
-				<p:inputText id="fi_9" value="#{materializedArrivalView.searchObject.searchFields[9].stringCriterion}" size="30"/>
+				<p:autoComplete minQueryLength="2" maxResults="10" completeMethod="#{materializedArrivalView.onCompleteCountry}" id="fi_9" value="#{materializedArrivalView.searchObject.searchFields[9].stringCriterion}" size="30"/>
 				<h:panelGroup id="p_9">
-					<p:inputText id="b_9" rendered="#{materializedArrivalView.searchObject.searchFields[9].between}" value="#{materializedArrivalView.searchObject.searchFields[9].stringBetweenCriterion}" size="30"/>
+				<p:autoComplete minQueryLength="2" rendered="#{materializedArrivalView.searchObject.searchFields[9].between}" maxResults="10" completeMethod="#{materializedArrivalView.onCompleteCountry}" id="b_9" value="#{materializedArrivalView.searchObject.searchFields[9].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
 
@@ -218,11 +218,6 @@
 
 
 <!-- material no. -->
-<!-- 
-	<p:autoComplete minQueryLength="2" maxResults="10" completeMethod="#{materializedArrivalView.onCompleteMaterialMaterialNumber}" id="fi_7" value="#{materializedArrivalView.searchObject.searchFields[7].stringCriterion}" size="30"/>
-	<h:panelGroup id="p_7">
-	<p:autoComplete minQueryLength="2" rendered="#{materializedArrivalView.searchObject.searchFields[7].between}" maxResults="10" completeMethod="#{materializedArrivalView.onCompleteMaterialMaterialNumber}" id="b_7" value="#{materializedArrivalView.searchObject.searchFields[7].stringBetweenCriterion}" size="30"/>
--->
 				<h:outputLabel styleClass="label-field-optional" for="fi_12" value="#{materializedArrivalView.searchObject.searchFields[12].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{materializedArrivalView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_12" value="#{materializedArrivalView.searchObject.searchFields[12].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_12" value="#{materializedArrivalView.textOperators}" var="advInputItem12" itemValue="#{advInputItem12}" itemLabel="#{advInputItem12.description}"/>
@@ -231,9 +226,9 @@
 				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_12" id="s_12" value="#{materializedArrivalView.searchObject.searchFields[12].sortOrder}">
 					<f:selectItems value="#{materializedArrivalView.sortOrderList}"/>
 				</p:selectOneMenu>
-				<p:inputText id="fi_12" value="#{materializedArrivalView.searchObject.searchFields[12].stringCriterion}" size="30"/>
+				<p:autoComplete minQueryLength="2" maxResults="10" completeMethod="#{materializedArrivalView.onCompleteMaterialNumber}" id="fi_12" value="#{materializedArrivalView.searchObject.searchFields[12].stringCriterion}" size="30"/>
 				<h:panelGroup id="p_12">
-					<p:inputText id="b_12" rendered="#{materializedArrivalView.searchObject.searchFields[12].between}" value="#{materializedArrivalView.searchObject.searchFields[12].stringBetweenCriterion}" size="30"/>
+				<p:autoComplete minQueryLength="2" rendered="#{materializedArrivalView.searchObject.searchFields[12].between}" maxResults="10" completeMethod="#{materializedArrivalView.onCompleteMaterialNumber}" id="b_12" value="#{materializedArrivalView.searchObject.searchFields[12].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
 <!-- sap no. -->
@@ -245,9 +240,9 @@
 				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_13" id="s_13" value="#{materializedArrivalView.searchObject.searchFields[13].sortOrder}">
 					<f:selectItems value="#{materializedArrivalView.sortOrderList}"/>
 				</p:selectOneMenu>
-				<p:inputText id="fi_13" value="#{materializedArrivalView.searchObject.searchFields[13].stringCriterion}" size="30"/>
+				<p:autoComplete minQueryLength="2" maxResults="10" completeMethod="#{materializedArrivalView.onCompleteSapNumber}" id="fi_13" value="#{materializedArrivalView.searchObject.searchFields[13].stringCriterion}" size="30"/>
 				<h:panelGroup id="p_13">
-					<p:inputText id="b_13" rendered="#{materializedArrivalView.searchObject.searchFields[13].between}" value="#{materializedArrivalView.searchObject.searchFields[13].stringBetweenCriterion}" size="30"/>
+				<p:autoComplete minQueryLength="2" rendered="#{materializedArrivalView.searchObject.searchFields[13].between}" maxResults="10" completeMethod="#{materializedArrivalView.onCompleteSapNumber}" id="b_13" value="#{materializedArrivalView.searchObject.searchFields[13].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
 <!-- short text -->
@@ -287,9 +282,9 @@
 				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_16" id="s_16" value="#{materializedArrivalView.searchObject.searchFields[16].sortOrder}">
 					<f:selectItems value="#{materializedArrivalView.sortOrderList}"/>
 				</p:selectOneMenu>
-				<p:inputText id="fi_16" value="#{materializedArrivalView.searchObject.searchFields[16].stringCriterion}" size="30"/>
+				<p:autoComplete minQueryLength="1" maxResults="10" completeMethod="#{materializedArrivalView.onCompleteMatType}" id="fi_16" value="#{materializedArrivalView.searchObject.searchFields[16].stringCriterion}" size="30"/>
 				<h:panelGroup id="p_16">
-					<p:inputText id="b_16" rendered="#{materializedArrivalView.searchObject.searchFields[16].between}" value="#{materializedArrivalView.searchObject.searchFields[16].stringBetweenCriterion}" size="30"/>
+				<p:autoComplete minQueryLength="1" rendered="#{materializedArrivalView.searchObject.searchFields[16].between}" maxResults="10" completeMethod="#{materializedArrivalView.onCompleteMatType}" id="b_16" value="#{materializedArrivalView.searchObject.searchFields[16].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
 
@@ -303,9 +298,9 @@
 				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_17" id="s_17" value="#{materializedArrivalView.searchObject.searchFields[17].sortOrder}">
 					<f:selectItems value="#{materializedArrivalView.sortOrderList}"/>
 				</p:selectOneMenu>
-				<p:inputText id="fi_17" value="#{materializedArrivalView.searchObject.searchFields[17].stringCriterion}" size="30"/>
+				<p:autoComplete minQueryLength="2" maxResults="10" completeMethod="#{materializedArrivalView.onCompleteMaterialNumber}" id="fi_17" value="#{materializedArrivalView.searchObject.searchFields[17].stringCriterion}" size="30"/>
 				<h:panelGroup id="p_17">
-					<p:inputText id="b_17" rendered="#{materializedArrivalView.searchObject.searchFields[17].between}" value="#{materializedArrivalView.searchObject.searchFields[17].stringBetweenCriterion}" size="30"/>
+				<p:autoComplete minQueryLength="2" rendered="#{materializedArrivalView.searchObject.searchFields[17].between}" maxResults="10" completeMethod="#{materializedArrivalView.onCompleteMaterialNumber}" id="b_17" value="#{materializedArrivalView.searchObject.searchFields[17].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
 <!-- parent sap no. -->
@@ -317,9 +312,9 @@
 				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_18" id="s_18" value="#{materializedArrivalView.searchObject.searchFields[18].sortOrder}">
 					<f:selectItems value="#{materializedArrivalView.sortOrderList}"/>
 				</p:selectOneMenu>
-				<p:inputText id="fi_18" value="#{materializedArrivalView.searchObject.searchFields[18].stringCriterion}" size="30"/>
+				<p:autoComplete minQueryLength="2" maxResults="10" completeMethod="#{materializedArrivalView.onCompleteSapNumber}" id="fi_18" value="#{materializedArrivalView.searchObject.searchFields[18].stringCriterion}" size="30"/>
 				<h:panelGroup id="p_18">
-					<p:inputText id="b_18" rendered="#{materializedArrivalView.searchObject.searchFields[18].between}" value="#{materializedArrivalView.searchObject.searchFields[18].stringBetweenCriterion}" size="30"/>
+				<p:autoComplete minQueryLength="2" rendered="#{materializedArrivalView.searchObject.searchFields[18].between}" maxResults="10" completeMethod="#{materializedArrivalView.onCompleteSapNumber}" id="b_18" value="#{materializedArrivalView.searchObject.searchFields[18].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
 <!-- parent short text -->
@@ -359,9 +354,9 @@
 				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_21" id="s_21" value="#{materializedArrivalView.searchObject.searchFields[21].sortOrder}">
 					<f:selectItems value="#{materializedArrivalView.sortOrderList}"/>
 				</p:selectOneMenu>
-				<p:inputText id="fi_21" value="#{materializedArrivalView.searchObject.searchFields[21].stringCriterion}" size="30"/>
+				<p:autoComplete minQueryLength="1" maxResults="10" completeMethod="#{materializedArrivalView.onCompleteMatType}" id="fi_21" value="#{materializedArrivalView.searchObject.searchFields[21].stringCriterion}" size="30"/>
 				<h:panelGroup id="p_21">
-					<p:inputText id="b_21" rendered="#{materializedArrivalView.searchObject.searchFields[21].between}" value="#{materializedArrivalView.searchObject.searchFields[21].stringBetweenCriterion}" size="30"/>
+				<p:autoComplete minQueryLength="1" rendered="#{materializedArrivalView.searchObject.searchFields[21].between}" maxResults="10" completeMethod="#{materializedArrivalView.onCompleteMatType}" id="b_21" value="#{materializedArrivalView.searchObject.searchFields[21].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
 
@@ -375,9 +370,9 @@
 				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_22" id="s_22" value="#{materializedArrivalView.searchObject.searchFields[22].sortOrder}">
 					<f:selectItems value="#{materializedArrivalView.sortOrderList}"/>
 				</p:selectOneMenu>
-				<p:inputText id="fi_22" value="#{materializedArrivalView.searchObject.searchFields[22].stringCriterion}" size="30"/>
+				<p:autoComplete minQueryLength="1" maxResults="10" completeMethod="#{materializedArrivalView.onCompleteMvtType}" id="fi_22" value="#{materializedArrivalView.searchObject.searchFields[22].stringCriterion}" size="30"/>
 				<h:panelGroup id="p_22">
-					<p:inputText id="b_22" rendered="#{materializedArrivalView.searchObject.searchFields[22].between}" value="#{materializedArrivalView.searchObject.searchFields[22].stringBetweenCriterion}" size="30"/>
+				<p:autoComplete minQueryLength="1" rendered="#{materializedArrivalView.searchObject.searchFields[22].between}" maxResults="10" completeMethod="#{materializedArrivalView.onCompleteMvtType}" id="b_22" value="#{materializedArrivalView.searchObject.searchFields[22].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
 			</h:panelGrid>

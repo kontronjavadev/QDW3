@@ -15,6 +15,7 @@ import jakarta.ejb.*;
 import jakarta.annotation.security.*;
 import net.sourceforge.jbizmo.commons.search.dto.*;
 import net.sourceforge.jbizmo.commons.repository.*;
+import net.sourceforge.jbizmo.commons.annotation.Customized;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
 import static net.sourceforge.jbizmo.commons.jpa.AbstractRepository.SMALL_LIST_SIZE;
 
@@ -39,6 +40,31 @@ public class MaterialBoundaryService {
     @Generated
     public MaterialBoundaryService(MaterialRepository repository) {
         this.repository = repository;
+    }
+
+    /**
+     * @param sapNumber
+     * @return a list containing material objects
+     */
+    @Customized
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public List<MaterialListSapDTO> findMaterialsBySapNumber(String sapNumber) {
+        final var resultList = new ArrayList<MaterialListSapDTO>();
+        String filter = sapNumber;
+        if (filter != null && !filter.isEmpty() && !filter.equals(WILDCARD)) {
+            filter += WILDCARD;
+        }
+
+        for (final Material material : repository.searchBySapNumber(filter)) {
+            final var dto = new MaterialListSapDTO();
+            dto.setId(material.getId());
+            dto.setSapNumber(material.getSapNumber());
+
+            resultList.add(dto);
+        }
+
+        return resultList;
     }
 
     /**
