@@ -15,7 +15,7 @@ public class MaterializedEntitiy {
     @Basic(optional = false)
     @Column(name = "serial_object_id", nullable = false, updatable = true, insertable = true)
     @Generated
-    private long serialObjectId;
+    private long meSerialObjectId;
     @Column(name = "parent_serial_object_id", nullable = true, updatable = true, insertable = true)
     @Generated
     private Long parentSerialObjectId;
@@ -144,16 +144,16 @@ public class MaterializedEntitiy {
      * @return the serial object id
      */
     @Generated
-    public long getSerialObjectId() {
-        return this.serialObjectId;
+    public long getMeSerialObjectId() {
+        return this.meSerialObjectId;
     }
 
     /**
-     * @param serialObjectId the serial object id to set
+     * @param meSerialObjectId the serial object id to set
      */
     @Generated
-    public void setSerialObjectId(long serialObjectId) {
-        this.serialObjectId = serialObjectId;
+    public void setMeSerialObjectId(long meSerialObjectId) {
+        this.meSerialObjectId = meSerialObjectId;
     }
 
     /**

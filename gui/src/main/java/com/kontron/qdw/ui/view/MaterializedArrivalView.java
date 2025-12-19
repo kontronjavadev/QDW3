@@ -15,11 +15,7 @@ import org.primefaces.model.DualListModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.kontron.qdw.boundary.base.SupplierBoundaryService;
-import com.kontron.qdw.boundary.material.MaterialBoundaryService;
 import com.kontron.qdw.boundary.mv.MaterializedArrivalBoundaryService;
-import com.kontron.qdw.dto.base.SupplierListDTO;
-import com.kontron.qdw.dto.material.MaterialListDTO;
 import com.kontron.qdw.dto.mv.MaterializedArrivalSearchDTO;
 import com.kontron.qdw.service.SavedQueryService;
 import com.kontron.qdw.ui.UserSession;
@@ -31,6 +27,8 @@ import jakarta.faces.model.SelectItem;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+import net.sourceforge.jbizmo.commons.annotation.Customized;
+import net.sourceforge.jbizmo.commons.annotation.Generated;
 import net.sourceforge.jbizmo.commons.search.dto.SearchDTO;
 import net.sourceforge.jbizmo.commons.search.dto.SearchFieldDTO;
 import net.sourceforge.jbizmo.commons.search.dto.SearchFieldDataTypeEnum;
@@ -42,6 +40,7 @@ import net.sourceforge.jbizmo.commons.webclient.primefaces.util.MessageUtil;
 @ViewScoped
 public class MaterializedArrivalView extends SuperView implements Serializable {
 
+    @Generated
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     public static final String VIEW_ID = "com.kontron.qdw.ui.view.MaterializedArrivalView";
     public static final String PAGE_URL = "/view/MaterializedArrivalView.jsf?faces-redirect=true";
@@ -49,9 +48,10 @@ public class MaterializedArrivalView extends SuperView implements Serializable {
 
     private transient ResourceBundle bundle;
     private final UserSession userSession;
-    private final transient MaterializedArrivalBoundaryService arrivalService;
-    private final transient SupplierBoundaryService supplierService;
-    private final transient MaterialBoundaryService materialService;
+    @Generated
+    private final transient MaterializedArrivalBoundaryService materializedArrivalService;
+    // private final transient SupplierBoundaryService supplierService;
+    // private final transient MaterialBoundaryService materialService;
     private final transient SavedQueryService queryManager;
 
     private String savedQueryName;
@@ -59,33 +59,44 @@ public class MaterializedArrivalView extends SuperView implements Serializable {
 
     private String formTitle = "";
 
-    private List<MaterializedArrivalSearchDTO> arrivalsList = new ArrayList<>();
+    @Generated
+    private List<MaterializedArrivalSearchDTO> materializedArrivalsList = new ArrayList<>();
     private MaterializedArrivalSearchDTO selectedObject;
     private long countResult;
 
 
 
+    /**
+     * Default constructor
+     */
+    @Generated
     public MaterializedArrivalView() {
         this.userSession = null;
-        this.arrivalService = null;
-        this.supplierService = null;
-        this.materialService = null;
+        this.materializedArrivalService = null;
         this.queryManager = null;
     }
 
+    /**
+     * Constructor for injecting all required beans
+     * @param userSession
+     * @param materializedArrivalService
+     * @param queryManager
+     */
     @Inject
-    public MaterializedArrivalView(UserSession userSession, MaterializedArrivalBoundaryService arrivalService,
-            SupplierBoundaryService supplierService,
-            MaterialBoundaryService materialService, SavedQueryService queryManager) {
+    @Generated
+    public MaterializedArrivalView(UserSession userSession, MaterializedArrivalBoundaryService materializedArrivalService,
+            SavedQueryService queryManager) {
         this.userSession = userSession;
-        this.arrivalService = arrivalService;
-        this.supplierService = supplierService;
-        this.materialService = materialService;
+        this.materializedArrivalService = materializedArrivalService;
         this.queryManager = queryManager;
     }
 
 
 
+    /**
+     * Initialize view
+     */
+    @Customized
     public void initView() {
         logger.debug("Initialize view");
 
@@ -112,11 +123,15 @@ public class MaterializedArrivalView extends SuperView implements Serializable {
         }
 
         initProperties();
-        fetchArrivals();
+        fetchMaterializedArrivals();
 
         logger.debug("View initialization finished");
     }
 
+    /**
+     * Initialize search object
+     */
+    @Customized
     public void initSearchObject() {
         searchObj = new SearchDTO();
         int colOrderId = -1;
@@ -133,7 +148,7 @@ public class MaterializedArrivalView extends SuperView implements Serializable {
                 bundle.getString(COL_MATERIALIZEDARRIVALVIEW_ID), SearchFieldDataTypeEnum.LONG, 120);
 
         new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalSearchDTO.SELECT_PLANT,
-                bundle.getString(COL_MATERIALIZEDARRIVALVIEW_PLANT), SearchFieldDataTypeEnum.STRING, 80);
+                bundle.getString(LBL_ATTR_MATERIALIZEDENTITIY_PLANT), SearchFieldDataTypeEnum.STRING, 80);
 
 
 
@@ -141,7 +156,7 @@ public class MaterializedArrivalView extends SuperView implements Serializable {
                 bundle.getString(COL_MATERIALIZEDARRIVALVIEW_SERIALNUMBER), SearchFieldDataTypeEnum.STRING, 100);
 
         new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalSearchDTO.SELECT_PARENTSERIALNUMBER,
-                bundle.getString(COL_MATERIALIZEDARRIVALVIEW_PARENTERIALNUMBER), SearchFieldDataTypeEnum.STRING, 100);
+                bundle.getString(COL_MATERIALIZEDARRIVALVIEW_PARENTSERIALNUMBER), SearchFieldDataTypeEnum.STRING, 100);
 
 
 
@@ -149,7 +164,7 @@ public class MaterializedArrivalView extends SuperView implements Serializable {
                 bundle.getString(COL_MATERIALIZEDARRIVALVIEW_ORDERNUMBER), SearchFieldDataTypeEnum.STRING, 100);
 
         new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalSearchDTO.SELECT_ARRIVALDATE,
-                bundle.getString(LBL_ATTR_ARRIVAL_ARRIVALDATE), SearchFieldDataTypeEnum.LOCAL_DATE, 80, false);
+                bundle.getString(LBL_ATTR_MATERIALIZEDARRIVAL_ARRIVALDATE), SearchFieldDataTypeEnum.LOCAL_DATE, 80, false);
 
         new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalSearchDTO.SELECT_ASSEMBLYDATE,
                 bundle.getString(COL_MATERIALIZEDARRIVALVIEW_ASSEMBLYDATE), SearchFieldDataTypeEnum.LOCAL_DATE, 80, false);
@@ -160,7 +175,7 @@ public class MaterializedArrivalView extends SuperView implements Serializable {
 
 
         new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalSearchDTO.SELECT_SUPPLIERNAME,
-                bundle.getString(COL_MATERIALIZEDARRIVALVIEW_SUPPLIERNAME), SearchFieldDataTypeEnum.STRING, 150);
+                bundle.getString(COL_MATERIALIZEDARRIVALVIEW_SUPPLIERNAME), SearchFieldDataTypeEnum.STRING, 200);
 
         new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalSearchDTO.SELECT_COUNTRYNAME,
                 bundle.getString(COL_MATERIALIZEDARRIVALVIEW_COUNTRYNAME), SearchFieldDataTypeEnum.STRING, 100);
@@ -168,7 +183,7 @@ public class MaterializedArrivalView extends SuperView implements Serializable {
 
 
         new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalSearchDTO.SELECT_REVISIONNUMBER,
-                bundle.getString(COL_MATERIALIZEDARRIVALVIEW_REVISIONNUMBER), SearchFieldDataTypeEnum.STRING, 150);
+                bundle.getString(LBL_ATTR_MATERIALIZEDENTITIY_REVISIONNUMBER), SearchFieldDataTypeEnum.STRING, 150);
 
         new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalSearchDTO.SELECT_PARENTREVISIONNUMBER,
                 bundle.getString(COL_MATERIALIZEDARRIVALVIEW_PARENTREVISIONNUMBER), SearchFieldDataTypeEnum.STRING, 150);
@@ -182,10 +197,10 @@ public class MaterializedArrivalView extends SuperView implements Serializable {
                 bundle.getString(COL_MATERIALIZEDARRIVALVIEW_SAPNUMBER), SearchFieldDataTypeEnum.STRING, 150);
 
         new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalSearchDTO.SELECT_MATERIALSHORTTEXT,
-                bundle.getString(COL_MATERIALIZEDARRIVALVIEW_MATERIALSHORTTEXT), SearchFieldDataTypeEnum.STRING, 250);
+                bundle.getString(LBL_ATTR_MATERIALIZEDENTITIY_MATERIALSHORTTEXT), SearchFieldDataTypeEnum.STRING, 250);
 
         new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalSearchDTO.SELECT_MATERIALHIERARCHY,
-                bundle.getString(COL_MATERIALIZEDARRIVALVIEW_MATERIALHIERARCHY), SearchFieldDataTypeEnum.STRING, 150);
+                bundle.getString(LBL_ATTR_MATERIALIZEDENTITIY_MATERIALHIERARCHY), SearchFieldDataTypeEnum.STRING, 150);
 
         new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalSearchDTO.SELECT_MATERIALTYPE,
                 bundle.getString(COL_MATERIALIZEDARRIVALVIEW_MATERIALTYPE), SearchFieldDataTypeEnum.STRING, 80);
@@ -199,7 +214,7 @@ public class MaterializedArrivalView extends SuperView implements Serializable {
                 bundle.getString(COL_MATERIALIZEDARRIVALVIEW_PARENTSAPNUMBER), SearchFieldDataTypeEnum.STRING, 150);
 
         new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalSearchDTO.SELECT_PARENTMATERIALSHORTTEXT,
-                bundle.getString(COL_MATERIALIZEDARRIVALVIEW_PARENTMATERIALSHORTTEXT), SearchFieldDataTypeEnum.STRING, 250);
+                bundle.getString(LBL_ATTR_MATERIALIZEDENTITIY_PARENTMATERIALSHORTTEXT), SearchFieldDataTypeEnum.STRING, 250);
 
         new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalSearchDTO.SELECT_PARENTMATERIALHIERARCHY,
                 bundle.getString(COL_MATERIALIZEDARRIVALVIEW_PARENTMATERIALHIERARCHY), SearchFieldDataTypeEnum.STRING, 150);
@@ -229,7 +244,11 @@ public class MaterializedArrivalView extends SuperView implements Serializable {
 
 
 
-    public void fetchArrivals() {
+    /**
+     * Perform data fetch operation
+     */
+    @Generated
+    public void fetchMaterializedArrivals() {
         logger.debug("Perform data fetch operation");
 
         try {
@@ -243,10 +262,10 @@ public class MaterializedArrivalView extends SuperView implements Serializable {
         refreshFormatSettings();
 
         try {
-            arrivalsList = arrivalService.searchAllArrivals(searchObj);
+            materializedArrivalsList = materializedArrivalService.searchAllMaterializedArrivals(searchObj);
 
             if (searchObj.isCount()) {
-                countResult = arrivalService.countAllArrivals(searchObj);
+                countResult = materializedArrivalService.countAllMaterializedArrivals(searchObj);
             }
 
             queryManager.saveQuery(userSession.getPrincipal().getId(), VIEW_ID, null, searchObj);
@@ -261,6 +280,10 @@ public class MaterializedArrivalView extends SuperView implements Serializable {
         }
     }
 
+    /**
+     * Perform count operation
+     */
+    @Generated
     public void countRecords() {
         logger.debug("Perform count operation");
 
@@ -275,7 +298,7 @@ public class MaterializedArrivalView extends SuperView implements Serializable {
         refreshFormatSettings();
 
         try {
-            countResult = arrivalService.countAllArrivals(searchObj);
+            countResult = materializedArrivalService.countAllMaterializedArrivals(searchObj);
 
             MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_INFO, OPERATION_COUNT_RESULT, "", countResult);
         }
@@ -289,11 +312,15 @@ public class MaterializedArrivalView extends SuperView implements Serializable {
         }
     }
 
-    public void deleteArrival() {
+    /**
+     * Delete selected element
+     */
+    @Generated
+    public void deleteMaterializedArrival() {
         try {
             logger.debug("Delete selected object with id '{}'", selectedObject.getId());
 
-            arrivalService.delete(selectedObject.getId());
+            materializedArrivalService.deleteMaterializedArrival(selectedObject.getId());
         }
         catch (final Exception e) {
             logger.error("Error while deleting selected object!", e);
@@ -301,14 +328,19 @@ public class MaterializedArrivalView extends SuperView implements Serializable {
             MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_ERROR, OPERATION_DELETE_FAIL, e);
         }
 
-        fetchArrivals();
+        fetchMaterializedArrivals();
     }
 
+    /**
+     * Create copy of selected element
+     * @return the navigation target
+     */
+    @Generated
     public String copy() {
         try {
             logger.debug("Create a copy of the selected object with id '{}'", selectedObject.getId());
 
-            arrivalService.copy(selectedObject.getId(), userSession.getPrincipal().getId());
+            materializedArrivalService.copy(selectedObject.getId(), userSession.getPrincipal().getId());
         }
         catch (final Exception e) {
             logger.error("Error while creating a copy of the selected object!", e);
@@ -317,12 +349,16 @@ public class MaterializedArrivalView extends SuperView implements Serializable {
             return "";
         }
 
-        fetchArrivals();
+        fetchMaterializedArrivals();
         return "";
     }
 
 
 
+    /**
+     * @return an array containing all saved queries
+     */
+    @Generated
     public SelectItem[] getSavedQueries() {
         logger.debug("Load saved queries");
 
@@ -337,6 +373,10 @@ public class MaterializedArrivalView extends SuperView implements Serializable {
         return items;
     }
 
+    /**
+     * Save new query
+     */
+    @Generated
     public void saveNewQuery() {
         if (savedQueryName.isEmpty()) {
             MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_ERROR, SAVED_QUERY_EMPTY_NAME);
@@ -354,6 +394,10 @@ public class MaterializedArrivalView extends SuperView implements Serializable {
         MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_INFO, SAVED_QUERY_NEW_SUCCESS, "", savedQueryName);
     }
 
+    /**
+     * Delete saved query
+     */
+    @Generated
     public void deleteSavedQuery() {
         if (selectedSavedQuery == null) {
             return;
@@ -367,6 +411,10 @@ public class MaterializedArrivalView extends SuperView implements Serializable {
         selectedSavedQuery = null;
     }
 
+    /**
+     * Run selected saved query
+     */
+    @Generated
     public void runSavedQuery() {
         if (selectedSavedQuery == null) {
             return;
@@ -377,7 +425,7 @@ public class MaterializedArrivalView extends SuperView implements Serializable {
         searchObj = queryManager.getSavedQuery(userSession.getPrincipal().getId(), VIEW_ID, selectedSavedQuery);
 
         prepareAfterLoad();
-        fetchArrivals();
+        fetchMaterializedArrivals();
     }
 
 
@@ -385,9 +433,13 @@ public class MaterializedArrivalView extends SuperView implements Serializable {
     @Override
     public void resetSearchObject() {
         initSearchObject();
-        fetchArrivals();
+        fetchMaterializedArrivals();
     }
 
+    /**
+     * Refresh format settings from user session
+     */
+    @Generated
     public void refreshFormatSettings() {
         searchObj.setDateFormat(userSession.getDateFormat());
         searchObj.setDateTimeFormat(userSession.getDateTimeFormat());
@@ -398,10 +450,12 @@ public class MaterializedArrivalView extends SuperView implements Serializable {
 
 
 
+    /**
+     * Event that will be fired if user performs a double-click on a grid row
+     */
+    @Customized
     public void onDoubleClick() {
-        logger.debug("Handle double-click event");
-
-        userSession.redirectTo(getCurrentPageURL(), openViewArrivalDialog());
+        // No appropriate form found!
     }
 
     public String openViewArrivalDialog() {
@@ -416,12 +470,13 @@ public class MaterializedArrivalView extends SuperView implements Serializable {
 
 
 
+    /*
     public List<String> onCompleteSupplierName(String query) {
         final var results = new ArrayList<String>();
-
+    
         try {
             final Collection<SupplierListDTO> items = supplierService.findSuppliers(query + "%");
-
+    
             for (final SupplierListDTO item : items) {
                 results.add(item.getName());
             }
@@ -429,16 +484,16 @@ public class MaterializedArrivalView extends SuperView implements Serializable {
         catch (final Exception e) {
             logger.error("Error while searching for auto-complete items by using the entered text '{}'!", query, e);
         }
-
+    
         return results;
     }
-
+    
     public List<String> onCompleteMaterialMaterialNumber(String query) {
         final var results = new ArrayList<String>();
-
+    
         try {
             final Collection<MaterialListDTO> items = materialService.findMaterials(query + "%");
-
+    
             for (final MaterialListDTO item : items) {
                 results.add(item.getMaterialNumber());
             }
@@ -446,9 +501,10 @@ public class MaterializedArrivalView extends SuperView implements Serializable {
         catch (final Exception e) {
             logger.error("Error while searching for auto-complete items by using the entered text '{}'!", query, e);
         }
-
+    
         return results;
     }
+    */
 
 
 
@@ -457,47 +513,92 @@ public class MaterializedArrivalView extends SuperView implements Serializable {
         return VIEW_ID;
     }
 
+    /**
+     * @return the URL of the current page
+     */
+    @Generated
     public String getCurrentPageURL() {
         return PAGE_URL;
     }
 
-    public Collection<MaterializedArrivalSearchDTO> getArrivalsList() {
-        return arrivalsList;
+    /**
+     * @return the list of elements
+     */
+    @Generated
+    public Collection<MaterializedArrivalSearchDTO> getMaterializedArrivalsList() {
+        return materializedArrivalsList;
     }
 
+    /**
+     * @return the selected item
+     */
+    @Generated
     public MaterializedArrivalSearchDTO getSelectedObject() {
         return selectedObject;
     }
 
+    /**
+     * @param selectedObject
+     */
+    @Generated
     public void setSelectedObject(MaterializedArrivalSearchDTO selectedObject) {
         this.selectedObject = selectedObject;
     }
 
+
+    /**
+     * @return the form title
+     */
+    @Generated
     public String getFormTitle() {
         return formTitle;
     }
 
+    /**
+     * @param formTitle
+     */
+    @Generated
     public void setFormTitle(String formTitle) {
         this.formTitle = formTitle;
     }
 
+    /**
+     * @return the result of the count operation
+     */
+    @Generated
     public long getCountResult() {
         return countResult;
     }
 
+    /**
+     * @return the name of the query
+     */
+    @Generated
     public String getSavedQueryName() {
         return savedQueryName;
     }
 
+    /**
+     * @param savedQueryName
+     */
+    @Generated
     public void setSavedQueryName(String savedQueryName) {
         this.savedQueryName = savedQueryName;
     }
 
+    /**
+     * @return the name of the selected saved query
+     */
     @Override
+    @Generated
     public String getSelectedSavedQuery() {
         return selectedSavedQuery;
     }
 
+    /**
+     * @param selectedSavedQuery
+     */
+    @Generated
     public void setSelectedSavedQuery(String selectedSavedQuery) {
         this.selectedSavedQuery = selectedSavedQuery;
     }

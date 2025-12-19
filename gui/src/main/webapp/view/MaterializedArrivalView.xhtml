@@ -150,9 +150,9 @@
 				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_7" id="s_7" value="#{materializedArrivalView.searchObject.searchFields[7].sortOrder}">
 					<f:selectItems value="#{materializedArrivalView.sortOrderList}"/>
 				</p:selectOneMenu>
-				<p:autoComplete minQueryLength="2" maxResults="10" completeMethod="#{materializedArrivalView.onCompleteMaterialMaterialNumber}" id="fi_7" value="#{materializedArrivalView.searchObject.searchFields[7].stringCriterion}" size="30"/>
+				<p:inputText id="fi_7" value="#{materializedArrivalView.searchObject.searchFields[7].stringCriterion}" size="30"/>
 				<h:panelGroup id="p_7">
-				<p:autoComplete minQueryLength="2" rendered="#{materializedArrivalView.searchObject.searchFields[7].between}" maxResults="10" completeMethod="#{materializedArrivalView.onCompleteMaterialMaterialNumber}" id="b_7" value="#{materializedArrivalView.searchObject.searchFields[7].stringBetweenCriterion}" size="30"/>
+					<p:inputText id="b_7" rendered="#{materializedArrivalView.searchObject.searchFields[7].between}" value="#{materializedArrivalView.searchObject.searchFields[7].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
 
@@ -218,6 +218,11 @@
 
 
 <!-- material no. -->
+<!-- 
+	<p:autoComplete minQueryLength="2" maxResults="10" completeMethod="#{materializedArrivalView.onCompleteMaterialMaterialNumber}" id="fi_7" value="#{materializedArrivalView.searchObject.searchFields[7].stringCriterion}" size="30"/>
+	<h:panelGroup id="p_7">
+	<p:autoComplete minQueryLength="2" rendered="#{materializedArrivalView.searchObject.searchFields[7].between}" maxResults="10" completeMethod="#{materializedArrivalView.onCompleteMaterialMaterialNumber}" id="b_7" value="#{materializedArrivalView.searchObject.searchFields[7].stringBetweenCriterion}" size="30"/>
+-->
 				<h:outputLabel styleClass="label-field-optional" for="fi_12" value="#{materializedArrivalView.searchObject.searchFields[12].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{materializedArrivalView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_12" value="#{materializedArrivalView.searchObject.searchFields[12].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_12" value="#{materializedArrivalView.textOperators}" var="advInputItem12" itemValue="#{advInputItem12}" itemLabel="#{advInputItem12.description}"/>
@@ -375,7 +380,6 @@
 					<p:inputText id="b_22" rendered="#{materializedArrivalView.searchObject.searchFields[22].between}" value="#{materializedArrivalView.searchObject.searchFields[22].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
-
 			</h:panelGrid>
 			</p:scrollPanel>
 			</p:tab>
@@ -416,7 +420,7 @@
 		</p:tabView>
 		<br/>
 		<h:panelGrid columns="4">
-			<p:commandButton id="cmdSearch" value="#{i18n.search_input_perform_search}" action="#{materializedArrivalView.fetchArrivals}" ajax="false"/>
+			<p:commandButton id="cmdSearch" value="#{i18n.search_input_perform_search}" action="#{materializedArrivalView.fetchMaterializedArrivals}" ajax="false"/>
 			<p:commandButton id="cmdReset" value="#{i18n.command_reset}" action="#{materializedArrivalView.resetSearchObject}" onclick="PF('dlgSearchInput').hide()" ajax="false"/>
 			<p:commandButton id="cmdClear" value="#{i18n.command_clear}" action="#{materializedArrivalView.clearSearchObject}" update="tabViewSearchInput" ajax="true"/>
 			<p:commandButton id="cmdCount" value="#{i18n.search_input_perform_count}" actionListener="#{materializedArrivalView.countRecords}" update="growl" ajax="true"/>
@@ -456,7 +460,7 @@
 			<p:menuitem value="#{i18n.search_input_dlg_save_query}" icon="pi pi-save" onclick="PF('dlgSaveQuery').show()"/>
 		</p:submenu>
 		<p:submenu icon="pi pi-refresh" label="#{i18n.mnu_view}">
-			<p:menuitem value="#{i18n.action_refresh}" ajax="false" icon="pi pi-refresh" actionListener="#{materializedArrivalView.fetchArrivals}"/>
+			<p:menuitem value="#{i18n.action_refresh}" ajax="false" icon="pi pi-refresh" actionListener="#{materializedArrivalView.fetchMaterializedArrivals}"/>
 		</p:submenu>
 		<p:submenu icon="pi pi-print" label="#{i18n.mnu_export}">
 			<p:menuitem value="#{i18n.action_export_xls}" ajax="false" icon="pi pi-file-excel">
@@ -475,7 +479,7 @@
 		selectionMode="single"
 		selection="#{materializedArrivalView.selectedObject}"
 		loadingMessage="#{i18n.action_fetch_data}"
-		value="#{materializedArrivalView.arrivalsList}" scrollable="false"
+		value="#{materializedArrivalView.materializedArrivalsList}" scrollable="false"
 		paginatorPosition="top" paginatorAlwaysVisible="#{materializedArrivalView.paginatorAlwaysVisible}" paginator="true" resizableColumns="true"
 		rowKey="#{arrivalViewItem.id}"
 		paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
@@ -493,7 +497,7 @@
 		<p:column sortBy="#{arrivalViewItem.plant}" width="80" 
 			rendered="#{materializedArrivalView.searchObject.searchFields[1].visible}" displayPriority="#{materializedArrivalView.searchObject.searchFields[1].colOrder}" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materializedarrivalview_plant}"/>
+				<h:outputText value="#{i18n.lbl_attr_materializedentitiy_plant}"/>
 			</f:facet>
 			<h:outputText value="#{arrivalViewItem.plant}"/>
 		</p:column>
@@ -529,7 +533,7 @@
 		<p:column sortBy="#{arrivalViewItem.arrivalDate}" width="80" 
 			rendered="#{materializedArrivalView.searchObject.searchFields[5].visible}" displayPriority="#{materializedArrivalView.searchObject.searchFields[5].colOrder}" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.lbl_attr_arrival_arrivaldate}"/>
+				<h:outputText value="#{i18n.lbl_attr_materializedarrival_arrivaldate}"/>
 			</f:facet>
 			<h:outputText value="#{arrivalViewItem.arrivalDate}">
 				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateConverter"/>
@@ -570,7 +574,7 @@
 			<p:tooltip for="supplierName" value="#{arrivalViewItem.supplierName}" position="top" showDelay="50"/>
 		</p:column>
 
-		<p:column sortBy="#{arrivalViewItem.countryName}" width="150" 
+		<p:column sortBy="#{arrivalViewItem.countryName}" width="100" 
 			rendered="#{materializedArrivalView.searchObject.searchFields[9].visible}" displayPriority="#{materializedArrivalView.searchObject.searchFields[9].colOrder}" 
 			exportValue="#{arrivalViewItem.countryName}" class="tdnowrap" >
 			<f:facet name="header">
@@ -586,7 +590,7 @@
 			rendered="#{materializedArrivalView.searchObject.searchFields[10].visible}" displayPriority="#{materializedArrivalView.searchObject.searchFields[10].colOrder}" 
 			exportValue="#{arrivalViewItem.revisionNumber}" class="tdnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materializedarrivalview_revisionnumber}"/>
+				<h:outputText value="#{i18n.lbl_attr_materializedentitiy_revisionnumber}"/>
 			</f:facet>
 			<h:outputText value="#{arrivalViewItem.revisionNumber}" id="revisionNumber" />
 			<p:tooltip for="revisionNumber" value="#{arrivalViewItem.revisionNumber}" position="top" showDelay="50"/>
@@ -628,7 +632,7 @@
 			rendered="#{materializedArrivalView.searchObject.searchFields[14].visible}" displayPriority="#{materializedArrivalView.searchObject.searchFields[14].colOrder}" 
 			exportValue="#{arrivalViewItem.materialShortText}" class="tdnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materializedarrivalview_materialshorttext}"/>
+				<h:outputText value="#{i18n.lbl_attr_materializedentitiy_materialshorttext}"/>
 			</f:facet>
 			<h:outputText value="#{arrivalViewItem.materialShortText}" id="materialShortText" />
 			<p:tooltip for="materialShortText" value="#{arrivalViewItem.materialShortText}" position="top" showDelay="50"/>
@@ -637,7 +641,7 @@
 		<p:column sortBy="#{arrivalViewItem.materialHierarchy}" width="150" 
 			rendered="#{materializedArrivalView.searchObject.searchFields[15].visible}" displayPriority="#{materializedArrivalView.searchObject.searchFields[15].colOrder}" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materializedarrivalview_materialhierarchy}"/>
+				<h:outputText value="#{i18n.lbl_attr_materializedentitiy_materialhierarchy}"/>
 			</f:facet>
 			<h:outputText value="#{arrivalViewItem.materialHierarchy}"/>
 		</p:column>
@@ -677,7 +681,7 @@
 			rendered="#{materializedArrivalView.searchObject.searchFields[19].visible}" displayPriority="#{materializedArrivalView.searchObject.searchFields[19].colOrder}" 
 			exportValue="#{arrivalViewItem.parentMaterialShortText}" class="tdnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materializedarrivalview_parentmaterialshorttext}"/>
+				<h:outputText value="#{i18n.lbl_attr_materializedentitiy_parentmaterialshorttext}"/>
 			</f:facet>
 			<h:outputText value="#{arrivalViewItem.parentMaterialShortText}" id="parentMaterialShortText" />
 			<p:tooltip for="parentMaterialShortText" value="#{arrivalViewItem.parentMaterialShortText}" position="top" showDelay="50"/>
@@ -712,7 +716,7 @@
 	</p:dataTable>
 	<p/>
 
-	<h:outputText styleClass="label-field-mandatory" value="#{i18n.result_total_number_records} #{materializedArrivalView.arrivalsList.size()}"/>
+	<h:outputText styleClass="label-field-mandatory" value="#{i18n.result_total_number_records} #{materializedArrivalView.materializedArrivalsList.size()}"/>
 	<h:outputText styleClass="label-field-mandatory" rendered="#{materializedArrivalView.searchObject.count}" value="&#160;#{i18n.search_input_count_of}&#160;"/>
 	<h:outputText styleClass="label-field-mandatory" rendered="#{materializedArrivalView.searchObject.count}" value="#{materializedArrivalView.countResult}"/>
 	<p/>
@@ -730,7 +734,7 @@
 			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{materializedArrivalView.currentPageURL}"/>
 		</p:menuitem>
 		<p:menuitem value="#{i18n.action_copy}" ajax="true" icon="pi pi-copy" id="panData_mniCopy" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR')}" onclick="PF('copyConfirm').show()"/>
-		<p:menuitem value="#{i18n.action_refresh}" ajax="false" type="push" icon="pi pi-refresh" id="panData_mniRefresh" actionListener="#{materializedArrivalView.fetchArrivals}"/>
+		<p:menuitem value="#{i18n.action_refresh}" ajax="false" type="push" icon="pi pi-refresh" id="panData_mniRefresh" actionListener="#{materializedArrivalView.fetchMaterializedArrivals}"/>
 
 		<p:separator/>
 
@@ -739,7 +743,7 @@
 	</p:contextMenu>
 
 	<p:confirmDialog modal="true" closeOnEscape="true" message="#{i18n.dialog_delete_question}" header="#{i18n.dialog_delete_title}" severity="warn" widgetVar="deleteConfirm">
-		<p:commandButton value="#{i18n.command_yes}" oncomplete="PF('deleteConfirm').hide()" actionListener="#{materializedArrivalView.deleteArrival}" id="panData_cmdYesDelete" ajax="false"/>
+		<p:commandButton value="#{i18n.command_yes}" oncomplete="PF('deleteConfirm').hide()" actionListener="#{materializedArrivalView.deleteMaterializedArrival}" id="panData_cmdYesDelete" ajax="false"/>
 		<p:commandButton value="#{i18n.command_no}" onclick="PF('deleteConfirm').hide()" type="button"/>
 	</p:confirmDialog>
 

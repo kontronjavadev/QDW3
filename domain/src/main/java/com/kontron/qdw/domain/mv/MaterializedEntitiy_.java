@@ -9,7 +9,7 @@ public class MaterializedEntitiy_ {
     @Generated
     public static volatile SingularAttribute<MaterializedEntitiy, Long> id;
     @Generated
-    public static volatile SingularAttribute<MaterializedEntitiy, Long> serialObjectId;
+    public static volatile SingularAttribute<MaterializedEntitiy, Long> meSerialObjectId;
     @Generated
     public static volatile SingularAttribute<MaterializedEntitiy, Long> parentSerialObjectId;
     @Generated

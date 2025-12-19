@@ -49,7 +49,7 @@ public class MaterializedArrivalRepository extends AbstractRepository<Materializ
         targetObject.setOrderNumber(sourceObject.getOrderNumber());
         targetObject.setCountryCode(sourceObject.getCountryCode());
         targetObject.setCountryName(sourceObject.getCountryName());
-        targetObject.setSerialObjectId(sourceObject.getSerialObjectId());
+        targetObject.setMeSerialObjectId(sourceObject.getMeSerialObjectId());
         targetObject.setParentSerialObjectId(sourceObject.getParentSerialObjectId());
         targetObject.setSerialNumber(sourceObject.getSerialNumber());
         targetObject.setParentSerialNumber(sourceObject.getParentSerialNumber());
