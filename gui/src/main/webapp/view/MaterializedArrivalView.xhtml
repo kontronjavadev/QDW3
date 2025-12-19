@@ -485,7 +485,7 @@
 		<p:column sortBy="#{arrivalViewItem.id}" width="120" 
 			rendered="#{materializedArrivalView.searchObject.searchFields[0].visible}" displayPriority="#{materializedArrivalView.searchObject.searchFields[0].colOrder}" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col__materializedarrivalview_id}"/>
+				<h:outputText value="#{i18n.col_materializedarrivalview_id}"/>
 			</f:facet>
 			<h:outputText value="#{arrivalViewItem.id}"/>
 		</p:column>
@@ -541,7 +541,7 @@
 		<p:column sortBy="#{arrivalViewItem.assemblyDate}" width="80" 
 			rendered="#{materializedArrivalView.searchObject.searchFields[6].visible}" displayPriority="#{materializedArrivalView.searchObject.searchFields[6].colOrder}" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.lbl_attr_arrival_assemblysate}"/>
+				<h:outputText value="#{i18n.col_materializedarrivalview_assemblydate}"/>
 			</f:facet>
 			<h:outputText value="#{arrivalViewItem.assemblyDate}">
 				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateConverter"/>
