@@ -14,16 +14,18 @@ import jakarta.faces.view.*;
 import java.text.*;
 import static com.kontron.qdw.ui.UserSession.*;
 import com.kontron.qdw.ui.*;
+import com.kontron.qdw.ui.view.util.SuperView;
 import com.kontron.qdw.service.*;
 import jakarta.faces.model.*;
 import jakarta.inject.*;
 import net.sourceforge.jbizmo.commons.search.dto.*;
+import net.sourceforge.jbizmo.commons.annotation.Customized;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
 import java.io.*;
 
 @Named("materializedArrivalShipmentView")
 @ViewScoped
-public class MaterializedArrivalShipmentView extends AbstractSearchableView implements Serializable {
+public class MaterializedArrivalShipmentView extends SuperView implements Serializable {
     @Generated
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     @Generated
@@ -76,6 +78,207 @@ public class MaterializedArrivalShipmentView extends AbstractSearchableView impl
         this.userSession = userSession;
         this.materializedArrivalShipmentService = materializedArrivalShipmentService;
         this.queryManager = queryManager;
+    }
+
+    /**
+     * Initialize view
+     */
+    @Customized
+    public void initView() {
+        logger.debug("Initialize view");
+
+        bundle = ResourceBundle.getBundle(DEFAULT_BUNDLE_NAME, userSession.getLocale());
+
+        // Check if user is allowed to open this page!
+        if (!userSession.checkAuthorization(true, ROLE_ADMINISTRATOR, ROLE_READONLY)) {
+            return;
+        }
+
+
+        formTitle = bundle.getString(FORM_MATERIALIZEDARRIVALSHIPMENTVIEW_TITLE);
+
+        if (searchObj == null) {
+            // Check if previous search exists!
+            final SearchDTO lastSearch = queryManager.getLastQuery(userSession.getPrincipal().getId(), VIEW_ID);
+            if (lastSearch != null) {
+                searchObj = lastSearch;
+                prepareAfterLoad();
+            }
+            else {
+                initSearchObject();
+            }
+        }
+
+        initProperties();
+        fetchMaterializedArrivalShipments();
+
+        logger.debug("View initialization finished");
+    }
+
+    /**
+     * Initialize search object
+     */
+    @Customized
+    public void initSearchObject() {
+        searchObj = new SearchDTO();
+        int colOrderId = -1;
+
+        // Initialize search object
+        searchObj.setMaxResult(1000);
+        searchObj.setExactFilterMatch(true);
+        searchObj.setCaseSensitive(false);
+        searchObj.setCount(false);
+
+        refreshFormatSettings();
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSearchDTO.SELECT_SHIPMENTID,
+                bundle.getString(COL_MATERIALIZEDARRIVALSHIPMENTVIEW_SHIPMENTID), SearchFieldDataTypeEnum.LONG, 80);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSearchDTO.SELECT_ARRIVALID,
+                bundle.getString(LBL_ATTR_MATERIALIZEDARRIVALSHIPMENT_ARRIVALID), SearchFieldDataTypeEnum.LONG, 80);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSearchDTO.SELECT_PLANT,
+                bundle.getString(LBL_ATTR_MATERIALIZEDENTITIY_PLANT), SearchFieldDataTypeEnum.STRING, 80);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSearchDTO.SELECT_SERIALNUMBER,
+                bundle.getString(COL_MATERIALIZEDARRIVALSHIPMENTVIEW_SERIALNUMBER), SearchFieldDataTypeEnum.STRING, 100);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSearchDTO.SELECT_PARENTSERIALNUMBER,
+                bundle.getString(COL_MATERIALIZEDARRIVALSHIPMENTVIEW_PARENTSERIALNUMBER), SearchFieldDataTypeEnum.STRING, 100);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSearchDTO.SELECT_CUSTOMERNAME,
+                bundle.getString(COL_MATERIALIZEDARRIVALSHIPMENTVIEW_CUSTOMERNAME), SearchFieldDataTypeEnum.STRING, 200);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSearchDTO.SELECT_COUNTRYNAME,
+                bundle.getString(COL_MATERIALIZEDARRIVALSHIPMENTVIEW_COUNTRYNAME), SearchFieldDataTypeEnum.STRING, 150);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSearchDTO.SELECT_SHIPMENTDATE,
+                bundle.getString(COL_MATERIALIZEDARRIVALSHIPMENTVIEW_SHIPMENTDATE), SearchFieldDataTypeEnum.LOCAL_DATE, 80, false);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSearchDTO.SELECT_ARRIVALDATE,
+                bundle.getString(COL_MATERIALIZEDARRIVALSHIPMENTVIEW_ARRIVALDATE), SearchFieldDataTypeEnum.LOCAL_DATE, 80, false);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSearchDTO.SELECT_SUPPLIERNAME,
+                bundle.getString(COL_MATERIALIZEDARRIVALSHIPMENTVIEW_SUPPLIERNAME), SearchFieldDataTypeEnum.STRING, 200);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSearchDTO.SELECT_SHIPMENTMOVEMENTTYPE,
+                bundle.getString(COL_MATERIALIZEDARRIVALSHIPMENTVIEW_SHIPMENTMOVEMENTTYPE), SearchFieldDataTypeEnum.STRING, 120);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSearchDTO.SELECT_ARRIVALMOVEMENTTYPE,
+                bundle.getString(COL_MATERIALIZEDARRIVALSHIPMENTVIEW_ARRIVALMOVEMENTTYPE), SearchFieldDataTypeEnum.STRING, 120);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSearchDTO.SELECT_CUSTOMERORDERNUMBER,
+                bundle.getString(COL_MATERIALIZEDARRIVALSHIPMENTVIEW_CUSTOMERORDERNUMBER), SearchFieldDataTypeEnum.STRING, 100);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSearchDTO.SELECT_PURCHASEORDERNUMBER,
+                bundle.getString(COL_MATERIALIZEDARRIVALSHIPMENTVIEW_PURCHASEORDERNUMBER), SearchFieldDataTypeEnum.STRING, 100);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSearchDTO.SELECT_MATERIALNUMBER,
+                bundle.getString(COL_MATERIALIZEDARRIVALSHIPMENTVIEW_MATERIALNUMBER), SearchFieldDataTypeEnum.STRING, 150);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSearchDTO.SELECT_SAPNUMBER,
+                bundle.getString(COL_MATERIALIZEDARRIVALSHIPMENTVIEW_SAPNUMBER), SearchFieldDataTypeEnum.STRING, 150);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSearchDTO.SELECT_MATERIALTYPE,
+                bundle.getString(COL_MATERIALIZEDARRIVALSHIPMENTVIEW_MATERIALTYPE), SearchFieldDataTypeEnum.STRING, 80);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSearchDTO.SELECT_MATERIALHIERARCHY,
+                bundle.getString(LBL_ATTR_MATERIALIZEDENTITIY_MATERIALHIERARCHY), SearchFieldDataTypeEnum.STRING, 150);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSearchDTO.SELECT_MATERIALSHORTTEXT,
+                bundle.getString(LBL_ATTR_MATERIALIZEDENTITIY_MATERIALSHORTTEXT), SearchFieldDataTypeEnum.STRING, 250);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSearchDTO.SELECT_REVISIONNUMBER,
+                bundle.getString(LBL_ATTR_MATERIALIZEDENTITIY_REVISIONNUMBER), SearchFieldDataTypeEnum.STRING, 150);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSearchDTO.SELECT_OWNERLOCATION,
+                bundle.getString(COL_MATERIALIZEDARRIVALSHIPMENTVIEW_OWNERLOCATION), SearchFieldDataTypeEnum.STRING, 80);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSearchDTO.SELECT_PARENTMATERIALNUMBER,
+                bundle.getString(COL_MATERIALIZEDARRIVALSHIPMENTVIEW_PARENTMATERIALNUMBER), SearchFieldDataTypeEnum.STRING, 150);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSearchDTO.SELECT_PARENTSAPNUMBER,
+                bundle.getString(COL_MATERIALIZEDARRIVALSHIPMENTVIEW_PARENTSAPNUMBER), SearchFieldDataTypeEnum.STRING, 150);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSearchDTO.SELECT_PARENTMATERIALTYPE,
+                bundle.getString(COL_MATERIALIZEDARRIVALSHIPMENTVIEW_PARENTMATERIALTYPE), SearchFieldDataTypeEnum.STRING, 80);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSearchDTO.SELECT_PARENTMATERIALSHORTTEXT,
+                bundle.getString(LBL_ATTR_MATERIALIZEDENTITIY_PARENTMATERIALSHORTTEXT), SearchFieldDataTypeEnum.STRING, 250);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSearchDTO.SELECT_PARENTMATERIALHIERARCHY,
+                bundle.getString(COL_MATERIALIZEDARRIVALSHIPMENTVIEW_PARENTMATERIALHIERARCHY), SearchFieldDataTypeEnum.STRING, 150);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSearchDTO.SELECT_PARENTREVISIONNUMBER,
+                bundle.getString(COL_MATERIALIZEDARRIVALSHIPMENTVIEW_PARENTREVISIONNUMBER), SearchFieldDataTypeEnum.STRING, 150);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSearchDTO.SELECT_ASSEMBLYDATE,
+                bundle.getString(COL_MATERIALIZEDARRIVALSHIPMENTVIEW_ASSEMBLYDATE), SearchFieldDataTypeEnum.LOCAL_DATE, 80, false);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSearchDTO.SELECT_ASSEMBLYPO,
+                bundle.getString(COL_MATERIALIZEDARRIVALSHIPMENTVIEW_ASSEMBLYPO), SearchFieldDataTypeEnum.STRING, 80);
+
+
+        visibleFields = new DualListModel<>();
+        visibleFields.setSource(new ArrayList<>());
+        visibleFields.setTarget(new ArrayList<>());
+
+        for (final SearchFieldDTO d : searchObj.getSearchFields()) {
+            if (!d.isVisible()) {
+                visibleFields.getSource().add(d);
+            }
+            else {
+                visibleFields.getTarget().add(d);
+            }
+        }
+    }
+
+    /**
+     * Perform data fetch operation
+     */
+    @Customized
+    public void fetchMaterializedArrivalShipments() {
+        logger.debug("Perform data fetch operation");
+
+        try {
+            preSearch();
+        }
+        catch (final SearchInputFieldValidationException e) {
+            MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_INFO, SEARCH_INPUT_VALIDATION, "", e.getSearchFieldName());
+            return;
+        }
+
+        refreshFormatSettings();
+        setCountFilterDependent(2);
+
+        try {
+            materializedArrivalShipmentsList = materializedArrivalShipmentService.searchAllMaterializedArrivalShipments(searchObj);
+
+            if (searchObj.isCount()) {
+                countResult = materializedArrivalShipmentService.countAllMaterializedArrivalShipments(searchObj);
+            }
+
+            queryManager.saveQuery(userSession.getPrincipal().getId(), VIEW_ID, null, searchObj);
+        }
+        catch (final Exception e) {
+            logger.error("Error while fetching data!", e);
+
+            MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_ERROR, OPERATION_FETCH_FAIL, e);
+        }
+        finally {
+            postSearch();
+        }
+    }
+
+    @Override
+    protected String getViewName() {
+        return VIEW_ID;
+    }
+
+    @Override
+    public void resetSearchObject() {
+        initSearchObject();
+        fetchMaterializedArrivalShipments();
     }
 
     /**
@@ -194,6 +397,7 @@ public class MaterializedArrivalShipmentView extends AbstractSearchableView impl
     /**
      * @return the name of the selected saved query
      */
+    @Override
     @Generated
     public String getSelectedSavedQuery() {
         return selectedSavedQuery;
@@ -225,216 +429,6 @@ public class MaterializedArrivalShipmentView extends AbstractSearchableView impl
         searchObj.setNumberFormat(userSession.getNumberFormat());
         searchObj.setDecimalSeparator(DecimalFormatSymbols.getInstance(userSession.getLocale()).getDecimalSeparator());
         searchObj.setGroupingSeparator(DecimalFormatSymbols.getInstance(userSession.getLocale()).getGroupingSeparator());
-    }
-
-    /**
-     * Initialize search object
-     */
-    @Generated
-    public void initSearchObject() {
-        searchObj = new SearchDTO();
-        int colOrderId = -1;
-
-        // Initialize search object
-        searchObj.setMaxResult(1000);
-        searchObj.setExactFilterMatch(true);
-        searchObj.setCaseSensitive(false);
-        searchObj.setCount(false);
-
-        refreshFormatSettings();
-
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSearchDTO.SELECT_SHIPMENTID,
-                bundle.getString(COL_MATERIALIZEDARRIVALSHIPMENTVIEW_SHIPMENTID), SearchFieldDataTypeEnum.LONG, 80);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSearchDTO.SELECT_ARRIVALID,
-                bundle.getString(LBL_ATTR_MATERIALIZEDARRIVALSHIPMENT_ARRIVALID), SearchFieldDataTypeEnum.LONG, 80);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSearchDTO.SELECT_PLANT,
-                bundle.getString(LBL_ATTR_MATERIALIZEDENTITIY_PLANT), SearchFieldDataTypeEnum.STRING, 80);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSearchDTO.SELECT_SERIALNUMBER,
-                bundle.getString(COL_MATERIALIZEDARRIVALSHIPMENTVIEW_SERIALNUMBER), SearchFieldDataTypeEnum.STRING, 100);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSearchDTO.SELECT_PARENTSERIALNUMBER,
-                bundle.getString(COL_MATERIALIZEDARRIVALSHIPMENTVIEW_PARENTSERIALNUMBER), SearchFieldDataTypeEnum.STRING, 100);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSearchDTO.SELECT_CUSTOMERNAME,
-                bundle.getString(COL_MATERIALIZEDARRIVALSHIPMENTVIEW_CUSTOMERNAME), SearchFieldDataTypeEnum.STRING, 200);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSearchDTO.SELECT_COUNTRYNAME,
-                bundle.getString(COL_MATERIALIZEDARRIVALSHIPMENTVIEW_COUNTRYNAME), SearchFieldDataTypeEnum.STRING, 150);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSearchDTO.SELECT_SHIPMENTDATE,
-                bundle.getString(COL_MATERIALIZEDARRIVALSHIPMENTVIEW_SHIPMENTDATE), SearchFieldDataTypeEnum.LOCAL_DATE, 80, false);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSearchDTO.SELECT_ARRIVALDATE,
-                bundle.getString(COL_MATERIALIZEDARRIVALSHIPMENTVIEW_ARRIVALDATE), SearchFieldDataTypeEnum.LOCAL_DATE, 80, false);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSearchDTO.SELECT_SUPPLIERNAME,
-                bundle.getString(COL_MATERIALIZEDARRIVALSHIPMENTVIEW_SUPPLIERNAME), SearchFieldDataTypeEnum.STRING, 200);
-
-        final var f11 = new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSearchDTO.SELECT_SHIPMENTMOVEMENTTYPE,
-                bundle.getString(COL_MATERIALIZEDARRIVALSHIPMENTVIEW_SHIPMENTMOVEMENTTYPE), SearchFieldDataTypeEnum.STRING, 120);
-        f11.setVisible(false);
-
-
-        final var f12 = new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSearchDTO.SELECT_ARRIVALMOVEMENTTYPE,
-                bundle.getString(COL_MATERIALIZEDARRIVALSHIPMENTVIEW_ARRIVALMOVEMENTTYPE), SearchFieldDataTypeEnum.STRING, 120);
-        f12.setVisible(false);
-
-
-        final var f13 = new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSearchDTO.SELECT_CUSTOMERORDERNUMBER,
-                bundle.getString(COL_MATERIALIZEDARRIVALSHIPMENTVIEW_CUSTOMERORDERNUMBER), SearchFieldDataTypeEnum.STRING, 100);
-        f13.setVisible(false);
-
-
-        final var f14 = new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSearchDTO.SELECT_PURCHASEORDERNUMBER,
-                bundle.getString(COL_MATERIALIZEDARRIVALSHIPMENTVIEW_PURCHASEORDERNUMBER), SearchFieldDataTypeEnum.STRING, 100);
-        f14.setVisible(false);
-
-
-        final var f15 = new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSearchDTO.SELECT_MATERIALNUMBER,
-                bundle.getString(COL_MATERIALIZEDARRIVALSHIPMENTVIEW_MATERIALNUMBER), SearchFieldDataTypeEnum.STRING, 150);
-        f15.setVisible(false);
-
-
-        final var f16 = new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSearchDTO.SELECT_SAPNUMBER,
-                bundle.getString(COL_MATERIALIZEDARRIVALSHIPMENTVIEW_SAPNUMBER), SearchFieldDataTypeEnum.STRING, 150);
-        f16.setVisible(false);
-
-
-        final var f17 = new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSearchDTO.SELECT_MATERIALTYPE,
-                bundle.getString(COL_MATERIALIZEDARRIVALSHIPMENTVIEW_MATERIALTYPE), SearchFieldDataTypeEnum.STRING, 80);
-        f17.setVisible(false);
-
-
-        final var f18 = new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSearchDTO.SELECT_MATERIALHIERARCHY,
-                bundle.getString(LBL_ATTR_MATERIALIZEDENTITIY_MATERIALHIERARCHY), SearchFieldDataTypeEnum.STRING, 150);
-        f18.setVisible(false);
-
-
-        final var f19 = new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSearchDTO.SELECT_MATERIALSHORTTEXT,
-                bundle.getString(LBL_ATTR_MATERIALIZEDENTITIY_MATERIALSHORTTEXT), SearchFieldDataTypeEnum.STRING, 250);
-        f19.setVisible(false);
-
-
-        final var f20 = new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSearchDTO.SELECT_REVISIONNUMBER,
-                bundle.getString(LBL_ATTR_MATERIALIZEDENTITIY_REVISIONNUMBER), SearchFieldDataTypeEnum.STRING, 150);
-        f20.setVisible(false);
-
-
-        final var f21 = new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSearchDTO.SELECT_OWNERLOCATION,
-                bundle.getString(COL_MATERIALIZEDARRIVALSHIPMENTVIEW_OWNERLOCATION), SearchFieldDataTypeEnum.STRING, 80);
-        f21.setVisible(false);
-
-
-        final var f22 = new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSearchDTO.SELECT_PARENTMATERIALNUMBER,
-                bundle.getString(COL_MATERIALIZEDARRIVALSHIPMENTVIEW_PARENTMATERIALNUMBER), SearchFieldDataTypeEnum.STRING, 150);
-        f22.setVisible(false);
-
-
-        final var f23 = new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSearchDTO.SELECT_PARENTSAPNUMBER,
-                bundle.getString(COL_MATERIALIZEDARRIVALSHIPMENTVIEW_PARENTSAPNUMBER), SearchFieldDataTypeEnum.STRING, 150);
-        f23.setVisible(false);
-
-
-        final var f24 = new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSearchDTO.SELECT_PARENTMATERIALTYPE,
-                bundle.getString(COL_MATERIALIZEDARRIVALSHIPMENTVIEW_PARENTMATERIALTYPE), SearchFieldDataTypeEnum.STRING, 80);
-        f24.setVisible(false);
-
-
-        final var f25 = new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSearchDTO.SELECT_PARENTMATERIALSHORTTEXT,
-                bundle.getString(LBL_ATTR_MATERIALIZEDENTITIY_PARENTMATERIALSHORTTEXT), SearchFieldDataTypeEnum.STRING, 250);
-        f25.setVisible(false);
-
-
-        final var f26 = new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSearchDTO.SELECT_PARENTMATERIALHIERARCHY,
-                bundle.getString(COL_MATERIALIZEDARRIVALSHIPMENTVIEW_PARENTMATERIALHIERARCHY), SearchFieldDataTypeEnum.STRING, 150);
-        f26.setVisible(false);
-
-
-        final var f27 = new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSearchDTO.SELECT_PARENTREVISIONNUMBER,
-                bundle.getString(COL_MATERIALIZEDARRIVALSHIPMENTVIEW_PARENTREVISIONNUMBER), SearchFieldDataTypeEnum.STRING, 150);
-        f27.setVisible(false);
-
-
-        final var f28 = new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSearchDTO.SELECT_ASSEMBLYDATE,
-                bundle.getString(COL_MATERIALIZEDARRIVALSHIPMENTVIEW_ASSEMBLYDATE), SearchFieldDataTypeEnum.LOCAL_DATE, 80, false);
-        f28.setVisible(false);
-
-
-        final var f29 = new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSearchDTO.SELECT_ASSEMBLYPO,
-                bundle.getString(COL_MATERIALIZEDARRIVALSHIPMENTVIEW_ASSEMBLYPO), SearchFieldDataTypeEnum.STRING, 80);
-        f29.setVisible(false);
-
-
-        visibleFields = new DualListModel<>();
-        visibleFields.setSource(new ArrayList<>());
-        visibleFields.setTarget(new ArrayList<>());
-
-        for (final SearchFieldDTO d : searchObj.getSearchFields())
-            if (!d.isVisible())
-                visibleFields.getSource().add(d);
-            else
-                visibleFields.getTarget().add(d);
-    }
-
-    /**
-     * Initialize view
-     */
-    @Generated
-    public void initView() {
-        logger.debug("Initialize view");
-
-        bundle = ResourceBundle.getBundle(DEFAULT_BUNDLE_NAME, userSession.getLocale());
-
-        // Check if user is allowed to open this page!
-        if (!userSession.checkAuthorization(true, ROLE_ADMINISTRATOR, ROLE_READONLY))
-            return;
-
-
-        formTitle = bundle.getString(FORM_MATERIALIZEDARRIVALSHIPMENTVIEW_TITLE);
-
-        // Check if previous search exists!
-        final SearchDTO lastSearch = queryManager.getLastQuery(userSession.getPrincipal().getId(), VIEW_ID);
-
-        if (lastSearch != null) {
-            searchObj = lastSearch;
-
-            prepareAfterLoad();
-        }
-        else
-            initSearchObject();
-
-        fetchMaterializedArrivalShipments();
-
-        logger.debug("View initialization finished");
-    }
-
-    /**
-     * Perform data fetch operation
-     */
-    @Generated
-    public void fetchMaterializedArrivalShipments() {
-        logger.debug("Perform data fetch operation");
-
-        try {
-            preSearch();
-        }
-        catch (final SearchInputFieldValidationException e) {
-            MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_INFO, SEARCH_INPUT_VALIDATION, "", e.getSearchFieldName());
-            return;
-        }
-
-        refreshFormatSettings();
-
-        try {
-            materializedArrivalShipmentsList = materializedArrivalShipmentService.searchAllMaterializedArrivalShipments(searchObj);
-
-            if (searchObj.isCount())
-                countResult = materializedArrivalShipmentService.countAllMaterializedArrivalShipments(searchObj);
-
-            queryManager.saveQuery(userSession.getPrincipal().getId(), VIEW_ID, null, searchObj);
-        }
-        catch (final Exception e) {
-            logger.error("Error while fetching data!", e);
-
-            MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_ERROR, OPERATION_FETCH_FAIL, e);
-        }
-        finally {
-            postSearch();
-        }
     }
 
     /**

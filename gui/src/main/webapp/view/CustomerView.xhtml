@@ -28,7 +28,7 @@
 
 	<p:growl id="growl" showDetail="true" skipDetailIfEqualsSummary="true" />
 
-	<p:dialog height="auto" width="1000" header="#{i18n.search_input_dlg}" widgetVar="dlgSearchInput" id="dlgSearchInput" closeOnEscape="true" modal="true" >
+	<p:dialog height="auto" width="1000" id="dlgSearchInput" closeOnEscape="true" header="#{i18n.search_input_dlg}" widgetVar="dlgSearchInput" modal="true" >
 		<p:tabView id="tabViewSearchInput" dynamic="false">
 			<p:tab title="#{i18n.search_input_filter}">
 			<p:scrollPanel style="width:100%; #{sizeServiceBean.searchFilterHeight()};" mode="native">

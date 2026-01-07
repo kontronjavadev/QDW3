@@ -12,6 +12,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.function.Predicate;
 import java.util.function.ToIntFunction;
 import java.util.stream.Collectors;
 
@@ -36,6 +37,12 @@ public abstract class SuperView extends CopyClipboard {
     private static final String KEY_NUMBER_ROWS = "NUMBER_ROWS";
     private static final String DEFAULT_NUMBER_ROWS = "50";
     private static final int PAGINATOR_INVISIBLE_MAX_ROWS = 150;
+
+    private static final Predicate<? super JSFSearchFieldDTO> FILTER_SET_PREDICATE = dto -> dto.getDateCriterion() != null
+            || dto.getDoubleCriterion() != null
+            || dto.getIntegerCriterion() != null
+            || StringUtils.isNotEmpty(dto.getStringCriterion())
+            || dto.getBigDecimalCriterion() != null;
 
     @Inject
     private UserSession userSession;
@@ -78,11 +85,14 @@ public abstract class SuperView extends CopyClipboard {
     protected void setCountFilterDependent() {
         searchObj.setCount(searchObj.getSearchFields().stream()
                 .map(JSFSearchFieldDTO.class::cast)
-                .anyMatch(dto -> dto.getDateCriterion() != null
-                        || dto.getDoubleCriterion() != null
-                        || dto.getIntegerCriterion() != null
-                        || StringUtils.isNotEmpty(dto.getStringCriterion())
-                        || dto.getBigDecimalCriterion() != null));
+                .anyMatch(FILTER_SET_PREDICATE));
+    }
+
+    protected void setCountFilterDependent(int minFilterSet) {
+        searchObj.setCount(searchObj.getSearchFields().stream()
+                .map(JSFSearchFieldDTO.class::cast)
+                .filter(FILTER_SET_PREDICATE)
+                .count() > minFilterSet);
     }
 
 
