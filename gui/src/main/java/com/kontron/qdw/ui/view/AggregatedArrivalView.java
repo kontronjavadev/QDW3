@@ -223,7 +223,12 @@ public class AggregatedArrivalView extends SuperView implements Serializable {
             aggregatedArrivalsList = aggregatedArrivalService.searchAllAggregatedArrivals(searchObj);
 
             if (searchObj.isCount()) {
-                countResult = aggregatedArrivalService.countAllAggregatedArrivals(searchObj);
+                if (aggregatedArrivalsList.size() == searchObj.getMaxResult()) {
+                    countResult = aggregatedArrivalService.countAllAggregatedArrivals(searchObj);
+                }
+                else {
+                    countResult = aggregatedArrivalsList.size();
+                }
             }
 
             queryManager.saveQuery(userSession.getPrincipal().getId(), VIEW_ID, null, searchObj);

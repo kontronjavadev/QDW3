@@ -172,6 +172,47 @@ public class SupplierView extends SuperView implements Serializable {
         logger.debug("View initialization finished");
     }
 
+    /**
+     * Perform data fetch operation
+     */
+    @Customized
+    public void fetchSuppliers() {
+        logger.debug("Perform data fetch operation");
+
+        try {
+            preSearch();
+        }
+        catch (final SearchInputFieldValidationException e) {
+            MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_INFO, SEARCH_INPUT_VALIDATION, "", e.getSearchFieldName());
+            return;
+        }
+
+        refreshFormatSettings();
+
+        try {
+            suppliersList = supplierService.searchAllSuppliers(searchObj);
+
+            if (searchObj.isCount()) {
+                if (suppliersList.size() == searchObj.getMaxResult()) {
+                    countResult = supplierService.countAllSuppliers(searchObj);
+                }
+                else {
+                    countResult = suppliersList.size();
+                }
+            }
+
+            queryManager.saveQuery(userSession.getPrincipal().getId(), VIEW_ID, null, searchObj);
+        }
+        catch (final Exception e) {
+            logger.error("Error while fetching data!", e);
+
+            MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_ERROR, OPERATION_FETCH_FAIL, e);
+        }
+        finally {
+            postSearch();
+        }
+    }
+
     @Override
     protected String getViewName() {
         return VIEW_ID;
@@ -366,41 +407,6 @@ public class SupplierView extends SuperView implements Serializable {
         searchObj.setNumberFormat(userSession.getNumberFormat());
         searchObj.setDecimalSeparator(DecimalFormatSymbols.getInstance(userSession.getLocale()).getDecimalSeparator());
         searchObj.setGroupingSeparator(DecimalFormatSymbols.getInstance(userSession.getLocale()).getGroupingSeparator());
-    }
-
-    /**
-     * Perform data fetch operation
-     */
-    @Generated
-    public void fetchSuppliers() {
-        logger.debug("Perform data fetch operation");
-
-        try {
-            preSearch();
-        }
-        catch (final SearchInputFieldValidationException e) {
-            MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_INFO, SEARCH_INPUT_VALIDATION, "", e.getSearchFieldName());
-            return;
-        }
-
-        refreshFormatSettings();
-
-        try {
-            suppliersList = supplierService.searchAllSuppliers(searchObj);
-
-            if (searchObj.isCount())
-                countResult = supplierService.countAllSuppliers(searchObj);
-
-            queryManager.saveQuery(userSession.getPrincipal().getId(), VIEW_ID, null, searchObj);
-        }
-        catch (final Exception e) {
-            logger.error("Error while fetching data!", e);
-
-            MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_ERROR, OPERATION_FETCH_FAIL, e);
-        }
-        finally {
-            postSearch();
-        }
     }
 
     /**

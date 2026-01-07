@@ -185,6 +185,47 @@ public class CustomerView extends SuperView implements Serializable {
         }
     }
 
+    /**
+     * Perform data fetch operation
+     */
+    @Customized
+    public void fetchCustomers() {
+        logger.debug("Perform data fetch operation");
+
+        try {
+            preSearch();
+        }
+        catch (final SearchInputFieldValidationException e) {
+            MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_INFO, SEARCH_INPUT_VALIDATION, "", e.getSearchFieldName());
+            return;
+        }
+
+        refreshFormatSettings();
+
+        try {
+            customersList = customerService.searchAllCustomers(searchObj);
+
+            if (searchObj.isCount()) {
+                if (customersList.size() == searchObj.getMaxResult()) {
+                    countResult = customerService.countAllCustomers(searchObj);
+                }
+                else {
+                    countResult = customersList.size();
+                }
+            }
+
+            queryManager.saveQuery(userSession.getPrincipal().getId(), VIEW_ID, null, searchObj);
+        }
+        catch (final Exception e) {
+            logger.error("Error while fetching data!", e);
+
+            MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_ERROR, OPERATION_FETCH_FAIL, e);
+        }
+        finally {
+            postSearch();
+        }
+    }
+
     @Override
     protected String getViewName() {
         return VIEW_ID;
@@ -379,41 +420,6 @@ public class CustomerView extends SuperView implements Serializable {
         searchObj.setNumberFormat(userSession.getNumberFormat());
         searchObj.setDecimalSeparator(DecimalFormatSymbols.getInstance(userSession.getLocale()).getDecimalSeparator());
         searchObj.setGroupingSeparator(DecimalFormatSymbols.getInstance(userSession.getLocale()).getGroupingSeparator());
-    }
-
-    /**
-     * Perform data fetch operation
-     */
-    @Generated
-    public void fetchCustomers() {
-        logger.debug("Perform data fetch operation");
-
-        try {
-            preSearch();
-        }
-        catch (final SearchInputFieldValidationException e) {
-            MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_INFO, SEARCH_INPUT_VALIDATION, "", e.getSearchFieldName());
-            return;
-        }
-
-        refreshFormatSettings();
-
-        try {
-            customersList = customerService.searchAllCustomers(searchObj);
-
-            if (searchObj.isCount())
-                countResult = customerService.countAllCustomers(searchObj);
-
-            queryManager.saveQuery(userSession.getPrincipal().getId(), VIEW_ID, null, searchObj);
-        }
-        catch (final Exception e) {
-            logger.error("Error while fetching data!", e);
-
-            MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_ERROR, OPERATION_FETCH_FAIL, e);
-        }
-        finally {
-            postSearch();
-        }
     }
 
     /**

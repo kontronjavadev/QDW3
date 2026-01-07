@@ -227,7 +227,12 @@ public class AggregatedShipmentView extends SuperView implements Serializable {
             aggregatedShipmentsList = aggregatedShipmentService.searchAllAggregatedShipments(searchObj);
 
             if (searchObj.isCount()) {
-                countResult = aggregatedShipmentService.countAllAggregatedShipments(searchObj);
+                if (aggregatedShipmentsList.size() == searchObj.getMaxResult()) {
+                    countResult = aggregatedShipmentService.countAllAggregatedShipments(searchObj);
+                }
+                else {
+                    countResult = aggregatedShipmentsList.size();
+                }
             }
 
             queryManager.saveQuery(userSession.getPrincipal().getId(), VIEW_ID, null, searchObj);

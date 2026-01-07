@@ -272,7 +272,7 @@ public class MaterializedArrivalView extends SuperView implements Serializable {
     /**
      * Perform data fetch operation
      */
-    @Generated
+    @Customized
     public void fetchMaterializedArrivals() {
         logger.debug("Perform data fetch operation");
 
@@ -285,12 +285,18 @@ public class MaterializedArrivalView extends SuperView implements Serializable {
         }
 
         refreshFormatSettings();
+        setCountFilterDependent();
 
         try {
             materializedArrivalsList = materializedArrivalService.searchAllMaterializedArrivals(searchObj);
 
             if (searchObj.isCount()) {
-                countResult = materializedArrivalService.countAllMaterializedArrivals(searchObj);
+                if (materializedArrivalsList.size() == searchObj.getMaxResult()) {
+                    countResult = materializedArrivalService.countAllMaterializedArrivals(searchObj);
+                }
+                else {
+                    countResult = materializedArrivalsList.size();
+                }
             }
 
             queryManager.saveQuery(userSession.getPrincipal().getId(), VIEW_ID, null, searchObj);

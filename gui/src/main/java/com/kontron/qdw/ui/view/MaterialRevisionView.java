@@ -217,7 +217,12 @@ public class MaterialRevisionView extends SuperView implements Serializable {
             materialRevisionsList = materialRevisionService.searchAllMaterialRevisions(searchObj);
 
             if (searchObj.isCount()) {
-                countResult = materialRevisionService.countAllMaterialRevisions(searchObj);
+                if (materialRevisionsList.size() == searchObj.getMaxResult()) {
+                    countResult = materialRevisionService.countAllMaterialRevisions(searchObj);
+                }
+                else {
+                    countResult = materialRevisionsList.size();
+                }
             }
 
             queryManager.saveQuery(userSession.getPrincipal().getId(), VIEW_ID, null, searchObj);

@@ -92,7 +92,7 @@ public abstract class SuperView extends CopyClipboard {
         searchObj.setCount(searchObj.getSearchFields().stream()
                 .map(JSFSearchFieldDTO.class::cast)
                 .filter(FILTER_SET_PREDICATE)
-                .count() > minFilterSet);
+                .count() >= minFilterSet);
     }
 
 

@@ -209,7 +209,12 @@ public class MaterialView extends SuperView implements Serializable {
             materialsList = materialService.searchAllMaterials(searchObj);
 
             if (searchObj.isCount()) {
-                countResult = materialService.countAllMaterials(searchObj);
+                if (materialsList.size() == searchObj.getMaxResult()) {
+                    countResult = materialService.countAllMaterials(searchObj);
+                }
+                else {
+                    countResult = materialsList.size();
+                }
             }
 
             queryManager.saveQuery(userSession.getPrincipal().getId(), VIEW_ID, null, searchObj);

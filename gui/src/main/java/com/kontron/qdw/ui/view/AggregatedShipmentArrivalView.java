@@ -232,7 +232,12 @@ public class AggregatedShipmentArrivalView extends SuperView implements Serializ
             aggregatedShipmentArrivalsList = aggregatedShipmentArrivalService.searchAllAggregatedShipmentArrivals(searchObj);
 
             if (searchObj.isCount()) {
-                countResult = aggregatedShipmentArrivalService.countAllAggregatedShipmentArrivals(searchObj);
+                if (aggregatedShipmentArrivalsList.size() == searchObj.getMaxResult()) {
+                    countResult = aggregatedShipmentArrivalService.countAllAggregatedShipmentArrivals(searchObj);
+                }
+                else {
+                    countResult = aggregatedShipmentArrivalsList.size();
+                }
             }
 
             queryManager.saveQuery(userSession.getPrincipal().getId(), VIEW_ID, null, searchObj);

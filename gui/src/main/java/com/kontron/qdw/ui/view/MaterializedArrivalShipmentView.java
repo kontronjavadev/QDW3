@@ -255,7 +255,12 @@ public class MaterializedArrivalShipmentView extends SuperView implements Serial
             materializedArrivalShipmentsList = materializedArrivalShipmentService.searchAllMaterializedArrivalShipments(searchObj);
 
             if (searchObj.isCount()) {
-                countResult = materializedArrivalShipmentService.countAllMaterializedArrivalShipments(searchObj);
+                if (materializedArrivalShipmentsList.size() == searchObj.getMaxResult()) {
+                    countResult = materializedArrivalShipmentService.countAllMaterializedArrivalShipments(searchObj);
+                }
+                else {
+                    countResult = materializedArrivalShipmentsList.size();
+                }
             }
 
             queryManager.saveQuery(userSession.getPrincipal().getId(), VIEW_ID, null, searchObj);
