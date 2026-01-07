@@ -795,11 +795,11 @@
 			rendered="#{materializedArrivalShipmentView.searchObject.searchFields[27].visible}" displayPriority="#{materializedArrivalShipmentView.searchObject.searchFields[27].colOrder}" 
 			exportHeaderValue="#{i18n.col_materializedarrivalshipmentview_assemblydate_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materializedarrivalshipmentview_assemblydate}"/>
+				<h:outputText value="#{i18n.col_materializedarrivalshipmentview_assemblydate}" id="assemblyDateHeader"/>
+				<p:tooltip for="assemblyDateHeader" value="#{i18n.col_materializedarrivalshipmentview_assemblydate_tooltip}" position="top" showDelay="50"/>
 			</f:facet>
 			<h:outputText value="#{materializedArrivalShipmentViewItem.assemblyDate}">
-				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateConverter" id="assemblyDateHeader"/>
-				<p:tooltip for="assemblyDateHeader" value="#{i18n.col_materializedarrivalshipmentview_assemblydate_tooltip}" position="top" showDelay="50"/>
+				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateConverter"/>
 				<f:attribute name="pattern" value="#{userSession.dateFormat}"/>
 				<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
 			</h:outputText>
