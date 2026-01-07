@@ -1,0 +1,769 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:h="jakarta.faces.html"
+	xmlns:f="jakarta.faces.core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/templates/ui.xhtml">
+
+<f:metadata>
+	<f:viewAction action="#{materializedArrivalShipmentView.initView()}"/>
+</f:metadata>
+
+<ui:define name="title">#{materializedArrivalShipmentView.formTitle}</ui:define>
+
+<ui:define name="content">
+	<h:panelGrid columns="3">
+		<div class="pi pi-list" style="font-size: 2em"/>
+		<h:outputText id="lblFormTitle" value="&#160;#{materializedArrivalShipmentView.formTitle}" styleClass="label-form-title"/>
+		<p:ajaxStatus style="width:16px;height:16px;">
+			<f:facet name="start">
+				<h:graphicImage value="/images/ajaxloading.gif"/>
+			</f:facet>
+
+			<f:facet name="complete">
+				<h:outputText value=""/>
+			</f:facet>
+		</p:ajaxStatus>
+	</h:panelGrid>
+
+	<p:growl id="growl" showDetail="true"/>
+
+	<p:dialog height="510" width="1000" header="#{i18n.search_input_dlg}" widgetVar="dlgSearchInput" modal="true">
+		<p:tabView id="tabViewSearchInput" dynamic="false">
+			<p:tab title="#{i18n.search_input_filter}">
+			<p:scrollPanel style="width:100%; height:400px;" mode="native">
+			<h:panelGrid columns="5" cellpadding="3">
+				<h:outputText styleClass="label-field-mandatory" value="#{i18n.search_input_column}"/>
+				<h:outputText styleClass="label-field-mandatory" value="#{i18n.search_input_operator}"/>
+				<h:outputText styleClass="label-field-mandatory" value="#{i18n.search_input_sort}"/>
+				<h:outputText styleClass="label-field-mandatory" value="#{i18n.search_input_filter_input}"/>
+				<h:outputText styleClass="label-field-mandatory" value="#{i18n.search_input_and}"/>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_0" value="#{materializedArrivalShipmentView.searchObject.searchFields[0].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedArrivalShipmentView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_0" value="#{materializedArrivalShipmentView.searchObject.searchFields[0].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_0" value="#{materializedArrivalShipmentView.numberOperators}" var="advInputItem0" itemValue="#{advInputItem0}" itemLabel="#{advInputItem0.description}"/>
+					<f:ajax render="p_0"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_0" id="s_0" value="#{materializedArrivalShipmentView.searchObject.searchFields[0].sortOrder}">
+					<f:selectItems value="#{materializedArrivalShipmentView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_0" value="#{materializedArrivalShipmentView.searchObject.searchFields[0].integerCriterion}" size="30"/>
+				<h:panelGroup id="p_0">
+					<p:inputText id="b_0" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[0].between}" value="#{materializedArrivalShipmentView.searchObject.searchFields[0].integerBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_1" value="#{materializedArrivalShipmentView.searchObject.searchFields[1].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedArrivalShipmentView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_1" value="#{materializedArrivalShipmentView.searchObject.searchFields[1].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_1" value="#{materializedArrivalShipmentView.numberOperators}" var="advInputItem1" itemValue="#{advInputItem1}" itemLabel="#{advInputItem1.description}"/>
+					<f:ajax render="p_1"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_1" id="s_1" value="#{materializedArrivalShipmentView.searchObject.searchFields[1].sortOrder}">
+					<f:selectItems value="#{materializedArrivalShipmentView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_1" value="#{materializedArrivalShipmentView.searchObject.searchFields[1].integerCriterion}" size="30"/>
+				<h:panelGroup id="p_1">
+					<p:inputText id="b_1" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[1].between}" value="#{materializedArrivalShipmentView.searchObject.searchFields[1].integerBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_2" value="#{materializedArrivalShipmentView.searchObject.searchFields[2].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedArrivalShipmentView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_2" value="#{materializedArrivalShipmentView.searchObject.searchFields[2].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_2" value="#{materializedArrivalShipmentView.textOperators}" var="advInputItem2" itemValue="#{advInputItem2}" itemLabel="#{advInputItem2.description}"/>
+					<f:ajax render="p_2"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_2" id="s_2" value="#{materializedArrivalShipmentView.searchObject.searchFields[2].sortOrder}">
+					<f:selectItems value="#{materializedArrivalShipmentView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_2" value="#{materializedArrivalShipmentView.searchObject.searchFields[2].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_2">
+					<p:inputText id="b_2" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[2].between}" value="#{materializedArrivalShipmentView.searchObject.searchFields[2].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_3" value="#{materializedArrivalShipmentView.searchObject.searchFields[3].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedArrivalShipmentView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_3" value="#{materializedArrivalShipmentView.searchObject.searchFields[3].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_3" value="#{materializedArrivalShipmentView.textOperators}" var="advInputItem3" itemValue="#{advInputItem3}" itemLabel="#{advInputItem3.description}"/>
+					<f:ajax render="p_3"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_3" id="s_3" value="#{materializedArrivalShipmentView.searchObject.searchFields[3].sortOrder}">
+					<f:selectItems value="#{materializedArrivalShipmentView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_3" value="#{materializedArrivalShipmentView.searchObject.searchFields[3].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_3">
+					<p:inputText id="b_3" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[3].between}" value="#{materializedArrivalShipmentView.searchObject.searchFields[3].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_4" value="#{materializedArrivalShipmentView.searchObject.searchFields[4].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedArrivalShipmentView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_4" value="#{materializedArrivalShipmentView.searchObject.searchFields[4].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_4" value="#{materializedArrivalShipmentView.textOperators}" var="advInputItem4" itemValue="#{advInputItem4}" itemLabel="#{advInputItem4.description}"/>
+					<f:ajax render="p_4"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_4" id="s_4" value="#{materializedArrivalShipmentView.searchObject.searchFields[4].sortOrder}">
+					<f:selectItems value="#{materializedArrivalShipmentView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_4" value="#{materializedArrivalShipmentView.searchObject.searchFields[4].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_4">
+					<p:inputText id="b_4" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[4].between}" value="#{materializedArrivalShipmentView.searchObject.searchFields[4].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_5" value="#{materializedArrivalShipmentView.searchObject.searchFields[5].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedArrivalShipmentView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_5" value="#{materializedArrivalShipmentView.searchObject.searchFields[5].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_5" value="#{materializedArrivalShipmentView.textOperators}" var="advInputItem5" itemValue="#{advInputItem5}" itemLabel="#{advInputItem5.description}"/>
+					<f:ajax render="p_5"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_5" id="s_5" value="#{materializedArrivalShipmentView.searchObject.searchFields[5].sortOrder}">
+					<f:selectItems value="#{materializedArrivalShipmentView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_5" value="#{materializedArrivalShipmentView.searchObject.searchFields[5].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_5">
+					<p:inputText id="b_5" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[5].between}" value="#{materializedArrivalShipmentView.searchObject.searchFields[5].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_6" value="#{materializedArrivalShipmentView.searchObject.searchFields[6].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedArrivalShipmentView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_6" value="#{materializedArrivalShipmentView.searchObject.searchFields[6].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_6" value="#{materializedArrivalShipmentView.textOperators}" var="advInputItem6" itemValue="#{advInputItem6}" itemLabel="#{advInputItem6.description}"/>
+					<f:ajax render="p_6"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_6" id="s_6" value="#{materializedArrivalShipmentView.searchObject.searchFields[6].sortOrder}">
+					<f:selectItems value="#{materializedArrivalShipmentView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_6" value="#{materializedArrivalShipmentView.searchObject.searchFields[6].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_6">
+					<p:inputText id="b_6" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[6].between}" value="#{materializedArrivalShipmentView.searchObject.searchFields[6].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_7" value="#{materializedArrivalShipmentView.searchObject.searchFields[7].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedArrivalShipmentView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_7" value="#{materializedArrivalShipmentView.searchObject.searchFields[7].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_7" value="#{materializedArrivalShipmentView.dateOperators}" var="advInputItem7" itemValue="#{advInputItem7}" itemLabel="#{advInputItem7.description}"/>
+					<f:ajax render="p_7"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_7" id="s_7" value="#{materializedArrivalShipmentView.searchObject.searchFields[7].sortOrder}">
+					<f:selectItems value="#{materializedArrivalShipmentView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:datePicker id="fi_7" value="#{materializedArrivalShipmentView.searchObject.searchFields[7].dateCriterion}" pattern="#{userSession.dateFormat}" size="20" showButtonBar="true" showIcon="true"/>
+				<h:panelGroup id="p_7">
+					<p:datePicker id="fb_7" value="#{materializedArrivalShipmentView.searchObject.searchFields[7].dateBetweenCriterion}" pattern="#{userSession.dateFormat}" size="20" showButtonBar="true" showIcon="true" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[7].between}"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_8" value="#{materializedArrivalShipmentView.searchObject.searchFields[8].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedArrivalShipmentView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_8" value="#{materializedArrivalShipmentView.searchObject.searchFields[8].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_8" value="#{materializedArrivalShipmentView.dateOperators}" var="advInputItem8" itemValue="#{advInputItem8}" itemLabel="#{advInputItem8.description}"/>
+					<f:ajax render="p_8"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_8" id="s_8" value="#{materializedArrivalShipmentView.searchObject.searchFields[8].sortOrder}">
+					<f:selectItems value="#{materializedArrivalShipmentView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:datePicker id="fi_8" value="#{materializedArrivalShipmentView.searchObject.searchFields[8].dateCriterion}" pattern="#{userSession.dateFormat}" size="20" showButtonBar="true" showIcon="true"/>
+				<h:panelGroup id="p_8">
+					<p:datePicker id="fb_8" value="#{materializedArrivalShipmentView.searchObject.searchFields[8].dateBetweenCriterion}" pattern="#{userSession.dateFormat}" size="20" showButtonBar="true" showIcon="true" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[8].between}"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_9" value="#{materializedArrivalShipmentView.searchObject.searchFields[9].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedArrivalShipmentView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_9" value="#{materializedArrivalShipmentView.searchObject.searchFields[9].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_9" value="#{materializedArrivalShipmentView.textOperators}" var="advInputItem9" itemValue="#{advInputItem9}" itemLabel="#{advInputItem9.description}"/>
+					<f:ajax render="p_9"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_9" id="s_9" value="#{materializedArrivalShipmentView.searchObject.searchFields[9].sortOrder}">
+					<f:selectItems value="#{materializedArrivalShipmentView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_9" value="#{materializedArrivalShipmentView.searchObject.searchFields[9].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_9">
+					<p:inputText id="b_9" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[9].between}" value="#{materializedArrivalShipmentView.searchObject.searchFields[9].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_10" value="#{materializedArrivalShipmentView.searchObject.searchFields[10].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedArrivalShipmentView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_10" value="#{materializedArrivalShipmentView.searchObject.searchFields[10].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_10" value="#{materializedArrivalShipmentView.textOperators}" var="advInputItem10" itemValue="#{advInputItem10}" itemLabel="#{advInputItem10.description}"/>
+					<f:ajax render="p_10"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_10" id="s_10" value="#{materializedArrivalShipmentView.searchObject.searchFields[10].sortOrder}">
+					<f:selectItems value="#{materializedArrivalShipmentView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_10" value="#{materializedArrivalShipmentView.searchObject.searchFields[10].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_10">
+					<p:inputText id="b_10" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[10].between}" value="#{materializedArrivalShipmentView.searchObject.searchFields[10].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_11" value="#{materializedArrivalShipmentView.searchObject.searchFields[11].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedArrivalShipmentView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_11" value="#{materializedArrivalShipmentView.searchObject.searchFields[11].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_11" value="#{materializedArrivalShipmentView.textOperators}" var="advInputItem11" itemValue="#{advInputItem11}" itemLabel="#{advInputItem11.description}"/>
+					<f:ajax render="p_11"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_11" id="s_11" value="#{materializedArrivalShipmentView.searchObject.searchFields[11].sortOrder}">
+					<f:selectItems value="#{materializedArrivalShipmentView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_11" value="#{materializedArrivalShipmentView.searchObject.searchFields[11].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_11">
+					<p:inputText id="b_11" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[11].between}" value="#{materializedArrivalShipmentView.searchObject.searchFields[11].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_12" value="#{materializedArrivalShipmentView.searchObject.searchFields[12].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedArrivalShipmentView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_12" value="#{materializedArrivalShipmentView.searchObject.searchFields[12].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_12" value="#{materializedArrivalShipmentView.textOperators}" var="advInputItem12" itemValue="#{advInputItem12}" itemLabel="#{advInputItem12.description}"/>
+					<f:ajax render="p_12"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_12" id="s_12" value="#{materializedArrivalShipmentView.searchObject.searchFields[12].sortOrder}">
+					<f:selectItems value="#{materializedArrivalShipmentView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_12" value="#{materializedArrivalShipmentView.searchObject.searchFields[12].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_12">
+					<p:inputText id="b_12" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[12].between}" value="#{materializedArrivalShipmentView.searchObject.searchFields[12].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_13" value="#{materializedArrivalShipmentView.searchObject.searchFields[13].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedArrivalShipmentView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_13" value="#{materializedArrivalShipmentView.searchObject.searchFields[13].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_13" value="#{materializedArrivalShipmentView.textOperators}" var="advInputItem13" itemValue="#{advInputItem13}" itemLabel="#{advInputItem13.description}"/>
+					<f:ajax render="p_13"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_13" id="s_13" value="#{materializedArrivalShipmentView.searchObject.searchFields[13].sortOrder}">
+					<f:selectItems value="#{materializedArrivalShipmentView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_13" value="#{materializedArrivalShipmentView.searchObject.searchFields[13].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_13">
+					<p:inputText id="b_13" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[13].between}" value="#{materializedArrivalShipmentView.searchObject.searchFields[13].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_14" value="#{materializedArrivalShipmentView.searchObject.searchFields[14].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedArrivalShipmentView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_14" value="#{materializedArrivalShipmentView.searchObject.searchFields[14].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_14" value="#{materializedArrivalShipmentView.textOperators}" var="advInputItem14" itemValue="#{advInputItem14}" itemLabel="#{advInputItem14.description}"/>
+					<f:ajax render="p_14"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_14" id="s_14" value="#{materializedArrivalShipmentView.searchObject.searchFields[14].sortOrder}">
+					<f:selectItems value="#{materializedArrivalShipmentView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_14" value="#{materializedArrivalShipmentView.searchObject.searchFields[14].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_14">
+					<p:inputText id="b_14" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[14].between}" value="#{materializedArrivalShipmentView.searchObject.searchFields[14].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_15" value="#{materializedArrivalShipmentView.searchObject.searchFields[15].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedArrivalShipmentView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_15" value="#{materializedArrivalShipmentView.searchObject.searchFields[15].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_15" value="#{materializedArrivalShipmentView.textOperators}" var="advInputItem15" itemValue="#{advInputItem15}" itemLabel="#{advInputItem15.description}"/>
+					<f:ajax render="p_15"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_15" id="s_15" value="#{materializedArrivalShipmentView.searchObject.searchFields[15].sortOrder}">
+					<f:selectItems value="#{materializedArrivalShipmentView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_15" value="#{materializedArrivalShipmentView.searchObject.searchFields[15].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_15">
+					<p:inputText id="b_15" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[15].between}" value="#{materializedArrivalShipmentView.searchObject.searchFields[15].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_16" value="#{materializedArrivalShipmentView.searchObject.searchFields[16].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedArrivalShipmentView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_16" value="#{materializedArrivalShipmentView.searchObject.searchFields[16].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_16" value="#{materializedArrivalShipmentView.textOperators}" var="advInputItem16" itemValue="#{advInputItem16}" itemLabel="#{advInputItem16.description}"/>
+					<f:ajax render="p_16"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_16" id="s_16" value="#{materializedArrivalShipmentView.searchObject.searchFields[16].sortOrder}">
+					<f:selectItems value="#{materializedArrivalShipmentView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_16" value="#{materializedArrivalShipmentView.searchObject.searchFields[16].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_16">
+					<p:inputText id="b_16" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[16].between}" value="#{materializedArrivalShipmentView.searchObject.searchFields[16].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_17" value="#{materializedArrivalShipmentView.searchObject.searchFields[17].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedArrivalShipmentView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_17" value="#{materializedArrivalShipmentView.searchObject.searchFields[17].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_17" value="#{materializedArrivalShipmentView.textOperators}" var="advInputItem17" itemValue="#{advInputItem17}" itemLabel="#{advInputItem17.description}"/>
+					<f:ajax render="p_17"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_17" id="s_17" value="#{materializedArrivalShipmentView.searchObject.searchFields[17].sortOrder}">
+					<f:selectItems value="#{materializedArrivalShipmentView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_17" value="#{materializedArrivalShipmentView.searchObject.searchFields[17].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_17">
+					<p:inputText id="b_17" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[17].between}" value="#{materializedArrivalShipmentView.searchObject.searchFields[17].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_18" value="#{materializedArrivalShipmentView.searchObject.searchFields[18].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedArrivalShipmentView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_18" value="#{materializedArrivalShipmentView.searchObject.searchFields[18].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_18" value="#{materializedArrivalShipmentView.textOperators}" var="advInputItem18" itemValue="#{advInputItem18}" itemLabel="#{advInputItem18.description}"/>
+					<f:ajax render="p_18"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_18" id="s_18" value="#{materializedArrivalShipmentView.searchObject.searchFields[18].sortOrder}">
+					<f:selectItems value="#{materializedArrivalShipmentView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_18" value="#{materializedArrivalShipmentView.searchObject.searchFields[18].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_18">
+					<p:inputText id="b_18" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[18].between}" value="#{materializedArrivalShipmentView.searchObject.searchFields[18].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_19" value="#{materializedArrivalShipmentView.searchObject.searchFields[19].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedArrivalShipmentView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_19" value="#{materializedArrivalShipmentView.searchObject.searchFields[19].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_19" value="#{materializedArrivalShipmentView.textOperators}" var="advInputItem19" itemValue="#{advInputItem19}" itemLabel="#{advInputItem19.description}"/>
+					<f:ajax render="p_19"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_19" id="s_19" value="#{materializedArrivalShipmentView.searchObject.searchFields[19].sortOrder}">
+					<f:selectItems value="#{materializedArrivalShipmentView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_19" value="#{materializedArrivalShipmentView.searchObject.searchFields[19].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_19">
+					<p:inputText id="b_19" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[19].between}" value="#{materializedArrivalShipmentView.searchObject.searchFields[19].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_20" value="#{materializedArrivalShipmentView.searchObject.searchFields[20].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedArrivalShipmentView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_20" value="#{materializedArrivalShipmentView.searchObject.searchFields[20].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_20" value="#{materializedArrivalShipmentView.textOperators}" var="advInputItem20" itemValue="#{advInputItem20}" itemLabel="#{advInputItem20.description}"/>
+					<f:ajax render="p_20"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_20" id="s_20" value="#{materializedArrivalShipmentView.searchObject.searchFields[20].sortOrder}">
+					<f:selectItems value="#{materializedArrivalShipmentView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_20" value="#{materializedArrivalShipmentView.searchObject.searchFields[20].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_20">
+					<p:inputText id="b_20" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[20].between}" value="#{materializedArrivalShipmentView.searchObject.searchFields[20].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_21" value="#{materializedArrivalShipmentView.searchObject.searchFields[21].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedArrivalShipmentView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_21" value="#{materializedArrivalShipmentView.searchObject.searchFields[21].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_21" value="#{materializedArrivalShipmentView.textOperators}" var="advInputItem21" itemValue="#{advInputItem21}" itemLabel="#{advInputItem21.description}"/>
+					<f:ajax render="p_21"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_21" id="s_21" value="#{materializedArrivalShipmentView.searchObject.searchFields[21].sortOrder}">
+					<f:selectItems value="#{materializedArrivalShipmentView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_21" value="#{materializedArrivalShipmentView.searchObject.searchFields[21].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_21">
+					<p:inputText id="b_21" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[21].between}" value="#{materializedArrivalShipmentView.searchObject.searchFields[21].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_22" value="#{materializedArrivalShipmentView.searchObject.searchFields[22].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedArrivalShipmentView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_22" value="#{materializedArrivalShipmentView.searchObject.searchFields[22].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_22" value="#{materializedArrivalShipmentView.textOperators}" var="advInputItem22" itemValue="#{advInputItem22}" itemLabel="#{advInputItem22.description}"/>
+					<f:ajax render="p_22"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_22" id="s_22" value="#{materializedArrivalShipmentView.searchObject.searchFields[22].sortOrder}">
+					<f:selectItems value="#{materializedArrivalShipmentView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_22" value="#{materializedArrivalShipmentView.searchObject.searchFields[22].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_22">
+					<p:inputText id="b_22" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[22].between}" value="#{materializedArrivalShipmentView.searchObject.searchFields[22].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_23" value="#{materializedArrivalShipmentView.searchObject.searchFields[23].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedArrivalShipmentView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_23" value="#{materializedArrivalShipmentView.searchObject.searchFields[23].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_23" value="#{materializedArrivalShipmentView.textOperators}" var="advInputItem23" itemValue="#{advInputItem23}" itemLabel="#{advInputItem23.description}"/>
+					<f:ajax render="p_23"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_23" id="s_23" value="#{materializedArrivalShipmentView.searchObject.searchFields[23].sortOrder}">
+					<f:selectItems value="#{materializedArrivalShipmentView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_23" value="#{materializedArrivalShipmentView.searchObject.searchFields[23].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_23">
+					<p:inputText id="b_23" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[23].between}" value="#{materializedArrivalShipmentView.searchObject.searchFields[23].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_24" value="#{materializedArrivalShipmentView.searchObject.searchFields[24].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedArrivalShipmentView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_24" value="#{materializedArrivalShipmentView.searchObject.searchFields[24].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_24" value="#{materializedArrivalShipmentView.textOperators}" var="advInputItem24" itemValue="#{advInputItem24}" itemLabel="#{advInputItem24.description}"/>
+					<f:ajax render="p_24"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_24" id="s_24" value="#{materializedArrivalShipmentView.searchObject.searchFields[24].sortOrder}">
+					<f:selectItems value="#{materializedArrivalShipmentView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_24" value="#{materializedArrivalShipmentView.searchObject.searchFields[24].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_24">
+					<p:inputText id="b_24" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[24].between}" value="#{materializedArrivalShipmentView.searchObject.searchFields[24].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_25" value="#{materializedArrivalShipmentView.searchObject.searchFields[25].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedArrivalShipmentView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_25" value="#{materializedArrivalShipmentView.searchObject.searchFields[25].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_25" value="#{materializedArrivalShipmentView.textOperators}" var="advInputItem25" itemValue="#{advInputItem25}" itemLabel="#{advInputItem25.description}"/>
+					<f:ajax render="p_25"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_25" id="s_25" value="#{materializedArrivalShipmentView.searchObject.searchFields[25].sortOrder}">
+					<f:selectItems value="#{materializedArrivalShipmentView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_25" value="#{materializedArrivalShipmentView.searchObject.searchFields[25].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_25">
+					<p:inputText id="b_25" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[25].between}" value="#{materializedArrivalShipmentView.searchObject.searchFields[25].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_26" value="#{materializedArrivalShipmentView.searchObject.searchFields[26].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedArrivalShipmentView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_26" value="#{materializedArrivalShipmentView.searchObject.searchFields[26].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_26" value="#{materializedArrivalShipmentView.textOperators}" var="advInputItem26" itemValue="#{advInputItem26}" itemLabel="#{advInputItem26.description}"/>
+					<f:ajax render="p_26"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_26" id="s_26" value="#{materializedArrivalShipmentView.searchObject.searchFields[26].sortOrder}">
+					<f:selectItems value="#{materializedArrivalShipmentView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_26" value="#{materializedArrivalShipmentView.searchObject.searchFields[26].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_26">
+					<p:inputText id="b_26" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[26].between}" value="#{materializedArrivalShipmentView.searchObject.searchFields[26].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_27" value="#{materializedArrivalShipmentView.searchObject.searchFields[27].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedArrivalShipmentView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_27" value="#{materializedArrivalShipmentView.searchObject.searchFields[27].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_27" value="#{materializedArrivalShipmentView.dateOperators}" var="advInputItem27" itemValue="#{advInputItem27}" itemLabel="#{advInputItem27.description}"/>
+					<f:ajax render="p_27"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_27" id="s_27" value="#{materializedArrivalShipmentView.searchObject.searchFields[27].sortOrder}">
+					<f:selectItems value="#{materializedArrivalShipmentView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:datePicker id="fi_27" value="#{materializedArrivalShipmentView.searchObject.searchFields[27].dateCriterion}" pattern="#{userSession.dateFormat}" size="20" showButtonBar="true" showIcon="true"/>
+				<h:panelGroup id="p_27">
+					<p:datePicker id="fb_27" value="#{materializedArrivalShipmentView.searchObject.searchFields[27].dateBetweenCriterion}" pattern="#{userSession.dateFormat}" size="20" showButtonBar="true" showIcon="true" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[27].between}"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_28" value="#{materializedArrivalShipmentView.searchObject.searchFields[28].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedArrivalShipmentView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_28" value="#{materializedArrivalShipmentView.searchObject.searchFields[28].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_28" value="#{materializedArrivalShipmentView.textOperators}" var="advInputItem28" itemValue="#{advInputItem28}" itemLabel="#{advInputItem28.description}"/>
+					<f:ajax render="p_28"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_28" id="s_28" value="#{materializedArrivalShipmentView.searchObject.searchFields[28].sortOrder}">
+					<f:selectItems value="#{materializedArrivalShipmentView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_28" value="#{materializedArrivalShipmentView.searchObject.searchFields[28].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_28">
+					<p:inputText id="b_28" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[28].between}" value="#{materializedArrivalShipmentView.searchObject.searchFields[28].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+			</h:panelGrid>
+			</p:scrollPanel>
+			</p:tab>
+			<p:tab title="#{i18n.search_input_adv}">
+			<h:panelGrid columns="2">
+				<h:outputLabel value="#{i18n.search_input_case}:" styleClass="label-field-mandatory"/>
+				<p:selectBooleanCheckbox value="#{materializedArrivalShipmentView.searchObject.caseSensitive}"/>
+				<h:outputLabel value="#{i18n.search_input_count}:" styleClass="label-field-mandatory"/>
+				<p:selectBooleanCheckbox value="#{materializedArrivalShipmentView.searchObject.count}"/>
+				<h:outputLabel value="#{i18n.search_input_filter_match}:" styleClass="label-field-mandatory"/>
+				<p:selectBooleanCheckbox value="#{materializedArrivalShipmentView.searchObject.exactFilterMatch}"/>
+				<h:outputLabel value="#{i18n.search_input_filter_fetch_size}:" styleClass="label-field-mandatory"/>
+				<p:inputText value="#{materializedArrivalShipmentView.searchObject.maxResult}" size="5">
+					<f:validateLongRange minimum="1" maximum="1000000"/>
+				</p:inputText>
+				<h:outputLabel value="#{i18n.search_input_visible_fields_label}:" styleClass="label-field-mandatory"/>
+				<p:pickList value="#{materializedArrivalShipmentView.visibleFields}" var="savedQueryListItem" itemLabel="#{savedQueryListItem.colLabel}" itemValue="#{savedQueryListItem}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchFieldDTOConverter" addLabel="#{i18n.pick_list_add}" addAllLabel="#{i18n.pick_list_add_all}" removeLabel="#{i18n.pick_list_remove}" removeAllLabel="#{i18n.pick_list_remove_all}">
+					<f:facet name="sourceCaption">#{i18n.search_input_all_fields}</f:facet>
+					<f:facet name="targetCaption">#{i18n.search_input_visible_fields}</f:facet>
+				</p:pickList>
+			</h:panelGrid>
+			</p:tab>
+			<p:tab title="#{i18n.search_input_saved_query_title}">
+				<h:panelGrid columns="1">
+					<h:outputLabel styleClass="label-field-mandatory" value="#{i18n.search_input_lbl_saved_query}"/>
+					<p:selectOneListbox id="savedQueryList" value="#{materializedArrivalShipmentView.selectedSavedQuery}" style="height:150px; width:300px">
+						<f:selectItems value="#{materializedArrivalShipmentView.savedQueries}"/>
+					</p:selectOneListbox>
+					<h:panelGrid columns="2">
+						<p:commandButton value="#{i18n.search_input_run_saved_query}" action="#{materializedArrivalShipmentView.runSavedQuery}" ajax="false"/>
+						<p:commandButton value="#{i18n.search_input_delete_saved_query}" action="#{materializedArrivalShipmentView.deleteSavedQuery}" ajax="false"/>
+					</h:panelGrid>
+				</h:panelGrid>
+			</p:tab>
+		</p:tabView>
+		<br/>
+		<h:panelGrid columns="3">
+			<p:commandButton id="cmdSearch" value="#{i18n.search_input_perform_search}" action="#{materializedArrivalShipmentView.fetchMaterializedArrivalShipments}" ajax="false"/>
+			<p:commandButton id="cmdReset" value="#{i18n.command_reset}" action="#{materializedArrivalShipmentView.initSearchObject}" onclick="PF('dlgSearchInput').hide()" ajax="false"/>
+			<p:commandButton id="cmdCount" value="#{i18n.search_input_perform_count}" actionListener="#{materializedArrivalShipmentView.countRecords}" onclick="PF('dlgSearchInput').hide()" update="growl" ajax="true"/>
+		</h:panelGrid>
+	</p:dialog>
+
+	<p:menubar>
+		<p:submenu icon="pi pi-file" label="#{i18n.mnu_file}" id="panData_mniFile">
+			<p:menuitem value="#{i18n.action_search_input}" ajax="true" icon="pi pi-search" id="panData_mniSearch" onclick="PF('dlgSearchInput').show()"/>
+			<p:menuitem value="#{i18n.search_input_dlg_save_query}" icon="pi pi-save" onclick="PF('dlgSaveQuery').show()"/>
+		</p:submenu>
+		<p:submenu icon="pi pi-refresh" label="#{i18n.mnu_view}">
+			<p:menuitem value="#{i18n.action_refresh}" ajax="false" icon="pi pi-refresh" actionListener="#{materializedArrivalShipmentView.fetchMaterializedArrivalShipments}"/>
+		</p:submenu>
+		<p:submenu icon="pi pi-print" label="#{i18n.mnu_export}">
+			<p:menuitem value="#{i18n.action_export_xls}" ajax="false" icon="pi pi-file-excel">
+				<p:dataExporter type="xls" target="panData" fileName="MaterializedArrivalShipmentList"/>
+			</p:menuitem>
+			<p:menuitem value="#{i18n.action_export_pdf}" ajax="false" icon="pi pi-file-pdf">
+				<p:dataExporter type="pdf" target="panData" fileName="MaterializedArrivalShipmentList"/>
+			</p:menuitem>
+		</p:submenu>
+	</p:menubar>
+
+	<br/>
+
+	<p:dataTable id="panData" var="materializedArrivalShipmentViewItem" rows="50"
+		selectionMode="single"
+		selection="#{materializedArrivalShipmentView.selectedObject}"
+		loadingMessage="#{i18n.action_fetch_data}"
+		value="#{materializedArrivalShipmentView.materializedArrivalShipmentsList}" scrollable="false"
+		paginatorPosition="top" paginatorAlwaysVisible="false" paginator="true" resizableColumns="true"
+		rowKey="#{materializedArrivalShipmentViewItem.id}"
+		paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+		rowsPerPageTemplate="10,50,100,500,1000">
+		<p:ajax event="rowDblselect" listener="#{materializedArrivalShipmentView.onDoubleClick}"/>
+
+		<p:column sortBy="#{materializedArrivalShipmentViewItem.shipmentId}" width="80" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[0].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedarrivalshipmentview_shipmentid}"/>
+			</f:facet>
+			<h:outputText value="#{materializedArrivalShipmentViewItem.shipmentId}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materializedArrivalShipmentViewItem.arrivalId}" width="80" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[1].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_materializedarrivalshipment_arrivalid}"/>
+			</f:facet>
+			<h:outputText value="#{materializedArrivalShipmentViewItem.arrivalId}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materializedArrivalShipmentViewItem.plant}" width="80" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[2].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_materializedentitiy_plant}"/>
+			</f:facet>
+			<h:outputText value="#{materializedArrivalShipmentViewItem.plant}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materializedArrivalShipmentViewItem.serialNumber}" width="100" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[3].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedarrivalshipmentview_serialnumber}"/>
+			</f:facet>
+			<h:outputText value="#{materializedArrivalShipmentViewItem.serialNumber}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materializedArrivalShipmentViewItem.parentSerialNumber}" width="100" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[4].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedarrivalshipmentview_parentserialnumber}"/>
+			</f:facet>
+			<h:outputText value="#{materializedArrivalShipmentViewItem.parentSerialNumber}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materializedArrivalShipmentViewItem.customerName}" width="200" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[5].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedarrivalshipmentview_customername}"/>
+			</f:facet>
+			<h:outputText value="#{materializedArrivalShipmentViewItem.customerName}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materializedArrivalShipmentViewItem.countryName}" width="150" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[6].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedarrivalshipmentview_countryname}"/>
+			</f:facet>
+			<h:outputText value="#{materializedArrivalShipmentViewItem.countryName}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materializedArrivalShipmentViewItem.shipmentDate}" width="80" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[7].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedarrivalshipmentview_shipmentdate}"/>
+			</f:facet>
+			<h:outputText value="#{materializedArrivalShipmentViewItem.shipmentDate}">
+				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateConverter"/>
+				<f:attribute name="pattern" value="#{userSession.dateFormat}"/>
+				<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materializedArrivalShipmentViewItem.arrivalDate}" width="80" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[8].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedarrivalshipmentview_arrivaldate}"/>
+			</f:facet>
+			<h:outputText value="#{materializedArrivalShipmentViewItem.arrivalDate}">
+				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateConverter"/>
+				<f:attribute name="pattern" value="#{userSession.dateFormat}"/>
+				<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materializedArrivalShipmentViewItem.supplierName}" width="200" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[9].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedarrivalshipmentview_suppliername}"/>
+			</f:facet>
+			<h:outputText value="#{materializedArrivalShipmentViewItem.supplierName}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materializedArrivalShipmentViewItem.shipmentMovementType}" width="120" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[10].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedarrivalshipmentview_shipmentmovementtype}"/>
+			</f:facet>
+			<h:outputText value="#{materializedArrivalShipmentViewItem.shipmentMovementType}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materializedArrivalShipmentViewItem.arrivalMovementType}" width="120" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[11].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedarrivalshipmentview_arrivalmovementtype}"/>
+			</f:facet>
+			<h:outputText value="#{materializedArrivalShipmentViewItem.arrivalMovementType}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materializedArrivalShipmentViewItem.customerOrderNumber}" width="100" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[12].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedarrivalshipmentview_customerordernumber}"/>
+			</f:facet>
+			<h:outputText value="#{materializedArrivalShipmentViewItem.customerOrderNumber}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materializedArrivalShipmentViewItem.purchaseOrderNumber}" width="100" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[13].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedarrivalshipmentview_purchaseordernumber}"/>
+			</f:facet>
+			<h:outputText value="#{materializedArrivalShipmentViewItem.purchaseOrderNumber}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materializedArrivalShipmentViewItem.materialNumber}" width="150" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[14].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedarrivalshipmentview_materialnumber}"/>
+			</f:facet>
+			<h:outputText value="#{materializedArrivalShipmentViewItem.materialNumber}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materializedArrivalShipmentViewItem.sapNumber}" width="150" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[15].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedarrivalshipmentview_sapnumber}"/>
+			</f:facet>
+			<h:outputText value="#{materializedArrivalShipmentViewItem.sapNumber}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materializedArrivalShipmentViewItem.materialType}" width="80" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[16].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedarrivalshipmentview_materialtype}"/>
+			</f:facet>
+			<h:outputText value="#{materializedArrivalShipmentViewItem.materialType}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materializedArrivalShipmentViewItem.materialHierarchy}" width="150" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[17].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_materializedentitiy_materialhierarchy}"/>
+			</f:facet>
+			<h:outputText value="#{materializedArrivalShipmentViewItem.materialHierarchy}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materializedArrivalShipmentViewItem.materialShortText}" width="250" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[18].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_materializedentitiy_materialshorttext}"/>
+			</f:facet>
+			<h:outputText value="#{materializedArrivalShipmentViewItem.materialShortText}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materializedArrivalShipmentViewItem.revisionNumber}" width="150" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[19].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_materializedentitiy_revisionnumber}"/>
+			</f:facet>
+			<h:outputText value="#{materializedArrivalShipmentViewItem.revisionNumber}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materializedArrivalShipmentViewItem.ownerLocation}" width="80" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[20].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedarrivalshipmentview_ownerlocation}"/>
+			</f:facet>
+			<h:outputText value="#{materializedArrivalShipmentViewItem.ownerLocation}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materializedArrivalShipmentViewItem.parentMaterialNumber}" width="150" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[21].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedarrivalshipmentview_parentmaterialnumber}"/>
+			</f:facet>
+			<h:outputText value="#{materializedArrivalShipmentViewItem.parentMaterialNumber}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materializedArrivalShipmentViewItem.parentSapNumber}" width="150" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[22].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedarrivalshipmentview_parentsapnumber}"/>
+			</f:facet>
+			<h:outputText value="#{materializedArrivalShipmentViewItem.parentSapNumber}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materializedArrivalShipmentViewItem.parentMaterialType}" width="80" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[23].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedarrivalshipmentview_parentmaterialtype}"/>
+			</f:facet>
+			<h:outputText value="#{materializedArrivalShipmentViewItem.parentMaterialType}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materializedArrivalShipmentViewItem.parentMaterialShortText}" width="250" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[24].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_materializedentitiy_parentmaterialshorttext}"/>
+			</f:facet>
+			<h:outputText value="#{materializedArrivalShipmentViewItem.parentMaterialShortText}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materializedArrivalShipmentViewItem.parentMaterialHierarchy}" width="150" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[25].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedarrivalshipmentview_parentmaterialhierarchy}"/>
+			</f:facet>
+			<h:outputText value="#{materializedArrivalShipmentViewItem.parentMaterialHierarchy}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materializedArrivalShipmentViewItem.parentRevisionNumber}" width="150" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[26].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedarrivalshipmentview_parentrevisionnumber}"/>
+			</f:facet>
+			<h:outputText value="#{materializedArrivalShipmentViewItem.parentRevisionNumber}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materializedArrivalShipmentViewItem.assemblyDate}" width="80" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[27].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedarrivalshipmentview_assemblydate}"/>
+			</f:facet>
+			<h:outputText value="#{materializedArrivalShipmentViewItem.assemblyDate}">
+				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateConverter"/>
+				<f:attribute name="pattern" value="#{userSession.dateFormat}"/>
+				<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materializedArrivalShipmentViewItem.assemblyPO}" width="80" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[28].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedarrivalshipmentview_assemblypo}"/>
+			</f:facet>
+			<h:outputText value="#{materializedArrivalShipmentViewItem.assemblyPO}">
+			</h:outputText>
+		</p:column>
+	</p:dataTable>
+	<p/>
+
+	<h:outputText styleClass="label-field-mandatory" value="#{i18n.result_total_number_records} #{materializedArrivalShipmentView.materializedArrivalShipmentsList.size()}"/>
+	<h:outputText styleClass="label-field-mandatory" rendered="#{materializedArrivalShipmentView.searchObject.count}" value="&#160;#{i18n.search_input_count_of}&#160;"/>
+	<h:outputText styleClass="label-field-mandatory" rendered="#{materializedArrivalShipmentView.searchObject.count}" value="#{materializedArrivalShipmentView.countResult}"/>
+	<p/>
+
+	<p:contextMenu for="panData">
+		<p:menuitem value="#{i18n.action_delete}" ajax="true" icon="pi pi-trash" id="panData_mniDelete" rendered="false" onclick="PF('deleteConfirm').show()"/>
+		<p:menuitem value="#{i18n.action_copy}" ajax="true" icon="pi pi-copy" id="panData_mniCopy" rendered="false" onclick="PF('copyConfirm').show()"/>
+		<p:menuitem value="#{i18n.action_refresh}" ajax="false" type="push" icon="pi pi-refresh" id="panData_mniRefresh" actionListener="#{materializedArrivalShipmentView.fetchMaterializedArrivalShipments}"/>
+	</p:contextMenu>
+
+	<p:confirmDialog modal="true" message="#{i18n.dialog_delete_question}" header="#{i18n.dialog_delete_title}" severity="alert" widgetVar="deleteConfirm">
+		<p:commandButton value="#{i18n.command_yes}" oncomplete="PF('deleteConfirm').hide()" actionListener="#{materializedArrivalShipmentView.deleteMaterializedArrivalShipment}" id="panData_cmdYesDelete" ajax="false"/>
+		<p:commandButton value="#{i18n.command_no}" onclick="PF('deleteConfirm').hide()" type="button"/>
+	</p:confirmDialog>
+
+	<p:confirmDialog modal="true" message="#{i18n.dialog_copy_question}" header="#{i18n.dialog_copy_title}" severity="info" widgetVar="copyConfirm">
+		<p:commandButton value="#{i18n.command_yes}" oncomplete="PF('copyConfirm').hide()" action="#{materializedArrivalShipmentView.copy}" id="panData_cmdYesCopy" ajax="false"/>
+		<p:commandButton value="#{i18n.command_no}" onclick="PF('copyConfirm').hide()" type="button"/>
+	</p:confirmDialog>
+
+	<p:dialog header="#{i18n.search_input_dlg_save_query}" widgetVar="dlgSaveQuery" modal="true" height="100">
+		<h:panelGrid columns="3">
+			<h:outputLabel value="#{i18n.search_input_lbl_save_query}" styleClass="label-field-mandatory"/>
+			<p:inputText id="txtQueryName" value="#{materializedArrivalShipmentView.savedQueryName}">
+			</p:inputText>
+			<p:commandButton value="#{i18n.command_save}" action="#{materializedArrivalShipmentView.saveNewQuery}" ajax="false" onclick="PF('dlgSaveQuery').hide()"/>
+		</h:panelGrid>
+	</p:dialog>
+
+	<p:defaultCommand target=":form:cmdSearch"/>
+
+</ui:define>
+</ui:composition>
