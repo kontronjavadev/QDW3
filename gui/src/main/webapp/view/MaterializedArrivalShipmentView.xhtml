@@ -518,15 +518,19 @@
 		rowsPerPageTemplate="50,150,400,1000">
 		<p:ajax event="rowDblselect" listener="#{materializedArrivalShipmentView.onDoubleClick}"/>
 
-		<p:column sortBy="#{materializedArrivalShipmentViewItem.shipmentId}" width="80" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[0].visible}" >
+		<p:column sortBy="#{materializedArrivalShipmentViewItem.shipmentId}" width="80" 
+			rendered="#{materializedArrivalShipmentView.searchObject.searchFields[0].visible}" displayPriority="#{materializedArrivalShipmentView.searchObject.searchFields[0].colOrder}" 
+			exportHeaderValue="#{i18n.col_materializedarrivalshipmentview_shipmentid_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materializedarrivalshipmentview_shipmentid}"/>
+				<h:outputText value="#{i18n.col_materializedarrivalshipmentview_shipmentid}" id="shipmentIdHeader"/>
+				<p:tooltip for="shipmentIdHeader" value="#{i18n.col_materializedarrivalshipmentview_shipmentid_tooltip}" position="top" showDelay="50"/>
 			</f:facet>
 			<h:outputText value="#{materializedArrivalShipmentViewItem.shipmentId}">
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedArrivalShipmentViewItem.arrivalId}" width="80" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[1].visible}" >
+		<p:column sortBy="#{materializedArrivalShipmentViewItem.arrivalId}" width="80" 
+			rendered="#{materializedArrivalShipmentView.searchObject.searchFields[1].visible}" displayPriority="#{materializedArrivalShipmentView.searchObject.searchFields[1].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_materializedarrivalshipment_arrivalid}"/>
 			</f:facet>
@@ -534,7 +538,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedArrivalShipmentViewItem.plant}" width="80" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[2].visible}" >
+		<p:column sortBy="#{materializedArrivalShipmentViewItem.plant}" width="80" 
+			rendered="#{materializedArrivalShipmentView.searchObject.searchFields[2].visible}" displayPriority="#{materializedArrivalShipmentView.searchObject.searchFields[2].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_materializedentitiy_plant}"/>
 			</f:facet>
@@ -542,7 +547,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedArrivalShipmentViewItem.serialNumber}" width="100" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[3].visible}" >
+		<p:column sortBy="#{materializedArrivalShipmentViewItem.serialNumber}" width="100" 
+			rendered="#{materializedArrivalShipmentView.searchObject.searchFields[3].visible}" displayPriority="#{materializedArrivalShipmentView.searchObject.searchFields[3].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedarrivalshipmentview_serialnumber}"/>
 			</f:facet>
@@ -550,15 +556,19 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedArrivalShipmentViewItem.parentSerialNumber}" width="100" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[4].visible}" >
+		<p:column sortBy="#{materializedArrivalShipmentViewItem.parentSerialNumber}" width="100" 
+			rendered="#{materializedArrivalShipmentView.searchObject.searchFields[4].visible}" displayPriority="#{materializedArrivalShipmentView.searchObject.searchFields[4].colOrder}" 
+			exportHeaderValue="#{i18n.col_materializedarrivalshipmentview_parentserialnumber_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materializedarrivalshipmentview_parentserialnumber}"/>
+				<h:outputText value="#{i18n.col_materializedarrivalshipmentview_parentserialnumber}" id="parentSerialNumberHeader"/>
+				<p:tooltip for="parentSerialNumberHeader" value="#{i18n.col_materializedarrivalshipmentview_parentserialnumber_tooltip}" position="top" showDelay="50"/>
 			</f:facet>
 			<h:outputText value="#{materializedArrivalShipmentViewItem.parentSerialNumber}">
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedArrivalShipmentViewItem.customerName}" width="200" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[5].visible}" >
+		<p:column sortBy="#{materializedArrivalShipmentViewItem.customerName}" width="200" 
+			rendered="#{materializedArrivalShipmentView.searchObject.searchFields[5].visible}" displayPriority="#{materializedArrivalShipmentView.searchObject.searchFields[5].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedarrivalshipmentview_customername}"/>
 			</f:facet>
@@ -566,7 +576,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedArrivalShipmentViewItem.countryName}" width="150" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[6].visible}" >
+		<p:column sortBy="#{materializedArrivalShipmentViewItem.countryName}" width="150" 
+			rendered="#{materializedArrivalShipmentView.searchObject.searchFields[6].visible}" displayPriority="#{materializedArrivalShipmentView.searchObject.searchFields[6].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedarrivalshipmentview_countryname}"/>
 			</f:facet>
@@ -574,9 +585,12 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedArrivalShipmentViewItem.shipmentDate}" width="80" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[7].visible}" >
+		<p:column sortBy="#{materializedArrivalShipmentViewItem.shipmentDate}" width="80" 
+			rendered="#{materializedArrivalShipmentView.searchObject.searchFields[7].visible}" displayPriority="#{materializedArrivalShipmentView.searchObject.searchFields[7].colOrder}" 
+			exportHeaderValue="#{i18n.col_materializedarrivalshipmentview_shipmentdate_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materializedarrivalshipmentview_shipmentdate}"/>
+				<h:outputText value="#{i18n.col_materializedarrivalshipmentview_shipmentdate}" id="shipmentDateHeader"/>
+				<p:tooltip for="shipmentDateHeader" value="#{i18n.col_materializedarrivalshipmentview_shipmentdate_tooltip}" position="top" showDelay="50"/>
 			</f:facet>
 			<h:outputText value="#{materializedArrivalShipmentViewItem.shipmentDate}">
 				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateConverter"/>
@@ -585,9 +599,12 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedArrivalShipmentViewItem.arrivalDate}" width="80" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[8].visible}" >
+		<p:column sortBy="#{materializedArrivalShipmentViewItem.arrivalDate}" width="80" 
+			rendered="#{materializedArrivalShipmentView.searchObject.searchFields[8].visible}" displayPriority="#{materializedArrivalShipmentView.searchObject.searchFields[8].colOrder}" 
+			exportHeaderValue="#{i18n.col_materializedarrivalshipmentview_arrivaldate_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materializedarrivalshipmentview_arrivaldate}"/>
+				<h:outputText value="#{i18n.col_materializedarrivalshipmentview_arrivaldate}" id="arrivalDateHeader"/>
+				<p:tooltip for="arrivalDateHeader" value="#{i18n.col_materializedarrivalshipmentview_arrivaldate_tooltip}" position="top" showDelay="50"/>
 			</f:facet>
 			<h:outputText value="#{materializedArrivalShipmentViewItem.arrivalDate}">
 				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateConverter"/>
@@ -596,7 +613,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedArrivalShipmentViewItem.supplierName}" width="200" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[9].visible}" >
+		<p:column sortBy="#{materializedArrivalShipmentViewItem.supplierName}" width="200" 
+			rendered="#{materializedArrivalShipmentView.searchObject.searchFields[9].visible}" displayPriority="#{materializedArrivalShipmentView.searchObject.searchFields[9].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedarrivalshipmentview_suppliername}"/>
 			</f:facet>
@@ -604,39 +622,52 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedArrivalShipmentViewItem.shipmentMovementType}" width="120" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[10].visible}" >
+		<p:column sortBy="#{materializedArrivalShipmentViewItem.shipmentMovementType}" width="120" 
+			rendered="#{materializedArrivalShipmentView.searchObject.searchFields[10].visible}" displayPriority="#{materializedArrivalShipmentView.searchObject.searchFields[10].colOrder}" 
+			exportHeaderValue="#{i18n.col_materializedarrivalshipmentview_shipmentmovementtype_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materializedarrivalshipmentview_shipmentmovementtype}"/>
+				<h:outputText value="#{i18n.col_materializedarrivalshipmentview_shipmentmovementtype}" id="shipmentMovementTypeHeader"/>
+				<p:tooltip for="shipmentMovementTypeHeader" value="#{i18n.col_materializedarrivalshipmentview_shipmentmovementtype_tooltip}" position="top" showDelay="50"/>
 			</f:facet>
 			<h:outputText value="#{materializedArrivalShipmentViewItem.shipmentMovementType}">
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedArrivalShipmentViewItem.arrivalMovementType}" width="120" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[11].visible}" >
+		<p:column sortBy="#{materializedArrivalShipmentViewItem.arrivalMovementType}" width="120" 
+			rendered="#{materializedArrivalShipmentView.searchObject.searchFields[11].visible}" displayPriority="#{materializedArrivalShipmentView.searchObject.searchFields[11].colOrder}" 
+			exportHeaderValue="#{i18n.col_materializedarrivalshipmentview_arrivalmovementtype_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materializedarrivalshipmentview_arrivalmovementtype}"/>
+				<h:outputText value="#{i18n.col_materializedarrivalshipmentview_arrivalmovementtype}" id="arrivalMovementTypeHeader"/>
+				<p:tooltip for="arrivalMovementTypeHeader" value="#{i18n.col_materializedarrivalshipmentview_arrivalmovementtype_tooltip}" position="top" showDelay="50"/>
 			</f:facet>
 			<h:outputText value="#{materializedArrivalShipmentViewItem.arrivalMovementType}">
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedArrivalShipmentViewItem.customerOrderNumber}" width="100" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[12].visible}" >
+		<p:column sortBy="#{materializedArrivalShipmentViewItem.customerOrderNumber}" width="100" 
+			rendered="#{materializedArrivalShipmentView.searchObject.searchFields[12].visible}" displayPriority="#{materializedArrivalShipmentView.searchObject.searchFields[12].colOrder}" 
+			exportHeaderValue="#{i18n.col_materializedarrivalshipmentview_customerordernumber_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materializedarrivalshipmentview_customerordernumber}"/>
+				<h:outputText value="#{i18n.col_materializedarrivalshipmentview_customerordernumber}" id="customerOrderNumberHeader"/>
+				<p:tooltip for="customerOrderNumberHeader" value="#{i18n.col_materializedarrivalshipmentview_customerordernumber_tooltip}" position="top" showDelay="50"/>
 			</f:facet>
 			<h:outputText value="#{materializedArrivalShipmentViewItem.customerOrderNumber}">
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedArrivalShipmentViewItem.purchaseOrderNumber}" width="100" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[13].visible}" >
+		<p:column sortBy="#{materializedArrivalShipmentViewItem.purchaseOrderNumber}" width="100" 
+			rendered="#{materializedArrivalShipmentView.searchObject.searchFields[13].visible}" displayPriority="#{materializedArrivalShipmentView.searchObject.searchFields[13].colOrder}" 
+			exportHeaderValue="#{i18n.col_materializedarrivalshipmentview_purchaseordernumber_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materializedarrivalshipmentview_purchaseordernumber}"/>
+				<h:outputText value="#{i18n.col_materializedarrivalshipmentview_purchaseordernumber}" id="purchaseOrderNumberHeader"/>
+				<p:tooltip for="purchaseOrderNumberHeader" value="#{i18n.col_materializedarrivalshipmentview_purchaseordernumber_tooltip}" position="top" showDelay="50"/>
 			</f:facet>
 			<h:outputText value="#{materializedArrivalShipmentViewItem.purchaseOrderNumber}">
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedArrivalShipmentViewItem.materialNumber}" width="150" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[14].visible}" >
+		<p:column sortBy="#{materializedArrivalShipmentViewItem.materialNumber}" width="150" 
+			rendered="#{materializedArrivalShipmentView.searchObject.searchFields[14].visible}" displayPriority="#{materializedArrivalShipmentView.searchObject.searchFields[14].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedarrivalshipmentview_materialnumber}"/>
 			</f:facet>
@@ -644,7 +675,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedArrivalShipmentViewItem.sapNumber}" width="150" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[15].visible}" >
+		<p:column sortBy="#{materializedArrivalShipmentViewItem.sapNumber}" width="150" 
+			rendered="#{materializedArrivalShipmentView.searchObject.searchFields[15].visible}" displayPriority="#{materializedArrivalShipmentView.searchObject.searchFields[15].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedarrivalshipmentview_sapnumber}"/>
 			</f:facet>
@@ -652,7 +684,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedArrivalShipmentViewItem.materialType}" width="80" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[16].visible}" >
+		<p:column sortBy="#{materializedArrivalShipmentViewItem.materialType}" width="80" 
+			rendered="#{materializedArrivalShipmentView.searchObject.searchFields[16].visible}" displayPriority="#{materializedArrivalShipmentView.searchObject.searchFields[16].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedarrivalshipmentview_materialtype}"/>
 			</f:facet>
@@ -660,7 +693,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedArrivalShipmentViewItem.materialHierarchy}" width="150" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[17].visible}" >
+		<p:column sortBy="#{materializedArrivalShipmentViewItem.materialHierarchy}" width="150" 
+			rendered="#{materializedArrivalShipmentView.searchObject.searchFields[17].visible}" displayPriority="#{materializedArrivalShipmentView.searchObject.searchFields[17].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_materializedentitiy_materialhierarchy}"/>
 			</f:facet>
@@ -668,7 +702,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedArrivalShipmentViewItem.materialShortText}" width="250" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[18].visible}" >
+		<p:column sortBy="#{materializedArrivalShipmentViewItem.materialShortText}" width="250" 
+			rendered="#{materializedArrivalShipmentView.searchObject.searchFields[18].visible}" displayPriority="#{materializedArrivalShipmentView.searchObject.searchFields[18].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_materializedentitiy_materialshorttext}"/>
 			</f:facet>
@@ -676,7 +711,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedArrivalShipmentViewItem.revisionNumber}" width="150" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[19].visible}" >
+		<p:column sortBy="#{materializedArrivalShipmentViewItem.revisionNumber}" width="150" 
+			rendered="#{materializedArrivalShipmentView.searchObject.searchFields[19].visible}" displayPriority="#{materializedArrivalShipmentView.searchObject.searchFields[19].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_materializedentitiy_revisionnumber}"/>
 			</f:facet>
@@ -684,23 +720,30 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedArrivalShipmentViewItem.ownerLocation}" width="80" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[20].visible}" >
+		<p:column sortBy="#{materializedArrivalShipmentViewItem.ownerLocation}" width="80" 
+			rendered="#{materializedArrivalShipmentView.searchObject.searchFields[20].visible}" displayPriority="#{materializedArrivalShipmentView.searchObject.searchFields[20].colOrder}" 
+			exportHeaderValue="#{i18n.col_materializedarrivalshipmentview_ownerlocation_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materializedarrivalshipmentview_ownerlocation}"/>
+				<h:outputText value="#{i18n.col_materializedarrivalshipmentview_ownerlocation}" id="ownerLocationHeader"/>
+				<p:tooltip for="ownerLocationHeader" value="#{i18n.col_materializedarrivalshipmentview_ownerlocation_tooltip}" position="top" showDelay="50"/>
 			</f:facet>
 			<h:outputText value="#{materializedArrivalShipmentViewItem.ownerLocation}">
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedArrivalShipmentViewItem.parentMaterialNumber}" width="150" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[21].visible}" >
+		<p:column sortBy="#{materializedArrivalShipmentViewItem.parentMaterialNumber}" width="150" 
+			rendered="#{materializedArrivalShipmentView.searchObject.searchFields[21].visible}" displayPriority="#{materializedArrivalShipmentView.searchObject.searchFields[21].colOrder}" 
+			exportHeaderValue="#{i18n.col_materializedarrivalshipmentview_parentmaterialnumber_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materializedarrivalshipmentview_parentmaterialnumber}"/>
+				<h:outputText value="#{i18n.col_materializedarrivalshipmentview_parentmaterialnumber}" id="parentMaterialNumberHeader"/>
+				<p:tooltip for="parentMaterialNumberHeader" value="#{i18n.col_materializedarrivalshipmentview_parentmaterialnumber_tooltip}" position="top" showDelay="50"/>
 			</f:facet>
 			<h:outputText value="#{materializedArrivalShipmentViewItem.parentMaterialNumber}">
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedArrivalShipmentViewItem.parentSapNumber}" width="150" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[22].visible}" >
+		<p:column sortBy="#{materializedArrivalShipmentViewItem.parentSapNumber}" width="150" 
+			rendered="#{materializedArrivalShipmentView.searchObject.searchFields[22].visible}" displayPriority="#{materializedArrivalShipmentView.searchObject.searchFields[22].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedarrivalshipmentview_parentsapnumber}"/>
 			</f:facet>
@@ -708,15 +751,19 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedArrivalShipmentViewItem.parentMaterialType}" width="80" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[23].visible}" >
+		<p:column sortBy="#{materializedArrivalShipmentViewItem.parentMaterialType}" width="80" 
+			rendered="#{materializedArrivalShipmentView.searchObject.searchFields[23].visible}" displayPriority="#{materializedArrivalShipmentView.searchObject.searchFields[23].colOrder}" 
+			exportHeaderValue="#{i18n.col_materializedarrivalshipmentview_parentmaterialtype_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materializedarrivalshipmentview_parentmaterialtype}"/>
+				<h:outputText value="#{i18n.col_materializedarrivalshipmentview_parentmaterialtype}" id="parentMaterialTypeHeader"/>
+				<p:tooltip for="parentMaterialTypeHeader" value="#{i18n.col_materializedarrivalshipmentview_parentmaterialtype_tooltip}" position="top" showDelay="50"/>
 			</f:facet>
 			<h:outputText value="#{materializedArrivalShipmentViewItem.parentMaterialType}">
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedArrivalShipmentViewItem.parentMaterialShortText}" width="250" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[24].visible}" >
+		<p:column sortBy="#{materializedArrivalShipmentViewItem.parentMaterialShortText}" width="250" 
+			rendered="#{materializedArrivalShipmentView.searchObject.searchFields[24].visible}" displayPriority="#{materializedArrivalShipmentView.searchObject.searchFields[24].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_materializedentitiy_parentmaterialshorttext}"/>
 			</f:facet>
@@ -724,15 +771,19 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedArrivalShipmentViewItem.parentMaterialHierarchy}" width="150" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[25].visible}" >
+		<p:column sortBy="#{materializedArrivalShipmentViewItem.parentMaterialHierarchy}" width="150" 
+			rendered="#{materializedArrivalShipmentView.searchObject.searchFields[25].visible}" displayPriority="#{materializedArrivalShipmentView.searchObject.searchFields[25].colOrder}" 
+			exportHeaderValue="#{i18n.col_materializedarrivalshipmentview_parentmaterialhierarchy_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materializedarrivalshipmentview_parentmaterialhierarchy}"/>
+				<h:outputText value="#{i18n.col_materializedarrivalshipmentview_parentmaterialhierarchy}" id="parentMaterialHierarchyHeader"/>
+				<p:tooltip for="parentMaterialHierarchyHeader" value="#{i18n.col_materializedarrivalshipmentview_parentmaterialhierarchy_tooltip}" position="top" showDelay="50"/>
 			</f:facet>
 			<h:outputText value="#{materializedArrivalShipmentViewItem.parentMaterialHierarchy}">
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedArrivalShipmentViewItem.parentRevisionNumber}" width="150" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[26].visible}" >
+		<p:column sortBy="#{materializedArrivalShipmentViewItem.parentRevisionNumber}" width="150" 
+			rendered="#{materializedArrivalShipmentView.searchObject.searchFields[26].visible}" displayPriority="#{materializedArrivalShipmentView.searchObject.searchFields[26].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedarrivalshipmentview_parentrevisionnumber}"/>
 			</f:facet>
@@ -740,20 +791,26 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedArrivalShipmentViewItem.assemblyDate}" width="80" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[27].visible}" >
+		<p:column sortBy="#{materializedArrivalShipmentViewItem.assemblyDate}" width="80" 
+			rendered="#{materializedArrivalShipmentView.searchObject.searchFields[27].visible}" displayPriority="#{materializedArrivalShipmentView.searchObject.searchFields[27].colOrder}" 
+			exportHeaderValue="#{i18n.col_materializedarrivalshipmentview_assemblydate_tooltip}" class="thnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedarrivalshipmentview_assemblydate}"/>
 			</f:facet>
 			<h:outputText value="#{materializedArrivalShipmentViewItem.assemblyDate}">
-				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateConverter"/>
+				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateConverter" id="assemblyDateHeader"/>
+				<p:tooltip for="assemblyDateHeader" value="#{i18n.col_materializedarrivalshipmentview_assemblydate_tooltip}" position="top" showDelay="50"/>
 				<f:attribute name="pattern" value="#{userSession.dateFormat}"/>
 				<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedArrivalShipmentViewItem.assemblyPO}" width="80" rendered="#{materializedArrivalShipmentView.searchObject.searchFields[28].visible}" >
+		<p:column sortBy="#{materializedArrivalShipmentViewItem.assemblyPO}" width="80" 
+			rendered="#{materializedArrivalShipmentView.searchObject.searchFields[28].visible}" displayPriority="#{materializedArrivalShipmentView.searchObject.searchFields[28].colOrder}" 
+			exportHeaderValue="#{i18n.col_materializedarrivalshipmentview_assemblypo_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materializedarrivalshipmentview_assemblypo}"/>
+				<h:outputText value="#{i18n.col_materializedarrivalshipmentview_assemblypo}" id="assemblyPOHeader"/>
+				<p:tooltip for="assemblyPOHeader" value="#{i18n.col_materializedarrivalshipmentview_assemblypo_tooltip}" position="top" showDelay="50"/>
 			</f:facet>
 			<h:outputText value="#{materializedArrivalShipmentViewItem.assemblyPO}">
 			</h:outputText>
