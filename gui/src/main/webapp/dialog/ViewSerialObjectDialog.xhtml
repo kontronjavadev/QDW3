@@ -66,10 +66,10 @@
 		<h:outputLabel value="#{i18n.field_viewserialobjectdialog_cboparentobject}:" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY')}" for="cboParentObject" styleClass="label-field-optional"/>
 		<p:commandLink rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY')}" id="cboParentObject" style="font-weight: bold;color: #0063ac" action="#{viewSerialObjectDialog.openViewSerialObjectDialogLink}">
 			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{viewSerialObjectDialog.currentPageURL}"/>
-			<h:outputText value="#{viewSerialObjectDialog.serialObject.parentObject.id}"/>
+			<h:outputText value="#{viewSerialObjectDialog.serialObject.parentObject.serialNumber}"/>
 		</p:commandLink>
 		<h:outputLabel value="#{i18n.field_viewserialobjectdialog_cboparentobject}:" rendered="#{!userSession.checkAuthorizationString('ADMINISTRATOR;READONLY')}" for="cboParentObjectAltLbl" styleClass="label-field-optional"/>
-		<h:outputText styleClass="label-field-value" rendered="#{!userSession.checkAuthorizationString('ADMINISTRATOR;READONLY')}" id="cboParentObjectAltLbl" value="#{viewSerialObjectDialog.serialObject.parentObject.id}"/>
+		<h:outputText styleClass="label-field-value" rendered="#{!userSession.checkAuthorizationString('ADMINISTRATOR;READONLY')}" id="cboParentObjectAltLbl" value="#{viewSerialObjectDialog.serialObject.parentObject.serialNumber}"/>
 		<p:tooltip for="cboParentObject" value=""/>
 
 		<h:outputLabel value="#{i18n.lbl_assoc_serialobject_tracebom}:" for="cboTraceBom" styleClass="label-field-optional"/>

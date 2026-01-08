@@ -4285,7 +4285,7 @@
   <net.sourceforge.jbizmo.model.java:Namespace name="mv" parent="/4" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="serial" parent="/2" javaTypes="/300 /302 /338" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="serial" parent="/1" javaTypes="/299 /301 /337" project="/0"/>
-  <net.sourceforge.jbizmo.model.java:Namespace name="serial" parent="/3" javaTypes="/295 /296 /306 /310 /330 /336 /335" project="/0"/>
+  <net.sourceforge.jbizmo.model.java:Namespace name="serial" parent="/3" javaTypes="/295 /310 /306 /335 /296 /330 /336" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="serial" parent="/4" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="service" parent="/2" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="service" parent="/1" project="/0"/>
@@ -5380,6 +5380,9 @@
     <attributes name="id" selectToken="a.id">
       <domainAttribute href="package-base.xmi#//@domainObjects.0/@attributes.0"/>
     </attributes>
+    <attributes name="serialNumber" selectToken="a.serialNumber">
+      <domainAttribute href="package-serial.xmi#//@domainObjects.0/@attributes.0"/>
+    </attributes>
   </net.sourceforge.jbizmo.model.dto:DTOBean>
   <net.sourceforge.jbizmo.model.dto:DTOBean name="SupplierListDTO" comment="Data transfer object for supplier objects" namespace="/8">
     <domainObject href="package-base.xmi#//@domainObjects.13"/>
@@ -5546,6 +5549,9 @@
       <methodParameters name="sourceObjectId" type="/0/@allSupportedTypes.2"/>
     </boundaryMethods>
     <boundaryMethods name="findSerialObjectById" comment="Find serial object by its ID" returnType="/335" methodType="FIND_BY_ID" serviceMethod="/302/@repositoryMethods.0">
+      <methodParameters name="id" type="/0/@allSupportedTypes.2"/>
+    </boundaryMethods>
+    <boundaryMethods name="findListSerialObject" comment="Find serial object by its ID" returnType="/296" methodType="FIND_BY_ID" serviceMethod="/302/@repositoryMethods.0">
       <methodParameters name="id" type="/0/@allSupportedTypes.2"/>
     </boundaryMethods>
   </net.sourceforge.jbizmo.model.boundary:BoundaryBean>

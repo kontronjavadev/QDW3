@@ -61,6 +61,7 @@ public class SerialObjectBoundaryService {
         // Collect the select tokens of all fields that should be fetched
         final var selectTokens = new ArrayList<String>();
         selectTokens.add(SerialObjectListDTO.SELECT_ID);
+        selectTokens.add(SerialObjectListDTO.SELECT_SERIALNUMBER);
 
         // Initialize the search object
         final var searchObj = new SearchDTO();
@@ -172,6 +173,7 @@ public class SerialObjectBoundaryService {
         if (serialObject.getParentObject() != null) {
             dto.setParentObject(new SerialObjectListDTO());
             dto.getParentObject().setId(serialObject.getParentObject().getId());
+            dto.getParentObject().setSerialNumber(serialObject.getParentObject().getSerialNumber());
         }
 
 
@@ -186,6 +188,25 @@ public class SerialObjectBoundaryService {
 
         dto.setMaterialMaterialNumber(serialObject.getMaterial().getMaterialNumber());
         dto.setMaterialSapNumber(serialObject.getMaterial().getSapNumber());
+
+        return dto;
+    }
+
+    /**
+     * Find serial object by its ID
+     * @param id
+     * @return the serial object object
+     */
+    @Generated
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public SerialObjectListDTO findListSerialObject(long id) {
+        // Find persistent object
+        final SerialObject serialObject = repository.findById(id, true);
+
+        final var dto = new SerialObjectListDTO();
+        dto.setId(serialObject.getId());
+        dto.setSerialNumber(serialObject.getSerialNumber());
 
         return dto;
     }

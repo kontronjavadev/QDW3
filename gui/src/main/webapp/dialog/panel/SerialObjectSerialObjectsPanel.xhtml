@@ -18,9 +18,9 @@
 		</p:submenu>
 	</p:menubar>
 
-	<br/>
 
 	<p:dataTable id="gridSerialObjectSerialObjectsPanel" var="serialObjectSerialObjectsPanelItem" rows="50"
+		selectionTextDisabled="false" allowUnsorting="true" resizeMode="expand" multiViewState="true" 
 		selectionMode="single"
 		selection="#{serialObjectSerialObjectsPanel.selItemOfSerialObjects}"
 		loadingMessage="#{i18n.action_fetch_data}"
@@ -28,52 +28,57 @@
 		paginatorPosition="top" paginatorAlwaysVisible="false" paginator="true" resizableColumns="true"
 		rowKey="#{serialObjectSerialObjectsPanelItem.id}"
 		paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-		rowsPerPageTemplate="10,50,100,500,1000">
+		rowsPerPageTemplate="50,150,400,1000">
 		<p:ajax event="rowDblselect" listener="#{serialObjectSerialObjectsPanel.onSerialObjectsGridDoubleClick}"/>
 
 		<p:column sortBy="#{serialObjectSerialObjectsPanelItem.serialNumber}" width="100" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_serialobjectserialobjectspanel_serialnumber}"/>
 			</f:facet>
-			<h:outputText value="#{serialObjectSerialObjectsPanelItem.serialNumber}">
-			</h:outputText>
+			<h:outputText value="#{serialObjectSerialObjectsPanelItem.serialNumber}" />
 		</p:column>
 
-		<p:column sortBy="#{serialObjectSerialObjectsPanelItem.materialMaterialNumber}" width="150" >
+		<p:column sortBy="#{serialObjectSerialObjectsPanelItem.materialMaterialNumber}" width="150" 
+			exportValue="#{serialObjectSerialObjectsPanelItem.materialMaterialNumber}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_serialobjectserialobjectspanel_materialmaterialnumber}"/>
 			</f:facet>
-			<h:outputText value="#{serialObjectSerialObjectsPanelItem.materialMaterialNumber}">
-			</h:outputText>
+			<h:outputText value="#{serialObjectSerialObjectsPanelItem.materialMaterialNumber}" id="materialMaterialNumber" />
+			<p:tooltip for="materialMaterialNumber" value="#{serialObjectSerialObjectsPanelItem.materialMaterialNumber}" position="top" showDelay="50"/>
 		</p:column>
 
-		<p:column sortBy="#{serialObjectSerialObjectsPanelItem.materialSapNumber}" width="150" >
+		<p:column sortBy="#{serialObjectSerialObjectsPanelItem.materialSapNumber}" width="150" 
+			exportValue="#{serialObjectSerialObjectsPanelItem.materialSapNumber}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_serialobjectserialobjectspanel_materialsapnumber}"/>
 			</f:facet>
-			<h:outputText value="#{serialObjectSerialObjectsPanelItem.materialSapNumber}">
-			</h:outputText>
+			<h:outputText value="#{serialObjectSerialObjectsPanelItem.materialSapNumber}" id="materialSapNumber" />
+			<p:tooltip for="materialSapNumber" value="#{serialObjectSerialObjectsPanelItem.materialSapNumber}" position="top" showDelay="50"/>
 		</p:column>
 
-		<p:column sortBy="#{serialObjectSerialObjectsPanelItem.customerSerialNumber}" width="100" >
+		<p:column sortBy="#{serialObjectSerialObjectsPanelItem.customerSerialNumber}" width="100" 
+			exportHeaderValue="#{i18n.col_serialobjectserialobjectspanel_customerserialnumber_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_serialobjectserialobjectspanel_customerserialnumber}"/>
+				<h:outputText value="#{i18n.col_serialobjectserialobjectspanel_customerserialnumber}" id="customerSerialNumberHeader"/>
+				<p:tooltip for="customerSerialNumberHeader" value="#{i18n.col_serialobjectserialobjectspanel_customerserialnumber_tooltip}" position="top" showDelay="50" />
 			</f:facet>
-			<h:outputText value="#{serialObjectSerialObjectsPanelItem.customerSerialNumber}">
-			</h:outputText>
+			<h:outputText value="#{serialObjectSerialObjectsPanelItem.customerSerialNumber}" />
 		</p:column>
 
-		<p:column sortBy="#{serialObjectSerialObjectsPanelItem.productionOrderNumber}" width="100" >
+		<p:column sortBy="#{serialObjectSerialObjectsPanelItem.productionOrderNumber}" width="100" 
+			exportHeaderValue="#{i18n.col_serialobjectserialobjectspanel_productionordernumber_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_serialobjectserialobjectspanel_productionordernumber}"/>
+				<h:outputText value="#{i18n.col_serialobjectserialobjectspanel_productionordernumber}" id="productionOrderNumberHeader"/>
+				<p:tooltip for="productionOrderNumberHeader" value="#{i18n.col_serialobjectserialobjectspanel_productionordernumber_tooltip}" position="top" showDelay="50" />
 			</f:facet>
-			<h:outputText value="#{serialObjectSerialObjectsPanelItem.productionOrderNumber}">
-			</h:outputText>
+			<h:outputText value="#{serialObjectSerialObjectsPanelItem.productionOrderNumber}" />
 		</p:column>
 
-		<p:column sortBy="#{serialObjectSerialObjectsPanelItem.assemblyDate}" width="80" >
+		<p:column sortBy="#{serialObjectSerialObjectsPanelItem.assemblyDate}" width="80" 
+			exportHeaderValue="#{i18n.col_serialobjectserialobjectspanel_assemblydate_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_serialobjectserialobjectspanel_assemblydate}"/>
+				<h:outputText value="#{i18n.col_serialobjectserialobjectspanel_assemblydate}" id="assemblyDateHeader"/>
+				<p:tooltip for="assemblyDateHeader" value="#{i18n.col_serialobjectserialobjectspanel_assemblydate_tooltip}" position="top" showDelay="50" />
 			</f:facet>
 			<h:outputText value="#{serialObjectSerialObjectsPanelItem.assemblyDate}">
 				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateConverter"/>
@@ -108,13 +113,25 @@
 
 	<h:outputText styleClass="label-field-mandatory" value="#{i18n.result_total_number_records} #{serialObjectSerialObjectsPanel.serialObjectsList.size()}"/>
 
-	<p:contextMenu for="gridSerialObjectSerialObjectsPanel">
+
+
+<!--Kontextmenü mit Möglichkeit, eine Zelle oder eine Zeile zu kopieren -->
+
+	<h:inputHidden id="cellText" value="#{serialObjectSerialObjectsPanel.cellText}" />
+	<h:inputHidden id="rowCsv" value="#{serialObjectSerialObjectsPanel.rowCsv}" />
+
+	<p:contextMenu for="gridSerialObjectSerialObjectsPanel" beforeShow="updateContextData(event)" >
 		<p:menuitem value="#{i18n.action_delete}" ajax="true" icon="pi pi-trash" id="gridSerialObjectSerialObjectsPanel_mniDelete" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR') and not serialObjectSerialObjectsPanel.readOnly}" onclick="PF('deleteConfirmSerialObjects').show()"/>
 		<p:menuitem value="#{i18n.action_copy}" ajax="true" icon="pi pi-copy" id="gridSerialObjectSerialObjectsPanel_mniCopy" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR') and not serialObjectSerialObjectsPanel.readOnly}" onclick="PF('copyConfirmSerialObjects').show()"/>
 		<p:menuitem value="#{i18n.action_view}" ajax="true" icon="pi pi-file" id="gridSerialObjectSerialObjectsPanel_mniView" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY')}" action="#{serialObjectSerialObjectsPanel.openViewSerialObjectDialog}">
 			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{serialObjectSerialObjectsPanel.currentPageURL}"/>
 		</p:menuitem>
 		<p:menuitem value="#{i18n.action_refresh}" ajax="false" type="push" icon="pi pi-refresh" id="gridSerialObjectSerialObjectsPanel_mniRefresh" actionListener="#{serialObjectSerialObjectsPanel.fetchSerialObjects}"/>
+
+		<p:separator/>
+
+		<p:menuitem value="#{i18n.ctxmenu_copy_cell}" actionListener="#{serialObjectSerialObjectsPanel.copyCellToClipboard}" icon="pi pi-copy" update="@none"/>
+		<p:menuitem value="#{i18n.ctxmenu_copy_row}" actionListener="#{serialObjectSerialObjectsPanel.copyRowToClipboard}" icon="pi pi-copy" update="@none"/>
 	</p:contextMenu>
 
 	<p:confirmDialog modal="true" message="#{i18n.dialog_delete_question}" header="#{i18n.dialog_delete_title}" severity="alert" widgetVar="deleteConfirmSerialObjects">

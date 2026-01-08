@@ -167,10 +167,13 @@ public interface TranslationKeys {
     String COL_NOTIFICATIONVIEW_NOTIFICATIONEND = "col_notificationview_notificationend";
     String COL_NOTIFICATIONVIEW_NOTIFICATIONSTART = "col_notificationview_notificationstart";
     String COL_SERIALOBJECTSERIALOBJECTSPANEL_ASSEMBLYDATE = "col_serialobjectserialobjectspanel_assemblydate";
+    String COL_SERIALOBJECTSERIALOBJECTSPANEL_ASSEMBLYDATE_TOOLTIP = "col_serialobjectserialobjectspanel_assemblydate_tooltip";
     String COL_SERIALOBJECTSERIALOBJECTSPANEL_CUSTOMERSERIALNUMBER = "col_serialobjectserialobjectspanel_customerserialnumber";
+    String COL_SERIALOBJECTSERIALOBJECTSPANEL_CUSTOMERSERIALNUMBER_TOOLTIP = "col_serialobjectserialobjectspanel_customerserialnumber_tooltip";
     String COL_SERIALOBJECTSERIALOBJECTSPANEL_MATERIALMATERIALNUMBER = "col_serialobjectserialobjectspanel_materialmaterialnumber";
     String COL_SERIALOBJECTSERIALOBJECTSPANEL_MATERIALSAPNUMBER = "col_serialobjectserialobjectspanel_materialsapnumber";
     String COL_SERIALOBJECTSERIALOBJECTSPANEL_PRODUCTIONORDERNUMBER = "col_serialobjectserialobjectspanel_productionordernumber";
+    String COL_SERIALOBJECTSERIALOBJECTSPANEL_PRODUCTIONORDERNUMBER_TOOLTIP = "col_serialobjectserialobjectspanel_productionordernumber_tooltip";
     String COL_SERIALOBJECTSERIALOBJECTSPANEL_SERIALNUMBER = "col_serialobjectserialobjectspanel_serialnumber";
     String COL_SUPPLIERVIEW_COUNTRYNAME = "col_supplierview_countryname";
     String COL_VERTICALSECTORVIEW_BUSINESSUNITCODE = "col_verticalsectorview_businessunitcode";
