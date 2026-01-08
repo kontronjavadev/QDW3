@@ -3,6 +3,7 @@ package com.kontron.qdw.ui.view;
 import org.slf4j.*;
 import java.lang.invoke.*;
 import com.kontron.qdw.dto.mv.*;
+import com.kontron.qdw.ui.view.util.SuperView;
 import com.kontron.qdw.boundary.mv.*;
 import org.primefaces.model.DualListModel;
 import net.sourceforge.jbizmo.commons.webclient.primefaces.search.*;
@@ -14,12 +15,11 @@ import jakarta.faces.view.*;
 import java.text.*;
 import static com.kontron.qdw.ui.UserSession.*;
 import com.kontron.qdw.ui.*;
-import com.kontron.qdw.ui.view.util.SuperView;
 import com.kontron.qdw.service.*;
 import jakarta.faces.model.*;
 import jakarta.inject.*;
-import net.sourceforge.jbizmo.commons.search.dto.*;
 import net.sourceforge.jbizmo.commons.annotation.Customized;
+import net.sourceforge.jbizmo.commons.search.dto.*;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
 import java.io.*;
 
@@ -203,11 +203,11 @@ public class MaterializedArrivalShipmentView extends SuperView implements Serial
         new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSearchDTO.SELECT_PARENTMATERIALTYPE,
                 bundle.getString(COL_MATERIALIZEDARRIVALSHIPMENTVIEW_PARENTMATERIALTYPE), SearchFieldDataTypeEnum.STRING, 80);
 
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSearchDTO.SELECT_PARENTMATERIALSHORTTEXT,
-                bundle.getString(LBL_ATTR_MATERIALIZEDENTITIY_PARENTMATERIALSHORTTEXT), SearchFieldDataTypeEnum.STRING, 250);
-
         new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSearchDTO.SELECT_PARENTMATERIALHIERARCHY,
                 bundle.getString(COL_MATERIALIZEDARRIVALSHIPMENTVIEW_PARENTMATERIALHIERARCHY), SearchFieldDataTypeEnum.STRING, 150);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSearchDTO.SELECT_PARENTMATERIALSHORTTEXT,
+                bundle.getString(LBL_ATTR_MATERIALIZEDENTITIY_PARENTMATERIALSHORTTEXT), SearchFieldDataTypeEnum.STRING, 250);
 
         new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSearchDTO.SELECT_PARENTREVISIONNUMBER,
                 bundle.getString(COL_MATERIALIZEDARRIVALSHIPMENTVIEW_PARENTREVISIONNUMBER), SearchFieldDataTypeEnum.STRING, 150);

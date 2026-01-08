@@ -4278,7 +4278,7 @@
       <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.0"/>
     </attributes>
   </net.sourceforge.jbizmo.model.dto:DTOBean>
-  <net.sourceforge.jbizmo.model.client:FormGroup name="Serial object" groupOrder="4" forms="/260 /266 /286 /307 /303 /317 /292 /322" roles="/0/@roles.0 /0/@roles.1" project="/0"/>
+  <net.sourceforge.jbizmo.model.client:FormGroup name="Serial object" groupOrder="4" forms="/260 /266 /286 /307 /303 /322 /317 /292" roles="/0/@roles.0 /0/@roles.1" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="mv" parent="/2" javaTypes="/265 /271 /291 /316 /327" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="mv" parent="/1" javaTypes="/264 /270 /290 /315 /326" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="mv" parent="/3" javaTypes="/263 /269 /289 /320 /325" project="/0"/>
@@ -6260,8 +6260,8 @@
     <fields colIndex="22" width="150" title="Parent mat. no." dTOAttribute="/325/@attributes.21"/>
     <fields colIndex="23" width="150" title="Parent SAP no." dTOAttribute="/325/@attributes.27"/>
     <fields colIndex="24" width="80" title="P. mat. type" dTOAttribute="/325/@attributes.23"/>
-    <fields colIndex="25" width="250" title="Parent material short text" dTOAttribute="/325/@attributes.25"/>
-    <fields colIndex="26" width="150" title="P. material hierarchy" dTOAttribute="/325/@attributes.29"/>
+    <fields colIndex="26" width="250" title="Parent material short text" dTOAttribute="/325/@attributes.25"/>
+    <fields colIndex="25" width="150" title="P. material hierarchy" dTOAttribute="/325/@attributes.29"/>
     <fields colIndex="27" width="150" title="Parent revision no." dTOAttribute="/325/@attributes.33"/>
     <fields colIndex="28" width="80" title="Assy. date" fieldType="LOCAL_DATE" dTOAttribute="/325/@attributes.34"/>
     <fields colIndex="29" width="80" title="Assy. PO" dTOAttribute="/325/@attributes.35"/>
