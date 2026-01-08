@@ -23,6 +23,7 @@ import com.kontron.qdw.boundary.mv.MaterializedArrivalShipmentBoundaryService;
 import com.kontron.qdw.dto.mv.MaterializedArrivalShipmentSearchDTO;
 import com.kontron.qdw.service.SavedQueryService;
 import com.kontron.qdw.ui.UserSession;
+import com.kontron.qdw.ui.dialog.ViewSerialObjectDialog;
 import com.kontron.qdw.ui.view.util.OnCompleteHelper;
 import com.kontron.qdw.ui.view.util.SuperView;
 
@@ -378,7 +379,20 @@ public class MaterializedArrivalShipmentView extends SuperView implements Serial
      */
     @Generated
     public void onDoubleClick() {
-        // No appropriate form found!
+        logger.debug("Handle double-click event");
+
+        userSession.redirectTo(getCurrentPageURL(), openViewSerialObjectDialog());
+    }
+
+
+    public String openViewSerialObjectDialog() {
+        var url = "";
+
+        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY)) {
+            url = ViewSerialObjectDialog.PAGE_INIT_URL + selectedObject.getMeSerialObjectId();
+        }
+
+        return url;
     }
 
     /**

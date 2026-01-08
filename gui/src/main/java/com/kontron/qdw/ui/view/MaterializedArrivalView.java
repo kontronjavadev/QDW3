@@ -480,9 +480,11 @@ public class MaterializedArrivalView extends SuperView implements Serializable {
     /**
      * Event that will be fired if user performs a double-click on a grid row
      */
-    @Customized
+    @Generated
     public void onDoubleClick() {
-        // No appropriate form found!
+        logger.debug("Handle double-click event");
+
+        userSession.redirectTo(getCurrentPageURL(), openViewArrivalDialog());
     }
 
     public String openViewArrivalDialog() {
