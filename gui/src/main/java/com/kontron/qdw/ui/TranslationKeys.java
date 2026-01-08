@@ -166,6 +166,12 @@ public interface TranslationKeys {
     String COL_NOTIFICATIONVIEW_INITIATORNAME = "col_notificationview_initiatorname";
     String COL_NOTIFICATIONVIEW_NOTIFICATIONEND = "col_notificationview_notificationend";
     String COL_NOTIFICATIONVIEW_NOTIFICATIONSTART = "col_notificationview_notificationstart";
+    String COL_SERIALOBJECTSERIALOBJECTSPANEL_ASSEMBLYDATE = "col_serialobjectserialobjectspanel_assemblydate";
+    String COL_SERIALOBJECTSERIALOBJECTSPANEL_CUSTOMERSERIALNUMBER = "col_serialobjectserialobjectspanel_customerserialnumber";
+    String COL_SERIALOBJECTSERIALOBJECTSPANEL_MATERIALMATERIALNUMBER = "col_serialobjectserialobjectspanel_materialmaterialnumber";
+    String COL_SERIALOBJECTSERIALOBJECTSPANEL_MATERIALSAPNUMBER = "col_serialobjectserialobjectspanel_materialsapnumber";
+    String COL_SERIALOBJECTSERIALOBJECTSPANEL_PRODUCTIONORDERNUMBER = "col_serialobjectserialobjectspanel_productionordernumber";
+    String COL_SERIALOBJECTSERIALOBJECTSPANEL_SERIALNUMBER = "col_serialobjectserialobjectspanel_serialnumber";
     String COL_SUPPLIERVIEW_COUNTRYNAME = "col_supplierview_countryname";
     String COL_VERTICALSECTORVIEW_BUSINESSUNITCODE = "col_verticalsectorview_businessunitcode";
     String COMMAND_BACK = "command_back";
@@ -230,6 +236,13 @@ public interface TranslationKeys {
     String FIELD_VIEWMATERIALDIALOG_TXTSAPNUMBER = "field_viewmaterialdialog_txtsapnumber";
     String FIELD_VIEWMATERIALREVISIONDIALOG_TXTALTERNATIVENUMBER = "field_viewmaterialrevisiondialog_txtalternativenumber";
     String FIELD_VIEWMATERIALREVISIONDIALOG_TXTREVISIONNUMBER = "field_viewmaterialrevisiondialog_txtrevisionnumber";
+    String FIELD_VIEWSERIALOBJECTDIALOG_CBOPARENTOBJECT = "field_viewserialobjectdialog_cboparentobject";
+    String FIELD_VIEWSERIALOBJECTDIALOG_TXTCUSTOMERSERIALNUMBER = "field_viewserialobjectdialog_txtcustomerserialnumber";
+    String FIELD_VIEWSERIALOBJECTDIALOG_TXTMATERIALMATERIALNUMBER = "field_viewserialobjectdialog_txtmaterialmaterialnumber";
+    String FIELD_VIEWSERIALOBJECTDIALOG_TXTMATERIALSAPNUMBER = "field_viewserialobjectdialog_txtmaterialsapnumber";
+    String FIELD_VIEWSERIALOBJECTDIALOG_TXTPARENTOBJECTSERIALNUMBER = "field_viewserialobjectdialog_txtparentobjectserialnumber";
+    String FIELD_VIEWSERIALOBJECTDIALOG_TXTPRODUCTIONORDERNUMBER = "field_viewserialobjectdialog_txtproductionordernumber";
+    String FIELD_VIEWSERIALOBJECTDIALOG_TXTSERIALNUMBER = "field_viewserialobjectdialog_txtserialnumber";
     String FORM_ADDBOMITEMDIALOG_TITLE = "form_addbomitemdialog_title";
     String FORM_AGGREGATEDARRIVALVIEW_TITLE = "form_aggregatedarrivalview_title";
     String FORM_AGGREGATEDSHIPMENTARRIVALVIEW_TITLE = "form_aggregatedshipmentarrivalview_title";
@@ -292,6 +305,7 @@ public interface TranslationKeys {
     String FORM_VIEWMATERIALDIALOG_TITLE = "form_viewmaterialdialog_title";
     String FORM_VIEWMATERIALREVISIONDIALOG_TITLE = "form_viewmaterialrevisiondialog_title";
     String FORM_VIEWROLEDIALOG_TITLE = "form_viewroledialog_title";
+    String FORM_VIEWSERIALOBJECTDIALOG_TITLE = "form_viewserialobjectdialog_title";
     String FORM_VIEWSUPPLIERDIALOG_TITLE = "form_viewsupplierdialog_title";
     String ILLEGAL_ITEM_SELECTED = "illegal_item_selected";
     String INVALID_MAIL_ADDRESS = "invalid_mail_address";
@@ -312,6 +326,9 @@ public interface TranslationKeys {
     String LBL_ASSOC_MATERIALREVISION_MATERIAL = "lbl_assoc_materialrevision_material";
     String LBL_ASSOC_MATERIALREVISION_PLANT = "lbl_assoc_materialrevision_plant";
     String LBL_ASSOC_NOTIFICATION_INITIATOR = "lbl_assoc_notification_initiator";
+    String LBL_ASSOC_SERIALOBJECT_MATERIAL = "lbl_assoc_serialobject_material";
+    String LBL_ASSOC_SERIALOBJECT_PARENTOBJECT = "lbl_assoc_serialobject_parentobject";
+    String LBL_ASSOC_SERIALOBJECT_TRACEBOM = "lbl_assoc_serialobject_tracebom";
     String LBL_ASSOC_SUPPLIER_COUNTRY = "lbl_assoc_supplier_country";
     String LBL_ASSOC_VERTICALSECTOR_BUSINESSUNIT = "lbl_assoc_verticalsector_businessunit";
     String LBL_ATTR_ABSTRACTAGGREGATEDBASE_MONTH = "lbl_attr_abstractaggregatedbase_month";
@@ -399,6 +416,9 @@ public interface TranslationKeys {
     String LBL_ATTR_NOTIFICATION_NOTIFICATIONEND = "lbl_attr_notification_notificationend";
     String LBL_ATTR_NOTIFICATION_NOTIFICATIONSTART = "lbl_attr_notification_notificationstart";
     String LBL_ATTR_ROLE_NAME = "lbl_attr_role_name";
+    String LBL_ATTR_SERIALOBJECT_ASSEMBLYDATE = "lbl_attr_serialobject_assemblydate";
+    String LBL_ATTR_SERIALOBJECT_CUSTOMERSERIALNUMBER = "lbl_attr_serialobject_customerserialnumber";
+    String LBL_ATTR_SERIALOBJECT_PRODUCTIONORDERNUMBER = "lbl_attr_serialobject_productionordernumber";
     String LBL_ATTR_SERIALOBJECT_SERIALNUMBER = "lbl_attr_serialobject_serialnumber";
     String LBL_ATTR_SUPPLIER_CITY = "lbl_attr_supplier_city";
     String LBL_ATTR_SUPPLIER_NAME = "lbl_attr_supplier_name";
@@ -458,6 +478,7 @@ public interface TranslationKeys {
     String PANEL_VIEWMATERIALDIALOG_PANREVISIONS_TITLE = "panel_viewmaterialdialog_panrevisions_title";
     String PANEL_VIEWMATERIALREVISIONDIALOG_PANBOMITEMS_TITLE = "panel_viewmaterialrevisiondialog_panbomitems_title";
     String PANEL_VIEWROLEDIALOG_USERS_TITLE = "panel_viewroledialog_users_title";
+    String PANEL_VIEWSERIALOBJECTDIALOG_PANSERIALOBJECTS_TITLE = "panel_viewserialobjectdialog_panserialobjects_title";
     String PICK_LIST_ADD = "pick_list_add";
     String PICK_LIST_ADD_ALL = "pick_list_add_all";
     String PICK_LIST_REMOVE = "pick_list_remove";
