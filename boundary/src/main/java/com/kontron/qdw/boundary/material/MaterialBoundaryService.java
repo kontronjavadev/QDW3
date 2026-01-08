@@ -50,21 +50,27 @@ public class MaterialBoundaryService {
     @PermitAll
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public List<MaterialListSapDTO> findMaterialsBySapNumber(String sapNumber) {
-        final var resultList = new ArrayList<MaterialListSapDTO>();
         String filter = sapNumber;
+        // Collect the select tokens of all fields that should be fetched
+        final var selectTokens = new ArrayList<String>();
+        selectTokens.add(MaterialListSapDTO.SELECT_ID);
+        selectTokens.add(MaterialListSapDTO.SELECT_SAPNUMBER);
+
+        // Initialize the search object
+        final var searchObj = new SearchDTO();
+        searchObj.setExactFilterMatch(true);
+        searchObj.setCaseSensitive(true);
+        searchObj.setMaxResult(SMALL_LIST_SIZE);
+        searchObj.setFromClause("from Material a");
+
         if (filter != null && !filter.isEmpty() && !filter.equals(WILDCARD)) {
-            filter += WILDCARD;
+            final var filterField = searchObj.addSearchField(MaterialListSapDTO.SELECT_SAPNUMBER, SearchFieldDataTypeEnum.STRING);
+            filterField.setFilterCriteria(filter + WILDCARD);
+            filterField.setSortIndex(1);
+            filterField.setSortOrder(SortDirectionEnum.ASC);
         }
 
-        for (final Material material : repository.searchBySapNumber(filter)) {
-            final var dto = new MaterialListSapDTO();
-            dto.setId(material.getId());
-            dto.setSapNumber(material.getSapNumber());
-
-            resultList.add(dto);
-        }
-
-        return resultList;
+        return repository.search(searchObj, MaterialListSapDTO.class, selectTokens);
     }
 
     /**

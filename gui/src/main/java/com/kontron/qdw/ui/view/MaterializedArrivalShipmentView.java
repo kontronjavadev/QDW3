@@ -1,68 +1,100 @@
 package com.kontron.qdw.ui.view;
 
-import org.slf4j.*;
-import java.lang.invoke.*;
-import com.kontron.qdw.dto.mv.*;
-import com.kontron.qdw.ui.view.util.SuperView;
-import com.kontron.qdw.boundary.mv.*;
-import org.primefaces.model.DualListModel;
-import net.sourceforge.jbizmo.commons.webclient.primefaces.search.*;
 import static com.kontron.qdw.ui.TranslationKeys.*;
-import net.sourceforge.jbizmo.commons.webclient.primefaces.util.*;
-import jakarta.faces.application.FacesMessage;
-import java.util.*;
-import jakarta.faces.view.*;
-import java.text.*;
 import static com.kontron.qdw.ui.UserSession.*;
-import com.kontron.qdw.ui.*;
-import com.kontron.qdw.service.*;
-import jakarta.faces.model.*;
-import jakarta.inject.*;
+
+import java.io.Serializable;
+import java.lang.invoke.MethodHandles;
+import java.text.DecimalFormatSymbols;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.ResourceBundle;
+
+import org.primefaces.model.DualListModel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.kontron.qdw.boundary.base.CountryBoundaryService;
+import com.kontron.qdw.boundary.base.SupplierBoundaryService;
+import com.kontron.qdw.boundary.material.MaterialBoundaryService;
+import com.kontron.qdw.boundary.material.MaterialTypeBoundaryService;
+import com.kontron.qdw.boundary.mv.MaterializedArrivalShipmentBoundaryService;
+import com.kontron.qdw.dto.mv.MaterializedArrivalShipmentSearchDTO;
+import com.kontron.qdw.service.SavedQueryService;
+import com.kontron.qdw.ui.UserSession;
+import com.kontron.qdw.ui.view.util.OnCompleteHelper;
+import com.kontron.qdw.ui.view.util.SuperView;
+
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.model.SelectItem;
+import jakarta.faces.view.ViewScoped;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 import net.sourceforge.jbizmo.commons.annotation.Customized;
-import net.sourceforge.jbizmo.commons.search.dto.*;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
-import java.io.*;
+import net.sourceforge.jbizmo.commons.search.dto.SearchDTO;
+import net.sourceforge.jbizmo.commons.search.dto.SearchFieldDTO;
+import net.sourceforge.jbizmo.commons.search.dto.SearchFieldDataTypeEnum;
+import net.sourceforge.jbizmo.commons.webclient.primefaces.search.JSFSearchFieldDTO;
+import net.sourceforge.jbizmo.commons.webclient.primefaces.search.SearchInputFieldValidationException;
+import net.sourceforge.jbizmo.commons.webclient.primefaces.util.MessageUtil;
 
 @Named("materializedArrivalShipmentView")
 @ViewScoped
 public class MaterializedArrivalShipmentView extends SuperView implements Serializable {
+
     @Generated
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     @Generated
+    public static final String VIEW_ID = "com.kontron.qdw.ui.view.MaterializedArrivalShipmentView";
+    @Generated
+    public static final String PAGE_URL = "/view/MaterializedArrivalShipmentView.jsf?faces-redirect=true";
+    @Generated
     private static final long serialVersionUID = 1L;
+
+    @Generated
+    private transient ResourceBundle bundle;
+    @Generated
+    private final UserSession userSession;
+
+    @Generated
+    private final transient MaterializedArrivalShipmentBoundaryService materializedArrivalShipmentService;
+    private final transient MaterialBoundaryService materialService;
+    private final transient SupplierBoundaryService supplierService;
+    private final transient CountryBoundaryService countryService;
+    private final transient MaterialTypeBoundaryService matTypeService;
+    @Generated
+    private final transient SavedQueryService queryManager;
+
+    @Generated
+    private String savedQueryName;
+    @Generated
+    private String selectedSavedQuery;
+    @Generated
+    private String formTitle = "";
+
     @Generated
     private List<MaterializedArrivalShipmentSearchDTO> materializedArrivalShipmentsList = new ArrayList<>();
     @Generated
     private MaterializedArrivalShipmentSearchDTO selectedObject;
     @Generated
-    private final UserSession userSession;
-    @Generated
-    private transient ResourceBundle bundle;
-    @Generated
-    private final transient MaterializedArrivalShipmentBoundaryService materializedArrivalShipmentService;
-    @Generated
-    public static final String PAGE_URL = "/view/MaterializedArrivalShipmentView.jsf?faces-redirect=true";
-    @Generated
-    private String formTitle = "";
-    @Generated
     private long countResult;
-    @Generated
-    public static final String VIEW_ID = "com.kontron.qdw.ui.view.MaterializedArrivalShipmentView";
-    @Generated
-    private final transient SavedQueryService queryManager;
-    @Generated
-    private String savedQueryName;
-    @Generated
-    private String selectedSavedQuery;
+
+
 
     /**
      * Default constructor
      */
     @Generated
     public MaterializedArrivalShipmentView() {
-        this.userSession = null;
-        this.materializedArrivalShipmentService = null;
-        this.queryManager = null;
+        userSession = null;
+        materializedArrivalShipmentService = null;
+        queryManager = null;
+        materialService = null;
+        supplierService = null;
+        countryService = null;
+        matTypeService = null;
     }
 
     /**
@@ -74,11 +106,18 @@ public class MaterializedArrivalShipmentView extends SuperView implements Serial
     @Inject
     @Generated
     public MaterializedArrivalShipmentView(UserSession userSession, MaterializedArrivalShipmentBoundaryService materializedArrivalShipmentService,
-            SavedQueryService queryManager) {
+            MaterialBoundaryService materialService, SupplierBoundaryService supplierService, CountryBoundaryService countryService,
+            MaterialTypeBoundaryService matTypeService, SavedQueryService queryManager) {
         this.userSession = userSession;
         this.materializedArrivalShipmentService = materializedArrivalShipmentService;
         this.queryManager = queryManager;
+        this.materialService = materialService;
+        this.supplierService = supplierService;
+        this.countryService = countryService;
+        this.matTypeService = matTypeService;
     }
+
+
 
     /**
      * Initialize view
@@ -285,6 +324,30 @@ public class MaterializedArrivalShipmentView extends SuperView implements Serial
         initSearchObject();
         fetchMaterializedArrivalShipments();
     }
+
+
+
+    public List<String> onCompleteMaterialNumber(String query) {
+        return OnCompleteHelper.onCompleteMaterialNumber(materialService, query);
+    }
+
+    public List<String> onCompleteSapNumber(String query) {
+        return OnCompleteHelper.onCompleteSapNumber(materialService, query);
+    }
+
+    public List<String> onCompleteSupplierName(String query) {
+        return OnCompleteHelper.onCompleteSupplierName(supplierService, query);
+    }
+
+    public List<String> onCompleteCountry(String query) {
+        return OnCompleteHelper.onCompleteCountry(countryService, query);
+    }
+
+    public List<String> onCompleteMatType(String query) {
+        return OnCompleteHelper.onCompleteMatType(matTypeService, query);
+    }
+
+
 
     /**
      * @return the list of elements
@@ -500,8 +563,9 @@ public class MaterializedArrivalShipmentView extends SuperView implements Serial
         final var items = new SelectItem[savedQueries.size()];
         int i = 0;
 
-        for (final String item : savedQueries)
+        for (final String item : savedQueries) {
             items[i++] = new SelectItem(item, item);
+        }
 
         return items;
     }
@@ -511,8 +575,9 @@ public class MaterializedArrivalShipmentView extends SuperView implements Serial
      */
     @Generated
     public void deleteSavedQuery() {
-        if (selectedSavedQuery == null)
+        if (selectedSavedQuery == null) {
             return;
+        }
 
         logger.debug("Delete saved query");
 
@@ -527,8 +592,9 @@ public class MaterializedArrivalShipmentView extends SuperView implements Serial
      */
     @Generated
     public void runSavedQuery() {
-        if (selectedSavedQuery == null)
+        if (selectedSavedQuery == null) {
             return;
+        }
 
         logger.debug("Run saved query");
 

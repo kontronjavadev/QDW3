@@ -10,6 +10,10 @@ public class MaterialListSapDTO implements Serializable {
     public static final String ATTR_ID = "id";
     @Generated
     public static final String ATTR_SAPNUMBER = "sapNumber";
+
+    public static final String SELECT_ID = "a." + ATTR_ID;
+    public static final String SELECT_SAPNUMBER = "a." + ATTR_SAPNUMBER;
+
     @Generated
     private long id;
     @Generated
