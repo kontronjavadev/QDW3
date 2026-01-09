@@ -4539,7 +4539,7 @@
     <fields colIndex="8" width="150" title="SAP no." dTOAttribute="/269/@attributes.16"/>
     <fields colIndex="9" width="250" title="Material short text" dTOAttribute="/269/@attributes.18"/>
     <fields colIndex="10" width="150" title="Material hierarchy" dTOAttribute="/269/@attributes.17"/>
-    <fields colIndex="11" title="Owner location" dTOAttribute="/269/@attributes.19"/>
+    <fields colIndex="11" title="Owner loc." dTOAttribute="/269/@attributes.19"/>
     <fields colIndex="12" width="80" title="Mat. type" dTOAttribute="/269/@attributes.20"/>
     <fields colIndex="13" title="Material class" dTOAttribute="/269/@attributes.21"/>
     <fields colIndex="14" title="Revision no." dTOAttribute="/269/@attributes.22"/>
