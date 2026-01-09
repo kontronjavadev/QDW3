@@ -1,6 +1,10 @@
 package com.kontron.qdw.boundary.base;
 
 import jakarta.validation.ConstraintViolationException;
+
+import static net.sourceforge.jbizmo.commons.jpa.AbstractRepository.SMALL_LIST_SIZE;
+import static net.sourceforge.jbizmo.commons.jpa.AbstractRepository.WILDCARD;
+
 import java.util.*;
 import com.kontron.qdw.repository.base.*;
 import jakarta.inject.*;
@@ -10,6 +14,7 @@ import net.sourceforge.jbizmo.commons.search.exception.*;
 import net.sourceforge.jbizmo.commons.repository.*;
 import net.sourceforge.jbizmo.commons.search.dto.*;
 import com.kontron.qdw.dto.base.*;
+
 import net.sourceforge.jbizmo.commons.annotation.Generated;
 import com.kontron.qdw.domain.base.*;
 
@@ -34,6 +39,31 @@ public class CustomerBoundaryService {
     @Generated
     public CustomerBoundaryService(CustomerRepository repository) {
         this.repository = repository;
+    }
+
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public List<CustomerListDTO> findCustomer(String filter) {
+        // Collect the select tokens of all fields that should be fetched
+        final var selectTokens = new ArrayList<String>();
+        selectTokens.add(CustomerListDTO.SELECT_CODE);
+        selectTokens.add(CustomerListDTO.SELECT_NAME);
+
+        // Initialize the search object
+        final var searchObj = new SearchDTO();
+        searchObj.setExactFilterMatch(true);
+        searchObj.setCaseSensitive(true);
+        searchObj.setMaxResult(SMALL_LIST_SIZE);
+        searchObj.setFromClause("from Customer a");
+
+        if (filter != null && !filter.isEmpty() && !filter.equals(WILDCARD)) {
+            final var filterField = searchObj.addSearchField(CustomerListDTO.SELECT_NAME, SearchFieldDataTypeEnum.STRING);
+            filterField.setFilterCriteria(filter + WILDCARD);
+            filterField.setSortIndex(1);
+            filterField.setSortOrder(SortDirectionEnum.ASC);
+        }
+
+        return repository.search(searchObj, CustomerListDTO.class, selectTokens);
     }
 
     /**

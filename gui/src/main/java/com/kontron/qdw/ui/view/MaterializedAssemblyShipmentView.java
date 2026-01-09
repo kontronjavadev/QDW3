@@ -3,6 +3,12 @@ package com.kontron.qdw.ui.view;
 import org.slf4j.*;
 import java.lang.invoke.*;
 import com.kontron.qdw.dto.mv.*;
+import com.kontron.qdw.boundary.base.CountryBoundaryService;
+import com.kontron.qdw.boundary.base.CustomerBoundaryService;
+import com.kontron.qdw.boundary.base.MovementTypeBoundaryService;
+import com.kontron.qdw.boundary.base.SupplierBoundaryService;
+import com.kontron.qdw.boundary.material.MaterialBoundaryService;
+import com.kontron.qdw.boundary.material.MaterialTypeBoundaryService;
 import com.kontron.qdw.boundary.mv.*;
 import org.primefaces.model.DualListModel;
 import net.sourceforge.jbizmo.commons.webclient.primefaces.search.*;
@@ -14,6 +20,7 @@ import jakarta.faces.view.*;
 import java.text.*;
 import static com.kontron.qdw.ui.UserSession.*;
 import com.kontron.qdw.ui.*;
+import com.kontron.qdw.ui.view.util.OnCompleteHelper;
 import com.kontron.qdw.ui.view.util.SuperView;
 import com.kontron.qdw.service.*;
 import jakarta.faces.model.*;
@@ -29,40 +36,58 @@ public class MaterializedAssemblyShipmentView extends SuperView implements Seria
     @Generated
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     @Generated
+    public static final String VIEW_ID = "com.kontron.qdw.ui.view.MaterializedAssemblyShipmentView";
+    @Generated
+    public static final String PAGE_URL = "/view/MaterializedAssemblyShipmentView.jsf?faces-redirect=true";
+    @Generated
     private static final long serialVersionUID = 1L;
+
+    @Generated
+    private final UserSession userSession;
+    @Generated
+    private transient ResourceBundle bundle;
+
+    @Generated
+    private final transient MaterializedAssemblyShipmentBoundaryService materializedAssemblyShipmentService;
+    private final transient MaterialBoundaryService materialService;
+    private final transient SupplierBoundaryService supplierService;
+    private final transient CountryBoundaryService countryService;
+    private final transient MaterialTypeBoundaryService matTypeService;
+    private final transient MovementTypeBoundaryService mvtTypeService;
+    private final transient CustomerBoundaryService customerService;
+    @Generated
+    private final transient SavedQueryService queryManager;
+
+    @Generated
+    private String savedQueryName;
+    @Generated
+    private String selectedSavedQuery;
+    @Generated
+    private String formTitle = "";
+
     @Generated
     private List<MaterializedAssemblyShipmentSearchDTO> materializedAssemblyShipmentsList = new ArrayList<>();
     @Generated
     private MaterializedAssemblyShipmentSearchDTO selectedObject;
     @Generated
-    private final UserSession userSession;
-    @Generated
-    private transient ResourceBundle bundle;
-    @Generated
-    private final transient MaterializedAssemblyShipmentBoundaryService materializedAssemblyShipmentService;
-    @Generated
-    public static final String PAGE_URL = "/view/MaterializedAssemblyShipmentView.jsf?faces-redirect=true";
-    @Generated
-    private String formTitle = "";
-    @Generated
     private long countResult;
-    @Generated
-    public static final String VIEW_ID = "com.kontron.qdw.ui.view.MaterializedAssemblyShipmentView";
-    @Generated
-    private final transient SavedQueryService queryManager;
-    @Generated
-    private String savedQueryName;
-    @Generated
-    private String selectedSavedQuery;
+
+
 
     /**
      * Default constructor
      */
     @Generated
     public MaterializedAssemblyShipmentView() {
-        this.userSession = null;
-        this.materializedAssemblyShipmentService = null;
-        this.queryManager = null;
+        userSession = null;
+        materializedAssemblyShipmentService = null;
+        queryManager = null;
+        materialService = null;
+        supplierService = null;
+        countryService = null;
+        matTypeService = null;
+        mvtTypeService = null;
+        customerService = null;
     }
 
     /**
@@ -74,11 +99,20 @@ public class MaterializedAssemblyShipmentView extends SuperView implements Seria
     @Inject
     @Generated
     public MaterializedAssemblyShipmentView(UserSession userSession, MaterializedAssemblyShipmentBoundaryService materializedAssemblyShipmentService,
+            MaterialBoundaryService materialService, SupplierBoundaryService supplierService, CountryBoundaryService countryService,
+            MaterialTypeBoundaryService matTypeService, MovementTypeBoundaryService mvtTypeService, CustomerBoundaryService customerService,
             SavedQueryService queryManager) {
         this.userSession = userSession;
         this.materializedAssemblyShipmentService = materializedAssemblyShipmentService;
         this.queryManager = queryManager;
+        this.materialService = materialService;
+        this.supplierService = supplierService;
+        this.countryService = countryService;
+        this.matTypeService = matTypeService;
+        this.mvtTypeService = mvtTypeService;
+        this.customerService = customerService;
     }
+
 
 
     /**
@@ -289,6 +323,37 @@ public class MaterializedAssemblyShipmentView extends SuperView implements Seria
         initSearchObject();
         fetchMaterializedAssemblyShipments();
     }
+
+
+
+    public List<String> onCompleteMaterialNumber(String query) {
+        return OnCompleteHelper.onCompleteMaterialNumber(materialService, query);
+    }
+
+    public List<String> onCompleteSapNumber(String query) {
+        return OnCompleteHelper.onCompleteSapNumber(materialService, query);
+    }
+
+    public List<String> onCompleteSupplierName(String query) {
+        return OnCompleteHelper.onCompleteSupplierName(supplierService, query);
+    }
+
+    public List<String> onCompleteCustomerName(String query) {
+        return OnCompleteHelper.onCompleteCustomerName(customerService, query);
+    }
+
+    public List<String> onCompleteCountry(String query) {
+        return OnCompleteHelper.onCompleteCountry(countryService, query);
+    }
+
+    public List<String> onCompleteMatType(String query) {
+        return OnCompleteHelper.onCompleteMatType(matTypeService, query);
+    }
+
+    public List<String> onCompleteMvtType(String query) {
+        return OnCompleteHelper.onCompleteMvtType(mvtTypeService, query);
+    }
+
 
 
     /**

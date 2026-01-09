@@ -39,6 +39,7 @@
 				<h:outputText styleClass="label-field-mandatory" value="#{i18n.search_input_filter_input}"/>
 				<h:outputText styleClass="label-field-mandatory" value="#{i18n.search_input_and}"/>
 
+<!-- id -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_0" value="#{materializedAssemblyShipmentView.searchObject.searchFields[0].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{materializedAssemblyShipmentView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_0" value="#{materializedAssemblyShipmentView.searchObject.searchFields[0].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_0" value="#{materializedAssemblyShipmentView.numberOperators}" var="advInputItem0" itemValue="#{advInputItem0}" itemLabel="#{advInputItem0.description}"/>
@@ -52,6 +53,7 @@
 					<p:inputText id="b_0" rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[0].between}" value="#{materializedAssemblyShipmentView.searchObject.searchFields[0].integerBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
+<!-- plant -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_1" value="#{materializedAssemblyShipmentView.searchObject.searchFields[1].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{materializedAssemblyShipmentView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_1" value="#{materializedAssemblyShipmentView.searchObject.searchFields[1].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_1" value="#{materializedAssemblyShipmentView.textOperators}" var="advInputItem1" itemValue="#{advInputItem1}" itemLabel="#{advInputItem1.description}"/>
@@ -65,6 +67,7 @@
 					<p:inputText id="b_1" rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[1].between}" value="#{materializedAssemblyShipmentView.searchObject.searchFields[1].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
+<!-- assembly date -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_2" value="#{materializedAssemblyShipmentView.searchObject.searchFields[2].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{materializedAssemblyShipmentView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_2" value="#{materializedAssemblyShipmentView.searchObject.searchFields[2].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_2" value="#{materializedAssemblyShipmentView.dateOperators}" var="advInputItem2" itemValue="#{advInputItem2}" itemLabel="#{advInputItem2.description}"/>
@@ -78,6 +81,7 @@
 					<p:datePicker id="fb_2" value="#{materializedAssemblyShipmentView.searchObject.searchFields[2].dateBetweenCriterion}" pattern="#{userSession.dateFormat}" size="20" showButtonBar="true" showIcon="true" rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[2].between}"/>
 				</h:panelGroup>
 
+<!-- assembly po -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_3" value="#{materializedAssemblyShipmentView.searchObject.searchFields[3].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{materializedAssemblyShipmentView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_3" value="#{materializedAssemblyShipmentView.searchObject.searchFields[3].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_3" value="#{materializedAssemblyShipmentView.textOperators}" var="advInputItem3" itemValue="#{advInputItem3}" itemLabel="#{advInputItem3.description}"/>
@@ -91,6 +95,7 @@
 					<p:inputText id="b_3" rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[3].between}" value="#{materializedAssemblyShipmentView.searchObject.searchFields[3].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
+<!-- serial no. -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_4" value="#{materializedAssemblyShipmentView.searchObject.searchFields[4].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{materializedAssemblyShipmentView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_4" value="#{materializedAssemblyShipmentView.searchObject.searchFields[4].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_4" value="#{materializedAssemblyShipmentView.textOperators}" var="advInputItem4" itemValue="#{advInputItem4}" itemLabel="#{advInputItem4.description}"/>
@@ -104,6 +109,7 @@
 					<p:inputText id="b_4" rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[4].between}" value="#{materializedAssemblyShipmentView.searchObject.searchFields[4].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
+<!-- p. serial no. -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_5" value="#{materializedAssemblyShipmentView.searchObject.searchFields[5].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{materializedAssemblyShipmentView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_5" value="#{materializedAssemblyShipmentView.searchObject.searchFields[5].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_5" value="#{materializedAssemblyShipmentView.textOperators}" var="advInputItem5" itemValue="#{advInputItem5}" itemLabel="#{advInputItem5.description}"/>
@@ -117,6 +123,7 @@
 					<p:inputText id="b_5" rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[5].between}" value="#{materializedAssemblyShipmentView.searchObject.searchFields[5].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
+<!-- cust. code -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_6" value="#{materializedAssemblyShipmentView.searchObject.searchFields[6].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{materializedAssemblyShipmentView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_6" value="#{materializedAssemblyShipmentView.searchObject.searchFields[6].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_6" value="#{materializedAssemblyShipmentView.textOperators}" var="advInputItem6" itemValue="#{advInputItem6}" itemLabel="#{advInputItem6.description}"/>
@@ -130,6 +137,7 @@
 					<p:inputText id="b_6" rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[6].between}" value="#{materializedAssemblyShipmentView.searchObject.searchFields[6].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
+<!-- customer -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_7" value="#{materializedAssemblyShipmentView.searchObject.searchFields[7].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{materializedAssemblyShipmentView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_7" value="#{materializedAssemblyShipmentView.searchObject.searchFields[7].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_7" value="#{materializedAssemblyShipmentView.textOperators}" var="advInputItem7" itemValue="#{advInputItem7}" itemLabel="#{advInputItem7.description}"/>
@@ -138,11 +146,12 @@
 				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_7" id="s_7" value="#{materializedAssemblyShipmentView.searchObject.searchFields[7].sortOrder}">
 					<f:selectItems value="#{materializedAssemblyShipmentView.sortOrderList}"/>
 				</p:selectOneMenu>
-				<p:inputText id="fi_7" value="#{materializedAssemblyShipmentView.searchObject.searchFields[7].stringCriterion}" size="30"/>
+				<p:autoComplete minQueryLength="2" maxResults="10" completeMethod="#{materializedAssemblyShipmentView.onCompleteCustomerName}" id="fi_7" value="#{materializedAssemblyShipmentView.searchObject.searchFields[7].stringCriterion}" size="30"/>
 				<h:panelGroup id="p_7">
-					<p:inputText id="b_7" rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[7].between}" value="#{materializedAssemblyShipmentView.searchObject.searchFields[7].stringBetweenCriterion}" size="30"/>
+					<p:autoComplete minQueryLength="2" rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[7].between}" maxResults="10" completeMethod="#{materializedAssemblyShipmentView.onCompleteCustomerName}" id="b_7" value="#{materializedAssemblyShipmentView.searchObject.searchFields[7].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
+<!-- country code -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_8" value="#{materializedAssemblyShipmentView.searchObject.searchFields[8].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{materializedAssemblyShipmentView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_8" value="#{materializedAssemblyShipmentView.searchObject.searchFields[8].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_8" value="#{materializedAssemblyShipmentView.textOperators}" var="advInputItem8" itemValue="#{advInputItem8}" itemLabel="#{advInputItem8.description}"/>
@@ -156,6 +165,7 @@
 					<p:inputText id="b_8" rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[8].between}" value="#{materializedAssemblyShipmentView.searchObject.searchFields[8].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
+<!-- country -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_9" value="#{materializedAssemblyShipmentView.searchObject.searchFields[9].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{materializedAssemblyShipmentView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_9" value="#{materializedAssemblyShipmentView.searchObject.searchFields[9].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_9" value="#{materializedAssemblyShipmentView.textOperators}" var="advInputItem9" itemValue="#{advInputItem9}" itemLabel="#{advInputItem9.description}"/>
@@ -164,11 +174,12 @@
 				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_9" id="s_9" value="#{materializedAssemblyShipmentView.searchObject.searchFields[9].sortOrder}">
 					<f:selectItems value="#{materializedAssemblyShipmentView.sortOrderList}"/>
 				</p:selectOneMenu>
-				<p:inputText id="fi_9" value="#{materializedAssemblyShipmentView.searchObject.searchFields[9].stringCriterion}" size="30"/>
+				<p:autoComplete minQueryLength="2" maxResults="10" completeMethod="#{materializedAssemblyShipmentView.onCompleteCountry}" id="fi_9" value="#{materializedAssemblyShipmentView.searchObject.searchFields[9].stringCriterion}" size="30"/>
 				<h:panelGroup id="p_9">
-					<p:inputText id="b_9" rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[9].between}" value="#{materializedAssemblyShipmentView.searchObject.searchFields[9].stringBetweenCriterion}" size="30"/>
+					<p:autoComplete minQueryLength="2" rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[9].between}" maxResults="10" completeMethod="#{materializedAssemblyShipmentView.onCompleteCountry}" id="b_9" value="#{materializedAssemblyShipmentView.searchObject.searchFields[9].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
+<!-- shipment date -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_10" value="#{materializedAssemblyShipmentView.searchObject.searchFields[10].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{materializedAssemblyShipmentView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_10" value="#{materializedAssemblyShipmentView.searchObject.searchFields[10].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_10" value="#{materializedAssemblyShipmentView.dateOperators}" var="advInputItem10" itemValue="#{advInputItem10}" itemLabel="#{advInputItem10.description}"/>
@@ -182,6 +193,7 @@
 					<p:datePicker id="fb_10" value="#{materializedAssemblyShipmentView.searchObject.searchFields[10].dateBetweenCriterion}" pattern="#{userSession.dateFormat}" size="20" showButtonBar="true" showIcon="true" rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[10].between}"/>
 				</h:panelGroup>
 
+<!-- arrival date -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_11" value="#{materializedAssemblyShipmentView.searchObject.searchFields[11].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{materializedAssemblyShipmentView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_11" value="#{materializedAssemblyShipmentView.searchObject.searchFields[11].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_11" value="#{materializedAssemblyShipmentView.dateOperators}" var="advInputItem11" itemValue="#{advInputItem11}" itemLabel="#{advInputItem11.description}"/>
@@ -195,6 +207,7 @@
 					<p:datePicker id="fb_11" value="#{materializedAssemblyShipmentView.searchObject.searchFields[11].dateBetweenCriterion}" pattern="#{userSession.dateFormat}" size="20" showButtonBar="true" showIcon="true" rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[11].between}"/>
 				</h:panelGroup>
 
+<!-- supplier code -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_12" value="#{materializedAssemblyShipmentView.searchObject.searchFields[12].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{materializedAssemblyShipmentView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_12" value="#{materializedAssemblyShipmentView.searchObject.searchFields[12].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_12" value="#{materializedAssemblyShipmentView.textOperators}" var="advInputItem12" itemValue="#{advInputItem12}" itemLabel="#{advInputItem12.description}"/>
@@ -208,6 +221,7 @@
 					<p:inputText id="b_12" rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[12].between}" value="#{materializedAssemblyShipmentView.searchObject.searchFields[12].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
+<!-- supplier -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_13" value="#{materializedAssemblyShipmentView.searchObject.searchFields[13].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{materializedAssemblyShipmentView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_13" value="#{materializedAssemblyShipmentView.searchObject.searchFields[13].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_13" value="#{materializedAssemblyShipmentView.textOperators}" var="advInputItem13" itemValue="#{advInputItem13}" itemLabel="#{advInputItem13.description}"/>
@@ -216,11 +230,12 @@
 				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_13" id="s_13" value="#{materializedAssemblyShipmentView.searchObject.searchFields[13].sortOrder}">
 					<f:selectItems value="#{materializedAssemblyShipmentView.sortOrderList}"/>
 				</p:selectOneMenu>
-				<p:inputText id="fi_13" value="#{materializedAssemblyShipmentView.searchObject.searchFields[13].stringCriterion}" size="30"/>
+				<p:autoComplete minQueryLength="2" maxResults="10" completeMethod="#{materializedAssemblyShipmentView.onCompleteSupplierName}" id="fi_13" value="#{materializedAssemblyShipmentView.searchObject.searchFields[13].stringCriterion}" size="30"/>
 				<h:panelGroup id="p_13">
-					<p:inputText id="b_13" rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[13].between}" value="#{materializedAssemblyShipmentView.searchObject.searchFields[13].stringBetweenCriterion}" size="30"/>
+					<p:autoComplete minQueryLength="2" rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[13].between}" maxResults="10" completeMethod="#{materializedAssemblyShipmentView.onCompleteSupplierName}" id="b_13" value="#{materializedAssemblyShipmentView.searchObject.searchFields[13].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
+<!-- shipment movement type -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_14" value="#{materializedAssemblyShipmentView.searchObject.searchFields[14].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{materializedAssemblyShipmentView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_14" value="#{materializedAssemblyShipmentView.searchObject.searchFields[14].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_14" value="#{materializedAssemblyShipmentView.textOperators}" var="advInputItem14" itemValue="#{advInputItem14}" itemLabel="#{advInputItem14.description}"/>
@@ -229,11 +244,12 @@
 				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_14" id="s_14" value="#{materializedAssemblyShipmentView.searchObject.searchFields[14].sortOrder}">
 					<f:selectItems value="#{materializedAssemblyShipmentView.sortOrderList}"/>
 				</p:selectOneMenu>
-				<p:inputText id="fi_14" value="#{materializedAssemblyShipmentView.searchObject.searchFields[14].stringCriterion}" size="30"/>
+				<p:autoComplete minQueryLength="1" maxResults="10" completeMethod="#{materializedAssemblyShipmentView.onCompleteMvtType}" id="fi_14" value="#{materializedAssemblyShipmentView.searchObject.searchFields[14].stringCriterion}" size="30"/>
 				<h:panelGroup id="p_14">
-					<p:inputText id="b_14" rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[14].between}" value="#{materializedAssemblyShipmentView.searchObject.searchFields[14].stringBetweenCriterion}" size="30"/>
+					<p:autoComplete minQueryLength="1" rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[14].between}" maxResults="10" completeMethod="#{materializedAssemblyShipmentView.onCompleteMvtType}" id="b_14" value="#{materializedAssemblyShipmentView.searchObject.searchFields[14].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
+<!-- arrival movement type -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_15" value="#{materializedAssemblyShipmentView.searchObject.searchFields[15].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{materializedAssemblyShipmentView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_15" value="#{materializedAssemblyShipmentView.searchObject.searchFields[15].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_15" value="#{materializedAssemblyShipmentView.textOperators}" var="advInputItem15" itemValue="#{advInputItem15}" itemLabel="#{advInputItem15.description}"/>
@@ -242,11 +258,12 @@
 				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_15" id="s_15" value="#{materializedAssemblyShipmentView.searchObject.searchFields[15].sortOrder}">
 					<f:selectItems value="#{materializedAssemblyShipmentView.sortOrderList}"/>
 				</p:selectOneMenu>
-				<p:inputText id="fi_15" value="#{materializedAssemblyShipmentView.searchObject.searchFields[15].stringCriterion}" size="30"/>
+				<p:autoComplete minQueryLength="1" maxResults="10" completeMethod="#{materializedAssemblyShipmentView.onCompleteMvtType}" id="fi_15" value="#{materializedAssemblyShipmentView.searchObject.searchFields[15].stringCriterion}" size="30"/>
 				<h:panelGroup id="p_15">
-					<p:inputText id="b_15" rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[15].between}" value="#{materializedAssemblyShipmentView.searchObject.searchFields[15].stringBetweenCriterion}" size="30"/>
+					<p:autoComplete minQueryLength="1" rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[15].between}" maxResults="10" completeMethod="#{materializedAssemblyShipmentView.onCompleteMvtType}" id="b_15" value="#{materializedAssemblyShipmentView.searchObject.searchFields[15].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
+<!-- customer order no. -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_16" value="#{materializedAssemblyShipmentView.searchObject.searchFields[16].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{materializedAssemblyShipmentView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_16" value="#{materializedAssemblyShipmentView.searchObject.searchFields[16].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_16" value="#{materializedAssemblyShipmentView.textOperators}" var="advInputItem16" itemValue="#{advInputItem16}" itemLabel="#{advInputItem16.description}"/>
@@ -260,6 +277,7 @@
 					<p:inputText id="b_16" rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[16].between}" value="#{materializedAssemblyShipmentView.searchObject.searchFields[16].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
+<!-- purchase order no. -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_17" value="#{materializedAssemblyShipmentView.searchObject.searchFields[17].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{materializedAssemblyShipmentView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_17" value="#{materializedAssemblyShipmentView.searchObject.searchFields[17].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_17" value="#{materializedAssemblyShipmentView.textOperators}" var="advInputItem17" itemValue="#{advInputItem17}" itemLabel="#{advInputItem17.description}"/>
@@ -273,6 +291,7 @@
 					<p:inputText id="b_17" rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[17].between}" value="#{materializedAssemblyShipmentView.searchObject.searchFields[17].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
+<!-- mat. no. -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_18" value="#{materializedAssemblyShipmentView.searchObject.searchFields[18].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{materializedAssemblyShipmentView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_18" value="#{materializedAssemblyShipmentView.searchObject.searchFields[18].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_18" value="#{materializedAssemblyShipmentView.textOperators}" var="advInputItem18" itemValue="#{advInputItem18}" itemLabel="#{advInputItem18.description}"/>
@@ -281,11 +300,12 @@
 				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_18" id="s_18" value="#{materializedAssemblyShipmentView.searchObject.searchFields[18].sortOrder}">
 					<f:selectItems value="#{materializedAssemblyShipmentView.sortOrderList}"/>
 				</p:selectOneMenu>
-				<p:inputText id="fi_18" value="#{materializedAssemblyShipmentView.searchObject.searchFields[18].stringCriterion}" size="30"/>
+				<p:autoComplete minQueryLength="2" maxResults="10" completeMethod="#{materializedAssemblyShipmentView.onCompleteMaterialNumber}" id="fi_18" value="#{materializedAssemblyShipmentView.searchObject.searchFields[18].stringCriterion}" size="30"/>
 				<h:panelGroup id="p_18">
-					<p:inputText id="b_18" rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[18].between}" value="#{materializedAssemblyShipmentView.searchObject.searchFields[18].stringBetweenCriterion}" size="30"/>
+					<p:autoComplete minQueryLength="2" rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[18].between}" maxResults="10" completeMethod="#{materializedAssemblyShipmentView.onCompleteMaterialNumber}" id="b_18" value="#{materializedAssemblyShipmentView.searchObject.searchFields[18].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
+<!-- sap no. -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_19" value="#{materializedAssemblyShipmentView.searchObject.searchFields[19].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{materializedAssemblyShipmentView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_19" value="#{materializedAssemblyShipmentView.searchObject.searchFields[19].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_19" value="#{materializedAssemblyShipmentView.textOperators}" var="advInputItem19" itemValue="#{advInputItem19}" itemLabel="#{advInputItem19.description}"/>
@@ -294,11 +314,12 @@
 				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_19" id="s_19" value="#{materializedAssemblyShipmentView.searchObject.searchFields[19].sortOrder}">
 					<f:selectItems value="#{materializedAssemblyShipmentView.sortOrderList}"/>
 				</p:selectOneMenu>
-				<p:inputText id="fi_19" value="#{materializedAssemblyShipmentView.searchObject.searchFields[19].stringCriterion}" size="30"/>
+				<p:autoComplete minQueryLength="2" maxResults="10" completeMethod="#{materializedAssemblyShipmentView.onCompleteSapNumber}" id="fi_19" value="#{materializedAssemblyShipmentView.searchObject.searchFields[19].stringCriterion}" size="30"/>
 				<h:panelGroup id="p_19">
-					<p:inputText id="b_19" rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[19].between}" value="#{materializedAssemblyShipmentView.searchObject.searchFields[19].stringBetweenCriterion}" size="30"/>
+					<p:autoComplete minQueryLength="2" rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[19].between}" maxResults="10" completeMethod="#{materializedAssemblyShipmentView.onCompleteSapNumber}" id="b_19" value="#{materializedAssemblyShipmentView.searchObject.searchFields[19].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
+<!-- rev. no. -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_20" value="#{materializedAssemblyShipmentView.searchObject.searchFields[20].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{materializedAssemblyShipmentView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_20" value="#{materializedAssemblyShipmentView.searchObject.searchFields[20].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_20" value="#{materializedAssemblyShipmentView.textOperators}" var="advInputItem20" itemValue="#{advInputItem20}" itemLabel="#{advInputItem20.description}"/>
@@ -312,6 +333,7 @@
 					<p:inputText id="b_20" rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[20].between}" value="#{materializedAssemblyShipmentView.searchObject.searchFields[20].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
+<!-- mat. type -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_21" value="#{materializedAssemblyShipmentView.searchObject.searchFields[21].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{materializedAssemblyShipmentView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_21" value="#{materializedAssemblyShipmentView.searchObject.searchFields[21].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_21" value="#{materializedAssemblyShipmentView.textOperators}" var="advInputItem21" itemValue="#{advInputItem21}" itemLabel="#{advInputItem21.description}"/>
@@ -320,11 +342,12 @@
 				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_21" id="s_21" value="#{materializedAssemblyShipmentView.searchObject.searchFields[21].sortOrder}">
 					<f:selectItems value="#{materializedAssemblyShipmentView.sortOrderList}"/>
 				</p:selectOneMenu>
-				<p:inputText id="fi_21" value="#{materializedAssemblyShipmentView.searchObject.searchFields[21].stringCriterion}" size="30"/>
+				<p:autoComplete minQueryLength="1" maxResults="10" completeMethod="#{materializedAssemblyShipmentView.onCompleteMatType}" id="fi_21" value="#{materializedAssemblyShipmentView.searchObject.searchFields[21].stringCriterion}" size="30"/>
 				<h:panelGroup id="p_21">
-					<p:inputText id="b_21" rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[21].between}" value="#{materializedAssemblyShipmentView.searchObject.searchFields[21].stringBetweenCriterion}" size="30"/>
+					<p:autoComplete minQueryLength="1" rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[21].between}" maxResults="10" completeMethod="#{materializedAssemblyShipmentView.onCompleteMatType}" id="b_21" value="#{materializedAssemblyShipmentView.searchObject.searchFields[21].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
+<!-- mat. hierarchy -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_22" value="#{materializedAssemblyShipmentView.searchObject.searchFields[22].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{materializedAssemblyShipmentView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_22" value="#{materializedAssemblyShipmentView.searchObject.searchFields[22].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_22" value="#{materializedAssemblyShipmentView.textOperators}" var="advInputItem22" itemValue="#{advInputItem22}" itemLabel="#{advInputItem22.description}"/>
@@ -338,6 +361,7 @@
 					<p:inputText id="b_22" rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[22].between}" value="#{materializedAssemblyShipmentView.searchObject.searchFields[22].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
+<!-- mat. shorttext -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_23" value="#{materializedAssemblyShipmentView.searchObject.searchFields[23].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{materializedAssemblyShipmentView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_23" value="#{materializedAssemblyShipmentView.searchObject.searchFields[23].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_23" value="#{materializedAssemblyShipmentView.textOperators}" var="advInputItem23" itemValue="#{advInputItem23}" itemLabel="#{advInputItem23.description}"/>
@@ -351,6 +375,7 @@
 					<p:inputText id="b_23" rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[23].between}" value="#{materializedAssemblyShipmentView.searchObject.searchFields[23].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
+<!-- p. mat. no. -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_24" value="#{materializedAssemblyShipmentView.searchObject.searchFields[24].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{materializedAssemblyShipmentView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_24" value="#{materializedAssemblyShipmentView.searchObject.searchFields[24].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_24" value="#{materializedAssemblyShipmentView.textOperators}" var="advInputItem24" itemValue="#{advInputItem24}" itemLabel="#{advInputItem24.description}"/>
@@ -359,11 +384,12 @@
 				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_24" id="s_24" value="#{materializedAssemblyShipmentView.searchObject.searchFields[24].sortOrder}">
 					<f:selectItems value="#{materializedAssemblyShipmentView.sortOrderList}"/>
 				</p:selectOneMenu>
-				<p:inputText id="fi_24" value="#{materializedAssemblyShipmentView.searchObject.searchFields[24].stringCriterion}" size="30"/>
+				<p:autoComplete minQueryLength="2" maxResults="10" completeMethod="#{materializedAssemblyShipmentView.onCompleteMaterialNumber}" id="fi_24" value="#{materializedAssemblyShipmentView.searchObject.searchFields[24].stringCriterion}" size="30"/>
 				<h:panelGroup id="p_24">
-					<p:inputText id="b_24" rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[24].between}" value="#{materializedAssemblyShipmentView.searchObject.searchFields[24].stringBetweenCriterion}" size="30"/>
+					<p:autoComplete minQueryLength="2" rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[24].between}" maxResults="10" completeMethod="#{materializedAssemblyShipmentView.onCompleteMaterialNumber}" id="b_24" value="#{materializedAssemblyShipmentView.searchObject.searchFields[24].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
+<!-- p. sap no. -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_25" value="#{materializedAssemblyShipmentView.searchObject.searchFields[25].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{materializedAssemblyShipmentView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_25" value="#{materializedAssemblyShipmentView.searchObject.searchFields[25].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_25" value="#{materializedAssemblyShipmentView.textOperators}" var="advInputItem25" itemValue="#{advInputItem25}" itemLabel="#{advInputItem25.description}"/>
@@ -372,11 +398,12 @@
 				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_25" id="s_25" value="#{materializedAssemblyShipmentView.searchObject.searchFields[25].sortOrder}">
 					<f:selectItems value="#{materializedAssemblyShipmentView.sortOrderList}"/>
 				</p:selectOneMenu>
-				<p:inputText id="fi_25" value="#{materializedAssemblyShipmentView.searchObject.searchFields[25].stringCriterion}" size="30"/>
+				<p:autoComplete minQueryLength="2" maxResults="10" completeMethod="#{materializedAssemblyShipmentView.onCompleteSapNumber}" id="fi_25" value="#{materializedAssemblyShipmentView.searchObject.searchFields[25].stringCriterion}" size="30"/>
 				<h:panelGroup id="p_25">
-					<p:inputText id="b_25" rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[25].between}" value="#{materializedAssemblyShipmentView.searchObject.searchFields[25].stringBetweenCriterion}" size="30"/>
+					<p:autoComplete minQueryLength="2" rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[25].between}" maxResults="10" completeMethod="#{materializedAssemblyShipmentView.onCompleteSapNumber}" id="b_25" value="#{materializedAssemblyShipmentView.searchObject.searchFields[25].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
+<!-- p. rev. no. -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_26" value="#{materializedAssemblyShipmentView.searchObject.searchFields[26].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{materializedAssemblyShipmentView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_26" value="#{materializedAssemblyShipmentView.searchObject.searchFields[26].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_26" value="#{materializedAssemblyShipmentView.textOperators}" var="advInputItem26" itemValue="#{advInputItem26}" itemLabel="#{advInputItem26.description}"/>
@@ -390,6 +417,7 @@
 					<p:inputText id="b_26" rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[26].between}" value="#{materializedAssemblyShipmentView.searchObject.searchFields[26].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
+<!-- p. mat. type -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_27" value="#{materializedAssemblyShipmentView.searchObject.searchFields[27].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{materializedAssemblyShipmentView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_27" value="#{materializedAssemblyShipmentView.searchObject.searchFields[27].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_27" value="#{materializedAssemblyShipmentView.textOperators}" var="advInputItem27" itemValue="#{advInputItem27}" itemLabel="#{advInputItem27.description}"/>
@@ -398,11 +426,12 @@
 				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_27" id="s_27" value="#{materializedAssemblyShipmentView.searchObject.searchFields[27].sortOrder}">
 					<f:selectItems value="#{materializedAssemblyShipmentView.sortOrderList}"/>
 				</p:selectOneMenu>
-				<p:inputText id="fi_27" value="#{materializedAssemblyShipmentView.searchObject.searchFields[27].stringCriterion}" size="30"/>
+				<p:autoComplete minQueryLength="1" maxResults="10" completeMethod="#{materializedAssemblyShipmentView.onCompleteMatType}" id="fi_27" value="#{materializedAssemblyShipmentView.searchObject.searchFields[27].stringCriterion}" size="30"/>
 				<h:panelGroup id="p_27">
-					<p:inputText id="b_27" rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[27].between}" value="#{materializedAssemblyShipmentView.searchObject.searchFields[27].stringBetweenCriterion}" size="30"/>
+					<p:autoComplete minQueryLength="1" rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[27].between}" maxResults="10" completeMethod="#{materializedAssemblyShipmentView.onCompleteMatType}" id="b_27" value="#{materializedAssemblyShipmentView.searchObject.searchFields[27].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
+<!-- p. mat. hierarchy -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_28" value="#{materializedAssemblyShipmentView.searchObject.searchFields[28].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{materializedAssemblyShipmentView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_28" value="#{materializedAssemblyShipmentView.searchObject.searchFields[28].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_28" value="#{materializedAssemblyShipmentView.textOperators}" var="advInputItem28" itemValue="#{advInputItem28}" itemLabel="#{advInputItem28.description}"/>
@@ -416,6 +445,7 @@
 					<p:inputText id="b_28" rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[28].between}" value="#{materializedAssemblyShipmentView.searchObject.searchFields[28].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
+<!-- p. mat. shorttext -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_29" value="#{materializedAssemblyShipmentView.searchObject.searchFields[29].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{materializedAssemblyShipmentView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_29" value="#{materializedAssemblyShipmentView.searchObject.searchFields[29].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_29" value="#{materializedAssemblyShipmentView.textOperators}" var="advInputItem29" itemValue="#{advInputItem29}" itemLabel="#{advInputItem29.description}"/>

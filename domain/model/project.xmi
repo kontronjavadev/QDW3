@@ -155,7 +155,7 @@
   <net.sourceforge.jbizmo.model.java:Namespace name="ui.test" parent="/0/@rootNamespace" project="/0"/>
   <net.sourceforge.jbizmo.model.client:FormGroup name="Master data" groupOrder="1" forms="/47 /77 /51 /69 /81 /96 /114 /126 /138 /150 /174 /158 /92 /41 /73 /88 /100 /118 /130 /142 /154 /178 /162 /104 /122 /134 /146 /166 /182 /170 /311" roles="/0/@roles.0" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="base" parent="/1" javaTypes="/45 /67 /14 /13 /64 /72 /86 /87 /99 /141 /153 /177 /277" project="/0"/>
-  <net.sourceforge.jbizmo.model.java:Namespace name="base" parent="/3" javaTypes="/16 /53 /161 /50 /44 /71 /85 /80 /76 /83 /95 /91 /98 /107 /103 /140 /149 /145 /65 /152 /214 /169 /157 /37 /40 /15 /34 /176 /185 /181 /25 /68 /63 /21 /30 /160 /84 /173 /165 /234 /276 /275 /281 /285 /297 /298 /314" project="/0"/>
+  <net.sourceforge.jbizmo.model.java:Namespace name="base" parent="/3" javaTypes="/16 /53 /161 /50 /44 /71 /85 /80 /76 /83 /95 /91 /98 /234 /107 /103 /140 /298 /149 /145 /281 /285 /275 /65 /152 /214 /169 /157 /37 /40 /15 /34 /176 /314 /297 /185 /181 /25 /276 /68 /63 /21 /30 /160 /84 /173 /165 /345" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="base" parent="/4" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="base" parent="/2" javaTypes="/46 /59 /60 /55 /57 /278 /66 /56 /12 /54 /61 /62 /11 /58" project="/0"/>
   <net.sourceforge.jbizmo.model.repository:Repository name="UserRepository" comment="Create, read, update and delete services for user objects." namespace="/10">
@@ -6972,4 +6972,13 @@
       </methodParameters>
     </repositoryMethods>
   </net.sourceforge.jbizmo.model.repository:Repository>
+  <net.sourceforge.jbizmo.model.dto:DTOBean name="CustomerListDTO" comment="Instances of this class represent data transfer objects that are mapped to customer domain objects" namespace="/8" standardConversion="true" createdManually="true">
+    <domainObject href="package-base.xmi#//@domainObjects.12"/>
+    <attributes name="code">
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.0"/>
+    </attributes>
+    <attributes name="name">
+      <domainAttribute href="package-base.xmi#//@domainObjects.12/@attributes.0"/>
+    </attributes>
+  </net.sourceforge.jbizmo.model.dto:DTOBean>
 </xmi:XMI>

@@ -9,11 +9,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.kontron.qdw.boundary.base.CountryBoundaryService;
+import com.kontron.qdw.boundary.base.CustomerBoundaryService;
 import com.kontron.qdw.boundary.base.MovementTypeBoundaryService;
 import com.kontron.qdw.boundary.base.SupplierBoundaryService;
 import com.kontron.qdw.boundary.material.MaterialBoundaryService;
 import com.kontron.qdw.boundary.material.MaterialTypeBoundaryService;
 import com.kontron.qdw.dto.base.CountryListDTO;
+import com.kontron.qdw.dto.base.CustomerListDTO;
 import com.kontron.qdw.dto.base.MovementTypeListDTO;
 import com.kontron.qdw.dto.base.SupplierListDTO;
 import com.kontron.qdw.dto.material.MaterialListDTO;
@@ -69,6 +71,23 @@ public final class OnCompleteHelper {
             final Collection<SupplierListDTO> items = supplierService.findSuppliers(searchText + "%");
 
             for (final SupplierListDTO item : items) {
+                results.add(item.getName());
+            }
+        }
+        catch (final Exception e) {
+            logger.error("Error while searching for auto-complete items by using the entered text '{}'!", searchText, e);
+        }
+
+        return results;
+    }
+
+    public static List<String> onCompleteCustomerName(CustomerBoundaryService customerBoundaryService, String searchText) {
+        final var results = new ArrayList<String>();
+
+        try {
+            final Collection<CustomerListDTO> items = customerBoundaryService.findCustomer(searchText + "%");
+
+            for (final CustomerListDTO item : items) {
                 results.add(item.getName());
             }
         }
