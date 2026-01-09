@@ -26,12 +26,12 @@
 		</p:ajaxStatus>
 	</h:panelGrid>
 
-	<p:growl id="growl" showDetail="true"/>
+	<p:growl id="growl" showDetail="true" skipDetailIfEqualsSummary="true" />
 
-	<p:dialog height="510" width="1000" header="#{i18n.search_input_dlg}" widgetVar="dlgSearchInput" modal="true">
+	<p:dialog height="auto" width="1000" id="dlgSearchInput" closeOnEscape="true" header="#{i18n.search_input_dlg}" widgetVar="dlgSearchInput" modal="true">
 		<p:tabView id="tabViewSearchInput" dynamic="false">
 			<p:tab title="#{i18n.search_input_filter}">
-			<p:scrollPanel style="width:100%; height:400px;" mode="native">
+			<p:scrollPanel style="width:100%; #{sizeServiceBean.searchFilterHeight()};" mode="native">
 			<h:panelGrid columns="5" cellpadding="3">
 				<h:outputText styleClass="label-field-mandatory" value="#{i18n.search_input_column}"/>
 				<h:outputText styleClass="label-field-mandatory" value="#{i18n.search_input_operator}"/>
@@ -276,6 +276,7 @@
 			</h:panelGrid>
 			</p:scrollPanel>
 			</p:tab>
+
 			<p:tab title="#{i18n.search_input_adv}">
 			<h:panelGrid columns="2">
 				<h:outputLabel value="#{i18n.search_input_case}:" styleClass="label-field-mandatory"/>
@@ -289,36 +290,65 @@
 					<f:validateLongRange minimum="1" maximum="1000000"/>
 				</p:inputText>
 				<h:outputLabel value="#{i18n.search_input_visible_fields_label}:" styleClass="label-field-mandatory"/>
-				<p:pickList value="#{shipmentView.visibleFields}" var="savedQueryListItem" itemLabel="#{savedQueryListItem.colLabel}" itemValue="#{savedQueryListItem}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchFieldDTOConverter" addLabel="#{i18n.pick_list_add}" addAllLabel="#{i18n.pick_list_add_all}" removeLabel="#{i18n.pick_list_remove}" removeAllLabel="#{i18n.pick_list_remove_all}">
+				<p:pickList styleClass="searchdialog-picklist" value="#{shipmentView.visibleFields}" var="savedQueryListItem" itemLabel="#{savedQueryListItem.colLabel}" itemValue="#{savedQueryListItem}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchFieldDTOConverter" addLabel="#{i18n.pick_list_add}" addAllLabel="#{i18n.pick_list_add_all}" removeLabel="#{i18n.pick_list_remove}" removeAllLabel="#{i18n.pick_list_remove_all}">
 					<f:facet name="sourceCaption">#{i18n.search_input_all_fields}</f:facet>
 					<f:facet name="targetCaption">#{i18n.search_input_visible_fields}</f:facet>
 				</p:pickList>
 			</h:panelGrid>
 			</p:tab>
+
 			<p:tab title="#{i18n.search_input_saved_query_title}">
 				<h:panelGrid columns="1">
 					<h:outputLabel styleClass="label-field-mandatory" value="#{i18n.search_input_lbl_saved_query}"/>
-					<p:selectOneListbox id="savedQueryList" value="#{shipmentView.selectedSavedQuery}" style="height:150px; width:300px">
+					<p:selectOneListbox id="savedQueryList" value="#{shipmentView.selectedSavedQuery}" style="#{sizeServiceBean.searchQueriesHeight()}; width:480px">
 						<f:selectItems value="#{shipmentView.savedQueries}"/>
 					</p:selectOneListbox>
-					<h:panelGrid columns="2">
-						<p:commandButton value="#{i18n.search_input_run_saved_query}" action="#{shipmentView.runSavedQuery}" ajax="false"/>
-						<p:commandButton value="#{i18n.search_input_delete_saved_query}" action="#{shipmentView.deleteSavedQuery}" ajax="false"/>
+					<h:panelGrid columns="3">
+						<p:commandButton icon="pi pi-caret-right" value="#{i18n.search_input_run_saved_query}" action="#{shipmentView.runSavedQuery}" ajax="false"/>
+						<p:commandButton icon="pi pi-pencil" value="#{i18n.search_input_rename_saved_query}" actionListener="#{shipmentView.openRenameDialog}" ajax="true"/>
+						<p:commandButton icon="pi pi-eraser" value="#{i18n.search_input_delete_saved_query}" actionListener="#{shipmentView.deleteSavedQuery}" update="savedQueryList" ajax="true"/>
 					</h:panelGrid>
 				</h:panelGrid>
 			</p:tab>
 		</p:tabView>
 		<br/>
-		<h:panelGrid columns="3">
+		<h:panelGrid columns="4">
 			<p:commandButton id="cmdSearch" value="#{i18n.search_input_perform_search}" action="#{shipmentView.fetchShipments}" ajax="false"/>
-			<p:commandButton id="cmdReset" value="#{i18n.command_reset}" action="#{shipmentView.initSearchObject}" onclick="PF('dlgSearchInput').hide()" ajax="false"/>
-			<p:commandButton id="cmdCount" value="#{i18n.search_input_perform_count}" actionListener="#{shipmentView.countRecords}" onclick="PF('dlgSearchInput').hide()" update="growl" ajax="true"/>
+			<p:commandButton id="cmdReset" value="#{i18n.command_reset}" action="#{shipmentView.resetSearchObject}" onclick="PF('dlgSearchInput').hide()" ajax="false"/>
+			<p:commandButton id="cmdClear" value="#{i18n.command_clear}" action="#{shipmentView.clearSearchObject}" update="tabViewSearchInput" ajax="true"/>
+			<p:commandButton id="cmdCount" value="#{i18n.search_input_perform_count}" actionListener="#{shipmentView.countRecords}" update="growl" ajax="true"/>
 		</h:panelGrid>
 	</p:dialog>
 
+<!-- Query rename dialog -->
+	<p:dialog widgetVar="dlgQeryRename" id="dlgQeryRename" modal="true" showEffect="fade" hideEffect="fade" focus="txtNewQueryName" closeOnEscape="true">
+		<f:facet name="header">
+			<i class="pi pi-pencil"/>
+			<h:outputText value="&#160;#{i18n.query_rename_title}"/>
+		</f:facet>
+
+		<h:panelGrid columns="3">
+			<h:outputLabel value="#{i18n.query_rename_newname} *:" for="txtNewQueryName" styleClass="label-field-mandatory"/>
+			<p:inputText id="txtNewQueryName" value="#{shipmentView.newQueryName}"/>
+			<p:tooltip for="txtNewQueryName" value=""/>
+		</h:panelGrid>
+		<p/>
+
+		<f:facet name="footer">
+			<p:commandButton id="cmdRename" icon="pi pi-save" value="#{i18n.command_rename}" ajax="true" 
+				actionListener="#{shipmentView.renameQuery()}"
+				update="tabViewSearchInput,growl" oncomplete="PF('dlgQeryRename').hide()"/>
+
+			<p:commandButton id="cmdCancel" icon="pi pi-times" value="#{i18n.command_cancel}" onclick="PF('dlgQeryRename').hide()" />
+
+			<p:defaultCommand target="cmdRename" scope="dlgQeryRename"/>
+		</f:facet>
+	</p:dialog>
+
+
+
 	<p:menubar>
 		<p:submenu icon="pi pi-file" label="#{i18n.mnu_file}" id="panData_mniFile">
-			<p:menuitem value="#{i18n.action_search_input}" ajax="true" icon="pi pi-search" id="panData_mniSearch" onclick="PF('dlgSearchInput').show()"/>
 			<p:menuitem value="#{i18n.search_input_dlg_save_query}" icon="pi pi-save" onclick="PF('dlgSaveQuery').show()"/>
 		</p:submenu>
 		<p:submenu icon="pi pi-refresh" label="#{i18n.mnu_view}">
@@ -326,28 +356,27 @@
 		</p:submenu>
 		<p:submenu icon="pi pi-print" label="#{i18n.mnu_export}">
 			<p:menuitem value="#{i18n.action_export_xls}" ajax="false" icon="pi pi-file-excel">
-				<p:dataExporter type="xls" target="panData" fileName="ShipmentList"/>
-			</p:menuitem>
-			<p:menuitem value="#{i18n.action_export_pdf}" ajax="false" icon="pi pi-file-pdf">
-				<p:dataExporter type="pdf" target="panData" fileName="ShipmentList"/>
+				<p:dataExporter type="xlsxstream" target="panData" fileName="ShipmentList"/>
 			</p:menuitem>
 		</p:submenu>
+		<p:menuitem value="#{i18n.action_search_input}" ajax="true" icon="pi pi-search" id="panData_mniSearch" onclick="PF('dlgSearchInput').show()"/>
 	</p:menubar>
 
-	<br/>
 
-	<p:dataTable id="panData" var="shipmentViewItem" rows="50"
+	<p:dataTable id="panData" var="shipmentViewItem" rows="#{shipmentView.numberRows}"
+		selectionTextDisabled="false" allowUnsorting="true" resizeMode="expand" multiViewState="true" 
 		selectionMode="single"
 		selection="#{shipmentView.selectedObject}"
 		loadingMessage="#{i18n.action_fetch_data}"
 		value="#{shipmentView.shipmentsList}" scrollable="false"
-		paginatorPosition="top" paginatorAlwaysVisible="false" paginator="true" resizableColumns="true"
+		paginatorPosition="top" paginatorAlwaysVisible="#{shipmentView.paginatorAlwaysVisible}" paginator="true" resizableColumns="true"
 		rowKey="#{shipmentViewItem.id}"
 		paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-		rowsPerPageTemplate="10,50,100,500,1000">
+		rowsPerPageTemplate="50,150,400,1000">
 		<p:ajax event="rowDblselect" listener="#{shipmentView.onDoubleClick}"/>
 
-		<p:column sortBy="#{shipmentViewItem.id}" width="120" rendered="#{shipmentView.searchObject.searchFields[0].visible}" >
+		<p:column sortBy="#{shipmentViewItem.id}" width="120" 
+			rendered="#{shipmentView.searchObject.searchFields[0].visible}" displayPriority="#{shipmentView.searchObject.searchFields[0].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_shipmentview_id}"/>
 			</f:facet>
@@ -355,7 +384,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{shipmentViewItem.plantCode}" width="80" rendered="#{shipmentView.searchObject.searchFields[1].visible}" >
+		<p:column sortBy="#{shipmentViewItem.plantCode}" width="80" 
+			rendered="#{shipmentView.searchObject.searchFields[1].visible}" displayPriority="#{shipmentView.searchObject.searchFields[1].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_shipmentview_plantcode}"/>
 			</f:facet>
@@ -363,7 +393,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{shipmentViewItem.orderNumber}" width="100" rendered="#{shipmentView.searchObject.searchFields[2].visible}" >
+		<p:column sortBy="#{shipmentViewItem.orderNumber}" width="100" 
+			rendered="#{shipmentView.searchObject.searchFields[2].visible}" displayPriority="#{shipmentView.searchObject.searchFields[2].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_shipmentview_ordernumber}"/>
 			</f:facet>
@@ -371,7 +402,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{shipmentViewItem.movementTypeCode}" width="80" rendered="#{shipmentView.searchObject.searchFields[3].visible}" >
+		<p:column sortBy="#{shipmentViewItem.movementTypeCode}" width="80" 
+			rendered="#{shipmentView.searchObject.searchFields[3].visible}" displayPriority="#{shipmentView.searchObject.searchFields[3].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_shipmentview_movementtypecode}"/>
 			</f:facet>
@@ -379,7 +411,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{shipmentViewItem.shipmentDate}" width="80" rendered="#{shipmentView.searchObject.searchFields[4].visible}" >
+		<p:column sortBy="#{shipmentViewItem.shipmentDate}" width="80" 
+			rendered="#{shipmentView.searchObject.searchFields[4].visible}" displayPriority="#{shipmentView.searchObject.searchFields[4].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_shipmentview_shipmentdate}"/>
 			</f:facet>
@@ -390,7 +423,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{shipmentViewItem.serialObjectSerialNumber}" width="100" rendered="#{shipmentView.searchObject.searchFields[5].visible}" >
+		<p:column sortBy="#{shipmentViewItem.serialObjectSerialNumber}" width="100" 
+			rendered="#{shipmentView.searchObject.searchFields[5].visible}" displayPriority="#{shipmentView.searchObject.searchFields[5].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_shipmentview_serialobjectserialnumber}"/>
 			</f:facet>
@@ -398,7 +432,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{shipmentViewItem.customerCode}" width="80" rendered="#{shipmentView.searchObject.searchFields[6].visible}" >
+		<p:column sortBy="#{shipmentViewItem.customerCode}" width="80" 
+			rendered="#{shipmentView.searchObject.searchFields[6].visible}" displayPriority="#{shipmentView.searchObject.searchFields[6].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_shipmentview_customercode}"/>
 			</f:facet>
@@ -406,7 +441,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{shipmentViewItem.customerName}" width="200" rendered="#{shipmentView.searchObject.searchFields[7].visible}" >
+		<p:column sortBy="#{shipmentViewItem.customerName}" width="200" 
+			rendered="#{shipmentView.searchObject.searchFields[7].visible}" displayPriority="#{shipmentView.searchObject.searchFields[7].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_shipmentview_customername}"/>
 			</f:facet>
@@ -414,7 +450,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{shipmentViewItem.matrevMaterialMaterialNumber}" width="150" rendered="#{shipmentView.searchObject.searchFields[8].visible}" >
+		<p:column sortBy="#{shipmentViewItem.matrevMaterialMaterialNumber}" width="150" 
+			rendered="#{shipmentView.searchObject.searchFields[8].visible}" displayPriority="#{shipmentView.searchObject.searchFields[8].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_shipmentview_matrevmaterialmaterialnumber}"/>
 			</f:facet>
@@ -422,7 +459,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{shipmentViewItem.matrevMaterialSapNumber}" width="150" rendered="#{shipmentView.searchObject.searchFields[9].visible}" >
+		<p:column sortBy="#{shipmentViewItem.matrevMaterialSapNumber}" width="150" 
+			rendered="#{shipmentView.searchObject.searchFields[9].visible}" displayPriority="#{shipmentView.searchObject.searchFields[9].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_shipmentview_matrevmaterialsapnumber}"/>
 			</f:facet>
@@ -430,7 +468,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{shipmentViewItem.matrevRevisionNumber}" width="150" rendered="#{shipmentView.searchObject.searchFields[10].visible}" >
+		<p:column sortBy="#{shipmentViewItem.matrevRevisionNumber}" width="150" 
+			rendered="#{shipmentView.searchObject.searchFields[10].visible}" displayPriority="#{shipmentView.searchObject.searchFields[10].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_shipmentview_matrevrevisionnumber}"/>
 			</f:facet>
@@ -438,7 +477,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{shipmentViewItem.matrevMatMaterialTypeCode}" width="80" rendered="#{shipmentView.searchObject.searchFields[11].visible}" >
+		<p:column sortBy="#{shipmentViewItem.matrevMatMaterialTypeCode}" width="80" 
+			rendered="#{shipmentView.searchObject.searchFields[11].visible}" displayPriority="#{shipmentView.searchObject.searchFields[11].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_shipmentview_matrevmatmaterialtypecode}"/>
 			</f:facet>
@@ -446,7 +486,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{shipmentViewItem.matrevMatMaterialClassCode}" width="120" rendered="#{shipmentView.searchObject.searchFields[12].visible}" >
+		<p:column sortBy="#{shipmentViewItem.matrevMatMaterialClassCode}" width="120" 
+			rendered="#{shipmentView.searchObject.searchFields[12].visible}" displayPriority="#{shipmentView.searchObject.searchFields[12].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_shipmentview_matrevmatmaterialclasscode}"/>
 			</f:facet>
@@ -454,7 +495,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{shipmentViewItem.matrevMatMaterialHierarchy}" width="150" rendered="#{shipmentView.searchObject.searchFields[13].visible}" >
+		<p:column sortBy="#{shipmentViewItem.matrevMatMaterialHierarchy}" width="150" 
+			rendered="#{shipmentView.searchObject.searchFields[13].visible}" displayPriority="#{shipmentView.searchObject.searchFields[13].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_material_materialhierarchy}"/>
 			</f:facet>
@@ -462,7 +504,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{shipmentViewItem.matrevMaterialShortText}" width="250" rendered="#{shipmentView.searchObject.searchFields[14].visible}" >
+		<p:column sortBy="#{shipmentViewItem.matrevMaterialShortText}" width="250" 
+			rendered="#{shipmentView.searchObject.searchFields[14].visible}" displayPriority="#{shipmentView.searchObject.searchFields[14].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_shipmentview_matrevmaterialshorttext}"/>
 			</f:facet>
@@ -470,7 +513,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{shipmentViewItem.matrevMatOwnerLocationCode}" width="100" rendered="#{shipmentView.searchObject.searchFields[15].visible}" >
+		<p:column sortBy="#{shipmentViewItem.matrevMatOwnerLocationCode}" width="100" 
+			rendered="#{shipmentView.searchObject.searchFields[15].visible}" displayPriority="#{shipmentView.searchObject.searchFields[15].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_shipmentview_matrevmatownerlocationcode}"/>
 			</f:facet>
@@ -478,7 +522,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{shipmentViewItem.creationDate}" width="120" rendered="#{shipmentView.searchObject.searchFields[16].visible}" >
+		<p:column sortBy="#{shipmentViewItem.creationDate}" width="120" 
+			rendered="#{shipmentView.searchObject.searchFields[16].visible}" displayPriority="#{shipmentView.searchObject.searchFields[16].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_abstractentitywithid_creationdate}"/>
 			</f:facet>
@@ -489,7 +534,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{shipmentViewItem.lastUpdate}" width="120" rendered="#{shipmentView.searchObject.searchFields[17].visible}" >
+		<p:column sortBy="#{shipmentViewItem.lastUpdate}" width="120" 
+			rendered="#{shipmentView.searchObject.searchFields[17].visible}" displayPriority="#{shipmentView.searchObject.searchFields[17].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_abstractentitywithid_lastupdate}"/>
 			</f:facet>
@@ -507,32 +553,44 @@
 	<h:outputText styleClass="label-field-mandatory" rendered="#{shipmentView.searchObject.count}" value="#{shipmentView.countResult}"/>
 	<p/>
 
-	<p:contextMenu for="panData">
+
+
+<!--Kontextmenü mit Möglichkeit, eine Zelle oder eine Zeile zu kopieren -->
+
+	<h:inputHidden id="cellText" value="#{shipmentView.cellText}" />
+	<h:inputHidden id="rowCsv" value="#{shipmentView.rowCsv}" />
+
+	<p:contextMenu for="panData" beforeShow="updateContextData(event)" >
 		<p:menuitem value="#{i18n.action_delete}" ajax="true" icon="pi pi-trash" id="panData_mniDelete" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR')}" onclick="PF('deleteConfirm').show()"/>
 		<p:menuitem value="#{i18n.action_copy}" ajax="true" icon="pi pi-copy" id="panData_mniCopy" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR')}" onclick="PF('copyConfirm').show()"/>
 		<p:menuitem value="#{i18n.action_refresh}" ajax="false" type="push" icon="pi pi-refresh" id="panData_mniRefresh" actionListener="#{shipmentView.fetchShipments}"/>
+
+		<p:separator/>
+
+		<p:menuitem value="#{i18n.ctxmenu_copy_cell}" actionListener="#{shipmentView.copyCellToClipboard}" icon="pi pi-copy" update="@none"/>
+		<p:menuitem value="#{i18n.ctxmenu_copy_row}" actionListener="#{shipmentView.copyRowToClipboard}" icon="pi pi-copy" update="@none"/>
 	</p:contextMenu>
 
-	<p:confirmDialog modal="true" message="#{i18n.dialog_delete_question}" header="#{i18n.dialog_delete_title}" severity="alert" widgetVar="deleteConfirm">
+	<p:confirmDialog modal="true" closeOnEscape="true" message="#{i18n.dialog_delete_question}" header="#{i18n.dialog_delete_title}" severity="warn" widgetVar="deleteConfirm">
 		<p:commandButton value="#{i18n.command_yes}" oncomplete="PF('deleteConfirm').hide()" actionListener="#{shipmentView.deleteShipment}" id="panData_cmdYesDelete" ajax="false"/>
 		<p:commandButton value="#{i18n.command_no}" onclick="PF('deleteConfirm').hide()" type="button"/>
 	</p:confirmDialog>
 
-	<p:confirmDialog modal="true" message="#{i18n.dialog_copy_question}" header="#{i18n.dialog_copy_title}" severity="info" widgetVar="copyConfirm">
+	<p:confirmDialog modal="true" closeOnEscape="true" message="#{i18n.dialog_copy_question}" header="#{i18n.dialog_copy_title}" severity="info" widgetVar="copyConfirm">
 		<p:commandButton value="#{i18n.command_yes}" oncomplete="PF('copyConfirm').hide()" action="#{shipmentView.copy}" id="panData_cmdYesCopy" ajax="false"/>
 		<p:commandButton value="#{i18n.command_no}" onclick="PF('copyConfirm').hide()" type="button"/>
 	</p:confirmDialog>
 
-	<p:dialog header="#{i18n.search_input_dlg_save_query}" widgetVar="dlgSaveQuery" modal="true" height="100">
+	<p:dialog header="#{i18n.search_input_dlg_save_query}" closeOnEscape="true" id="dlgSaveQuery" widgetVar="dlgSaveQuery" modal="true" height="100">
 		<h:panelGrid columns="3">
 			<h:outputLabel value="#{i18n.search_input_lbl_save_query}" styleClass="label-field-mandatory"/>
-			<p:inputText id="txtQueryName" value="#{shipmentView.savedQueryName}">
-			</p:inputText>
-			<p:commandButton value="#{i18n.command_save}" action="#{shipmentView.saveNewQuery}" ajax="false" onclick="PF('dlgSaveQuery').hide()"/>
+			<p:inputText id="txtQueryName" value="#{shipmentView.savedQueryName}" />
+			<p:commandButton id="saveQuery" value="#{i18n.command_save}" action="#{shipmentView.saveNewQuery}" ajax="false" onclick="PF('dlgSaveQuery').hide()"/>
+			<p:defaultCommand target="saveQuery" scope="dlgSaveQuery"/>
 		</h:panelGrid>
 	</p:dialog>
 
-	<p:defaultCommand target=":form:cmdSearch"/>
+	<p:defaultCommand target=":form:cmdSearch" scope="dlgSearchInput" />
 
 </ui:define>
 </ui:composition>

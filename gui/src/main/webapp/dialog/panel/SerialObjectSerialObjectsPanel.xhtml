@@ -134,7 +134,7 @@
 		<p:menuitem value="#{i18n.ctxmenu_copy_row}" actionListener="#{serialObjectSerialObjectsPanel.copyRowToClipboard}" icon="pi pi-copy" update="@none"/>
 	</p:contextMenu>
 
-	<p:confirmDialog modal="true" message="#{i18n.dialog_delete_question}" header="#{i18n.dialog_delete_title}" severity="alert" widgetVar="deleteConfirmSerialObjects">
+	<p:confirmDialog modal="true" message="#{i18n.dialog_delete_question}" header="#{i18n.dialog_delete_title}" severity="warn" widgetVar="deleteConfirmSerialObjects">
 		<p:commandButton value="#{i18n.command_yes}" oncomplete="PF('deleteConfirmSerialObjects').hide()" actionListener="#{serialObjectSerialObjectsPanel.deleteSerialObject}" id="gridSerialObjectSerialObjectsPanel_cmdYesDelete" ajax="false"/>
 		<p:commandButton value="#{i18n.command_no}" onclick="PF('deleteConfirmSerialObjects').hide()" type="button"/>
 	</p:confirmDialog>

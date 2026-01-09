@@ -442,11 +442,10 @@
 		<p:commandButton value="#{i18n.command_no}" onclick="PF('copyConfirm').hide()" type="button"/>
 	</p:confirmDialog>
 
-	<p:dialog header="#{i18n.search_input_dlg_save_query}" widgetVar="dlgSaveQuery" id="dlgSaveQuery" closeOnEscape="true" modal="true" height="100">
+	<p:dialog header="#{i18n.search_input_dlg_save_query}" closeOnEscape="true" id="dlgSaveQuery" widgetVar="dlgSaveQuery" modal="true" height="100">
 		<h:panelGrid columns="3">
 			<h:outputLabel value="#{i18n.search_input_lbl_save_query}" styleClass="label-field-mandatory"/>
-			<p:inputText id="txtQueryName" value="#{customerView.savedQueryName}">
-			</p:inputText>
+			<p:inputText id="txtQueryName" value="#{customerView.savedQueryName}" />
 			<p:commandButton id="saveQuery" value="#{i18n.command_save}" action="#{customerView.saveNewQuery}" ajax="false" onclick="PF('dlgSaveQuery').hide()"/>
 			<p:defaultCommand target="saveQuery" scope="dlgSaveQuery"/>
 		</h:panelGrid>
