@@ -173,19 +173,30 @@ public class NavigatorView implements Serializable {
             final var itemGroup0004 = new DefaultTreeNode<>(FOLDER_TYPE, new TreeNavigatorItem(bundle.getString(FG_TOP_SERIAL_OBJECT)), root);
             itemGroup0004.setExpanded(true);
 
+            // Aggr. shipment & arrivals
+            if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY))
+                new DefaultTreeNode<>(VIEW_TYPE, new TreeNavigatorItem(bundle.getString(FORM_AGGREGATEDSHIPMENTARRIVALVIEW_TITLE),
+                        req.getContextPath() + "/view/AggregatedShipmentArrivalView.jsf"), itemGroup0004);
+
+
+
+            // Aggregated arrivals
             if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY))
                 new DefaultTreeNode<>(VIEW_TYPE, new TreeNavigatorItem(bundle.getString(FORM_AGGREGATEDARRIVALVIEW_TITLE),
                         req.getContextPath() + "/view/AggregatedArrivalView.jsf"), itemGroup0004);
 
+            // Last arrivals
             if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY))
                 new DefaultTreeNode<>(VIEW_TYPE,
                         new TreeNavigatorItem(bundle.getString(FORM_ARRIVALLASTVIEW_TITLE), req.getContextPath() + "/view/ArrivalLastView.jsf"),
                         itemGroup0004);
-            
+
+            // Arrivals
             if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY))
                 new DefaultTreeNode<>(VIEW_TYPE, new TreeNavigatorItem(bundle.getString(FORM_MATERIALIZEDARRIVALVIEW_TITLE),
                         req.getContextPath() + "/view/MaterializedArrivalView.jsf"), itemGroup0004);
 
+            // Arrivals (Standard)
             if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY))
                 new DefaultTreeNode<>(VIEW_TYPE,
                         new TreeNavigatorItem(bundle.getString(FORM_ARRIVALVIEW_TITLE), req.getContextPath() + "/view/ArrivalView.jsf"),
@@ -193,20 +204,23 @@ public class NavigatorView implements Serializable {
 
 
 
-            if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY))
-                new DefaultTreeNode<>(VIEW_TYPE, new TreeNavigatorItem(bundle.getString(FORM_AGGREGATEDSHIPMENTARRIVALVIEW_TITLE),
-                        req.getContextPath() + "/view/AggregatedShipmentArrivalView.jsf"), itemGroup0004);
-
-
-
+            // Aggregated shipments
             if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY))
                 new DefaultTreeNode<>(VIEW_TYPE, new TreeNavigatorItem(bundle.getString(FORM_AGGREGATEDSHIPMENTVIEW_TITLE),
                         req.getContextPath() + "/view/AggregatedShipmentView.jsf"), itemGroup0004);
 
+            // Shipments
             if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY))
                 new DefaultTreeNode<>(VIEW_TYPE, new TreeNavigatorItem(bundle.getString(FORM_MATERIALIZEDARRIVALSHIPMENTVIEW_TITLE),
                         req.getContextPath() + "/view/MaterializedArrivalShipmentView.jsf"), itemGroup0004);
+            
+            // Shipments (Standard)
+            if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY))
+                new DefaultTreeNode<>(VIEW_TYPE,
+                        new TreeNavigatorItem(bundle.getString(FORM_SHIPMENTVIEW_TITLE), req.getContextPath() + "/view/ShipmentView.jsf"),
+                        itemGroup0004);
 
+            // Assembly shipments
             if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY))
                 new DefaultTreeNode<>(VIEW_TYPE, new TreeNavigatorItem(bundle.getString(FORM_MATERIALIZEDASSEMBLYSHIPMENTVIEW_TITLE),
                         req.getContextPath() + "/view/MaterializedAssemblyShipmentView.jsf"), itemGroup0004);
