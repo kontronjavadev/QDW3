@@ -26,12 +26,12 @@
 		</p:ajaxStatus>
 	</h:panelGrid>
 
-	<p:growl id="growl" showDetail="true"/>
+	<p:growl id="growl" showDetail="true" skipDetailIfEqualsSummary="true" />
 
-	<p:dialog height="510" width="1000" header="#{i18n.search_input_dlg}" widgetVar="dlgSearchInput" modal="true">
+	<p:dialog height="auto" width="1000" id="dlgSearchInput" closeOnEscape="true" header="#{i18n.search_input_dlg}" widgetVar="dlgSearchInput" modal="true">
 		<p:tabView id="tabViewSearchInput" dynamic="false">
 			<p:tab title="#{i18n.search_input_filter}">
-			<p:scrollPanel style="width:100%; height:400px;" mode="native">
+			<p:scrollPanel style="width:100%; #{sizeServiceBean.searchFilterHeight()};" mode="native">
 			<h:panelGrid columns="5" cellpadding="3">
 				<h:outputText styleClass="label-field-mandatory" value="#{i18n.search_input_column}"/>
 				<h:outputText styleClass="label-field-mandatory" value="#{i18n.search_input_operator}"/>
@@ -432,6 +432,7 @@
 			</h:panelGrid>
 			</p:scrollPanel>
 			</p:tab>
+
 			<p:tab title="#{i18n.search_input_adv}">
 			<h:panelGrid columns="2">
 				<h:outputLabel value="#{i18n.search_input_case}:" styleClass="label-field-mandatory"/>
@@ -445,36 +446,65 @@
 					<f:validateLongRange minimum="1" maximum="1000000"/>
 				</p:inputText>
 				<h:outputLabel value="#{i18n.search_input_visible_fields_label}:" styleClass="label-field-mandatory"/>
-				<p:pickList value="#{materializedAssemblyShipmentView.visibleFields}" var="savedQueryListItem" itemLabel="#{savedQueryListItem.colLabel}" itemValue="#{savedQueryListItem}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchFieldDTOConverter" addLabel="#{i18n.pick_list_add}" addAllLabel="#{i18n.pick_list_add_all}" removeLabel="#{i18n.pick_list_remove}" removeAllLabel="#{i18n.pick_list_remove_all}">
+				<p:pickList styleClass="searchdialog-picklist" value="#{materializedAssemblyShipmentView.visibleFields}" var="savedQueryListItem" itemLabel="#{savedQueryListItem.colLabel}" itemValue="#{savedQueryListItem}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchFieldDTOConverter" addLabel="#{i18n.pick_list_add}" addAllLabel="#{i18n.pick_list_add_all}" removeLabel="#{i18n.pick_list_remove}" removeAllLabel="#{i18n.pick_list_remove_all}">
 					<f:facet name="sourceCaption">#{i18n.search_input_all_fields}</f:facet>
 					<f:facet name="targetCaption">#{i18n.search_input_visible_fields}</f:facet>
 				</p:pickList>
 			</h:panelGrid>
 			</p:tab>
+
 			<p:tab title="#{i18n.search_input_saved_query_title}">
 				<h:panelGrid columns="1">
 					<h:outputLabel styleClass="label-field-mandatory" value="#{i18n.search_input_lbl_saved_query}"/>
-					<p:selectOneListbox id="savedQueryList" value="#{materializedAssemblyShipmentView.selectedSavedQuery}" style="height:150px; width:300px">
+					<p:selectOneListbox id="savedQueryList" value="#{materializedAssemblyShipmentView.selectedSavedQuery}" style="#{sizeServiceBean.searchQueriesHeight()}; width:480px">
 						<f:selectItems value="#{materializedAssemblyShipmentView.savedQueries}"/>
 					</p:selectOneListbox>
-					<h:panelGrid columns="2">
-						<p:commandButton value="#{i18n.search_input_run_saved_query}" action="#{materializedAssemblyShipmentView.runSavedQuery}" ajax="false"/>
-						<p:commandButton value="#{i18n.search_input_delete_saved_query}" action="#{materializedAssemblyShipmentView.deleteSavedQuery}" ajax="false"/>
+					<h:panelGrid columns="3">
+						<p:commandButton icon="pi pi-caret-right" value="#{i18n.search_input_run_saved_query}" action="#{materializedAssemblyShipmentView.runSavedQuery}" ajax="false"/>
+						<p:commandButton icon="pi pi-pencil" value="#{i18n.search_input_rename_saved_query}" actionListener="#{materializedAssemblyShipmentView.openRenameDialog}" ajax="true"/>
+						<p:commandButton icon="pi pi-eraser" value="#{i18n.search_input_delete_saved_query}" actionListener="#{materializedAssemblyShipmentView.deleteSavedQuery}" update="savedQueryList" ajax="true"/>
 					</h:panelGrid>
 				</h:panelGrid>
 			</p:tab>
 		</p:tabView>
 		<br/>
-		<h:panelGrid columns="3">
+		<h:panelGrid columns="4">
 			<p:commandButton id="cmdSearch" value="#{i18n.search_input_perform_search}" action="#{materializedAssemblyShipmentView.fetchMaterializedAssemblyShipments}" ajax="false"/>
-			<p:commandButton id="cmdReset" value="#{i18n.command_reset}" action="#{materializedAssemblyShipmentView.initSearchObject}" onclick="PF('dlgSearchInput').hide()" ajax="false"/>
-			<p:commandButton id="cmdCount" value="#{i18n.search_input_perform_count}" actionListener="#{materializedAssemblyShipmentView.countRecords}" onclick="PF('dlgSearchInput').hide()" update="growl" ajax="true"/>
+			<p:commandButton id="cmdReset" value="#{i18n.command_reset}" action="#{materializedAssemblyShipmentView.resetSearchObject}" onclick="PF('dlgSearchInput').hide()" ajax="false"/>
+			<p:commandButton id="cmdClear" value="#{i18n.command_clear}" action="#{materializedAssemblyShipmentView.clearSearchObject}" update="tabViewSearchInput" ajax="true"/>
+			<p:commandButton id="cmdCount" value="#{i18n.search_input_perform_count}" actionListener="#{materializedAssemblyShipmentView.countRecords}" update="growl" ajax="true"/>
 		</h:panelGrid>
 	</p:dialog>
 
+<!-- Query rename dialog -->
+	<p:dialog widgetVar="dlgQeryRename" id="dlgQeryRename" modal="true" showEffect="fade" hideEffect="fade" focus="txtNewQueryName" closeOnEscape="true">
+		<f:facet name="header">
+			<i class="pi pi-pencil"/>
+			<h:outputText value="&#160;#{i18n.query_rename_title}"/>
+		</f:facet>
+
+		<h:panelGrid columns="3">
+			<h:outputLabel value="#{i18n.query_rename_newname} *:" for="txtNewQueryName" styleClass="label-field-mandatory"/>
+			<p:inputText id="txtNewQueryName" value="#{materializedAssemblyShipmentView.newQueryName}"/>
+			<p:tooltip for="txtNewQueryName" value=""/>
+		</h:panelGrid>
+		<p/>
+
+		<f:facet name="footer">
+			<p:commandButton id="cmdRename" icon="pi pi-save" value="#{i18n.command_rename}" ajax="true" 
+				actionListener="#{materializedAssemblyShipmentView.renameQuery()}"
+				update="tabViewSearchInput,growl" oncomplete="PF('dlgQeryRename').hide()"/>
+
+			<p:commandButton id="cmdCancel" icon="pi pi-times" value="#{i18n.command_cancel}" onclick="PF('dlgQeryRename').hide()" />
+
+			<p:defaultCommand target="cmdRename" scope="dlgQeryRename"/>
+		</f:facet>
+	</p:dialog>
+
+
+
 	<p:menubar>
 		<p:submenu icon="pi pi-file" label="#{i18n.mnu_file}" id="panData_mniFile">
-			<p:menuitem value="#{i18n.action_search_input}" ajax="true" icon="pi pi-search" id="panData_mniSearch" onclick="PF('dlgSearchInput').show()"/>
 			<p:menuitem value="#{i18n.search_input_dlg_save_query}" icon="pi pi-save" onclick="PF('dlgSaveQuery').show()"/>
 		</p:submenu>
 		<p:submenu icon="pi pi-refresh" label="#{i18n.mnu_view}">
@@ -482,28 +512,27 @@
 		</p:submenu>
 		<p:submenu icon="pi pi-print" label="#{i18n.mnu_export}">
 			<p:menuitem value="#{i18n.action_export_xls}" ajax="false" icon="pi pi-file-excel">
-				<p:dataExporter type="xls" target="panData" fileName="MaterializedAssemblyShipmentList"/>
-			</p:menuitem>
-			<p:menuitem value="#{i18n.action_export_pdf}" ajax="false" icon="pi pi-file-pdf">
-				<p:dataExporter type="pdf" target="panData" fileName="MaterializedAssemblyShipmentList"/>
+				<p:dataExporter type="xlsxstream" target="panData" fileName="MaterializedAssemblyShipmentList"/>
 			</p:menuitem>
 		</p:submenu>
+		<p:menuitem value="#{i18n.action_search_input}" ajax="true" icon="pi pi-search" id="panData_mniSearch" onclick="PF('dlgSearchInput').show()"/>
 	</p:menubar>
 
-	<br/>
 
-	<p:dataTable id="panData" var="materializedAssemblyShipmentViewItem" rows="50"
+	<p:dataTable id="panData" var="materializedAssemblyShipmentViewItem" rows="#{materializedAssemblyShipmentView.numberRows}"
+		selectionTextDisabled="false" allowUnsorting="true" resizeMode="expand" multiViewState="true" 
 		selectionMode="single"
 		selection="#{materializedAssemblyShipmentView.selectedObject}"
 		loadingMessage="#{i18n.action_fetch_data}"
 		value="#{materializedAssemblyShipmentView.materializedAssemblyShipmentsList}" scrollable="false"
-		paginatorPosition="top" paginatorAlwaysVisible="false" paginator="true" resizableColumns="true"
+		paginatorPosition="top" paginatorAlwaysVisible="#{materializedAssemblyShipmentView.paginatorAlwaysVisible}" paginator="true" resizableColumns="true"
 		rowKey="#{materializedAssemblyShipmentViewItem.id}"
 		paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-		rowsPerPageTemplate="10,50,100,500,1000">
+		rowsPerPageTemplate="50,150,400,1000">
 		<p:ajax event="rowDblselect" listener="#{materializedAssemblyShipmentView.onDoubleClick}"/>
 
-		<p:column sortBy="#{materializedAssemblyShipmentViewItem.id}" width="80" rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[0].visible}" >
+		<p:column sortBy="#{materializedAssemblyShipmentViewItem.id}" width="80" 
+			rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[0].visible}" displayPriority="#{materializedAssemblyShipmentView.searchObject.searchFields[0].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_materializedentitiy_id}"/>
 			</f:facet>
@@ -511,7 +540,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedAssemblyShipmentViewItem.plant}" width="100" rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[1].visible}" >
+		<p:column sortBy="#{materializedAssemblyShipmentViewItem.plant}" width="100" 
+			rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[1].visible}" displayPriority="#{materializedAssemblyShipmentView.searchObject.searchFields[1].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_materializedentitiy_plant}"/>
 			</f:facet>
@@ -519,7 +549,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedAssemblyShipmentViewItem.assemblyDate}" width="80" rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[2].visible}" >
+		<p:column sortBy="#{materializedAssemblyShipmentViewItem.assemblyDate}" width="80" 
+			rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[2].visible}" displayPriority="#{materializedAssemblyShipmentView.searchObject.searchFields[2].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedassemblyshipmentview_assemblydate}"/>
 			</f:facet>
@@ -530,7 +561,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedAssemblyShipmentViewItem.assemblyPO}" width="80" rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[3].visible}" >
+		<p:column sortBy="#{materializedAssemblyShipmentViewItem.assemblyPO}" width="80" 
+			rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[3].visible}" displayPriority="#{materializedAssemblyShipmentView.searchObject.searchFields[3].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedassemblyshipmentview_assemblypo}"/>
 			</f:facet>
@@ -538,7 +570,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedAssemblyShipmentViewItem.serialNumber}" width="100" rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[4].visible}" >
+		<p:column sortBy="#{materializedAssemblyShipmentViewItem.serialNumber}" width="100" 
+			rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[4].visible}" displayPriority="#{materializedAssemblyShipmentView.searchObject.searchFields[4].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedassemblyshipmentview_serialnumber}"/>
 			</f:facet>
@@ -546,7 +579,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedAssemblyShipmentViewItem.parentSerialNumber}" width="100" rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[5].visible}" >
+		<p:column sortBy="#{materializedAssemblyShipmentViewItem.parentSerialNumber}" width="100" 
+			rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[5].visible}" displayPriority="#{materializedAssemblyShipmentView.searchObject.searchFields[5].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedassemblyshipmentview_parentserialnumber}"/>
 			</f:facet>
@@ -554,7 +588,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedAssemblyShipmentViewItem.customerCode}" width="100" rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[6].visible}" >
+		<p:column sortBy="#{materializedAssemblyShipmentViewItem.customerCode}" width="100" 
+			rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[6].visible}" displayPriority="#{materializedAssemblyShipmentView.searchObject.searchFields[6].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedassemblyshipmentview_customercode}"/>
 			</f:facet>
@@ -562,7 +597,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedAssemblyShipmentViewItem.customerName}" width="200" rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[7].visible}" >
+		<p:column sortBy="#{materializedAssemblyShipmentViewItem.customerName}" width="200" 
+			rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[7].visible}" displayPriority="#{materializedAssemblyShipmentView.searchObject.searchFields[7].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedassemblyshipmentview_customername}"/>
 			</f:facet>
@@ -570,7 +606,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedAssemblyShipmentViewItem.countryCode}" width="80" rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[8].visible}" >
+		<p:column sortBy="#{materializedAssemblyShipmentViewItem.countryCode}" width="80" 
+			rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[8].visible}" displayPriority="#{materializedAssemblyShipmentView.searchObject.searchFields[8].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedassemblyshipmentview_countrycode}"/>
 			</f:facet>
@@ -578,7 +615,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedAssemblyShipmentViewItem.countryName}" width="150" rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[9].visible}" >
+		<p:column sortBy="#{materializedAssemblyShipmentViewItem.countryName}" width="150" 
+			rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[9].visible}" displayPriority="#{materializedAssemblyShipmentView.searchObject.searchFields[9].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedassemblyshipmentview_countryname}"/>
 			</f:facet>
@@ -586,7 +624,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedAssemblyShipmentViewItem.shipmentDate}" width="80" rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[10].visible}" >
+		<p:column sortBy="#{materializedAssemblyShipmentViewItem.shipmentDate}" width="80" 
+			rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[10].visible}" displayPriority="#{materializedAssemblyShipmentView.searchObject.searchFields[10].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedassemblyshipmentview_shipmentdate}"/>
 			</f:facet>
@@ -597,7 +636,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedAssemblyShipmentViewItem.arrivalDate}" width="80" rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[11].visible}" >
+		<p:column sortBy="#{materializedAssemblyShipmentViewItem.arrivalDate}" width="80" 
+			rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[11].visible}" displayPriority="#{materializedAssemblyShipmentView.searchObject.searchFields[11].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedassemblyshipmentview_arrivaldate}"/>
 			</f:facet>
@@ -608,7 +648,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedAssemblyShipmentViewItem.supplierCode}" width="80" rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[12].visible}" >
+		<p:column sortBy="#{materializedAssemblyShipmentViewItem.supplierCode}" width="80" 
+			rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[12].visible}" displayPriority="#{materializedAssemblyShipmentView.searchObject.searchFields[12].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedassemblyshipmentview_suppliercode}"/>
 			</f:facet>
@@ -616,7 +657,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedAssemblyShipmentViewItem.supplierName}" width="200" rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[13].visible}" >
+		<p:column sortBy="#{materializedAssemblyShipmentViewItem.supplierName}" width="200" 
+			rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[13].visible}" displayPriority="#{materializedAssemblyShipmentView.searchObject.searchFields[13].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedassemblyshipmentview_suppliername}"/>
 			</f:facet>
@@ -624,7 +666,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedAssemblyShipmentViewItem.shipmentMovementType}" width="120" rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[14].visible}" >
+		<p:column sortBy="#{materializedAssemblyShipmentViewItem.shipmentMovementType}" width="120" 
+			rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[14].visible}" displayPriority="#{materializedAssemblyShipmentView.searchObject.searchFields[14].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedassemblyshipmentview_shipmentmovementtype}"/>
 			</f:facet>
@@ -632,7 +675,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedAssemblyShipmentViewItem.arrivalMovementType}" width="120" rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[15].visible}" >
+		<p:column sortBy="#{materializedAssemblyShipmentViewItem.arrivalMovementType}" width="120" 
+			rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[15].visible}" displayPriority="#{materializedAssemblyShipmentView.searchObject.searchFields[15].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedassemblyshipmentview_arrivalmovementtype}"/>
 			</f:facet>
@@ -640,7 +684,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedAssemblyShipmentViewItem.customerOrderNumber}" width="100" rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[16].visible}" >
+		<p:column sortBy="#{materializedAssemblyShipmentViewItem.customerOrderNumber}" width="100" 
+			rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[16].visible}" displayPriority="#{materializedAssemblyShipmentView.searchObject.searchFields[16].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedassemblyshipmentview_customerordernumber}"/>
 			</f:facet>
@@ -648,7 +693,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedAssemblyShipmentViewItem.purchaseOrderNumber}" width="100" rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[17].visible}" >
+		<p:column sortBy="#{materializedAssemblyShipmentViewItem.purchaseOrderNumber}" width="100" 
+			rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[17].visible}" displayPriority="#{materializedAssemblyShipmentView.searchObject.searchFields[17].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedassemblyshipmentview_purchaseordernumber}"/>
 			</f:facet>
@@ -656,7 +702,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedAssemblyShipmentViewItem.materialNumber}" width="150" rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[18].visible}" >
+		<p:column sortBy="#{materializedAssemblyShipmentViewItem.materialNumber}" width="150" 
+			rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[18].visible}" displayPriority="#{materializedAssemblyShipmentView.searchObject.searchFields[18].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedassemblyshipmentview_materialnumber}"/>
 			</f:facet>
@@ -664,7 +711,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedAssemblyShipmentViewItem.sapNumber}" width="150" rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[19].visible}" >
+		<p:column sortBy="#{materializedAssemblyShipmentViewItem.sapNumber}" width="150" 
+			rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[19].visible}" displayPriority="#{materializedAssemblyShipmentView.searchObject.searchFields[19].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedassemblyshipmentview_sapnumber}"/>
 			</f:facet>
@@ -672,7 +720,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedAssemblyShipmentViewItem.revisionNumber}" width="150" rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[20].visible}" >
+		<p:column sortBy="#{materializedAssemblyShipmentViewItem.revisionNumber}" width="150" 
+			rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[20].visible}" displayPriority="#{materializedAssemblyShipmentView.searchObject.searchFields[20].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_materializedentitiy_revisionnumber}"/>
 			</f:facet>
@@ -680,7 +729,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedAssemblyShipmentViewItem.materialHierarchy}" width="150" rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[21].visible}" >
+		<p:column sortBy="#{materializedAssemblyShipmentViewItem.materialHierarchy}" width="150" 
+			rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[21].visible}" displayPriority="#{materializedAssemblyShipmentView.searchObject.searchFields[21].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_materializedentitiy_materialhierarchy}"/>
 			</f:facet>
@@ -688,7 +738,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedAssemblyShipmentViewItem.materialShortText}" width="250" rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[22].visible}" >
+		<p:column sortBy="#{materializedAssemblyShipmentViewItem.materialShortText}" width="250" 
+			rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[22].visible}" displayPriority="#{materializedAssemblyShipmentView.searchObject.searchFields[22].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_materializedentitiy_materialshorttext}"/>
 			</f:facet>
@@ -696,7 +747,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedAssemblyShipmentViewItem.materialType}" width="80" rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[23].visible}" >
+		<p:column sortBy="#{materializedAssemblyShipmentViewItem.materialType}" width="80" 
+			rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[23].visible}" displayPriority="#{materializedAssemblyShipmentView.searchObject.searchFields[23].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedassemblyshipmentview_materialtype}"/>
 			</f:facet>
@@ -704,7 +756,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedAssemblyShipmentViewItem.parentMaterialNumber}" width="150" rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[24].visible}" >
+		<p:column sortBy="#{materializedAssemblyShipmentViewItem.parentMaterialNumber}" width="150" 
+			rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[24].visible}" displayPriority="#{materializedAssemblyShipmentView.searchObject.searchFields[24].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedassemblyshipmentview_parentmaterialnumber}"/>
 			</f:facet>
@@ -712,7 +765,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedAssemblyShipmentViewItem.parentSapNumber}" width="150" rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[25].visible}" >
+		<p:column sortBy="#{materializedAssemblyShipmentViewItem.parentSapNumber}" width="150" 
+			rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[25].visible}" displayPriority="#{materializedAssemblyShipmentView.searchObject.searchFields[25].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedassemblyshipmentview_parentsapnumber}"/>
 			</f:facet>
@@ -720,7 +774,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedAssemblyShipmentViewItem.parentMaterialType}" width="80" rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[26].visible}" >
+		<p:column sortBy="#{materializedAssemblyShipmentViewItem.parentMaterialType}" width="80" 
+			rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[26].visible}" displayPriority="#{materializedAssemblyShipmentView.searchObject.searchFields[26].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedassemblyshipmentview_parentmaterialtype}"/>
 			</f:facet>
@@ -728,7 +783,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedAssemblyShipmentViewItem.parentRevisionNumber}" width="150" rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[27].visible}" >
+		<p:column sortBy="#{materializedAssemblyShipmentViewItem.parentRevisionNumber}" width="150" 
+			rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[27].visible}" displayPriority="#{materializedAssemblyShipmentView.searchObject.searchFields[27].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedassemblyshipmentview_parentrevisionnumber}"/>
 			</f:facet>
@@ -736,7 +792,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedAssemblyShipmentViewItem.parentMaterialHierarchy}" width="150" rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[28].visible}" >
+		<p:column sortBy="#{materializedAssemblyShipmentViewItem.parentMaterialHierarchy}" width="150" 
+			rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[28].visible}" displayPriority="#{materializedAssemblyShipmentView.searchObject.searchFields[28].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedassemblyshipmentview_parentmaterialhierarchy}"/>
 			</f:facet>
@@ -744,7 +801,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedAssemblyShipmentViewItem.parentMaterialShortText}" width="250" rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[29].visible}" >
+		<p:column sortBy="#{materializedAssemblyShipmentViewItem.parentMaterialShortText}" width="250" 
+			rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[29].visible}" displayPriority="#{materializedAssemblyShipmentView.searchObject.searchFields[29].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_materializedentitiy_parentmaterialshorttext}"/>
 			</f:facet>
@@ -759,10 +817,25 @@
 	<h:outputText styleClass="label-field-mandatory" rendered="#{materializedAssemblyShipmentView.searchObject.count}" value="#{materializedAssemblyShipmentView.countResult}"/>
 	<p/>
 
-	<p:contextMenu for="panData">
+
+
+<!--Kontextmenü mit Möglichkeit, eine Zelle oder eine Zeile zu kopieren -->
+
+	<h:inputHidden id="cellText" value="#{materializedAssemblyShipmentView.cellText}" />
+	<h:inputHidden id="rowCsv" value="#{materializedAssemblyShipmentView.rowCsv}" />
+
+	<p:contextMenu for="panData" beforeShow="updateContextData(event)" >
 		<p:menuitem value="#{i18n.action_delete}" ajax="true" icon="pi pi-trash" id="panData_mniDelete" rendered="false" onclick="PF('deleteConfirm').show()"/>
+		<p:menuitem value="#{i18n.action_view}" ajax="true" icon="pi pi-file" id="panData_mniView" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY')}" action="#{materializedAssemblyShipmentView.openViewArrivalDialog}">
+			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{materializedAssemblyShipmentView.currentPageURL}"/>
+		</p:menuitem>
 		<p:menuitem value="#{i18n.action_copy}" ajax="true" icon="pi pi-copy" id="panData_mniCopy" rendered="false" onclick="PF('copyConfirm').show()"/>
 		<p:menuitem value="#{i18n.action_refresh}" ajax="false" type="push" icon="pi pi-refresh" id="panData_mniRefresh" actionListener="#{materializedAssemblyShipmentView.fetchMaterializedAssemblyShipments}"/>
+
+		<p:separator/>
+
+		<p:menuitem value="#{i18n.ctxmenu_copy_cell}" actionListener="#{materializedAssemblyShipmentView.copyCellToClipboard}" icon="pi pi-copy" update="@none"/>
+		<p:menuitem value="#{i18n.ctxmenu_copy_row}" actionListener="#{materializedAssemblyShipmentView.copyRowToClipboard}" icon="pi pi-copy" update="@none"/>
 	</p:contextMenu>
 
 	<p:confirmDialog modal="true" message="#{i18n.dialog_delete_question}" header="#{i18n.dialog_delete_title}" severity="alert" widgetVar="deleteConfirm">
