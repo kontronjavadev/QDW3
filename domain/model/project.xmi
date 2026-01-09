@@ -154,7 +154,7 @@
   <net.sourceforge.jbizmo.model.java:Namespace name="exchange" parent="/0/@rootNamespace" childNamespaces="/9 /111 /251 /255 /259" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="ui.test" parent="/0/@rootNamespace" project="/0"/>
   <net.sourceforge.jbizmo.model.client:FormGroup name="Master data" groupOrder="1" forms="/47 /77 /51 /69 /81 /96 /114 /126 /138 /150 /174 /158 /92 /41 /73 /88 /100 /118 /130 /142 /154 /178 /162 /104 /122 /134 /146 /166 /182 /170 /311" roles="/0/@roles.0" project="/0"/>
-  <net.sourceforge.jbizmo.model.java:Namespace name="base" parent="/1" javaTypes="/45 /67 /14 /13 /64 /72 /86 /87 /99 /141 /153 /177 /277" project="/0"/>
+  <net.sourceforge.jbizmo.model.java:Namespace name="base" parent="/1" javaTypes="/45 /72 /86 /99 /141 /277 /67 /153 /14 /177 /13 /64 /87" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="base" parent="/3" javaTypes="/16 /53 /161 /50 /44 /71 /85 /80 /76 /83 /95 /91 /98 /234 /107 /103 /140 /298 /149 /145 /281 /285 /275 /65 /152 /214 /169 /157 /37 /40 /15 /34 /176 /314 /297 /185 /181 /25 /276 /68 /63 /21 /30 /160 /84 /173 /165 /345" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="base" parent="/4" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="base" parent="/2" javaTypes="/46 /59 /60 /55 /57 /278 /66 /56 /12 /54 /61 /62 /11 /58" project="/0"/>
@@ -6562,7 +6562,7 @@
     <fields name="txtAssemblyDate" colIndex="2" rowIndex="2" label="Assembly date" readonly="true" mandatory="false" fieldType="DATE" width="140" dTOAttribute="/335/@attributes.1"/>
     <fields name="txtParentObjectSerialNumber" rowIndex="3" label="Parent serial no." readonly="true" mandatory="false" width="140" dTOAttribute="/335/@attributes.11"/>
     <fields name="cboParentObject" colIndex="2" rowIndex="3" label="Parent serial object" readonly="true" mandatory="false" fieldType="FORM_LINK" width="140" dTOAttribute="/335/@attributes.9"/>
-    <fields name="cboTraceBom" rowIndex="4" label="Trace bom" readonly="true" mandatory="false" fieldType="FORM_LINK" width="140" dTOAttribute="/335/@attributes.10"/>
+    <fields name="cboTraceBom" rowIndex="4" label="Trace BoM" readonly="true" mandatory="false" fieldType="FORM_LINK" width="140" dTOAttribute="/335/@attributes.10"/>
     <fields name="cboMaterial" colIndex="2" rowIndex="4" label="Material" readonly="true" fieldType="FORM_LINK" width="140" dTOAttribute="/335/@attributes.8"/>
     <fields name="txtMaterialMaterialNumber" rowIndex="5" label="Material no." readonly="true" width="140" dTOAttribute="/335/@attributes.12"/>
     <fields name="txtMaterialSapNumber" colIndex="2" rowIndex="5" label="SAP no." readonly="true" width="140" dTOAttribute="/335/@attributes.13"/>

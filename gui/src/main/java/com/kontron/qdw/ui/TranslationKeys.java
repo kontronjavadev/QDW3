@@ -244,6 +244,7 @@ public interface TranslationKeys {
     String FIELD_VIEWMATERIALREVISIONDIALOG_TXTALTERNATIVENUMBER = "field_viewmaterialrevisiondialog_txtalternativenumber";
     String FIELD_VIEWMATERIALREVISIONDIALOG_TXTREVISIONNUMBER = "field_viewmaterialrevisiondialog_txtrevisionnumber";
     String FIELD_VIEWSERIALOBJECTDIALOG_CBOPARENTOBJECT = "field_viewserialobjectdialog_cboparentobject";
+    String FIELD_VIEWSERIALOBJECTDIALOG_CBOTRACEBOM = "field_viewserialobjectdialog_cbotracebom";
     String FIELD_VIEWSERIALOBJECTDIALOG_TXTCUSTOMERSERIALNUMBER = "field_viewserialobjectdialog_txtcustomerserialnumber";
     String FIELD_VIEWSERIALOBJECTDIALOG_TXTMATERIALMATERIALNUMBER = "field_viewserialobjectdialog_txtmaterialmaterialnumber";
     String FIELD_VIEWSERIALOBJECTDIALOG_TXTMATERIALSAPNUMBER = "field_viewserialobjectdialog_txtmaterialsapnumber";

@@ -72,7 +72,7 @@
 		<h:outputText styleClass="label-field-value" rendered="#{!userSession.checkAuthorizationString('ADMINISTRATOR;READONLY')}" id="cboParentObjectAltLbl" value="#{viewSerialObjectDialog.serialObject.parentObject.serialNumber}"/>
 		<p:tooltip for="cboParentObject" value=""/>
 
-		<h:outputLabel value="#{i18n.lbl_assoc_serialobject_tracebom}:" for="cboTraceBom" styleClass="label-field-optional"/>
+		<h:outputLabel value="#{i18n.field_viewserialobjectdialog_cbotracebom}:" for="cboTraceBom" styleClass="label-field-optional"/>
 		<h:outputText styleClass="label-field-value" id="cboTraceBom" value="#{viewSerialObjectDialog.serialObject.traceBom.id}"/>
 		<p:tooltip for="cboTraceBom" value=""/>
 
