@@ -195,14 +195,14 @@ public class MaterializedAssemblyShipmentView extends SuperView implements Seria
         new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedAssemblyShipmentSearchDTO.SELECT_REVISIONNUMBER,
                 bundle.getString(LBL_ATTR_MATERIALIZEDENTITIY_REVISIONNUMBER), SearchFieldDataTypeEnum.STRING, 150);
 
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedAssemblyShipmentSearchDTO.SELECT_MATERIALTYPE,
+                bundle.getString(COL_MATERIALIZEDASSEMBLYSHIPMENTVIEW_MATERIALTYPE), SearchFieldDataTypeEnum.STRING, 80);
+
         new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedAssemblyShipmentSearchDTO.SELECT_MATERIALHIERARCHY,
                 bundle.getString(LBL_ATTR_MATERIALIZEDENTITIY_MATERIALHIERARCHY), SearchFieldDataTypeEnum.STRING, 150);
 
         new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedAssemblyShipmentSearchDTO.SELECT_MATERIALSHORTTEXT,
                 bundle.getString(LBL_ATTR_MATERIALIZEDENTITIY_MATERIALSHORTTEXT), SearchFieldDataTypeEnum.STRING, 250);
-
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedAssemblyShipmentSearchDTO.SELECT_MATERIALTYPE,
-                bundle.getString(COL_MATERIALIZEDASSEMBLYSHIPMENTVIEW_MATERIALTYPE), SearchFieldDataTypeEnum.STRING, 80);
 
         new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedAssemblyShipmentSearchDTO.SELECT_PARENTMATERIALNUMBER,
                 bundle.getString(COL_MATERIALIZEDASSEMBLYSHIPMENTVIEW_PARENTMATERIALNUMBER), SearchFieldDataTypeEnum.STRING, 150);
@@ -210,11 +210,11 @@ public class MaterializedAssemblyShipmentView extends SuperView implements Seria
         new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedAssemblyShipmentSearchDTO.SELECT_PARENTSAPNUMBER,
                 bundle.getString(COL_MATERIALIZEDASSEMBLYSHIPMENTVIEW_PARENTSAPNUMBER), SearchFieldDataTypeEnum.STRING, 150);
 
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedAssemblyShipmentSearchDTO.SELECT_PARENTMATERIALTYPE,
-                bundle.getString(COL_MATERIALIZEDASSEMBLYSHIPMENTVIEW_PARENTMATERIALTYPE), SearchFieldDataTypeEnum.STRING, 80);
-
         new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedAssemblyShipmentSearchDTO.SELECT_PARENTREVISIONNUMBER,
                 bundle.getString(COL_MATERIALIZEDASSEMBLYSHIPMENTVIEW_PARENTREVISIONNUMBER), SearchFieldDataTypeEnum.STRING, 150);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedAssemblyShipmentSearchDTO.SELECT_PARENTMATERIALTYPE,
+                bundle.getString(COL_MATERIALIZEDASSEMBLYSHIPMENTVIEW_PARENTMATERIALTYPE), SearchFieldDataTypeEnum.STRING, 80);
 
         new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedAssemblyShipmentSearchDTO.SELECT_PARENTMATERIALHIERARCHY,
                 bundle.getString(COL_MATERIALIZEDASSEMBLYSHIPMENTVIEW_PARENTMATERIALHIERARCHY), SearchFieldDataTypeEnum.STRING, 150);
