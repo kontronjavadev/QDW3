@@ -1,0 +1,121 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:h="jakarta.faces.html"
+	xmlns:f="jakarta.faces.core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/templates/ui.xhtml">
+
+<f:metadata>
+	<f:viewAction action="#{viewIllegalTraceBoMItemDialog.initView()}"/>
+	<f:viewParam name="selectedObjectId" value="#{viewIllegalTraceBoMItemDialog.selectedObjectId}"/>
+</f:metadata>
+
+<ui:define name="title">#{viewIllegalTraceBoMItemDialog.formTitle}</ui:define>
+
+<ui:define name="content">
+	<p:dialog header="#{i18n.feedback_dialog_header}" modal="true" widgetVar="msgBox" visible="#{(not empty facesContext.messageList)}">
+		<p:messages id="messages" showDetail="true" showSummary="true"/>
+	</p:dialog>
+
+	<h:panelGrid columns="3">
+		<div class="pi pi-file" style="font-size: 2em"/>
+		<h:outputText id="lblFormTitle" value="&#160;#{viewIllegalTraceBoMItemDialog.formTitle}" styleClass="label-form-title"/>
+		<p:ajaxStatus style="width:16px;height:16px;">
+			<f:facet name="start">
+				<h:graphicImage value="/images/ajaxloading.gif"/>
+			</f:facet>
+
+			<f:facet name="complete">
+				<h:outputText value=""/>
+			</f:facet>
+		</p:ajaxStatus>
+	</h:panelGrid>
+
+	<p:tabView id="tabview1" dynamic="true" effect="fade" effectDuration="fast">
+	<p:tab id="tabPanIllegalTraceBoMItem" title="#{i18n.panel_basic_title}">
+	<h:panelGrid columns="6">
+
+		<h:outputLabel value="#{i18n.field_viewillegaltracebomitemdialog_cbotracebom}:" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY')}" for="cboTraceBom" styleClass="label-field-optional"/>
+		<p:commandLink rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY')}" id="cboTraceBom" style="font-weight: bold;color: #0063ac" action="#{viewIllegalTraceBoMItemDialog.openViewTraceBoMDialogLink}">
+			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{viewIllegalTraceBoMItemDialog.currentPageURL}"/>
+			<h:outputText value="#{viewIllegalTraceBoMItemDialog.illegalTraceBoMItem.traceBom.id}"/>
+		</p:commandLink>
+		<h:outputLabel value="#{i18n.field_viewillegaltracebomitemdialog_cbotracebom}:" rendered="#{!userSession.checkAuthorizationString('ADMINISTRATOR;READONLY')}" for="cboTraceBomAltLbl" styleClass="label-field-optional"/>
+		<h:outputText styleClass="label-field-value" rendered="#{!userSession.checkAuthorizationString('ADMINISTRATOR;READONLY')}" id="cboTraceBomAltLbl" value="#{viewIllegalTraceBoMItemDialog.illegalTraceBoMItem.traceBom.id}"/>
+		<p:tooltip for="cboTraceBom" value=""/>
+		<h:outputLabel/>
+		<h:outputLabel/>
+		<h:outputLabel/>
+
+		<h:outputLabel value="#{i18n.lbl_attr_illegaltracebomitem_manufacturer}:" for="txtManufacturer" styleClass="label-field-optional"/>
+		<p:inputText id="txtManufacturer" value="#{viewIllegalTraceBoMItemDialog.illegalTraceBoMItem.manufacturer}" readonly="true">
+		</p:inputText>
+		<p:tooltip for="txtManufacturer" value=""/>
+		<h:outputLabel/>
+		<h:outputLabel/>
+		<h:outputLabel/>
+
+		<h:outputLabel value="#{i18n.lbl_attr_illegaltracebomitem_datecode}:" for="txtDateCode" styleClass="label-field-optional"/>
+		<p:inputText id="txtDateCode" value="#{viewIllegalTraceBoMItemDialog.illegalTraceBoMItem.dateCode}" readonly="true">
+		</p:inputText>
+		<p:tooltip for="txtDateCode" value=""/>
+
+		<h:outputLabel value="#{i18n.lbl_attr_illegaltracebomitem_ordercode}:" for="txtOrderCode" styleClass="label-field-optional"/>
+		<p:inputText id="txtOrderCode" value="#{viewIllegalTraceBoMItemDialog.illegalTraceBoMItem.orderCode}" readonly="true">
+		</p:inputText>
+		<p:tooltip for="txtOrderCode" value=""/>
+
+		<h:outputLabel value="#{i18n.lbl_attr_illegaltracebomitem_manufacturerrevision}:" for="txtManufacturerRevision" styleClass="label-field-optional"/>
+		<p:inputText id="txtManufacturerRevision" value="#{viewIllegalTraceBoMItemDialog.illegalTraceBoMItem.manufacturerRevision}" readonly="true">
+		</p:inputText>
+		<p:tooltip for="txtManufacturerRevision" value=""/>
+
+		<h:outputLabel value="#{i18n.lbl_attr_illegaltracebomitem_materialnumber}:" for="txtMaterialNumber" styleClass="label-field-optional"/>
+		<p:inputText id="txtMaterialNumber" value="#{viewIllegalTraceBoMItemDialog.illegalTraceBoMItem.materialNumber}" readonly="true">
+		</p:inputText>
+		<p:tooltip for="txtMaterialNumber" value=""/>
+
+	</h:panelGrid>
+	</p:tab>
+	<p:tab id="tabPanAdministration" title="#{i18n.panel_admin_title}">
+	<h:panelGrid columns="3">
+
+		<h:outputLabel value="#{i18n.lbl_attr_abstractentitywithid_id}:" for="txtId" styleClass="label-field-optional"/>
+		<p:inputText id="txtId" value="#{viewIllegalTraceBoMItemDialog.illegalTraceBoMItem.id}" readonly="true">
+		</p:inputText>
+		<p:tooltip for="txtId" value=""/>
+
+		<h:outputLabel value="#{i18n.lbl_attr_abstractentitywithid_version}:" for="txtVersion" styleClass="label-field-optional"/>
+		<p:inputText id="txtVersion" value="#{viewIllegalTraceBoMItemDialog.illegalTraceBoMItem.version}" readonly="true">
+		</p:inputText>
+		<p:tooltip for="txtVersion" value=""/>
+
+		<h:outputLabel value="#{i18n.lbl_attr_abstractentitywithid_creationdate}:" for="txtCreationDate" styleClass="label-field-optional"/>
+		<p:inputText id="txtCreationDate" value="#{viewIllegalTraceBoMItemDialog.illegalTraceBoMItem.creationDate}" readonly="true">
+			<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateTimeConverter"/>
+			<f:attribute name="pattern" value="#{userSession.dateTimeFormat}"/>
+			<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
+		</p:inputText>
+		<p:tooltip for="txtCreationDate" value=""/>
+
+		<h:outputLabel value="#{i18n.lbl_attr_abstractentitywithid_lastupdate}:" for="txtLastUpdate" styleClass="label-field-optional"/>
+		<p:inputText id="txtLastUpdate" value="#{viewIllegalTraceBoMItemDialog.illegalTraceBoMItem.lastUpdate}" readonly="true">
+			<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateTimeConverter"/>
+			<f:attribute name="pattern" value="#{userSession.dateTimeFormat}"/>
+			<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
+		</p:inputText>
+		<p:tooltip for="txtLastUpdate" value=""/>
+
+	</h:panelGrid>
+	</p:tab>
+	</p:tabView>
+
+
+	<h:panelGrid columns="1">
+		<p:commandButton id="cmdBack" icon="pi pi-caret-left" value="#{i18n.command_back}" action="#{userSession.getLastPage}" immediate="true" ajax="false"/>
+	</h:panelGrid>
+
+	<p:defaultCommand target=":form:cmdBack"/>
+
+</ui:define>
+</ui:composition>

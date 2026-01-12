@@ -1,0 +1,121 @@
+<ui:composition xmlns="https://jakarta.ee/xml/ns/jakartaee"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:h="jakarta.faces.html"
+	xmlns:f="jakarta.faces.core"
+	xmlns:p="http://primefaces.org/ui">
+
+	<p:menubar>
+		<p:submenu icon="pi pi-file" label="#{i18n.mnu_file}" id="gridTraceBoMIllegalTraceBoMItemsPanel_mniFile">
+		</p:submenu>
+		<p:submenu icon="pi pi-refresh" label="#{i18n.mnu_view}">
+			<p:menuitem value="#{i18n.action_refresh}" ajax="false" icon="pi pi-refresh" actionListener="#{traceBoMIllegalTraceBoMItemsPanel.fetchIllegalTraceBoMItems}"/>
+		</p:submenu>
+		<p:submenu icon="pi pi-print" label="#{i18n.mnu_export}">
+			<p:menuitem value="#{i18n.action_export_xls}" ajax="false" icon="pi pi-file-excel">
+				<p:dataExporter type="xls" target="gridTraceBoMIllegalTraceBoMItemsPanel" fileName="IllegalTraceBoMItemList"/>
+			</p:menuitem>
+			<p:menuitem value="#{i18n.action_export_pdf}" ajax="false" icon="pi pi-file-pdf">
+				<p:dataExporter type="pdf" target="gridTraceBoMIllegalTraceBoMItemsPanel" fileName="IllegalTraceBoMItemList"/>
+			</p:menuitem>
+		</p:submenu>
+	</p:menubar>
+
+	<br/>
+
+	<p:dataTable id="gridTraceBoMIllegalTraceBoMItemsPanel" var="traceBoMIllegalTraceBoMItemsPanelItem" rows="50"
+		selectionMode="single"
+		selection="#{traceBoMIllegalTraceBoMItemsPanel.selItemOfIllegalTraceBoMItems}"
+		loadingMessage="#{i18n.action_fetch_data}"
+		value="#{traceBoMIllegalTraceBoMItemsPanel.illegalTraceBoMItemsList}" scrollable="false"
+		paginatorPosition="top" paginatorAlwaysVisible="false" paginator="true" resizableColumns="true"
+		rowKey="#{traceBoMIllegalTraceBoMItemsPanelItem.id}"
+		paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+		rowsPerPageTemplate="10,50,100,500,1000">
+		<p:ajax event="rowDblselect" listener="#{traceBoMIllegalTraceBoMItemsPanel.onIllegalTraceBoMItemsGridDoubleClick}"/>
+
+		<p:column sortBy="#{traceBoMIllegalTraceBoMItemsPanelItem.materialNumber}" width="150" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_tracebomillegaltracebomitemspanel_materialnumber}"/>
+			</f:facet>
+			<h:outputText value="#{traceBoMIllegalTraceBoMItemsPanelItem.materialNumber}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{traceBoMIllegalTraceBoMItemsPanelItem.manufacturer}" width="200" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_illegaltracebomitem_manufacturer}"/>
+			</f:facet>
+			<h:outputText value="#{traceBoMIllegalTraceBoMItemsPanelItem.manufacturer}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{traceBoMIllegalTraceBoMItemsPanelItem.dateCode}" width="150" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_illegaltracebomitem_datecode}"/>
+			</f:facet>
+			<h:outputText value="#{traceBoMIllegalTraceBoMItemsPanelItem.dateCode}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{traceBoMIllegalTraceBoMItemsPanelItem.orderCode}" width="150" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_illegaltracebomitem_ordercode}"/>
+			</f:facet>
+			<h:outputText value="#{traceBoMIllegalTraceBoMItemsPanelItem.orderCode}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{traceBoMIllegalTraceBoMItemsPanelItem.manufacturerRevision}" width="150" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_illegaltracebomitem_manufacturerrevision}"/>
+			</f:facet>
+			<h:outputText value="#{traceBoMIllegalTraceBoMItemsPanelItem.manufacturerRevision}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{traceBoMIllegalTraceBoMItemsPanelItem.creationDate}" width="120" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_abstractentitywithid_creationdate}"/>
+			</f:facet>
+			<h:outputText value="#{traceBoMIllegalTraceBoMItemsPanelItem.creationDate}">
+				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateTimeConverter"/>
+				<f:attribute name="pattern" value="#{userSession.dateTimeFormat}"/>
+				<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{traceBoMIllegalTraceBoMItemsPanelItem.lastUpdate}" width="120" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_abstractentitywithid_lastupdate}"/>
+			</f:facet>
+			<h:outputText value="#{traceBoMIllegalTraceBoMItemsPanelItem.lastUpdate}">
+				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateTimeConverter"/>
+				<f:attribute name="pattern" value="#{userSession.dateTimeFormat}"/>
+				<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
+			</h:outputText>
+		</p:column>
+	</p:dataTable>
+	<p/>
+
+	<h:outputText styleClass="label-field-mandatory" value="#{i18n.result_total_number_records} #{traceBoMIllegalTraceBoMItemsPanel.illegalTraceBoMItemsList.size()}"/>
+
+	<p:contextMenu for="gridTraceBoMIllegalTraceBoMItemsPanel">
+		<p:menuitem value="#{i18n.action_delete}" ajax="true" icon="pi pi-trash" id="gridTraceBoMIllegalTraceBoMItemsPanel_mniDelete" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR') and not traceBoMIllegalTraceBoMItemsPanel.readOnly}" onclick="PF('deleteConfirmIllegalTraceBoMItems').show()"/>
+		<p:menuitem value="#{i18n.action_view}" ajax="true" icon="pi pi-file" id="gridTraceBoMIllegalTraceBoMItemsPanel_mniView" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY')}" action="#{traceBoMIllegalTraceBoMItemsPanel.openViewIllegalTraceBoMItemDialog}">
+			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{traceBoMIllegalTraceBoMItemsPanel.currentPageURL}"/>
+		</p:menuitem>
+		<p:menuitem value="#{i18n.action_copy}" ajax="true" icon="pi pi-copy" id="gridTraceBoMIllegalTraceBoMItemsPanel_mniCopy" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR') and not traceBoMIllegalTraceBoMItemsPanel.readOnly}" onclick="PF('copyConfirmIllegalTraceBoMItems').show()"/>
+		<p:menuitem value="#{i18n.action_refresh}" ajax="false" type="push" icon="pi pi-refresh" id="gridTraceBoMIllegalTraceBoMItemsPanel_mniRefresh" actionListener="#{traceBoMIllegalTraceBoMItemsPanel.fetchIllegalTraceBoMItems}"/>
+	</p:contextMenu>
+
+	<p:confirmDialog modal="true" closeOnEscape="true" message="#{i18n.dialog_delete_question}" header="#{i18n.dialog_delete_title}" severity="warn" widgetVar="deleteConfirmIllegalTraceBoMItems">
+		<p:commandButton value="#{i18n.command_yes}" oncomplete="PF('deleteConfirmIllegalTraceBoMItems').hide()" actionListener="#{traceBoMIllegalTraceBoMItemsPanel.deleteIllegalTraceBoMItem}" id="gridTraceBoMIllegalTraceBoMItemsPanel_cmdYesDelete" ajax="false"/>
+		<p:commandButton value="#{i18n.command_no}" onclick="PF('deleteConfirmIllegalTraceBoMItems').hide()" type="button"/>
+	</p:confirmDialog>
+
+	<p:confirmDialog modal="true" closeOnEscape="true" message="#{i18n.dialog_copy_question}" header="#{i18n.dialog_copy_title}" severity="info" widgetVar="copyConfirmIllegalTraceBoMItems">
+		<p:commandButton value="#{i18n.command_yes}" oncomplete="PF('copyConfirmIllegalTraceBoMItems').hide()" action="#{traceBoMIllegalTraceBoMItemsPanel.copy}" id="gridTraceBoMIllegalTraceBoMItemsPanel_cmdYesCopy" ajax="false"/>
+		<p:commandButton value="#{i18n.command_no}" onclick="PF('copyConfirmIllegalTraceBoMItems').hide()" type="button"/>
+	</p:confirmDialog>
+
+</ui:composition>

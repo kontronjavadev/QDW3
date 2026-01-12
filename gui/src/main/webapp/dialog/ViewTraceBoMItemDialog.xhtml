@@ -1,0 +1,171 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:h="jakarta.faces.html"
+	xmlns:f="jakarta.faces.core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/templates/ui.xhtml">
+
+<f:metadata>
+	<f:viewAction action="#{viewTraceBoMItemDialog.initView()}"/>
+	<f:viewParam name="selectedObjectId" value="#{viewTraceBoMItemDialog.selectedObjectId}"/>
+</f:metadata>
+
+<ui:define name="title">#{viewTraceBoMItemDialog.formTitle}</ui:define>
+
+<ui:define name="content">
+	<p:dialog header="#{i18n.feedback_dialog_header}" modal="true" widgetVar="msgBox" visible="#{(not empty facesContext.messageList)}">
+		<p:messages id="messages" showDetail="true" showSummary="true"/>
+	</p:dialog>
+
+	<h:panelGrid columns="3">
+		<div class="pi pi-file" style="font-size: 2em"/>
+		<h:outputText id="lblFormTitle" value="&#160;#{viewTraceBoMItemDialog.formTitle}" styleClass="label-form-title"/>
+		<p:ajaxStatus style="width:16px;height:16px;">
+			<f:facet name="start">
+				<h:graphicImage value="/images/ajaxloading.gif"/>
+			</f:facet>
+
+			<f:facet name="complete">
+				<h:outputText value=""/>
+			</f:facet>
+		</p:ajaxStatus>
+	</h:panelGrid>
+
+	<p:tabView id="tabview1" dynamic="true" effect="fade" effectDuration="fast">
+	<p:tab id="tabPanTraceBoMItem" title="#{i18n.panel_basic_title}">
+	<h:panelGrid columns="6">
+
+		<h:outputLabel value="#{i18n.lbl_assoc_tracebomitem_material}:" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;SUPERUSER')}" for="cboMaterial" styleClass="label-field-optional"/>
+		<p:commandLink rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;SUPERUSER')}" id="cboMaterial" style="font-weight: bold;color: #0063ac" action="#{viewTraceBoMItemDialog.openViewMaterialDialogLink}">
+			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{viewTraceBoMItemDialog.currentPageURL}"/>
+			<h:outputText value="#{viewTraceBoMItemDialog.traceBoMItem.material.materialNumber}"/>
+		</p:commandLink>
+		<h:outputLabel value="#{i18n.lbl_assoc_tracebomitem_material}:" rendered="#{!userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;SUPERUSER')}" for="cboMaterialAltLbl" styleClass="label-field-optional"/>
+		<h:outputText styleClass="label-field-value" rendered="#{!userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;SUPERUSER')}" id="cboMaterialAltLbl" value="#{viewTraceBoMItemDialog.traceBoMItem.material.materialNumber}"/>
+		<p:tooltip for="cboMaterial" value=""/>
+
+		<h:outputLabel value="#{i18n.lbl_attr_tracebomitem_quantity}:" for="txtQuantity" styleClass="label-field-optional"/>
+		<p:inputText id="txtQuantity" value="#{viewTraceBoMItemDialog.traceBoMItem.quantity}" readonly="true">
+		</p:inputText>
+		<p:tooltip for="txtQuantity" value=""/>
+
+		<h:outputLabel value="#{i18n.field_viewtracebomitemdialog_cbotracebom}:" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY')}" for="cboTraceBom" styleClass="label-field-optional"/>
+		<p:commandLink rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY')}" id="cboTraceBom" style="font-weight: bold;color: #0063ac" action="#{viewTraceBoMItemDialog.openViewTraceBoMDialogLink}">
+			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{viewTraceBoMItemDialog.currentPageURL}"/>
+			<h:outputText value="#{viewTraceBoMItemDialog.traceBoMItem.traceBom.id}"/>
+		</p:commandLink>
+		<h:outputLabel value="#{i18n.field_viewtracebomitemdialog_cbotracebom}:" rendered="#{!userSession.checkAuthorizationString('ADMINISTRATOR;READONLY')}" for="cboTraceBomAltLbl" styleClass="label-field-optional"/>
+		<h:outputText styleClass="label-field-value" rendered="#{!userSession.checkAuthorizationString('ADMINISTRATOR;READONLY')}" id="cboTraceBomAltLbl" value="#{viewTraceBoMItemDialog.traceBoMItem.traceBom.id}"/>
+		<p:tooltip for="cboTraceBom" value=""/>
+		<h:outputLabel/>
+		<h:outputLabel/>
+		<h:outputLabel/>
+
+		<h:outputLabel value="#{i18n.lbl_attr_tracebomitem_manufacturername}:" for="txtManufacturerName" styleClass="label-field-optional"/>
+		<p:inputText id="txtManufacturerName" value="#{viewTraceBoMItemDialog.traceBoMItem.manufacturerName}" readonly="true">
+		</p:inputText>
+		<p:tooltip for="txtManufacturerName" value=""/>
+		<h:outputLabel/>
+		<h:outputLabel/>
+		<h:outputLabel/>
+
+		<h:outputLabel value="#{i18n.lbl_attr_tracebomitem_ordercode}:" for="txtOrderCode" styleClass="label-field-optional"/>
+		<p:inputText id="txtOrderCode" value="#{viewTraceBoMItemDialog.traceBoMItem.orderCode}" readonly="true">
+		</p:inputText>
+		<p:tooltip for="txtOrderCode" value=""/>
+		<h:outputLabel/>
+		<h:outputLabel/>
+		<h:outputLabel/>
+
+		<h:outputLabel value="#{i18n.lbl_attr_tracebomitem_datecode}:" for="txtDateCode" styleClass="label-field-optional"/>
+		<p:inputText id="txtDateCode" value="#{viewTraceBoMItemDialog.traceBoMItem.dateCode}" readonly="true">
+		</p:inputText>
+		<p:tooltip for="txtDateCode" value=""/>
+		<h:outputLabel/>
+		<h:outputLabel/>
+		<h:outputLabel/>
+
+		<h:outputLabel value="#{i18n.lbl_attr_tracebomitem_manufacturerrevision}:" for="txtManufacturerRevision" styleClass="label-field-optional"/>
+		<p:inputText id="txtManufacturerRevision" value="#{viewTraceBoMItemDialog.traceBoMItem.manufacturerRevision}" readonly="true">
+		</p:inputText>
+		<p:tooltip for="txtManufacturerRevision" value=""/>
+		<h:outputLabel/>
+		<h:outputLabel/>
+		<h:outputLabel/>
+
+		<h:outputLabel value="#{i18n.lbl_attr_tracebomitem_infofield1}:" for="txtInfoField1" styleClass="label-field-optional"/>
+		<p:inputText id="txtInfoField1" value="#{viewTraceBoMItemDialog.traceBoMItem.infoField1}" readonly="true">
+		</p:inputText>
+		<p:tooltip for="txtInfoField1" value=""/>
+		<h:outputLabel/>
+		<h:outputLabel/>
+		<h:outputLabel/>
+
+		<h:outputLabel value="#{i18n.lbl_attr_tracebomitem_infofield2}:" for="txtInfoField2" styleClass="label-field-optional"/>
+		<p:inputText id="txtInfoField2" value="#{viewTraceBoMItemDialog.traceBoMItem.infoField2}" readonly="true">
+		</p:inputText>
+		<p:tooltip for="txtInfoField2" value=""/>
+		<h:outputLabel/>
+		<h:outputLabel/>
+		<h:outputLabel/>
+
+		<h:outputLabel value="#{i18n.lbl_attr_tracebomitem_infofield3}:" for="txtInfoField3" styleClass="label-field-optional"/>
+		<p:inputText id="txtInfoField3" value="#{viewTraceBoMItemDialog.traceBoMItem.infoField3}" readonly="true">
+		</p:inputText>
+		<p:tooltip for="txtInfoField3" value=""/>
+		<h:outputLabel/>
+		<h:outputLabel/>
+		<h:outputLabel/>
+
+		<h:outputLabel value="#{i18n.lbl_attr_tracebomitem_infofield4}:" for="txtInfoField4" styleClass="label-field-optional"/>
+		<p:inputText id="txtInfoField4" value="#{viewTraceBoMItemDialog.traceBoMItem.infoField4}" readonly="true">
+		</p:inputText>
+		<p:tooltip for="txtInfoField4" value=""/>
+		<h:outputLabel/>
+		<h:outputLabel/>
+		<h:outputLabel/>
+
+	</h:panelGrid>
+	</p:tab>
+	<p:tab id="tabPanAdministration" title="#{i18n.panel_admin_title}">
+	<h:panelGrid columns="3">
+
+		<h:outputLabel value="#{i18n.lbl_attr_abstractentitywithid_id}:" for="txtId" styleClass="label-field-optional"/>
+		<p:inputText id="txtId" value="#{viewTraceBoMItemDialog.traceBoMItem.id}" readonly="true">
+		</p:inputText>
+		<p:tooltip for="txtId" value=""/>
+
+		<h:outputLabel value="#{i18n.lbl_attr_abstractentitywithid_version}:" for="txtVersion" styleClass="label-field-optional"/>
+		<p:inputText id="txtVersion" value="#{viewTraceBoMItemDialog.traceBoMItem.version}" readonly="true">
+		</p:inputText>
+		<p:tooltip for="txtVersion" value=""/>
+
+		<h:outputLabel value="#{i18n.lbl_attr_abstractentitywithid_creationdate}:" for="txtCreationDate" styleClass="label-field-optional"/>
+		<p:inputText id="txtCreationDate" value="#{viewTraceBoMItemDialog.traceBoMItem.creationDate}" readonly="true">
+			<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateTimeConverter"/>
+			<f:attribute name="pattern" value="#{userSession.dateTimeFormat}"/>
+			<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
+		</p:inputText>
+		<p:tooltip for="txtCreationDate" value=""/>
+
+		<h:outputLabel value="#{i18n.lbl_attr_abstractentitywithid_lastupdate}:" for="txtLastUpdate" styleClass="label-field-optional"/>
+		<p:inputText id="txtLastUpdate" value="#{viewTraceBoMItemDialog.traceBoMItem.lastUpdate}" readonly="true">
+			<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateTimeConverter"/>
+			<f:attribute name="pattern" value="#{userSession.dateTimeFormat}"/>
+			<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
+		</p:inputText>
+		<p:tooltip for="txtLastUpdate" value=""/>
+
+	</h:panelGrid>
+	</p:tab>
+	</p:tabView>
+
+
+	<h:panelGrid columns="1">
+		<p:commandButton id="cmdBack" icon="pi pi-caret-left" value="#{i18n.command_back}" action="#{userSession.getLastPage}" immediate="true" ajax="false"/>
+	</h:panelGrid>
+
+	<p:defaultCommand target=":form:cmdBack"/>
+
+</ui:define>
+</ui:composition>

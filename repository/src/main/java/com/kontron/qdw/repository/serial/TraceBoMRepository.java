@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import net.sourceforge.jbizmo.commons.jpa.*;
 import jakarta.ejb.*;
 import jakarta.validation.*;
+import jakarta.inject.*;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
 import com.kontron.qdw.domain.base.*;
 
@@ -14,6 +15,31 @@ import com.kontron.qdw.domain.base.*;
 public class TraceBoMRepository extends AbstractRepository<TraceBoM, Long> {
     @Generated
     private static final String PARAM_ID = "id";
+    @Generated
+    private final TraceBoMItemRepository traceBoMItemManager;
+    @Generated
+    private final IllegalTraceBoMItemRepository illegalTraceBoMItemManager;
+
+    /**
+     * Default constructor
+     */
+    @Generated
+    public TraceBoMRepository() {
+        this.traceBoMItemManager = null;
+        this.illegalTraceBoMItemManager = null;
+    }
+
+    /**
+     * Constructor for injecting all required beans
+     * @param traceBoMItemManager
+     * @param illegalTraceBoMItemManager
+     */
+    @Inject
+    @Generated
+    public TraceBoMRepository(TraceBoMItemRepository traceBoMItemManager, IllegalTraceBoMItemRepository illegalTraceBoMItemManager) {
+        this.traceBoMItemManager = traceBoMItemManager;
+        this.illegalTraceBoMItemManager = illegalTraceBoMItemManager;
+    }
 
     /**
      * Find a persistent trace BoM by using the primary key of the provided object
@@ -51,6 +77,22 @@ public class TraceBoMRepository extends AbstractRepository<TraceBoM, Long> {
         targetObject.setSupplier(sourceObject.getSupplier());
 
         targetObject = persist(targetObject, false, false);
+
+        for (final TraceBoMItem traceBoMItem : sourceObject.getTraceBoMItems()) {
+            var newTraceBoMItem = new TraceBoMItem();
+            newTraceBoMItem.setTraceBom(targetObject);
+
+            newTraceBoMItem = traceBoMItemManager.copy(traceBoMItem, newTraceBoMItem, loggedOnUserId);
+            targetObject.getTraceBoMItems().add(newTraceBoMItem);
+        }
+
+        for (final IllegalTraceBoMItem illegalTraceBoMItem : sourceObject.getIllegalTraceBoMItems()) {
+            var newIllegalTraceBoMItem = new IllegalTraceBoMItem();
+            newIllegalTraceBoMItem.setTraceBom(targetObject);
+
+            newIllegalTraceBoMItem = illegalTraceBoMItemManager.copy(illegalTraceBoMItem, newIllegalTraceBoMItem, loggedOnUserId);
+            targetObject.getIllegalTraceBoMItems().add(newIllegalTraceBoMItem);
+        }
 
         if (flushAndRefresh) {
             // Call the flush() method in order to force the database insert immediately!
