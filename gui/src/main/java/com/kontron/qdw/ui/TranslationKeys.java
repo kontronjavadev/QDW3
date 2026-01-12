@@ -200,6 +200,17 @@ public interface TranslationKeys {
     String COL_TRACEBOMTRACEBOMITEMSPANEL_MATERIALMATERIALNUMBER = "col_tracebomtracebomitemspanel_materialmaterialnumber";
     String COL_TRACEBOMTRACEBOMITEMSPANEL_MATERIALSAPNUMBER = "col_tracebomtracebomitemspanel_materialsapnumber";
     String COL_TRACEBOMTRACEBOMITEMSPANEL_MATERIALSHORTTEXT = "col_tracebomtracebomitemspanel_materialshorttext";
+    String COL_TRACEBOMVIEW_DELIVERYNOTENUMBER = "col_tracebomview_deliverynotenumber";
+    String COL_TRACEBOMVIEW_LOTNUMBER = "col_tracebomview_lotnumber";
+    String COL_TRACEBOMVIEW_MATREVMATMATERIALCLASSCODE = "col_tracebomview_matrevmatmaterialclasscode";
+    String COL_TRACEBOMVIEW_MATREVMATMATERIALNUMBER = "col_tracebomview_matrevmatmaterialnumber";
+    String COL_TRACEBOMVIEW_MATREVMATMATERIALTYPECODE = "col_tracebomview_matrevmatmaterialtypecode";
+    String COL_TRACEBOMVIEW_MATREVMATSAPNUMBER = "col_tracebomview_matrevmatsapnumber";
+    String COL_TRACEBOMVIEW_MATREVMATSHORTTEXT = "col_tracebomview_matrevmatshorttext";
+    String COL_TRACEBOMVIEW_MATREVREVISIONNUMBER = "col_tracebomview_matrevrevisionnumber";
+    String COL_TRACEBOMVIEW_ORDERNUMBER = "col_tracebomview_ordernumber";
+    String COL_TRACEBOMVIEW_PRODUCTIONDATE = "col_tracebomview_productiondate";
+    String COL_TRACEBOMVIEW_SUPPLIERNAME = "col_tracebomview_suppliername";
     String COL_VERTICALSECTORVIEW_BUSINESSUNITCODE = "col_verticalsectorview_businessunitcode";
     String COMMAND_BACK = "command_back";
     String COMMAND_BROWSE = "command_browse";
@@ -334,6 +345,7 @@ public interface TranslationKeys {
     String FORM_ROLEVIEW_TITLE = "form_roleview_title";
     String FORM_SHIPMENTVIEW_TITLE = "form_shipmentview_title";
     String FORM_SUPPLIERVIEW_TITLE = "form_supplierview_title";
+    String FORM_TRACEBOMVIEW_TITLE = "form_tracebomview_title";
     String FORM_USERVIEW_TITLE = "form_userview_title";
     String FORM_VERTICALSECTORVIEW_TITLE = "form_verticalsectorview_title";
     String FORM_VIEWARRIVALDIALOG_TITLE = "form_viewarrivaldialog_title";

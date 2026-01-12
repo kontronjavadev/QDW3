@@ -224,6 +224,12 @@ public class NavigatorView implements Serializable {
             if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY))
                 new DefaultTreeNode<>(VIEW_TYPE, new TreeNavigatorItem(bundle.getString(FORM_MATERIALIZEDASSEMBLYSHIPMENTVIEW_TITLE),
                         req.getContextPath() + "/view/MaterializedAssemblyShipmentView.jsf"), itemGroup0004);
+
+            // Trace BoMs
+            if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY))
+                new DefaultTreeNode<>(VIEW_TYPE,
+                        new TreeNavigatorItem(bundle.getString(FORM_TRACEBOMVIEW_TITLE), req.getContextPath() + "/view/TraceBoMView.jsf"),
+                        itemGroup0004);
         }
     }
 

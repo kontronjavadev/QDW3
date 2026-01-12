@@ -6,6 +6,7 @@ import static net.sourceforge.jbizmo.commons.jpa.AbstractRepository.DEFAULT_LIST
 import static net.sourceforge.jbizmo.commons.jpa.AbstractRepository.WILDCARD;
 import com.kontron.qdw.dto.base.*;
 import java.util.*;
+import jakarta.validation.ConstraintViolationException;
 import com.kontron.qdw.dto.serial.*;
 import com.kontron.qdw.dto.material.*;
 import jakarta.inject.*;
@@ -190,6 +191,87 @@ public class TraceBoMBoundaryService {
         dto.setMaterialShortText(traceBoM.getMaterialRevision().getMaterial().getShortText());
 
         return dto;
+    }
+
+    /**
+     * Search for trace BoM objects
+     * @param searchObj a generic container that holds filter criteria
+     * @return a list of trace BoM objects
+     * @throws GeneralSearchException if the search operation has failed
+     */
+    @Generated
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public List<TraceBoMSearchDTO> searchAllTraceBoMs(SearchDTO searchObj) {
+        // Collect the select tokens of all fields that should be fetched
+        final var selectTokens = new ArrayList<String>();
+        selectTokens.add(TraceBoMSearchDTO.SELECT_DELIVERYNOTENUMBER);
+        selectTokens.add(TraceBoMSearchDTO.SELECT_LOTNUMBER);
+        selectTokens.add(TraceBoMSearchDTO.SELECT_ORDERNUMBER);
+        selectTokens.add(TraceBoMSearchDTO.SELECT_PRODUCTIONDATE);
+        selectTokens.add(TraceBoMSearchDTO.SELECT_ID);
+        selectTokens.add(TraceBoMSearchDTO.SELECT_CREATIONDATE);
+        selectTokens.add(TraceBoMSearchDTO.SELECT_LASTUPDATE);
+        selectTokens.add(TraceBoMSearchDTO.SELECT_SUPPLIERNAME);
+        selectTokens.add(TraceBoMSearchDTO.SELECT_SUPPLIERCODE);
+        selectTokens.add(TraceBoMSearchDTO.SELECT_MATERIALREVISIONID);
+        selectTokens.add(TraceBoMSearchDTO.SELECT_MATREVMATERIALID);
+        selectTokens.add(TraceBoMSearchDTO.SELECT_MATREVMATMATERIALNUMBER);
+        selectTokens.add(TraceBoMSearchDTO.SELECT_MATREVMATSAPNUMBER);
+        selectTokens.add(TraceBoMSearchDTO.SELECT_MATREVMATSHORTTEXT);
+        selectTokens.add(TraceBoMSearchDTO.SELECT_MATREVMATMATERIALTYPECODE);
+        selectTokens.add(TraceBoMSearchDTO.SELECT_MATREVMATMATERIALCLASSCODE);
+        selectTokens.add(TraceBoMSearchDTO.SELECT_MATREVMATMATERIALHIERARCHY);
+        selectTokens.add(TraceBoMSearchDTO.SELECT_MATREVREVISIONNUMBER);
+
+        searchObj.setFromClause(
+                "from TraceBoM a join a.materialRevision b join a.supplier c join b.material f join f.materialClass j join f.materialType k");
+
+        return repository.search(searchObj, TraceBoMSearchDTO.class, selectTokens);
+    }
+
+    /**
+     * Count trace BoM objects
+     * @param searchObj the query criteria
+     * @return the number of objects a query would return
+     * @throws GeneralSearchException if the count operation has failed
+     */
+    @Generated
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public long countAllTraceBoMs(SearchDTO searchObj) {
+        searchObj.setFromClause(
+                "from TraceBoM a join a.materialRevision b join a.supplier c join b.material f join f.materialClass j join f.materialType k");
+
+        return repository.count(searchObj);
+    }
+
+    /**
+     * Delete existing trace BoM
+     * @param id the ID of the object to be deleted
+     */
+    @Generated
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public void deleteTraceBoM(long id) {
+        repository.delete(id);
+    }
+
+    /**
+     * Create copy of selected trace BoM
+     * @param sourceObjectId
+     * @param loggedOnUserId
+     * @throws ConstraintViolationException if the validation of one or more persistent attribute values has failed
+     * @return the id of the new object
+     */
+    @Generated
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public long copy(long sourceObjectId, long loggedOnUserId) {
+        final TraceBoM sourceObject = repository.findById(sourceObjectId);
+        final TraceBoM targetObject = repository.copy(sourceObject, null, loggedOnUserId);
+
+        return targetObject.getId();
     }
 
 }
