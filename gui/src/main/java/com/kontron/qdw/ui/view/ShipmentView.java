@@ -15,12 +15,15 @@ import org.primefaces.model.DualListModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.kontron.qdw.boundary.base.CustomerBoundaryService;
+import com.kontron.qdw.boundary.base.MovementTypeBoundaryService;
 import com.kontron.qdw.boundary.material.MaterialBoundaryService;
+import com.kontron.qdw.boundary.material.MaterialTypeBoundaryService;
 import com.kontron.qdw.boundary.serial.ShipmentBoundaryService;
-import com.kontron.qdw.dto.material.MaterialListDTO;
 import com.kontron.qdw.dto.serial.ShipmentSearchDTO;
 import com.kontron.qdw.service.SavedQueryService;
 import com.kontron.qdw.ui.UserSession;
+import com.kontron.qdw.ui.view.util.OnCompleteHelper;
 import com.kontron.qdw.ui.view.util.SuperView;
 
 import jakarta.faces.application.FacesMessage;
@@ -43,43 +46,57 @@ public class ShipmentView extends SuperView implements Serializable {
     @Generated
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     @Generated
+    public static final String VIEW_ID = "com.kontron.qdw.ui.view.ShipmentView";
+    @Generated
+    public static final String PAGE_URL = "/view/ShipmentView.jsf?faces-redirect=true";
+    @Generated
     private static final long serialVersionUID = 1L;
+
+    @Generated
+    private final UserSession userSession;
+    @Generated
+    private transient ResourceBundle bundle;
+
+    @Generated
+    private final transient ShipmentBoundaryService shipmentService;
+    @Generated
+    private final transient MaterialBoundaryService materialService;
+    private final transient CustomerBoundaryService customerService;
+    private final transient MaterialTypeBoundaryService matTypeService;
+    private final transient MovementTypeBoundaryService mvtTypeService;
+    @Generated
+    private final transient SavedQueryService queryManager;
+
+
+    @Generated
+    private String savedQueryName;
+    @Generated
+    private String selectedSavedQuery;
+    @Generated
+    private String formTitle = "";
+
     @Generated
     private List<ShipmentSearchDTO> shipmentsList = new ArrayList<>();
     @Generated
     private ShipmentSearchDTO selectedObject;
     @Generated
-    private final UserSession userSession;
-    @Generated
-    private transient ResourceBundle bundle;
-    @Generated
-    private final transient ShipmentBoundaryService shipmentService;
-    @Generated
-    public static final String PAGE_URL = "/view/ShipmentView.jsf?faces-redirect=true";
-    @Generated
-    private String formTitle = "";
-    @Generated
     private long countResult;
-    @Generated
-    private final transient MaterialBoundaryService materialService;
-    @Generated
-    public static final String VIEW_ID = "com.kontron.qdw.ui.view.ShipmentView";
-    @Generated
-    private final transient SavedQueryService queryManager;
-    @Generated
-    private String savedQueryName;
-    @Generated
-    private String selectedSavedQuery;
+
+
 
     /**
      * Default constructor
      */
     @Generated
     public ShipmentView() {
-        this.userSession = null;
-        this.shipmentService = null;
-        this.materialService = null;
-        this.queryManager = null;
+        userSession = null;
+        shipmentService = null;
+        materialService = null;
+        queryManager = null;
+        customerService = null;
+        matTypeService = null;
+        mvtTypeService = null;
+
     }
 
     /**
@@ -92,12 +109,18 @@ public class ShipmentView extends SuperView implements Serializable {
     @Inject
     @Generated
     public ShipmentView(UserSession userSession, ShipmentBoundaryService shipmentService, MaterialBoundaryService materialService,
+            CustomerBoundaryService customerService, MaterialTypeBoundaryService matTypeService, MovementTypeBoundaryService mvtTypeService,
             SavedQueryService queryManager) {
         this.userSession = userSession;
         this.shipmentService = shipmentService;
         this.materialService = materialService;
         this.queryManager = queryManager;
+        this.customerService = customerService;
+        this.matTypeService = matTypeService;
+        this.mvtTypeService = mvtTypeService;
     }
+
+
 
     /**
      * Initialize view
@@ -271,6 +294,8 @@ public class ShipmentView extends SuperView implements Serializable {
         initSearchObject();
         fetchShipments();
     }
+
+
 
     /**
      * @return the list of elements
@@ -461,19 +486,23 @@ public class ShipmentView extends SuperView implements Serializable {
      */
     @Generated
     public List<String> onCompleteMaterialMaterialNumber(String query) {
-        final var results = new ArrayList<String>();
+        return OnCompleteHelper.onCompleteMaterialNumber(materialService, query);
+    }
 
-        try {
-            final Collection<MaterialListDTO> items = materialService.findMaterials(query + "%");
+    public List<String> onCompleteSapNumber(String query) {
+        return OnCompleteHelper.onCompleteSapNumber(materialService, query);
+    }
 
-            for (final MaterialListDTO item : items)
-                results.add(item.getMaterialNumber());
-        }
-        catch (final Exception e) {
-            logger.error("Error while searching for auto-complete items by using the entered text '{}'!", query, e);
-        }
+    public List<String> onCompleteCustomerName(String query) {
+        return OnCompleteHelper.onCompleteCustomerName(customerService, query);
+    }
 
-        return results;
+    public List<String> onCompleteMatType(String query) {
+        return OnCompleteHelper.onCompleteMatType(matTypeService, query);
+    }
+
+    public List<String> onCompleteMvtType(String query) {
+        return OnCompleteHelper.onCompleteMvtType(mvtTypeService, query);
     }
 
     /**
