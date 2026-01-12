@@ -3,7 +3,6 @@ package com.kontron.qdw.ui.view;
 import org.primefaces.model.DualListModel;
 import net.sourceforge.jbizmo.commons.webclient.primefaces.search.*;
 import static com.kontron.qdw.ui.TranslationKeys.*;
-import com.kontron.qdw.dto.base.*;
 import com.kontron.qdw.dto.serial.*;
 import com.kontron.qdw.boundary.serial.*;
 import java.text.*;
@@ -17,6 +16,7 @@ import org.slf4j.*;
 import com.kontron.qdw.boundary.material.*;
 import java.lang.invoke.*;
 import com.kontron.qdw.ui.dialog.*;
+import com.kontron.qdw.ui.view.util.OnCompleteHelper;
 import com.kontron.qdw.ui.view.util.SuperView;
 
 import net.sourceforge.jbizmo.commons.webclient.primefaces.util.*;
@@ -25,7 +25,6 @@ import java.util.*;
 import jakarta.faces.view.*;
 import com.kontron.qdw.ui.*;
 import com.kontron.qdw.service.*;
-import com.kontron.qdw.dto.material.*;
 
 import net.sourceforge.jbizmo.commons.annotation.Customized;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
@@ -249,6 +248,30 @@ public class TraceBoMView extends SuperView implements Serializable {
         }
     }
 
+    /**
+     * Callback method for auto-complete field
+     * @param query the filter criterion inserted by the user
+     * @return a list containing all proposals
+     */
+    @Customized
+    public List<String> onCompleteMaterialMaterialNumber(String query) {
+        return OnCompleteHelper.onCompleteMaterialNumber(materialService, query);
+    }
+
+    public List<String> onCompleteSapNumber(String query) {
+        return OnCompleteHelper.onCompleteSapNumber(materialService, query);
+    }
+
+    /**
+     * Callback method for auto-complete field
+     * @param query the filter criterion inserted by the user
+     * @return a list containing all proposals
+     */
+    @Customized
+    public List<String> onCompleteSupplierName(String query) {
+        return OnCompleteHelper.onCompleteSupplierName(supplierService, query);
+    }
+
     @Override
     protected String getViewName() {
         return VIEW_ID;
@@ -458,50 +481,6 @@ public class TraceBoMView extends SuperView implements Serializable {
         finally {
             postSearch();
         }
-    }
-
-    /**
-     * Callback method for auto-complete field
-     * @param query the filter criterion inserted by the user
-     * @return a list containing all proposals
-     */
-    @Generated
-    public List<String> onCompleteMaterialMaterialNumber(String query) {
-        final var results = new ArrayList<String>();
-
-        try {
-            final Collection<MaterialListDTO> items = materialService.findMaterials(query + "%");
-
-            for (final MaterialListDTO item : items)
-                results.add(item.getMaterialNumber());
-        }
-        catch (final Exception e) {
-            logger.error("Error while searching for auto-complete items by using the entered text '{}'!", query, e);
-        }
-
-        return results;
-    }
-
-    /**
-     * Callback method for auto-complete field
-     * @param query the filter criterion inserted by the user
-     * @return a list containing all proposals
-     */
-    @Generated
-    public List<String> onCompleteSupplierName(String query) {
-        final var results = new ArrayList<String>();
-
-        try {
-            final Collection<SupplierListDTO> items = supplierService.findSuppliers(query + "%");
-
-            for (final SupplierListDTO item : items)
-                results.add(item.getName());
-        }
-        catch (final Exception e) {
-            logger.error("Error while searching for auto-complete items by using the entered text '{}'!", query, e);
-        }
-
-        return results;
     }
 
     /**
