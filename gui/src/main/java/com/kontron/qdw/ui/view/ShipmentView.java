@@ -23,6 +23,7 @@ import com.kontron.qdw.boundary.serial.ShipmentBoundaryService;
 import com.kontron.qdw.dto.serial.ShipmentSearchDTO;
 import com.kontron.qdw.service.SavedQueryService;
 import com.kontron.qdw.ui.UserSession;
+import com.kontron.qdw.ui.dialog.ViewShipmentDialog;
 import com.kontron.qdw.ui.view.util.OnCompleteHelper;
 import com.kontron.qdw.ui.view.util.SuperView;
 
@@ -91,31 +92,31 @@ public class ShipmentView extends SuperView implements Serializable {
     public ShipmentView() {
         userSession = null;
         shipmentService = null;
+        customerService = null;
         materialService = null;
         queryManager = null;
-        customerService = null;
         matTypeService = null;
         mvtTypeService = null;
-
     }
 
     /**
      * Constructor for injecting all required beans
      * @param userSession
      * @param shipmentService
+     * @param customerService
      * @param materialService
      * @param queryManager
      */
     @Inject
     @Generated
-    public ShipmentView(UserSession userSession, ShipmentBoundaryService shipmentService, MaterialBoundaryService materialService,
-            CustomerBoundaryService customerService, MaterialTypeBoundaryService matTypeService, MovementTypeBoundaryService mvtTypeService,
+    public ShipmentView(UserSession userSession, ShipmentBoundaryService shipmentService, CustomerBoundaryService customerService,
+            MaterialBoundaryService materialService, MaterialTypeBoundaryService matTypeService, MovementTypeBoundaryService mvtTypeService,
             SavedQueryService queryManager) {
         this.userSession = userSession;
         this.shipmentService = shipmentService;
+        this.customerService = customerService;
         this.materialService = materialService;
         this.queryManager = queryManager;
-        this.customerService = customerService;
         this.matTypeService = matTypeService;
         this.mvtTypeService = mvtTypeService;
     }
@@ -298,6 +299,40 @@ public class ShipmentView extends SuperView implements Serializable {
 
 
     /**
+     * Callback method for auto-complete field
+     * @param query the filter criterion inserted by the user
+     * @return a list containing all proposals
+     */
+    @Customized
+    public List<String> onCompleteMaterialMaterialNumber(String query) {
+        return OnCompleteHelper.onCompleteMaterialNumber(materialService, query);
+    }
+
+    public List<String> onCompleteSapNumber(String query) {
+        return OnCompleteHelper.onCompleteSapNumber(materialService, query);
+    }
+
+    /**
+     * Callback method for auto-complete field
+     * @param query the filter criterion inserted by the user
+     * @return a list containing all proposals
+     */
+    @Generated
+    public List<String> onCompleteCustomerName(String query) {
+        return OnCompleteHelper.onCompleteCustomerName(customerService, query);
+    }
+
+    public List<String> onCompleteMatType(String query) {
+        return OnCompleteHelper.onCompleteMatType(matTypeService, query);
+    }
+
+    public List<String> onCompleteMvtType(String query) {
+        return OnCompleteHelper.onCompleteMvtType(mvtTypeService, query);
+    }
+
+
+
+    /**
      * @return the list of elements
      */
     @Generated
@@ -326,7 +361,9 @@ public class ShipmentView extends SuperView implements Serializable {
      */
     @Generated
     public void onDoubleClick() {
-        // No appropriate form found!
+        logger.debug("Handle double-click event");
+
+        userSession.redirectTo(getCurrentPageURL(), openViewShipmentDialog());
     }
 
     /**
@@ -368,6 +405,21 @@ public class ShipmentView extends SuperView implements Serializable {
 
         fetchShipments();
         return "";
+    }
+
+    /**
+     * Open dialog
+     * @return the navigation target
+     */
+    @Generated
+    public String openViewShipmentDialog() {
+        var url = "";
+
+        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY)) {
+            url = ViewShipmentDialog.PAGE_INIT_URL + selectedObject.getId();
+        }
+
+        return url;
     }
 
     /**
@@ -477,32 +529,6 @@ public class ShipmentView extends SuperView implements Serializable {
         finally {
             postSearch();
         }
-    }
-
-    /**
-     * Callback method for auto-complete field
-     * @param query the filter criterion inserted by the user
-     * @return a list containing all proposals
-     */
-    @Generated
-    public List<String> onCompleteMaterialMaterialNumber(String query) {
-        return OnCompleteHelper.onCompleteMaterialNumber(materialService, query);
-    }
-
-    public List<String> onCompleteSapNumber(String query) {
-        return OnCompleteHelper.onCompleteSapNumber(materialService, query);
-    }
-
-    public List<String> onCompleteCustomerName(String query) {
-        return OnCompleteHelper.onCompleteCustomerName(customerService, query);
-    }
-
-    public List<String> onCompleteMatType(String query) {
-        return OnCompleteHelper.onCompleteMatType(matTypeService, query);
-    }
-
-    public List<String> onCompleteMvtType(String query) {
-        return OnCompleteHelper.onCompleteMvtType(mvtTypeService, query);
     }
 
     /**

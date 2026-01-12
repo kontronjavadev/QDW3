@@ -85,7 +85,7 @@ public final class OnCompleteHelper {
         final var results = new ArrayList<String>();
 
         try {
-            final Collection<CustomerListDTO> items = customerBoundaryService.findCustomer(searchText + "%");
+            final Collection<CustomerListDTO> items = customerBoundaryService.findCustomers(searchText + "%");
 
             for (final CustomerListDTO item : items) {
                 results.add(item.getName());

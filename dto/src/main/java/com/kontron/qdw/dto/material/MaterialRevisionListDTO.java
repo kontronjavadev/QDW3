@@ -72,7 +72,7 @@ public class MaterialRevisionListDTO implements Serializable {
         }
         return getRevisionNumber();
     }
-    
+
     /**
      * @return the id
      */

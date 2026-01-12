@@ -22,6 +22,8 @@ public class SerialObjectRepository extends AbstractRepository<SerialObject, Lon
     private static final String PARAM_SERIALNUMBER = "serialNumber";
     @Generated
     private final ArrivalRepository arrivalManager;
+    @Generated
+    private final ShipmentRepository shipmentManager;
 
     /**
      * Default constructor
@@ -29,16 +31,19 @@ public class SerialObjectRepository extends AbstractRepository<SerialObject, Lon
     @Generated
     public SerialObjectRepository() {
         this.arrivalManager = null;
+        this.shipmentManager = null;
     }
 
     /**
      * Constructor for injecting all required beans
      * @param arrivalManager
+     * @param shipmentManager
      */
     @Inject
     @Generated
-    public SerialObjectRepository(ArrivalRepository arrivalManager) {
+    public SerialObjectRepository(ArrivalRepository arrivalManager, ShipmentRepository shipmentManager) {
         this.arrivalManager = arrivalManager;
+        this.shipmentManager = shipmentManager;
     }
 
     /**
@@ -133,6 +138,14 @@ public class SerialObjectRepository extends AbstractRepository<SerialObject, Lon
 
             newArrival = arrivalManager.copy(arrival, newArrival, loggedOnUserId);
             targetObject.getArrivals().add(newArrival);
+        }
+
+        for (final Shipment shipment : sourceObject.getShipments()) {
+            var newShipment = new Shipment();
+            newShipment.setSerialObject(targetObject);
+
+            newShipment = shipmentManager.copy(shipment, newShipment, loggedOnUserId);
+            targetObject.getShipments().add(newShipment);
         }
 
         if (flushAndRefresh) {

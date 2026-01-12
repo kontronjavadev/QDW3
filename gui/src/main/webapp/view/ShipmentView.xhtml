@@ -592,6 +592,9 @@
 	<p:contextMenu for="panData" beforeShow="updateContextData(event)" >
 		<p:menuitem value="#{i18n.action_delete}" ajax="true" icon="pi pi-trash" id="panData_mniDelete" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR')}" onclick="PF('deleteConfirm').show()"/>
 		<p:menuitem value="#{i18n.action_copy}" ajax="true" icon="pi pi-copy" id="panData_mniCopy" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR')}" onclick="PF('copyConfirm').show()"/>
+		<p:menuitem value="#{i18n.action_view}" ajax="true" icon="pi pi-file" id="panData_mniView" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY')}" action="#{shipmentView.openViewShipmentDialog}">
+			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{shipmentView.currentPageURL}"/>
+		</p:menuitem>
 		<p:menuitem value="#{i18n.action_refresh}" ajax="false" type="push" icon="pi pi-refresh" id="panData_mniRefresh" actionListener="#{shipmentView.fetchShipments}"/>
 
 		<p:separator/>

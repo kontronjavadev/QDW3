@@ -1,0 +1,157 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:h="jakarta.faces.html"
+	xmlns:f="jakarta.faces.core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/templates/ui.xhtml">
+
+<f:metadata>
+	<f:viewAction action="#{viewShipmentDialog.initView()}"/>
+	<f:viewParam name="selectedObjectId" value="#{viewShipmentDialog.selectedObjectId}"/>
+</f:metadata>
+
+<ui:define name="title">#{viewShipmentDialog.formTitle}</ui:define>
+
+<ui:define name="content">
+	<p:dialog header="#{i18n.feedback_dialog_header}" modal="true" widgetVar="msgBox" visible="#{(not empty facesContext.messageList)}">
+		<p:messages id="messages" showDetail="true" showSummary="true"/>
+	</p:dialog>
+
+	<h:panelGrid columns="3">
+		<div class="pi pi-file" style="font-size: 2em"/>
+		<h:outputText id="lblFormTitle" value="&#160;#{viewShipmentDialog.formTitle}" styleClass="label-form-title"/>
+		<p:ajaxStatus style="width:16px;height:16px;">
+			<f:facet name="start">
+				<h:graphicImage value="/images/ajaxloading.gif"/>
+			</f:facet>
+
+			<f:facet name="complete">
+				<h:outputText value=""/>
+			</f:facet>
+		</p:ajaxStatus>
+	</h:panelGrid>
+
+	<p:tabView id="tabview1" dynamic="true" effect="fade" effectDuration="fast">
+	<p:tab id="tabPanShipment" title="#{i18n.panel_basic_title}">
+	<h:panelGrid columns="6">
+
+		<h:outputLabel value="#{i18n.lbl_attr_serialobject_serialnumber}:" for="txtSerialObjectSerialNumber" styleClass="label-field-optional"/>
+		<p:inputText id="txtSerialObjectSerialNumber" value="#{viewShipmentDialog.shipment.serialObjectSerialNumber}" readonly="true">
+		</p:inputText>
+		<p:tooltip for="txtSerialObjectSerialNumber" value=""/>
+
+		<h:outputLabel value="#{i18n.lbl_assoc_shipment_serialobject}:" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY')}" for="cboSerialObject" styleClass="label-field-optional"/>
+		<p:commandLink rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY')}" id="cboSerialObject" style="font-weight: bold;color: #0063ac" action="#{viewShipmentDialog.openViewSerialObjectDialogLink}">
+			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{viewShipmentDialog.currentPageURL}"/>
+			<h:outputText value="#{viewShipmentDialog.shipment.serialObject.serialNumber}"/>
+		</p:commandLink>
+		<h:outputLabel value="#{i18n.lbl_assoc_shipment_serialobject}:" rendered="#{!userSession.checkAuthorizationString('ADMINISTRATOR;READONLY')}" for="cboSerialObjectAltLbl" styleClass="label-field-optional"/>
+		<h:outputText styleClass="label-field-value" rendered="#{!userSession.checkAuthorizationString('ADMINISTRATOR;READONLY')}" id="cboSerialObjectAltLbl" value="#{viewShipmentDialog.shipment.serialObject.serialNumber}"/>
+		<p:tooltip for="cboSerialObject" value=""/>
+
+		<h:outputLabel value="#{i18n.lbl_attr_shipment_ordernumber}:" for="txtOrderNumber" styleClass="label-field-optional"/>
+		<p:inputText id="txtOrderNumber" value="#{viewShipmentDialog.shipment.orderNumber}" readonly="true">
+		</p:inputText>
+		<p:tooltip for="txtOrderNumber" value=""/>
+
+		<h:outputLabel value="#{i18n.lbl_assoc_shipment_plant}:" for="cboPlant" styleClass="label-field-optional"/>
+		<h:outputText styleClass="label-field-value" id="cboPlant" value="#{viewShipmentDialog.shipment.plant.code}"/>
+		<p:tooltip for="cboPlant" value=""/>
+
+		<h:outputLabel value="#{i18n.lbl_assoc_shipment_customer}:" for="cboCustomer" styleClass="label-field-optional"/>
+		<h:outputText styleClass="label-field-value" id="cboCustomer" value="#{viewShipmentDialog.shipment.customer.name}"/>
+		<p:tooltip for="cboCustomer" value=""/>
+		<h:outputLabel/>
+		<h:outputLabel/>
+		<h:outputLabel/>
+
+		<h:outputLabel value="#{i18n.lbl_assoc_materialrevision_material}:" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;SUPERUSER')}" for="cboMaterialRevisionMaterial" styleClass="label-field-optional"/>
+		<p:commandLink rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;SUPERUSER')}" id="cboMaterialRevisionMaterial" style="font-weight: bold;color: #0063ac" action="#{viewShipmentDialog.openViewMaterialDialogLink}">
+			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{viewShipmentDialog.currentPageURL}"/>
+			<h:outputText value="#{viewShipmentDialog.shipment.materialRevisionMaterial.materialNumber}"/>
+		</p:commandLink>
+		<h:outputLabel value="#{i18n.lbl_assoc_materialrevision_material}:" rendered="#{!userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;SUPERUSER')}" for="cboMaterialRevisionMaterialAltLbl" styleClass="label-field-optional"/>
+		<h:outputText styleClass="label-field-value" rendered="#{!userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;SUPERUSER')}" id="cboMaterialRevisionMaterialAltLbl" value="#{viewShipmentDialog.shipment.materialRevisionMaterial.materialNumber}"/>
+		<p:tooltip for="cboMaterialRevisionMaterial" value=""/>
+
+		<h:outputLabel value="#{i18n.lbl_assoc_shipment_materialrevision}:" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;SUPERUSER')}" for="cboMaterialRevision" styleClass="label-field-optional"/>
+		<p:commandLink rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;SUPERUSER')}" id="cboMaterialRevision" style="font-weight: bold;color: #0063ac" action="#{viewShipmentDialog.openViewMaterialRevisionDialogLink}">
+			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{viewShipmentDialog.currentPageURL}"/>
+			<h:outputText value="#{viewShipmentDialog.shipment.materialRevision.revisionNumber}"/>
+		</p:commandLink>
+		<h:outputLabel value="#{i18n.lbl_assoc_shipment_materialrevision}:" rendered="#{!userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;SUPERUSER')}" for="cboMaterialRevisionAltLbl" styleClass="label-field-optional"/>
+		<h:outputText styleClass="label-field-value" rendered="#{!userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;SUPERUSER')}" id="cboMaterialRevisionAltLbl" value="#{viewShipmentDialog.shipment.materialRevision.revisionNumber}"/>
+		<p:tooltip for="cboMaterialRevision" value=""/>
+
+		<h:outputLabel value="#{i18n.lbl_attr_material_shorttext}:" for="txtMaterialShortText" styleClass="label-field-optional"/>
+		<p:inputText id="txtMaterialShortText" value="#{viewShipmentDialog.shipment.materialShortText}" readonly="true">
+		</p:inputText>
+		<p:tooltip for="txtMaterialShortText" value=""/>
+		<h:outputLabel/>
+		<h:outputLabel/>
+		<h:outputLabel/>
+
+		<h:outputLabel value="#{i18n.lbl_assoc_material_materialtype}:" for="cboMaterialRevisionMaterialType" styleClass="label-field-optional"/>
+		<h:outputText styleClass="label-field-value" id="cboMaterialRevisionMaterialType" value="#{viewShipmentDialog.shipment.materialRevisionMaterialType.code}"/>
+		<p:tooltip for="cboMaterialRevisionMaterialType" value=""/>
+
+		<h:outputLabel value="#{i18n.lbl_assoc_material_materialclass}:" for="cboMaterialRevisionMaterialClass" styleClass="label-field-optional"/>
+		<h:outputText styleClass="label-field-value" id="cboMaterialRevisionMaterialClass" value="#{viewShipmentDialog.shipment.materialRevisionMaterialClass.code}"/>
+		<p:tooltip for="cboMaterialRevisionMaterialClass" value=""/>
+
+		<h:outputLabel value="#{i18n.lbl_attr_shipment_shipmentdate}:" for="txtShipmentDate" styleClass="label-field-optional"/>
+		<p:inputText id="txtShipmentDate" value="#{viewShipmentDialog.shipment.shipmentDate}" readonly="true">
+			<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateConverter"/>
+			<f:attribute name="pattern" value="#{userSession.dateFormat}"/>
+			<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
+		</p:inputText>
+		<p:tooltip for="txtShipmentDate" value=""/>
+
+		<h:outputLabel value="#{i18n.lbl_assoc_shipment_movementtype}:" for="cboMovementType" styleClass="label-field-optional"/>
+		<h:outputText styleClass="label-field-value" id="cboMovementType" value="#{viewShipmentDialog.shipment.movementType.code}"/>
+		<p:tooltip for="cboMovementType" value=""/>
+
+	</h:panelGrid>
+	</p:tab>
+	<p:tab id="tabPanAdministration" title="#{i18n.panel_admin_title}">
+	<h:panelGrid columns="3">
+
+		<h:outputLabel value="#{i18n.field_viewshipmentdialog_txtid}:" for="txtId" styleClass="label-field-optional"/>
+		<p:inputText id="txtId" value="#{viewShipmentDialog.shipment.id}" readonly="true">
+		</p:inputText>
+		<p:tooltip for="txtId" value=""/>
+
+		<h:outputLabel value="#{i18n.lbl_attr_abstractentitywithid_version}:" for="txtVersion" styleClass="label-field-optional"/>
+		<p:inputText id="txtVersion" value="#{viewShipmentDialog.shipment.version}" readonly="true">
+		</p:inputText>
+		<p:tooltip for="txtVersion" value=""/>
+
+		<h:outputLabel value="#{i18n.lbl_attr_abstractentitywithid_creationdate}:" for="txtCreationDate" styleClass="label-field-optional"/>
+		<p:inputText id="txtCreationDate" value="#{viewShipmentDialog.shipment.creationDate}" readonly="true">
+			<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateTimeConverter"/>
+			<f:attribute name="pattern" value="#{userSession.dateTimeFormat}"/>
+			<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
+		</p:inputText>
+		<p:tooltip for="txtCreationDate" value=""/>
+
+		<h:outputLabel value="#{i18n.lbl_attr_abstractentitywithid_lastupdate}:" for="txtLastUpdate" styleClass="label-field-optional"/>
+		<p:inputText id="txtLastUpdate" value="#{viewShipmentDialog.shipment.lastUpdate}" readonly="true">
+			<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateTimeConverter"/>
+			<f:attribute name="pattern" value="#{userSession.dateTimeFormat}"/>
+			<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
+		</p:inputText>
+		<p:tooltip for="txtLastUpdate" value=""/>
+
+	</h:panelGrid>
+	</p:tab>
+	</p:tabView>
+
+
+	<h:panelGrid columns="1">
+		<p:commandButton id="cmdBack" icon="pi pi-caret-left" value="#{i18n.command_back}" action="#{userSession.getLastPage}" immediate="true" ajax="false"/>
+	</h:panelGrid>
+
+	<p:defaultCommand target=":form:cmdBack"/>
+
+</ui:define>
+</ui:composition>

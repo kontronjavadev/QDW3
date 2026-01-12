@@ -1,10 +1,12 @@
 package com.kontron.qdw.boundary.serial;
 
 import com.kontron.qdw.domain.serial.*;
+import net.sourceforge.jbizmo.commons.search.exception.*;
+import com.kontron.qdw.dto.base.*;
 import java.util.*;
 import jakarta.validation.ConstraintViolationException;
 import com.kontron.qdw.dto.serial.*;
-import net.sourceforge.jbizmo.commons.search.exception.*;
+import com.kontron.qdw.dto.material.*;
 import jakarta.inject.*;
 import jakarta.ejb.*;
 import jakarta.annotation.security.*;
@@ -117,6 +119,51 @@ public class ShipmentBoundaryService {
         final Shipment targetObject = repository.copy(sourceObject, null, loggedOnUserId);
 
         return targetObject.getId();
+    }
+
+    /**
+     * Find shipment by its ID
+     * @param id
+     * @return the shipment object
+     */
+    @Generated
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public ShipmentDTO findShipmentById(long id) {
+        // Find persistent object
+        final Shipment shipment = repository.findById(id, true);
+
+        final var dto = new ShipmentDTO();
+        dto.setOrderNumber(shipment.getOrderNumber());
+        dto.setShipmentDate(shipment.getShipmentDate());
+        dto.setId(shipment.getId());
+        dto.setVersion(shipment.getVersion());
+        dto.setCreationDate(shipment.getCreationDate());
+        dto.setLastUpdate(shipment.getLastUpdate());
+        dto.setCustomer(new CustomerListDTO());
+        dto.getCustomer().setCode(shipment.getCustomer().getCode());
+        dto.getCustomer().setName(shipment.getCustomer().getName());
+        dto.setMaterialRevision(new MaterialRevisionListDTO());
+        dto.getMaterialRevision().setId(shipment.getMaterialRevision().getId());
+        dto.getMaterialRevision().setRevisionNumber(shipment.getMaterialRevision().getRevisionNumber());
+        dto.setMovementType(new MovementTypeListDTO());
+        dto.getMovementType().setCode(shipment.getMovementType().getCode());
+        dto.setPlant(new PlantListDTO());
+        dto.getPlant().setCode(shipment.getPlant().getCode());
+        dto.setSerialObject(new SerialObjectListDTO());
+        dto.getSerialObject().setId(shipment.getSerialObject().getId());
+        dto.getSerialObject().setSerialNumber(shipment.getSerialObject().getSerialNumber());
+        dto.setSerialObjectSerialNumber(shipment.getSerialObject().getSerialNumber());
+        dto.setMaterialRevisionMaterial(new MaterialListDTO());
+        dto.getMaterialRevisionMaterial().setId(shipment.getMaterialRevision().getMaterial().getId());
+        dto.getMaterialRevisionMaterial().setMaterialNumber(shipment.getMaterialRevision().getMaterial().getMaterialNumber());
+        dto.setMaterialShortText(shipment.getMaterialRevision().getMaterial().getShortText());
+        dto.setMaterialRevisionMaterialType(new MaterialTypeListDTO());
+        dto.getMaterialRevisionMaterialType().setCode(shipment.getMaterialRevision().getMaterial().getMaterialType().getCode());
+        dto.setMaterialRevisionMaterialClass(new MaterialClassListDTO());
+        dto.getMaterialRevisionMaterialClass().setCode(shipment.getMaterialRevision().getMaterial().getMaterialClass().getCode());
+
+        return dto;
     }
 
 }

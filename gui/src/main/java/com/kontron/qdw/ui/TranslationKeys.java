@@ -266,6 +266,7 @@ public interface TranslationKeys {
     String FIELD_VIEWSERIALOBJECTDIALOG_TXTPARENTOBJECTSERIALNUMBER = "field_viewserialobjectdialog_txtparentobjectserialnumber";
     String FIELD_VIEWSERIALOBJECTDIALOG_TXTPRODUCTIONORDERNUMBER = "field_viewserialobjectdialog_txtproductionordernumber";
     String FIELD_VIEWSERIALOBJECTDIALOG_TXTSERIALNUMBER = "field_viewserialobjectdialog_txtserialnumber";
+    String FIELD_VIEWSHIPMENTDIALOG_TXTID = "field_viewshipmentdialog_txtid";
     String FORM_ADDBOMITEMDIALOG_TITLE = "form_addbomitemdialog_title";
     String FORM_AGGREGATEDARRIVALVIEW_TITLE = "form_aggregatedarrivalview_title";
     String FORM_AGGREGATEDSHIPMENTARRIVALVIEW_TITLE = "form_aggregatedshipmentarrivalview_title";
@@ -331,6 +332,7 @@ public interface TranslationKeys {
     String FORM_VIEWMATERIALREVISIONDIALOG_TITLE = "form_viewmaterialrevisiondialog_title";
     String FORM_VIEWROLEDIALOG_TITLE = "form_viewroledialog_title";
     String FORM_VIEWSERIALOBJECTDIALOG_TITLE = "form_viewserialobjectdialog_title";
+    String FORM_VIEWSHIPMENTDIALOG_TITLE = "form_viewshipmentdialog_title";
     String FORM_VIEWSUPPLIERDIALOG_TITLE = "form_viewsupplierdialog_title";
     String ILLEGAL_ITEM_SELECTED = "illegal_item_selected";
     String INVALID_MAIL_ADDRESS = "invalid_mail_address";
@@ -354,6 +356,11 @@ public interface TranslationKeys {
     String LBL_ASSOC_SERIALOBJECT_MATERIAL = "lbl_assoc_serialobject_material";
     String LBL_ASSOC_SERIALOBJECT_PARENTOBJECT = "lbl_assoc_serialobject_parentobject";
     String LBL_ASSOC_SERIALOBJECT_TRACEBOM = "lbl_assoc_serialobject_tracebom";
+    String LBL_ASSOC_SHIPMENT_CUSTOMER = "lbl_assoc_shipment_customer";
+    String LBL_ASSOC_SHIPMENT_MATERIALREVISION = "lbl_assoc_shipment_materialrevision";
+    String LBL_ASSOC_SHIPMENT_MOVEMENTTYPE = "lbl_assoc_shipment_movementtype";
+    String LBL_ASSOC_SHIPMENT_PLANT = "lbl_assoc_shipment_plant";
+    String LBL_ASSOC_SHIPMENT_SERIALOBJECT = "lbl_assoc_shipment_serialobject";
     String LBL_ASSOC_SUPPLIER_COUNTRY = "lbl_assoc_supplier_country";
     String LBL_ASSOC_VERTICALSECTOR_BUSINESSUNIT = "lbl_assoc_verticalsector_businessunit";
     String LBL_ATTR_ABSTRACTAGGREGATEDBASE_MONTH = "lbl_attr_abstractaggregatedbase_month";

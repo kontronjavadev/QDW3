@@ -1856,6 +1856,12 @@
     <boundaryMethods name="copy" comment="Create copy of selected customer" returnType="/0/@allSupportedTypes.12" methodType="COPY" serviceMethod="/60/@repositoryMethods.6">
       <methodParameters name="sourceObjectId" type="/0/@allSupportedTypes.12"/>
     </boundaryMethods>
+    <boundaryMethods name="findCustomers" comment="Search for customer objects" returnType="/345" returnTypeModifier="List" queryStatement="from Customer a" customStatement="" methodType="SEARCH_BY_FILTER" serviceMethod="/60/@repositoryMethods.0">
+      <methodParameters name="filter" type="/0/@allSupportedTypes.12"/>
+    </boundaryMethods>
+    <boundaryMethods name="findListCustomer" comment="Find customer by its ID" returnType="/345" methodType="FIND_BY_ID" serviceMethod="/60/@repositoryMethods.0">
+      <methodParameters name="id" type="/0/@allSupportedTypes.12"/>
+    </boundaryMethods>
   </net.sourceforge.jbizmo.model.boundary:BoundaryBean>
   <net.sourceforge.jbizmo.model.boundary:BoundaryBean name="VerticalSectorBoundaryServiceBean" comment="Boundary service for vertical sector objects" namespace="/7" interfaceName="VerticalSectorBoundaryService" repository="/58">
     <domainObject href="package-base.xmi#//@domainObjects.10"/>
@@ -4278,14 +4284,14 @@
       <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.0"/>
     </attributes>
   </net.sourceforge.jbizmo.model.dto:DTOBean>
-  <net.sourceforge.jbizmo.model.client:FormGroup name="Serial object" groupOrder="4" forms="/260 /266 /286 /307 /303 /322 /317 /339 /346 /292 /331" panels="/328" roles="/0/@roles.0 /0/@roles.1" project="/0"/>
+  <net.sourceforge.jbizmo.model.client:FormGroup name="Serial object" groupOrder="4" forms="/260 /266 /286 /307 /303 /322 /317 /339 /346 /292 /331 /352" panels="/328" roles="/0/@roles.0 /0/@roles.1" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="mv" parent="/2" javaTypes="/265 /271 /291 /316 /327 /344" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="mv" parent="/1" javaTypes="/264 /270 /290 /315 /326 /343" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="mv" parent="/3" javaTypes="/263 /269 /289 /320 /325 /342" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="mv" parent="/4" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="serial" parent="/2" javaTypes="/300 /302 /338 /351" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="serial" parent="/1" javaTypes="/299 /301 /337 /350" project="/0"/>
-  <net.sourceforge.jbizmo.model.java:Namespace name="serial" parent="/3" javaTypes="/295 /310 /306 /335 /296 /330 /336 /349" project="/0"/>
+  <net.sourceforge.jbizmo.model.java:Namespace name="serial" parent="/3" javaTypes="/295 /310 /306 /335 /296 /330 /336 /349 /355" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="serial" parent="/4" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="service" parent="/2" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="service" parent="/1" project="/0"/>
@@ -6984,6 +6990,7 @@
   <net.sourceforge.jbizmo.model.client:Form name="ShipmentView" formType="SEARCHABLE_VIEW" formGroup="/247" title="Shipments (standard)" formPanels="/347" dTO="/349" roles="/0/@roles.0 /0/@roles.1" boundaryMethod="/350/@boundaryMethods.0">
     <actions name="actionDelete" description="Delete selected shipment" boundaryMethod="/350/@boundaryMethods.2" roles="/0/@roles.0" type="DELETE"/>
     <actions name="actionCopy" description="Create copy of selected shipment" boundaryMethod="/350/@boundaryMethods.3" roles="/0/@roles.0" type="COPY"/>
+    <actions name="actionGet" description="View shipment" targetForm="/352" roles="/0/@roles.0 /0/@roles.1" type="READ"/>
     <domainObject href="package-serial.xmi#//@domainObjects.3"/>
   </net.sourceforge.jbizmo.model.client:Form>
   <net.sourceforge.jbizmo.model.client:FormPanel name="ShipmentPanel" form="/346" formTable="/348" dTO="/349" boundaryMethod="/350/@boundaryMethods.1"/>
@@ -7113,6 +7120,9 @@
     <boundaryMethods name="copy" comment="Create copy of selected shipment" returnType="/0/@allSupportedTypes.2" methodType="COPY" serviceMethod="/351/@repositoryMethods.6">
       <methodParameters name="sourceObjectId" type="/0/@allSupportedTypes.2"/>
     </boundaryMethods>
+    <boundaryMethods name="findShipmentById" comment="Find shipment by its ID" returnType="/355" methodType="FIND_BY_ID" serviceMethod="/351/@repositoryMethods.0">
+      <methodParameters name="id" type="/0/@allSupportedTypes.2"/>
+    </boundaryMethods>
   </net.sourceforge.jbizmo.model.boundary:BoundaryBean>
   <net.sourceforge.jbizmo.model.repository:Repository name="ShipmentRepository" comment="Create, read, update and delete services for shipment objects." namespace="/252">
     <domainObject href="package-serial.xmi#//@domainObjects.3"/>
@@ -7233,4 +7243,87 @@
       </methodParameters>
     </repositoryMethods>
   </net.sourceforge.jbizmo.model.repository:Repository>
+  <net.sourceforge.jbizmo.model.client:Form name="ViewShipmentDialog" formType="READONLY" formGroup="/247" title="View shipment" formPanels="/353 /354" dTO="/355" roles="/0/@roles.0 /0/@roles.1">
+    <actions name="actionGet" boundaryMethod="/350/@boundaryMethods.4" type="READ"/>
+    <domainObject href="package-serial.xmi#//@domainObjects.3"/>
+  </net.sourceforge.jbizmo.model.client:Form>
+  <net.sourceforge.jbizmo.model.client:FormPanel name="panShipment" label="Basic data" form="/352">
+    <fields name="txtSerialObjectSerialNumber" label="Serial number" readonly="true" width="140" dTOAttribute="/355/@attributes.11"/>
+    <fields name="cboSerialObject" colIndex="2" label="Serial object" readonly="true" fieldType="FORM_LINK" width="140" dTOAttribute="/355/@attributes.10"/>
+    <fields name="txtOrderNumber" rowIndex="2" label="Order number" readonly="true" width="140" dTOAttribute="/355/@attributes.0"/>
+    <fields name="cboPlant" colIndex="2" rowIndex="2" label="Plant" readonly="true" fieldType="FORM_LINK" width="140" dTOAttribute="/355/@attributes.9"/>
+    <fields name="cboCustomer" rowIndex="3" label="Customer" spanCols="true" readonly="true" fieldType="FORM_LINK" width="140" dTOAttribute="/355/@attributes.6"/>
+    <fields name="cboMaterialRevisionMaterial" rowIndex="4" label="Material" readonly="true" fieldType="FORM_LINK" width="140" dTOAttribute="/355/@attributes.12"/>
+    <fields name="cboMaterialRevision" colIndex="2" rowIndex="4" label="Material revision" readonly="true" fieldType="FORM_LINK" width="140" dTOAttribute="/355/@attributes.7"/>
+    <fields name="txtMaterialShortText" rowIndex="5" label="Short text" spanCols="true" readonly="true" dTOAttribute="/355/@attributes.13"/>
+    <fields name="cboMaterialRevisionMaterialType" rowIndex="6" label="Material type" readonly="true" fieldType="FORM_LINK" width="140" dTOAttribute="/355/@attributes.14"/>
+    <fields name="cboMaterialRevisionMaterialClass" colIndex="2" rowIndex="6" label="Material class" readonly="true" fieldType="FORM_LINK" width="140" dTOAttribute="/355/@attributes.15"/>
+    <fields name="txtShipmentDate" rowIndex="7" label="Shipment date" readonly="true" fieldType="DATE" width="140" dTOAttribute="/355/@attributes.1"/>
+    <fields name="cboMovementType" colIndex="2" rowIndex="7" label="Movement type" readonly="true" fieldType="FORM_LINK" width="140" dTOAttribute="/355/@attributes.8"/>
+  </net.sourceforge.jbizmo.model.client:FormPanel>
+  <net.sourceforge.jbizmo.model.client:FormPanel name="panAdministration" colIndex="2" label="Administration data" form="/352">
+    <fields name="txtId" label="Transac. id" readonly="true" width="120" dTOAttribute="/355/@attributes.2"/>
+    <fields name="txtVersion" rowIndex="2" label="Version" readonly="true" width="120" dTOAttribute="/355/@attributes.3"/>
+    <fields name="txtCreationDate" rowIndex="3" label="Creation date" readonly="true" fieldType="DATE_TIME" width="120" dTOAttribute="/355/@attributes.4"/>
+    <fields name="txtLastUpdate" rowIndex="4" label="Last update" readonly="true" mandatory="false" fieldType="DATE_TIME" width="120" dTOAttribute="/355/@attributes.5"/>
+  </net.sourceforge.jbizmo.model.client:FormPanel>
+  <net.sourceforge.jbizmo.model.dto:DTOBean name="ShipmentDTO" comment="Data transfer object for shipment objects" namespace="/254" standardConversion="true">
+    <domainObject href="package-serial.xmi#//@domainObjects.3"/>
+    <attributes name="orderNumber">
+      <domainAttribute href="package-serial.xmi#//@domainObjects.3/@attributes.0"/>
+    </attributes>
+    <attributes name="shipmentDate">
+      <domainAttribute href="package-serial.xmi#//@domainObjects.3/@attributes.2"/>
+    </attributes>
+    <attributes name="id">
+      <domainAttribute href="package-base.xmi#//@domainObjects.0/@attributes.0"/>
+    </attributes>
+    <attributes name="version">
+      <domainAttribute href="package-base.xmi#//@domainObjects.0/@attributes.1"/>
+    </attributes>
+    <attributes name="creationDate">
+      <domainAttribute href="package-base.xmi#//@domainObjects.0/@attributes.2"/>
+    </attributes>
+    <attributes name="lastUpdate">
+      <domainAttribute href="package-base.xmi#//@domainObjects.0/@attributes.3"/>
+    </attributes>
+    <attributes name="customer" referencedDTOBean="/345">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-serial.xmi#//@domainObjects.3/@associations.0"/>
+    </attributes>
+    <attributes name="materialRevision" referencedDTOBean="/192">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-serial.xmi#//@domainObjects.3/@associations.1"/>
+    </attributes>
+    <attributes name="movementType" referencedDTOBean="/298">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-serial.xmi#//@domainObjects.3/@associations.2"/>
+    </attributes>
+    <attributes name="plant" referencedDTOBean="/214">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-serial.xmi#//@domainObjects.3/@associations.3"/>
+    </attributes>
+    <attributes name="serialObject" referencedDTOBean="/296">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-serial.xmi#//@domainObjects.3/@associations.4"/>
+    </attributes>
+    <attributes name="serialObjectSerialNumber">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-serial.xmi#//@domainObjects.3/@associations.4"/>
+      <domainAttribute href="package-serial.xmi#//@domainObjects.0/@attributes.0"/>
+    </attributes>
+    <attributes name="materialRevisionMaterial" referencedDTOBean="/191">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-material.xmi#//@domainObjects.3/@associations.0"/>
+      <associationList xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-serial.xmi#//@domainObjects.3/@associations.1"/>
+    </attributes>
+    <attributes name="materialShortText">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-material.xmi#//@domainObjects.3/@associations.0"/>
+      <domainAttribute href="package-material.xmi#//@domainObjects.2/@attributes.2"/>
+      <associationList xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-serial.xmi#//@domainObjects.3/@associations.1"/>
+    </attributes>
+    <attributes name="materialRevisionMaterialType" referencedDTOBean="/232">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-material.xmi#//@domainObjects.2/@associations.2"/>
+      <associationList xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-material.xmi#//@domainObjects.3/@associations.0"/>
+      <associationList xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-serial.xmi#//@domainObjects.3/@associations.1"/>
+    </attributes>
+    <attributes name="materialRevisionMaterialClass" referencedDTOBean="/233">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-material.xmi#//@domainObjects.2/@associations.1"/>
+      <associationList xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-material.xmi#//@domainObjects.3/@associations.0"/>
+      <associationList xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-serial.xmi#//@domainObjects.3/@associations.1"/>
+    </attributes>
+  </net.sourceforge.jbizmo.model.dto:DTOBean>
 </xmi:XMI>
