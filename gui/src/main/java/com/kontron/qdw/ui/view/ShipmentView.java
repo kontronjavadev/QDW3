@@ -235,7 +235,7 @@ public class ShipmentView extends SuperView implements Serializable {
         }
 
         refreshFormatSettings();
-        setCountFilterDependent();
+        setCountFilterDependent(2);
 
         try {
             shipmentsList = shipmentService.searchAllShipments(searchObj);

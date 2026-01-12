@@ -508,11 +508,13 @@
 		</p:column>
 
 		<p:column sortBy="#{arrivalViewItem.parentSerialNumber}" width="100" 
-			rendered="#{materializedArrivalView.searchObject.searchFields[3].visible}" displayPriority="#{materializedArrivalView.searchObject.searchFields[3].colOrder}" >
+			rendered="#{materializedArrivalView.searchObject.searchFields[3].visible}" displayPriority="#{materializedArrivalView.searchObject.searchFields[3].colOrder}" 
+			exportHeaderValue="#{i18n.lbl_attr_parentserialnumber_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materializedarrivalview_parentserialnumber}"/>
+				<h:outputText value="#{i18n.col_materializedarrivalview_parentserialnumber}" id="parentSerialNumberHeader" />
+				<p:tooltip for="parentSerialNumberHeader" value="#{i18n.lbl_attr_parentserialnumber_tooltip}" position="top" showDelay="50" />
 			</f:facet>
-			<h:outputText value="#{arrivalViewItem.parentSerialNumber}"/>
+			<h:outputText value="#{arrivalViewItem.parentSerialNumber}" />
 		</p:column>
 
 
@@ -538,9 +540,11 @@
 		</p:column>
 
 		<p:column sortBy="#{arrivalViewItem.assemblyDate}" width="80" 
-			rendered="#{materializedArrivalView.searchObject.searchFields[6].visible}" displayPriority="#{materializedArrivalView.searchObject.searchFields[6].colOrder}" >
+			rendered="#{materializedArrivalView.searchObject.searchFields[6].visible}" displayPriority="#{materializedArrivalView.searchObject.searchFields[6].colOrder}"  
+			exportHeaderValue="#{i18n.lbl_attr_assemblydate_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materializedarrivalview_assemblydate}"/>
+				<h:outputText value="#{i18n.col_materializedarrivalview_assemblydate}" id="assemblyDateHeader" />
+				<p:tooltip for="assemblyDateHeader" value="#{i18n.lbl_attr_assemblydate_tooltip}" position="top" showDelay="50" />
 			</f:facet>
 			<h:outputText value="#{arrivalViewItem.assemblyDate}">
 				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateConverter"/>
@@ -550,11 +554,13 @@
 		</p:column>
 
 		<p:column sortBy="#{arrivalViewItem.assemblyPO}" width="100" 
-			rendered="#{materializedArrivalView.searchObject.searchFields[7].visible}" displayPriority="#{materializedArrivalView.searchObject.searchFields[7].colOrder}" >
+			rendered="#{materializedArrivalView.searchObject.searchFields[7].visible}" displayPriority="#{materializedArrivalView.searchObject.searchFields[7].colOrder}"  
+			exportHeaderValue="#{i18n.lbl_attr_assemblypo_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materializedarrivalview_assemblypo}"/>
+				<h:outputText value="#{i18n.col_materializedarrivalview_assemblypo}" id="assemblyPOHeader" />
+				<p:tooltip for="assemblyPOHeader" value="#{i18n.lbl_attr_assemblypo_tooltip}" position="top" showDelay="50" />
 			</f:facet>
-			<h:outputText value="#{arrivalViewItem.assemblyPO}"/>
+			<h:outputText value="#{arrivalViewItem.assemblyPO}" />
 		</p:column>
 
 
@@ -654,9 +660,10 @@
 
 		<p:column sortBy="#{arrivalViewItem.parentMaterialNumber}" width="150" 
 			rendered="#{materializedArrivalView.searchObject.searchFields[17].visible}" displayPriority="#{materializedArrivalView.searchObject.searchFields[17].colOrder}" 
-			exportValue="#{arrivalViewItem.parentMaterialNumber}" class="tdnowrap" >
+			exportValue="#{arrivalViewItem.parentMaterialNumber}" exportHeaderValue="#{i18n.lbl_attr_parentmaterialnumber_tooltip}" class="tdnowrap,thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materializedarrivalview_parentmaterialnumber}"/>
+				<h:outputText value="#{i18n.col_materializedarrivalview_parentmaterialnumber}" id="parentMaterialNumberHeader" />
+				<p:tooltip for="parentMaterialNumberHeader" value="#{i18n.lbl_attr_parentmaterialnumber_tooltip}" position="top" showDelay="50" />
 			</f:facet>
 			<h:outputText value="#{arrivalViewItem.parentMaterialNumber}" id="parentMaterialNumber" />
 			<p:tooltip for="parentMaterialNumber" value="#{arrivalViewItem.parentMaterialNumber}" position="top" showDelay="50"/>
@@ -691,22 +698,25 @@
 		</p:column>
 
 		<p:column sortBy="#{arrivalViewItem.parentMaterialType}" width="80" 
-			rendered="#{materializedArrivalView.searchObject.searchFields[21].visible}" displayPriority="#{materializedArrivalView.searchObject.searchFields[21].colOrder}" >
+			rendered="#{materializedArrivalView.searchObject.searchFields[21].visible}" displayPriority="#{materializedArrivalView.searchObject.searchFields[21].colOrder}"  
+			exportHeaderValue="#{i18n.lbl_attr_parentmaterialtype_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materializedarrivalview_parentmaterialtype}"/>
+				<h:outputText value="#{i18n.col_materializedarrivalview_parentmaterialtype}" id="parentMaterialTypeHeader" />
+				<p:tooltip for="parentMaterialTypeHeader" value="#{i18n.lbl_attr_parentmaterialtype_tooltip}" position="top" showDelay="50" />
 			</f:facet>
-			<h:outputText value="#{arrivalViewItem.parentMaterialType}"/>
+			<h:outputText value="#{arrivalViewItem.parentMaterialType}" />
 		</p:column>
 
 
 
 		<p:column sortBy="#{arrivalViewItem.movementType}" width="80" 
-			rendered="#{materializedArrivalView.searchObject.searchFields[22].visible}" displayPriority="#{materializedArrivalView.searchObject.searchFields[22].colOrder}" >
+			rendered="#{materializedArrivalView.searchObject.searchFields[22].visible}" displayPriority="#{materializedArrivalView.searchObject.searchFields[22].colOrder}" 
+			exportHeaderValue="#{i18n.lbl_attr_movementtype_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materializedarrivalview_movementtype}"/>
+				<h:outputText value="#{i18n.col_materializedarrivalview_movementtype}" id="movementTypeHeader" />
+				<p:tooltip for="movementTypeHeader" value="#{i18n.lbl_attr_movementtype_tooltip}" position="top" showDelay="50" />
 			</f:facet>
-			<h:outputText value="#{arrivalViewItem.movementType}">
-			</h:outputText>
+			<h:outputText value="#{arrivalViewItem.movementType}" />
 		</p:column>
 	</p:dataTable>
 	<p/>

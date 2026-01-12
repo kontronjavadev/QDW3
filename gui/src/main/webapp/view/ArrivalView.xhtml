@@ -394,9 +394,11 @@
 		</p:column>
 
 		<p:column sortBy="#{arrivalViewItem.movementTypeCode}" width="80" 
-			rendered="#{arrivalView.searchObject.searchFields[3].visible}" displayPriority="#{arrivalView.searchObject.searchFields[3].colOrder}" >
+			rendered="#{arrivalView.searchObject.searchFields[3].visible}" displayPriority="#{arrivalView.searchObject.searchFields[3].colOrder}" 
+			exportHeaderValue="#{i18n.lbl_attr_movementtype_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_arrivalview_movementtypecode}"/>
+				<h:outputText value="#{i18n.col_arrivalview_movementtypecode}" id="movementTypeCodeHeader"/>
+				<p:tooltip for="movementTypeCodeHeader" value="#{i18n.lbl_attr_movementtype_tooltip}" position="top" showDelay="50"/>
 			</f:facet>
 			<h:outputText value="#{arrivalViewItem.movementTypeCode}">
 			</h:outputText>

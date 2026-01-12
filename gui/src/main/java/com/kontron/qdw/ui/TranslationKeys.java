@@ -463,6 +463,7 @@ public interface TranslationKeys {
     String LBL_ATTR_MATERIALREVISION_REV2 = "lbl_attr_materialrevision_rev2";
     String LBL_ATTR_MATERIALREVISION_REV6 = "lbl_attr_materialrevision_rev6";
     String LBL_ATTR_MATERIALREVISION_REVISIONNUMBER = "lbl_attr_materialrevision_revisionnumber";
+    String LBL_ATTR_MOVEMENTTYPE_TOOLTIP = "lbl_attr_movementtype_tooltip";
     String LBL_ATTR_NOTIFICATION_HEADER = "lbl_attr_notification_header";
     String LBL_ATTR_NOTIFICATION_NOTIFICATION = "lbl_attr_notification_notification";
     String LBL_ATTR_NOTIFICATION_NOTIFICATIONEND = "lbl_attr_notification_notificationend";

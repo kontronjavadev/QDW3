@@ -4278,7 +4278,7 @@
       <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.0"/>
     </attributes>
   </net.sourceforge.jbizmo.model.dto:DTOBean>
-  <net.sourceforge.jbizmo.model.client:FormGroup name="Serial object" groupOrder="4" forms="/260 /266 /286 /307 /303 /322 /317 /339 /292 /331 /346" panels="/328" roles="/0/@roles.0 /0/@roles.1" project="/0"/>
+  <net.sourceforge.jbizmo.model.client:FormGroup name="Serial object" groupOrder="4" forms="/260 /266 /286 /307 /303 /322 /317 /339 /346 /292 /331" panels="/328" roles="/0/@roles.0 /0/@roles.1" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="mv" parent="/2" javaTypes="/265 /271 /291 /316 /327 /344" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="mv" parent="/1" javaTypes="/264 /270 /290 /315 /326 /343" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="mv" parent="/3" javaTypes="/263 /269 /289 /320 /325 /342" project="/0"/>
@@ -6129,7 +6129,7 @@
     <fields colIndex="9" width="200" title="Supplier" dTOAttribute="/320/@attributes.1"/>
     <fields colIndex="10" title="Country" dTOAttribute="/320/@attributes.5"/>
     <fields colIndex="11" width="150" title="Revision no." dTOAttribute="/320/@attributes.23"/>
-    <fields colIndex="12" width="150" title="Parent revision mo." dTOAttribute="/320/@attributes.24"/>
+    <fields colIndex="12" width="150" title="Parent revision no." dTOAttribute="/320/@attributes.24"/>
     <fields colIndex="13" width="150" title="Material no." dTOAttribute="/320/@attributes.11"/>
     <fields colIndex="14" width="150" title="SAP no." dTOAttribute="/320/@attributes.17"/>
     <fields colIndex="15" width="250" title="Material short text" dTOAttribute="/320/@attributes.15"/>

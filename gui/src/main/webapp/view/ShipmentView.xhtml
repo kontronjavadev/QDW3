@@ -403,18 +403,22 @@
 		</p:column>
 
 		<p:column sortBy="#{shipmentViewItem.movementTypeCode}" width="80" 
-			rendered="#{shipmentView.searchObject.searchFields[3].visible}" displayPriority="#{shipmentView.searchObject.searchFields[3].colOrder}" >
+			rendered="#{shipmentView.searchObject.searchFields[3].visible}" displayPriority="#{shipmentView.searchObject.searchFields[3].colOrder}"  
+			exportHeaderValue="#{i18n.lbl_attr_movementtype_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_shipmentview_movementtypecode}"/>
+				<h:outputText value="#{i18n.col_shipmentview_movementtypecode}" id="movementTypeCodeHeader" />
+				<p:tooltip for="movementTypeCodeHeader" value="#{i18n.lbl_attr_movementtype_tooltip}" position="top" showDelay="50" />
 			</f:facet>
 			<h:outputText value="#{shipmentViewItem.movementTypeCode}">
 			</h:outputText>
 		</p:column>
 
 		<p:column sortBy="#{shipmentViewItem.shipmentDate}" width="80" 
-			rendered="#{shipmentView.searchObject.searchFields[4].visible}" displayPriority="#{shipmentView.searchObject.searchFields[4].colOrder}" >
+			rendered="#{shipmentView.searchObject.searchFields[4].visible}" displayPriority="#{shipmentView.searchObject.searchFields[4].colOrder}"  
+			exportHeaderValue="#{i18n.lbl_attr_shipmentdate_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_shipmentview_shipmentdate}"/>
+				<h:outputText value="#{i18n.col_shipmentview_shipmentdate}" id="shipmentDateHeader" />
+				<p:tooltip for="shipmentDateHeader" value="#{i18n.lbl_attr_shipmentdate_tooltip}" position="top" showDelay="50" />
 			</f:facet>
 			<h:outputText value="#{shipmentViewItem.shipmentDate}">
 				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateConverter"/>
@@ -433,48 +437,53 @@
 		</p:column>
 
 		<p:column sortBy="#{shipmentViewItem.customerCode}" width="80" 
-			rendered="#{shipmentView.searchObject.searchFields[6].visible}" displayPriority="#{shipmentView.searchObject.searchFields[6].colOrder}" >
+			rendered="#{shipmentView.searchObject.searchFields[6].visible}" displayPriority="#{shipmentView.searchObject.searchFields[6].colOrder}"  
+			exportHeaderValue="#{i18n.lbl_attr_customercode_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_shipmentview_customercode}"/>
+				<h:outputText value="#{i18n.col_shipmentview_customercode}" id="customerCodeHeader" />
+				<p:tooltip for="customerCodeHeader" value="#{i18n.lbl_attr_customercode_tooltip}" position="top" showDelay="50" />
 			</f:facet>
-			<h:outputText value="#{shipmentViewItem.customerCode}">
-			</h:outputText>
+			<h:outputText value="#{shipmentViewItem.customerCode}" />
 		</p:column>
 
 		<p:column sortBy="#{shipmentViewItem.customerName}" width="200" 
-			rendered="#{shipmentView.searchObject.searchFields[7].visible}" displayPriority="#{shipmentView.searchObject.searchFields[7].colOrder}" >
+			rendered="#{shipmentView.searchObject.searchFields[7].visible}" displayPriority="#{shipmentView.searchObject.searchFields[7].colOrder}" 
+			exportValue="#{shipmentView.customerName}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_shipmentview_customername}"/>
 			</f:facet>
-			<h:outputText value="#{shipmentViewItem.customerName}">
-			</h:outputText>
+			<h:outputText value="#{shipmentViewItem.customerName}" id="customerName" />
+			<p:tooltip for="customerName" value="#{shipmentView.customerName}" position="top" showDelay="50" />
 		</p:column>
 
 		<p:column sortBy="#{shipmentViewItem.matrevMaterialMaterialNumber}" width="150" 
-			rendered="#{shipmentView.searchObject.searchFields[8].visible}" displayPriority="#{shipmentView.searchObject.searchFields[8].colOrder}" >
+			rendered="#{shipmentView.searchObject.searchFields[8].visible}" displayPriority="#{shipmentView.searchObject.searchFields[8].colOrder}" 
+			exportValue="#{shipmentView.matrevMaterialMaterialNumber}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_shipmentview_matrevmaterialmaterialnumber}"/>
 			</f:facet>
-			<h:outputText value="#{shipmentViewItem.matrevMaterialMaterialNumber}">
-			</h:outputText>
+			<h:outputText value="#{shipmentViewItem.matrevMaterialMaterialNumber}" id="matrevMaterialMaterialNumber" />
+			<p:tooltip for="matrevMaterialMaterialNumber" value="#{shipmentView.matrevMaterialMaterialNumber}" position="top" showDelay="50" />
 		</p:column>
 
 		<p:column sortBy="#{shipmentViewItem.matrevMaterialSapNumber}" width="150" 
-			rendered="#{shipmentView.searchObject.searchFields[9].visible}" displayPriority="#{shipmentView.searchObject.searchFields[9].colOrder}" >
+			rendered="#{shipmentView.searchObject.searchFields[9].visible}" displayPriority="#{shipmentView.searchObject.searchFields[9].colOrder}" 
+			exportValue="#{shipmentView.matrevMaterialSapNumber}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_shipmentview_matrevmaterialsapnumber}"/>
 			</f:facet>
-			<h:outputText value="#{shipmentViewItem.matrevMaterialSapNumber}">
-			</h:outputText>
+			<h:outputText value="#{shipmentViewItem.matrevMaterialSapNumber}" id="matrevMaterialSapNumber" />
+			<p:tooltip for="matrevMaterialSapNumber" value="#{shipmentView.matrevMaterialSapNumber}" position="top" showDelay="50" />
 		</p:column>
 
 		<p:column sortBy="#{shipmentViewItem.matrevRevisionNumber}" width="150" 
-			rendered="#{shipmentView.searchObject.searchFields[10].visible}" displayPriority="#{shipmentView.searchObject.searchFields[10].colOrder}" >
+			rendered="#{shipmentView.searchObject.searchFields[10].visible}" displayPriority="#{shipmentView.searchObject.searchFields[10].colOrder}" 
+			exportValue="#{shipmentView.matrevRevisionNumber}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_shipmentview_matrevrevisionnumber}"/>
 			</f:facet>
-			<h:outputText value="#{shipmentViewItem.matrevRevisionNumber}">
-			</h:outputText>
+			<h:outputText value="#{shipmentViewItem.matrevRevisionNumber}" id="matrevRevisionNumber" />
+			<p:tooltip for="matrevRevisionNumber" value="#{shipmentView.matrevRevisionNumber}" position="top" showDelay="50" />
 		</p:column>
 
 		<p:column sortBy="#{shipmentViewItem.matrevMatMaterialTypeCode}" width="80" 
@@ -505,21 +514,23 @@
 		</p:column>
 
 		<p:column sortBy="#{shipmentViewItem.matrevMaterialShortText}" width="250" 
-			rendered="#{shipmentView.searchObject.searchFields[14].visible}" displayPriority="#{shipmentView.searchObject.searchFields[14].colOrder}" >
+			rendered="#{shipmentView.searchObject.searchFields[14].visible}" displayPriority="#{shipmentView.searchObject.searchFields[14].colOrder}" 
+			exportValue="#{shipmentView.matrevMaterialShortText}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_shipmentview_matrevmaterialshorttext}"/>
 			</f:facet>
-			<h:outputText value="#{shipmentViewItem.matrevMaterialShortText}">
-			</h:outputText>
+			<h:outputText value="#{shipmentViewItem.matrevMaterialShortText}" id="matrevMaterialShortText" />
+			<p:tooltip for="matrevMaterialShortText" value="#{shipmentView.matrevMaterialShortText}" position="top" showDelay="50" />
 		</p:column>
 
 		<p:column sortBy="#{shipmentViewItem.matrevMatOwnerLocationCode}" width="100" 
-			rendered="#{shipmentView.searchObject.searchFields[15].visible}" displayPriority="#{shipmentView.searchObject.searchFields[15].colOrder}" >
+			rendered="#{shipmentView.searchObject.searchFields[15].visible}" displayPriority="#{shipmentView.searchObject.searchFields[15].colOrder}"  
+			exportHeaderValue="#{i18n.lbl_attr_ownerlocation_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_shipmentview_matrevmatownerlocationcode}"/>
+				<h:outputText value="#{i18n.col_shipmentview_matrevmatownerlocationcode}" id="matrevMatOwnerLocationCodeHeader" />
+				<p:tooltip for="matrevMatOwnerLocationCodeHeader" value="#{i18n.lbl_attr_ownerlocation_tooltip}" position="top" showDelay="50" />
 			</f:facet>
-			<h:outputText value="#{shipmentViewItem.matrevMatOwnerLocationCode}">
-			</h:outputText>
+			<h:outputText value="#{shipmentViewItem.matrevMatOwnerLocationCode}" />
 		</p:column>
 
 		<p:column sortBy="#{shipmentViewItem.creationDate}" width="120" 
