@@ -660,7 +660,7 @@
 
 		<p:column sortBy="#{arrivalViewItem.parentMaterialNumber}" width="150" 
 			rendered="#{materializedArrivalView.searchObject.searchFields[17].visible}" displayPriority="#{materializedArrivalView.searchObject.searchFields[17].colOrder}" 
-			exportValue="#{arrivalViewItem.parentMaterialNumber}" exportHeaderValue="#{i18n.lbl_attr_parentmaterialnumber_tooltip}" class="tdnowrap,thnowrap" >
+			exportValue="#{arrivalViewItem.parentMaterialNumber}" exportHeaderValue="#{i18n.lbl_attr_parentmaterialnumber_tooltip}" class="tdnowrap thnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedarrivalview_parentmaterialnumber}" id="parentMaterialNumberHeader" />
 				<p:tooltip for="parentMaterialNumberHeader" value="#{i18n.lbl_attr_parentmaterialnumber_tooltip}" position="top" showDelay="50" />

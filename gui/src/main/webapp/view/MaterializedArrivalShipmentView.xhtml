@@ -549,7 +549,7 @@
 
 		<p:column sortBy="#{materializedArrivalShipmentViewItem.shipmentId}" width="80" 
 			rendered="#{materializedArrivalShipmentView.searchObject.searchFields[0].visible}" displayPriority="#{materializedArrivalShipmentView.searchObject.searchFields[0].colOrder}" 
-			exportHeaderValue="#{i18n.lbl_attr_shipmentid_tooltip}" exportValue="#{materializedArrivalShipmentViewItem.shipmentId}" class="thnowrap,tdnowrap" >
+			exportHeaderValue="#{i18n.lbl_attr_shipmentid_tooltip}" exportValue="#{materializedArrivalShipmentViewItem.shipmentId}" class="thnowrap tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedarrivalshipmentview_shipmentid}" id="shipmentIdHeader"/>
 				<p:tooltip for="shipmentIdHeader" value="#{i18n.lbl_attr_shipmentid_tooltip}" position="top" showDelay="50"/>
@@ -770,7 +770,7 @@
 
 		<p:column sortBy="#{materializedArrivalShipmentViewItem.parentMaterialNumber}" width="150" 
 			rendered="#{materializedArrivalShipmentView.searchObject.searchFields[21].visible}" displayPriority="#{materializedArrivalShipmentView.searchObject.searchFields[21].colOrder}" 
-			exportHeaderValue="#{i18n.lbl_attr_parentmaterialnumber_tooltip}" exportValue="#{materializedArrivalShipmentViewItem.parentMaterialNumber}" class="thnowrap,tdnowrap" >
+			exportHeaderValue="#{i18n.lbl_attr_parentmaterialnumber_tooltip}" exportValue="#{materializedArrivalShipmentViewItem.parentMaterialNumber}" class="thnowrap tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedarrivalshipmentview_parentmaterialnumber}" id="parentMaterialNumberHeader"/>
 				<p:tooltip for="parentMaterialNumberHeader" value="#{i18n.lbl_attr_parentmaterialnumber_tooltip}" position="top" showDelay="50"/>
