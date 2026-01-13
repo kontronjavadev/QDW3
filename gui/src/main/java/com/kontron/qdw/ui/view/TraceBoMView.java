@@ -222,7 +222,7 @@ public class TraceBoMView extends SuperView implements Serializable {
         }
 
         refreshFormatSettings();
-        setCountFilterDependent(2);
+        setCountFilterDependent();
 
         try {
             traceBoMsList = traceBoMService.searchAllTraceBoMs(searchObj);

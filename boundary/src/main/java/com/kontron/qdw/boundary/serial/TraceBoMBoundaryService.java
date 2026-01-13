@@ -2,7 +2,7 @@ package com.kontron.qdw.boundary.serial;
 
 import com.kontron.qdw.domain.serial.*;
 import net.sourceforge.jbizmo.commons.search.exception.*;
-import static net.sourceforge.jbizmo.commons.jpa.AbstractRepository.DEFAULT_LIST_SIZE;
+import static net.sourceforge.jbizmo.commons.jpa.AbstractRepository.MAX_LIST_SIZE;
 import static net.sourceforge.jbizmo.commons.jpa.AbstractRepository.WILDCARD;
 import com.kontron.qdw.dto.base.*;
 import java.util.*;
@@ -113,7 +113,7 @@ public class TraceBoMBoundaryService {
         final var searchObj = new SearchDTO();
         searchObj.setExactFilterMatch(true);
         searchObj.setCaseSensitive(true);
-        searchObj.setMaxResult(DEFAULT_LIST_SIZE);
+        searchObj.setMaxResult(MAX_LIST_SIZE);
         searchObj.setFromClause("from TraceBoM x join x.traceBoMItems a join a.material b join a.traceBom c");
 
         final var parentFilterField = searchObj.addSearchField("x.id", SearchFieldDataTypeEnum.LONG);
@@ -148,7 +148,7 @@ public class TraceBoMBoundaryService {
         final var searchObj = new SearchDTO();
         searchObj.setExactFilterMatch(true);
         searchObj.setCaseSensitive(true);
-        searchObj.setMaxResult(DEFAULT_LIST_SIZE);
+        searchObj.setMaxResult(MAX_LIST_SIZE);
         searchObj.setFromClause("from TraceBoM x join x.illegalTraceBoMItems a join a.traceBom b");
 
         final var parentFilterField = searchObj.addSearchField("x.id", SearchFieldDataTypeEnum.LONG);

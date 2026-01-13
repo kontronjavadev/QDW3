@@ -5,22 +5,16 @@
 	xmlns:p="http://primefaces.org/ui">
 
 	<p:menubar>
-		<p:submenu icon="pi pi-file" label="#{i18n.mnu_file}" id="gridTraceBoMTraceBoMItemsPanel_mniFile">
-		</p:submenu>
 		<p:submenu icon="pi pi-refresh" label="#{i18n.mnu_view}">
 			<p:menuitem value="#{i18n.action_refresh}" ajax="false" icon="pi pi-refresh" actionListener="#{traceBoMTraceBoMItemsPanel.fetchTraceBoMItems}"/>
 		</p:submenu>
 		<p:submenu icon="pi pi-print" label="#{i18n.mnu_export}">
 			<p:menuitem value="#{i18n.action_export_xls}" ajax="false" icon="pi pi-file-excel">
-				<p:dataExporter type="xls" target="gridTraceBoMTraceBoMItemsPanel" fileName="TraceBoMItemList"/>
-			</p:menuitem>
-			<p:menuitem value="#{i18n.action_export_pdf}" ajax="false" icon="pi pi-file-pdf">
-				<p:dataExporter type="pdf" target="gridTraceBoMTraceBoMItemsPanel" fileName="TraceBoMItemList"/>
+				<p:dataExporter type="xlsxstream" target="gridTraceBoMTraceBoMItemsPanel" fileName="TraceBoMItemList"/>
 			</p:menuitem>
 		</p:submenu>
 	</p:menubar>
 
-	<br/>
 
 	<p:dataTable id="gridTraceBoMTraceBoMItemsPanel" var="traceBoMTraceBoMItemsPanelItem" rows="50"
 		selectionMode="single"
@@ -33,28 +27,31 @@
 		rowsPerPageTemplate="10,50,100,500,1000">
 		<p:ajax event="rowDblselect" listener="#{traceBoMTraceBoMItemsPanel.onTraceBoMItemsGridDoubleClick}"/>
 
-		<p:column sortBy="#{traceBoMTraceBoMItemsPanelItem.materialMaterialNumber}" width="150" >
+		<p:column sortBy="#{traceBoMTraceBoMItemsPanelItem.materialMaterialNumber}" width="150" 
+			exportValue="#{traceBoMTraceBoMItemsPanelItem.materialMaterialNumber}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_tracebomtracebomitemspanel_materialmaterialnumber}"/>
 			</f:facet>
-			<h:outputText value="#{traceBoMTraceBoMItemsPanelItem.materialMaterialNumber}">
-			</h:outputText>
+			<h:outputText value="#{traceBoMTraceBoMItemsPanelItem.materialMaterialNumber}" id="materialMaterialNumber" />
+			<p:tooltip for="materialMaterialNumber" value="#{traceBoMTraceBoMItemsPanelItem.materialMaterialNumber}" position="top" showDelay="50" />
 		</p:column>
 
-		<p:column sortBy="#{traceBoMTraceBoMItemsPanelItem.materialSapNumber}" width="150" >
+		<p:column sortBy="#{traceBoMTraceBoMItemsPanelItem.materialSapNumber}" width="150" 
+			exportValue="#{traceBoMTraceBoMItemsPanelItem.materialSapNumber}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_tracebomtracebomitemspanel_materialsapnumber}"/>
 			</f:facet>
-			<h:outputText value="#{traceBoMTraceBoMItemsPanelItem.materialSapNumber}">
-			</h:outputText>
+			<h:outputText value="#{traceBoMTraceBoMItemsPanelItem.materialSapNumber}" id="materialSapNumber" />
+			<p:tooltip for="materialSapNumber" value="#{traceBoMTraceBoMItemsPanelItem.materialSapNumber}" position="top" showDelay="50" />
 		</p:column>
 
-		<p:column sortBy="#{traceBoMTraceBoMItemsPanelItem.materialShortText}" width="250" >
+		<p:column sortBy="#{traceBoMTraceBoMItemsPanelItem.materialShortText}" width="250" 
+			exportValue="#{traceBoMTraceBoMItemsPanelItem.materialShortText}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_tracebomtracebomitemspanel_materialshorttext}"/>
 			</f:facet>
-			<h:outputText value="#{traceBoMTraceBoMItemsPanelItem.materialShortText}">
-			</h:outputText>
+			<h:outputText value="#{traceBoMTraceBoMItemsPanelItem.materialShortText}" id="materialShortText" />
+			<p:tooltip for="materialShortText" value="#{traceBoMTraceBoMItemsPanelItem.materialShortText}" position="top" showDelay="50" />
 		</p:column>
 
 		<p:column sortBy="#{traceBoMTraceBoMItemsPanelItem.quantity}" width="80" >
@@ -65,68 +62,76 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{traceBoMTraceBoMItemsPanelItem.manufacturerName}" width="200" >
+		<p:column sortBy="#{traceBoMTraceBoMItemsPanelItem.manufacturerName}" width="200" 
+			exportValue="#{traceBoMTraceBoMItemsPanelItem.manufacturerName}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_tracebomtracebomitemspanel_manufacturername}"/>
 			</f:facet>
-			<h:outputText value="#{traceBoMTraceBoMItemsPanelItem.manufacturerName}">
-			</h:outputText>
+			<h:outputText value="#{traceBoMTraceBoMItemsPanelItem.manufacturerName}" id="manufacturerName" />
+			<p:tooltip for="manufacturerName" value="#{traceBoMTraceBoMItemsPanelItem.manufacturerName}" position="top" showDelay="50" />
 		</p:column>
 
-		<p:column sortBy="#{traceBoMTraceBoMItemsPanelItem.orderCode}" width="150" >
+		<p:column sortBy="#{traceBoMTraceBoMItemsPanelItem.orderCode}" width="150" 
+			exportValue="#{traceBoMTraceBoMItemsPanelItem.orderCode}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_tracebomitem_ordercode}"/>
 			</f:facet>
-			<h:outputText value="#{traceBoMTraceBoMItemsPanelItem.orderCode}">
-			</h:outputText>
+			<h:outputText value="#{traceBoMTraceBoMItemsPanelItem.orderCode}" id="orderCode" />
+			<p:tooltip for="orderCode" value="#{traceBoMTraceBoMItemsPanelItem.orderCode}" position="top" showDelay="50" />
 		</p:column>
 
-		<p:column sortBy="#{traceBoMTraceBoMItemsPanelItem.dateCode}" width="100" >
+		<p:column sortBy="#{traceBoMTraceBoMItemsPanelItem.dateCode}" width="100" 
+			exportValue="#{traceBoMTraceBoMItemsPanelItem.dateCode}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_tracebomitem_datecode}"/>
 			</f:facet>
-			<h:outputText value="#{traceBoMTraceBoMItemsPanelItem.dateCode}">
-			</h:outputText>
+			<h:outputText value="#{traceBoMTraceBoMItemsPanelItem.dateCode}" id="dateCode" />
+			<p:tooltip for="dateCode" value="#{traceBoMTraceBoMItemsPanelItem.dateCode}" position="top" showDelay="50" />
 		</p:column>
 
-		<p:column sortBy="#{traceBoMTraceBoMItemsPanelItem.manufacturerRevision}" width="150" >
+		<p:column sortBy="#{traceBoMTraceBoMItemsPanelItem.manufacturerRevision}" width="150" 
+			exportValue="#{traceBoMTraceBoMItemsPanelItem.manufacturerRevision}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_tracebomitem_manufacturerrevision}"/>
 			</f:facet>
-			<h:outputText value="#{traceBoMTraceBoMItemsPanelItem.manufacturerRevision}">
-			</h:outputText>
+			<h:outputText value="#{traceBoMTraceBoMItemsPanelItem.manufacturerRevision}" id="manufacturerRevision" />
+			<p:tooltip for="manufacturerRevision" value="#{traceBoMTraceBoMItemsPanelItem.manufacturerRevision}" position="top" showDelay="50" />
 		</p:column>
 
-		<p:column sortBy="#{traceBoMTraceBoMItemsPanelItem.infoField1}" width="150" >
+		<p:column sortBy="#{traceBoMTraceBoMItemsPanelItem.infoField1}" width="150" 
+			exportValue="#{traceBoMTraceBoMItemsPanelItem.infoField1}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_tracebomitem_infofield1}"/>
 			</f:facet>
-			<h:outputText value="#{traceBoMTraceBoMItemsPanelItem.infoField1}">
-			</h:outputText>
+			<h:outputText value="#{traceBoMTraceBoMItemsPanelItem.infoField1}" id="infoField1" />
+			<p:tooltip for="infoField1" value="#{traceBoMTraceBoMItemsPanelItem.infoField1}" position="top" showDelay="50" />
 		</p:column>
 
-		<p:column sortBy="#{traceBoMTraceBoMItemsPanelItem.infoField2}" width="150" >
+		<p:column sortBy="#{traceBoMTraceBoMItemsPanelItem.infoField2}" width="150" 
+			exportValue="#{traceBoMTraceBoMItemsPanelItem.infoField2}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_tracebomitem_infofield2}"/>
 			</f:facet>
-			<h:outputText value="#{traceBoMTraceBoMItemsPanelItem.infoField2}">
-			</h:outputText>
+			<h:outputText value="#{traceBoMTraceBoMItemsPanelItem.infoField2}" id="infoField2" />
+			<p:tooltip for="infoField2" value="#{traceBoMTraceBoMItemsPanelItem.infoField2}" position="top" showDelay="50" />
 		</p:column>
 
-		<p:column sortBy="#{traceBoMTraceBoMItemsPanelItem.infoField3}" width="150" >
+		<p:column sortBy="#{traceBoMTraceBoMItemsPanelItem.infoField3}" width="150" 
+			exportValue="#{traceBoMTraceBoMItemsPanelItem.infoField3}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_tracebomitem_infofield3}"/>
 			</f:facet>
-			<h:outputText value="#{traceBoMTraceBoMItemsPanelItem.infoField3}">
-			</h:outputText>
+			<h:outputText value="#{traceBoMTraceBoMItemsPanelItem.infoField3}" id="infoField3" />
+			<p:tooltip for="infoField3" value="#{traceBoMTraceBoMItemsPanelItem.infoField3}" position="top" showDelay="50" />
 		</p:column>
 
-		<p:column sortBy="#{traceBoMTraceBoMItemsPanelItem.infoField4}" width="150" >
+		<p:column sortBy="#{traceBoMTraceBoMItemsPanelItem.infoField4}" width="150" 
+			exportValue="#{traceBoMTraceBoMItemsPanelItem.infoField4}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_tracebomitem_infofield4}"/>
 			</f:facet>
-			<h:outputText value="#{traceBoMTraceBoMItemsPanelItem.infoField4}">
-			</h:outputText>
+			<h:outputText value="#{traceBoMTraceBoMItemsPanelItem.infoField4}" id="infoField4" />
+			<p:tooltip for="infoField4" value="#{traceBoMTraceBoMItemsPanelItem.infoField4}" position="top" showDelay="50" />
 		</p:column>
 
 		<p:column sortBy="#{traceBoMTraceBoMItemsPanelItem.creationDate}" width="120" >
