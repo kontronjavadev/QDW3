@@ -211,4 +211,72 @@ public class SerialObjectBoundaryService {
         return dto;
     }
 
+    /**
+     * Search for serial object objects
+     * @param searchObj a generic container that holds filter criteria
+     * @return a list of serial object objects
+     * @throws GeneralSearchException if the search operation has failed
+     */
+    @Generated
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public List<SerialObjectTraceBoMSearchDTO> searchAllSerialObjectTraceBoMs(SearchDTO searchObj) {
+        // Collect the select tokens of all fields that should be fetched
+        final var selectTokens = new ArrayList<String>();
+        selectTokens.add(SerialObjectTraceBoMSearchDTO.SELECT_SERIALNUMBER);
+        selectTokens.add(SerialObjectTraceBoMSearchDTO.SELECT_ASSEMBLYDATE);
+        selectTokens.add(SerialObjectTraceBoMSearchDTO.SELECT_CUSTOMERSERIALNUMBER);
+        selectTokens.add(SerialObjectTraceBoMSearchDTO.SELECT_PRODUCTIONORDERNUMBER);
+        selectTokens.add(SerialObjectTraceBoMSearchDTO.SELECT_ID);
+        selectTokens.add(SerialObjectTraceBoMSearchDTO.SELECT_CREATIONDATE);
+        selectTokens.add(SerialObjectTraceBoMSearchDTO.SELECT_LASTUPDATE);
+        selectTokens.add(SerialObjectTraceBoMSearchDTO.SELECT_SOMATID);
+        selectTokens.add(SerialObjectTraceBoMSearchDTO.SELECT_TBOMSUPPLIERCODE);
+        selectTokens.add(SerialObjectTraceBoMSearchDTO.SELECT_TBOMSUPPLIERNAME);
+        selectTokens.add(SerialObjectTraceBoMSearchDTO.SELECT_TBOMDELIVERYNOTENUMBER);
+        selectTokens.add(SerialObjectTraceBoMSearchDTO.SELECT_TBOMMATREVID);
+        selectTokens.add(SerialObjectTraceBoMSearchDTO.SELECT_TBOMMATREVMATID);
+        selectTokens.add(SerialObjectTraceBoMSearchDTO.SELECT_TBOMMATREVMATMATERIALNUMBER);
+        selectTokens.add(SerialObjectTraceBoMSearchDTO.SELECT_TBOMMATREVMATSAPNUMBER);
+        selectTokens.add(SerialObjectTraceBoMSearchDTO.SELECT_TBOMMATREVMATMATERIALHIERARCHY);
+        selectTokens.add(SerialObjectTraceBoMSearchDTO.SELECT_TBOMMATREVMATSHORTTEXT);
+        selectTokens.add(SerialObjectTraceBoMSearchDTO.SELECT_TBOMTBOMITEMID);
+        selectTokens.add(SerialObjectTraceBoMSearchDTO.SELECT_TBOMTBOMITEMMATID);
+        selectTokens.add(SerialObjectTraceBoMSearchDTO.SELECT_TBOMTBOMITEMMATMATERIALNUMBER);
+        selectTokens.add(SerialObjectTraceBoMSearchDTO.SELECT_TBOMTBOMITEMMATSAPNUMBER);
+        selectTokens.add(SerialObjectTraceBoMSearchDTO.SELECT_TBOMTBOMITEMMATMATERIALHIERARCHY);
+        selectTokens.add(SerialObjectTraceBoMSearchDTO.SELECT_TBOMTBOMITEMMATSHORTTEXT);
+        selectTokens.add(SerialObjectTraceBoMSearchDTO.SELECT_TBOMMATREVREVISIONNUMBER);
+        selectTokens.add(SerialObjectTraceBoMSearchDTO.SELECT_TBOMPRODUCTIONDATE);
+        selectTokens.add(SerialObjectTraceBoMSearchDTO.SELECT_TBOMORDERNUMBER);
+        selectTokens.add(SerialObjectTraceBoMSearchDTO.SELECT_TBOMLOTNUMBER);
+        selectTokens.add(SerialObjectTraceBoMSearchDTO.SELECT_TBOMTBOMITEMMANUFACTURERNAME);
+        selectTokens.add(SerialObjectTraceBoMSearchDTO.SELECT_TBOMTBOMITEMORDERCODE);
+        selectTokens.add(SerialObjectTraceBoMSearchDTO.SELECT_TBOMTBOMITEMDATECODE);
+        selectTokens.add(SerialObjectTraceBoMSearchDTO.SELECT_TBOMTBOMITEMQUANTITY);
+        selectTokens.add(SerialObjectTraceBoMSearchDTO.SELECT_TBOMTBOMITEMINFOFIELD1);
+        selectTokens.add(SerialObjectTraceBoMSearchDTO.SELECT_TBOMTBOMITEMINFOFIELD2);
+
+        searchObj.setFromClause(
+                "from SerialObject a join a.material b left join a.traceBom f left join f.materialRevision h left join f.supplier i left join f.traceBoMItems j left join h.material m left join j.material u");
+
+        return repository.search(searchObj, SerialObjectTraceBoMSearchDTO.class, selectTokens);
+    }
+
+    /**
+     * Count serial object objects
+     * @param searchObj the query criteria
+     * @return the number of objects a query would return
+     * @throws GeneralSearchException if the count operation has failed
+     */
+    @Generated
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public long countAllSerialObjectTraceBoMs(SearchDTO searchObj) {
+        searchObj.setFromClause(
+                "from SerialObject a join a.material b left join a.traceBom f left join f.materialRevision h left join f.supplier i left join f.traceBoMItems j left join h.material m left join j.material u");
+
+        return repository.count(searchObj);
+    }
+
 }

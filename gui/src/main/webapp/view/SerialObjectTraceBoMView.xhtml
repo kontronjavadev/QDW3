@@ -1,0 +1,712 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:h="jakarta.faces.html"
+	xmlns:f="jakarta.faces.core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/templates/ui.xhtml">
+
+<f:metadata>
+	<f:viewAction action="#{serialObjectTraceBoMView.initView()}"/>
+</f:metadata>
+
+<ui:define name="title">#{serialObjectTraceBoMView.formTitle}</ui:define>
+
+<ui:define name="content">
+	<h:panelGrid columns="3">
+		<div class="pi pi-list" style="font-size: 2em"/>
+		<h:outputText id="lblFormTitle" value="&#160;#{serialObjectTraceBoMView.formTitle}" styleClass="label-form-title"/>
+		<p:ajaxStatus style="width:16px;height:16px;">
+			<f:facet name="start">
+				<h:graphicImage value="/images/ajaxloading.gif"/>
+			</f:facet>
+
+			<f:facet name="complete">
+				<h:outputText value=""/>
+			</f:facet>
+		</p:ajaxStatus>
+	</h:panelGrid>
+
+	<p:growl id="growl" showDetail="true"/>
+
+	<p:dialog height="510" width="1000" header="#{i18n.search_input_dlg}" widgetVar="dlgSearchInput" modal="true">
+		<p:tabView id="tabViewSearchInput" dynamic="false">
+			<p:tab title="#{i18n.search_input_filter}">
+			<p:scrollPanel style="width:100%; height:400px;" mode="native">
+			<h:panelGrid columns="5" cellpadding="3">
+				<h:outputText styleClass="label-field-mandatory" value="#{i18n.search_input_column}"/>
+				<h:outputText styleClass="label-field-mandatory" value="#{i18n.search_input_operator}"/>
+				<h:outputText styleClass="label-field-mandatory" value="#{i18n.search_input_sort}"/>
+				<h:outputText styleClass="label-field-mandatory" value="#{i18n.search_input_filter_input}"/>
+				<h:outputText styleClass="label-field-mandatory" value="#{i18n.search_input_and}"/>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_0" value="#{serialObjectTraceBoMView.searchObject.searchFields[0].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{serialObjectTraceBoMView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_0" value="#{serialObjectTraceBoMView.searchObject.searchFields[0].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_0" value="#{serialObjectTraceBoMView.textOperators}" var="advInputItem0" itemValue="#{advInputItem0}" itemLabel="#{advInputItem0.description}"/>
+					<f:ajax render="p_0"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_0" id="s_0" value="#{serialObjectTraceBoMView.searchObject.searchFields[0].sortOrder}">
+					<f:selectItems value="#{serialObjectTraceBoMView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:autoComplete minQueryLength="2" maxResults="10" completeMethod="#{serialObjectTraceBoMView.onCompleteSupplierName}" id="fi_0" value="#{serialObjectTraceBoMView.searchObject.searchFields[0].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_0">
+				<p:autoComplete minQueryLength="2" rendered="#{serialObjectTraceBoMView.searchObject.searchFields[0].between}" maxResults="10" completeMethod="#{serialObjectTraceBoMView.onCompleteSupplierName}" id="b_0" value="#{serialObjectTraceBoMView.searchObject.searchFields[0].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_1" value="#{serialObjectTraceBoMView.searchObject.searchFields[1].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{serialObjectTraceBoMView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_1" value="#{serialObjectTraceBoMView.searchObject.searchFields[1].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_1" value="#{serialObjectTraceBoMView.textOperators}" var="advInputItem1" itemValue="#{advInputItem1}" itemLabel="#{advInputItem1.description}"/>
+					<f:ajax render="p_1"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_1" id="s_1" value="#{serialObjectTraceBoMView.searchObject.searchFields[1].sortOrder}">
+					<f:selectItems value="#{serialObjectTraceBoMView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_1" value="#{serialObjectTraceBoMView.searchObject.searchFields[1].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_1">
+					<p:inputText id="b_1" rendered="#{serialObjectTraceBoMView.searchObject.searchFields[1].between}" value="#{serialObjectTraceBoMView.searchObject.searchFields[1].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_2" value="#{serialObjectTraceBoMView.searchObject.searchFields[2].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{serialObjectTraceBoMView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_2" value="#{serialObjectTraceBoMView.searchObject.searchFields[2].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_2" value="#{serialObjectTraceBoMView.textOperators}" var="advInputItem2" itemValue="#{advInputItem2}" itemLabel="#{advInputItem2.description}"/>
+					<f:ajax render="p_2"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_2" id="s_2" value="#{serialObjectTraceBoMView.searchObject.searchFields[2].sortOrder}">
+					<f:selectItems value="#{serialObjectTraceBoMView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_2" value="#{serialObjectTraceBoMView.searchObject.searchFields[2].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_2">
+					<p:inputText id="b_2" rendered="#{serialObjectTraceBoMView.searchObject.searchFields[2].between}" value="#{serialObjectTraceBoMView.searchObject.searchFields[2].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_3" value="#{serialObjectTraceBoMView.searchObject.searchFields[3].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{serialObjectTraceBoMView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_3" value="#{serialObjectTraceBoMView.searchObject.searchFields[3].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_3" value="#{serialObjectTraceBoMView.textOperators}" var="advInputItem3" itemValue="#{advInputItem3}" itemLabel="#{advInputItem3.description}"/>
+					<f:ajax render="p_3"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_3" id="s_3" value="#{serialObjectTraceBoMView.searchObject.searchFields[3].sortOrder}">
+					<f:selectItems value="#{serialObjectTraceBoMView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:autoComplete minQueryLength="2" maxResults="10" completeMethod="#{serialObjectTraceBoMView.onCompleteMaterialMaterialNumber}" id="fi_3" value="#{serialObjectTraceBoMView.searchObject.searchFields[3].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_3">
+				<p:autoComplete minQueryLength="2" rendered="#{serialObjectTraceBoMView.searchObject.searchFields[3].between}" maxResults="10" completeMethod="#{serialObjectTraceBoMView.onCompleteMaterialMaterialNumber}" id="b_3" value="#{serialObjectTraceBoMView.searchObject.searchFields[3].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_4" value="#{serialObjectTraceBoMView.searchObject.searchFields[4].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{serialObjectTraceBoMView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_4" value="#{serialObjectTraceBoMView.searchObject.searchFields[4].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_4" value="#{serialObjectTraceBoMView.textOperators}" var="advInputItem4" itemValue="#{advInputItem4}" itemLabel="#{advInputItem4.description}"/>
+					<f:ajax render="p_4"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_4" id="s_4" value="#{serialObjectTraceBoMView.searchObject.searchFields[4].sortOrder}">
+					<f:selectItems value="#{serialObjectTraceBoMView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_4" value="#{serialObjectTraceBoMView.searchObject.searchFields[4].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_4">
+					<p:inputText id="b_4" rendered="#{serialObjectTraceBoMView.searchObject.searchFields[4].between}" value="#{serialObjectTraceBoMView.searchObject.searchFields[4].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_5" value="#{serialObjectTraceBoMView.searchObject.searchFields[5].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{serialObjectTraceBoMView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_5" value="#{serialObjectTraceBoMView.searchObject.searchFields[5].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_5" value="#{serialObjectTraceBoMView.textOperators}" var="advInputItem5" itemValue="#{advInputItem5}" itemLabel="#{advInputItem5.description}"/>
+					<f:ajax render="p_5"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_5" id="s_5" value="#{serialObjectTraceBoMView.searchObject.searchFields[5].sortOrder}">
+					<f:selectItems value="#{serialObjectTraceBoMView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_5" value="#{serialObjectTraceBoMView.searchObject.searchFields[5].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_5">
+					<p:inputText id="b_5" rendered="#{serialObjectTraceBoMView.searchObject.searchFields[5].between}" value="#{serialObjectTraceBoMView.searchObject.searchFields[5].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_6" value="#{serialObjectTraceBoMView.searchObject.searchFields[6].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{serialObjectTraceBoMView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_6" value="#{serialObjectTraceBoMView.searchObject.searchFields[6].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_6" value="#{serialObjectTraceBoMView.textOperators}" var="advInputItem6" itemValue="#{advInputItem6}" itemLabel="#{advInputItem6.description}"/>
+					<f:ajax render="p_6"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_6" id="s_6" value="#{serialObjectTraceBoMView.searchObject.searchFields[6].sortOrder}">
+					<f:selectItems value="#{serialObjectTraceBoMView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_6" value="#{serialObjectTraceBoMView.searchObject.searchFields[6].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_6">
+					<p:inputText id="b_6" rendered="#{serialObjectTraceBoMView.searchObject.searchFields[6].between}" value="#{serialObjectTraceBoMView.searchObject.searchFields[6].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_7" value="#{serialObjectTraceBoMView.searchObject.searchFields[7].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{serialObjectTraceBoMView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_7" value="#{serialObjectTraceBoMView.searchObject.searchFields[7].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_7" value="#{serialObjectTraceBoMView.textOperators}" var="advInputItem7" itemValue="#{advInputItem7}" itemLabel="#{advInputItem7.description}"/>
+					<f:ajax render="p_7"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_7" id="s_7" value="#{serialObjectTraceBoMView.searchObject.searchFields[7].sortOrder}">
+					<f:selectItems value="#{serialObjectTraceBoMView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_7" value="#{serialObjectTraceBoMView.searchObject.searchFields[7].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_7">
+					<p:inputText id="b_7" rendered="#{serialObjectTraceBoMView.searchObject.searchFields[7].between}" value="#{serialObjectTraceBoMView.searchObject.searchFields[7].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_8" value="#{serialObjectTraceBoMView.searchObject.searchFields[8].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{serialObjectTraceBoMView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_8" value="#{serialObjectTraceBoMView.searchObject.searchFields[8].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_8" value="#{serialObjectTraceBoMView.textOperators}" var="advInputItem8" itemValue="#{advInputItem8}" itemLabel="#{advInputItem8.description}"/>
+					<f:ajax render="p_8"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_8" id="s_8" value="#{serialObjectTraceBoMView.searchObject.searchFields[8].sortOrder}">
+					<f:selectItems value="#{serialObjectTraceBoMView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:autoComplete minQueryLength="2" maxResults="10" completeMethod="#{serialObjectTraceBoMView.onCompleteMaterialMaterialNumber}" id="fi_8" value="#{serialObjectTraceBoMView.searchObject.searchFields[8].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_8">
+				<p:autoComplete minQueryLength="2" rendered="#{serialObjectTraceBoMView.searchObject.searchFields[8].between}" maxResults="10" completeMethod="#{serialObjectTraceBoMView.onCompleteMaterialMaterialNumber}" id="b_8" value="#{serialObjectTraceBoMView.searchObject.searchFields[8].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_9" value="#{serialObjectTraceBoMView.searchObject.searchFields[9].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{serialObjectTraceBoMView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_9" value="#{serialObjectTraceBoMView.searchObject.searchFields[9].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_9" value="#{serialObjectTraceBoMView.textOperators}" var="advInputItem9" itemValue="#{advInputItem9}" itemLabel="#{advInputItem9.description}"/>
+					<f:ajax render="p_9"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_9" id="s_9" value="#{serialObjectTraceBoMView.searchObject.searchFields[9].sortOrder}">
+					<f:selectItems value="#{serialObjectTraceBoMView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_9" value="#{serialObjectTraceBoMView.searchObject.searchFields[9].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_9">
+					<p:inputText id="b_9" rendered="#{serialObjectTraceBoMView.searchObject.searchFields[9].between}" value="#{serialObjectTraceBoMView.searchObject.searchFields[9].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_10" value="#{serialObjectTraceBoMView.searchObject.searchFields[10].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{serialObjectTraceBoMView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_10" value="#{serialObjectTraceBoMView.searchObject.searchFields[10].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_10" value="#{serialObjectTraceBoMView.textOperators}" var="advInputItem10" itemValue="#{advInputItem10}" itemLabel="#{advInputItem10.description}"/>
+					<f:ajax render="p_10"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_10" id="s_10" value="#{serialObjectTraceBoMView.searchObject.searchFields[10].sortOrder}">
+					<f:selectItems value="#{serialObjectTraceBoMView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_10" value="#{serialObjectTraceBoMView.searchObject.searchFields[10].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_10">
+					<p:inputText id="b_10" rendered="#{serialObjectTraceBoMView.searchObject.searchFields[10].between}" value="#{serialObjectTraceBoMView.searchObject.searchFields[10].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_11" value="#{serialObjectTraceBoMView.searchObject.searchFields[11].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{serialObjectTraceBoMView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_11" value="#{serialObjectTraceBoMView.searchObject.searchFields[11].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_11" value="#{serialObjectTraceBoMView.textOperators}" var="advInputItem11" itemValue="#{advInputItem11}" itemLabel="#{advInputItem11.description}"/>
+					<f:ajax render="p_11"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_11" id="s_11" value="#{serialObjectTraceBoMView.searchObject.searchFields[11].sortOrder}">
+					<f:selectItems value="#{serialObjectTraceBoMView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_11" value="#{serialObjectTraceBoMView.searchObject.searchFields[11].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_11">
+					<p:inputText id="b_11" rendered="#{serialObjectTraceBoMView.searchObject.searchFields[11].between}" value="#{serialObjectTraceBoMView.searchObject.searchFields[11].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_12" value="#{serialObjectTraceBoMView.searchObject.searchFields[12].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{serialObjectTraceBoMView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_12" value="#{serialObjectTraceBoMView.searchObject.searchFields[12].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_12" value="#{serialObjectTraceBoMView.textOperators}" var="advInputItem12" itemValue="#{advInputItem12}" itemLabel="#{advInputItem12.description}"/>
+					<f:ajax render="p_12"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_12" id="s_12" value="#{serialObjectTraceBoMView.searchObject.searchFields[12].sortOrder}">
+					<f:selectItems value="#{serialObjectTraceBoMView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_12" value="#{serialObjectTraceBoMView.searchObject.searchFields[12].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_12">
+					<p:inputText id="b_12" rendered="#{serialObjectTraceBoMView.searchObject.searchFields[12].between}" value="#{serialObjectTraceBoMView.searchObject.searchFields[12].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_13" value="#{serialObjectTraceBoMView.searchObject.searchFields[13].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{serialObjectTraceBoMView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_13" value="#{serialObjectTraceBoMView.searchObject.searchFields[13].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_13" value="#{serialObjectTraceBoMView.textOperators}" var="advInputItem13" itemValue="#{advInputItem13}" itemLabel="#{advInputItem13.description}"/>
+					<f:ajax render="p_13"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_13" id="s_13" value="#{serialObjectTraceBoMView.searchObject.searchFields[13].sortOrder}">
+					<f:selectItems value="#{serialObjectTraceBoMView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_13" value="#{serialObjectTraceBoMView.searchObject.searchFields[13].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_13">
+					<p:inputText id="b_13" rendered="#{serialObjectTraceBoMView.searchObject.searchFields[13].between}" value="#{serialObjectTraceBoMView.searchObject.searchFields[13].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_14" value="#{serialObjectTraceBoMView.searchObject.searchFields[14].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{serialObjectTraceBoMView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_14" value="#{serialObjectTraceBoMView.searchObject.searchFields[14].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_14" value="#{serialObjectTraceBoMView.dateOperators}" var="advInputItem14" itemValue="#{advInputItem14}" itemLabel="#{advInputItem14.description}"/>
+					<f:ajax render="p_14"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_14" id="s_14" value="#{serialObjectTraceBoMView.searchObject.searchFields[14].sortOrder}">
+					<f:selectItems value="#{serialObjectTraceBoMView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:datePicker id="fi_14" value="#{serialObjectTraceBoMView.searchObject.searchFields[14].dateCriterion}" pattern="#{userSession.dateFormat}" size="20" showButtonBar="true" showIcon="true"/>
+				<h:panelGroup id="p_14">
+					<p:datePicker id="fb_14" value="#{serialObjectTraceBoMView.searchObject.searchFields[14].dateBetweenCriterion}" pattern="#{userSession.dateFormat}" size="20" showButtonBar="true" showIcon="true" rendered="#{serialObjectTraceBoMView.searchObject.searchFields[14].between}"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_15" value="#{serialObjectTraceBoMView.searchObject.searchFields[15].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{serialObjectTraceBoMView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_15" value="#{serialObjectTraceBoMView.searchObject.searchFields[15].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_15" value="#{serialObjectTraceBoMView.dateOperators}" var="advInputItem15" itemValue="#{advInputItem15}" itemLabel="#{advInputItem15.description}"/>
+					<f:ajax render="p_15"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_15" id="s_15" value="#{serialObjectTraceBoMView.searchObject.searchFields[15].sortOrder}">
+					<f:selectItems value="#{serialObjectTraceBoMView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:datePicker id="fi_15" value="#{serialObjectTraceBoMView.searchObject.searchFields[15].dateCriterion}" pattern="#{userSession.dateFormat}" size="20" showButtonBar="true" showIcon="true"/>
+				<h:panelGroup id="p_15">
+					<p:datePicker id="fb_15" value="#{serialObjectTraceBoMView.searchObject.searchFields[15].dateBetweenCriterion}" pattern="#{userSession.dateFormat}" size="20" showButtonBar="true" showIcon="true" rendered="#{serialObjectTraceBoMView.searchObject.searchFields[15].between}"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_16" value="#{serialObjectTraceBoMView.searchObject.searchFields[16].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{serialObjectTraceBoMView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_16" value="#{serialObjectTraceBoMView.searchObject.searchFields[16].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_16" value="#{serialObjectTraceBoMView.textOperators}" var="advInputItem16" itemValue="#{advInputItem16}" itemLabel="#{advInputItem16.description}"/>
+					<f:ajax render="p_16"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_16" id="s_16" value="#{serialObjectTraceBoMView.searchObject.searchFields[16].sortOrder}">
+					<f:selectItems value="#{serialObjectTraceBoMView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_16" value="#{serialObjectTraceBoMView.searchObject.searchFields[16].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_16">
+					<p:inputText id="b_16" rendered="#{serialObjectTraceBoMView.searchObject.searchFields[16].between}" value="#{serialObjectTraceBoMView.searchObject.searchFields[16].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_17" value="#{serialObjectTraceBoMView.searchObject.searchFields[17].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{serialObjectTraceBoMView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_17" value="#{serialObjectTraceBoMView.searchObject.searchFields[17].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_17" value="#{serialObjectTraceBoMView.textOperators}" var="advInputItem17" itemValue="#{advInputItem17}" itemLabel="#{advInputItem17.description}"/>
+					<f:ajax render="p_17"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_17" id="s_17" value="#{serialObjectTraceBoMView.searchObject.searchFields[17].sortOrder}">
+					<f:selectItems value="#{serialObjectTraceBoMView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_17" value="#{serialObjectTraceBoMView.searchObject.searchFields[17].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_17">
+					<p:inputText id="b_17" rendered="#{serialObjectTraceBoMView.searchObject.searchFields[17].between}" value="#{serialObjectTraceBoMView.searchObject.searchFields[17].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_18" value="#{serialObjectTraceBoMView.searchObject.searchFields[18].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{serialObjectTraceBoMView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_18" value="#{serialObjectTraceBoMView.searchObject.searchFields[18].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_18" value="#{serialObjectTraceBoMView.textOperators}" var="advInputItem18" itemValue="#{advInputItem18}" itemLabel="#{advInputItem18.description}"/>
+					<f:ajax render="p_18"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_18" id="s_18" value="#{serialObjectTraceBoMView.searchObject.searchFields[18].sortOrder}">
+					<f:selectItems value="#{serialObjectTraceBoMView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_18" value="#{serialObjectTraceBoMView.searchObject.searchFields[18].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_18">
+					<p:inputText id="b_18" rendered="#{serialObjectTraceBoMView.searchObject.searchFields[18].between}" value="#{serialObjectTraceBoMView.searchObject.searchFields[18].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_19" value="#{serialObjectTraceBoMView.searchObject.searchFields[19].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{serialObjectTraceBoMView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_19" value="#{serialObjectTraceBoMView.searchObject.searchFields[19].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_19" value="#{serialObjectTraceBoMView.textOperators}" var="advInputItem19" itemValue="#{advInputItem19}" itemLabel="#{advInputItem19.description}"/>
+					<f:ajax render="p_19"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_19" id="s_19" value="#{serialObjectTraceBoMView.searchObject.searchFields[19].sortOrder}">
+					<f:selectItems value="#{serialObjectTraceBoMView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_19" value="#{serialObjectTraceBoMView.searchObject.searchFields[19].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_19">
+					<p:inputText id="b_19" rendered="#{serialObjectTraceBoMView.searchObject.searchFields[19].between}" value="#{serialObjectTraceBoMView.searchObject.searchFields[19].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_20" value="#{serialObjectTraceBoMView.searchObject.searchFields[20].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{serialObjectTraceBoMView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_20" value="#{serialObjectTraceBoMView.searchObject.searchFields[20].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_20" value="#{serialObjectTraceBoMView.textOperators}" var="advInputItem20" itemValue="#{advInputItem20}" itemLabel="#{advInputItem20.description}"/>
+					<f:ajax render="p_20"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_20" id="s_20" value="#{serialObjectTraceBoMView.searchObject.searchFields[20].sortOrder}">
+					<f:selectItems value="#{serialObjectTraceBoMView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_20" value="#{serialObjectTraceBoMView.searchObject.searchFields[20].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_20">
+					<p:inputText id="b_20" rendered="#{serialObjectTraceBoMView.searchObject.searchFields[20].between}" value="#{serialObjectTraceBoMView.searchObject.searchFields[20].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_21" value="#{serialObjectTraceBoMView.searchObject.searchFields[21].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{serialObjectTraceBoMView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_21" value="#{serialObjectTraceBoMView.searchObject.searchFields[21].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_21" value="#{serialObjectTraceBoMView.numberOperators}" var="advInputItem21" itemValue="#{advInputItem21}" itemLabel="#{advInputItem21.description}"/>
+					<f:ajax render="p_21"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_21" id="s_21" value="#{serialObjectTraceBoMView.searchObject.searchFields[21].sortOrder}">
+					<f:selectItems value="#{serialObjectTraceBoMView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_21" value="#{serialObjectTraceBoMView.searchObject.searchFields[21].integerCriterion}" size="30"/>
+				<h:panelGroup id="p_21">
+					<p:inputText id="b_21" rendered="#{serialObjectTraceBoMView.searchObject.searchFields[21].between}" value="#{serialObjectTraceBoMView.searchObject.searchFields[21].integerBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_22" value="#{serialObjectTraceBoMView.searchObject.searchFields[22].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{serialObjectTraceBoMView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_22" value="#{serialObjectTraceBoMView.searchObject.searchFields[22].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_22" value="#{serialObjectTraceBoMView.textOperators}" var="advInputItem22" itemValue="#{advInputItem22}" itemLabel="#{advInputItem22.description}"/>
+					<f:ajax render="p_22"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_22" id="s_22" value="#{serialObjectTraceBoMView.searchObject.searchFields[22].sortOrder}">
+					<f:selectItems value="#{serialObjectTraceBoMView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_22" value="#{serialObjectTraceBoMView.searchObject.searchFields[22].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_22">
+					<p:inputText id="b_22" rendered="#{serialObjectTraceBoMView.searchObject.searchFields[22].between}" value="#{serialObjectTraceBoMView.searchObject.searchFields[22].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_23" value="#{serialObjectTraceBoMView.searchObject.searchFields[23].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{serialObjectTraceBoMView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_23" value="#{serialObjectTraceBoMView.searchObject.searchFields[23].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_23" value="#{serialObjectTraceBoMView.textOperators}" var="advInputItem23" itemValue="#{advInputItem23}" itemLabel="#{advInputItem23.description}"/>
+					<f:ajax render="p_23"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_23" id="s_23" value="#{serialObjectTraceBoMView.searchObject.searchFields[23].sortOrder}">
+					<f:selectItems value="#{serialObjectTraceBoMView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_23" value="#{serialObjectTraceBoMView.searchObject.searchFields[23].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_23">
+					<p:inputText id="b_23" rendered="#{serialObjectTraceBoMView.searchObject.searchFields[23].between}" value="#{serialObjectTraceBoMView.searchObject.searchFields[23].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_24" value="#{serialObjectTraceBoMView.searchObject.searchFields[24].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{serialObjectTraceBoMView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_24" value="#{serialObjectTraceBoMView.searchObject.searchFields[24].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_24" value="#{serialObjectTraceBoMView.dateOperators}" var="advInputItem24" itemValue="#{advInputItem24}" itemLabel="#{advInputItem24.description}"/>
+					<f:ajax render="p_24"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_24" id="s_24" value="#{serialObjectTraceBoMView.searchObject.searchFields[24].sortOrder}">
+					<f:selectItems value="#{serialObjectTraceBoMView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:datePicker id="fi_24" value="#{serialObjectTraceBoMView.searchObject.searchFields[24].dateCriterion}" pattern="#{userSession.dateTimeFormat}" size="20" showButtonBar="true" showIcon="true" showTime="true"/>
+				<h:panelGroup id="p_24">
+					<p:datePicker id="fb_24" value="#{serialObjectTraceBoMView.searchObject.searchFields[24].dateBetweenCriterion}" pattern="#{userSession.dateTimeFormat}" size="20" showButtonBar="true" showIcon="true" rendered="#{serialObjectTraceBoMView.searchObject.searchFields[24].between}" showTime="true"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_25" value="#{serialObjectTraceBoMView.searchObject.searchFields[25].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{serialObjectTraceBoMView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_25" value="#{serialObjectTraceBoMView.searchObject.searchFields[25].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_25" value="#{serialObjectTraceBoMView.dateOperators}" var="advInputItem25" itemValue="#{advInputItem25}" itemLabel="#{advInputItem25.description}"/>
+					<f:ajax render="p_25"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_25" id="s_25" value="#{serialObjectTraceBoMView.searchObject.searchFields[25].sortOrder}">
+					<f:selectItems value="#{serialObjectTraceBoMView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:datePicker id="fi_25" value="#{serialObjectTraceBoMView.searchObject.searchFields[25].dateCriterion}" pattern="#{userSession.dateTimeFormat}" size="20" showButtonBar="true" showIcon="true" showTime="true"/>
+				<h:panelGroup id="p_25">
+					<p:datePicker id="fb_25" value="#{serialObjectTraceBoMView.searchObject.searchFields[25].dateBetweenCriterion}" pattern="#{userSession.dateTimeFormat}" size="20" showButtonBar="true" showIcon="true" rendered="#{serialObjectTraceBoMView.searchObject.searchFields[25].between}" showTime="true"/>
+				</h:panelGroup>
+
+			</h:panelGrid>
+			</p:scrollPanel>
+			</p:tab>
+			<p:tab title="#{i18n.search_input_adv}">
+			<h:panelGrid columns="2">
+				<h:outputLabel value="#{i18n.search_input_case}:" styleClass="label-field-mandatory"/>
+				<p:selectBooleanCheckbox value="#{serialObjectTraceBoMView.searchObject.caseSensitive}"/>
+				<h:outputLabel value="#{i18n.search_input_count}:" styleClass="label-field-mandatory"/>
+				<p:selectBooleanCheckbox value="#{serialObjectTraceBoMView.searchObject.count}"/>
+				<h:outputLabel value="#{i18n.search_input_filter_match}:" styleClass="label-field-mandatory"/>
+				<p:selectBooleanCheckbox value="#{serialObjectTraceBoMView.searchObject.exactFilterMatch}"/>
+				<h:outputLabel value="#{i18n.search_input_filter_fetch_size}:" styleClass="label-field-mandatory"/>
+				<p:inputText value="#{serialObjectTraceBoMView.searchObject.maxResult}" size="5">
+					<f:validateLongRange minimum="1" maximum="1000000"/>
+				</p:inputText>
+				<h:outputLabel value="#{i18n.search_input_visible_fields_label}:" styleClass="label-field-mandatory"/>
+				<p:pickList value="#{serialObjectTraceBoMView.visibleFields}" var="savedQueryListItem" itemLabel="#{savedQueryListItem.colLabel}" itemValue="#{savedQueryListItem}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchFieldDTOConverter" addLabel="#{i18n.pick_list_add}" addAllLabel="#{i18n.pick_list_add_all}" removeLabel="#{i18n.pick_list_remove}" removeAllLabel="#{i18n.pick_list_remove_all}">
+					<f:facet name="sourceCaption">#{i18n.search_input_all_fields}</f:facet>
+					<f:facet name="targetCaption">#{i18n.search_input_visible_fields}</f:facet>
+				</p:pickList>
+			</h:panelGrid>
+			</p:tab>
+			<p:tab title="#{i18n.search_input_saved_query_title}">
+				<h:panelGrid columns="1">
+					<h:outputLabel styleClass="label-field-mandatory" value="#{i18n.search_input_lbl_saved_query}"/>
+					<p:selectOneListbox id="savedQueryList" value="#{serialObjectTraceBoMView.selectedSavedQuery}" style="height:150px; width:300px">
+						<f:selectItems value="#{serialObjectTraceBoMView.savedQueries}"/>
+					</p:selectOneListbox>
+					<h:panelGrid columns="2">
+						<p:commandButton value="#{i18n.search_input_run_saved_query}" action="#{serialObjectTraceBoMView.runSavedQuery}" ajax="false"/>
+						<p:commandButton value="#{i18n.search_input_delete_saved_query}" action="#{serialObjectTraceBoMView.deleteSavedQuery}" ajax="false"/>
+					</h:panelGrid>
+				</h:panelGrid>
+			</p:tab>
+		</p:tabView>
+		<br/>
+		<h:panelGrid columns="3">
+			<p:commandButton id="cmdSearch" value="#{i18n.search_input_perform_search}" action="#{serialObjectTraceBoMView.fetchSerialObjects}" ajax="false"/>
+			<p:commandButton id="cmdReset" value="#{i18n.command_reset}" action="#{serialObjectTraceBoMView.initSearchObject}" onclick="PF('dlgSearchInput').hide()" ajax="false"/>
+			<p:commandButton id="cmdCount" value="#{i18n.search_input_perform_count}" actionListener="#{serialObjectTraceBoMView.countRecords}" onclick="PF('dlgSearchInput').hide()" update="growl" ajax="true"/>
+		</h:panelGrid>
+	</p:dialog>
+
+	<p:menubar>
+		<p:submenu icon="pi pi-file" label="#{i18n.mnu_file}" id="panData_mniFile">
+			<p:menuitem value="#{i18n.action_search_input}" ajax="true" icon="pi pi-search" id="panData_mniSearch" onclick="PF('dlgSearchInput').show()"/>
+			<p:menuitem value="#{i18n.search_input_dlg_save_query}" icon="pi pi-save" onclick="PF('dlgSaveQuery').show()"/>
+		</p:submenu>
+		<p:submenu icon="pi pi-refresh" label="#{i18n.mnu_view}">
+			<p:menuitem value="#{i18n.action_refresh}" ajax="false" icon="pi pi-refresh" actionListener="#{serialObjectTraceBoMView.fetchSerialObjects}"/>
+		</p:submenu>
+		<p:submenu icon="pi pi-print" label="#{i18n.mnu_export}">
+			<p:menuitem value="#{i18n.action_export_xls}" ajax="false" icon="pi pi-file-excel">
+				<p:dataExporter type="xls" target="panData" fileName="SerialObjectList"/>
+			</p:menuitem>
+			<p:menuitem value="#{i18n.action_export_pdf}" ajax="false" icon="pi pi-file-pdf">
+				<p:dataExporter type="pdf" target="panData" fileName="SerialObjectList"/>
+			</p:menuitem>
+		</p:submenu>
+	</p:menubar>
+
+	<br/>
+
+	<p:dataTable id="panData" var="serialObjectTraceBoMViewItem" rows="50"
+		selectionMode="single"
+		selection="#{serialObjectTraceBoMView.selectedObject}"
+		loadingMessage="#{i18n.action_fetch_data}"
+		value="#{serialObjectTraceBoMView.serialObjectsList}" scrollable="false"
+		paginatorPosition="top" paginatorAlwaysVisible="false" paginator="true" resizableColumns="true"
+		rowKey="#{serialObjectTraceBoMViewItem.id}"
+		paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+		rowsPerPageTemplate="10,50,100,500,1000">
+		<p:ajax event="rowDblselect" listener="#{serialObjectTraceBoMView.onDoubleClick}"/>
+
+		<p:column sortBy="#{serialObjectTraceBoMViewItem.tbomSupplierName}" width="200" rendered="#{serialObjectTraceBoMView.searchObject.searchFields[0].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serialobjecttracebomview_tbomsuppliername}"/>
+			</f:facet>
+			<h:outputText value="#{serialObjectTraceBoMViewItem.tbomSupplierName}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serialObjectTraceBoMViewItem.productionOrderNumber}" width="80" rendered="#{serialObjectTraceBoMView.searchObject.searchFields[1].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serialobjecttracebomview_productionordernumber}"/>
+			</f:facet>
+			<h:outputText value="#{serialObjectTraceBoMViewItem.productionOrderNumber}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serialObjectTraceBoMViewItem.tbomDeliveryNoteNumber}" width="100" rendered="#{serialObjectTraceBoMView.searchObject.searchFields[2].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serialobjecttracebomview_tbomdeliverynotenumber}"/>
+			</f:facet>
+			<h:outputText value="#{serialObjectTraceBoMViewItem.tbomDeliveryNoteNumber}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serialObjectTraceBoMViewItem.tbomMatrevMatMaterialNumber}" width="150" rendered="#{serialObjectTraceBoMView.searchObject.searchFields[3].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serialobjecttracebomview_tbommatrevmatmaterialnumber}"/>
+			</f:facet>
+			<h:outputText value="#{serialObjectTraceBoMViewItem.tbomMatrevMatMaterialNumber}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serialObjectTraceBoMViewItem.tbomMatrevMatSapNumber}" width="150" rendered="#{serialObjectTraceBoMView.searchObject.searchFields[4].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serialobjecttracebomview_tbommatrevmatsapnumber}"/>
+			</f:facet>
+			<h:outputText value="#{serialObjectTraceBoMViewItem.tbomMatrevMatSapNumber}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serialObjectTraceBoMViewItem.tbomMatrevRevisionNumber}" width="150" rendered="#{serialObjectTraceBoMView.searchObject.searchFields[5].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serialobjecttracebomview_tbommatrevrevisionnumber}"/>
+			</f:facet>
+			<h:outputText value="#{serialObjectTraceBoMViewItem.tbomMatrevRevisionNumber}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serialObjectTraceBoMViewItem.tbomMatrevMatMaterialHierarchy}" width="150" rendered="#{serialObjectTraceBoMView.searchObject.searchFields[6].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serialobjecttracebomview_tbommatrevmatmaterialhierarchy}"/>
+			</f:facet>
+			<h:outputText value="#{serialObjectTraceBoMViewItem.tbomMatrevMatMaterialHierarchy}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serialObjectTraceBoMViewItem.tbomMatrevMatShortText}" width="250" rendered="#{serialObjectTraceBoMView.searchObject.searchFields[7].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serialobjecttracebomview_tbommatrevmatshorttext}"/>
+			</f:facet>
+			<h:outputText value="#{serialObjectTraceBoMViewItem.tbomMatrevMatShortText}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serialObjectTraceBoMViewItem.tbomTbomitemMatMaterialNumber}" width="150" rendered="#{serialObjectTraceBoMView.searchObject.searchFields[8].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serialobjecttracebomview_tbomtbomitemmatmaterialnumber}"/>
+			</f:facet>
+			<h:outputText value="#{serialObjectTraceBoMViewItem.tbomTbomitemMatMaterialNumber}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serialObjectTraceBoMViewItem.tbomTbomitemMatSapNumber}" width="150" rendered="#{serialObjectTraceBoMView.searchObject.searchFields[9].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serialobjecttracebomview_tbomtbomitemmatsapnumber}"/>
+			</f:facet>
+			<h:outputText value="#{serialObjectTraceBoMViewItem.tbomTbomitemMatSapNumber}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serialObjectTraceBoMViewItem.tbomTbomitemMatMaterialHierarchy}" width="150" rendered="#{serialObjectTraceBoMView.searchObject.searchFields[10].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serialobjecttracebomview_tbomtbomitemmatmaterialhierarchy}"/>
+			</f:facet>
+			<h:outputText value="#{serialObjectTraceBoMViewItem.tbomTbomitemMatMaterialHierarchy}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serialObjectTraceBoMViewItem.tbomTbomitemMatShortText}" width="250" rendered="#{serialObjectTraceBoMView.searchObject.searchFields[11].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serialobjecttracebomview_tbomtbomitemmatshorttext}"/>
+			</f:facet>
+			<h:outputText value="#{serialObjectTraceBoMViewItem.tbomTbomitemMatShortText}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serialObjectTraceBoMViewItem.serialNumber}" width="100" rendered="#{serialObjectTraceBoMView.searchObject.searchFields[12].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serialobjecttracebomview_serialnumber}"/>
+			</f:facet>
+			<h:outputText value="#{serialObjectTraceBoMViewItem.serialNumber}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serialObjectTraceBoMViewItem.customerSerialNumber}" width="100" rendered="#{serialObjectTraceBoMView.searchObject.searchFields[13].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serialobjecttracebomview_customerserialnumber}"/>
+			</f:facet>
+			<h:outputText value="#{serialObjectTraceBoMViewItem.customerSerialNumber}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serialObjectTraceBoMViewItem.assemblyDate}" width="80" rendered="#{serialObjectTraceBoMView.searchObject.searchFields[14].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serialobjecttracebomview_assemblydate}"/>
+			</f:facet>
+			<h:outputText value="#{serialObjectTraceBoMViewItem.assemblyDate}">
+				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateConverter"/>
+				<f:attribute name="pattern" value="#{userSession.dateFormat}"/>
+				<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serialObjectTraceBoMViewItem.tbomProductionDate}" width="100" rendered="#{serialObjectTraceBoMView.searchObject.searchFields[15].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serialobjecttracebomview_tbomproductiondate}"/>
+			</f:facet>
+			<h:outputText value="#{serialObjectTraceBoMViewItem.tbomProductionDate}">
+				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateConverter"/>
+				<f:attribute name="pattern" value="#{userSession.dateFormat}"/>
+				<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serialObjectTraceBoMViewItem.tbomOrderNumber}" width="100" rendered="#{serialObjectTraceBoMView.searchObject.searchFields[16].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serialobjecttracebomview_tbomordernumber}"/>
+			</f:facet>
+			<h:outputText value="#{serialObjectTraceBoMViewItem.tbomOrderNumber}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serialObjectTraceBoMViewItem.tbomLotNumber}" width="100" rendered="#{serialObjectTraceBoMView.searchObject.searchFields[17].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serialobjecttracebomview_tbomlotnumber}"/>
+			</f:facet>
+			<h:outputText value="#{serialObjectTraceBoMViewItem.tbomLotNumber}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serialObjectTraceBoMViewItem.tbomTbomitemManufacturerName}" width="200" rendered="#{serialObjectTraceBoMView.searchObject.searchFields[18].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serialobjecttracebomview_tbomtbomitemmanufacturername}"/>
+			</f:facet>
+			<h:outputText value="#{serialObjectTraceBoMViewItem.tbomTbomitemManufacturerName}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serialObjectTraceBoMViewItem.tbomTbomitemOrderCode}" width="100" rendered="#{serialObjectTraceBoMView.searchObject.searchFields[19].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_tracebomitem_ordercode}"/>
+			</f:facet>
+			<h:outputText value="#{serialObjectTraceBoMViewItem.tbomTbomitemOrderCode}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serialObjectTraceBoMViewItem.tbomTbomitemDateCode}" width="100" rendered="#{serialObjectTraceBoMView.searchObject.searchFields[20].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_tracebomitem_datecode}"/>
+			</f:facet>
+			<h:outputText value="#{serialObjectTraceBoMViewItem.tbomTbomitemDateCode}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serialObjectTraceBoMViewItem.tbomTbomitemQuantity}" width="80" rendered="#{serialObjectTraceBoMView.searchObject.searchFields[21].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serialobjecttracebomview_tbomtbomitemquantity}"/>
+			</f:facet>
+			<h:outputText value="#{serialObjectTraceBoMViewItem.tbomTbomitemQuantity}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serialObjectTraceBoMViewItem.tbomTbomitemInfoField1}" width="150" rendered="#{serialObjectTraceBoMView.searchObject.searchFields[22].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_tracebomitem_infofield1}"/>
+			</f:facet>
+			<h:outputText value="#{serialObjectTraceBoMViewItem.tbomTbomitemInfoField1}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serialObjectTraceBoMViewItem.tbomTbomitemInfoField2}" width="150" rendered="#{serialObjectTraceBoMView.searchObject.searchFields[23].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_tracebomitem_infofield2}"/>
+			</f:facet>
+			<h:outputText value="#{serialObjectTraceBoMViewItem.tbomTbomitemInfoField2}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serialObjectTraceBoMViewItem.creationDate}" width="120" rendered="#{serialObjectTraceBoMView.searchObject.searchFields[24].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_abstractentitywithid_creationdate}"/>
+			</f:facet>
+			<h:outputText value="#{serialObjectTraceBoMViewItem.creationDate}">
+				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateTimeConverter"/>
+				<f:attribute name="pattern" value="#{userSession.dateTimeFormat}"/>
+				<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serialObjectTraceBoMViewItem.lastUpdate}" width="120" rendered="#{serialObjectTraceBoMView.searchObject.searchFields[25].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_abstractentitywithid_lastupdate}"/>
+			</f:facet>
+			<h:outputText value="#{serialObjectTraceBoMViewItem.lastUpdate}">
+				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateTimeConverter"/>
+				<f:attribute name="pattern" value="#{userSession.dateTimeFormat}"/>
+				<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
+			</h:outputText>
+		</p:column>
+	</p:dataTable>
+	<p/>
+
+	<h:outputText styleClass="label-field-mandatory" value="#{i18n.result_total_number_records} #{serialObjectTraceBoMView.serialObjectsList.size()}"/>
+	<h:outputText styleClass="label-field-mandatory" rendered="#{serialObjectTraceBoMView.searchObject.count}" value="&#160;#{i18n.search_input_count_of}&#160;"/>
+	<h:outputText styleClass="label-field-mandatory" rendered="#{serialObjectTraceBoMView.searchObject.count}" value="#{serialObjectTraceBoMView.countResult}"/>
+	<p/>
+
+	<p:contextMenu for="panData">
+		<p:menuitem value="#{i18n.action_delete}" ajax="true" icon="pi pi-trash" id="panData_mniDelete" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR')}" onclick="PF('deleteConfirm').show()"/>
+		<p:menuitem value="#{i18n.action_view}" ajax="true" icon="pi pi-file" id="panData_mniView" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY')}" action="#{serialObjectTraceBoMView.openViewSerialObjectDialog}">
+			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{serialObjectTraceBoMView.currentPageURL}"/>
+		</p:menuitem>
+		<p:menuitem value="#{i18n.action_copy}" ajax="true" icon="pi pi-copy" id="panData_mniCopy" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR')}" onclick="PF('copyConfirm').show()"/>
+		<p:menuitem value="#{i18n.action_refresh}" ajax="false" type="push" icon="pi pi-refresh" id="panData_mniRefresh" actionListener="#{serialObjectTraceBoMView.fetchSerialObjects}"/>
+	</p:contextMenu>
+
+	<p:confirmDialog modal="true" message="#{i18n.dialog_delete_question}" header="#{i18n.dialog_delete_title}" severity="alert" widgetVar="deleteConfirm">
+		<p:commandButton value="#{i18n.command_yes}" oncomplete="PF('deleteConfirm').hide()" actionListener="#{serialObjectTraceBoMView.deleteSerialObject}" id="panData_cmdYesDelete" ajax="false"/>
+		<p:commandButton value="#{i18n.command_no}" onclick="PF('deleteConfirm').hide()" type="button"/>
+	</p:confirmDialog>
+
+	<p:confirmDialog modal="true" message="#{i18n.dialog_copy_question}" header="#{i18n.dialog_copy_title}" severity="info" widgetVar="copyConfirm">
+		<p:commandButton value="#{i18n.command_yes}" oncomplete="PF('copyConfirm').hide()" action="#{serialObjectTraceBoMView.copy}" id="panData_cmdYesCopy" ajax="false"/>
+		<p:commandButton value="#{i18n.command_no}" onclick="PF('copyConfirm').hide()" type="button"/>
+	</p:confirmDialog>
+
+	<p:dialog header="#{i18n.search_input_dlg_save_query}" widgetVar="dlgSaveQuery" modal="true" height="100">
+		<h:panelGrid columns="3">
+			<h:outputLabel value="#{i18n.search_input_lbl_save_query}" styleClass="label-field-mandatory"/>
+			<p:inputText id="txtQueryName" value="#{serialObjectTraceBoMView.savedQueryName}">
+			</p:inputText>
+			<p:commandButton value="#{i18n.command_save}" action="#{serialObjectTraceBoMView.saveNewQuery}" ajax="false" onclick="PF('dlgSaveQuery').hide()"/>
+		</h:panelGrid>
+	</p:dialog>
+
+	<p:defaultCommand target=":form:cmdSearch"/>
+
+</ui:define>
+</ui:composition>
