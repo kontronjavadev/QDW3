@@ -11,10 +11,11 @@ public final class MailServiceFacade {
     }
 
     private static MailServiceIF getMailServiceInstance() {
-        if (Constants.IS_LOCAL_ENVIRONMENT) {
-            return getMockMailServiceInstance();
+        if (Constants.IS_PROD_ENVIRONMENT) {
+            return getRealMailServiceInstance();
         }
-        return getRealMailServiceInstance();
+        // Lokal und auch auf Test mit Mock arbeiten.
+        return getMockMailServiceInstance();
     }
 
     private static MailService getRealMailServiceInstance() {
