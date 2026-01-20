@@ -390,8 +390,8 @@
 			rendered="#{materialView.searchObject.searchFields[8].visible}" displayPriority="#{materialView.searchObject.searchFields[8].colOrder}" 
 			exportHeaderValue="#{i18n.col_materialview_searchsubassemblies_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materialview_searchsubassemblies}" id="searchSubAssembliesHeader"/>
-				<p:tooltip for="searchSubAssembliesHeader" value="#{i18n.col_materialview_searchsubassemblies_tooltip}" position="top" showDelay="50"/>
+				<h:outputText value="#{i18n.col_materialview_searchsubassemblies}" id="searchSubAssembliesHeader" />
+				<p:tooltip for="searchSubAssembliesHeader" value="#{i18n.col_materialview_searchsubassemblies_tooltip}" position="top" showDelay="50" />
 			</f:facet>
 			<p:selectBooleanCheckbox value="#{materialViewItem.searchSubAssemblies}" disabled="true"/>
 		</p:column>
