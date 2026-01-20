@@ -230,7 +230,6 @@ public class SerialObjectBoundaryService {
         selectTokens.add(SerialObjectTraceBoMSearchDTO.SELECT_ID);
         selectTokens.add(SerialObjectTraceBoMSearchDTO.SELECT_CREATIONDATE);
         selectTokens.add(SerialObjectTraceBoMSearchDTO.SELECT_LASTUPDATE);
-        selectTokens.add(SerialObjectTraceBoMSearchDTO.SELECT_SOMATID);
         selectTokens.add(SerialObjectTraceBoMSearchDTO.SELECT_TBOMSUPPLIERCODE);
         selectTokens.add(SerialObjectTraceBoMSearchDTO.SELECT_TBOMSUPPLIERNAME);
         selectTokens.add(SerialObjectTraceBoMSearchDTO.SELECT_TBOMDELIVERYNOTENUMBER);
@@ -258,7 +257,7 @@ public class SerialObjectBoundaryService {
         selectTokens.add(SerialObjectTraceBoMSearchDTO.SELECT_TBOMTBOMITEMINFOFIELD2);
 
         searchObj.setFromClause(
-                "from SerialObject a join a.material b left join a.traceBom f left join f.materialRevision h left join f.supplier i left join f.traceBoMItems j left join h.material m left join j.material u");
+                "from SerialObject a left join a.traceBom f join f.materialRevision h join f.supplier i join f.traceBoMItems j join h.material m join j.material u");
 
         return repository.search(searchObj, SerialObjectTraceBoMSearchDTO.class, selectTokens);
     }
@@ -274,7 +273,7 @@ public class SerialObjectBoundaryService {
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public long countAllSerialObjectTraceBoMs(SearchDTO searchObj) {
         searchObj.setFromClause(
-                "from SerialObject a join a.material b left join a.traceBom f left join f.materialRevision h left join f.supplier i left join f.traceBoMItems j left join h.material m left join j.material u");
+                "from SerialObject a left join a.traceBom f join f.materialRevision h join f.supplier i join f.traceBoMItems j join h.material m join j.material u");
 
         return repository.count(searchObj);
     }

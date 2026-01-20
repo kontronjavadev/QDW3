@@ -1,8 +1,7 @@
 package com.kontron.qdw.dto.serial;
 
-import java.util.*;
-import java.time.*;
 import java.io.Serializable;
+import java.time.*;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
 
 public class SerialObjectTraceBoMSearchDTO implements Serializable {
@@ -22,8 +21,6 @@ public class SerialObjectTraceBoMSearchDTO implements Serializable {
     public static final String ATTR_CREATIONDATE = "creationDate";
     @Generated
     public static final String ATTR_LASTUPDATE = "lastUpdate";
-    @Generated
-    public static final String ATTR_SOMATID = "soMatId";
     @Generated
     public static final String ATTR_TBOMSUPPLIERCODE = "tbomSupplierCode";
     @Generated
@@ -89,8 +86,6 @@ public class SerialObjectTraceBoMSearchDTO implements Serializable {
     @Generated
     public static final String SELECT_LASTUPDATE = "a.lastUpdate";
     @Generated
-    public static final String SELECT_SOMATID = "b.id";
-    @Generated
     public static final String SELECT_TBOMSUPPLIERCODE = "i.code";
     @Generated
     public static final String SELECT_TBOMSUPPLIERNAME = "i.name";
@@ -154,8 +149,6 @@ public class SerialObjectTraceBoMSearchDTO implements Serializable {
     private LocalDateTime creationDate;
     @Generated
     private LocalDateTime lastUpdate;
-    @Generated
-    private long soMatId;
     @Generated
     private String tbomSupplierCode;
     @Generated
@@ -232,7 +225,6 @@ public class SerialObjectTraceBoMSearchDTO implements Serializable {
      * @param id
      * @param creationDate
      * @param lastUpdate
-     * @param soMatId
      * @param tbomSupplierCode
      * @param tbomSupplierName
      * @param tbomDeliveryNoteNumber
@@ -261,7 +253,7 @@ public class SerialObjectTraceBoMSearchDTO implements Serializable {
      */
     @Generated
     public SerialObjectTraceBoMSearchDTO(String serialNumber, LocalDate assemblyDate, String customerSerialNumber, String productionOrderNumber,
-            long id, LocalDateTime creationDate, LocalDateTime lastUpdate, long soMatId, String tbomSupplierCode, String tbomSupplierName,
+            long id, LocalDateTime creationDate, LocalDateTime lastUpdate, String tbomSupplierCode, String tbomSupplierName,
             String tbomDeliveryNoteNumber, Long tbomMatrevId, Long tbomMatrevMatId, String tbomMatrevMatMaterialNumber, String tbomMatrevMatSapNumber,
             String tbomMatrevMatMaterialHierarchy, String tbomMatrevMatShortText, Long tbomTbomitemId, Long tbomTbomitemMatId,
             String tbomTbomitemMatMaterialNumber, String tbomTbomitemMatSapNumber, String tbomTbomitemMatMaterialHierarchy,
@@ -275,7 +267,6 @@ public class SerialObjectTraceBoMSearchDTO implements Serializable {
         this.id = id;
         this.creationDate = creationDate;
         this.lastUpdate = lastUpdate;
-        this.soMatId = soMatId;
         this.tbomSupplierCode = tbomSupplierCode;
         this.tbomSupplierName = tbomSupplierName;
         this.tbomDeliveryNoteNumber = tbomDeliveryNoteNumber;
@@ -413,22 +404,6 @@ public class SerialObjectTraceBoMSearchDTO implements Serializable {
     @Generated
     public void setLastUpdate(LocalDateTime lastUpdate) {
         this.lastUpdate = lastUpdate;
-    }
-
-    /**
-     * @return the id of the material
-     */
-    @Generated
-    public long getSoMatId() {
-        return this.soMatId;
-    }
-
-    /**
-     * @param soMatId the id of the material to set
-     */
-    @Generated
-    public void setSoMatId(long soMatId) {
-        this.soMatId = soMatId;
     }
 
     /**

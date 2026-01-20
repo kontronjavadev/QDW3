@@ -4284,7 +4284,7 @@
       <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.0"/>
     </attributes>
   </net.sourceforge.jbizmo.model.dto:DTOBean>
-  <net.sourceforge.jbizmo.model.client:FormGroup name="Serial object" groupOrder="4" forms="/260 /266 /286 /307 /303 /322 /317 /339 /346 /380 /292 /365 /331 /352 /374 /356 /384" panels="/328 /371 /362" roles="/0/@roles.0 /0/@roles.1" project="/0"/>
+  <net.sourceforge.jbizmo.model.client:FormGroup name="Serial object" groupOrder="4" forms="/260 /266 /286 /307 /303 /322 /317 /339 /384 /346 /380 /292 /365 /331 /352 /374 /356" panels="/328 /371 /362" roles="/0/@roles.0 /0/@roles.1" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="mv" parent="/2" javaTypes="/265 /271 /291 /316 /327 /344" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="mv" parent="/1" javaTypes="/264 /270 /290 /315 /326 /343" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="mv" parent="/3" javaTypes="/263 /269 /289 /320 /325 /342" project="/0"/>
@@ -5560,8 +5560,8 @@
     <boundaryMethods name="findListSerialObject" comment="Find serial object by its ID" returnType="/296" methodType="FIND_BY_ID" serviceMethod="/302/@repositoryMethods.0">
       <methodParameters name="id" type="/0/@allSupportedTypes.2"/>
     </boundaryMethods>
-    <boundaryMethods name="searchAllSerialObjectTraceBoMs" comment="Search for serial object objects" returnType="/387" returnTypeModifier="List" queryStatement="from SerialObject a join a.material b left join a.traceBom f left join f.materialRevision h left join f.supplier i left join f.traceBoMItems j left join h.material m left join j.material u" customStatement="" methodType="SEARCH" serviceMethod="/302/@repositoryMethods.15"/>
-    <boundaryMethods name="countAllSerialObjectTraceBoMs" comment="Count serial object objects" returnType="/0/@allSupportedTypes.2" queryStatement="from SerialObject a join a.material b left join a.traceBom f left join f.materialRevision h left join f.supplier i left join f.traceBoMItems j left join h.material m left join j.material u" customStatement="" methodType="COUNT" serviceMethod="/302/@repositoryMethods.16"/>
+    <boundaryMethods name="searchAllSerialObjectTraceBoMs" comment="Search for serial object objects" returnType="/387" returnTypeModifier="List" queryStatement="from SerialObject a left join a.traceBom f join f.materialRevision h join f.supplier i join f.traceBoMItems j join h.material m join j.material u" customStatement="" methodType="SEARCH" serviceMethod="/302/@repositoryMethods.15"/>
+    <boundaryMethods name="countAllSerialObjectTraceBoMs" comment="Count serial object objects" returnType="/0/@allSupportedTypes.2" queryStatement="from SerialObject a left join a.traceBom f join f.materialRevision h join f.supplier i join f.traceBoMItems j join h.material m join j.material u" customStatement="" methodType="COUNT" serviceMethod="/302/@repositoryMethods.16"/>
   </net.sourceforge.jbizmo.model.boundary:BoundaryBean>
   <net.sourceforge.jbizmo.model.repository:Repository name="SerialObjectRepository" comment="Create, read, update and delete services for serial object objects." namespace="/252">
     <domainObject href="package-serial.xmi#//@domainObjects.0"/>
@@ -7952,39 +7952,38 @@
   </net.sourceforge.jbizmo.model.client:Form>
   <net.sourceforge.jbizmo.model.client:FormPanel name="SerialObjectPanel" form="/384" formTable="/386" dTO="/387" boundaryMethod="/301/@boundaryMethods.7"/>
   <net.sourceforge.jbizmo.model.client:FormTable name="SerialObjectTable" formPanel="/385">
-    <fields width="200" title="Supplier" dTOAttribute="/387/@attributes.9"/>
+    <fields width="200" title="Supplier" dTOAttribute="/387/@attributes.8"/>
     <fields colIndex="2" width="80" title="PO no." dTOAttribute="/387/@attributes.3"/>
-    <fields colIndex="3" title="Deliv. note no." dTOAttribute="/387/@attributes.10"/>
-    <fields colIndex="4" width="150" title="T. BoM material no." dTOAttribute="/387/@attributes.13"/>
-    <fields colIndex="5" width="150" title="T. BoM SAP no." dTOAttribute="/387/@attributes.14"/>
-    <fields colIndex="6" width="150" title="T. BoM revision no." dTOAttribute="/387/@attributes.23"/>
-    <fields colIndex="7" width="150" title="T. BoM mat. hierarchy" dTOAttribute="/387/@attributes.15"/>
-    <fields colIndex="8" width="250" title="T. BoM material short text" dTOAttribute="/387/@attributes.16"/>
-    <fields colIndex="9" width="150" title="Item material no." dTOAttribute="/387/@attributes.19"/>
-    <fields colIndex="10" width="150" title="Item SAP no." dTOAttribute="/387/@attributes.20"/>
-    <fields colIndex="11" width="150" title="Item mat. hierarchy" dTOAttribute="/387/@attributes.21"/>
-    <fields colIndex="12" width="250" title="Item material short text" dTOAttribute="/387/@attributes.22"/>
+    <fields colIndex="3" title="Deliv. note no." dTOAttribute="/387/@attributes.9"/>
+    <fields colIndex="4" width="150" title="T. BoM material no." dTOAttribute="/387/@attributes.12"/>
+    <fields colIndex="5" width="150" title="T. BoM SAP no." dTOAttribute="/387/@attributes.13"/>
+    <fields colIndex="6" width="150" title="T. BoM revision no." dTOAttribute="/387/@attributes.22"/>
+    <fields colIndex="7" width="150" title="T. BoM mat. hierarchy" dTOAttribute="/387/@attributes.14"/>
+    <fields colIndex="8" width="250" title="T. BoM material short text" dTOAttribute="/387/@attributes.15"/>
+    <fields colIndex="9" width="150" title="Item material no." dTOAttribute="/387/@attributes.18"/>
+    <fields colIndex="10" width="150" title="Item SAP no." dTOAttribute="/387/@attributes.19"/>
+    <fields colIndex="11" width="150" title="Item mat. hierarchy" dTOAttribute="/387/@attributes.20"/>
+    <fields colIndex="12" width="250" title="Item material short text" dTOAttribute="/387/@attributes.21"/>
     <fields colIndex="13" title="Serial no." dTOAttribute="/387/@attributes.0"/>
     <fields colIndex="14" title="Cust. serial no." dTOAttribute="/387/@attributes.2"/>
     <fields colIndex="15" width="80" title="Assy. date" fieldType="LOCAL_DATE" dTOAttribute="/387/@attributes.1"/>
-    <fields colIndex="16" title="T. BoM. prod. date" fieldType="LOCAL_DATE" dTOAttribute="/387/@attributes.24"/>
-    <fields colIndex="17" title="T. BoM order no." dTOAttribute="/387/@attributes.25"/>
-    <fields colIndex="18" title="T. BoM lot no." dTOAttribute="/387/@attributes.26"/>
-    <fields colIndex="19" width="200" title="Manufacturer" dTOAttribute="/387/@attributes.27"/>
-    <fields colIndex="20" title="Order code" dTOAttribute="/387/@attributes.28"/>
-    <fields colIndex="21" title="Date code" dTOAttribute="/387/@attributes.29"/>
-    <fields colIndex="22" width="80" title="Item quant." fieldType="INTEGER" dTOAttribute="/387/@attributes.30"/>
-    <fields colIndex="23" width="150" title="Info field 1" dTOAttribute="/387/@attributes.31"/>
-    <fields colIndex="24" width="150" title="Info field 2" dTOAttribute="/387/@attributes.32"/>
+    <fields colIndex="16" title="T. BoM. prod. date" fieldType="LOCAL_DATE" dTOAttribute="/387/@attributes.23"/>
+    <fields colIndex="17" title="T. BoM order no." dTOAttribute="/387/@attributes.24"/>
+    <fields colIndex="18" title="T. BoM lot no." dTOAttribute="/387/@attributes.25"/>
+    <fields colIndex="19" width="200" title="Manufacturer" dTOAttribute="/387/@attributes.26"/>
+    <fields colIndex="20" title="Order code" dTOAttribute="/387/@attributes.27"/>
+    <fields colIndex="21" title="Date code" dTOAttribute="/387/@attributes.28"/>
+    <fields colIndex="22" width="80" title="Item quant." fieldType="INTEGER" dTOAttribute="/387/@attributes.29"/>
+    <fields colIndex="23" width="150" title="Info field 1" dTOAttribute="/387/@attributes.30"/>
+    <fields colIndex="24" width="150" title="Info field 2" dTOAttribute="/387/@attributes.31"/>
     <fields colIndex="25" width="120" title="Creation date" fieldType="LOCAL_DATE_TIME" dTOAttribute="/387/@attributes.5"/>
     <fields colIndex="26" width="120" title="Last update" fieldType="LOCAL_DATE_TIME" dTOAttribute="/387/@attributes.6"/>
-    <fields colIndex="27" visible="false" width="80" title="tbomTbomitemMatId" fieldType="LONG" dTOAttribute="/387/@attributes.18"/>
-    <fields colIndex="28" visible="false" width="126" title="tbomTbomitemId" fieldType="LONG" dTOAttribute="/387/@attributes.17"/>
-    <fields colIndex="29" visible="false" width="80" title="tbomMatrevMatId" fieldType="LONG" dTOAttribute="/387/@attributes.12"/>
-    <fields colIndex="30" visible="false" width="140" title="tbomMatrevId" fieldType="LONG" dTOAttribute="/387/@attributes.11"/>
-    <fields colIndex="31" visible="false" title="tbomSupplierCode" dTOAttribute="/387/@attributes.8"/>
+    <fields colIndex="27" visible="false" width="80" title="tbomTbomitemMatId" fieldType="LONG" dTOAttribute="/387/@attributes.17"/>
+    <fields colIndex="28" visible="false" width="126" title="tbomTbomitemId" fieldType="LONG" dTOAttribute="/387/@attributes.16"/>
+    <fields colIndex="29" visible="false" width="80" title="tbomMatrevMatId" fieldType="LONG" dTOAttribute="/387/@attributes.11"/>
+    <fields colIndex="30" visible="false" width="140" title="tbomMatrevId" fieldType="LONG" dTOAttribute="/387/@attributes.10"/>
+    <fields colIndex="31" visible="false" title="tbomSupplierCode" dTOAttribute="/387/@attributes.7"/>
     <fields colIndex="32" visible="false" identifier="true" width="80" title="Id" fieldType="LONG" dTOAttribute="/387/@attributes.4"/>
-    <fields colIndex="33" visible="false" width="80" title="soMatId" fieldType="LONG" dTOAttribute="/387/@attributes.7"/>
   </net.sourceforge.jbizmo.model.client:FormTable>
   <net.sourceforge.jbizmo.model.dto:DTOBean name="SerialObjectTraceBoMSearchDTO" comment="DTO for serial object objects" namespace="/254">
     <domainObject href="package-serial.xmi#//@domainObjects.0"/>
@@ -8008,10 +8007,6 @@
     </attributes>
     <attributes name="lastUpdate" selectToken="a.lastUpdate">
       <domainAttribute href="package-base.xmi#//@domainObjects.0/@attributes.3"/>
-    </attributes>
-    <attributes name="soMatId" selectToken="b.id">
-      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-serial.xmi#//@domainObjects.0/@associations.0"/>
-      <domainAttribute href="package-base.xmi#//@domainObjects.0/@attributes.0"/>
     </attributes>
     <attributes name="tbomSupplierCode" selectToken="i.code">
       <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-serial.xmi#//@domainObjects.4/@associations.1"/>
