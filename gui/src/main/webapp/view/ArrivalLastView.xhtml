@@ -344,10 +344,7 @@
 		</p:submenu>
 		<p:submenu icon="pi pi-print" label="#{i18n.mnu_export}">
 			<p:menuitem value="#{i18n.action_export_xls}" ajax="false" icon="pi pi-file-excel">
-				<p:dataExporter type="xlsxstream" target="panData" fileName="ArrivalList"/>
-			</p:menuitem>
-			<p:menuitem value="#{i18n.action_export_pdf}" ajax="false" icon="pi pi-file-pdf">
-				<p:dataExporter type="pdf" target="panData" fileName="ArrivalList"/>
+				<p:dataExporter type="xlsxstream" target="panData" fileName="LastArrivalList"/>
 			</p:menuitem>
 		</p:submenu>
 		<p:menuitem value="#{i18n.action_search_input}" ajax="true" icon="pi pi-search" id="panData_mniSearch" onclick="PF('dlgSearchInput').show()"/>

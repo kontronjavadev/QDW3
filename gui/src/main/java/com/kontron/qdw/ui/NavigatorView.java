@@ -187,9 +187,8 @@ public class NavigatorView implements Serializable {
 
             // Last arrivals
             if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY))
-                new DefaultTreeNode<>(VIEW_TYPE,
-                        new TreeNavigatorItem(bundle.getString(FORM_ARRIVALLASTVIEW_TITLE), req.getContextPath() + "/view/ArrivalLastView.jsf"),
-                        itemGroup0004);
+                new DefaultTreeNode<>(VIEW_TYPE, new TreeNavigatorItem(bundle.getString(FORM_ARRIVALLASTVIEW_TITLE),
+                        req.getContextPath() + "/view/ArrivalLastView.jsf"), itemGroup0004);
 
             // Arrivals
             if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY))
@@ -198,9 +197,8 @@ public class NavigatorView implements Serializable {
 
             // Arrivals (Standard)
             if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY))
-                new DefaultTreeNode<>(VIEW_TYPE,
-                        new TreeNavigatorItem(bundle.getString(FORM_ARRIVALVIEW_TITLE), req.getContextPath() + "/view/ArrivalView.jsf"),
-                        itemGroup0004);
+                new DefaultTreeNode<>(VIEW_TYPE, new TreeNavigatorItem(bundle.getString(FORM_ARRIVALVIEW_TITLE),
+                        req.getContextPath() + "/view/ArrivalView.jsf"), itemGroup0004);
 
 
 
@@ -213,12 +211,11 @@ public class NavigatorView implements Serializable {
             if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY))
                 new DefaultTreeNode<>(VIEW_TYPE, new TreeNavigatorItem(bundle.getString(FORM_MATERIALIZEDARRIVALSHIPMENTVIEW_TITLE),
                         req.getContextPath() + "/view/MaterializedArrivalShipmentView.jsf"), itemGroup0004);
-            
+
             // Shipments (Standard)
             if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY))
-                new DefaultTreeNode<>(VIEW_TYPE,
-                        new TreeNavigatorItem(bundle.getString(FORM_SHIPMENTVIEW_TITLE), req.getContextPath() + "/view/ShipmentView.jsf"),
-                        itemGroup0004);
+                new DefaultTreeNode<>(VIEW_TYPE, new TreeNavigatorItem(bundle.getString(FORM_SHIPMENTVIEW_TITLE),
+                        req.getContextPath() + "/view/ShipmentView.jsf"), itemGroup0004);
 
             // Assembly shipments
             if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY))
@@ -227,9 +224,8 @@ public class NavigatorView implements Serializable {
 
             // Trace BoMs
             if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY))
-                new DefaultTreeNode<>(VIEW_TYPE,
-                        new TreeNavigatorItem(bundle.getString(FORM_TRACEBOMVIEW_TITLE), req.getContextPath() + "/view/TraceBoMView.jsf"),
-                        itemGroup0004);
+                new DefaultTreeNode<>(VIEW_TYPE, new TreeNavigatorItem(bundle.getString(FORM_TRACEBOMVIEW_TITLE),
+                        req.getContextPath() + "/view/TraceBoMView.jsf"), itemGroup0004);
 
             // Trace BoM items (auf Basis Serial objects mit TraceBoM und items)
             if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY))

@@ -306,9 +306,6 @@
 			<p:menuitem value="#{i18n.action_export_xls}" ajax="false" icon="pi pi-file-excel">
 				<p:dataExporter type="xlsxstream" target="panData" fileName="AggregatedArrivalList"/>
 			</p:menuitem>
-			<p:menuitem value="#{i18n.action_export_pdf}" ajax="false" icon="pi pi-file-pdf">
-				<p:dataExporter type="pdf" target="panData" fileName="AggregatedArrivalList"/>
-			</p:menuitem>
 		</p:submenu>
 		<p:menuitem value="#{i18n.action_search_input}" ajax="true" icon="pi pi-search" id="panData_mniSearch" onclick="PF('dlgSearchInput').show()"/>
 	</p:menubar>
@@ -337,7 +334,7 @@
 
 		<p:column sortBy="#{aggregatedArrivalViewItem.supplierName}" width="200" 
 			rendered="#{aggregatedArrivalView.searchObject.searchFields[1].visible}" displayPriority="#{aggregatedArrivalView.searchObject.searchFields[1].colOrder}" 
-			exportValue="#{aggregatedArrivalView.supplierName}" class="tdnowrap" >
+			exportValue="#{aggregatedArrivalViewItem.supplierName}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_aggregatedarrivalview_suppliername}"/>
 			</f:facet>
@@ -347,7 +344,7 @@
 
 		<p:column sortBy="#{aggregatedArrivalViewItem.countryName}" width="150" 
 			rendered="#{aggregatedArrivalView.searchObject.searchFields[2].visible}" displayPriority="#{aggregatedArrivalView.searchObject.searchFields[2].colOrder}" 
-			exportValue="#{aggregatedArrivalView.countryName}" class="tdnowrap" >
+			exportValue="#{aggregatedArrivalViewItem.countryName}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_aggregatedarrivalview_countryname}"/>
 			</f:facet>
@@ -357,7 +354,7 @@
 
 		<p:column sortBy="#{aggregatedArrivalViewItem.matrevMatMaterialNumber}" width="150" 
 			rendered="#{aggregatedArrivalView.searchObject.searchFields[3].visible}" displayPriority="#{aggregatedArrivalView.searchObject.searchFields[3].colOrder}" 
-			exportValue="#{aggregatedArrivalView.matrevMatMaterialNumber}" class="tdnowrap" >
+			exportValue="#{aggregatedArrivalViewItem.matrevMatMaterialNumber}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_aggregatedarrivalview_matrevmatmaterialnumber}"/>
 			</f:facet>
@@ -367,7 +364,7 @@
 
 		<p:column sortBy="#{aggregatedArrivalViewItem.matrevMatSapNumber}" width="150" 
 			rendered="#{aggregatedArrivalView.searchObject.searchFields[4].visible}" displayPriority="#{aggregatedArrivalView.searchObject.searchFields[4].colOrder}" 
-			exportValue="#{aggregatedArrivalView.matrevMatSapNumber}" class="tdnowrap" >
+			exportValue="#{aggregatedArrivalViewItem.matrevMatSapNumber}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_aggregatedarrivalview_matrevmatsapnumber}"/>
 			</f:facet>
@@ -386,7 +383,7 @@
 
 		<p:column sortBy="#{aggregatedArrivalViewItem.matrevMatClassCode}" width="120" 
 			rendered="#{aggregatedArrivalView.searchObject.searchFields[6].visible}" displayPriority="#{aggregatedArrivalView.searchObject.searchFields[6].colOrder}" 
-			exportValue="#{aggregatedArrivalView.matrevMatClassCode}" class="tdnowrap" >
+			exportValue="#{aggregatedArrivalViewItem.matrevMatClassCode}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_aggregatedarrivalview_matrevmatclasscode}"/>
 			</f:facet>
@@ -405,7 +402,7 @@
 
 		<p:column sortBy="#{aggregatedArrivalViewItem.matrevMatShortText}" width="250" 
 			rendered="#{aggregatedArrivalView.searchObject.searchFields[8].visible}" displayPriority="#{aggregatedArrivalView.searchObject.searchFields[8].colOrder}" 
-			exportValue="#{aggregatedArrivalView.matrevMatShortText}" class="tdnowrap" >
+			exportValue="#{aggregatedArrivalViewItem.matrevMatShortText}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_aggregatedarrivalview_matrevmatshorttext}"/>
 			</f:facet>
@@ -415,7 +412,7 @@
 
 		<p:column sortBy="#{aggregatedArrivalViewItem.matrevRevisionNumber}" width="100" 
 			rendered="#{aggregatedArrivalView.searchObject.searchFields[9].visible}" displayPriority="#{aggregatedArrivalView.searchObject.searchFields[9].colOrder}" 
-			exportValue="#{aggregatedArrivalView.matrevRevisionNumber}" class="tdnowrap" >
+			exportValue="#{aggregatedArrivalViewItem.matrevRevisionNumber}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_aggregatedarrivalview_matrevrevisionnumber}"/>
 			</f:facet>

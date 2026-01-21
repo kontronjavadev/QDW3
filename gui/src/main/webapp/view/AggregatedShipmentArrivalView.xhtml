@@ -345,9 +345,6 @@
 			<p:menuitem value="#{i18n.action_export_xls}" ajax="false" icon="pi pi-file-excel">
 				<p:dataExporter type="xlsxstream" target="panData" fileName="AggregatedShipmentArrivalList"/>
 			</p:menuitem>
-			<p:menuitem value="#{i18n.action_export_pdf}" ajax="false" icon="pi pi-file-pdf">
-				<p:dataExporter type="pdf" target="panData" fileName="AggregatedShipmentArrivalList"/>
-			</p:menuitem>
 		</p:submenu>
 		<p:menuitem value="#{i18n.action_search_input}" ajax="true" icon="pi pi-search" id="panData_mniSearch" onclick="PF('dlgSearchInput').show()"/>
 	</p:menubar>
@@ -487,7 +484,7 @@
 
 		<p:column sortBy="#{aggregatedShipmentArrivalViewItem.matrevMatMaterialClassCode}" width="100" 
 			rendered="#{aggregatedShipmentArrivalView.searchObject.searchFields[12].visible}" displayPriority="#{aggregatedShipmentArrivalView.searchObject.searchFields[12].colOrder}" 
-			exportValue="#{aggregatedShipmentArrivalView.matrevMatMaterialClassCode}" class="tdnowrap" >
+			exportValue="#{aggregatedShipmentArrivalViewItem.matrevMatMaterialClassCode}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_aggregatedshipmentarrivalview_matrevmatmaterialclasscode}"/>
 			</f:facet>
