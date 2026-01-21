@@ -480,12 +480,13 @@
 		<p:ajax event="rowDblselect" listener="#{serialObjectTraceBoMView.onDoubleClick}"/>
 
 		<p:column sortBy="#{serialObjectTraceBoMViewItem.tbomSupplierName}" width="200" 
-			rendered="#{serialObjectTraceBoMView.searchObject.searchFields[0].visible}" displayPriority="#{serialObjectTraceBoMView.searchObject.searchFields[0].colOrder}" >
+			rendered="#{serialObjectTraceBoMView.searchObject.searchFields[0].visible}" displayPriority="#{serialObjectTraceBoMView.searchObject.searchFields[0].colOrder}" 
+			exportValue="#{serialObjectTraceBoMViewItem.tbomSupplierName}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_serialobjecttracebomview_tbomsuppliername}"/>
 			</f:facet>
-			<h:outputText value="#{serialObjectTraceBoMViewItem.tbomSupplierName}">
-			</h:outputText>
+			<h:outputText value="#{serialObjectTraceBoMViewItem.tbomSupplierName}" id="tbomSupplierName" />
+			<p:tooltip for="tbomSupplierName" value="#{serialObjectTraceBoMViewItem.tbomSupplierName}" position="top" showDelay="50" />
 		</p:column>
 
 		<p:column sortBy="#{serialObjectTraceBoMViewItem.productionOrderNumber}" width="80" 
@@ -510,32 +511,35 @@
 
 		<p:column sortBy="#{serialObjectTraceBoMViewItem.tbomMatrevMatMaterialNumber}" width="150" 
 			rendered="#{serialObjectTraceBoMView.searchObject.searchFields[3].visible}" displayPriority="#{serialObjectTraceBoMView.searchObject.searchFields[3].colOrder}" 
-			exportHeaderValue="#{i18n.col_serialobjecttracebomview_tbommatrevmatmaterialnumber_tooltip}" class="thnowrap" >
+			exportHeaderValue="#{i18n.col_serialobjecttracebomview_tbommatrevmatmaterialnumber_tooltip}" exportValue="#{serialObjectTraceBoMViewItem.tbomMatrevMatMaterialNumber}" class="thnowrap tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_serialobjecttracebomview_tbommatrevmatmaterialnumber}" id="tbomMatrevMatMaterialNumberHeader" />
 				<p:tooltip for="tbomMatrevMatMaterialNumberHeader" value="#{i18n.col_serialobjecttracebomview_tbommatrevmatmaterialnumber_tooltip}" position="top" showDelay="50" />
 			</f:facet>
-			<h:outputText value="#{serialObjectTraceBoMViewItem.tbomMatrevMatMaterialNumber}" />
+			<h:outputText value="#{serialObjectTraceBoMViewItem.tbomMatrevMatMaterialNumber}" id="tbomMatrevMatMaterialNumber" />
+			<p:tooltip for="tbomMatrevMatMaterialNumber" value="#{serialObjectTraceBoMViewItem.tbomMatrevMatMaterialNumber}" position="top" showDelay="50" />
 		</p:column>
 
 		<p:column sortBy="#{serialObjectTraceBoMViewItem.tbomMatrevMatSapNumber}" width="150" 
 			rendered="#{serialObjectTraceBoMView.searchObject.searchFields[4].visible}" displayPriority="#{serialObjectTraceBoMView.searchObject.searchFields[4].colOrder}" 
-			exportHeaderValue="#{i18n.col_serialobjecttracebomview_tbommatrevmatsapnumber_tooltip}" class="thnowrap" >
+			exportHeaderValue="#{i18n.col_serialobjecttracebomview_tbommatrevmatsapnumber_tooltip}" exportValue="#{serialObjectTraceBoMViewItem.tbomMatrevMatSapNumber}" class="thnowrap tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_serialobjecttracebomview_tbommatrevmatsapnumber}" id="tbomMatrevMatSapNumberHeader" />
 				<p:tooltip for="tbomMatrevMatSapNumberHeader" value="#{i18n.col_serialobjecttracebomview_tbommatrevmatsapnumber_tooltip}" position="top" showDelay="50" />
 			</f:facet>
-			<h:outputText value="#{serialObjectTraceBoMViewItem.tbomMatrevMatSapNumber}" />
+			<h:outputText value="#{serialObjectTraceBoMViewItem.tbomMatrevMatSapNumber}" id="tbomMatrevMatSapNumber" />
+			<p:tooltip for="tbomMatrevMatSapNumber" value="#{serialObjectTraceBoMViewItem.tbomMatrevMatSapNumber}" position="top" showDelay="50" />
 		</p:column>
 
 		<p:column sortBy="#{serialObjectTraceBoMViewItem.tbomMatrevRevisionNumber}" width="150" 
 			rendered="#{serialObjectTraceBoMView.searchObject.searchFields[5].visible}" displayPriority="#{serialObjectTraceBoMView.searchObject.searchFields[5].colOrder}" 
-			exportHeaderValue="#{i18n.col_serialobjecttracebomview_tbommatrevrevisionnumber_tooltip}" class="thnowrap" >
+			exportHeaderValue="#{i18n.col_serialobjecttracebomview_tbommatrevrevisionnumber_tooltip}" exportValue="#{serialObjectTraceBoMViewItem.tbomMatrevRevisionNumber}" class="thnowrap tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_serialobjecttracebomview_tbommatrevrevisionnumber}" id="tbomMatrevRevisionNumberHeader" />
 				<p:tooltip for="tbomMatrevRevisionNumberHeader" value="#{i18n.col_serialobjecttracebomview_tbommatrevrevisionnumber_tooltip}" position="top" showDelay="50" />
 			</f:facet>
-			<h:outputText value="#{serialObjectTraceBoMViewItem.tbomMatrevRevisionNumber}" />
+			<h:outputText value="#{serialObjectTraceBoMViewItem.tbomMatrevRevisionNumber}" id="tbomMatrevRevisionNumber" />
+			<p:tooltip for="tbomMatrevRevisionNumber" value="#{serialObjectTraceBoMViewItem.tbomMatrevRevisionNumber}" position="top" showDelay="50" />
 		</p:column>
 
 		<p:column sortBy="#{serialObjectTraceBoMViewItem.tbomMatrevMatMaterialHierarchy}" width="150" 
@@ -550,30 +554,33 @@
 
 		<p:column sortBy="#{serialObjectTraceBoMViewItem.tbomMatrevMatShortText}" width="250" 
 			rendered="#{serialObjectTraceBoMView.searchObject.searchFields[7].visible}" displayPriority="#{serialObjectTraceBoMView.searchObject.searchFields[7].colOrder}" 
-			exportHeaderValue="#{i18n.col_serialobjecttracebomview_tbommatrevmatshorttext_tooltip}" class="thnowrap" >
+			exportHeaderValue="#{i18n.col_serialobjecttracebomview_tbommatrevmatshorttext_tooltip}" exportValue="#{serialObjectTraceBoMViewItem.tbomMatrevMatShortText}" class="thnowrap tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_serialobjecttracebomview_tbommatrevmatshorttext}" id="tbomMatrevMatShortTextHeader" />
 				<p:tooltip for="tbomMatrevMatShortTextHeader" value="#{i18n.col_serialobjecttracebomview_tbommatrevmatshorttext_tooltip}" position="top" showDelay="50" />
 			</f:facet>
-			<h:outputText value="#{serialObjectTraceBoMViewItem.tbomMatrevMatShortText}" />
+			<h:outputText value="#{serialObjectTraceBoMViewItem.tbomMatrevMatShortText}" id="tbomMatrevMatShortText" />
+			<p:tooltip for="tbomMatrevMatShortText" value="#{serialObjectTraceBoMViewItem.tbomMatrevMatShortText}" position="top" showDelay="50" />
 		</p:column>
 
 		<p:column sortBy="#{serialObjectTraceBoMViewItem.tbomTbomitemMatMaterialNumber}" width="150" 
-			rendered="#{serialObjectTraceBoMView.searchObject.searchFields[8].visible}" displayPriority="#{serialObjectTraceBoMView.searchObject.searchFields[8].colOrder}" >
+			rendered="#{serialObjectTraceBoMView.searchObject.searchFields[8].visible}" displayPriority="#{serialObjectTraceBoMView.searchObject.searchFields[8].colOrder}" 
+			exportValue="#{serialObjectTraceBoMViewItem.tbomTbomitemMatMaterialNumber}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_serialobjecttracebomview_tbomtbomitemmatmaterialnumber}"/>
 			</f:facet>
-			<h:outputText value="#{serialObjectTraceBoMViewItem.tbomTbomitemMatMaterialNumber}">
-			</h:outputText>
+			<h:outputText value="#{serialObjectTraceBoMViewItem.tbomTbomitemMatMaterialNumber}" id="tbomTbomitemMatMaterialNumber" />
+			<p:tooltip for="tbomTbomitemMatMaterialNumber" value="#{serialObjectTraceBoMViewItem.tbomTbomitemMatMaterialNumber}" position="top" showDelay="50" />
 		</p:column>
 
 		<p:column sortBy="#{serialObjectTraceBoMViewItem.tbomTbomitemMatSapNumber}" width="150" 
-			rendered="#{serialObjectTraceBoMView.searchObject.searchFields[9].visible}" displayPriority="#{serialObjectTraceBoMView.searchObject.searchFields[9].colOrder}" >
+			rendered="#{serialObjectTraceBoMView.searchObject.searchFields[9].visible}" displayPriority="#{serialObjectTraceBoMView.searchObject.searchFields[9].colOrder}" 
+			exportValue="#{serialObjectTraceBoMViewItem.tbomTbomitemMatSapNumber}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_serialobjecttracebomview_tbomtbomitemmatsapnumber}"/>
 			</f:facet>
-			<h:outputText value="#{serialObjectTraceBoMViewItem.tbomTbomitemMatSapNumber}">
-			</h:outputText>
+			<h:outputText value="#{serialObjectTraceBoMViewItem.tbomTbomitemMatSapNumber}" id="tbomTbomitemMatSapNumber" />
+			<p:tooltip for="tbomTbomitemMatSapNumber" value="#{serialObjectTraceBoMViewItem.tbomTbomitemMatSapNumber}" position="top" showDelay="50" />
 		</p:column>
 
 		<p:column sortBy="#{serialObjectTraceBoMViewItem.tbomTbomitemMatMaterialHierarchy}" width="150" 
@@ -581,17 +588,17 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_serialobjecttracebomview_tbomtbomitemmatmaterialhierarchy}"/>
 			</f:facet>
-			<h:outputText value="#{serialObjectTraceBoMViewItem.tbomTbomitemMatMaterialHierarchy}">
-			</h:outputText>
+			<h:outputText value="#{serialObjectTraceBoMViewItem.tbomTbomitemMatMaterialHierarchy}" />
 		</p:column>
 
 		<p:column sortBy="#{serialObjectTraceBoMViewItem.tbomTbomitemMatShortText}" width="250" 
-			rendered="#{serialObjectTraceBoMView.searchObject.searchFields[11].visible}" displayPriority="#{serialObjectTraceBoMView.searchObject.searchFields[11].colOrder}" >
+			rendered="#{serialObjectTraceBoMView.searchObject.searchFields[11].visible}" displayPriority="#{serialObjectTraceBoMView.searchObject.searchFields[11].colOrder}" 
+			exportValue="#{serialObjectTraceBoMViewItem.tbomTbomitemMatShortText}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_serialobjecttracebomview_tbomtbomitemmatshorttext}"/>
 			</f:facet>
-			<h:outputText value="#{serialObjectTraceBoMViewItem.tbomTbomitemMatShortText}">
-			</h:outputText>
+			<h:outputText value="#{serialObjectTraceBoMViewItem.tbomTbomitemMatShortText}" id="tbomTbomitemMatShortText" />
+			<p:tooltip for="tbomTbomitemMatShortText" value="#{serialObjectTraceBoMViewItem.tbomTbomitemMatShortText}" position="top" showDelay="50" />
 		</p:column>
 
 		<p:column sortBy="#{serialObjectTraceBoMViewItem.serialNumber}" width="100" 
@@ -599,8 +606,7 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_serialobjecttracebomview_serialnumber}"/>
 			</f:facet>
-			<h:outputText value="#{serialObjectTraceBoMViewItem.serialNumber}">
-			</h:outputText>
+			<h:outputText value="#{serialObjectTraceBoMViewItem.serialNumber}" />
 		</p:column>
 
 		<p:column sortBy="#{serialObjectTraceBoMViewItem.customerSerialNumber}" width="100" 
@@ -662,21 +668,23 @@
 		</p:column>
 
 		<p:column sortBy="#{serialObjectTraceBoMViewItem.tbomTbomitemManufacturerName}" width="200" 
-			rendered="#{serialObjectTraceBoMView.searchObject.searchFields[18].visible}" displayPriority="#{serialObjectTraceBoMView.searchObject.searchFields[18].colOrder}" >
+			rendered="#{serialObjectTraceBoMView.searchObject.searchFields[18].visible}" displayPriority="#{serialObjectTraceBoMView.searchObject.searchFields[18].colOrder}" 
+			exportValue="#{serialObjectTraceBoMViewItem.tbomTbomitemManufacturerName}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_serialobjecttracebomview_tbomtbomitemmanufacturername}"/>
 			</f:facet>
-			<h:outputText value="#{serialObjectTraceBoMViewItem.tbomTbomitemManufacturerName}">
-			</h:outputText>
+			<h:outputText value="#{serialObjectTraceBoMViewItem.tbomTbomitemManufacturerName}" id="tbomTbomitemManufacturerName" />
+			<p:tooltip for="tbomTbomitemManufacturerName" value="#{serialObjectTraceBoMViewItem.tbomTbomitemManufacturerName}" position="top" showDelay="50" />
 		</p:column>
 
 		<p:column sortBy="#{serialObjectTraceBoMViewItem.tbomTbomitemOrderCode}" width="100" 
-			rendered="#{serialObjectTraceBoMView.searchObject.searchFields[19].visible}" displayPriority="#{serialObjectTraceBoMView.searchObject.searchFields[19].colOrder}" >
+			rendered="#{serialObjectTraceBoMView.searchObject.searchFields[19].visible}" displayPriority="#{serialObjectTraceBoMView.searchObject.searchFields[19].colOrder}" 
+			exportValue="#{serialObjectTraceBoMViewItem.tbomTbomitemOrderCode}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_tracebomitem_ordercode}"/>
 			</f:facet>
-			<h:outputText value="#{serialObjectTraceBoMViewItem.tbomTbomitemOrderCode}">
-			</h:outputText>
+			<h:outputText value="#{serialObjectTraceBoMViewItem.tbomTbomitemOrderCode}" id="tbomTbomitemOrderCode" />
+			<p:tooltip for="tbomTbomitemOrderCode" value="#{serialObjectTraceBoMViewItem.tbomTbomitemOrderCode}" position="top" showDelay="50" />
 		</p:column>
 
 		<p:column sortBy="#{serialObjectTraceBoMViewItem.tbomTbomitemDateCode}" width="100" 
@@ -684,8 +692,7 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_tracebomitem_datecode}"/>
 			</f:facet>
-			<h:outputText value="#{serialObjectTraceBoMViewItem.tbomTbomitemDateCode}">
-			</h:outputText>
+			<h:outputText value="#{serialObjectTraceBoMViewItem.tbomTbomitemDateCode}" />
 		</p:column>
 
 		<p:column sortBy="#{serialObjectTraceBoMViewItem.tbomTbomitemQuantity}" width="80" 
@@ -699,21 +706,23 @@
 		</p:column>
 
 		<p:column sortBy="#{serialObjectTraceBoMViewItem.tbomTbomitemInfoField1}" width="150" 
-			rendered="#{serialObjectTraceBoMView.searchObject.searchFields[22].visible}" displayPriority="#{serialObjectTraceBoMView.searchObject.searchFields[22].colOrder}" >
+			rendered="#{serialObjectTraceBoMView.searchObject.searchFields[22].visible}" displayPriority="#{serialObjectTraceBoMView.searchObject.searchFields[22].colOrder}" 
+			exportValue="#{serialObjectTraceBoMViewItem.tbomTbomitemInfoField1}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_tracebomitem_infofield1}"/>
 			</f:facet>
-			<h:outputText value="#{serialObjectTraceBoMViewItem.tbomTbomitemInfoField1}">
-			</h:outputText>
+			<h:outputText value="#{serialObjectTraceBoMViewItem.tbomTbomitemInfoField1}" id="tbomTbomitemInfoField1" />
+			<p:tooltip for="tbomTbomitemInfoField1" value="#{serialObjectTraceBoMViewItem.tbomTbomitemInfoField1}" position="top" showDelay="50" />
 		</p:column>
 
 		<p:column sortBy="#{serialObjectTraceBoMViewItem.tbomTbomitemInfoField2}" width="150" 
-			rendered="#{serialObjectTraceBoMView.searchObject.searchFields[23].visible}" displayPriority="#{serialObjectTraceBoMView.searchObject.searchFields[23].colOrder}" >
+			rendered="#{serialObjectTraceBoMView.searchObject.searchFields[23].visible}" displayPriority="#{serialObjectTraceBoMView.searchObject.searchFields[23].colOrder}" 
+			exportValue="#{serialObjectTraceBoMViewItem.tbomTbomitemInfoField2}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_tracebomitem_infofield2}"/>
 			</f:facet>
-			<h:outputText value="#{serialObjectTraceBoMViewItem.tbomTbomitemInfoField2}">
-			</h:outputText>
+			<h:outputText value="#{serialObjectTraceBoMViewItem.tbomTbomitemInfoField2}" id="tbomTbomitemInfoField2" />
+			<p:tooltip for="tbomTbomitemInfoField2" value="#{serialObjectTraceBoMViewItem.tbomTbomitemInfoField2}" position="top" showDelay="50" />
 		</p:column>
 
 		<p:column sortBy="#{serialObjectTraceBoMViewItem.creationDate}" width="120" 
