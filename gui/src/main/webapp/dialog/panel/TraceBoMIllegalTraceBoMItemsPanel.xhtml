@@ -20,6 +20,7 @@
 
 
 	<p:dataTable id="gridTraceBoMIllegalTraceBoMItemsPanel" var="traceBoMIllegalTraceBoMItemsPanelItem" rows="50"
+		selectionTextDisabled="false" allowUnsorting="true" resizeMode="expand" multiViewState="true" 
 		selectionMode="single"
 		selection="#{traceBoMIllegalTraceBoMItemsPanel.selItemOfIllegalTraceBoMItems}"
 		loadingMessage="#{i18n.action_fetch_data}"
@@ -27,7 +28,7 @@
 		paginatorPosition="top" paginatorAlwaysVisible="false" paginator="true" resizableColumns="true"
 		rowKey="#{traceBoMIllegalTraceBoMItemsPanelItem.id}"
 		paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-		rowsPerPageTemplate="10,50,100,500,1000">
+		rowsPerPageTemplate="50,150,400,1000,{ShowAll|'All'}">
 		<p:ajax event="rowDblselect" listener="#{traceBoMIllegalTraceBoMItemsPanel.onIllegalTraceBoMItemsGridDoubleClick}"/>
 
 		<p:column sortBy="#{traceBoMIllegalTraceBoMItemsPanelItem.materialNumber}" width="150" 
@@ -100,13 +101,25 @@
 
 	<h:outputText styleClass="label-field-mandatory" value="#{i18n.result_total_number_records} #{traceBoMIllegalTraceBoMItemsPanel.illegalTraceBoMItemsList.size()}"/>
 
-	<p:contextMenu for="gridTraceBoMIllegalTraceBoMItemsPanel">
+
+
+<!--Kontextmenü mit Möglichkeit, eine Zelle oder eine Zeile zu kopieren -->
+
+	<h:inputHidden id="tbomillgcellText" value="#{traceBoMIllegalTraceBoMItemsPanel.cellText}" />
+	<h:inputHidden id="tbomillgrowCsv" value="#{traceBoMIllegalTraceBoMItemsPanel.rowCsv}" />
+
+	<p:contextMenu for="gridTraceBoMIllegalTraceBoMItemsPanel" beforeShow="updateContextData(event, 'form:tabview2', 'tbomillg')" >
 		<p:menuitem value="#{i18n.action_delete}" ajax="true" icon="pi pi-trash" id="gridTraceBoMIllegalTraceBoMItemsPanel_mniDelete" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR') and not traceBoMIllegalTraceBoMItemsPanel.readOnly}" onclick="PF('deleteConfirmIllegalTraceBoMItems').show()"/>
 		<p:menuitem value="#{i18n.action_view}" ajax="true" icon="pi pi-file" id="gridTraceBoMIllegalTraceBoMItemsPanel_mniView" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY')}" action="#{traceBoMIllegalTraceBoMItemsPanel.openViewIllegalTraceBoMItemDialog}">
 			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{traceBoMIllegalTraceBoMItemsPanel.currentPageURL}"/>
 		</p:menuitem>
 		<p:menuitem value="#{i18n.action_copy}" ajax="true" icon="pi pi-copy" id="gridTraceBoMIllegalTraceBoMItemsPanel_mniCopy" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR') and not traceBoMIllegalTraceBoMItemsPanel.readOnly}" onclick="PF('copyConfirmIllegalTraceBoMItems').show()"/>
 		<p:menuitem value="#{i18n.action_refresh}" ajax="false" type="push" icon="pi pi-refresh" id="gridTraceBoMIllegalTraceBoMItemsPanel_mniRefresh" actionListener="#{traceBoMIllegalTraceBoMItemsPanel.fetchIllegalTraceBoMItems}"/>
+
+		<p:separator/>
+
+		<p:menuitem value="#{i18n.ctxmenu_copy_cell}" actionListener="#{traceBoMIllegalTraceBoMItemsPanel.copyCellToClipboard}" icon="pi pi-copy" update="@none"/>
+		<p:menuitem value="#{i18n.ctxmenu_copy_row}" actionListener="#{traceBoMIllegalTraceBoMItemsPanel.copyRowToClipboard}" icon="pi pi-copy" update="@none"/>
 	</p:contextMenu>
 
 	<p:confirmDialog modal="true" closeOnEscape="true" message="#{i18n.dialog_delete_question}" header="#{i18n.dialog_delete_title}" severity="warn" widgetVar="deleteConfirmIllegalTraceBoMItems">
