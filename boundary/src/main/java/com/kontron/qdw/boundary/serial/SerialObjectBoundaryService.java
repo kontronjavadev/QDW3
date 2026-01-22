@@ -255,6 +255,7 @@ public class SerialObjectBoundaryService {
         selectTokens.add(SerialObjectTraceBoMSearchDTO.SELECT_TBOMTBOMITEMQUANTITY);
         selectTokens.add(SerialObjectTraceBoMSearchDTO.SELECT_TBOMTBOMITEMINFOFIELD1);
         selectTokens.add(SerialObjectTraceBoMSearchDTO.SELECT_TBOMTBOMITEMINFOFIELD2);
+        selectTokens.add(SerialObjectTraceBoMSearchDTO.SELECT_TBOMID);
 
         searchObj.setFromClause(
                 "from SerialObject a left join a.traceBom f join f.materialRevision h join f.supplier i join f.traceBoMItems j join h.material m join j.material u");

@@ -7978,12 +7978,13 @@
     <fields colIndex="24" width="150" title="Info field 2" dTOAttribute="/387/@attributes.31"/>
     <fields colIndex="25" width="120" title="Creation date" fieldType="LOCAL_DATE_TIME" dTOAttribute="/387/@attributes.5"/>
     <fields colIndex="26" width="120" title="Last update" fieldType="LOCAL_DATE_TIME" dTOAttribute="/387/@attributes.6"/>
-    <fields colIndex="27" visible="false" width="80" title="tbomTbomitemMatId" fieldType="LONG" dTOAttribute="/387/@attributes.17"/>
-    <fields colIndex="28" visible="false" width="126" title="tbomTbomitemId" fieldType="LONG" dTOAttribute="/387/@attributes.16"/>
-    <fields colIndex="29" visible="false" width="80" title="tbomMatrevMatId" fieldType="LONG" dTOAttribute="/387/@attributes.11"/>
-    <fields colIndex="30" visible="false" width="140" title="tbomMatrevId" fieldType="LONG" dTOAttribute="/387/@attributes.10"/>
-    <fields colIndex="31" visible="false" title="tbomSupplierCode" dTOAttribute="/387/@attributes.7"/>
-    <fields colIndex="32" visible="false" identifier="true" width="80" title="Id" fieldType="LONG" dTOAttribute="/387/@attributes.4"/>
+    <fields colIndex="27" visible="false" width="80" title="tbomId" fieldType="LONG" dTOAttribute="/387/@attributes.32"/>
+    <fields colIndex="28" visible="false" width="80" title="tbomTbomitemMatId" fieldType="LONG" dTOAttribute="/387/@attributes.17"/>
+    <fields colIndex="29" visible="false" width="126" title="tbomTbomitemId" fieldType="LONG" dTOAttribute="/387/@attributes.16"/>
+    <fields colIndex="30" visible="false" width="80" title="tbomMatrevMatId" fieldType="LONG" dTOAttribute="/387/@attributes.11"/>
+    <fields colIndex="31" visible="false" width="140" title="tbomMatrevId" fieldType="LONG" dTOAttribute="/387/@attributes.10"/>
+    <fields colIndex="32" visible="false" title="tbomSupplierCode" dTOAttribute="/387/@attributes.7"/>
+    <fields colIndex="33" visible="false" identifier="true" width="80" title="Id" fieldType="LONG" dTOAttribute="/387/@attributes.4"/>
   </net.sourceforge.jbizmo.model.client:FormTable>
   <net.sourceforge.jbizmo.model.dto:DTOBean name="SerialObjectTraceBoMSearchDTO" comment="DTO for serial object objects" namespace="/254">
     <domainObject href="package-serial.xmi#//@domainObjects.0"/>
@@ -8138,6 +8139,10 @@
       <association xsi:type="net.sourceforge.net.model.domain:OneToManyAssociation" href="package-serial.xmi#//@domainObjects.4/@associations.2"/>
       <domainAttribute href="package-serial.xmi#//@domainObjects.5/@attributes.2"/>
       <associationList xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-serial.xmi#//@domainObjects.0/@associations.6"/>
+    </attributes>
+    <attributes name="tbomId" selectToken="f.id">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-serial.xmi#//@domainObjects.0/@associations.6"/>
+      <domainAttribute href="package-base.xmi#//@domainObjects.0/@attributes.0"/>
     </attributes>
   </net.sourceforge.jbizmo.model.dto:DTOBean>
 </xmi:XMI>

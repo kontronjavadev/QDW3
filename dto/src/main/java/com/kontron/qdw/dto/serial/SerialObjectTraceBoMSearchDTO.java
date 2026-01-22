@@ -72,6 +72,8 @@ public class SerialObjectTraceBoMSearchDTO implements Serializable {
     @Generated
     public static final String ATTR_TBOMTBOMITEMINFOFIELD2 = "tbomTbomitemInfoField2";
     @Generated
+    public static final String ATTR_TBOMID = "tbomId";
+    @Generated
     public static final String SELECT_SERIALNUMBER = "a.serialNumber";
     @Generated
     public static final String SELECT_ASSEMBLYDATE = "a.assemblyDate";
@@ -136,6 +138,8 @@ public class SerialObjectTraceBoMSearchDTO implements Serializable {
     @Generated
     public static final String SELECT_TBOMTBOMITEMINFOFIELD2 = "j.infoField2";
     @Generated
+    public static final String SELECT_TBOMID = "f.id";
+    @Generated
     private String serialNumber;
     @Generated
     private LocalDate assemblyDate;
@@ -199,6 +203,8 @@ public class SerialObjectTraceBoMSearchDTO implements Serializable {
     private String tbomTbomitemInfoField1;
     @Generated
     private String tbomTbomitemInfoField2;
+    @Generated
+    private Long tbomId;
 
     /**
      * Default constructor
@@ -250,6 +256,7 @@ public class SerialObjectTraceBoMSearchDTO implements Serializable {
      * @param tbomTbomitemQuantity
      * @param tbomTbomitemInfoField1
      * @param tbomTbomitemInfoField2
+     * @param tbomId
      */
     @Generated
     public SerialObjectTraceBoMSearchDTO(String serialNumber, LocalDate assemblyDate, String customerSerialNumber, String productionOrderNumber,
@@ -259,7 +266,7 @@ public class SerialObjectTraceBoMSearchDTO implements Serializable {
             String tbomTbomitemMatMaterialNumber, String tbomTbomitemMatSapNumber, String tbomTbomitemMatMaterialHierarchy,
             String tbomTbomitemMatShortText, String tbomMatrevRevisionNumber, LocalDate tbomProductionDate, String tbomOrderNumber,
             String tbomLotNumber, String tbomTbomitemManufacturerName, String tbomTbomitemOrderCode, String tbomTbomitemDateCode,
-            Integer tbomTbomitemQuantity, String tbomTbomitemInfoField1, String tbomTbomitemInfoField2) {
+            Integer tbomTbomitemQuantity, String tbomTbomitemInfoField1, String tbomTbomitemInfoField2, Long tbomId) {
         this.serialNumber = serialNumber;
         this.assemblyDate = assemblyDate;
         this.customerSerialNumber = customerSerialNumber;
@@ -292,6 +299,7 @@ public class SerialObjectTraceBoMSearchDTO implements Serializable {
         this.tbomTbomitemQuantity = tbomTbomitemQuantity;
         this.tbomTbomitemInfoField1 = tbomTbomitemInfoField1;
         this.tbomTbomitemInfoField2 = tbomTbomitemInfoField2;
+        this.tbomId = tbomId;
     }
 
     /**
@@ -804,6 +812,22 @@ public class SerialObjectTraceBoMSearchDTO implements Serializable {
     @Generated
     public void setTbomTbomitemInfoField2(String tbomTbomitemInfoField2) {
         this.tbomTbomitemInfoField2 = tbomTbomitemInfoField2;
+    }
+
+    /**
+     * @return the id of the trace BoM
+     */
+    @Generated
+    public Long getTbomId() {
+        return this.tbomId;
+    }
+
+    /**
+     * @param tbomId the id of the trace BoM to set
+     */
+    @Generated
+    public void setTbomId(Long tbomId) {
+        this.tbomId = tbomId;
     }
 
     /* (non-Javadoc)

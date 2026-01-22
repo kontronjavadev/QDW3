@@ -500,7 +500,7 @@
 		loadingMessage="#{i18n.action_fetch_data}"
 		value="#{serialObjectTraceBoMView.serialObjectsList}" scrollable="false"
 		paginatorPosition="top" paginatorAlwaysVisible="#{serialObjectTraceBoMView.paginatorAlwaysVisible}" paginator="true" resizableColumns="true"
-		rowKey="#{serialObjectTraceBoMViewItem.id}"
+		rowKey="#{serialObjectTraceBoMViewItem.id}_#{serialObjectTraceBoMViewItem.tbomTbomitemId}"
 		paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 		rowsPerPageTemplate="50,150,400,1000">
 		<p:ajax event="rowDblselect" listener="#{serialObjectTraceBoMView.onDoubleClick}"/>
@@ -791,7 +791,12 @@
 
 	<p:contextMenu for="panData" beforeShow="updateContextData(event)" >
 		<p:menuitem value="#{i18n.action_delete}" ajax="true" icon="pi pi-trash" id="panData_mniDelete" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR')}" onclick="PF('deleteConfirm').show()"/>
-		<p:menuitem value="#{i18n.action_view}" ajax="true" icon="pi pi-file" id="panData_mniView" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY')}" action="#{serialObjectTraceBoMView.openViewSerialObjectDialog}">
+		<p:menuitem value="#{i18n.action_serialobjecttracebomview_viewserialobject}" ajax="true" icon="pi pi-file" id="panData_mniViewSO" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY')}" 
+			action="#{serialObjectTraceBoMView.openViewSerialObjectDialog}">
+			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{serialObjectTraceBoMView.currentPageURL}"/>
+		</p:menuitem>
+		<p:menuitem value="#{i18n.action_serialobjecttracebomview_viewtracebom}" ajax="true" icon="pi pi-file" id="panData_mniViewTB" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY')}" 
+			action="#{serialObjectTraceBoMView.openViewTraceBoMDialog}">
 			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{serialObjectTraceBoMView.currentPageURL}"/>
 		</p:menuitem>
 		<p:menuitem value="#{i18n.action_copy}" ajax="true" icon="pi pi-copy" id="panData_mniCopy" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR')}" onclick="PF('copyConfirm').show()"/>

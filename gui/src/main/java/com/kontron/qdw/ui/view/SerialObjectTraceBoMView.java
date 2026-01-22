@@ -330,6 +330,43 @@ public class SerialObjectTraceBoMView extends SuperView implements Serializable 
 
 
     /**
+     * Event that will be fired if user performs a double-click on a grid row
+     */
+    @Generated
+    public void onDoubleClick() {
+        logger.debug("Handle double-click event");
+
+        userSession.redirectTo(getCurrentPageURL(), openViewSerialObjectDialog());
+    }
+
+    /**
+     * Open dialog
+     * @return the navigation target
+     */
+    @Generated
+    public String openViewSerialObjectDialog() {
+        var url = "";
+
+        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY)) {
+            url = ViewSerialObjectDialog.PAGE_INIT_URL + selectedObject.getId();
+        }
+
+        return url;
+    }
+
+    public String openViewTraceBoMDialog() {
+        var url = "";
+
+        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY)) {
+            url = ViewTraceBoMDialog.PAGE_INIT_URL + selectedObject.getTbomId();
+        }
+
+        return url;
+    }
+
+
+
+    /**
      * @return the list of elements
      */
     @Generated
@@ -351,16 +388,6 @@ public class SerialObjectTraceBoMView extends SuperView implements Serializable 
     @Generated
     public void setSelectedObject(SerialObjectTraceBoMSearchDTO selectedObject) {
         this.selectedObject = selectedObject;
-    }
-
-    /**
-     * Event that will be fired if user performs a double-click on a grid row
-     */
-    @Generated
-    public void onDoubleClick() {
-        logger.debug("Handle double-click event");
-
-        userSession.redirectTo(getCurrentPageURL(), openViewSerialObjectDialog());
     }
 
     /**
@@ -402,21 +429,6 @@ public class SerialObjectTraceBoMView extends SuperView implements Serializable 
 
         fetchSerialObjects();
         return "";
-    }
-
-    /**
-     * Open dialog
-     * @return the navigation target
-     */
-    @Generated
-    public String openViewSerialObjectDialog() {
-        var url = "";
-
-        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY)) {
-            url = ViewSerialObjectDialog.PAGE_INIT_URL + selectedObject.getId();
-        }
-
-        return url;
     }
 
     /**
