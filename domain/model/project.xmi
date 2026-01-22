@@ -7967,9 +7967,9 @@
     <fields colIndex="13" title="Serial no." dTOAttribute="/387/@attributes.0"/>
     <fields colIndex="14" title="Cust. serial no." dTOAttribute="/387/@attributes.2"/>
     <fields colIndex="15" width="80" title="Assy. date" fieldType="LOCAL_DATE" dTOAttribute="/387/@attributes.1"/>
-    <fields colIndex="16" title="T. BoM prod. date" fieldType="LOCAL_DATE" dTOAttribute="/387/@attributes.23"/>
-    <fields colIndex="17" title="T. BoM order no." dTOAttribute="/387/@attributes.24"/>
-    <fields colIndex="18" title="T. BoM lot no." dTOAttribute="/387/@attributes.25"/>
+    <fields colIndex="16" width="80" title="Prod. date" fieldType="LOCAL_DATE" dTOAttribute="/387/@attributes.23"/>
+    <fields colIndex="17" title="Order no." dTOAttribute="/387/@attributes.24"/>
+    <fields colIndex="18" title="Lot no." dTOAttribute="/387/@attributes.25"/>
     <fields colIndex="19" width="200" title="Manufacturer" dTOAttribute="/387/@attributes.26"/>
     <fields colIndex="20" title="Order code" dTOAttribute="/387/@attributes.27"/>
     <fields colIndex="21" title="Date code" dTOAttribute="/387/@attributes.28"/>

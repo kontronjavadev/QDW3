@@ -201,7 +201,7 @@ public class SerialObjectTraceBoMView extends SuperView implements Serializable 
                 bundle.getString(COL_SERIALOBJECTTRACEBOMVIEW_ASSEMBLYDATE), SearchFieldDataTypeEnum.LOCAL_DATE, 80, false);
 
         new JSFSearchFieldDTO(searchObj, ++colOrderId, SerialObjectTraceBoMSearchDTO.SELECT_TBOMPRODUCTIONDATE,
-                bundle.getString(COL_SERIALOBJECTTRACEBOMVIEW_TBOMPRODUCTIONDATE), SearchFieldDataTypeEnum.LOCAL_DATE, 100, false);
+                bundle.getString(COL_SERIALOBJECTTRACEBOMVIEW_TBOMPRODUCTIONDATE), SearchFieldDataTypeEnum.LOCAL_DATE, 80, false);
 
         new JSFSearchFieldDTO(searchObj, ++colOrderId, SerialObjectTraceBoMSearchDTO.SELECT_TBOMORDERNUMBER,
                 bundle.getString(COL_SERIALOBJECTTRACEBOMVIEW_TBOMORDERNUMBER), SearchFieldDataTypeEnum.STRING, 100);
