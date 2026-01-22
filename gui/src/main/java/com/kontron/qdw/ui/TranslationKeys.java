@@ -187,7 +187,6 @@ public interface TranslationKeys {
     String COL_SERIALOBJECTTRACEBOMVIEW_SERIALNUMBER = "col_serialobjecttracebomview_serialnumber";
     String COL_SERIALOBJECTTRACEBOMVIEW_TBOMDELIVERYNOTENUMBER = "col_serialobjecttracebomview_tbomdeliverynotenumber";
     String COL_SERIALOBJECTTRACEBOMVIEW_TBOMLOTNUMBER = "col_serialobjecttracebomview_tbomlotnumber";
-    String COL_SERIALOBJECTTRACEBOMVIEW_TBOMLOTNUMBER_TOOLTIP = "col_serialobjecttracebomview_tbomlotnumber_tooltip";
     String COL_SERIALOBJECTTRACEBOMVIEW_TBOMMATREVMATMATERIALHIERARCHY = "col_serialobjecttracebomview_tbommatrevmatmaterialhierarchy";
     String COL_SERIALOBJECTTRACEBOMVIEW_TBOMMATREVMATMATERIALHIERARCHY_TOOLTIP = "col_serialobjecttracebomview_tbommatrevmatmaterialhierarchy_tooltip";
     String COL_SERIALOBJECTTRACEBOMVIEW_TBOMMATREVMATMATERIALNUMBER = "col_serialobjecttracebomview_tbommatrevmatmaterialnumber";
@@ -199,7 +198,6 @@ public interface TranslationKeys {
     String COL_SERIALOBJECTTRACEBOMVIEW_TBOMMATREVREVISIONNUMBER = "col_serialobjecttracebomview_tbommatrevrevisionnumber";
     String COL_SERIALOBJECTTRACEBOMVIEW_TBOMMATREVREVISIONNUMBER_TOOLTIP = "col_serialobjecttracebomview_tbommatrevrevisionnumber_tooltip";
     String COL_SERIALOBJECTTRACEBOMVIEW_TBOMORDERNUMBER = "col_serialobjecttracebomview_tbomordernumber";
-    String COL_SERIALOBJECTTRACEBOMVIEW_TBOMORDERNUMBER_TOOLTIP = "col_serialobjecttracebomview_tbomordernumber_tooltip";
     String COL_SERIALOBJECTTRACEBOMVIEW_TBOMPRODUCTIONDATE = "col_serialobjecttracebomview_tbomproductiondate";
     String COL_SERIALOBJECTTRACEBOMVIEW_TBOMPRODUCTIONDATE_TOOLTIP = "col_serialobjecttracebomview_tbomproductiondate_tooltip";
     String COL_SERIALOBJECTTRACEBOMVIEW_TBOMSUPPLIERNAME = "col_serialobjecttracebomview_tbomsuppliername";
@@ -210,6 +208,16 @@ public interface TranslationKeys {
     String COL_SERIALOBJECTTRACEBOMVIEW_TBOMTBOMITEMMATSHORTTEXT = "col_serialobjecttracebomview_tbomtbomitemmatshorttext";
     String COL_SERIALOBJECTTRACEBOMVIEW_TBOMTBOMITEMQUANTITY = "col_serialobjecttracebomview_tbomtbomitemquantity";
     String COL_SERIALOBJECTTRACEBOMVIEW_TBOMTBOMITEMQUANTITY_TOOLTIP = "col_serialobjecttracebomview_tbomtbomitemquantity_tooltip";
+    String COL_SERIALOBJECTVIEW_ASSEMBLYDATE = "col_serialobjectview_assemblydate";
+    String COL_SERIALOBJECTVIEW_CUSTOMERSERIALNUMBER = "col_serialobjectview_customerserialnumber";
+    String COL_SERIALOBJECTVIEW_MATMATERIALCLASSCODE = "col_serialobjectview_matmaterialclasscode";
+    String COL_SERIALOBJECTVIEW_MATMATERIALNUMBER = "col_serialobjectview_matmaterialnumber";
+    String COL_SERIALOBJECTVIEW_MATMATERIALTYPECODE = "col_serialobjectview_matmaterialtypecode";
+    String COL_SERIALOBJECTVIEW_MATOWNERLOCATIONCODE = "col_serialobjectview_matownerlocationcode";
+    String COL_SERIALOBJECTVIEW_MATSAPNUMBER = "col_serialobjectview_matsapnumber";
+    String COL_SERIALOBJECTVIEW_MATSHORTTEXT = "col_serialobjectview_matshorttext";
+    String COL_SERIALOBJECTVIEW_PRODUCTIONORDERNUMBER = "col_serialobjectview_productionordernumber";
+    String COL_SERIALOBJECTVIEW_SERIALNUMBER = "col_serialobjectview_serialnumber";
     String COL_SHIPMENTVIEW_CUSTOMERCODE = "col_shipmentview_customercode";
     String COL_SHIPMENTVIEW_CUSTOMERNAME = "col_shipmentview_customername";
     String COL_SHIPMENTVIEW_ID = "col_shipmentview_id";
@@ -375,6 +383,7 @@ public interface TranslationKeys {
     String FORM_RESETPASSWORDDIALOG_TITLE = "form_resetpassworddialog_title";
     String FORM_ROLEVIEW_TITLE = "form_roleview_title";
     String FORM_SERIALOBJECTTRACEBOMVIEW_TITLE = "form_serialobjecttracebomview_title";
+    String FORM_SERIALOBJECTVIEW_TITLE = "form_serialobjectview_title";
     String FORM_SHIPMENTVIEW_TITLE = "form_shipmentview_title";
     String FORM_SUPPLIERVIEW_TITLE = "form_supplierview_title";
     String FORM_TRACEBOMVIEW_TITLE = "form_tracebomview_title";

@@ -279,4 +279,52 @@ public class SerialObjectBoundaryService {
         return repository.count(searchObj);
     }
 
+    /**
+     * Search for serial object objects
+     * @param searchObj a generic container that holds filter criteria
+     * @return a list of serial object objects
+     * @throws GeneralSearchException if the search operation has failed
+     */
+    @Generated
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public List<SerialObjectSearchDTO> searchAllSerialObjects(SearchDTO searchObj) {
+        // Collect the select tokens of all fields that should be fetched
+        final var selectTokens = new ArrayList<String>();
+        selectTokens.add(SerialObjectSearchDTO.SELECT_SERIALNUMBER);
+        selectTokens.add(SerialObjectSearchDTO.SELECT_ASSEMBLYDATE);
+        selectTokens.add(SerialObjectSearchDTO.SELECT_CUSTOMERSERIALNUMBER);
+        selectTokens.add(SerialObjectSearchDTO.SELECT_PRODUCTIONORDERNUMBER);
+        selectTokens.add(SerialObjectSearchDTO.SELECT_ID);
+        selectTokens.add(SerialObjectSearchDTO.SELECT_CREATIONDATE);
+        selectTokens.add(SerialObjectSearchDTO.SELECT_LASTUPDATE);
+        selectTokens.add(SerialObjectSearchDTO.SELECT_MATMATERIALNUMBER);
+        selectTokens.add(SerialObjectSearchDTO.SELECT_MATID);
+        selectTokens.add(SerialObjectSearchDTO.SELECT_MATSAPNUMBER);
+        selectTokens.add(SerialObjectSearchDTO.SELECT_MATMATERIALHIERARCHY);
+        selectTokens.add(SerialObjectSearchDTO.SELECT_MATSHORTTEXT);
+        selectTokens.add(SerialObjectSearchDTO.SELECT_MATOWNERLOCATIONCODE);
+        selectTokens.add(SerialObjectSearchDTO.SELECT_MATMATERIALTYPECODE);
+        selectTokens.add(SerialObjectSearchDTO.SELECT_MATMATERIALCLASSCODE);
+
+        searchObj.setFromClause("from SerialObject a join a.material b join b.ownerLocation h join b.materialClass i join b.materialType j");
+
+        return repository.search(searchObj, SerialObjectSearchDTO.class, selectTokens);
+    }
+
+    /**
+     * Count serial object objects
+     * @param searchObj the query criteria
+     * @return the number of objects a query would return
+     * @throws GeneralSearchException if the count operation has failed
+     */
+    @Generated
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public long countAllSerialObjects(SearchDTO searchObj) {
+        searchObj.setFromClause("from SerialObject a join a.material b join b.ownerLocation h join b.materialClass i join b.materialType j");
+
+        return repository.count(searchObj);
+    }
+
 }

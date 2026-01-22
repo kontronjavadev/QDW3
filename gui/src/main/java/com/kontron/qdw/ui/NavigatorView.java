@@ -222,6 +222,8 @@ public class NavigatorView implements Serializable {
                 new DefaultTreeNode<>(VIEW_TYPE, new TreeNavigatorItem(bundle.getString(FORM_MATERIALIZEDASSEMBLYSHIPMENTVIEW_TITLE),
                         req.getContextPath() + "/view/MaterializedAssemblyShipmentView.jsf"), itemGroup0004);
 
+
+
             // Trace BoMs
             if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY))
                 new DefaultTreeNode<>(VIEW_TYPE, new TreeNavigatorItem(bundle.getString(FORM_TRACEBOMVIEW_TITLE),
@@ -231,6 +233,13 @@ public class NavigatorView implements Serializable {
             if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY))
                 new DefaultTreeNode<>(VIEW_TYPE, new TreeNavigatorItem(bundle.getString(FORM_SERIALOBJECTTRACEBOMVIEW_TITLE),
                         req.getContextPath() + "/view/SerialObjectTraceBoMView.jsf"), itemGroup0004);
+
+
+
+            // Serial objects
+            if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY))
+                new DefaultTreeNode<>(VIEW_TYPE, new TreeNavigatorItem(bundle.getString(FORM_SERIALOBJECTVIEW_TITLE),
+                        req.getContextPath() + "/view/SerialObjectView.jsf"), itemGroup0004);
         }
     }
 
