@@ -321,22 +321,22 @@
 
 		<p:column sortBy="#{serialObjectViewItem.matMaterialNumber}" width="150" 
 			rendered="#{serialObjectView.searchObject.searchFields[1].visible}" displayPriority="#{serialObjectView.searchObject.searchFields[1].colOrder}" 
-			exportValue="#{serialObjectView.matMaterialNumber}" class="tdnowrap" >
+			exportValue="#{serialObjectViewItem.matMaterialNumber}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_serialobjectview_matmaterialnumber}"/>
 			</f:facet>
 			<h:outputText value="#{serialObjectViewItem.matMaterialNumber}" id="matMaterialNumber" />
-			<p:tooltip for="matMaterialNumber" value="#{serialObjectView.matMaterialNumber}" position="top" showDelay="50" />
+			<p:tooltip for="matMaterialNumber" value="#{serialObjectViewItem.matMaterialNumber}" position="top" showDelay="50" />
 		</p:column>
 
 		<p:column sortBy="#{serialObjectViewItem.matSapNumber}" width="150" 
 			rendered="#{serialObjectView.searchObject.searchFields[2].visible}" displayPriority="#{serialObjectView.searchObject.searchFields[2].colOrder}" 
-			exportValue="#{serialObjectView.matSapNumber}" class="tdnowrap" >
+			exportValue="#{serialObjectViewItem.matSapNumber}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_serialobjectview_matsapnumber}"/>
 			</f:facet>
 			<h:outputText value="#{serialObjectViewItem.matSapNumber}" id="matSapNumber" />
-			<p:tooltip for="matSapNumber" value="#{serialObjectView.matSapNumber}" position="top" showDelay="50" />
+			<p:tooltip for="matSapNumber" value="#{serialObjectViewItem.matSapNumber}" position="top" showDelay="50" />
 		</p:column>
 
 		<p:column sortBy="#{serialObjectViewItem.matMaterialHierarchy}" width="150" 
@@ -349,12 +349,12 @@
 
 		<p:column sortBy="#{serialObjectViewItem.matShortText}" width="250" 
 			rendered="#{serialObjectView.searchObject.searchFields[4].visible}" displayPriority="#{serialObjectView.searchObject.searchFields[4].colOrder}" 
-			exportValue="#{serialObjectView.matShortText}" class="tdnowrap" >
+			exportValue="#{serialObjectViewItem.matShortText}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_serialobjectview_matshorttext}"/>
 			</f:facet>
 			<h:outputText value="#{serialObjectViewItem.matShortText}" id="matShortText" />
-			<p:tooltip for="matShortText" value="#{serialObjectView.matShortText}" position="top" showDelay="50" />
+			<p:tooltip for="matShortText" value="#{serialObjectViewItem.matShortText}" position="top" showDelay="50" />
 		</p:column>
 
 		<p:column sortBy="#{serialObjectViewItem.matOwnerLocationCode}" width="100" 
@@ -377,12 +377,12 @@
 
 		<p:column sortBy="#{serialObjectViewItem.matMaterialClassCode}" width="120" 
 			rendered="#{serialObjectView.searchObject.searchFields[7].visible}" displayPriority="#{serialObjectView.searchObject.searchFields[7].colOrder}" 
-			exportValue="#{serialObjectView.matMaterialClassCode}" class="tdnowrap" >
+			exportValue="#{serialObjectViewItem.matMaterialClassCode}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_serialobjectview_matmaterialclasscode}"/>
 			</f:facet>
 			<h:outputText value="#{serialObjectViewItem.matMaterialClassCode}" id="matMaterialClassCode" />
-			<p:tooltip for="matMaterialClassCode" value="#{serialObjectView.matMaterialClassCode}" position="top" showDelay="50" />
+			<p:tooltip for="matMaterialClassCode" value="#{serialObjectViewItem.matMaterialClassCode}" position="top" showDelay="50" />
 		</p:column>
 
 		<p:column sortBy="#{serialObjectViewItem.customerSerialNumber}" width="100" 
