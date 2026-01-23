@@ -6,6 +6,8 @@ import java.lang.invoke.*;
 import org.primefaces.model.DualListModel;
 import net.sourceforge.jbizmo.commons.webclient.primefaces.search.*;
 import com.kontron.qdw.ui.dialog.*;
+import com.kontron.qdw.ui.view.util.SuperView;
+
 import static com.kontron.qdw.ui.TranslationKeys.*;
 import net.sourceforge.jbizmo.commons.webclient.primefaces.util.*;
 import jakarta.faces.application.FacesMessage;
@@ -21,12 +23,13 @@ import com.kontron.qdw.dto.material.*;
 import jakarta.faces.model.*;
 import jakarta.inject.*;
 import net.sourceforge.jbizmo.commons.search.dto.*;
+import net.sourceforge.jbizmo.commons.annotation.Customized;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
 import java.io.*;
 
 @Named("serialObjectView")
 @ViewScoped
-public class SerialObjectView extends AbstractSearchableView implements Serializable {
+public class SerialObjectView extends SuperView implements Serializable {
     @Generated
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     @Generated
@@ -84,6 +87,164 @@ public class SerialObjectView extends AbstractSearchableView implements Serializ
         this.serialObjectService = serialObjectService;
         this.materialService = materialService;
         this.queryManager = queryManager;
+    }
+
+    /**
+     * Initialize view
+     */
+    @Customized
+    public void initView() {
+        logger.debug("Initialize view");
+
+        bundle = ResourceBundle.getBundle(DEFAULT_BUNDLE_NAME, userSession.getLocale());
+
+        // Check if user is allowed to open this page!
+        if (!userSession.checkAuthorization(true, ROLE_ADMINISTRATOR, ROLE_READONLY)) {
+            return;
+        }
+
+
+        formTitle = bundle.getString(FORM_SERIALOBJECTVIEW_TITLE);
+
+        if (searchObj == null) {
+            // Check if previous search exists!
+            final SearchDTO lastSearch = queryManager.getLastQuery(userSession.getPrincipal().getId(), VIEW_ID);
+            if (lastSearch != null) {
+                searchObj = lastSearch;
+                prepareAfterLoad();
+            }
+            else {
+                initSearchObject();
+            }
+        }
+
+        initProperties();
+        fetchSerialObjects();
+
+        logger.debug("View initialization finished");
+    }
+
+    /**
+     * Initialize search object
+     */
+    @Customized
+    public void initSearchObject() {
+        searchObj = new SearchDTO();
+        int colOrderId = -1;
+
+        // Initialize search object
+        searchObj.setMaxResult(1000);
+        searchObj.setExactFilterMatch(true);
+        searchObj.setCaseSensitive(true);
+        searchObj.setCount(false);
+
+        refreshFormatSettings();
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, SerialObjectSearchDTO.SELECT_SERIALNUMBER,
+                bundle.getString(COL_SERIALOBJECTVIEW_SERIALNUMBER), SearchFieldDataTypeEnum.STRING, 100);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, SerialObjectSearchDTO.SELECT_MATMATERIALNUMBER,
+                bundle.getString(COL_SERIALOBJECTVIEW_MATMATERIALNUMBER), SearchFieldDataTypeEnum.STRING, 150);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, SerialObjectSearchDTO.SELECT_MATSAPNUMBER,
+                bundle.getString(COL_SERIALOBJECTVIEW_MATSAPNUMBER), SearchFieldDataTypeEnum.STRING, 150);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, SerialObjectSearchDTO.SELECT_MATMATERIALHIERARCHY,
+                bundle.getString(LBL_ATTR_MATERIAL_MATERIALHIERARCHY), SearchFieldDataTypeEnum.STRING, 150);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, SerialObjectSearchDTO.SELECT_MATSHORTTEXT,
+                bundle.getString(COL_SERIALOBJECTVIEW_MATSHORTTEXT), SearchFieldDataTypeEnum.STRING, 250);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, SerialObjectSearchDTO.SELECT_MATOWNERLOCATIONCODE,
+                bundle.getString(COL_SERIALOBJECTVIEW_MATOWNERLOCATIONCODE), SearchFieldDataTypeEnum.STRING, 100);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, SerialObjectSearchDTO.SELECT_MATMATERIALTYPECODE,
+                bundle.getString(COL_SERIALOBJECTVIEW_MATMATERIALTYPECODE), SearchFieldDataTypeEnum.STRING, 80);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, SerialObjectSearchDTO.SELECT_MATMATERIALCLASSCODE,
+                bundle.getString(COL_SERIALOBJECTVIEW_MATMATERIALCLASSCODE), SearchFieldDataTypeEnum.STRING, 120);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, SerialObjectSearchDTO.SELECT_CUSTOMERSERIALNUMBER,
+                bundle.getString(COL_SERIALOBJECTVIEW_CUSTOMERSERIALNUMBER), SearchFieldDataTypeEnum.STRING, 100);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, SerialObjectSearchDTO.SELECT_PRODUCTIONORDERNUMBER,
+                bundle.getString(COL_SERIALOBJECTVIEW_PRODUCTIONORDERNUMBER), SearchFieldDataTypeEnum.STRING, 80);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, SerialObjectSearchDTO.SELECT_ASSEMBLYDATE,
+                bundle.getString(COL_SERIALOBJECTVIEW_ASSEMBLYDATE), SearchFieldDataTypeEnum.LOCAL_DATE, 80, false);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, SerialObjectSearchDTO.SELECT_CREATIONDATE,
+                bundle.getString(LBL_ATTR_ABSTRACTENTITYWITHID_CREATIONDATE), SearchFieldDataTypeEnum.LOCAL_DATE_TIME, 120);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, SerialObjectSearchDTO.SELECT_LASTUPDATE,
+                bundle.getString(LBL_ATTR_ABSTRACTENTITYWITHID_LASTUPDATE), SearchFieldDataTypeEnum.LOCAL_DATE_TIME, 120);
+
+
+        visibleFields = new DualListModel<>();
+        visibleFields.setSource(new ArrayList<>());
+        visibleFields.setTarget(new ArrayList<>());
+
+        for (final SearchFieldDTO d : searchObj.getSearchFields()) {
+            if (!d.isVisible()) {
+                visibleFields.getSource().add(d);
+            }
+            else {
+                visibleFields.getTarget().add(d);
+            }
+        }
+    }
+
+    /**
+     * Perform data fetch operation
+     */
+    @Customized
+    public void fetchSerialObjects() {
+        logger.debug("Perform data fetch operation");
+
+        try {
+            preSearch();
+        }
+        catch (final SearchInputFieldValidationException e) {
+            MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_INFO, SEARCH_INPUT_VALIDATION, "", e.getSearchFieldName());
+            return;
+        }
+
+        refreshFormatSettings();
+        setCountFilterDependent(2);
+
+        try {
+            serialObjectsList = serialObjectService.searchAllSerialObjects(searchObj);
+
+            if (searchObj.isCount()) {
+                if (serialObjectsList.size() == searchObj.getMaxResult()) {
+                    countResult = serialObjectService.countAllSerialObjects(searchObj);
+                }
+                else {
+                    countResult = serialObjectsList.size();
+                }
+            }
+
+            queryManager.saveQuery(userSession.getPrincipal().getId(), VIEW_ID, null, searchObj);
+        }
+        catch (final Exception e) {
+            logger.error("Error while fetching data!", e);
+
+            MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_ERROR, OPERATION_FETCH_FAIL, e);
+        }
+        finally {
+            postSearch();
+        }
+    }
+
+    @Override
+    protected String getViewName() {
+        return VIEW_ID;
+    }
+
+    @Override
+    public void resetSearchObject() {
+        initSearchObject();
+        fetchSerialObjects();
     }
 
     /**
@@ -218,6 +379,7 @@ public class SerialObjectView extends AbstractSearchableView implements Serializ
     /**
      * @return the name of the selected saved query
      */
+    @Override
     @Generated
     public String getSelectedSavedQuery() {
         return selectedSavedQuery;
@@ -249,136 +411,6 @@ public class SerialObjectView extends AbstractSearchableView implements Serializ
         searchObj.setNumberFormat(userSession.getNumberFormat());
         searchObj.setDecimalSeparator(DecimalFormatSymbols.getInstance(userSession.getLocale()).getDecimalSeparator());
         searchObj.setGroupingSeparator(DecimalFormatSymbols.getInstance(userSession.getLocale()).getGroupingSeparator());
-    }
-
-    /**
-     * Initialize search object
-     */
-    @Generated
-    public void initSearchObject() {
-        searchObj = new SearchDTO();
-        int colOrderId = -1;
-
-        // Initialize search object
-        searchObj.setMaxResult(1000);
-        searchObj.setExactFilterMatch(true);
-        searchObj.setCaseSensitive(false);
-        searchObj.setCount(false);
-
-        refreshFormatSettings();
-
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, SerialObjectSearchDTO.SELECT_SERIALNUMBER, bundle.getString(COL_SERIALOBJECTVIEW_SERIALNUMBER),
-                SearchFieldDataTypeEnum.STRING, 100);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, SerialObjectSearchDTO.SELECT_MATMATERIALNUMBER,
-                bundle.getString(COL_SERIALOBJECTVIEW_MATMATERIALNUMBER), SearchFieldDataTypeEnum.STRING, 150);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, SerialObjectSearchDTO.SELECT_MATSAPNUMBER, bundle.getString(COL_SERIALOBJECTVIEW_MATSAPNUMBER),
-                SearchFieldDataTypeEnum.STRING, 150);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, SerialObjectSearchDTO.SELECT_MATMATERIALHIERARCHY,
-                bundle.getString(LBL_ATTR_MATERIAL_MATERIALHIERARCHY), SearchFieldDataTypeEnum.STRING, 150);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, SerialObjectSearchDTO.SELECT_MATSHORTTEXT, bundle.getString(COL_SERIALOBJECTVIEW_MATSHORTTEXT),
-                SearchFieldDataTypeEnum.STRING, 250);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, SerialObjectSearchDTO.SELECT_MATOWNERLOCATIONCODE,
-                bundle.getString(COL_SERIALOBJECTVIEW_MATOWNERLOCATIONCODE), SearchFieldDataTypeEnum.STRING, 100);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, SerialObjectSearchDTO.SELECT_MATMATERIALTYPECODE,
-                bundle.getString(COL_SERIALOBJECTVIEW_MATMATERIALTYPECODE), SearchFieldDataTypeEnum.STRING, 80);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, SerialObjectSearchDTO.SELECT_MATMATERIALCLASSCODE,
-                bundle.getString(COL_SERIALOBJECTVIEW_MATMATERIALCLASSCODE), SearchFieldDataTypeEnum.STRING, 120);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, SerialObjectSearchDTO.SELECT_CUSTOMERSERIALNUMBER,
-                bundle.getString(COL_SERIALOBJECTVIEW_CUSTOMERSERIALNUMBER), SearchFieldDataTypeEnum.STRING, 100);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, SerialObjectSearchDTO.SELECT_PRODUCTIONORDERNUMBER,
-                bundle.getString(COL_SERIALOBJECTVIEW_PRODUCTIONORDERNUMBER), SearchFieldDataTypeEnum.STRING, 80);
-
-        final var f11 = new JSFSearchFieldDTO(searchObj, ++colOrderId, SerialObjectSearchDTO.SELECT_ASSEMBLYDATE,
-                bundle.getString(COL_SERIALOBJECTVIEW_ASSEMBLYDATE), SearchFieldDataTypeEnum.LOCAL_DATE, 80, false);
-        f11.setVisible(false);
-
-
-        final var f12 = new JSFSearchFieldDTO(searchObj, ++colOrderId, SerialObjectSearchDTO.SELECT_CREATIONDATE,
-                bundle.getString(LBL_ATTR_ABSTRACTENTITYWITHID_CREATIONDATE), SearchFieldDataTypeEnum.LOCAL_DATE_TIME, 120);
-        f12.setVisible(false);
-
-
-        final var f13 = new JSFSearchFieldDTO(searchObj, ++colOrderId, SerialObjectSearchDTO.SELECT_LASTUPDATE,
-                bundle.getString(LBL_ATTR_ABSTRACTENTITYWITHID_LASTUPDATE), SearchFieldDataTypeEnum.LOCAL_DATE_TIME, 120);
-        f13.setVisible(false);
-
-
-        visibleFields = new DualListModel<>();
-        visibleFields.setSource(new ArrayList<>());
-        visibleFields.setTarget(new ArrayList<>());
-
-        for (final SearchFieldDTO d : searchObj.getSearchFields())
-            if (!d.isVisible())
-                visibleFields.getSource().add(d);
-            else
-                visibleFields.getTarget().add(d);
-    }
-
-    /**
-     * Initialize view
-     */
-    @Generated
-    public void initView() {
-        logger.debug("Initialize view");
-
-        bundle = ResourceBundle.getBundle(DEFAULT_BUNDLE_NAME, userSession.getLocale());
-
-        // Check if user is allowed to open this page!
-        if (!userSession.checkAuthorization(true, ROLE_ADMINISTRATOR, ROLE_READONLY))
-            return;
-
-
-        formTitle = bundle.getString(FORM_SERIALOBJECTVIEW_TITLE);
-
-        // Check if previous search exists!
-        final SearchDTO lastSearch = queryManager.getLastQuery(userSession.getPrincipal().getId(), VIEW_ID);
-
-        if (lastSearch != null) {
-            searchObj = lastSearch;
-
-            prepareAfterLoad();
-        }
-        else
-            initSearchObject();
-
-        fetchSerialObjects();
-
-        logger.debug("View initialization finished");
-    }
-
-    /**
-     * Perform data fetch operation
-     */
-    @Generated
-    public void fetchSerialObjects() {
-        logger.debug("Perform data fetch operation");
-
-        try {
-            preSearch();
-        }
-        catch (final SearchInputFieldValidationException e) {
-            MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_INFO, SEARCH_INPUT_VALIDATION, "", e.getSearchFieldName());
-            return;
-        }
-
-        refreshFormatSettings();
-
-        try {
-            serialObjectsList = serialObjectService.searchAllSerialObjects(searchObj);
-
-            if (searchObj.isCount())
-                countResult = serialObjectService.countAllSerialObjects(searchObj);
-
-            queryManager.saveQuery(userSession.getPrincipal().getId(), VIEW_ID, null, searchObj);
-        }
-        catch (final Exception e) {
-            logger.error("Error while fetching data!", e);
-
-            MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_ERROR, OPERATION_FETCH_FAIL, e);
-        }
-        finally {
-            postSearch();
-        }
     }
 
     /**
