@@ -4284,7 +4284,7 @@
       <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.0"/>
     </attributes>
   </net.sourceforge.jbizmo.model.dto:DTOBean>
-  <net.sourceforge.jbizmo.model.client:FormGroup name="Serial object" groupOrder="4" forms="/260 /266 /286 /307 /303 /322 /317 /339 /384 /388 /346 /380 /292 /365 /331 /352 /374 /356 /392" panels="/328 /371 /362" roles="/0/@roles.0 /0/@roles.1" project="/0"/>
+  <net.sourceforge.jbizmo.model.client:FormGroup name="Serial object" groupOrder="4" forms="/260 /266 /286 /307 /303 /322 /317 /339 /384 /388 /392 /346 /380 /292 /365 /331 /352 /374 /356" panels="/328 /371 /362" roles="/0/@roles.0 /0/@roles.1" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="mv" parent="/2" javaTypes="/265 /271 /291 /316 /327 /344" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="mv" parent="/1" javaTypes="/264 /270 /290 /315 /326 /343" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="mv" parent="/3" javaTypes="/263 /269 /289 /320 /325 /342 /395" project="/0"/>
@@ -8233,8 +8233,8 @@
     </attributes>
   </net.sourceforge.jbizmo.model.dto:DTOBean>
   <net.sourceforge.jbizmo.model.client:Form name="SerialObjectWithTraceBoMView" formType="SEARCHABLE_VIEW" formGroup="/247" title="Serial objects with trace BoM" formPanels="/393" dTO="/395" roles="/0/@roles.0 /0/@roles.1" boundaryMethod="/326/@boundaryMethods.4">
-    <actions name="actionDelete" description="Delete selected materialized arrival shipment" boundaryMethod="/326/@boundaryMethods.2" roles="/0/@roles.0" type="DELETE"/>
-    <actions name="actionCopy" description="Create copy of selected materialized arrival shipment" boundaryMethod="/326/@boundaryMethods.3" roles="/0/@roles.0" type="COPY"/>
+    <actions name="actionDelete" description="Delete selected materialized arrival shipment" boundaryMethod="/326/@boundaryMethods.2" type="DELETE"/>
+    <actions name="actionCopy" description="Create copy of selected materialized arrival shipment" boundaryMethod="/326/@boundaryMethods.3" type="COPY"/>
     <domainObject href="package-mv.xmi#//@domainObjects.2"/>
   </net.sourceforge.jbizmo.model.client:Form>
   <net.sourceforge.jbizmo.model.client:FormPanel name="MaterializedArrivalShipmentPanel" form="/392" formTable="/394" dTO="/395" boundaryMethod="/326/@boundaryMethods.5"/>
