@@ -18,6 +18,7 @@ import net.sourceforge.jbizmo.commons.annotation.Generated;
 @NamedQuery(name = User.NQ_FIND, query = "select a from User a where a.id = :id")
 @NamedQuery(name = User.NQ_CHECK, query = "select count(a) from User a where a.id = :id")
 @NamedQuery(name = User.NQ_COUNT, query = "select count(a) from User a")
+@NamedQuery(name = User.NQ_UK_FIND_ACTIVE_BY_EMAIL, query = "select a from User a where a.email = :email and active = true")
 public class User extends AbstractEntityWithId {
     @Generated
     public static final String NQ_UK_EXISTS_BY_NAME = "User.checkByName";

@@ -4,7 +4,6 @@ import com.kontron.qdw.boundary.util.MailServiceFacade;
 import com.kontron.qdw.repository.base.*;
 import com.kontron.qdw.boundary.util.Constants;
 import net.sourceforge.jbizmo.commons.search.exception.*;
-import static net.sourceforge.jbizmo.commons.jpa.AbstractRepository.WILDCARD;
 import com.kontron.qdw.dto.base.*;
 import com.kontron.qdw.domain.base.*;
 import com.kontron.util.cipher.PasswordGenerator;
