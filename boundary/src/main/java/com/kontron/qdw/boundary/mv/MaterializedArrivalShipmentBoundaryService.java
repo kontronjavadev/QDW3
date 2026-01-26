@@ -133,4 +133,69 @@ public class MaterializedArrivalShipmentBoundaryService {
         return targetObject.getId();
     }
 
+    /**
+     * Search for materialized arrival shipment objects
+     * @param searchObj a generic container that holds filter criteria
+     * @return a list of materialized arrival shipment objects
+     * @throws GeneralSearchException if the search operation has failed
+     */
+    @Generated
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public List<MaterializedArrivalShipmentSerObjTBoMSearchDTO> searchAllMaterializedArrivalShipmentSerObjTBoMs(SearchDTO searchObj) {
+        // Collect the select tokens of all fields that should be fetched
+        final var selectTokens = new ArrayList<String>();
+        selectTokens.add(MaterializedArrivalShipmentSerObjTBoMSearchDTO.SELECT_COUNTRYCODE);
+        selectTokens.add(MaterializedArrivalShipmentSerObjTBoMSearchDTO.SELECT_COUNTRYNAME);
+        selectTokens.add(MaterializedArrivalShipmentSerObjTBoMSearchDTO.SELECT_CUSTOMERCODE);
+        selectTokens.add(MaterializedArrivalShipmentSerObjTBoMSearchDTO.SELECT_CUSTOMERNAME);
+        selectTokens.add(MaterializedArrivalShipmentSerObjTBoMSearchDTO.SELECT_ID);
+        selectTokens.add(MaterializedArrivalShipmentSerObjTBoMSearchDTO.SELECT_SERIALNUMBER);
+        selectTokens.add(MaterializedArrivalShipmentSerObjTBoMSearchDTO.SELECT_PARENTSERIALNUMBER);
+        selectTokens.add(MaterializedArrivalShipmentSerObjTBoMSearchDTO.SELECT_ASSEMBLYDATE);
+        selectTokens.add(MaterializedArrivalShipmentSerObjTBoMSearchDTO.SELECT_ASSEMBLYPO);
+        selectTokens.add(MaterializedArrivalShipmentSerObjTBoMSearchDTO.SELECT_PLANT);
+        selectTokens.add(MaterializedArrivalShipmentSerObjTBoMSearchDTO.SELECT_A_MATID);
+        selectTokens.add(MaterializedArrivalShipmentSerObjTBoMSearchDTO.SELECT_SEROBJID);
+        selectTokens.add(MaterializedArrivalShipmentSerObjTBoMSearchDTO.SELECT_SEROBJIDCUSTOMERSERIALNUMBER);
+        selectTokens.add(MaterializedArrivalShipmentSerObjTBoMSearchDTO.SELECT_SEROBJTBOMID);
+        selectTokens.add(MaterializedArrivalShipmentSerObjTBoMSearchDTO.SELECT_SEROBJTBOMSUPPLIERCODE);
+        selectTokens.add(MaterializedArrivalShipmentSerObjTBoMSearchDTO.SELECT_SEROBJTBOMSUPPLIERNAME);
+        selectTokens.add(MaterializedArrivalShipmentSerObjTBoMSearchDTO.SELECT_SEROBJTBOMMATREVID);
+        selectTokens.add(MaterializedArrivalShipmentSerObjTBoMSearchDTO.SELECT_SEROBJTBOMMATREVMATID);
+        selectTokens.add(MaterializedArrivalShipmentSerObjTBoMSearchDTO.SELECT_SEROBJTBOMMATREVMATMATERIALNUMBER);
+        selectTokens.add(MaterializedArrivalShipmentSerObjTBoMSearchDTO.SELECT_SEROBJTBOMMATREVREVISIONNUMBER);
+        selectTokens.add(MaterializedArrivalShipmentSerObjTBoMSearchDTO.SELECT_SEROBJTBOMMATREVMATSAPNUMBER);
+        selectTokens.add(MaterializedArrivalShipmentSerObjTBoMSearchDTO.SELECT_SEROBJTBOMMATREVMATMATERIALHIERARCHY);
+        selectTokens.add(MaterializedArrivalShipmentSerObjTBoMSearchDTO.SELECT_SEROBJTBOMMATREVMATSHORTTEXT);
+        selectTokens.add(MaterializedArrivalShipmentSerObjTBoMSearchDTO.SELECT_SEROBJTBOMMATREVMATOWNERLOCATIONCODE);
+        selectTokens.add(MaterializedArrivalShipmentSerObjTBoMSearchDTO.SELECT_SEROBJTBOMMATREVMATMATERIALTYPECODE);
+        selectTokens.add(MaterializedArrivalShipmentSerObjTBoMSearchDTO.SELECT_SEROBJTBOMMATREVMATMATERIALCLASSCODE);
+        selectTokens.add(MaterializedArrivalShipmentSerObjTBoMSearchDTO.SELECT_SEROBJTBOMPRODUCTIONDATE);
+        selectTokens.add(MaterializedArrivalShipmentSerObjTBoMSearchDTO.SELECT_SEROBJTBOMDELIVERYNOTENUMBER);
+        selectTokens.add(MaterializedArrivalShipmentSerObjTBoMSearchDTO.SELECT_SEROBJTBOMORDERNUMBER);
+        selectTokens.add(MaterializedArrivalShipmentSerObjTBoMSearchDTO.SELECT_SEROBJTBOMLOTNUMBER);
+
+        searchObj.setFromClause(
+                "from MaterializedArrivalShipment a join a.material b join a.serialObject c left join c.traceBom h left join h.materialRevision j left join h.supplier k left join j.material o left join o.ownerLocation r left join o.materialClass s left join o.materialType t");
+
+        return repository.search(searchObj, MaterializedArrivalShipmentSerObjTBoMSearchDTO.class, selectTokens);
+    }
+
+    /**
+     * Count materialized arrival shipment objects
+     * @param searchObj the query criteria
+     * @return the number of objects a query would return
+     * @throws GeneralSearchException if the count operation has failed
+     */
+    @Generated
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public long countAllMaterializedArrivalShipmentSerObjTBoMs(SearchDTO searchObj) {
+        searchObj.setFromClause(
+                "from MaterializedArrivalShipment a join a.material b join a.serialObject c left join c.traceBom h left join h.materialRevision j left join h.supplier k left join j.material o left join o.ownerLocation r left join o.materialClass s left join o.materialType t");
+
+        return repository.count(searchObj);
+    }
+
 }
