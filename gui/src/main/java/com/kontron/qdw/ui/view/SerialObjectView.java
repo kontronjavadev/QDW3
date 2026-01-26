@@ -6,6 +6,7 @@ import java.lang.invoke.*;
 import org.primefaces.model.DualListModel;
 import net.sourceforge.jbizmo.commons.webclient.primefaces.search.*;
 import com.kontron.qdw.ui.dialog.*;
+import com.kontron.qdw.ui.view.util.OnCompleteHelper;
 import com.kontron.qdw.ui.view.util.SuperView;
 
 import static com.kontron.qdw.ui.TranslationKeys.*;
@@ -19,7 +20,6 @@ import java.text.*;
 import static com.kontron.qdw.ui.UserSession.*;
 import com.kontron.qdw.ui.*;
 import com.kontron.qdw.service.*;
-import com.kontron.qdw.dto.material.*;
 import jakarta.faces.model.*;
 import jakarta.inject.*;
 import net.sourceforge.jbizmo.commons.search.dto.*;
@@ -33,43 +33,51 @@ public class SerialObjectView extends SuperView implements Serializable {
     @Generated
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     @Generated
+    public static final String VIEW_ID = "com.kontron.qdw.ui.view.SerialObjectView";
+    @Generated
+    public static final String PAGE_URL = "/view/SerialObjectView.jsf?faces-redirect=true";
+    @Generated
     private static final long serialVersionUID = 1L;
+
+    @Generated
+    private final UserSession userSession;
+    @Generated
+    private transient ResourceBundle bundle;
+
+    @Generated
+    private final transient SerialObjectBoundaryService serialObjectService;
+    @Generated
+    private final transient MaterialBoundaryService materialService;
+    private final transient MaterialTypeBoundaryService matTypeService;
+    @Generated
+    private final transient SavedQueryService queryManager;
+
+    @Generated
+    private String savedQueryName;
+    @Generated
+    private String selectedSavedQuery;
+    @Generated
+    private String formTitle = "";
+
     @Generated
     private List<SerialObjectSearchDTO> serialObjectsList = new ArrayList<>();
     @Generated
     private SerialObjectSearchDTO selectedObject;
     @Generated
-    private final UserSession userSession;
-    @Generated
-    private transient ResourceBundle bundle;
-    @Generated
-    private final transient SerialObjectBoundaryService serialObjectService;
-    @Generated
-    public static final String PAGE_URL = "/view/SerialObjectView.jsf?faces-redirect=true";
-    @Generated
-    private String formTitle = "";
-    @Generated
     private long countResult;
-    @Generated
-    private final transient MaterialBoundaryService materialService;
-    @Generated
-    public static final String VIEW_ID = "com.kontron.qdw.ui.view.SerialObjectView";
-    @Generated
-    private final transient SavedQueryService queryManager;
-    @Generated
-    private String savedQueryName;
-    @Generated
-    private String selectedSavedQuery;
+
+
 
     /**
      * Default constructor
      */
     @Generated
     public SerialObjectView() {
-        this.userSession = null;
-        this.serialObjectService = null;
-        this.materialService = null;
-        this.queryManager = null;
+        userSession = null;
+        serialObjectService = null;
+        materialService = null;
+        queryManager = null;
+        matTypeService = null;
     }
 
     /**
@@ -82,12 +90,15 @@ public class SerialObjectView extends SuperView implements Serializable {
     @Inject
     @Generated
     public SerialObjectView(UserSession userSession, SerialObjectBoundaryService serialObjectService, MaterialBoundaryService materialService,
-            SavedQueryService queryManager) {
+            MaterialTypeBoundaryService matTypeService, SavedQueryService queryManager) {
         this.userSession = userSession;
         this.serialObjectService = serialObjectService;
         this.materialService = materialService;
         this.queryManager = queryManager;
+        this.matTypeService = matTypeService;
     }
+
+
 
     /**
      * Initialize view
@@ -246,6 +257,28 @@ public class SerialObjectView extends SuperView implements Serializable {
         initSearchObject();
         fetchSerialObjects();
     }
+
+
+
+    /**
+     * Callback method for auto-complete field
+     * @param query the filter criterion inserted by the user
+     * @return a list containing all proposals
+     */
+    @Customized
+    public List<String> onCompleteMaterialMaterialNumber(String query) {
+        return OnCompleteHelper.onCompleteMaterialNumber(materialService, query);
+    }
+
+    public List<String> onCompleteSapNumber(String query) {
+        return OnCompleteHelper.onCompleteSapNumber(materialService, query);
+    }
+
+    public List<String> onCompleteMatType(String query) {
+        return OnCompleteHelper.onCompleteMatType(matTypeService, query);
+    }
+
+
 
     /**
      * @return the list of elements
@@ -443,28 +476,6 @@ public class SerialObjectView extends SuperView implements Serializable {
         finally {
             postSearch();
         }
-    }
-
-    /**
-     * Callback method for auto-complete field
-     * @param query the filter criterion inserted by the user
-     * @return a list containing all proposals
-     */
-    @Generated
-    public List<String> onCompleteMaterialMaterialNumber(String query) {
-        final var results = new ArrayList<String>();
-
-        try {
-            final Collection<MaterialListDTO> items = materialService.findMaterials(query + "%");
-
-            for (final MaterialListDTO item : items)
-                results.add(item.getMaterialNumber());
-        }
-        catch (final Exception e) {
-            logger.error("Error while searching for auto-complete items by using the entered text '{}'!", query, e);
-        }
-
-        return results;
     }
 
     /**

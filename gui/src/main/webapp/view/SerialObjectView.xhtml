@@ -39,6 +39,7 @@
 				<h:outputText styleClass="label-field-mandatory" value="#{i18n.search_input_filter_input}"/>
 				<h:outputText styleClass="label-field-mandatory" value="#{i18n.search_input_and}"/>
 
+<!-- Serial no. -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_0" value="#{serialObjectView.searchObject.searchFields[0].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{serialObjectView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_0" value="#{serialObjectView.searchObject.searchFields[0].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_0" value="#{serialObjectView.textOperators}" var="advInputItem0" itemValue="#{advInputItem0}" itemLabel="#{advInputItem0.description}"/>
@@ -52,6 +53,7 @@
 					<p:inputText id="b_0" rendered="#{serialObjectView.searchObject.searchFields[0].between}" value="#{serialObjectView.searchObject.searchFields[0].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
+<!-- Material no. -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_1" value="#{serialObjectView.searchObject.searchFields[1].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{serialObjectView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_1" value="#{serialObjectView.searchObject.searchFields[1].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_1" value="#{serialObjectView.textOperators}" var="advInputItem1" itemValue="#{advInputItem1}" itemLabel="#{advInputItem1.description}"/>
@@ -65,6 +67,7 @@
 				<p:autoComplete minQueryLength="2" rendered="#{serialObjectView.searchObject.searchFields[1].between}" maxResults="10" completeMethod="#{serialObjectView.onCompleteMaterialMaterialNumber}" id="b_1" value="#{serialObjectView.searchObject.searchFields[1].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
+<!-- SAP no. -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_2" value="#{serialObjectView.searchObject.searchFields[2].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{serialObjectView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_2" value="#{serialObjectView.searchObject.searchFields[2].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_2" value="#{serialObjectView.textOperators}" var="advInputItem2" itemValue="#{advInputItem2}" itemLabel="#{advInputItem2.description}"/>
@@ -73,11 +76,12 @@
 				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_2" id="s_2" value="#{serialObjectView.searchObject.searchFields[2].sortOrder}">
 					<f:selectItems value="#{serialObjectView.sortOrderList}"/>
 				</p:selectOneMenu>
-				<p:inputText id="fi_2" value="#{serialObjectView.searchObject.searchFields[2].stringCriterion}" size="30"/>
+				<p:autoComplete minQueryLength="2" maxResults="10" completeMethod="#{serialObjectView.onCompleteSapNumber}" id="fi_2" value="#{serialObjectView.searchObject.searchFields[2].stringCriterion}" size="30"/>
 				<h:panelGroup id="p_2">
-					<p:inputText id="b_2" rendered="#{serialObjectView.searchObject.searchFields[2].between}" value="#{serialObjectView.searchObject.searchFields[2].stringBetweenCriterion}" size="30"/>
+					<p:autoComplete minQueryLength="2" rendered="#{serialObjectView.searchObject.searchFields[2].between}" maxResults="10" completeMethod="#{serialObjectView.onCompleteSapNumber}" id="b_2" value="#{serialObjectView.searchObject.searchFields[2].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
+<!-- Material hierarchy -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_3" value="#{serialObjectView.searchObject.searchFields[3].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{serialObjectView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_3" value="#{serialObjectView.searchObject.searchFields[3].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_3" value="#{serialObjectView.textOperators}" var="advInputItem3" itemValue="#{advInputItem3}" itemLabel="#{advInputItem3.description}"/>
@@ -91,6 +95,7 @@
 					<p:inputText id="b_3" rendered="#{serialObjectView.searchObject.searchFields[3].between}" value="#{serialObjectView.searchObject.searchFields[3].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
+<!-- Material short text -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_4" value="#{serialObjectView.searchObject.searchFields[4].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{serialObjectView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_4" value="#{serialObjectView.searchObject.searchFields[4].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_4" value="#{serialObjectView.textOperators}" var="advInputItem4" itemValue="#{advInputItem4}" itemLabel="#{advInputItem4.description}"/>
@@ -104,6 +109,7 @@
 					<p:inputText id="b_4" rendered="#{serialObjectView.searchObject.searchFields[4].between}" value="#{serialObjectView.searchObject.searchFields[4].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
+<!-- Owner loc. -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_5" value="#{serialObjectView.searchObject.searchFields[5].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{serialObjectView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_5" value="#{serialObjectView.searchObject.searchFields[5].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_5" value="#{serialObjectView.textOperators}" var="advInputItem5" itemValue="#{advInputItem5}" itemLabel="#{advInputItem5.description}"/>
@@ -117,6 +123,7 @@
 					<p:inputText id="b_5" rendered="#{serialObjectView.searchObject.searchFields[5].between}" value="#{serialObjectView.searchObject.searchFields[5].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
+<!-- Mat. type -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_6" value="#{serialObjectView.searchObject.searchFields[6].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{serialObjectView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_6" value="#{serialObjectView.searchObject.searchFields[6].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_6" value="#{serialObjectView.textOperators}" var="advInputItem6" itemValue="#{advInputItem6}" itemLabel="#{advInputItem6.description}"/>
@@ -125,11 +132,12 @@
 				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_6" id="s_6" value="#{serialObjectView.searchObject.searchFields[6].sortOrder}">
 					<f:selectItems value="#{serialObjectView.sortOrderList}"/>
 				</p:selectOneMenu>
-				<p:inputText id="fi_6" value="#{serialObjectView.searchObject.searchFields[6].stringCriterion}" size="30"/>
+				<p:autoComplete minQueryLength="1" maxResults="10" completeMethod="#{serialObjectView.onCompleteMatType}" id="fi_6" value="#{serialObjectView.searchObject.searchFields[6].stringCriterion}" size="30"/>
 				<h:panelGroup id="p_6">
-					<p:inputText id="b_6" rendered="#{serialObjectView.searchObject.searchFields[6].between}" value="#{serialObjectView.searchObject.searchFields[6].stringBetweenCriterion}" size="30"/>
+					<p:autoComplete minQueryLength="1" rendered="#{serialObjectView.searchObject.searchFields[6].between}" maxResults="10" completeMethod="#{serialObjectView.onCompleteMatType}" id="b_6" value="#{serialObjectView.searchObject.searchFields[6].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
+<!-- Material class -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_7" value="#{serialObjectView.searchObject.searchFields[7].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{serialObjectView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_7" value="#{serialObjectView.searchObject.searchFields[7].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_7" value="#{serialObjectView.textOperators}" var="advInputItem7" itemValue="#{advInputItem7}" itemLabel="#{advInputItem7.description}"/>
@@ -143,6 +151,7 @@
 					<p:inputText id="b_7" rendered="#{serialObjectView.searchObject.searchFields[7].between}" value="#{serialObjectView.searchObject.searchFields[7].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
+<!-- Cust. serial no. -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_8" value="#{serialObjectView.searchObject.searchFields[8].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{serialObjectView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_8" value="#{serialObjectView.searchObject.searchFields[8].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_8" value="#{serialObjectView.textOperators}" var="advInputItem8" itemValue="#{advInputItem8}" itemLabel="#{advInputItem8.description}"/>
@@ -156,6 +165,7 @@
 					<p:inputText id="b_8" rendered="#{serialObjectView.searchObject.searchFields[8].between}" value="#{serialObjectView.searchObject.searchFields[8].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
+<!-- PO no. -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_9" value="#{serialObjectView.searchObject.searchFields[9].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{serialObjectView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_9" value="#{serialObjectView.searchObject.searchFields[9].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_9" value="#{serialObjectView.textOperators}" var="advInputItem9" itemValue="#{advInputItem9}" itemLabel="#{advInputItem9.description}"/>
@@ -169,6 +179,7 @@
 					<p:inputText id="b_9" rendered="#{serialObjectView.searchObject.searchFields[9].between}" value="#{serialObjectView.searchObject.searchFields[9].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
+<!-- Assy. date -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_10" value="#{serialObjectView.searchObject.searchFields[10].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{serialObjectView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_10" value="#{serialObjectView.searchObject.searchFields[10].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_10" value="#{serialObjectView.dateOperators}" var="advInputItem10" itemValue="#{advInputItem10}" itemLabel="#{advInputItem10.description}"/>
@@ -182,6 +193,7 @@
 					<p:datePicker id="fb_10" value="#{serialObjectView.searchObject.searchFields[10].dateBetweenCriterion}" pattern="#{userSession.dateFormat}" size="20" showButtonBar="true" showIcon="true" rendered="#{serialObjectView.searchObject.searchFields[10].between}"/>
 				</h:panelGroup>
 
+<!-- Creation date -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_11" value="#{serialObjectView.searchObject.searchFields[11].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{serialObjectView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_11" value="#{serialObjectView.searchObject.searchFields[11].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_11" value="#{serialObjectView.dateOperators}" var="advInputItem11" itemValue="#{advInputItem11}" itemLabel="#{advInputItem11.description}"/>
@@ -195,6 +207,7 @@
 					<p:datePicker id="fb_11" value="#{serialObjectView.searchObject.searchFields[11].dateBetweenCriterion}" pattern="#{userSession.dateTimeFormat}" size="20" showButtonBar="true" showIcon="true" rendered="#{serialObjectView.searchObject.searchFields[11].between}" showTime="true"/>
 				</h:panelGroup>
 
+<!-- Last update -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_12" value="#{serialObjectView.searchObject.searchFields[12].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{serialObjectView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_12" value="#{serialObjectView.searchObject.searchFields[12].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_12" value="#{serialObjectView.dateOperators}" var="advInputItem12" itemValue="#{advInputItem12}" itemLabel="#{advInputItem12.description}"/>
