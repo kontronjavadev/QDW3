@@ -177,7 +177,7 @@ public class MaterializedArrivalShipmentBoundaryService {
         selectTokens.add(MaterializedArrivalShipmentSerObjTBoMSearchDTO.SELECT_SEROBJTBOMLOTNUMBER);
 
         searchObj.setFromClause(
-                "from MaterializedArrivalShipment a join a.material b join a.serialObject c left join c.traceBom h left join h.materialRevision j left join h.supplier k left join j.material o left join o.ownerLocation r left join o.materialClass s left join o.materialType t");
+                "from MaterializedArrivalShipment a join a.material b join a.serialObject c join c.traceBom h join h.materialRevision j join h.supplier k join j.material o join o.ownerLocation r join o.materialClass s join o.materialType t");
 
         return repository.search(searchObj, MaterializedArrivalShipmentSerObjTBoMSearchDTO.class, selectTokens);
     }
@@ -193,7 +193,7 @@ public class MaterializedArrivalShipmentBoundaryService {
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public long countAllMaterializedArrivalShipmentSerObjTBoMs(SearchDTO searchObj) {
         searchObj.setFromClause(
-                "from MaterializedArrivalShipment a join a.material b join a.serialObject c left join c.traceBom h left join h.materialRevision j left join h.supplier k left join j.material o left join o.ownerLocation r left join o.materialClass s left join o.materialType t");
+                "from MaterializedArrivalShipment a join a.material b join a.serialObject c join c.traceBom h join h.materialRevision j join h.supplier k join j.material o join o.ownerLocation r join o.materialClass s join o.materialType t");
 
         return repository.count(searchObj);
     }
