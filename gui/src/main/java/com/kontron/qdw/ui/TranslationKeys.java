@@ -15,9 +15,9 @@ public interface TranslationKeys {
     String ACTION_IMPORT = "action_import";
     String ACTION_REFRESH = "action_refresh";
     String ACTION_SEARCH_INPUT = "action_search_input";
-    String ACTION_SERIALOBJECTTRACEBOMVIEW_VIEWSERIALOBJECT = "action_serialobjecttracebomview_viewserialobject";
-    String ACTION_SERIALOBJECTTRACEBOMVIEW_VIEWTRACEBOM = "action_serialobjecttracebomview_viewtracebom";
     String ACTION_VIEW = "action_view";
+    String ACTION_VIEWSERIALOBJECT = "action_viewserialobject";
+    String ACTION_VIEWTRACEBOM = "action_viewtracebom";
     String APPLICATION_TAB_TITLE = "application_tab_title";
     String APPLICATION_TITLE = "application_title";
     String APPLICATION_TITLE_ENVIRONMENT = "application_title_environment";

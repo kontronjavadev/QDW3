@@ -180,6 +180,14 @@ public class ViewSerialObjectDialog implements Serializable {
      * @return the navigation target
      */
     @Generated
+    public String openViewTraceBoMDialogLink() {
+        return ViewTraceBoMDialog.PAGE_INIT_URL + serialObject.getTraceBom().getId();
+    }
+
+    /**
+     * @return the navigation target
+     */
+    @Generated
     public String openViewMaterialDialogLink() {
         return ViewMaterialDialog.PAGE_INIT_URL + serialObject.getMaterial().getId();
     }
