@@ -26,12 +26,12 @@
 		</p:ajaxStatus>
 	</h:panelGrid>
 
-	<p:growl id="growl" showDetail="true"/>
+	<p:growl id="growl" showDetail="true" skipDetailIfEqualsSummary="true" />
 
-	<p:dialog height="510" width="1000" header="#{i18n.search_input_dlg}" widgetVar="dlgSearchInput" modal="true">
+	<p:dialog height="auto" width="1000" id="dlgSearchInput" closeOnEscape="true" header="#{i18n.search_input_dlg}" widgetVar="dlgSearchInput" modal="true" >
 		<p:tabView id="tabViewSearchInput" dynamic="false">
 			<p:tab title="#{i18n.search_input_filter}">
-			<p:scrollPanel style="width:100%; height:400px;" mode="native">
+			<p:scrollPanel style="width:100%; #{sizeServiceBean.searchFilterHeight()};" mode="native">
 			<h:panelGrid columns="5" cellpadding="3">
 				<h:outputText styleClass="label-field-mandatory" value="#{i18n.search_input_column}"/>
 				<h:outputText styleClass="label-field-mandatory" value="#{i18n.search_input_operator}"/>
@@ -315,6 +315,7 @@
 			</h:panelGrid>
 			</p:scrollPanel>
 			</p:tab>
+
 			<p:tab title="#{i18n.search_input_adv}">
 			<h:panelGrid columns="2">
 				<h:outputLabel value="#{i18n.search_input_case}:" styleClass="label-field-mandatory"/>
@@ -328,36 +329,65 @@
 					<f:validateLongRange minimum="1" maximum="1000000"/>
 				</p:inputText>
 				<h:outputLabel value="#{i18n.search_input_visible_fields_label}:" styleClass="label-field-mandatory"/>
-				<p:pickList value="#{serialObjectWithTraceBoMView.visibleFields}" var="savedQueryListItem" itemLabel="#{savedQueryListItem.colLabel}" itemValue="#{savedQueryListItem}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchFieldDTOConverter" addLabel="#{i18n.pick_list_add}" addAllLabel="#{i18n.pick_list_add_all}" removeLabel="#{i18n.pick_list_remove}" removeAllLabel="#{i18n.pick_list_remove_all}">
+				<p:pickList styleClass="searchdialog-picklist" value="#{serialObjectWithTraceBoMView.visibleFields}" var="savedQueryListItem" itemLabel="#{savedQueryListItem.colLabel}" itemValue="#{savedQueryListItem}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchFieldDTOConverter" addLabel="#{i18n.pick_list_add}" addAllLabel="#{i18n.pick_list_add_all}" removeLabel="#{i18n.pick_list_remove}" removeAllLabel="#{i18n.pick_list_remove_all}">
 					<f:facet name="sourceCaption">#{i18n.search_input_all_fields}</f:facet>
 					<f:facet name="targetCaption">#{i18n.search_input_visible_fields}</f:facet>
 				</p:pickList>
 			</h:panelGrid>
 			</p:tab>
+
 			<p:tab title="#{i18n.search_input_saved_query_title}">
 				<h:panelGrid columns="1">
 					<h:outputLabel styleClass="label-field-mandatory" value="#{i18n.search_input_lbl_saved_query}"/>
-					<p:selectOneListbox id="savedQueryList" value="#{serialObjectWithTraceBoMView.selectedSavedQuery}" style="height:150px; width:300px">
+					<p:selectOneListbox id="savedQueryList" value="#{serialObjectWithTraceBoMView.selectedSavedQuery}" style="#{sizeServiceBean.searchQueriesHeight()}; width:480px">
 						<f:selectItems value="#{serialObjectWithTraceBoMView.savedQueries}"/>
 					</p:selectOneListbox>
-					<h:panelGrid columns="2">
-						<p:commandButton value="#{i18n.search_input_run_saved_query}" action="#{serialObjectWithTraceBoMView.runSavedQuery}" ajax="false"/>
-						<p:commandButton value="#{i18n.search_input_delete_saved_query}" action="#{serialObjectWithTraceBoMView.deleteSavedQuery}" ajax="false"/>
+					<h:panelGrid columns="3">
+						<p:commandButton icon="pi pi-caret-right" value="#{i18n.search_input_run_saved_query}" action="#{serialObjectWithTraceBoMView.runSavedQuery}" ajax="false"/>
+						<p:commandButton icon="pi pi-pencil" value="#{i18n.search_input_rename_saved_query}" actionListener="#{serialObjectWithTraceBoMView.openRenameDialog}" ajax="true"/>
+						<p:commandButton icon="pi pi-eraser" value="#{i18n.search_input_delete_saved_query}" actionListener="#{serialObjectWithTraceBoMView.deleteSavedQuery}" update="savedQueryList" ajax="true"/>
 					</h:panelGrid>
 				</h:panelGrid>
 			</p:tab>
 		</p:tabView>
 		<br/>
-		<h:panelGrid columns="3">
+		<h:panelGrid columns="4">
 			<p:commandButton id="cmdSearch" value="#{i18n.search_input_perform_search}" action="#{serialObjectWithTraceBoMView.fetchMaterializedArrivalShipments}" ajax="false"/>
-			<p:commandButton id="cmdReset" value="#{i18n.command_reset}" action="#{serialObjectWithTraceBoMView.initSearchObject}" onclick="PF('dlgSearchInput').hide()" ajax="false"/>
-			<p:commandButton id="cmdCount" value="#{i18n.search_input_perform_count}" actionListener="#{serialObjectWithTraceBoMView.countRecords}" onclick="PF('dlgSearchInput').hide()" update="growl" ajax="true"/>
+			<p:commandButton id="cmdReset" value="#{i18n.command_reset}" action="#{serialObjectWithTraceBoMView.resetSearchObject}" onclick="PF('dlgSearchInput').hide()" ajax="false"/>
+			<p:commandButton id="cmdClear" value="#{i18n.command_clear}" action="#{serialObjectWithTraceBoMView.clearSearchObject}" update="tabViewSearchInput" ajax="true"/>
+			<p:commandButton id="cmdCount" value="#{i18n.search_input_perform_count}" actionListener="#{serialObjectWithTraceBoMView.countRecords}" update="growl" ajax="true"/>
 		</h:panelGrid>
 	</p:dialog>
 
+<!-- Query rename dialog -->
+	<p:dialog widgetVar="dlgQeryRename" id="dlgQeryRename" modal="true" showEffect="fade" hideEffect="fade" focus="txtNewQueryName" closeOnEscape="true">
+		<f:facet name="header">
+			<i class="pi pi-pencil"/>
+			<h:outputText value="&#160;#{i18n.query_rename_title}"/>
+		</f:facet>
+
+		<h:panelGrid columns="3">
+			<h:outputLabel value="#{i18n.query_rename_newname} *:" for="txtNewQueryName" styleClass="label-field-mandatory"/>
+			<p:inputText id="txtNewQueryName" value="#{serialObjectWithTraceBoMView.newQueryName}"/>
+			<p:tooltip for="txtNewQueryName" value=""/>
+		</h:panelGrid>
+		<p/>
+
+		<f:facet name="footer">
+			<p:commandButton id="cmdRename" icon="pi pi-save" value="#{i18n.command_rename}" ajax="true" 
+				actionListener="#{serialObjectWithTraceBoMView.renameQuery()}"
+				update="tabViewSearchInput,growl" oncomplete="PF('dlgQeryRename').hide()"/>
+
+			<p:commandButton id="cmdCancel" icon="pi pi-times" value="#{i18n.command_cancel}" onclick="PF('dlgQeryRename').hide()" />
+
+			<p:defaultCommand target="cmdRename" scope="dlgQeryRename"/>
+		</f:facet>
+	</p:dialog>
+
+
+
 	<p:menubar>
 		<p:submenu icon="pi pi-file" label="#{i18n.mnu_file}" id="panData_mniFile">
-			<p:menuitem value="#{i18n.action_search_input}" ajax="true" icon="pi pi-search" id="panData_mniSearch" onclick="PF('dlgSearchInput').show()"/>
 			<p:menuitem value="#{i18n.search_input_dlg_save_query}" icon="pi pi-save" onclick="PF('dlgSaveQuery').show()"/>
 		</p:submenu>
 		<p:submenu icon="pi pi-refresh" label="#{i18n.mnu_view}">
@@ -365,28 +395,27 @@
 		</p:submenu>
 		<p:submenu icon="pi pi-print" label="#{i18n.mnu_export}">
 			<p:menuitem value="#{i18n.action_export_xls}" ajax="false" icon="pi pi-file-excel">
-				<p:dataExporter type="xls" target="panData" fileName="MaterializedArrivalShipmentList"/>
-			</p:menuitem>
-			<p:menuitem value="#{i18n.action_export_pdf}" ajax="false" icon="pi pi-file-pdf">
-				<p:dataExporter type="pdf" target="panData" fileName="MaterializedArrivalShipmentList"/>
+				<p:dataExporter type="xlsxstream" target="panData" fileName="MaterializedArrivalShipmentList"/>
 			</p:menuitem>
 		</p:submenu>
+		<p:menuitem value="#{i18n.action_search_input}" ajax="true" icon="pi pi-search" id="panData_mniSearch" onclick="PF('dlgSearchInput').show()"/>
 	</p:menubar>
 
-	<br/>
 
-	<p:dataTable id="panData" var="serialObjectWithTraceBoMViewItem" rows="50"
+	<p:dataTable id="panData" var="serialObjectWithTraceBoMViewItem" rows="#{serialObjectWithTraceBoMView.numberRows}"
+		selectionTextDisabled="false" allowUnsorting="true" resizeMode="expand" multiViewState="true" 
 		selectionMode="single"
 		selection="#{serialObjectWithTraceBoMView.selectedObject}"
 		loadingMessage="#{i18n.action_fetch_data}"
 		value="#{serialObjectWithTraceBoMView.materializedArrivalShipmentsList}" scrollable="false"
-		paginatorPosition="top" paginatorAlwaysVisible="false" paginator="true" resizableColumns="true"
+		paginatorPosition="top" paginatorAlwaysVisible="#{serialObjectWithTraceBoMView.paginatorAlwaysVisible}" paginator="true" resizableColumns="true"
 		rowKey="#{serialObjectWithTraceBoMViewItem.id}"
 		paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-		rowsPerPageTemplate="10,50,100,500,1000">
+		rowsPerPageTemplate="50,150,400,1000">
 		<p:ajax event="rowDblselect" listener="#{serialObjectWithTraceBoMView.onDoubleClick}"/>
 
-		<p:column sortBy="#{serialObjectWithTraceBoMViewItem.plant}" width="80" rendered="#{serialObjectWithTraceBoMView.searchObject.searchFields[0].visible}" >
+		<p:column sortBy="#{serialObjectWithTraceBoMViewItem.plant}" width="80" 
+			rendered="#{serialObjectWithTraceBoMView.searchObject.searchFields[0].visible}" displayPriority="#{serialObjectWithTraceBoMView.searchObject.searchFields[0].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_materializedentitiy_plant}"/>
 			</f:facet>
@@ -394,7 +423,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{serialObjectWithTraceBoMViewItem.serialNumber}" width="80" rendered="#{serialObjectWithTraceBoMView.searchObject.searchFields[1].visible}" >
+		<p:column sortBy="#{serialObjectWithTraceBoMViewItem.serialNumber}" width="80" 
+			rendered="#{serialObjectWithTraceBoMView.searchObject.searchFields[1].visible}" displayPriority="#{serialObjectWithTraceBoMView.searchObject.searchFields[1].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_serialobjectwithtracebomview_serialnumber}"/>
 			</f:facet>
@@ -402,7 +432,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{serialObjectWithTraceBoMViewItem.parentSerialNumber}" width="80" rendered="#{serialObjectWithTraceBoMView.searchObject.searchFields[2].visible}" >
+		<p:column sortBy="#{serialObjectWithTraceBoMViewItem.parentSerialNumber}" width="80" 
+			rendered="#{serialObjectWithTraceBoMView.searchObject.searchFields[2].visible}" displayPriority="#{serialObjectWithTraceBoMView.searchObject.searchFields[2].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_serialobjectwithtracebomview_parentserialnumber}"/>
 			</f:facet>
@@ -410,7 +441,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{serialObjectWithTraceBoMViewItem.serObjIdCustomerSerialNumber}" width="100" rendered="#{serialObjectWithTraceBoMView.searchObject.searchFields[3].visible}" >
+		<p:column sortBy="#{serialObjectWithTraceBoMViewItem.serObjIdCustomerSerialNumber}" width="100" 
+			rendered="#{serialObjectWithTraceBoMView.searchObject.searchFields[3].visible}" displayPriority="#{serialObjectWithTraceBoMView.searchObject.searchFields[3].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_serialobjectwithtracebomview_serobjidcustomerserialnumber}"/>
 			</f:facet>
@@ -418,7 +450,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{serialObjectWithTraceBoMViewItem.serObjTBomSupplierName}" width="150" rendered="#{serialObjectWithTraceBoMView.searchObject.searchFields[4].visible}" >
+		<p:column sortBy="#{serialObjectWithTraceBoMViewItem.serObjTBomSupplierName}" width="150" 
+			rendered="#{serialObjectWithTraceBoMView.searchObject.searchFields[4].visible}" displayPriority="#{serialObjectWithTraceBoMView.searchObject.searchFields[4].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_serialobjectwithtracebomview_serobjtbomsuppliername}"/>
 			</f:facet>
@@ -426,7 +459,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{serialObjectWithTraceBoMViewItem.serObjTBomMatrevMatMaterialNumber}" width="150" rendered="#{serialObjectWithTraceBoMView.searchObject.searchFields[5].visible}" >
+		<p:column sortBy="#{serialObjectWithTraceBoMViewItem.serObjTBomMatrevMatMaterialNumber}" width="150" 
+			rendered="#{serialObjectWithTraceBoMView.searchObject.searchFields[5].visible}" displayPriority="#{serialObjectWithTraceBoMView.searchObject.searchFields[5].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_serialobjectwithtracebomview_serobjtbommatrevmatmaterialnumber}"/>
 			</f:facet>
@@ -434,7 +468,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{serialObjectWithTraceBoMViewItem.serObjTBomMatrevRevisionNumber}" width="150" rendered="#{serialObjectWithTraceBoMView.searchObject.searchFields[6].visible}" >
+		<p:column sortBy="#{serialObjectWithTraceBoMViewItem.serObjTBomMatrevRevisionNumber}" width="150" 
+			rendered="#{serialObjectWithTraceBoMView.searchObject.searchFields[6].visible}" displayPriority="#{serialObjectWithTraceBoMView.searchObject.searchFields[6].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_serialobjectwithtracebomview_serobjtbommatrevrevisionnumber}"/>
 			</f:facet>
@@ -442,7 +477,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{serialObjectWithTraceBoMViewItem.serObjTBomMatrevMatSapNumber}" width="150" rendered="#{serialObjectWithTraceBoMView.searchObject.searchFields[7].visible}" >
+		<p:column sortBy="#{serialObjectWithTraceBoMViewItem.serObjTBomMatrevMatSapNumber}" width="150" 
+			rendered="#{serialObjectWithTraceBoMView.searchObject.searchFields[7].visible}" displayPriority="#{serialObjectWithTraceBoMView.searchObject.searchFields[7].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_serialobjectwithtracebomview_serobjtbommatrevmatsapnumber}"/>
 			</f:facet>
@@ -450,7 +486,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{serialObjectWithTraceBoMViewItem.serObjTBomMatrevMatMaterialHierarchy}" width="150" rendered="#{serialObjectWithTraceBoMView.searchObject.searchFields[8].visible}" >
+		<p:column sortBy="#{serialObjectWithTraceBoMViewItem.serObjTBomMatrevMatMaterialHierarchy}" width="150" 
+			rendered="#{serialObjectWithTraceBoMView.searchObject.searchFields[8].visible}" displayPriority="#{serialObjectWithTraceBoMView.searchObject.searchFields[8].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_material_materialhierarchy}"/>
 			</f:facet>
@@ -458,7 +495,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{serialObjectWithTraceBoMViewItem.serObjTBomMatrevMatShortText}" width="250" rendered="#{serialObjectWithTraceBoMView.searchObject.searchFields[9].visible}" >
+		<p:column sortBy="#{serialObjectWithTraceBoMViewItem.serObjTBomMatrevMatShortText}" width="250" 
+			rendered="#{serialObjectWithTraceBoMView.searchObject.searchFields[9].visible}" displayPriority="#{serialObjectWithTraceBoMView.searchObject.searchFields[9].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_serialobjectwithtracebomview_serobjtbommatrevmatshorttext}"/>
 			</f:facet>
@@ -466,7 +504,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{serialObjectWithTraceBoMViewItem.serObjTBomMatrevMatOwnerLocationCode}" width="100" rendered="#{serialObjectWithTraceBoMView.searchObject.searchFields[10].visible}" >
+		<p:column sortBy="#{serialObjectWithTraceBoMViewItem.serObjTBomMatrevMatOwnerLocationCode}" width="100" 
+			rendered="#{serialObjectWithTraceBoMView.searchObject.searchFields[10].visible}" displayPriority="#{serialObjectWithTraceBoMView.searchObject.searchFields[10].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_serialobjectwithtracebomview_serobjtbommatrevmatownerlocationcode}"/>
 			</f:facet>
@@ -474,7 +513,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{serialObjectWithTraceBoMViewItem.serObjTBomMatrevMatMaterialTypeCode}" width="80" rendered="#{serialObjectWithTraceBoMView.searchObject.searchFields[11].visible}" >
+		<p:column sortBy="#{serialObjectWithTraceBoMViewItem.serObjTBomMatrevMatMaterialTypeCode}" width="80" 
+			rendered="#{serialObjectWithTraceBoMView.searchObject.searchFields[11].visible}" displayPriority="#{serialObjectWithTraceBoMView.searchObject.searchFields[11].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_serialobjectwithtracebomview_serobjtbommatrevmatmaterialtypecode}"/>
 			</f:facet>
@@ -482,7 +522,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{serialObjectWithTraceBoMViewItem.serObjTBomMatrevMatMaterialClassCode}" width="120" rendered="#{serialObjectWithTraceBoMView.searchObject.searchFields[12].visible}" >
+		<p:column sortBy="#{serialObjectWithTraceBoMViewItem.serObjTBomMatrevMatMaterialClassCode}" width="120" 
+			rendered="#{serialObjectWithTraceBoMView.searchObject.searchFields[12].visible}" displayPriority="#{serialObjectWithTraceBoMView.searchObject.searchFields[12].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_serialobjectwithtracebomview_serobjtbommatrevmatmaterialclasscode}"/>
 			</f:facet>
@@ -490,7 +531,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{serialObjectWithTraceBoMViewItem.customerName}" width="150" rendered="#{serialObjectWithTraceBoMView.searchObject.searchFields[13].visible}" >
+		<p:column sortBy="#{serialObjectWithTraceBoMViewItem.customerName}" width="150" 
+			rendered="#{serialObjectWithTraceBoMView.searchObject.searchFields[13].visible}" displayPriority="#{serialObjectWithTraceBoMView.searchObject.searchFields[13].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_serialobjectwithtracebomview_customername}"/>
 			</f:facet>
@@ -498,7 +540,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{serialObjectWithTraceBoMViewItem.countryName}" width="150" rendered="#{serialObjectWithTraceBoMView.searchObject.searchFields[14].visible}" >
+		<p:column sortBy="#{serialObjectWithTraceBoMViewItem.countryName}" width="150" 
+			rendered="#{serialObjectWithTraceBoMView.searchObject.searchFields[14].visible}" displayPriority="#{serialObjectWithTraceBoMView.searchObject.searchFields[14].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_serialobjectwithtracebomview_countryname}"/>
 			</f:facet>
@@ -506,7 +549,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{serialObjectWithTraceBoMViewItem.assemblyDate}" width="80" rendered="#{serialObjectWithTraceBoMView.searchObject.searchFields[15].visible}" >
+		<p:column sortBy="#{serialObjectWithTraceBoMViewItem.assemblyDate}" width="80" 
+			rendered="#{serialObjectWithTraceBoMView.searchObject.searchFields[15].visible}" displayPriority="#{serialObjectWithTraceBoMView.searchObject.searchFields[15].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_serialobjectwithtracebomview_assemblydate}"/>
 			</f:facet>
@@ -517,7 +561,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{serialObjectWithTraceBoMViewItem.assemblyPO}" width="80" rendered="#{serialObjectWithTraceBoMView.searchObject.searchFields[16].visible}" >
+		<p:column sortBy="#{serialObjectWithTraceBoMViewItem.assemblyPO}" width="80" 
+			rendered="#{serialObjectWithTraceBoMView.searchObject.searchFields[16].visible}" displayPriority="#{serialObjectWithTraceBoMView.searchObject.searchFields[16].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_serialobjectwithtracebomview_assemblypo}"/>
 			</f:facet>
@@ -525,7 +570,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{serialObjectWithTraceBoMViewItem.serObjTBomProductionDate}" width="80" rendered="#{serialObjectWithTraceBoMView.searchObject.searchFields[17].visible}" >
+		<p:column sortBy="#{serialObjectWithTraceBoMViewItem.serObjTBomProductionDate}" width="80" 
+			rendered="#{serialObjectWithTraceBoMView.searchObject.searchFields[17].visible}" displayPriority="#{serialObjectWithTraceBoMView.searchObject.searchFields[17].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_serialobjectwithtracebomview_serobjtbomproductiondate}"/>
 			</f:facet>
@@ -536,7 +582,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{serialObjectWithTraceBoMViewItem.serObjTBomDeliveryNoteNumber}" width="100" rendered="#{serialObjectWithTraceBoMView.searchObject.searchFields[18].visible}" >
+		<p:column sortBy="#{serialObjectWithTraceBoMViewItem.serObjTBomDeliveryNoteNumber}" width="100" 
+			rendered="#{serialObjectWithTraceBoMView.searchObject.searchFields[18].visible}" displayPriority="#{serialObjectWithTraceBoMView.searchObject.searchFields[18].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_serialobjectwithtracebomview_serobjtbomdeliverynotenumber}"/>
 			</f:facet>
@@ -544,7 +591,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{serialObjectWithTraceBoMViewItem.serObjTBomOrderNumber}" width="100" rendered="#{serialObjectWithTraceBoMView.searchObject.searchFields[19].visible}" >
+		<p:column sortBy="#{serialObjectWithTraceBoMViewItem.serObjTBomOrderNumber}" width="100" 
+			rendered="#{serialObjectWithTraceBoMView.searchObject.searchFields[19].visible}" displayPriority="#{serialObjectWithTraceBoMView.searchObject.searchFields[19].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_serialobjectwithtracebomview_serobjtbomordernumber}"/>
 			</f:facet>
@@ -552,7 +600,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{serialObjectWithTraceBoMViewItem.serObjTBomLotNumber}" width="80" rendered="#{serialObjectWithTraceBoMView.searchObject.searchFields[20].visible}" >
+		<p:column sortBy="#{serialObjectWithTraceBoMViewItem.serObjTBomLotNumber}" width="80" 
+			rendered="#{serialObjectWithTraceBoMView.searchObject.searchFields[20].visible}" displayPriority="#{serialObjectWithTraceBoMView.searchObject.searchFields[20].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_serialobjectwithtracebomview_serobjtbomlotnumber}"/>
 			</f:facet>
@@ -567,32 +616,44 @@
 	<h:outputText styleClass="label-field-mandatory" rendered="#{serialObjectWithTraceBoMView.searchObject.count}" value="#{serialObjectWithTraceBoMView.countResult}"/>
 	<p/>
 
-	<p:contextMenu for="panData">
+
+
+<!--Kontextmenü mit Möglichkeit, eine Zelle oder eine Zeile zu kopieren -->
+
+	<h:inputHidden id="cellText" value="#{serialObjectWithTraceBoMView.cellText}" />
+	<h:inputHidden id="rowCsv" value="#{serialObjectWithTraceBoMView.rowCsv}" />
+
+	<p:contextMenu for="panData" beforeShow="updateContextData(event)" >
 		<p:menuitem value="#{i18n.action_delete}" ajax="true" icon="pi pi-trash" id="panData_mniDelete" rendered="false" onclick="PF('deleteConfirm').show()"/>
 		<p:menuitem value="#{i18n.action_copy}" ajax="true" icon="pi pi-copy" id="panData_mniCopy" rendered="false" onclick="PF('copyConfirm').show()"/>
 		<p:menuitem value="#{i18n.action_refresh}" ajax="false" type="push" icon="pi pi-refresh" id="panData_mniRefresh" actionListener="#{serialObjectWithTraceBoMView.fetchMaterializedArrivalShipments}"/>
+
+		<p:separator/>
+
+		<p:menuitem value="#{i18n.ctxmenu_copy_cell}" actionListener="#{serialObjectWithTraceBoMView.copyCellToClipboard}" icon="pi pi-copy" update="@none"/>
+		<p:menuitem value="#{i18n.ctxmenu_copy_row}" actionListener="#{serialObjectWithTraceBoMView.copyRowToClipboard}" icon="pi pi-copy" update="@none"/>
 	</p:contextMenu>
 
-	<p:confirmDialog modal="true" message="#{i18n.dialog_delete_question}" header="#{i18n.dialog_delete_title}" severity="alert" widgetVar="deleteConfirm">
+	<p:confirmDialog modal="true" closeOnEscape="true" message="#{i18n.dialog_delete_question}" header="#{i18n.dialog_delete_title}" severity="warn" widgetVar="deleteConfirm">
 		<p:commandButton value="#{i18n.command_yes}" oncomplete="PF('deleteConfirm').hide()" actionListener="#{serialObjectWithTraceBoMView.deleteMaterializedArrivalShipment}" id="panData_cmdYesDelete" ajax="false"/>
 		<p:commandButton value="#{i18n.command_no}" onclick="PF('deleteConfirm').hide()" type="button"/>
 	</p:confirmDialog>
 
-	<p:confirmDialog modal="true" message="#{i18n.dialog_copy_question}" header="#{i18n.dialog_copy_title}" severity="info" widgetVar="copyConfirm">
+	<p:confirmDialog modal="true" closeOnEscape="true" message="#{i18n.dialog_copy_question}" header="#{i18n.dialog_copy_title}" severity="info" widgetVar="copyConfirm">
 		<p:commandButton value="#{i18n.command_yes}" oncomplete="PF('copyConfirm').hide()" action="#{serialObjectWithTraceBoMView.copy}" id="panData_cmdYesCopy" ajax="false"/>
 		<p:commandButton value="#{i18n.command_no}" onclick="PF('copyConfirm').hide()" type="button"/>
 	</p:confirmDialog>
 
-	<p:dialog header="#{i18n.search_input_dlg_save_query}" widgetVar="dlgSaveQuery" modal="true" height="100">
+	<p:dialog header="#{i18n.search_input_dlg_save_query}" closeOnEscape="true" id="dlgSaveQuery" widgetVar="dlgSaveQuery" modal="true" height="100">
 		<h:panelGrid columns="3">
 			<h:outputLabel value="#{i18n.search_input_lbl_save_query}" styleClass="label-field-mandatory"/>
-			<p:inputText id="txtQueryName" value="#{serialObjectWithTraceBoMView.savedQueryName}">
-			</p:inputText>
-			<p:commandButton value="#{i18n.command_save}" action="#{serialObjectWithTraceBoMView.saveNewQuery}" ajax="false" onclick="PF('dlgSaveQuery').hide()"/>
+			<p:inputText id="txtQueryName" value="#{serialObjectWithTraceBoMView.savedQueryName}" />
+			<p:commandButton id="saveQuery" value="#{i18n.command_save}" action="#{serialObjectWithTraceBoMView.saveNewQuery}" ajax="false" onclick="PF('dlgSaveQuery').hide()"/>
+			<p:defaultCommand target="saveQuery" scope="dlgSaveQuery"/>
 		</h:panelGrid>
 	</p:dialog>
 
-	<p:defaultCommand target=":form:cmdSearch"/>
+	<p:defaultCommand target=":form:cmdSearch" scope="dlgSearchInput" />
 
 </ui:define>
 </ui:composition>

@@ -17,17 +17,19 @@ import jakarta.faces.view.*;
 import java.text.*;
 import static com.kontron.qdw.ui.UserSession.*;
 import com.kontron.qdw.ui.*;
+import com.kontron.qdw.ui.view.util.SuperView;
 import com.kontron.qdw.service.*;
 import com.kontron.qdw.dto.material.*;
 import jakarta.faces.model.*;
 import jakarta.inject.*;
 import net.sourceforge.jbizmo.commons.search.dto.*;
+import net.sourceforge.jbizmo.commons.annotation.Customized;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
 import java.io.*;
 
 @Named("serialObjectWithTraceBoMView")
 @ViewScoped
-public class SerialObjectWithTraceBoMView extends AbstractSearchableView implements Serializable {
+public class SerialObjectWithTraceBoMView extends SuperView implements Serializable {
     @Generated
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     @Generated
@@ -91,6 +93,192 @@ public class SerialObjectWithTraceBoMView extends AbstractSearchableView impleme
         this.materialService = materialService;
         this.queryManager = queryManager;
     }
+
+
+
+    /**
+     * Initialize view
+     */
+    @Customized
+    public void initView() {
+        logger.debug("Initialize view");
+
+        bundle = ResourceBundle.getBundle(DEFAULT_BUNDLE_NAME, userSession.getLocale());
+
+        // Check if user is allowed to open this page!
+        if (!userSession.checkAuthorization(true, ROLE_ADMINISTRATOR, ROLE_READONLY)) {
+            return;
+        }
+
+
+        formTitle = bundle.getString(FORM_SERIALOBJECTWITHTRACEBOMVIEW_TITLE);
+
+        if (searchObj == null) {
+            // Check if previous search exists!
+            final SearchDTO lastSearch = queryManager.getLastQuery(userSession.getPrincipal().getId(), VIEW_ID);
+            if (lastSearch != null) {
+                searchObj = lastSearch;
+                prepareAfterLoad();
+            }
+            else {
+                initSearchObject();
+            }
+        }
+
+        initProperties();
+        fetchMaterializedArrivalShipments();
+
+        logger.debug("View initialization finished");
+    }
+
+    /**
+     * Initialize search object
+     */
+    @Customized
+    public void initSearchObject() {
+        searchObj = new SearchDTO();
+        int colOrderId = -1;
+
+        // Initialize search object
+        searchObj.setMaxResult(1000);
+        searchObj.setExactFilterMatch(true);
+        searchObj.setCaseSensitive(true);
+        searchObj.setCount(false);
+
+        refreshFormatSettings();
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSerObjTBoMSearchDTO.SELECT_PLANT,
+                bundle.getString(LBL_ATTR_MATERIALIZEDENTITIY_PLANT), SearchFieldDataTypeEnum.STRING, 80);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSerObjTBoMSearchDTO.SELECT_SERIALNUMBER,
+                bundle.getString(COL_SERIALOBJECTWITHTRACEBOMVIEW_SERIALNUMBER), SearchFieldDataTypeEnum.STRING, 80);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSerObjTBoMSearchDTO.SELECT_PARENTSERIALNUMBER,
+                bundle.getString(COL_SERIALOBJECTWITHTRACEBOMVIEW_PARENTSERIALNUMBER), SearchFieldDataTypeEnum.STRING, 80);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSerObjTBoMSearchDTO.SELECT_SEROBJIDCUSTOMERSERIALNUMBER,
+                bundle.getString(COL_SERIALOBJECTWITHTRACEBOMVIEW_SEROBJIDCUSTOMERSERIALNUMBER), SearchFieldDataTypeEnum.STRING, 100);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSerObjTBoMSearchDTO.SELECT_SEROBJTBOMSUPPLIERNAME,
+                bundle.getString(COL_SERIALOBJECTWITHTRACEBOMVIEW_SEROBJTBOMSUPPLIERNAME), SearchFieldDataTypeEnum.STRING, 150);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSerObjTBoMSearchDTO.SELECT_SEROBJTBOMMATREVMATMATERIALNUMBER,
+                bundle.getString(COL_SERIALOBJECTWITHTRACEBOMVIEW_SEROBJTBOMMATREVMATMATERIALNUMBER), SearchFieldDataTypeEnum.STRING, 150);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSerObjTBoMSearchDTO.SELECT_SEROBJTBOMMATREVREVISIONNUMBER,
+                bundle.getString(COL_SERIALOBJECTWITHTRACEBOMVIEW_SEROBJTBOMMATREVREVISIONNUMBER), SearchFieldDataTypeEnum.STRING, 150);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSerObjTBoMSearchDTO.SELECT_SEROBJTBOMMATREVMATSAPNUMBER,
+                bundle.getString(COL_SERIALOBJECTWITHTRACEBOMVIEW_SEROBJTBOMMATREVMATSAPNUMBER), SearchFieldDataTypeEnum.STRING, 150);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSerObjTBoMSearchDTO.SELECT_SEROBJTBOMMATREVMATMATERIALHIERARCHY,
+                bundle.getString(LBL_ATTR_MATERIAL_MATERIALHIERARCHY), SearchFieldDataTypeEnum.STRING, 150);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSerObjTBoMSearchDTO.SELECT_SEROBJTBOMMATREVMATSHORTTEXT,
+                bundle.getString(COL_SERIALOBJECTWITHTRACEBOMVIEW_SEROBJTBOMMATREVMATSHORTTEXT), SearchFieldDataTypeEnum.STRING, 250);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSerObjTBoMSearchDTO.SELECT_SEROBJTBOMMATREVMATOWNERLOCATIONCODE,
+                bundle.getString(COL_SERIALOBJECTWITHTRACEBOMVIEW_SEROBJTBOMMATREVMATOWNERLOCATIONCODE), SearchFieldDataTypeEnum.STRING, 100);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSerObjTBoMSearchDTO.SELECT_SEROBJTBOMMATREVMATMATERIALTYPECODE,
+                bundle.getString(COL_SERIALOBJECTWITHTRACEBOMVIEW_SEROBJTBOMMATREVMATMATERIALTYPECODE), SearchFieldDataTypeEnum.STRING, 80);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSerObjTBoMSearchDTO.SELECT_SEROBJTBOMMATREVMATMATERIALCLASSCODE,
+                bundle.getString(COL_SERIALOBJECTWITHTRACEBOMVIEW_SEROBJTBOMMATREVMATMATERIALCLASSCODE), SearchFieldDataTypeEnum.STRING, 120);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSerObjTBoMSearchDTO.SELECT_CUSTOMERNAME,
+                bundle.getString(COL_SERIALOBJECTWITHTRACEBOMVIEW_CUSTOMERNAME), SearchFieldDataTypeEnum.STRING, 150);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSerObjTBoMSearchDTO.SELECT_COUNTRYNAME,
+                bundle.getString(COL_SERIALOBJECTWITHTRACEBOMVIEW_COUNTRYNAME), SearchFieldDataTypeEnum.STRING, 150);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSerObjTBoMSearchDTO.SELECT_ASSEMBLYDATE,
+                bundle.getString(COL_SERIALOBJECTWITHTRACEBOMVIEW_ASSEMBLYDATE), SearchFieldDataTypeEnum.LOCAL_DATE, 80, false);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSerObjTBoMSearchDTO.SELECT_ASSEMBLYPO,
+                bundle.getString(COL_SERIALOBJECTWITHTRACEBOMVIEW_ASSEMBLYPO), SearchFieldDataTypeEnum.STRING, 80);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSerObjTBoMSearchDTO.SELECT_SEROBJTBOMPRODUCTIONDATE,
+                bundle.getString(COL_SERIALOBJECTWITHTRACEBOMVIEW_SEROBJTBOMPRODUCTIONDATE), SearchFieldDataTypeEnum.LOCAL_DATE, 80, false);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSerObjTBoMSearchDTO.SELECT_SEROBJTBOMDELIVERYNOTENUMBER,
+                bundle.getString(COL_SERIALOBJECTWITHTRACEBOMVIEW_SEROBJTBOMDELIVERYNOTENUMBER), SearchFieldDataTypeEnum.STRING, 100);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSerObjTBoMSearchDTO.SELECT_SEROBJTBOMORDERNUMBER,
+                bundle.getString(COL_SERIALOBJECTWITHTRACEBOMVIEW_SEROBJTBOMORDERNUMBER), SearchFieldDataTypeEnum.STRING, 100);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSerObjTBoMSearchDTO.SELECT_SEROBJTBOMLOTNUMBER,
+                bundle.getString(COL_SERIALOBJECTWITHTRACEBOMVIEW_SEROBJTBOMLOTNUMBER), SearchFieldDataTypeEnum.STRING, 80);
+
+
+        visibleFields = new DualListModel<>();
+        visibleFields.setSource(new ArrayList<>());
+        visibleFields.setTarget(new ArrayList<>());
+
+        for (final SearchFieldDTO d : searchObj.getSearchFields()) {
+            if (!d.isVisible()) {
+                visibleFields.getSource().add(d);
+            }
+            else {
+                visibleFields.getTarget().add(d);
+            }
+        }
+    }
+
+    /**
+     * Perform data fetch operation
+     */
+    @Customized
+    public void fetchMaterializedArrivalShipments() {
+        logger.debug("Perform data fetch operation");
+
+        try {
+            preSearch();
+        }
+        catch (final SearchInputFieldValidationException e) {
+            MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_INFO, SEARCH_INPUT_VALIDATION, "", e.getSearchFieldName());
+            return;
+        }
+
+        refreshFormatSettings();
+        setCountFilterDependent();
+
+        try {
+            materializedArrivalShipmentsList = materializedArrivalShipmentService.searchAllMaterializedArrivalShipmentSerObjTBoMs(searchObj);
+
+            if (searchObj.isCount()) {
+                if (materializedArrivalShipmentsList.size() == searchObj.getMaxResult()) {
+                    countResult = materializedArrivalShipmentService.countAllMaterializedArrivalShipmentSerObjTBoMs(searchObj);
+                }
+                else {
+                    countResult = materializedArrivalShipmentsList.size();
+                }
+            }
+
+            queryManager.saveQuery(userSession.getPrincipal().getId(), VIEW_ID, null, searchObj);
+        }
+        catch (final Exception e) {
+            logger.error("Error while fetching data!", e);
+
+            MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_ERROR, OPERATION_FETCH_FAIL, e);
+        }
+        finally {
+            postSearch();
+        }
+    }
+
+    @Override
+    protected String getViewName() {
+        return VIEW_ID;
+    }
+
+    @Override
+    public void resetSearchObject() {
+        initSearchObject();
+        fetchMaterializedArrivalShipments();
+    }
+
+
 
     /**
      * @return the list of elements
@@ -208,6 +396,7 @@ public class SerialObjectWithTraceBoMView extends AbstractSearchableView impleme
     /**
      * @return the name of the selected saved query
      */
+    @Override
     @Generated
     public String getSelectedSavedQuery() {
         return selectedSavedQuery;
@@ -239,180 +428,6 @@ public class SerialObjectWithTraceBoMView extends AbstractSearchableView impleme
         searchObj.setNumberFormat(userSession.getNumberFormat());
         searchObj.setDecimalSeparator(DecimalFormatSymbols.getInstance(userSession.getLocale()).getDecimalSeparator());
         searchObj.setGroupingSeparator(DecimalFormatSymbols.getInstance(userSession.getLocale()).getGroupingSeparator());
-    }
-
-    /**
-     * Initialize search object
-     */
-    @Generated
-    public void initSearchObject() {
-        searchObj = new SearchDTO();
-        int colOrderId = -1;
-
-        // Initialize search object
-        searchObj.setMaxResult(1000);
-        searchObj.setExactFilterMatch(true);
-        searchObj.setCaseSensitive(false);
-        searchObj.setCount(false);
-
-        refreshFormatSettings();
-
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSerObjTBoMSearchDTO.SELECT_PLANT,
-                bundle.getString(LBL_ATTR_MATERIALIZEDENTITIY_PLANT), SearchFieldDataTypeEnum.STRING, 80);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSerObjTBoMSearchDTO.SELECT_SERIALNUMBER,
-                bundle.getString(COL_SERIALOBJECTWITHTRACEBOMVIEW_SERIALNUMBER), SearchFieldDataTypeEnum.STRING, 80);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSerObjTBoMSearchDTO.SELECT_PARENTSERIALNUMBER,
-                bundle.getString(COL_SERIALOBJECTWITHTRACEBOMVIEW_PARENTSERIALNUMBER), SearchFieldDataTypeEnum.STRING, 80);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSerObjTBoMSearchDTO.SELECT_SEROBJIDCUSTOMERSERIALNUMBER,
-                bundle.getString(COL_SERIALOBJECTWITHTRACEBOMVIEW_SEROBJIDCUSTOMERSERIALNUMBER), SearchFieldDataTypeEnum.STRING, 100);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSerObjTBoMSearchDTO.SELECT_SEROBJTBOMSUPPLIERNAME,
-                bundle.getString(COL_SERIALOBJECTWITHTRACEBOMVIEW_SEROBJTBOMSUPPLIERNAME), SearchFieldDataTypeEnum.STRING, 150);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSerObjTBoMSearchDTO.SELECT_SEROBJTBOMMATREVMATMATERIALNUMBER,
-                bundle.getString(COL_SERIALOBJECTWITHTRACEBOMVIEW_SEROBJTBOMMATREVMATMATERIALNUMBER), SearchFieldDataTypeEnum.STRING, 150);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSerObjTBoMSearchDTO.SELECT_SEROBJTBOMMATREVREVISIONNUMBER,
-                bundle.getString(COL_SERIALOBJECTWITHTRACEBOMVIEW_SEROBJTBOMMATREVREVISIONNUMBER), SearchFieldDataTypeEnum.STRING, 150);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSerObjTBoMSearchDTO.SELECT_SEROBJTBOMMATREVMATSAPNUMBER,
-                bundle.getString(COL_SERIALOBJECTWITHTRACEBOMVIEW_SEROBJTBOMMATREVMATSAPNUMBER), SearchFieldDataTypeEnum.STRING, 150);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSerObjTBoMSearchDTO.SELECT_SEROBJTBOMMATREVMATMATERIALHIERARCHY,
-                bundle.getString(LBL_ATTR_MATERIAL_MATERIALHIERARCHY), SearchFieldDataTypeEnum.STRING, 150);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSerObjTBoMSearchDTO.SELECT_SEROBJTBOMMATREVMATSHORTTEXT,
-                bundle.getString(COL_SERIALOBJECTWITHTRACEBOMVIEW_SEROBJTBOMMATREVMATSHORTTEXT), SearchFieldDataTypeEnum.STRING, 250);
-
-        final var f11 = new JSFSearchFieldDTO(searchObj, ++colOrderId,
-                MaterializedArrivalShipmentSerObjTBoMSearchDTO.SELECT_SEROBJTBOMMATREVMATOWNERLOCATIONCODE,
-                bundle.getString(COL_SERIALOBJECTWITHTRACEBOMVIEW_SEROBJTBOMMATREVMATOWNERLOCATIONCODE), SearchFieldDataTypeEnum.STRING, 100);
-        f11.setVisible(false);
-
-
-        final var f12 = new JSFSearchFieldDTO(searchObj, ++colOrderId,
-                MaterializedArrivalShipmentSerObjTBoMSearchDTO.SELECT_SEROBJTBOMMATREVMATMATERIALTYPECODE,
-                bundle.getString(COL_SERIALOBJECTWITHTRACEBOMVIEW_SEROBJTBOMMATREVMATMATERIALTYPECODE), SearchFieldDataTypeEnum.STRING, 80);
-        f12.setVisible(false);
-
-
-        final var f13 = new JSFSearchFieldDTO(searchObj, ++colOrderId,
-                MaterializedArrivalShipmentSerObjTBoMSearchDTO.SELECT_SEROBJTBOMMATREVMATMATERIALCLASSCODE,
-                bundle.getString(COL_SERIALOBJECTWITHTRACEBOMVIEW_SEROBJTBOMMATREVMATMATERIALCLASSCODE), SearchFieldDataTypeEnum.STRING, 120);
-        f13.setVisible(false);
-
-
-        final var f14 = new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSerObjTBoMSearchDTO.SELECT_CUSTOMERNAME,
-                bundle.getString(COL_SERIALOBJECTWITHTRACEBOMVIEW_CUSTOMERNAME), SearchFieldDataTypeEnum.STRING, 150);
-        f14.setVisible(false);
-
-
-        final var f15 = new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSerObjTBoMSearchDTO.SELECT_COUNTRYNAME,
-                bundle.getString(COL_SERIALOBJECTWITHTRACEBOMVIEW_COUNTRYNAME), SearchFieldDataTypeEnum.STRING, 150);
-        f15.setVisible(false);
-
-
-        final var f16 = new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSerObjTBoMSearchDTO.SELECT_ASSEMBLYDATE,
-                bundle.getString(COL_SERIALOBJECTWITHTRACEBOMVIEW_ASSEMBLYDATE), SearchFieldDataTypeEnum.LOCAL_DATE, 80, false);
-        f16.setVisible(false);
-
-
-        final var f17 = new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSerObjTBoMSearchDTO.SELECT_ASSEMBLYPO,
-                bundle.getString(COL_SERIALOBJECTWITHTRACEBOMVIEW_ASSEMBLYPO), SearchFieldDataTypeEnum.STRING, 80);
-        f17.setVisible(false);
-
-
-        final var f18 = new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSerObjTBoMSearchDTO.SELECT_SEROBJTBOMPRODUCTIONDATE,
-                bundle.getString(COL_SERIALOBJECTWITHTRACEBOMVIEW_SEROBJTBOMPRODUCTIONDATE), SearchFieldDataTypeEnum.LOCAL_DATE, 80, false);
-        f18.setVisible(false);
-
-
-        final var f19 = new JSFSearchFieldDTO(searchObj, ++colOrderId,
-                MaterializedArrivalShipmentSerObjTBoMSearchDTO.SELECT_SEROBJTBOMDELIVERYNOTENUMBER,
-                bundle.getString(COL_SERIALOBJECTWITHTRACEBOMVIEW_SEROBJTBOMDELIVERYNOTENUMBER), SearchFieldDataTypeEnum.STRING, 100);
-        f19.setVisible(false);
-
-
-        final var f20 = new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSerObjTBoMSearchDTO.SELECT_SEROBJTBOMORDERNUMBER,
-                bundle.getString(COL_SERIALOBJECTWITHTRACEBOMVIEW_SEROBJTBOMORDERNUMBER), SearchFieldDataTypeEnum.STRING, 100);
-        f20.setVisible(false);
-
-
-        final var f21 = new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSerObjTBoMSearchDTO.SELECT_SEROBJTBOMLOTNUMBER,
-                bundle.getString(COL_SERIALOBJECTWITHTRACEBOMVIEW_SEROBJTBOMLOTNUMBER), SearchFieldDataTypeEnum.STRING, 80);
-        f21.setVisible(false);
-
-
-        visibleFields = new DualListModel<>();
-        visibleFields.setSource(new ArrayList<>());
-        visibleFields.setTarget(new ArrayList<>());
-
-        for (final SearchFieldDTO d : searchObj.getSearchFields())
-            if (!d.isVisible())
-                visibleFields.getSource().add(d);
-            else
-                visibleFields.getTarget().add(d);
-    }
-
-    /**
-     * Initialize view
-     */
-    @Generated
-    public void initView() {
-        logger.debug("Initialize view");
-
-        bundle = ResourceBundle.getBundle(DEFAULT_BUNDLE_NAME, userSession.getLocale());
-
-        // Check if user is allowed to open this page!
-        if (!userSession.checkAuthorization(true, ROLE_ADMINISTRATOR, ROLE_READONLY))
-            return;
-
-
-        formTitle = bundle.getString(FORM_SERIALOBJECTWITHTRACEBOMVIEW_TITLE);
-
-        // Check if previous search exists!
-        final SearchDTO lastSearch = queryManager.getLastQuery(userSession.getPrincipal().getId(), VIEW_ID);
-
-        if (lastSearch != null) {
-            searchObj = lastSearch;
-
-            prepareAfterLoad();
-        }
-        else
-            initSearchObject();
-
-        fetchMaterializedArrivalShipments();
-
-        logger.debug("View initialization finished");
-    }
-
-    /**
-     * Perform data fetch operation
-     */
-    @Generated
-    public void fetchMaterializedArrivalShipments() {
-        logger.debug("Perform data fetch operation");
-
-        try {
-            preSearch();
-        }
-        catch (final SearchInputFieldValidationException e) {
-            MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_INFO, SEARCH_INPUT_VALIDATION, "", e.getSearchFieldName());
-            return;
-        }
-
-        refreshFormatSettings();
-
-        try {
-            materializedArrivalShipmentsList = materializedArrivalShipmentService.searchAllMaterializedArrivalShipmentSerObjTBoMs(searchObj);
-
-            if (searchObj.isCount())
-                countResult = materializedArrivalShipmentService.countAllMaterializedArrivalShipmentSerObjTBoMs(searchObj);
-
-            queryManager.saveQuery(userSession.getPrincipal().getId(), VIEW_ID, null, searchObj);
-        }
-        catch (final Exception e) {
-            logger.error("Error while fetching data!", e);
-
-            MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_ERROR, OPERATION_FETCH_FAIL, e);
-        }
-        finally {
-            postSearch();
-        }
     }
 
     /**
