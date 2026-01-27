@@ -16,6 +16,8 @@ import jakarta.faces.view.*;
 import java.text.*;
 import static com.kontron.qdw.ui.UserSession.*;
 import com.kontron.qdw.ui.*;
+import com.kontron.qdw.ui.dialog.ViewSerialObjectDialog;
+import com.kontron.qdw.ui.dialog.ViewTraceBoMDialog;
 import com.kontron.qdw.ui.view.util.OnCompleteHelper;
 import com.kontron.qdw.ui.view.util.SuperView;
 import com.kontron.qdw.service.*;
@@ -320,6 +322,38 @@ public class SerialObjectWithTraceBoMView extends SuperView implements Serializa
 
 
     /**
+     * Event that will be fired if user performs a double-click on a grid row
+     */
+    @Customized
+    public void onDoubleClick() {
+        logger.debug("Handle double-click event");
+
+        userSession.redirectTo(getCurrentPageURL(), openViewTraceBoMDialog());
+    }
+
+    public String openViewTraceBoMDialog() {
+        var url = "";
+
+        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY)) {
+            url = ViewTraceBoMDialog.PAGE_INIT_URL + selectedObject.getSerObjTBomId();
+        }
+
+        return url;
+    }
+
+    public String openViewSerialObjectDialog() {
+        var url = "";
+
+        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY)) {
+            url = ViewSerialObjectDialog.PAGE_INIT_URL + selectedObject.getSerObjId();
+        }
+
+        return url;
+    }
+
+
+
+    /**
      * @return the list of elements
      */
     @Generated
@@ -341,14 +375,6 @@ public class SerialObjectWithTraceBoMView extends SuperView implements Serializa
     @Generated
     public void setSelectedObject(MaterializedArrivalShipmentSerObjTBoMSearchDTO selectedObject) {
         this.selectedObject = selectedObject;
-    }
-
-    /**
-     * Event that will be fired if user performs a double-click on a grid row
-     */
-    @Generated
-    public void onDoubleClick() {
-        // No appropriate form found!
     }
 
     /**
