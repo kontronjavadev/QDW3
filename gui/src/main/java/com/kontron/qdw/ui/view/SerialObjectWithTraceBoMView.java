@@ -165,11 +165,11 @@ public class SerialObjectWithTraceBoMView extends SuperView implements Serializa
         new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSerObjTBoMSearchDTO.SELECT_SEROBJTBOMMATREVMATMATERIALNUMBER,
                 bundle.getString(COL_SERIALOBJECTWITHTRACEBOMVIEW_SEROBJTBOMMATREVMATMATERIALNUMBER), SearchFieldDataTypeEnum.STRING, 150);
 
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSerObjTBoMSearchDTO.SELECT_SEROBJTBOMMATREVREVISIONNUMBER,
-                bundle.getString(COL_SERIALOBJECTWITHTRACEBOMVIEW_SEROBJTBOMMATREVREVISIONNUMBER), SearchFieldDataTypeEnum.STRING, 150);
-
         new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSerObjTBoMSearchDTO.SELECT_SEROBJTBOMMATREVMATSAPNUMBER,
                 bundle.getString(COL_SERIALOBJECTWITHTRACEBOMVIEW_SEROBJTBOMMATREVMATSAPNUMBER), SearchFieldDataTypeEnum.STRING, 150);
+        
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSerObjTBoMSearchDTO.SELECT_SEROBJTBOMMATREVREVISIONNUMBER,
+                bundle.getString(COL_SERIALOBJECTWITHTRACEBOMVIEW_SEROBJTBOMMATREVREVISIONNUMBER), SearchFieldDataTypeEnum.STRING, 150);
 
         new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSerObjTBoMSearchDTO.SELECT_SEROBJTBOMMATREVMATMATERIALHIERARCHY,
                 bundle.getString(LBL_ATTR_MATERIAL_MATERIALHIERARCHY), SearchFieldDataTypeEnum.STRING, 150);
