@@ -8245,8 +8245,8 @@
     <fields colIndex="4" title="Cust. serial no." dTOAttribute="/395/@attributes.12"/>
     <fields colIndex="5" width="150" title="Supplier" dTOAttribute="/395/@attributes.15"/>
     <fields colIndex="6" width="150" title="Material no." dTOAttribute="/395/@attributes.18"/>
-    <fields colIndex="8" width="150" title="Revision no." dTOAttribute="/395/@attributes.19"/>
     <fields colIndex="7" width="150" title="SAP no." dTOAttribute="/395/@attributes.20"/>
+    <fields colIndex="8" width="150" title="Revision no." dTOAttribute="/395/@attributes.19"/>
     <fields colIndex="9" width="150" title="Material hierarchy" dTOAttribute="/395/@attributes.21"/>
     <fields colIndex="10" width="250" title="Material short text" dTOAttribute="/395/@attributes.22"/>
     <fields colIndex="11" title="Owner loc." dTOAttribute="/395/@attributes.23"/>
@@ -8257,7 +8257,7 @@
     <fields colIndex="16" width="80" title="Assy. date" fieldType="LOCAL_DATE" dTOAttribute="/395/@attributes.7"/>
     <fields colIndex="17" width="80" title="Assy. PO" dTOAttribute="/395/@attributes.8"/>
     <fields colIndex="18" width="80" title="Prod. date" fieldType="LOCAL_DATE" dTOAttribute="/395/@attributes.26"/>
-    <fields colIndex="19" title="Dliv. note no." dTOAttribute="/395/@attributes.27"/>
+    <fields colIndex="19" title="Deliv. note no." dTOAttribute="/395/@attributes.27"/>
     <fields colIndex="20" title="Order no." dTOAttribute="/395/@attributes.28"/>
     <fields colIndex="21" width="80" title="Lot no." dTOAttribute="/395/@attributes.29"/>
     <fields colIndex="22" visible="false" title="Country code" dTOAttribute="/395/@attributes.0"/>

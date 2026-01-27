@@ -10,16 +10,15 @@ import org.primefaces.model.DualListModel;
 import net.sourceforge.jbizmo.commons.webclient.primefaces.search.*;
 import static com.kontron.qdw.ui.TranslationKeys.*;
 import net.sourceforge.jbizmo.commons.webclient.primefaces.util.*;
-import com.kontron.qdw.dto.base.*;
 import jakarta.faces.application.FacesMessage;
 import java.util.*;
 import jakarta.faces.view.*;
 import java.text.*;
 import static com.kontron.qdw.ui.UserSession.*;
 import com.kontron.qdw.ui.*;
+import com.kontron.qdw.ui.view.util.OnCompleteHelper;
 import com.kontron.qdw.ui.view.util.SuperView;
 import com.kontron.qdw.service.*;
-import com.kontron.qdw.dto.material.*;
 import jakarta.faces.model.*;
 import jakarta.inject.*;
 import net.sourceforge.jbizmo.commons.search.dto.*;
@@ -33,46 +32,54 @@ public class SerialObjectWithTraceBoMView extends SuperView implements Serializa
     @Generated
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     @Generated
+    public static final String VIEW_ID = "com.kontron.qdw.ui.view.SerialObjectWithTraceBoMView";
+    @Generated
+    public static final String PAGE_URL = "/view/SerialObjectWithTraceBoMView.jsf?faces-redirect=true";
+    @Generated
     private static final long serialVersionUID = 1L;
+
+    @Generated
+    private final UserSession userSession;
+    @Generated
+    private transient ResourceBundle bundle;
+
+    @Generated
+    private final transient MaterializedArrivalShipmentBoundaryService materializedArrivalShipmentService;
+    @Generated
+    private final transient SupplierBoundaryService supplierService;
+    @Generated
+    private final transient MaterialBoundaryService materialService;
+    private final transient MaterialTypeBoundaryService matTypeService;
+    @Generated
+    private final transient SavedQueryService queryManager;
+
+    @Generated
+    private String savedQueryName;
+    @Generated
+    private String selectedSavedQuery;
+    @Generated
+    private String formTitle = "";
+
     @Generated
     private List<MaterializedArrivalShipmentSerObjTBoMSearchDTO> materializedArrivalShipmentsList = new ArrayList<>();
     @Generated
     private MaterializedArrivalShipmentSerObjTBoMSearchDTO selectedObject;
     @Generated
-    private final UserSession userSession;
-    @Generated
-    private transient ResourceBundle bundle;
-    @Generated
-    private final transient MaterializedArrivalShipmentBoundaryService materializedArrivalShipmentService;
-    @Generated
-    public static final String PAGE_URL = "/view/SerialObjectWithTraceBoMView.jsf?faces-redirect=true";
-    @Generated
-    private String formTitle = "";
-    @Generated
     private long countResult;
-    @Generated
-    private final transient SupplierBoundaryService supplierService;
-    @Generated
-    private final transient MaterialBoundaryService materialService;
-    @Generated
-    public static final String VIEW_ID = "com.kontron.qdw.ui.view.SerialObjectWithTraceBoMView";
-    @Generated
-    private final transient SavedQueryService queryManager;
-    @Generated
-    private String savedQueryName;
-    @Generated
-    private String selectedSavedQuery;
+
+
 
     /**
      * Default constructor
      */
     @Generated
     public SerialObjectWithTraceBoMView() {
-        this.userSession = null;
-        this.materializedArrivalShipmentService = null;
-        this.supplierService = null;
-        this.materialService = null;
-        this.queryManager = null;
+        userSession = null;
+        materializedArrivalShipmentService = null;
+        supplierService = null;
+        materialService = null;
+        queryManager = null;
+        matTypeService = null;
     }
 
     /**
@@ -86,11 +93,13 @@ public class SerialObjectWithTraceBoMView extends SuperView implements Serializa
     @Inject
     @Generated
     public SerialObjectWithTraceBoMView(UserSession userSession, MaterializedArrivalShipmentBoundaryService materializedArrivalShipmentService,
-            SupplierBoundaryService supplierService, MaterialBoundaryService materialService, SavedQueryService queryManager) {
+            SupplierBoundaryService supplierService, MaterialBoundaryService materialService, MaterialTypeBoundaryService matTypeService,
+            SavedQueryService queryManager) {
         this.userSession = userSession;
         this.materializedArrivalShipmentService = materializedArrivalShipmentService;
         this.supplierService = supplierService;
         this.materialService = materialService;
+        this.matTypeService = matTypeService;
         this.queryManager = queryManager;
     }
 
@@ -167,7 +176,7 @@ public class SerialObjectWithTraceBoMView extends SuperView implements Serializa
 
         new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSerObjTBoMSearchDTO.SELECT_SEROBJTBOMMATREVMATSAPNUMBER,
                 bundle.getString(COL_SERIALOBJECTWITHTRACEBOMVIEW_SEROBJTBOMMATREVMATSAPNUMBER), SearchFieldDataTypeEnum.STRING, 150);
-        
+
         new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedArrivalShipmentSerObjTBoMSearchDTO.SELECT_SEROBJTBOMMATREVREVISIONNUMBER,
                 bundle.getString(COL_SERIALOBJECTWITHTRACEBOMVIEW_SEROBJTBOMMATREVREVISIONNUMBER), SearchFieldDataTypeEnum.STRING, 150);
 
@@ -276,6 +285,36 @@ public class SerialObjectWithTraceBoMView extends SuperView implements Serializa
     public void resetSearchObject() {
         initSearchObject();
         fetchMaterializedArrivalShipments();
+    }
+
+
+
+    /**
+     * Callback method for auto-complete field
+     * @param query the filter criterion inserted by the user
+     * @return a list containing all proposals
+     */
+    @Customized
+    public List<String> onCompleteMaterialMaterialNumber(String query) {
+        return OnCompleteHelper.onCompleteMaterialNumber(materialService, query);
+    }
+
+    public List<String> onCompleteSapNumber(String query) {
+        return OnCompleteHelper.onCompleteSapNumber(materialService, query);
+    }
+
+    /**
+     * Callback method for auto-complete field
+     * @param query the filter criterion inserted by the user
+     * @return a list containing all proposals
+     */
+    @Customized
+    public List<String> onCompleteSupplierName(String query) {
+        return OnCompleteHelper.onCompleteSupplierName(supplierService, query);
+    }
+
+    public List<String> onCompleteMatType(String query) {
+        return OnCompleteHelper.onCompleteMatType(matTypeService, query);
     }
 
 
@@ -463,50 +502,6 @@ public class SerialObjectWithTraceBoMView extends SuperView implements Serializa
     }
 
     /**
-     * Callback method for auto-complete field
-     * @param query the filter criterion inserted by the user
-     * @return a list containing all proposals
-     */
-    @Generated
-    public List<String> onCompleteSupplierName(String query) {
-        final var results = new ArrayList<String>();
-
-        try {
-            final Collection<SupplierListDTO> items = supplierService.findSuppliers(query + "%");
-
-            for (final SupplierListDTO item : items)
-                results.add(item.getName());
-        }
-        catch (final Exception e) {
-            logger.error("Error while searching for auto-complete items by using the entered text '{}'!", query, e);
-        }
-
-        return results;
-    }
-
-    /**
-     * Callback method for auto-complete field
-     * @param query the filter criterion inserted by the user
-     * @return a list containing all proposals
-     */
-    @Generated
-    public List<String> onCompleteMaterialMaterialNumber(String query) {
-        final var results = new ArrayList<String>();
-
-        try {
-            final Collection<MaterialListDTO> items = materialService.findMaterials(query + "%");
-
-            for (final MaterialListDTO item : items)
-                results.add(item.getMaterialNumber());
-        }
-        catch (final Exception e) {
-            logger.error("Error while searching for auto-complete items by using the entered text '{}'!", query, e);
-        }
-
-        return results;
-    }
-
-    /**
      * Save new query
      */
     @Generated
@@ -538,8 +533,9 @@ public class SerialObjectWithTraceBoMView extends SuperView implements Serializa
         final var items = new SelectItem[savedQueries.size()];
         int i = 0;
 
-        for (final String item : savedQueries)
+        for (final String item : savedQueries) {
             items[i++] = new SelectItem(item, item);
+        }
 
         return items;
     }
@@ -549,8 +545,9 @@ public class SerialObjectWithTraceBoMView extends SuperView implements Serializa
      */
     @Generated
     public void deleteSavedQuery() {
-        if (selectedSavedQuery == null)
+        if (selectedSavedQuery == null) {
             return;
+        }
 
         logger.debug("Delete saved query");
 
@@ -565,8 +562,9 @@ public class SerialObjectWithTraceBoMView extends SuperView implements Serializa
      */
     @Generated
     public void runSavedQuery() {
-        if (selectedSavedQuery == null)
+        if (selectedSavedQuery == null) {
             return;
+        }
 
         logger.debug("Run saved query");
 
