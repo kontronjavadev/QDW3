@@ -20,6 +20,8 @@ import jakarta.faces.view.*;
 import java.text.*;
 import static com.kontron.qdw.ui.UserSession.*;
 import com.kontron.qdw.ui.*;
+import com.kontron.qdw.ui.dialog.ViewArrivalDialog;
+import com.kontron.qdw.ui.dialog.ViewShipmentDialog;
 import com.kontron.qdw.ui.view.util.OnCompleteHelper;
 import com.kontron.qdw.ui.view.util.SuperView;
 import com.kontron.qdw.service.*;
@@ -153,7 +155,7 @@ public class MaterializedAssemblyShipmentView extends SuperView implements Seria
     /**
      * Initialize search object
      */
-    @Generated
+    @Customized
     public void initSearchObject() {
         searchObj = new SearchDTO();
         int colOrderId = -1;
@@ -385,7 +387,29 @@ public class MaterializedAssemblyShipmentView extends SuperView implements Seria
      */
     @Generated
     public void onDoubleClick() {
-        // No appropriate form found!
+        logger.debug("Handle double-click event");
+
+        userSession.redirectTo(getCurrentPageURL(), openViewShipmentDialog());
+    }
+
+    public String openViewShipmentDialog() {
+        var url = "";
+
+        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY)) {
+            url = ViewShipmentDialog.PAGE_INIT_URL + selectedObject.getShipmentId();
+        }
+
+        return url;
+    }
+
+    public String openViewArrivalDialog() {
+        var url = "";
+
+        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY)) {
+            url = ViewArrivalDialog.PAGE_INIT_URL + selectedObject.getArrivalId();
+        }
+
+        return url;
     }
 
     /**
