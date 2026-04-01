@@ -1,0 +1,1310 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:h="jakarta.faces.html"
+	xmlns:f="jakarta.faces.core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/templates/ui.xhtml">
+
+<f:metadata>
+	<f:viewAction action="#{materializedServiceMessageView.initView()}"/>
+</f:metadata>
+
+<ui:define name="title">#{materializedServiceMessageView.formTitle}</ui:define>
+
+<ui:define name="content">
+	<h:panelGrid columns="3">
+		<div class="pi pi-list" style="font-size: 2em"/>
+		<h:outputText id="lblFormTitle" value="&#160;#{materializedServiceMessageView.formTitle}" styleClass="label-form-title"/>
+		<p:ajaxStatus style="width:16px;height:16px;">
+			<f:facet name="start">
+				<h:graphicImage value="/images/ajaxloading.gif"/>
+			</f:facet>
+
+			<f:facet name="complete">
+				<h:outputText value=""/>
+			</f:facet>
+		</p:ajaxStatus>
+	</h:panelGrid>
+
+	<p:growl id="growl" showDetail="true"/>
+
+	<p:dialog height="510" width="1000" header="#{i18n.search_input_dlg}" widgetVar="dlgSearchInput" modal="true">
+		<p:tabView id="tabViewSearchInput" dynamic="false">
+			<p:tab title="#{i18n.search_input_filter}">
+			<p:scrollPanel style="width:100%; height:400px;" mode="native">
+			<h:panelGrid columns="5" cellpadding="3">
+				<h:outputText styleClass="label-field-mandatory" value="#{i18n.search_input_column}"/>
+				<h:outputText styleClass="label-field-mandatory" value="#{i18n.search_input_operator}"/>
+				<h:outputText styleClass="label-field-mandatory" value="#{i18n.search_input_sort}"/>
+				<h:outputText styleClass="label-field-mandatory" value="#{i18n.search_input_filter_input}"/>
+				<h:outputText styleClass="label-field-mandatory" value="#{i18n.search_input_and}"/>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_0" value="#{materializedServiceMessageView.searchObject.searchFields[0].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_0" value="#{materializedServiceMessageView.searchObject.searchFields[0].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_0" value="#{materializedServiceMessageView.numberOperators}" var="advInputItem0" itemValue="#{advInputItem0}" itemLabel="#{advInputItem0.description}"/>
+					<f:ajax render="p_0"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_0" id="s_0" value="#{materializedServiceMessageView.searchObject.searchFields[0].sortOrder}">
+					<f:selectItems value="#{materializedServiceMessageView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_0" value="#{materializedServiceMessageView.searchObject.searchFields[0].integerCriterion}" size="30"/>
+				<h:panelGroup id="p_0">
+					<p:inputText id="b_0" rendered="#{materializedServiceMessageView.searchObject.searchFields[0].between}" value="#{materializedServiceMessageView.searchObject.searchFields[0].integerBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_1" value="#{materializedServiceMessageView.searchObject.searchFields[1].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_1" value="#{materializedServiceMessageView.searchObject.searchFields[1].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_1" value="#{materializedServiceMessageView.textOperators}" var="advInputItem1" itemValue="#{advInputItem1}" itemLabel="#{advInputItem1.description}"/>
+					<f:ajax render="p_1"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_1" id="s_1" value="#{materializedServiceMessageView.searchObject.searchFields[1].sortOrder}">
+					<f:selectItems value="#{materializedServiceMessageView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_1" value="#{materializedServiceMessageView.searchObject.searchFields[1].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_1">
+					<p:inputText id="b_1" rendered="#{materializedServiceMessageView.searchObject.searchFields[1].between}" value="#{materializedServiceMessageView.searchObject.searchFields[1].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_2" value="#{materializedServiceMessageView.searchObject.searchFields[2].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_2" value="#{materializedServiceMessageView.searchObject.searchFields[2].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_2" value="#{materializedServiceMessageView.textOperators}" var="advInputItem2" itemValue="#{advInputItem2}" itemLabel="#{advInputItem2.description}"/>
+					<f:ajax render="p_2"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_2" id="s_2" value="#{materializedServiceMessageView.searchObject.searchFields[2].sortOrder}">
+					<f:selectItems value="#{materializedServiceMessageView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_2" value="#{materializedServiceMessageView.searchObject.searchFields[2].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_2">
+					<p:inputText id="b_2" rendered="#{materializedServiceMessageView.searchObject.searchFields[2].between}" value="#{materializedServiceMessageView.searchObject.searchFields[2].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fc_3" value="#{materializedServiceMessageView.searchObject.searchFields[3].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_3" value="#{materializedServiceMessageView.searchObject.searchFields[3].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_3" value="#{materializedServiceMessageView.enumOperators}" var="advInputItem3" itemValue="#{advInputItem3}" itemLabel="#{advInputItem3.description}"/>
+					<f:ajax render="p_3"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_3" id="s_3" value="#{materializedServiceMessageView.searchObject.searchFields[3].sortOrder}">
+					<f:selectItems value="#{materializedServiceMessageView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu id="fc_3" value="#{materializedServiceMessageView.searchObject.searchFields[3].stringCriterion}">
+					<f:selectItem itemLabel="" itemValue=""/>
+					<f:selectItem itemLabel="#{i18n.serviceordertype_rma}" itemValue="RMA"/>
+					<f:selectItem itemLabel="#{i18n.serviceordertype_production}" itemValue="PRODUCTION"/>
+					<f:selectItem itemLabel="#{i18n.serviceordertype_incoming_inspection}" itemValue="INCOMING_INSPECTION"/>
+				</p:selectOneMenu>
+				<h:panelGroup id="p_3"/>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_4" value="#{materializedServiceMessageView.searchObject.searchFields[4].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_4" value="#{materializedServiceMessageView.searchObject.searchFields[4].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_4" value="#{materializedServiceMessageView.textOperators}" var="advInputItem4" itemValue="#{advInputItem4}" itemLabel="#{advInputItem4.description}"/>
+					<f:ajax render="p_4"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_4" id="s_4" value="#{materializedServiceMessageView.searchObject.searchFields[4].sortOrder}">
+					<f:selectItems value="#{materializedServiceMessageView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_4" value="#{materializedServiceMessageView.searchObject.searchFields[4].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_4">
+					<p:inputText id="b_4" rendered="#{materializedServiceMessageView.searchObject.searchFields[4].between}" value="#{materializedServiceMessageView.searchObject.searchFields[4].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_5" value="#{materializedServiceMessageView.searchObject.searchFields[5].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_5" value="#{materializedServiceMessageView.searchObject.searchFields[5].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_5" value="#{materializedServiceMessageView.textOperators}" var="advInputItem5" itemValue="#{advInputItem5}" itemLabel="#{advInputItem5.description}"/>
+					<f:ajax render="p_5"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_5" id="s_5" value="#{materializedServiceMessageView.searchObject.searchFields[5].sortOrder}">
+					<f:selectItems value="#{materializedServiceMessageView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_5" value="#{materializedServiceMessageView.searchObject.searchFields[5].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_5">
+					<p:inputText id="b_5" rendered="#{materializedServiceMessageView.searchObject.searchFields[5].between}" value="#{materializedServiceMessageView.searchObject.searchFields[5].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_6" value="#{materializedServiceMessageView.searchObject.searchFields[6].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_6" value="#{materializedServiceMessageView.searchObject.searchFields[6].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_6" value="#{materializedServiceMessageView.textOperators}" var="advInputItem6" itemValue="#{advInputItem6}" itemLabel="#{advInputItem6.description}"/>
+					<f:ajax render="p_6"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_6" id="s_6" value="#{materializedServiceMessageView.searchObject.searchFields[6].sortOrder}">
+					<f:selectItems value="#{materializedServiceMessageView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_6" value="#{materializedServiceMessageView.searchObject.searchFields[6].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_6">
+					<p:inputText id="b_6" rendered="#{materializedServiceMessageView.searchObject.searchFields[6].between}" value="#{materializedServiceMessageView.searchObject.searchFields[6].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_7" value="#{materializedServiceMessageView.searchObject.searchFields[7].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_7" value="#{materializedServiceMessageView.searchObject.searchFields[7].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_7" value="#{materializedServiceMessageView.textOperators}" var="advInputItem7" itemValue="#{advInputItem7}" itemLabel="#{advInputItem7.description}"/>
+					<f:ajax render="p_7"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_7" id="s_7" value="#{materializedServiceMessageView.searchObject.searchFields[7].sortOrder}">
+					<f:selectItems value="#{materializedServiceMessageView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_7" value="#{materializedServiceMessageView.searchObject.searchFields[7].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_7">
+					<p:inputText id="b_7" rendered="#{materializedServiceMessageView.searchObject.searchFields[7].between}" value="#{materializedServiceMessageView.searchObject.searchFields[7].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_8" value="#{materializedServiceMessageView.searchObject.searchFields[8].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_8" value="#{materializedServiceMessageView.searchObject.searchFields[8].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_8" value="#{materializedServiceMessageView.textOperators}" var="advInputItem8" itemValue="#{advInputItem8}" itemLabel="#{advInputItem8.description}"/>
+					<f:ajax render="p_8"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_8" id="s_8" value="#{materializedServiceMessageView.searchObject.searchFields[8].sortOrder}">
+					<f:selectItems value="#{materializedServiceMessageView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_8" value="#{materializedServiceMessageView.searchObject.searchFields[8].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_8">
+					<p:inputText id="b_8" rendered="#{materializedServiceMessageView.searchObject.searchFields[8].between}" value="#{materializedServiceMessageView.searchObject.searchFields[8].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_9" value="#{materializedServiceMessageView.searchObject.searchFields[9].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_9" value="#{materializedServiceMessageView.searchObject.searchFields[9].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_9" value="#{materializedServiceMessageView.textOperators}" var="advInputItem9" itemValue="#{advInputItem9}" itemLabel="#{advInputItem9.description}"/>
+					<f:ajax render="p_9"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_9" id="s_9" value="#{materializedServiceMessageView.searchObject.searchFields[9].sortOrder}">
+					<f:selectItems value="#{materializedServiceMessageView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_9" value="#{materializedServiceMessageView.searchObject.searchFields[9].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_9">
+					<p:inputText id="b_9" rendered="#{materializedServiceMessageView.searchObject.searchFields[9].between}" value="#{materializedServiceMessageView.searchObject.searchFields[9].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_10" value="#{materializedServiceMessageView.searchObject.searchFields[10].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_10" value="#{materializedServiceMessageView.searchObject.searchFields[10].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_10" value="#{materializedServiceMessageView.textOperators}" var="advInputItem10" itemValue="#{advInputItem10}" itemLabel="#{advInputItem10.description}"/>
+					<f:ajax render="p_10"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_10" id="s_10" value="#{materializedServiceMessageView.searchObject.searchFields[10].sortOrder}">
+					<f:selectItems value="#{materializedServiceMessageView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_10" value="#{materializedServiceMessageView.searchObject.searchFields[10].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_10">
+					<p:inputText id="b_10" rendered="#{materializedServiceMessageView.searchObject.searchFields[10].between}" value="#{materializedServiceMessageView.searchObject.searchFields[10].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_11" value="#{materializedServiceMessageView.searchObject.searchFields[11].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_11" value="#{materializedServiceMessageView.searchObject.searchFields[11].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_11" value="#{materializedServiceMessageView.textOperators}" var="advInputItem11" itemValue="#{advInputItem11}" itemLabel="#{advInputItem11.description}"/>
+					<f:ajax render="p_11"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_11" id="s_11" value="#{materializedServiceMessageView.searchObject.searchFields[11].sortOrder}">
+					<f:selectItems value="#{materializedServiceMessageView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_11" value="#{materializedServiceMessageView.searchObject.searchFields[11].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_11">
+					<p:inputText id="b_11" rendered="#{materializedServiceMessageView.searchObject.searchFields[11].between}" value="#{materializedServiceMessageView.searchObject.searchFields[11].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_12" value="#{materializedServiceMessageView.searchObject.searchFields[12].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_12" value="#{materializedServiceMessageView.searchObject.searchFields[12].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_12" value="#{materializedServiceMessageView.textOperators}" var="advInputItem12" itemValue="#{advInputItem12}" itemLabel="#{advInputItem12.description}"/>
+					<f:ajax render="p_12"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_12" id="s_12" value="#{materializedServiceMessageView.searchObject.searchFields[12].sortOrder}">
+					<f:selectItems value="#{materializedServiceMessageView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_12" value="#{materializedServiceMessageView.searchObject.searchFields[12].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_12">
+					<p:inputText id="b_12" rendered="#{materializedServiceMessageView.searchObject.searchFields[12].between}" value="#{materializedServiceMessageView.searchObject.searchFields[12].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_13" value="#{materializedServiceMessageView.searchObject.searchFields[13].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_13" value="#{materializedServiceMessageView.searchObject.searchFields[13].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_13" value="#{materializedServiceMessageView.textOperators}" var="advInputItem13" itemValue="#{advInputItem13}" itemLabel="#{advInputItem13.description}"/>
+					<f:ajax render="p_13"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_13" id="s_13" value="#{materializedServiceMessageView.searchObject.searchFields[13].sortOrder}">
+					<f:selectItems value="#{materializedServiceMessageView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_13" value="#{materializedServiceMessageView.searchObject.searchFields[13].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_13">
+					<p:inputText id="b_13" rendered="#{materializedServiceMessageView.searchObject.searchFields[13].between}" value="#{materializedServiceMessageView.searchObject.searchFields[13].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_14" value="#{materializedServiceMessageView.searchObject.searchFields[14].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_14" value="#{materializedServiceMessageView.searchObject.searchFields[14].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_14" value="#{materializedServiceMessageView.textOperators}" var="advInputItem14" itemValue="#{advInputItem14}" itemLabel="#{advInputItem14.description}"/>
+					<f:ajax render="p_14"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_14" id="s_14" value="#{materializedServiceMessageView.searchObject.searchFields[14].sortOrder}">
+					<f:selectItems value="#{materializedServiceMessageView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_14" value="#{materializedServiceMessageView.searchObject.searchFields[14].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_14">
+					<p:inputText id="b_14" rendered="#{materializedServiceMessageView.searchObject.searchFields[14].between}" value="#{materializedServiceMessageView.searchObject.searchFields[14].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_15" value="#{materializedServiceMessageView.searchObject.searchFields[15].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_15" value="#{materializedServiceMessageView.searchObject.searchFields[15].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_15" value="#{materializedServiceMessageView.textOperators}" var="advInputItem15" itemValue="#{advInputItem15}" itemLabel="#{advInputItem15.description}"/>
+					<f:ajax render="p_15"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_15" id="s_15" value="#{materializedServiceMessageView.searchObject.searchFields[15].sortOrder}">
+					<f:selectItems value="#{materializedServiceMessageView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_15" value="#{materializedServiceMessageView.searchObject.searchFields[15].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_15">
+					<p:inputText id="b_15" rendered="#{materializedServiceMessageView.searchObject.searchFields[15].between}" value="#{materializedServiceMessageView.searchObject.searchFields[15].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_16" value="#{materializedServiceMessageView.searchObject.searchFields[16].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_16" value="#{materializedServiceMessageView.searchObject.searchFields[16].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_16" value="#{materializedServiceMessageView.textOperators}" var="advInputItem16" itemValue="#{advInputItem16}" itemLabel="#{advInputItem16.description}"/>
+					<f:ajax render="p_16"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_16" id="s_16" value="#{materializedServiceMessageView.searchObject.searchFields[16].sortOrder}">
+					<f:selectItems value="#{materializedServiceMessageView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_16" value="#{materializedServiceMessageView.searchObject.searchFields[16].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_16">
+					<p:inputText id="b_16" rendered="#{materializedServiceMessageView.searchObject.searchFields[16].between}" value="#{materializedServiceMessageView.searchObject.searchFields[16].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_17" value="#{materializedServiceMessageView.searchObject.searchFields[17].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_17" value="#{materializedServiceMessageView.searchObject.searchFields[17].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_17" value="#{materializedServiceMessageView.textOperators}" var="advInputItem17" itemValue="#{advInputItem17}" itemLabel="#{advInputItem17.description}"/>
+					<f:ajax render="p_17"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_17" id="s_17" value="#{materializedServiceMessageView.searchObject.searchFields[17].sortOrder}">
+					<f:selectItems value="#{materializedServiceMessageView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_17" value="#{materializedServiceMessageView.searchObject.searchFields[17].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_17">
+					<p:inputText id="b_17" rendered="#{materializedServiceMessageView.searchObject.searchFields[17].between}" value="#{materializedServiceMessageView.searchObject.searchFields[17].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_18" value="#{materializedServiceMessageView.searchObject.searchFields[18].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_18" value="#{materializedServiceMessageView.searchObject.searchFields[18].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_18" value="#{materializedServiceMessageView.textOperators}" var="advInputItem18" itemValue="#{advInputItem18}" itemLabel="#{advInputItem18.description}"/>
+					<f:ajax render="p_18"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_18" id="s_18" value="#{materializedServiceMessageView.searchObject.searchFields[18].sortOrder}">
+					<f:selectItems value="#{materializedServiceMessageView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_18" value="#{materializedServiceMessageView.searchObject.searchFields[18].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_18">
+					<p:inputText id="b_18" rendered="#{materializedServiceMessageView.searchObject.searchFields[18].between}" value="#{materializedServiceMessageView.searchObject.searchFields[18].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_19" value="#{materializedServiceMessageView.searchObject.searchFields[19].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_19" value="#{materializedServiceMessageView.searchObject.searchFields[19].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_19" value="#{materializedServiceMessageView.textOperators}" var="advInputItem19" itemValue="#{advInputItem19}" itemLabel="#{advInputItem19.description}"/>
+					<f:ajax render="p_19"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_19" id="s_19" value="#{materializedServiceMessageView.searchObject.searchFields[19].sortOrder}">
+					<f:selectItems value="#{materializedServiceMessageView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_19" value="#{materializedServiceMessageView.searchObject.searchFields[19].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_19">
+					<p:inputText id="b_19" rendered="#{materializedServiceMessageView.searchObject.searchFields[19].between}" value="#{materializedServiceMessageView.searchObject.searchFields[19].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_20" value="#{materializedServiceMessageView.searchObject.searchFields[20].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_20" value="#{materializedServiceMessageView.searchObject.searchFields[20].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_20" value="#{materializedServiceMessageView.textOperators}" var="advInputItem20" itemValue="#{advInputItem20}" itemLabel="#{advInputItem20.description}"/>
+					<f:ajax render="p_20"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_20" id="s_20" value="#{materializedServiceMessageView.searchObject.searchFields[20].sortOrder}">
+					<f:selectItems value="#{materializedServiceMessageView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_20" value="#{materializedServiceMessageView.searchObject.searchFields[20].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_20">
+					<p:inputText id="b_20" rendered="#{materializedServiceMessageView.searchObject.searchFields[20].between}" value="#{materializedServiceMessageView.searchObject.searchFields[20].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_21" value="#{materializedServiceMessageView.searchObject.searchFields[21].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_21" value="#{materializedServiceMessageView.searchObject.searchFields[21].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_21" value="#{materializedServiceMessageView.textOperators}" var="advInputItem21" itemValue="#{advInputItem21}" itemLabel="#{advInputItem21.description}"/>
+					<f:ajax render="p_21"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_21" id="s_21" value="#{materializedServiceMessageView.searchObject.searchFields[21].sortOrder}">
+					<f:selectItems value="#{materializedServiceMessageView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_21" value="#{materializedServiceMessageView.searchObject.searchFields[21].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_21">
+					<p:inputText id="b_21" rendered="#{materializedServiceMessageView.searchObject.searchFields[21].between}" value="#{materializedServiceMessageView.searchObject.searchFields[21].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_22" value="#{materializedServiceMessageView.searchObject.searchFields[22].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_22" value="#{materializedServiceMessageView.searchObject.searchFields[22].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_22" value="#{materializedServiceMessageView.textOperators}" var="advInputItem22" itemValue="#{advInputItem22}" itemLabel="#{advInputItem22.description}"/>
+					<f:ajax render="p_22"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_22" id="s_22" value="#{materializedServiceMessageView.searchObject.searchFields[22].sortOrder}">
+					<f:selectItems value="#{materializedServiceMessageView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_22" value="#{materializedServiceMessageView.searchObject.searchFields[22].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_22">
+					<p:inputText id="b_22" rendered="#{materializedServiceMessageView.searchObject.searchFields[22].between}" value="#{materializedServiceMessageView.searchObject.searchFields[22].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_23" value="#{materializedServiceMessageView.searchObject.searchFields[23].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_23" value="#{materializedServiceMessageView.searchObject.searchFields[23].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_23" value="#{materializedServiceMessageView.textOperators}" var="advInputItem23" itemValue="#{advInputItem23}" itemLabel="#{advInputItem23.description}"/>
+					<f:ajax render="p_23"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_23" id="s_23" value="#{materializedServiceMessageView.searchObject.searchFields[23].sortOrder}">
+					<f:selectItems value="#{materializedServiceMessageView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_23" value="#{materializedServiceMessageView.searchObject.searchFields[23].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_23">
+					<p:inputText id="b_23" rendered="#{materializedServiceMessageView.searchObject.searchFields[23].between}" value="#{materializedServiceMessageView.searchObject.searchFields[23].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_24" value="#{materializedServiceMessageView.searchObject.searchFields[24].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_24" value="#{materializedServiceMessageView.searchObject.searchFields[24].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_24" value="#{materializedServiceMessageView.textOperators}" var="advInputItem24" itemValue="#{advInputItem24}" itemLabel="#{advInputItem24.description}"/>
+					<f:ajax render="p_24"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_24" id="s_24" value="#{materializedServiceMessageView.searchObject.searchFields[24].sortOrder}">
+					<f:selectItems value="#{materializedServiceMessageView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_24" value="#{materializedServiceMessageView.searchObject.searchFields[24].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_24">
+					<p:inputText id="b_24" rendered="#{materializedServiceMessageView.searchObject.searchFields[24].between}" value="#{materializedServiceMessageView.searchObject.searchFields[24].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_25" value="#{materializedServiceMessageView.searchObject.searchFields[25].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_25" value="#{materializedServiceMessageView.searchObject.searchFields[25].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_25" value="#{materializedServiceMessageView.textOperators}" var="advInputItem25" itemValue="#{advInputItem25}" itemLabel="#{advInputItem25.description}"/>
+					<f:ajax render="p_25"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_25" id="s_25" value="#{materializedServiceMessageView.searchObject.searchFields[25].sortOrder}">
+					<f:selectItems value="#{materializedServiceMessageView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_25" value="#{materializedServiceMessageView.searchObject.searchFields[25].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_25">
+					<p:inputText id="b_25" rendered="#{materializedServiceMessageView.searchObject.searchFields[25].between}" value="#{materializedServiceMessageView.searchObject.searchFields[25].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_26" value="#{materializedServiceMessageView.searchObject.searchFields[26].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_26" value="#{materializedServiceMessageView.searchObject.searchFields[26].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_26" value="#{materializedServiceMessageView.textOperators}" var="advInputItem26" itemValue="#{advInputItem26}" itemLabel="#{advInputItem26.description}"/>
+					<f:ajax render="p_26"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_26" id="s_26" value="#{materializedServiceMessageView.searchObject.searchFields[26].sortOrder}">
+					<f:selectItems value="#{materializedServiceMessageView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_26" value="#{materializedServiceMessageView.searchObject.searchFields[26].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_26">
+					<p:inputText id="b_26" rendered="#{materializedServiceMessageView.searchObject.searchFields[26].between}" value="#{materializedServiceMessageView.searchObject.searchFields[26].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_27" value="#{materializedServiceMessageView.searchObject.searchFields[27].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_27" value="#{materializedServiceMessageView.searchObject.searchFields[27].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_27" value="#{materializedServiceMessageView.textOperators}" var="advInputItem27" itemValue="#{advInputItem27}" itemLabel="#{advInputItem27.description}"/>
+					<f:ajax render="p_27"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_27" id="s_27" value="#{materializedServiceMessageView.searchObject.searchFields[27].sortOrder}">
+					<f:selectItems value="#{materializedServiceMessageView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_27" value="#{materializedServiceMessageView.searchObject.searchFields[27].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_27">
+					<p:inputText id="b_27" rendered="#{materializedServiceMessageView.searchObject.searchFields[27].between}" value="#{materializedServiceMessageView.searchObject.searchFields[27].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_28" value="#{materializedServiceMessageView.searchObject.searchFields[28].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_28" value="#{materializedServiceMessageView.searchObject.searchFields[28].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_28" value="#{materializedServiceMessageView.textOperators}" var="advInputItem28" itemValue="#{advInputItem28}" itemLabel="#{advInputItem28.description}"/>
+					<f:ajax render="p_28"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_28" id="s_28" value="#{materializedServiceMessageView.searchObject.searchFields[28].sortOrder}">
+					<f:selectItems value="#{materializedServiceMessageView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_28" value="#{materializedServiceMessageView.searchObject.searchFields[28].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_28">
+					<p:inputText id="b_28" rendered="#{materializedServiceMessageView.searchObject.searchFields[28].between}" value="#{materializedServiceMessageView.searchObject.searchFields[28].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_29" value="#{materializedServiceMessageView.searchObject.searchFields[29].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_29" value="#{materializedServiceMessageView.searchObject.searchFields[29].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_29" value="#{materializedServiceMessageView.textOperators}" var="advInputItem29" itemValue="#{advInputItem29}" itemLabel="#{advInputItem29.description}"/>
+					<f:ajax render="p_29"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_29" id="s_29" value="#{materializedServiceMessageView.searchObject.searchFields[29].sortOrder}">
+					<f:selectItems value="#{materializedServiceMessageView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_29" value="#{materializedServiceMessageView.searchObject.searchFields[29].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_29">
+					<p:inputText id="b_29" rendered="#{materializedServiceMessageView.searchObject.searchFields[29].between}" value="#{materializedServiceMessageView.searchObject.searchFields[29].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_30" value="#{materializedServiceMessageView.searchObject.searchFields[30].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_30" value="#{materializedServiceMessageView.searchObject.searchFields[30].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_30" value="#{materializedServiceMessageView.textOperators}" var="advInputItem30" itemValue="#{advInputItem30}" itemLabel="#{advInputItem30.description}"/>
+					<f:ajax render="p_30"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_30" id="s_30" value="#{materializedServiceMessageView.searchObject.searchFields[30].sortOrder}">
+					<f:selectItems value="#{materializedServiceMessageView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_30" value="#{materializedServiceMessageView.searchObject.searchFields[30].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_30">
+					<p:inputText id="b_30" rendered="#{materializedServiceMessageView.searchObject.searchFields[30].between}" value="#{materializedServiceMessageView.searchObject.searchFields[30].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_31" value="#{materializedServiceMessageView.searchObject.searchFields[31].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_31" value="#{materializedServiceMessageView.searchObject.searchFields[31].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_31" value="#{materializedServiceMessageView.textOperators}" var="advInputItem31" itemValue="#{advInputItem31}" itemLabel="#{advInputItem31.description}"/>
+					<f:ajax render="p_31"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_31" id="s_31" value="#{materializedServiceMessageView.searchObject.searchFields[31].sortOrder}">
+					<f:selectItems value="#{materializedServiceMessageView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_31" value="#{materializedServiceMessageView.searchObject.searchFields[31].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_31">
+					<p:inputText id="b_31" rendered="#{materializedServiceMessageView.searchObject.searchFields[31].between}" value="#{materializedServiceMessageView.searchObject.searchFields[31].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_32" value="#{materializedServiceMessageView.searchObject.searchFields[32].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_32" value="#{materializedServiceMessageView.searchObject.searchFields[32].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_32" value="#{materializedServiceMessageView.textOperators}" var="advInputItem32" itemValue="#{advInputItem32}" itemLabel="#{advInputItem32.description}"/>
+					<f:ajax render="p_32"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_32" id="s_32" value="#{materializedServiceMessageView.searchObject.searchFields[32].sortOrder}">
+					<f:selectItems value="#{materializedServiceMessageView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_32" value="#{materializedServiceMessageView.searchObject.searchFields[32].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_32">
+					<p:inputText id="b_32" rendered="#{materializedServiceMessageView.searchObject.searchFields[32].between}" value="#{materializedServiceMessageView.searchObject.searchFields[32].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_33" value="#{materializedServiceMessageView.searchObject.searchFields[33].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_33" value="#{materializedServiceMessageView.searchObject.searchFields[33].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_33" value="#{materializedServiceMessageView.dateOperators}" var="advInputItem33" itemValue="#{advInputItem33}" itemLabel="#{advInputItem33.description}"/>
+					<f:ajax render="p_33"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_33" id="s_33" value="#{materializedServiceMessageView.searchObject.searchFields[33].sortOrder}">
+					<f:selectItems value="#{materializedServiceMessageView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:datePicker id="fi_33" value="#{materializedServiceMessageView.searchObject.searchFields[33].dateCriterion}" pattern="#{userSession.dateFormat}" size="20" showButtonBar="true" showIcon="true"/>
+				<h:panelGroup id="p_33">
+					<p:datePicker id="fb_33" value="#{materializedServiceMessageView.searchObject.searchFields[33].dateBetweenCriterion}" pattern="#{userSession.dateFormat}" size="20" showButtonBar="true" showIcon="true" rendered="#{materializedServiceMessageView.searchObject.searchFields[33].between}"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_34" value="#{materializedServiceMessageView.searchObject.searchFields[34].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_34" value="#{materializedServiceMessageView.searchObject.searchFields[34].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_34" value="#{materializedServiceMessageView.dateOperators}" var="advInputItem34" itemValue="#{advInputItem34}" itemLabel="#{advInputItem34.description}"/>
+					<f:ajax render="p_34"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_34" id="s_34" value="#{materializedServiceMessageView.searchObject.searchFields[34].sortOrder}">
+					<f:selectItems value="#{materializedServiceMessageView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:datePicker id="fi_34" value="#{materializedServiceMessageView.searchObject.searchFields[34].dateCriterion}" pattern="#{userSession.dateFormat}" size="20" showButtonBar="true" showIcon="true"/>
+				<h:panelGroup id="p_34">
+					<p:datePicker id="fb_34" value="#{materializedServiceMessageView.searchObject.searchFields[34].dateBetweenCriterion}" pattern="#{userSession.dateFormat}" size="20" showButtonBar="true" showIcon="true" rendered="#{materializedServiceMessageView.searchObject.searchFields[34].between}"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_35" value="#{materializedServiceMessageView.searchObject.searchFields[35].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_35" value="#{materializedServiceMessageView.searchObject.searchFields[35].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_35" value="#{materializedServiceMessageView.dateOperators}" var="advInputItem35" itemValue="#{advInputItem35}" itemLabel="#{advInputItem35.description}"/>
+					<f:ajax render="p_35"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_35" id="s_35" value="#{materializedServiceMessageView.searchObject.searchFields[35].sortOrder}">
+					<f:selectItems value="#{materializedServiceMessageView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:datePicker id="fi_35" value="#{materializedServiceMessageView.searchObject.searchFields[35].dateCriterion}" pattern="#{userSession.dateFormat}" size="20" showButtonBar="true" showIcon="true"/>
+				<h:panelGroup id="p_35">
+					<p:datePicker id="fb_35" value="#{materializedServiceMessageView.searchObject.searchFields[35].dateBetweenCriterion}" pattern="#{userSession.dateFormat}" size="20" showButtonBar="true" showIcon="true" rendered="#{materializedServiceMessageView.searchObject.searchFields[35].between}"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_36" value="#{materializedServiceMessageView.searchObject.searchFields[36].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_36" value="#{materializedServiceMessageView.searchObject.searchFields[36].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_36" value="#{materializedServiceMessageView.dateOperators}" var="advInputItem36" itemValue="#{advInputItem36}" itemLabel="#{advInputItem36.description}"/>
+					<f:ajax render="p_36"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_36" id="s_36" value="#{materializedServiceMessageView.searchObject.searchFields[36].sortOrder}">
+					<f:selectItems value="#{materializedServiceMessageView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:datePicker id="fi_36" value="#{materializedServiceMessageView.searchObject.searchFields[36].dateCriterion}" pattern="#{userSession.dateFormat}" size="20" showButtonBar="true" showIcon="true"/>
+				<h:panelGroup id="p_36">
+					<p:datePicker id="fb_36" value="#{materializedServiceMessageView.searchObject.searchFields[36].dateBetweenCriterion}" pattern="#{userSession.dateFormat}" size="20" showButtonBar="true" showIcon="true" rendered="#{materializedServiceMessageView.searchObject.searchFields[36].between}"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_37" value="#{materializedServiceMessageView.searchObject.searchFields[37].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_37" value="#{materializedServiceMessageView.searchObject.searchFields[37].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_37" value="#{materializedServiceMessageView.textOperators}" var="advInputItem37" itemValue="#{advInputItem37}" itemLabel="#{advInputItem37.description}"/>
+					<f:ajax render="p_37"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_37" id="s_37" value="#{materializedServiceMessageView.searchObject.searchFields[37].sortOrder}">
+					<f:selectItems value="#{materializedServiceMessageView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_37" value="#{materializedServiceMessageView.searchObject.searchFields[37].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_37">
+					<p:inputText id="b_37" rendered="#{materializedServiceMessageView.searchObject.searchFields[37].between}" value="#{materializedServiceMessageView.searchObject.searchFields[37].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_38" value="#{materializedServiceMessageView.searchObject.searchFields[38].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_38" value="#{materializedServiceMessageView.searchObject.searchFields[38].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_38" value="#{materializedServiceMessageView.textOperators}" var="advInputItem38" itemValue="#{advInputItem38}" itemLabel="#{advInputItem38.description}"/>
+					<f:ajax render="p_38"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_38" id="s_38" value="#{materializedServiceMessageView.searchObject.searchFields[38].sortOrder}">
+					<f:selectItems value="#{materializedServiceMessageView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_38" value="#{materializedServiceMessageView.searchObject.searchFields[38].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_38">
+					<p:inputText id="b_38" rendered="#{materializedServiceMessageView.searchObject.searchFields[38].between}" value="#{materializedServiceMessageView.searchObject.searchFields[38].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_39" value="#{materializedServiceMessageView.searchObject.searchFields[39].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_39" value="#{materializedServiceMessageView.searchObject.searchFields[39].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_39" value="#{materializedServiceMessageView.textOperators}" var="advInputItem39" itemValue="#{advInputItem39}" itemLabel="#{advInputItem39.description}"/>
+					<f:ajax render="p_39"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_39" id="s_39" value="#{materializedServiceMessageView.searchObject.searchFields[39].sortOrder}">
+					<f:selectItems value="#{materializedServiceMessageView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_39" value="#{materializedServiceMessageView.searchObject.searchFields[39].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_39">
+					<p:inputText id="b_39" rendered="#{materializedServiceMessageView.searchObject.searchFields[39].between}" value="#{materializedServiceMessageView.searchObject.searchFields[39].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_40" value="#{materializedServiceMessageView.searchObject.searchFields[40].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_40" value="#{materializedServiceMessageView.searchObject.searchFields[40].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_40" value="#{materializedServiceMessageView.textOperators}" var="advInputItem40" itemValue="#{advInputItem40}" itemLabel="#{advInputItem40.description}"/>
+					<f:ajax render="p_40"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_40" id="s_40" value="#{materializedServiceMessageView.searchObject.searchFields[40].sortOrder}">
+					<f:selectItems value="#{materializedServiceMessageView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_40" value="#{materializedServiceMessageView.searchObject.searchFields[40].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_40">
+					<p:inputText id="b_40" rendered="#{materializedServiceMessageView.searchObject.searchFields[40].between}" value="#{materializedServiceMessageView.searchObject.searchFields[40].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_41" value="#{materializedServiceMessageView.searchObject.searchFields[41].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_41" value="#{materializedServiceMessageView.searchObject.searchFields[41].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_41" value="#{materializedServiceMessageView.textOperators}" var="advInputItem41" itemValue="#{advInputItem41}" itemLabel="#{advInputItem41.description}"/>
+					<f:ajax render="p_41"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_41" id="s_41" value="#{materializedServiceMessageView.searchObject.searchFields[41].sortOrder}">
+					<f:selectItems value="#{materializedServiceMessageView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_41" value="#{materializedServiceMessageView.searchObject.searchFields[41].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_41">
+					<p:inputText id="b_41" rendered="#{materializedServiceMessageView.searchObject.searchFields[41].between}" value="#{materializedServiceMessageView.searchObject.searchFields[41].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_42" value="#{materializedServiceMessageView.searchObject.searchFields[42].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_42" value="#{materializedServiceMessageView.searchObject.searchFields[42].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_42" value="#{materializedServiceMessageView.textOperators}" var="advInputItem42" itemValue="#{advInputItem42}" itemLabel="#{advInputItem42.description}"/>
+					<f:ajax render="p_42"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_42" id="s_42" value="#{materializedServiceMessageView.searchObject.searchFields[42].sortOrder}">
+					<f:selectItems value="#{materializedServiceMessageView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_42" value="#{materializedServiceMessageView.searchObject.searchFields[42].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_42">
+					<p:inputText id="b_42" rendered="#{materializedServiceMessageView.searchObject.searchFields[42].between}" value="#{materializedServiceMessageView.searchObject.searchFields[42].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fc_43" value="#{materializedServiceMessageView.searchObject.searchFields[43].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_43" value="#{materializedServiceMessageView.searchObject.searchFields[43].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_43" value="#{materializedServiceMessageView.boolOperators}" var="advInputItem43" itemValue="#{advInputItem43}" itemLabel="#{advInputItem43.description}"/>
+					<f:ajax render="p_43"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_43" id="s_43" value="#{materializedServiceMessageView.searchObject.searchFields[43].sortOrder}">
+					<f:selectItems value="#{materializedServiceMessageView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu id="fc_43" value="#{materializedServiceMessageView.searchObject.searchFields[43].stringCriterion}">
+					<f:selectItem itemLabel="" itemValue=""/>
+					<f:selectItem itemLabel="true" itemValue="true"/>
+					<f:selectItem itemLabel="false" itemValue="false"/>
+				</p:selectOneMenu>
+				<h:panelGroup id="p_43"/>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_44" value="#{materializedServiceMessageView.searchObject.searchFields[44].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_44" value="#{materializedServiceMessageView.searchObject.searchFields[44].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_44" value="#{materializedServiceMessageView.textOperators}" var="advInputItem44" itemValue="#{advInputItem44}" itemLabel="#{advInputItem44.description}"/>
+					<f:ajax render="p_44"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_44" id="s_44" value="#{materializedServiceMessageView.searchObject.searchFields[44].sortOrder}">
+					<f:selectItems value="#{materializedServiceMessageView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_44" value="#{materializedServiceMessageView.searchObject.searchFields[44].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_44">
+					<p:inputText id="b_44" rendered="#{materializedServiceMessageView.searchObject.searchFields[44].between}" value="#{materializedServiceMessageView.searchObject.searchFields[44].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_45" value="#{materializedServiceMessageView.searchObject.searchFields[45].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_45" value="#{materializedServiceMessageView.searchObject.searchFields[45].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_45" value="#{materializedServiceMessageView.textOperators}" var="advInputItem45" itemValue="#{advInputItem45}" itemLabel="#{advInputItem45.description}"/>
+					<f:ajax render="p_45"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_45" id="s_45" value="#{materializedServiceMessageView.searchObject.searchFields[45].sortOrder}">
+					<f:selectItems value="#{materializedServiceMessageView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_45" value="#{materializedServiceMessageView.searchObject.searchFields[45].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_45">
+					<p:inputText id="b_45" rendered="#{materializedServiceMessageView.searchObject.searchFields[45].between}" value="#{materializedServiceMessageView.searchObject.searchFields[45].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fc_46" value="#{materializedServiceMessageView.searchObject.searchFields[46].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_46" value="#{materializedServiceMessageView.searchObject.searchFields[46].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_46" value="#{materializedServiceMessageView.boolOperators}" var="advInputItem46" itemValue="#{advInputItem46}" itemLabel="#{advInputItem46.description}"/>
+					<f:ajax render="p_46"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_46" id="s_46" value="#{materializedServiceMessageView.searchObject.searchFields[46].sortOrder}">
+					<f:selectItems value="#{materializedServiceMessageView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu id="fc_46" value="#{materializedServiceMessageView.searchObject.searchFields[46].stringCriterion}">
+					<f:selectItem itemLabel="" itemValue=""/>
+					<f:selectItem itemLabel="true" itemValue="true"/>
+					<f:selectItem itemLabel="false" itemValue="false"/>
+				</p:selectOneMenu>
+				<h:panelGroup id="p_46"/>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_47" value="#{materializedServiceMessageView.searchObject.searchFields[47].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_47" value="#{materializedServiceMessageView.searchObject.searchFields[47].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_47" value="#{materializedServiceMessageView.textOperators}" var="advInputItem47" itemValue="#{advInputItem47}" itemLabel="#{advInputItem47.description}"/>
+					<f:ajax render="p_47"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_47" id="s_47" value="#{materializedServiceMessageView.searchObject.searchFields[47].sortOrder}">
+					<f:selectItems value="#{materializedServiceMessageView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_47" value="#{materializedServiceMessageView.searchObject.searchFields[47].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_47">
+					<p:inputText id="b_47" rendered="#{materializedServiceMessageView.searchObject.searchFields[47].between}" value="#{materializedServiceMessageView.searchObject.searchFields[47].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_48" value="#{materializedServiceMessageView.searchObject.searchFields[48].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_48" value="#{materializedServiceMessageView.searchObject.searchFields[48].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_48" value="#{materializedServiceMessageView.dateOperators}" var="advInputItem48" itemValue="#{advInputItem48}" itemLabel="#{advInputItem48.description}"/>
+					<f:ajax render="p_48"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_48" id="s_48" value="#{materializedServiceMessageView.searchObject.searchFields[48].sortOrder}">
+					<f:selectItems value="#{materializedServiceMessageView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:datePicker id="fi_48" value="#{materializedServiceMessageView.searchObject.searchFields[48].dateCriterion}" pattern="#{userSession.dateFormat}" size="20" showButtonBar="true" showIcon="true"/>
+				<h:panelGroup id="p_48">
+					<p:datePicker id="fb_48" value="#{materializedServiceMessageView.searchObject.searchFields[48].dateBetweenCriterion}" pattern="#{userSession.dateFormat}" size="20" showButtonBar="true" showIcon="true" rendered="#{materializedServiceMessageView.searchObject.searchFields[48].between}"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_49" value="#{materializedServiceMessageView.searchObject.searchFields[49].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_49" value="#{materializedServiceMessageView.searchObject.searchFields[49].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_49" value="#{materializedServiceMessageView.dateOperators}" var="advInputItem49" itemValue="#{advInputItem49}" itemLabel="#{advInputItem49.description}"/>
+					<f:ajax render="p_49"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_49" id="s_49" value="#{materializedServiceMessageView.searchObject.searchFields[49].sortOrder}">
+					<f:selectItems value="#{materializedServiceMessageView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:datePicker id="fi_49" value="#{materializedServiceMessageView.searchObject.searchFields[49].dateCriterion}" pattern="#{userSession.dateFormat}" size="20" showButtonBar="true" showIcon="true"/>
+				<h:panelGroup id="p_49">
+					<p:datePicker id="fb_49" value="#{materializedServiceMessageView.searchObject.searchFields[49].dateBetweenCriterion}" pattern="#{userSession.dateFormat}" size="20" showButtonBar="true" showIcon="true" rendered="#{materializedServiceMessageView.searchObject.searchFields[49].between}"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_50" value="#{materializedServiceMessageView.searchObject.searchFields[50].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_50" value="#{materializedServiceMessageView.searchObject.searchFields[50].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_50" value="#{materializedServiceMessageView.textOperators}" var="advInputItem50" itemValue="#{advInputItem50}" itemLabel="#{advInputItem50.description}"/>
+					<f:ajax render="p_50"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_50" id="s_50" value="#{materializedServiceMessageView.searchObject.searchFields[50].sortOrder}">
+					<f:selectItems value="#{materializedServiceMessageView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_50" value="#{materializedServiceMessageView.searchObject.searchFields[50].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_50">
+					<p:inputText id="b_50" rendered="#{materializedServiceMessageView.searchObject.searchFields[50].between}" value="#{materializedServiceMessageView.searchObject.searchFields[50].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_51" value="#{materializedServiceMessageView.searchObject.searchFields[51].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_51" value="#{materializedServiceMessageView.searchObject.searchFields[51].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_51" value="#{materializedServiceMessageView.textOperators}" var="advInputItem51" itemValue="#{advInputItem51}" itemLabel="#{advInputItem51.description}"/>
+					<f:ajax render="p_51"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_51" id="s_51" value="#{materializedServiceMessageView.searchObject.searchFields[51].sortOrder}">
+					<f:selectItems value="#{materializedServiceMessageView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_51" value="#{materializedServiceMessageView.searchObject.searchFields[51].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_51">
+					<p:inputText id="b_51" rendered="#{materializedServiceMessageView.searchObject.searchFields[51].between}" value="#{materializedServiceMessageView.searchObject.searchFields[51].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_52" value="#{materializedServiceMessageView.searchObject.searchFields[52].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_52" value="#{materializedServiceMessageView.searchObject.searchFields[52].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_52" value="#{materializedServiceMessageView.dateOperators}" var="advInputItem52" itemValue="#{advInputItem52}" itemLabel="#{advInputItem52.description}"/>
+					<f:ajax render="p_52"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_52" id="s_52" value="#{materializedServiceMessageView.searchObject.searchFields[52].sortOrder}">
+					<f:selectItems value="#{materializedServiceMessageView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:datePicker id="fi_52" value="#{materializedServiceMessageView.searchObject.searchFields[52].dateCriterion}" pattern="#{userSession.dateFormat}" size="20" showButtonBar="true" showIcon="true"/>
+				<h:panelGroup id="p_52">
+					<p:datePicker id="fb_52" value="#{materializedServiceMessageView.searchObject.searchFields[52].dateBetweenCriterion}" pattern="#{userSession.dateFormat}" size="20" showButtonBar="true" showIcon="true" rendered="#{materializedServiceMessageView.searchObject.searchFields[52].between}"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_53" value="#{materializedServiceMessageView.searchObject.searchFields[53].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_53" value="#{materializedServiceMessageView.searchObject.searchFields[53].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_53" value="#{materializedServiceMessageView.textOperators}" var="advInputItem53" itemValue="#{advInputItem53}" itemLabel="#{advInputItem53.description}"/>
+					<f:ajax render="p_53"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_53" id="s_53" value="#{materializedServiceMessageView.searchObject.searchFields[53].sortOrder}">
+					<f:selectItems value="#{materializedServiceMessageView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_53" value="#{materializedServiceMessageView.searchObject.searchFields[53].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_53">
+					<p:inputText id="b_53" rendered="#{materializedServiceMessageView.searchObject.searchFields[53].between}" value="#{materializedServiceMessageView.searchObject.searchFields[53].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+			</h:panelGrid>
+			</p:scrollPanel>
+			</p:tab>
+			<p:tab title="#{i18n.search_input_adv}">
+			<h:panelGrid columns="2">
+				<h:outputLabel value="#{i18n.search_input_case}:" styleClass="label-field-mandatory"/>
+				<p:selectBooleanCheckbox value="#{materializedServiceMessageView.searchObject.caseSensitive}"/>
+				<h:outputLabel value="#{i18n.search_input_count}:" styleClass="label-field-mandatory"/>
+				<p:selectBooleanCheckbox value="#{materializedServiceMessageView.searchObject.count}"/>
+				<h:outputLabel value="#{i18n.search_input_filter_match}:" styleClass="label-field-mandatory"/>
+				<p:selectBooleanCheckbox value="#{materializedServiceMessageView.searchObject.exactFilterMatch}"/>
+				<h:outputLabel value="#{i18n.search_input_filter_fetch_size}:" styleClass="label-field-mandatory"/>
+				<p:inputText value="#{materializedServiceMessageView.searchObject.maxResult}" size="5">
+					<f:validateLongRange minimum="1" maximum="1000000"/>
+				</p:inputText>
+				<h:outputLabel value="#{i18n.search_input_visible_fields_label}:" styleClass="label-field-mandatory"/>
+				<p:pickList value="#{materializedServiceMessageView.visibleFields}" var="savedQueryListItem" itemLabel="#{savedQueryListItem.colLabel}" itemValue="#{savedQueryListItem}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchFieldDTOConverter" addLabel="#{i18n.pick_list_add}" addAllLabel="#{i18n.pick_list_add_all}" removeLabel="#{i18n.pick_list_remove}" removeAllLabel="#{i18n.pick_list_remove_all}">
+					<f:facet name="sourceCaption">#{i18n.search_input_all_fields}</f:facet>
+					<f:facet name="targetCaption">#{i18n.search_input_visible_fields}</f:facet>
+				</p:pickList>
+			</h:panelGrid>
+			</p:tab>
+			<p:tab title="#{i18n.search_input_saved_query_title}">
+				<h:panelGrid columns="1">
+					<h:outputLabel styleClass="label-field-mandatory" value="#{i18n.search_input_lbl_saved_query}"/>
+					<p:selectOneListbox id="savedQueryList" value="#{materializedServiceMessageView.selectedSavedQuery}" style="height:150px; width:300px">
+						<f:selectItems value="#{materializedServiceMessageView.savedQueries}"/>
+					</p:selectOneListbox>
+					<h:panelGrid columns="2">
+						<p:commandButton value="#{i18n.search_input_run_saved_query}" action="#{materializedServiceMessageView.runSavedQuery}" ajax="false"/>
+						<p:commandButton value="#{i18n.search_input_delete_saved_query}" action="#{materializedServiceMessageView.deleteSavedQuery}" ajax="false"/>
+					</h:panelGrid>
+				</h:panelGrid>
+			</p:tab>
+		</p:tabView>
+		<br/>
+		<h:panelGrid columns="3">
+			<p:commandButton id="cmdSearch" value="#{i18n.search_input_perform_search}" action="#{materializedServiceMessageView.fetchMaterializedServiceMessages}" ajax="false"/>
+			<p:commandButton id="cmdReset" value="#{i18n.command_reset}" action="#{materializedServiceMessageView.initSearchObject}" onclick="PF('dlgSearchInput').hide()" ajax="false"/>
+			<p:commandButton id="cmdCount" value="#{i18n.search_input_perform_count}" actionListener="#{materializedServiceMessageView.countRecords}" onclick="PF('dlgSearchInput').hide()" update="growl" ajax="true"/>
+		</h:panelGrid>
+	</p:dialog>
+
+	<p:menubar>
+		<p:submenu icon="pi pi-file" label="#{i18n.mnu_file}" id="panData_mniFile">
+			<p:menuitem value="#{i18n.action_search_input}" ajax="true" icon="pi pi-search" id="panData_mniSearch" onclick="PF('dlgSearchInput').show()"/>
+			<p:menuitem value="#{i18n.search_input_dlg_save_query}" icon="pi pi-save" onclick="PF('dlgSaveQuery').show()"/>
+		</p:submenu>
+		<p:submenu icon="pi pi-refresh" label="#{i18n.mnu_view}">
+			<p:menuitem value="#{i18n.action_refresh}" ajax="false" icon="pi pi-refresh" actionListener="#{materializedServiceMessageView.fetchMaterializedServiceMessages}"/>
+		</p:submenu>
+		<p:submenu icon="pi pi-print" label="#{i18n.mnu_export}">
+			<p:menuitem value="#{i18n.action_export_xls}" ajax="false" icon="pi pi-file-excel">
+				<p:dataExporter type="xls" target="panData" fileName="MaterializedServiceMessageList"/>
+			</p:menuitem>
+			<p:menuitem value="#{i18n.action_export_pdf}" ajax="false" icon="pi pi-file-pdf">
+				<p:dataExporter type="pdf" target="panData" fileName="MaterializedServiceMessageList"/>
+			</p:menuitem>
+		</p:submenu>
+	</p:menubar>
+
+	<br/>
+
+	<p:dataTable id="panData" var="materializedServiceMessageViewItem" rows="50"
+		selectionMode="single"
+		selection="#{materializedServiceMessageView.selectedObject}"
+		loadingMessage="#{i18n.action_fetch_data}"
+		value="#{materializedServiceMessageView.materializedServiceMessagesList}" scrollable="false"
+		paginatorPosition="top" paginatorAlwaysVisible="false" paginator="true" resizableColumns="true"
+		rowKey="#{materializedServiceMessageViewItem.id}"
+		paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+		rowsPerPageTemplate="10,50,100,500,1000">
+		<p:ajax event="rowDblselect" listener="#{materializedServiceMessageView.onDoubleClick}"/>
+
+		<p:column sortBy="#{materializedServiceMessageViewItem.id}" width="120" rendered="#{materializedServiceMessageView.searchObject.searchFields[0].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedservicemessageview_id}"/>
+			</f:facet>
+			<h:outputText value="#{materializedServiceMessageViewItem.id}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materializedServiceMessageViewItem.plant}" width="80" rendered="#{materializedServiceMessageView.searchObject.searchFields[1].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_materializedentitiy_plant}"/>
+			</f:facet>
+			<h:outputText value="#{materializedServiceMessageViewItem.plant}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materializedServiceMessageViewItem.serviceOrder}" width="120" rendered="#{materializedServiceMessageView.searchObject.searchFields[2].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedservicemessageview_serviceorder}"/>
+			</f:facet>
+			<h:outputText value="#{materializedServiceMessageViewItem.serviceOrder}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materializedServiceMessageViewItem.serviceOrderType}" width="80" rendered="#{materializedServiceMessageView.searchObject.searchFields[3].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedservicemessageview_serviceordertype}"/>
+			</f:facet>
+			<h:outputText value="#{materializedServiceMessageView.translateServiceOrderType(materializedServiceMessageViewItem.serviceOrderType)}"/>
+		</p:column>
+
+		<p:column sortBy="#{materializedServiceMessageViewItem.countryName}" width="150" rendered="#{materializedServiceMessageView.searchObject.searchFields[4].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedservicemessageview_countryname}"/>
+			</f:facet>
+			<h:outputText value="#{materializedServiceMessageViewItem.countryName}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materializedServiceMessageViewItem.customerName}" width="200" rendered="#{materializedServiceMessageView.searchObject.searchFields[5].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedservicemessageview_customername}"/>
+			</f:facet>
+			<h:outputText value="#{materializedServiceMessageViewItem.customerName}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materializedServiceMessageViewItem.externalSupplierName}" width="150" rendered="#{materializedServiceMessageView.searchObject.searchFields[6].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedservicemessageview_externalsuppliername}"/>
+			</f:facet>
+			<h:outputText value="#{materializedServiceMessageViewItem.externalSupplierName}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materializedServiceMessageViewItem.supplierName}" width="200" rendered="#{materializedServiceMessageView.searchObject.searchFields[7].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedservicemessageview_suppliername}"/>
+			</f:facet>
+			<h:outputText value="#{materializedServiceMessageViewItem.supplierName}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materializedServiceMessageViewItem.serialNumber}" width="120" rendered="#{materializedServiceMessageView.searchObject.searchFields[8].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedservicemessageview_serialnumber}"/>
+			</f:facet>
+			<h:outputText value="#{materializedServiceMessageViewItem.serialNumber}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materializedServiceMessageViewItem.parentSerialNumber}" width="120" rendered="#{materializedServiceMessageView.searchObject.searchFields[9].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedservicemessageview_parentserialnumber}"/>
+			</f:facet>
+			<h:outputText value="#{materializedServiceMessageViewItem.parentSerialNumber}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materializedServiceMessageViewItem.materialNumber}" width="150" rendered="#{materializedServiceMessageView.searchObject.searchFields[10].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_materializedentitiy_materialnumber}"/>
+			</f:facet>
+			<h:outputText value="#{materializedServiceMessageViewItem.materialNumber}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materializedServiceMessageViewItem.sapNumber}" width="150" rendered="#{materializedServiceMessageView.searchObject.searchFields[11].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedservicemessageview_sapnumber}"/>
+			</f:facet>
+			<h:outputText value="#{materializedServiceMessageViewItem.sapNumber}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materializedServiceMessageViewItem.materialType}" width="80" rendered="#{materializedServiceMessageView.searchObject.searchFields[12].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedservicemessageview_materialtype}"/>
+			</f:facet>
+			<h:outputText value="#{materializedServiceMessageViewItem.materialType}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materializedServiceMessageViewItem.materialShortText}" width="250" rendered="#{materializedServiceMessageView.searchObject.searchFields[13].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_materializedentitiy_materialshorttext}"/>
+			</f:facet>
+			<h:outputText value="#{materializedServiceMessageViewItem.materialShortText}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materializedServiceMessageViewItem.materialHierarchy}" width="150" rendered="#{materializedServiceMessageView.searchObject.searchFields[14].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_materializedentitiy_materialhierarchy}"/>
+			</f:facet>
+			<h:outputText value="#{materializedServiceMessageViewItem.materialHierarchy}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materializedServiceMessageViewItem.revisionNumber}" width="100" rendered="#{materializedServiceMessageView.searchObject.searchFields[15].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_materializedentitiy_revisionnumber}"/>
+			</f:facet>
+			<h:outputText value="#{materializedServiceMessageViewItem.revisionNumber}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materializedServiceMessageViewItem.ownerLocation}" width="100" rendered="#{materializedServiceMessageView.searchObject.searchFields[16].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_materializedservicemessage_ownerlocation}"/>
+			</f:facet>
+			<h:outputText value="#{materializedServiceMessageViewItem.ownerLocation}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materializedServiceMessageViewItem.parentMaterialNumber}" width="150" rendered="#{materializedServiceMessageView.searchObject.searchFields[17].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedservicemessageview_parentmaterialnumber}"/>
+			</f:facet>
+			<h:outputText value="#{materializedServiceMessageViewItem.parentMaterialNumber}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materializedServiceMessageViewItem.parentSapNumber}" width="150" rendered="#{materializedServiceMessageView.searchObject.searchFields[18].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedservicemessageview_parentsapnumber}"/>
+			</f:facet>
+			<h:outputText value="#{materializedServiceMessageViewItem.parentSapNumber}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materializedServiceMessageViewItem.parentMaterialType}" width="80" rendered="#{materializedServiceMessageView.searchObject.searchFields[19].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedservicemessageview_parentmaterialtype}"/>
+			</f:facet>
+			<h:outputText value="#{materializedServiceMessageViewItem.parentMaterialType}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materializedServiceMessageViewItem.parentMaterialShortText}" width="250" rendered="#{materializedServiceMessageView.searchObject.searchFields[20].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_materializedentitiy_parentmaterialshorttext}"/>
+			</f:facet>
+			<h:outputText value="#{materializedServiceMessageViewItem.parentMaterialShortText}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materializedServiceMessageViewItem.parentMaterialHierarchy}" width="150" rendered="#{materializedServiceMessageView.searchObject.searchFields[21].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedservicemessageview_parentmaterialhierarchy}"/>
+			</f:facet>
+			<h:outputText value="#{materializedServiceMessageViewItem.parentMaterialHierarchy}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materializedServiceMessageViewItem.parentRevisionNumber}" width="100" rendered="#{materializedServiceMessageView.searchObject.searchFields[22].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedservicemessageview_parentrevisionnumber}"/>
+			</f:facet>
+			<h:outputText value="#{materializedServiceMessageViewItem.parentRevisionNumber}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materializedServiceMessageViewItem.rmaType}" width="80" rendered="#{materializedServiceMessageView.searchObject.searchFields[23].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedservicemessageview_rmatype}"/>
+			</f:facet>
+			<h:outputText value="#{materializedServiceMessageViewItem.rmaType}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materializedServiceMessageViewItem.faultAnalysisCode}" width="120" rendered="#{materializedServiceMessageView.searchObject.searchFields[24].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedservicemessageview_faultanalysiscode}"/>
+			</f:facet>
+			<h:outputText value="#{materializedServiceMessageViewItem.faultAnalysisCode}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materializedServiceMessageViewItem.symptomShortText}" width="250" rendered="#{materializedServiceMessageView.searchObject.searchFields[25].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_materializedservicemessage_symptomshorttext}"/>
+			</f:facet>
+			<h:outputText value="#{materializedServiceMessageViewItem.symptomShortText}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materializedServiceMessageViewItem.serviceName}" width="100" rendered="#{materializedServiceMessageView.searchObject.searchFields[26].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_materializedservicemessage_servicename}"/>
+			</f:facet>
+			<h:outputText value="#{materializedServiceMessageViewItem.serviceName}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materializedServiceMessageViewItem.errorCodeGroup}" width="150" rendered="#{materializedServiceMessageView.searchObject.searchFields[27].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedservicemessageview_errorcodegroup}"/>
+			</f:facet>
+			<h:outputText value="#{materializedServiceMessageViewItem.errorCodeGroup}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materializedServiceMessageViewItem.errorCodeName}" width="150" rendered="#{materializedServiceMessageView.searchObject.searchFields[28].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedservicemessageview_errorcodename}"/>
+			</f:facet>
+			<h:outputText value="#{materializedServiceMessageViewItem.errorCodeName}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materializedServiceMessageViewItem.errorShortText}" width="250" rendered="#{materializedServiceMessageView.searchObject.searchFields[29].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedservicemessageview_errorshorttext}"/>
+			</f:facet>
+			<h:outputText value="#{materializedServiceMessageViewItem.errorShortText}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materializedServiceMessageViewItem.taskName}" width="120" rendered="#{materializedServiceMessageView.searchObject.searchFields[30].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedservicemessageview_taskname}"/>
+			</f:facet>
+			<h:outputText value="#{materializedServiceMessageViewItem.taskName}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materializedServiceMessageViewItem.repairTaskShortText}" width="250" rendered="#{materializedServiceMessageView.searchObject.searchFields[31].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_materializedservicemessage_repairtaskshorttext}"/>
+			</f:facet>
+			<h:outputText value="#{materializedServiceMessageViewItem.repairTaskShortText}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materializedServiceMessageViewItem.stateName}" width="120" rendered="#{materializedServiceMessageView.searchObject.searchFields[32].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedservicemessageview_statename}"/>
+			</f:facet>
+			<h:outputText value="#{materializedServiceMessageViewItem.stateName}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materializedServiceMessageViewItem.internalArrivalDate}" width="110" rendered="#{materializedServiceMessageView.searchObject.searchFields[33].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedservicemessageview_internalarrivaldate}"/>
+			</f:facet>
+			<h:outputText value="#{materializedServiceMessageViewItem.internalArrivalDate}">
+				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateConverter"/>
+				<f:attribute name="pattern" value="#{userSession.dateFormat}"/>
+				<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materializedServiceMessageViewItem.internalShipmentDate}" width="110" rendered="#{materializedServiceMessageView.searchObject.searchFields[34].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedservicemessageview_internalshipmentdate}"/>
+			</f:facet>
+			<h:outputText value="#{materializedServiceMessageViewItem.internalShipmentDate}">
+				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateConverter"/>
+				<f:attribute name="pattern" value="#{userSession.dateFormat}"/>
+				<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materializedServiceMessageViewItem.basicStartDate}" width="110" rendered="#{materializedServiceMessageView.searchObject.searchFields[35].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedservicemessageview_basicstartdate}"/>
+			</f:facet>
+			<h:outputText value="#{materializedServiceMessageViewItem.basicStartDate}">
+				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateConverter"/>
+				<f:attribute name="pattern" value="#{userSession.dateFormat}"/>
+				<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materializedServiceMessageViewItem.basicEndDate}" width="100" rendered="#{materializedServiceMessageView.searchObject.searchFields[36].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_materializedservicemessage_basicenddate}"/>
+			</f:facet>
+			<h:outputText value="#{materializedServiceMessageViewItem.basicEndDate}">
+				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateConverter"/>
+				<f:attribute name="pattern" value="#{userSession.dateFormat}"/>
+				<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materializedServiceMessageViewItem.designator}" width="100" rendered="#{materializedServiceMessageView.searchObject.searchFields[37].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_materializedservicemessage_designator}"/>
+			</f:facet>
+			<h:outputText value="#{materializedServiceMessageViewItem.designator}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materializedServiceMessageViewItem.defectComponent}" width="120" rendered="#{materializedServiceMessageView.searchObject.searchFields[38].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_materializedservicemessage_defectcomponent}"/>
+			</f:facet>
+			<h:outputText value="#{materializedServiceMessageViewItem.defectComponent}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materializedServiceMessageViewItem.analysisText}" width="250" rendered="#{materializedServiceMessageView.searchObject.searchFields[39].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_materializedservicemessage_analysistext}"/>
+			</f:facet>
+			<h:outputText value="#{materializedServiceMessageViewItem.analysisText}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materializedServiceMessageViewItem.internalReport}" width="250" rendered="#{materializedServiceMessageView.searchObject.searchFields[40].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_materializedservicemessage_internalreport}"/>
+			</f:facet>
+			<h:outputText value="#{materializedServiceMessageViewItem.internalReport}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materializedServiceMessageViewItem.externalReport}" width="250" rendered="#{materializedServiceMessageView.searchObject.searchFields[41].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_materializedservicemessage_externalreport}"/>
+			</f:facet>
+			<h:outputText value="#{materializedServiceMessageViewItem.externalReport}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materializedServiceMessageViewItem.customerReport}" width="150" rendered="#{materializedServiceMessageView.searchObject.searchFields[42].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_materializedservicemessage_customerreport}"/>
+			</f:facet>
+			<h:outputText value="#{materializedServiceMessageViewItem.customerReport}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materializedServiceMessageViewItem.epidemicFailure}" width="80" rendered="#{materializedServiceMessageView.searchObject.searchFields[43].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedservicemessageview_epidemicfailure}"/>
+			</f:facet>
+			<p:selectBooleanCheckbox value="#{materializedServiceMessageViewItem.epidemicFailure}" disabled="true"/>
+		</p:column>
+
+		<p:column sortBy="#{materializedServiceMessageViewItem.errorId}" width="100" rendered="#{materializedServiceMessageView.searchObject.searchFields[44].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_materializedservicemessage_errorid}"/>
+			</f:facet>
+			<h:outputText value="#{materializedServiceMessageViewItem.errorId}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materializedServiceMessageViewItem.origin}" width="100" rendered="#{materializedServiceMessageView.searchObject.searchFields[45].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_materializedservicemessage_origin}"/>
+			</f:facet>
+			<h:outputText value="#{materializedServiceMessageViewItem.origin}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materializedServiceMessageViewItem.customerFailure}" width="80" rendered="#{materializedServiceMessageView.searchObject.searchFields[46].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedservicemessageview_customerfailure}"/>
+			</f:facet>
+			<p:selectBooleanCheckbox value="#{materializedServiceMessageViewItem.customerFailure}" disabled="true"/>
+		</p:column>
+
+		<p:column sortBy="#{materializedServiceMessageViewItem.customerGroup}" width="120" rendered="#{materializedServiceMessageView.searchObject.searchFields[47].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_materializedservicemessage_customergroup}"/>
+			</f:facet>
+			<h:outputText value="#{materializedServiceMessageViewItem.customerGroup}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materializedServiceMessageViewItem.supplierArrivalDate}" width="100" rendered="#{materializedServiceMessageView.searchObject.searchFields[48].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedservicemessageview_supplierarrivaldate}"/>
+			</f:facet>
+			<h:outputText value="#{materializedServiceMessageViewItem.supplierArrivalDate}">
+				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateConverter"/>
+				<f:attribute name="pattern" value="#{userSession.dateFormat}"/>
+				<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materializedServiceMessageViewItem.customerShipmentDate}" width="110" rendered="#{materializedServiceMessageView.searchObject.searchFields[49].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedservicemessageview_customershipmentdate}"/>
+			</f:facet>
+			<h:outputText value="#{materializedServiceMessageViewItem.customerShipmentDate}">
+				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateConverter"/>
+				<f:attribute name="pattern" value="#{userSession.dateFormat}"/>
+				<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materializedServiceMessageViewItem.deliveryNoteNumber}" width="100" rendered="#{materializedServiceMessageView.searchObject.searchFields[50].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedservicemessageview_deliverynotenumber}"/>
+			</f:facet>
+			<h:outputText value="#{materializedServiceMessageViewItem.deliveryNoteNumber}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materializedServiceMessageViewItem.repairDescription}" width="150" rendered="#{materializedServiceMessageView.searchObject.searchFields[51].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_materializedservicemessage_repairdescription}"/>
+			</f:facet>
+			<h:outputText value="#{materializedServiceMessageViewItem.repairDescription}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materializedServiceMessageViewItem.assemblyDate}" width="80" rendered="#{materializedServiceMessageView.searchObject.searchFields[52].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedservicemessageview_assemblydate}"/>
+			</f:facet>
+			<h:outputText value="#{materializedServiceMessageViewItem.assemblyDate}">
+				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateConverter"/>
+				<f:attribute name="pattern" value="#{userSession.dateFormat}"/>
+				<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{materializedServiceMessageViewItem.assemblyPO}" width="100" rendered="#{materializedServiceMessageView.searchObject.searchFields[53].visible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedservicemessageview_assemblypo}"/>
+			</f:facet>
+			<h:outputText value="#{materializedServiceMessageViewItem.assemblyPO}">
+			</h:outputText>
+		</p:column>
+	</p:dataTable>
+	<p/>
+
+	<h:outputText styleClass="label-field-mandatory" value="#{i18n.result_total_number_records} #{materializedServiceMessageView.materializedServiceMessagesList.size()}"/>
+	<h:outputText styleClass="label-field-mandatory" rendered="#{materializedServiceMessageView.searchObject.count}" value="&#160;#{i18n.search_input_count_of}&#160;"/>
+	<h:outputText styleClass="label-field-mandatory" rendered="#{materializedServiceMessageView.searchObject.count}" value="#{materializedServiceMessageView.countResult}"/>
+	<p/>
+
+	<p:contextMenu for="panData">
+		<p:menuitem value="#{i18n.action_delete}" ajax="true" icon="pi pi-trash" id="panData_mniDelete" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR')}" onclick="PF('deleteConfirm').show()"/>
+		<p:menuitem value="#{i18n.action_copy}" ajax="true" icon="pi pi-copy" id="panData_mniCopy" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR')}" onclick="PF('copyConfirm').show()"/>
+		<p:menuitem value="#{i18n.action_refresh}" ajax="false" type="push" icon="pi pi-refresh" id="panData_mniRefresh" actionListener="#{materializedServiceMessageView.fetchMaterializedServiceMessages}"/>
+	</p:contextMenu>
+
+	<p:confirmDialog modal="true" message="#{i18n.dialog_delete_question}" header="#{i18n.dialog_delete_title}" severity="alert" widgetVar="deleteConfirm">
+		<p:commandButton value="#{i18n.command_yes}" oncomplete="PF('deleteConfirm').hide()" actionListener="#{materializedServiceMessageView.deleteMaterializedServiceMessage}" id="panData_cmdYesDelete" ajax="false"/>
+		<p:commandButton value="#{i18n.command_no}" onclick="PF('deleteConfirm').hide()" type="button"/>
+	</p:confirmDialog>
+
+	<p:confirmDialog modal="true" message="#{i18n.dialog_copy_question}" header="#{i18n.dialog_copy_title}" severity="info" widgetVar="copyConfirm">
+		<p:commandButton value="#{i18n.command_yes}" oncomplete="PF('copyConfirm').hide()" action="#{materializedServiceMessageView.copy}" id="panData_cmdYesCopy" ajax="false"/>
+		<p:commandButton value="#{i18n.command_no}" onclick="PF('copyConfirm').hide()" type="button"/>
+	</p:confirmDialog>
+
+	<p:dialog header="#{i18n.search_input_dlg_save_query}" widgetVar="dlgSaveQuery" modal="true" height="100">
+		<h:panelGrid columns="3">
+			<h:outputLabel value="#{i18n.search_input_lbl_save_query}" styleClass="label-field-mandatory"/>
+			<p:inputText id="txtQueryName" value="#{materializedServiceMessageView.savedQueryName}">
+			</p:inputText>
+			<p:commandButton value="#{i18n.command_save}" action="#{materializedServiceMessageView.saveNewQuery}" ajax="false" onclick="PF('dlgSaveQuery').hide()"/>
+		</h:panelGrid>
+	</p:dialog>
+
+	<p:defaultCommand target=":form:cmdSearch"/>
+
+</ui:define>
+</ui:composition>

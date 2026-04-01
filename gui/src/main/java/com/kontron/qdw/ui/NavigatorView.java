@@ -246,6 +246,25 @@ public class NavigatorView implements Serializable {
                 new DefaultTreeNode<>(VIEW_TYPE, new TreeNavigatorItem(bundle.getString(FORM_SERIALOBJECTWITHTRACEBOMVIEW_TITLE),
                         req.getContextPath() + "/view/SerialObjectWithTraceBoMView.jsf"), itemGroup0004);
         }
+
+
+        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY)) {
+            // Form group: Service
+            final var itemGroup0005 = new DefaultTreeNode<>(FOLDER_TYPE, new TreeNavigatorItem(bundle.getString(FG_TOP_SERVICE)), root);
+            itemGroup0005.setExpanded(true);
+
+            if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR)) {
+                // Form group: Master data
+                final var itemGroup0006 = new DefaultTreeNode<>(FOLDER_TYPE, new TreeNavigatorItem(bundle.getString(FG_SERVICE_MASTER_DATA)),
+                        itemGroup0005);
+                itemGroup0006.setExpanded(true);
+            }
+
+            // Materialized service orders
+            if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY))
+                new DefaultTreeNode<>(VIEW_TYPE, new TreeNavigatorItem(bundle.getString(FORM_MATERIALIZEDSERVICEMESSAGEVIEW_TITLE),
+                        req.getContextPath() + "/view/MaterializedServiceMessageView.jsf"), itemGroup0005);
+        }
     }
 
     /**
