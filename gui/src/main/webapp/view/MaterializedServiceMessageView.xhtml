@@ -886,21 +886,23 @@
 		</p:column>
 
 		<p:column sortBy="#{materializedServiceMessageViewItem.countryName}" width="150" 
-			rendered="#{materializedServiceMessageView.searchObject.searchFields[4].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[4].colOrder}" >
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[4].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[4].colOrder}" 
+			exportValue="#{materializedServiceMessageViewItem.countryName}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedservicemessageview_countryname}"/>
 			</f:facet>
-			<h:outputText value="#{materializedServiceMessageViewItem.countryName}">
-			</h:outputText>
+			<h:outputText value="#{materializedServiceMessageViewItem.countryName}" id="countryName" />
+			<p:tooltip for="countryName" value="#{materializedServiceMessageViewItem.countryName}" position="top" showDelay="50" />
 		</p:column>
 
 		<p:column sortBy="#{materializedServiceMessageViewItem.customerName}" width="200" 
-			rendered="#{materializedServiceMessageView.searchObject.searchFields[5].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[4].colOrder}" >
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[5].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[4].colOrder}" 
+			exportValue="#{materializedServiceMessageViewItem.customerName}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedservicemessageview_customername}"/>
 			</f:facet>
-			<h:outputText value="#{materializedServiceMessageViewItem.customerName}">
-			</h:outputText>
+			<h:outputText value="#{materializedServiceMessageViewItem.customerName}" id="customerName" />
+			<p:tooltip for="customerName" value="#{materializedServiceMessageViewItem.customerName}" position="top" showDelay="50" />
 		</p:column>
 
 		<p:column sortBy="#{materializedServiceMessageViewItem.externalSupplierName}" width="150" 
@@ -913,48 +915,49 @@
 		</p:column>
 
 		<p:column sortBy="#{materializedServiceMessageViewItem.supplierName}" width="200" 
-			rendered="#{materializedServiceMessageView.searchObject.searchFields[7].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[7].colOrder}" >
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[7].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[7].colOrder}" 
+			exportValue="#{materializedServiceMessageViewItem.supplierName}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedservicemessageview_suppliername}"/>
 			</f:facet>
-			<h:outputText value="#{materializedServiceMessageViewItem.supplierName}">
-			</h:outputText>
+			<h:outputText value="#{materializedServiceMessageViewItem.supplierName}" id="supplierName" />
+			<p:tooltip for="supplierName" value="#{materializedServiceMessageViewItem.supplierName}" position="top" showDelay="50" />
 		</p:column>
 
-		<p:column sortBy="#{materializedServiceMessageViewItem.serialNumber}" width="120" 
+		<p:column sortBy="#{materializedServiceMessageViewItem.serialNumber}" width="150" 
 			rendered="#{materializedServiceMessageView.searchObject.searchFields[8].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[8].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedservicemessageview_serialnumber}"/>
 			</f:facet>
-			<h:outputText value="#{materializedServiceMessageViewItem.serialNumber}">
-			</h:outputText>
+			<h:outputText value="#{materializedServiceMessageViewItem.serialNumber}" />
 		</p:column>
 
-		<p:column sortBy="#{materializedServiceMessageViewItem.parentSerialNumber}" width="120" 
+		<p:column sortBy="#{materializedServiceMessageViewItem.parentSerialNumber}" width="150" 
 			rendered="#{materializedServiceMessageView.searchObject.searchFields[9].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[9].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedservicemessageview_parentserialnumber}"/>
 			</f:facet>
-			<h:outputText value="#{materializedServiceMessageViewItem.parentSerialNumber}">
-			</h:outputText>
+			<h:outputText value="#{materializedServiceMessageViewItem.parentSerialNumber}" />
 		</p:column>
 
 		<p:column sortBy="#{materializedServiceMessageViewItem.materialNumber}" width="150" 
-			rendered="#{materializedServiceMessageView.searchObject.searchFields[10].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[10].colOrder}" >
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[10].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[10].colOrder}" 
+			exportValue="#{materializedServiceMessageViewItem.materialNumber}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_materializedentitiy_materialnumber}"/>
 			</f:facet>
-			<h:outputText value="#{materializedServiceMessageViewItem.materialNumber}">
-			</h:outputText>
+			<h:outputText value="#{materializedServiceMessageViewItem.materialNumber}" id="materialNumber" />
+			<p:tooltip for="materialNumber" value="#{materializedServiceMessageViewItem.materialNumber}" position="top" showDelay="50" />
 		</p:column>
 
 		<p:column sortBy="#{materializedServiceMessageViewItem.sapNumber}" width="150" 
-			rendered="#{materializedServiceMessageView.searchObject.searchFields[11].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[11].colOrder}" >
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[11].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[11].colOrder}" 
+			exportValue="#{materializedServiceMessageViewItem.sapNumber}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedservicemessageview_sapnumber}"/>
 			</f:facet>
-			<h:outputText value="#{materializedServiceMessageViewItem.sapNumber}">
-			</h:outputText>
+			<h:outputText value="#{materializedServiceMessageViewItem.sapNumber}" id="sapNumber" />
+			<p:tooltip for="sapNumber" value="#{materializedServiceMessageViewItem.sapNumber}" position="top" showDelay="50" />
 		</p:column>
 
 		<p:column sortBy="#{materializedServiceMessageViewItem.materialType}" width="80" 
@@ -967,12 +970,13 @@
 		</p:column>
 
 		<p:column sortBy="#{materializedServiceMessageViewItem.materialShortText}" width="250" 
-			rendered="#{materializedServiceMessageView.searchObject.searchFields[13].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[13].colOrder}" >
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[13].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[13].colOrder}" 
+			exportValue="#{materializedServiceMessageViewItem.materialShortText}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_materializedentitiy_materialshorttext}"/>
 			</f:facet>
-			<h:outputText value="#{materializedServiceMessageViewItem.materialShortText}">
-			</h:outputText>
+			<h:outputText value="#{materializedServiceMessageViewItem.materialShortText}" id="materialShortText" />
+			<p:tooltip for="materialShortText" value="#{materializedServiceMessageViewItem.materialShortText}" position="top" showDelay="50" />
 		</p:column>
 
 		<p:column sortBy="#{materializedServiceMessageViewItem.materialHierarchy}" width="150" 
@@ -985,12 +989,13 @@
 		</p:column>
 
 		<p:column sortBy="#{materializedServiceMessageViewItem.revisionNumber}" width="100" 
-			rendered="#{materializedServiceMessageView.searchObject.searchFields[15].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[15].colOrder}" >
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[15].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[15].colOrder}" 
+			exportValue="#{materializedServiceMessageViewItem.revisionNumber}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_materializedentitiy_revisionnumber}"/>
 			</f:facet>
-			<h:outputText value="#{materializedServiceMessageViewItem.revisionNumber}">
-			</h:outputText>
+			<h:outputText value="#{materializedServiceMessageViewItem.revisionNumber}" id="revisionNumber" />
+			<p:tooltip for="revisionNumber" value="#{materializedServiceMessageViewItem.revisionNumber}" position="top" showDelay="50" />
 		</p:column>
 
 		<p:column sortBy="#{materializedServiceMessageViewItem.ownerLocation}" width="100" 
@@ -1003,21 +1008,23 @@
 		</p:column>
 
 		<p:column sortBy="#{materializedServiceMessageViewItem.parentMaterialNumber}" width="150" 
-			rendered="#{materializedServiceMessageView.searchObject.searchFields[17].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[17].colOrder}" >
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[17].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[17].colOrder}" 
+			exportValue="#{materializedServiceMessageViewItem.parentMaterialNumber}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedservicemessageview_parentmaterialnumber}"/>
 			</f:facet>
-			<h:outputText value="#{materializedServiceMessageViewItem.parentMaterialNumber}">
-			</h:outputText>
+			<h:outputText value="#{materializedServiceMessageViewItem.parentMaterialNumber}" id="parentMaterialNumber" />
+			<p:tooltip for="parentMaterialNumber" value="#{materializedServiceMessageViewItem.parentMaterialNumber}" position="top" showDelay="50" />
 		</p:column>
 
 		<p:column sortBy="#{materializedServiceMessageViewItem.parentSapNumber}" width="150" 
-			rendered="#{materializedServiceMessageView.searchObject.searchFields[18].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[18].colOrder}" >
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[18].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[18].colOrder}" 
+			exportValue="#{materializedServiceMessageViewItem.parentSapNumber}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedservicemessageview_parentsapnumber}"/>
 			</f:facet>
-			<h:outputText value="#{materializedServiceMessageViewItem.parentSapNumber}">
-			</h:outputText>
+			<h:outputText value="#{materializedServiceMessageViewItem.parentSapNumber}" id="parentSapNumber" />
+			<p:tooltip for="parentSapNumber" value="#{materializedServiceMessageViewItem.parentSapNumber}" position="top" showDelay="50" />
 		</p:column>
 
 		<p:column sortBy="#{materializedServiceMessageViewItem.parentMaterialType}" width="80" 
@@ -1030,12 +1037,13 @@
 		</p:column>
 
 		<p:column sortBy="#{materializedServiceMessageViewItem.parentMaterialShortText}" width="250" 
-			rendered="#{materializedServiceMessageView.searchObject.searchFields[20].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[20].colOrder}" >
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[20].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[20].colOrder}" 
+			exportValue="#{materializedServiceMessageViewItem.parentMaterialShortText}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_materializedentitiy_parentmaterialshorttext}"/>
 			</f:facet>
-			<h:outputText value="#{materializedServiceMessageViewItem.parentMaterialShortText}">
-			</h:outputText>
+			<h:outputText value="#{materializedServiceMessageViewItem.parentMaterialShortText}" id="parentMaterialShortText" />
+			<p:tooltip for="parentMaterialShortText" value="#{materializedServiceMessageViewItem.parentMaterialShortText}" position="top" showDelay="50" />
 		</p:column>
 
 		<p:column sortBy="#{materializedServiceMessageViewItem.parentMaterialHierarchy}" width="150" 
@@ -1048,12 +1056,13 @@
 		</p:column>
 
 		<p:column sortBy="#{materializedServiceMessageViewItem.parentRevisionNumber}" width="100" 
-			rendered="#{materializedServiceMessageView.searchObject.searchFields[22].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[22].colOrder}" >
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[22].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[22].colOrder}" 
+			exportValue="#{materializedServiceMessageViewItem.parentRevisionNumber}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedservicemessageview_parentrevisionnumber}"/>
 			</f:facet>
-			<h:outputText value="#{materializedServiceMessageViewItem.parentRevisionNumber}">
-			</h:outputText>
+			<h:outputText value="#{materializedServiceMessageViewItem.parentRevisionNumber}" id="parentRevisionNumber" />
+			<p:tooltip for="parentRevisionNumber" value="#{materializedServiceMessageViewItem.parentRevisionNumber}" position="top" showDelay="50" />
 		</p:column>
 
 		<p:column sortBy="#{materializedServiceMessageViewItem.rmaType}" width="80" 
@@ -1066,57 +1075,63 @@
 		</p:column>
 
 		<p:column sortBy="#{materializedServiceMessageViewItem.faultAnalysisCode}" width="120" 
-			rendered="#{materializedServiceMessageView.searchObject.searchFields[24].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[24].colOrder}" >
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[24].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[24].colOrder}" 
+			exportValue="#{materializedServiceMessageViewItem.faultAnalysisCode}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedservicemessageview_faultanalysiscode}"/>
 			</f:facet>
-			<h:outputText value="#{materializedServiceMessageViewItem.faultAnalysisCode}">
-			</h:outputText>
+			<h:outputText value="#{materializedServiceMessageViewItem.faultAnalysisCode}" id="faultAnalysisCode" />
+			<p:tooltip for="faultAnalysisCode" value="#{materializedServiceMessageViewItem.faultAnalysisCode}" position="top" showDelay="50" />
 		</p:column>
 
 		<p:column sortBy="#{materializedServiceMessageViewItem.symptomShortText}" width="250" 
-			rendered="#{materializedServiceMessageView.searchObject.searchFields[25].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[25].colOrder}" >
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[25].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[25].colOrder}" 
+			exportValue="#{materializedServiceMessageViewItem.symptomShortText}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_materializedservicemessage_symptomshorttext}"/>
 			</f:facet>
-			<h:outputText value="#{materializedServiceMessageViewItem.symptomShortText}">
-			</h:outputText>
+			<h:outputText value="#{materializedServiceMessageViewItem.symptomShortText}" id="symptomShortText" />
+			<p:tooltip for="symptomShortText" value="#{materializedServiceMessageViewItem.symptomShortText}" position="top" showDelay="50" />
 		</p:column>
 
 		<p:column sortBy="#{materializedServiceMessageViewItem.serviceName}" width="100" 
-			rendered="#{materializedServiceMessageView.searchObject.searchFields[26].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[26].colOrder}" >
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[26].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[26].colOrder}" 
+			exportValue="#{materializedServiceMessageViewItem.serviceName}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_materializedservicemessage_servicename}"/>
 			</f:facet>
-			<h:outputText value="#{materializedServiceMessageViewItem.serviceName}">
-			</h:outputText>
+			<h:outputText value="#{materializedServiceMessageViewItem.serviceName}" id="serviceName" />
+			<p:tooltip for="serviceName" value="#{materializedServiceMessageViewItem.serviceName}" position="top" showDelay="50" />
 		</p:column>
 
 		<p:column sortBy="#{materializedServiceMessageViewItem.errorCodeGroup}" width="150" 
-			rendered="#{materializedServiceMessageView.searchObject.searchFields[27].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[27].colOrder}" >
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[27].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[27].colOrder}" 
+			exportValue="#{materializedServiceMessageViewItem.errorCodeGroup}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedservicemessageview_errorcodegroup}"/>
 			</f:facet>
-			<h:outputText value="#{materializedServiceMessageViewItem.errorCodeGroup}">
-			</h:outputText>
+			<h:outputText value="#{materializedServiceMessageViewItem.errorCodeGroup}" id="errorCodeGroup" />
+			<p:tooltip for="errorCodeGroup" value="#{materializedServiceMessageViewItem.errorCodeGroup}" position="top" showDelay="50" />
 		</p:column>
 
 		<p:column sortBy="#{materializedServiceMessageViewItem.errorCodeName}" width="150" 
-			rendered="#{materializedServiceMessageView.searchObject.searchFields[28].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[28].colOrder}" >
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[28].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[28].colOrder}" 
+			exportValue="#{materializedServiceMessageViewItem.errorCodeName}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedservicemessageview_errorcodename}"/>
 			</f:facet>
-			<h:outputText value="#{materializedServiceMessageViewItem.errorCodeName}">
-			</h:outputText>
+			<h:outputText value="#{materializedServiceMessageViewItem.errorCodeName}" id="errorCodeName" />
+			<p:tooltip for="errorCodeName" value="#{materializedServiceMessageViewItem.errorCodeName}" position="top" showDelay="50" />
 		</p:column>
 
 		<p:column sortBy="#{materializedServiceMessageViewItem.errorShortText}" width="250" 
-			rendered="#{materializedServiceMessageView.searchObject.searchFields[29].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[29].colOrder}" >
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[29].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[29].colOrder}" 
+			exportValue="#{materializedServiceMessageViewItem.errorShortText}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedservicemessageview_errorshorttext}"/>
 			</f:facet>
-			<h:outputText value="#{materializedServiceMessageViewItem.errorShortText}">
-			</h:outputText>
+			<h:outputText value="#{materializedServiceMessageViewItem.errorShortText}" id="errorShortText" />
+			<p:tooltip for="errorShortText" value="#{materializedServiceMessageViewItem.errorShortText}" position="top" showDelay="50" />
 		</p:column>
 
 		<p:column sortBy="#{materializedServiceMessageViewItem.taskName}" width="120" 
@@ -1129,21 +1144,23 @@
 		</p:column>
 
 		<p:column sortBy="#{materializedServiceMessageViewItem.repairTaskShortText}" width="250" 
-			rendered="#{materializedServiceMessageView.searchObject.searchFields[31].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[31].colOrder}" >
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[31].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[31].colOrder}" 
+			exportValue="#{materializedServiceMessageViewItem.repairTaskShortText}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_materializedservicemessage_repairtaskshorttext}"/>
 			</f:facet>
-			<h:outputText value="#{materializedServiceMessageViewItem.repairTaskShortText}">
-			</h:outputText>
+			<h:outputText value="#{materializedServiceMessageViewItem.repairTaskShortText}" id="repairTaskShortText" />
+			<p:tooltip for="repairTaskShortText" value="#{materializedServiceMessageViewItem.repairTaskShortText}" position="top" showDelay="50" />
 		</p:column>
 
 		<p:column sortBy="#{materializedServiceMessageViewItem.stateName}" width="120" 
-			rendered="#{materializedServiceMessageView.searchObject.searchFields[32].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[32].colOrder}" >
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[32].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[32].colOrder}" 
+			exportValue="#{materializedServiceMessageViewItem.stateName}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedservicemessageview_statename}"/>
 			</f:facet>
-			<h:outputText value="#{materializedServiceMessageViewItem.stateName}">
-			</h:outputText>
+			<h:outputText value="#{materializedServiceMessageViewItem.stateName}" id="stateName" />
+			<p:tooltip for="stateName" value="#{materializedServiceMessageViewItem.stateName}" position="top" showDelay="50" />
 		</p:column>
 
 		<p:column sortBy="#{materializedServiceMessageViewItem.internalArrivalDate}" width="110" 
@@ -1204,48 +1221,53 @@
 		</p:column>
 
 		<p:column sortBy="#{materializedServiceMessageViewItem.defectComponent}" width="120" 
-			rendered="#{materializedServiceMessageView.searchObject.searchFields[38].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[38].colOrder}" >
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[38].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[38].colOrder}" 
+			exportValue="#{materializedServiceMessageViewItem.defectComponent}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_materializedservicemessage_defectcomponent}"/>
 			</f:facet>
-			<h:outputText value="#{materializedServiceMessageViewItem.defectComponent}">
-			</h:outputText>
+			<h:outputText value="#{materializedServiceMessageViewItem.defectComponent}" id="defectComponent" />
+			<p:tooltip for="defectComponent" value="#{materializedServiceMessageViewItem.defectComponent}" position="top" showDelay="50" />
 		</p:column>
 
 		<p:column sortBy="#{materializedServiceMessageViewItem.analysisText}" width="250" 
-			rendered="#{materializedServiceMessageView.searchObject.searchFields[39].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[39].colOrder}" >
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[39].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[39].colOrder}" 
+			exportValue="#{materializedServiceMessageViewItem.analysisText}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_materializedservicemessage_analysistext}"/>
 			</f:facet>
-			<h:outputText value="#{materializedServiceMessageViewItem.analysisText}">
-			</h:outputText>
+			<h:outputText value="#{materializedServiceMessageViewItem.analysisText}" id="analysisText" />
+			<p:tooltip for="analysisText" value="#{materializedServiceMessageViewItem.analysisText}" position="top" showDelay="50" />
 		</p:column>
 
 		<p:column sortBy="#{materializedServiceMessageViewItem.internalReport}" width="250" 
-			rendered="#{materializedServiceMessageView.searchObject.searchFields[40].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[40].colOrder}" >
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[40].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[40].colOrder}" 
+			exportValue="#{materializedServiceMessageViewItem.internalReport}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_materializedservicemessage_internalreport}"/>
 			</f:facet>
-			<h:outputText value="#{materializedServiceMessageViewItem.internalReport}">
-			</h:outputText>
+			<h:outputText value="#{materializedServiceMessageViewItem.internalReport}" id="internalReport" />
+			<p:tooltip for="internalReport" value="#{materializedServiceMessageViewItem.internalReport}" position="top" showDelay="50" />
 		</p:column>
 
 		<p:column sortBy="#{materializedServiceMessageViewItem.externalReport}" width="250" 
-			rendered="#{materializedServiceMessageView.searchObject.searchFields[41].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[41].colOrder}" >
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[41].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[41].colOrder}" 
+			exportValue="#{materializedServiceMessageViewItem.externalReport}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_materializedservicemessage_externalreport}"/>
 			</f:facet>
-			<h:outputText value="#{materializedServiceMessageViewItem.externalReport}">
-			</h:outputText>
+			<h:outputText value="#{materializedServiceMessageViewItem.externalReport}" id="externalReport" />
+			<p:tooltip for="externalReport" value="#{materializedServiceMessageViewItem.externalReport}" position="top" showDelay="50" />
 		</p:column>
 
 		<p:column sortBy="#{materializedServiceMessageViewItem.customerReport}" width="150" 
-			rendered="#{materializedServiceMessageView.searchObject.searchFields[42].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[42].colOrder}" >
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[42].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[42].colOrder}" 
+			exportValue="#{materializedServiceMessageViewItem.customerReport}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_materializedservicemessage_customerreport}"/>
 			</f:facet>
-			<h:outputText value="#{materializedServiceMessageViewItem.customerReport}">
-			</h:outputText>
+			<h:outputText value="#{materializedServiceMessageViewItem.customerReport}" id="customerReport" />
+			<p:tooltip for="customerReport" value="#{materializedServiceMessageViewItem.customerReport}" position="top" showDelay="50" />
 		</p:column>
 
 		<p:column sortBy="#{materializedServiceMessageViewItem.epidemicFailure}" width="80" 
@@ -1325,12 +1347,13 @@
 		</p:column>
 
 		<p:column sortBy="#{materializedServiceMessageViewItem.repairDescription}" width="150" 
-			rendered="#{materializedServiceMessageView.searchObject.searchFields[51].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[51].colOrder}" >
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[51].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[51].colOrder}" 
+			exportValue="#{materializedServiceMessageViewItem.repairDescription}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_materializedservicemessage_repairdescription}"/>
 			</f:facet>
-			<h:outputText value="#{materializedServiceMessageViewItem.repairDescription}">
-			</h:outputText>
+			<h:outputText value="#{materializedServiceMessageViewItem.repairDescription}" id="repairDescription" />
+			<p:tooltip for="repairDescription" value="#{materializedServiceMessageViewItem.repairDescription}" position="top" showDelay="50" />
 		</p:column>
 
 		<p:column sortBy="#{materializedServiceMessageViewItem.assemblyDate}" width="80" 

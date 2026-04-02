@@ -8441,8 +8441,8 @@
     <fields colIndex="6" width="200" title="Customer" dTOAttribute="/400/@attributes.21"/>
     <fields colIndex="7" width="150" title="Work center" dTOAttribute="/400/@attributes.32"/>
     <fields colIndex="8" width="200" title="Supplier" dTOAttribute="/400/@attributes.26"/>
-    <fields colIndex="9" width="120" title="Serial no," dTOAttribute="/400/@attributes.43"/>
-    <fields colIndex="10" width="120" title="P. serial no." dTOAttribute="/400/@attributes.44"/>
+    <fields colIndex="9" width="150" title="Serial no," dTOAttribute="/400/@attributes.43"/>
+    <fields colIndex="10" width="150" title="P. serial no." dTOAttribute="/400/@attributes.44"/>
     <fields colIndex="11" width="150" title="Material number" dTOAttribute="/400/@attributes.45"/>
     <fields colIndex="12" width="150" title="SAP number" dTOAttribute="/400/@attributes.51"/>
     <fields colIndex="13" width="80" title="Mat. type" dTOAttribute="/400/@attributes.47"/>

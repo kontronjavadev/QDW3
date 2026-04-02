@@ -171,10 +171,10 @@ public class MaterializedServiceMessageView extends SuperView implements Seriali
                 bundle.getString(COL_MATERIALIZEDSERVICEMESSAGEVIEW_SUPPLIERNAME), SearchFieldDataTypeEnum.STRING, 200);
 
         new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedServiceMessageSearchDTO.SELECT_SERIALNUMBER,
-                bundle.getString(COL_MATERIALIZEDSERVICEMESSAGEVIEW_SERIALNUMBER), SearchFieldDataTypeEnum.STRING, 120);
+                bundle.getString(COL_MATERIALIZEDSERVICEMESSAGEVIEW_SERIALNUMBER), SearchFieldDataTypeEnum.STRING, 150);
 
         new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedServiceMessageSearchDTO.SELECT_PARENTSERIALNUMBER,
-                bundle.getString(COL_MATERIALIZEDSERVICEMESSAGEVIEW_PARENTSERIALNUMBER), SearchFieldDataTypeEnum.STRING, 120);
+                bundle.getString(COL_MATERIALIZEDSERVICEMESSAGEVIEW_PARENTSERIALNUMBER), SearchFieldDataTypeEnum.STRING, 150);
 
         new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterializedServiceMessageSearchDTO.SELECT_MATERIALNUMBER,
                 bundle.getString(LBL_ATTR_MATERIALIZEDENTITIY_MATERIALNUMBER), SearchFieldDataTypeEnum.STRING, 150);
