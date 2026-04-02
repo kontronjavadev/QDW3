@@ -26,12 +26,12 @@
 		</p:ajaxStatus>
 	</h:panelGrid>
 
-	<p:growl id="growl" showDetail="true"/>
+	<p:growl id="growl" showDetail="true" skipDetailIfEqualsSummary="true" />
 
-	<p:dialog height="510" width="1000" header="#{i18n.search_input_dlg}" widgetVar="dlgSearchInput" modal="true">
+	<p:dialog height="auto" width="1000" id="dlgSearchInput" closeOnEscape="true" header="#{i18n.search_input_dlg}" widgetVar="dlgSearchInput" modal="true" >
 		<p:tabView id="tabViewSearchInput" dynamic="false">
 			<p:tab title="#{i18n.search_input_filter}">
-			<p:scrollPanel style="width:100%; height:400px;" mode="native">
+			<p:scrollPanel style="width:100%; #{sizeServiceBean.searchFilterHeight()};" mode="native">
 			<h:panelGrid columns="5" cellpadding="3">
 				<h:outputText styleClass="label-field-mandatory" value="#{i18n.search_input_column}"/>
 				<h:outputText styleClass="label-field-mandatory" value="#{i18n.search_input_operator}"/>
@@ -751,6 +751,7 @@
 			</h:panelGrid>
 			</p:scrollPanel>
 			</p:tab>
+
 			<p:tab title="#{i18n.search_input_adv}">
 			<h:panelGrid columns="2">
 				<h:outputLabel value="#{i18n.search_input_case}:" styleClass="label-field-mandatory"/>
@@ -764,36 +765,65 @@
 					<f:validateLongRange minimum="1" maximum="1000000"/>
 				</p:inputText>
 				<h:outputLabel value="#{i18n.search_input_visible_fields_label}:" styleClass="label-field-mandatory"/>
-				<p:pickList value="#{materializedServiceMessageView.visibleFields}" var="savedQueryListItem" itemLabel="#{savedQueryListItem.colLabel}" itemValue="#{savedQueryListItem}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchFieldDTOConverter" addLabel="#{i18n.pick_list_add}" addAllLabel="#{i18n.pick_list_add_all}" removeLabel="#{i18n.pick_list_remove}" removeAllLabel="#{i18n.pick_list_remove_all}">
+				<p:pickList styleClass="searchdialog-picklist" value="#{materializedServiceMessageView.visibleFields}" var="savedQueryListItem" itemLabel="#{savedQueryListItem.colLabel}" itemValue="#{savedQueryListItem}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchFieldDTOConverter" addLabel="#{i18n.pick_list_add}" addAllLabel="#{i18n.pick_list_add_all}" removeLabel="#{i18n.pick_list_remove}" removeAllLabel="#{i18n.pick_list_remove_all}">
 					<f:facet name="sourceCaption">#{i18n.search_input_all_fields}</f:facet>
 					<f:facet name="targetCaption">#{i18n.search_input_visible_fields}</f:facet>
 				</p:pickList>
 			</h:panelGrid>
 			</p:tab>
+
 			<p:tab title="#{i18n.search_input_saved_query_title}">
 				<h:panelGrid columns="1">
 					<h:outputLabel styleClass="label-field-mandatory" value="#{i18n.search_input_lbl_saved_query}"/>
-					<p:selectOneListbox id="savedQueryList" value="#{materializedServiceMessageView.selectedSavedQuery}" style="height:150px; width:300px">
+					<p:selectOneListbox id="savedQueryList" value="#{materializedServiceMessageView.selectedSavedQuery}" style="#{sizeServiceBean.searchQueriesHeight()}; width:480px">
 						<f:selectItems value="#{materializedServiceMessageView.savedQueries}"/>
 					</p:selectOneListbox>
-					<h:panelGrid columns="2">
-						<p:commandButton value="#{i18n.search_input_run_saved_query}" action="#{materializedServiceMessageView.runSavedQuery}" ajax="false"/>
-						<p:commandButton value="#{i18n.search_input_delete_saved_query}" action="#{materializedServiceMessageView.deleteSavedQuery}" ajax="false"/>
+					<h:panelGrid columns="3">
+						<p:commandButton icon="pi pi-caret-right" value="#{i18n.search_input_run_saved_query}" action="#{materializedServiceMessageView.runSavedQuery}" ajax="false"/>
+						<p:commandButton icon="pi pi-pencil" value="#{i18n.search_input_rename_saved_query}" actionListener="#{materializedServiceMessageView.openRenameDialog}" ajax="true"/>
+						<p:commandButton icon="pi pi-eraser" value="#{i18n.search_input_delete_saved_query}" actionListener="#{materializedServiceMessageView.deleteSavedQuery}" update="savedQueryList" ajax="true"/>
 					</h:panelGrid>
 				</h:panelGrid>
 			</p:tab>
 		</p:tabView>
 		<br/>
-		<h:panelGrid columns="3">
+		<h:panelGrid columns="4">
 			<p:commandButton id="cmdSearch" value="#{i18n.search_input_perform_search}" action="#{materializedServiceMessageView.fetchMaterializedServiceMessages}" ajax="false"/>
-			<p:commandButton id="cmdReset" value="#{i18n.command_reset}" action="#{materializedServiceMessageView.initSearchObject}" onclick="PF('dlgSearchInput').hide()" ajax="false"/>
-			<p:commandButton id="cmdCount" value="#{i18n.search_input_perform_count}" actionListener="#{materializedServiceMessageView.countRecords}" onclick="PF('dlgSearchInput').hide()" update="growl" ajax="true"/>
+			<p:commandButton id="cmdReset" value="#{i18n.command_reset}" action="#{materializedServiceMessageView.resetSearchObject}" onclick="PF('dlgSearchInput').hide()" ajax="false"/>
+			<p:commandButton id="cmdClear" value="#{i18n.command_clear}" action="#{materializedServiceMessageView.clearSearchObject}" update="tabViewSearchInput" ajax="true"/>
+			<p:commandButton id="cmdCount" value="#{i18n.search_input_perform_count}" actionListener="#{materializedServiceMessageView.countRecords}" update="growl" ajax="true"/>
 		</h:panelGrid>
 	</p:dialog>
 
+<!-- Query rename dialog -->
+	<p:dialog widgetVar="dlgQeryRename" id="dlgQeryRename" modal="true" showEffect="fade" hideEffect="fade" focus="txtNewQueryName" closeOnEscape="true">
+		<f:facet name="header">
+			<i class="pi pi-pencil"/>
+			<h:outputText value="&#160;#{i18n.query_rename_title}"/>
+		</f:facet>
+
+		<h:panelGrid columns="3">
+			<h:outputLabel value="#{i18n.query_rename_newname} *:" for="txtNewQueryName" styleClass="label-field-mandatory"/>
+			<p:inputText id="txtNewQueryName" value="#{materializedServiceMessageView.newQueryName}"/>
+			<p:tooltip for="txtNewQueryName" value=""/>
+		</h:panelGrid>
+		<p/>
+
+		<f:facet name="footer">
+			<p:commandButton id="cmdRename" icon="pi pi-save" value="#{i18n.command_rename}" ajax="true" 
+				actionListener="#{materializedServiceMessageView.renameQuery()}"
+				update="tabViewSearchInput,growl" oncomplete="PF('dlgQeryRename').hide()"/>
+
+			<p:commandButton id="cmdCancel" icon="pi pi-times" value="#{i18n.command_cancel}" onclick="PF('dlgQeryRename').hide()" />
+
+			<p:defaultCommand target="cmdRename" scope="dlgQeryRename"/>
+		</f:facet>
+	</p:dialog>
+
+
+
 	<p:menubar>
 		<p:submenu icon="pi pi-file" label="#{i18n.mnu_file}" id="panData_mniFile">
-			<p:menuitem value="#{i18n.action_search_input}" ajax="true" icon="pi pi-search" id="panData_mniSearch" onclick="PF('dlgSearchInput').show()"/>
 			<p:menuitem value="#{i18n.search_input_dlg_save_query}" icon="pi pi-save" onclick="PF('dlgSaveQuery').show()"/>
 		</p:submenu>
 		<p:submenu icon="pi pi-refresh" label="#{i18n.mnu_view}">
@@ -801,28 +831,27 @@
 		</p:submenu>
 		<p:submenu icon="pi pi-print" label="#{i18n.mnu_export}">
 			<p:menuitem value="#{i18n.action_export_xls}" ajax="false" icon="pi pi-file-excel">
-				<p:dataExporter type="xls" target="panData" fileName="MaterializedServiceMessageList"/>
-			</p:menuitem>
-			<p:menuitem value="#{i18n.action_export_pdf}" ajax="false" icon="pi pi-file-pdf">
-				<p:dataExporter type="pdf" target="panData" fileName="MaterializedServiceMessageList"/>
+				<p:dataExporter type="xlsxstream" target="panData" fileName="MaterializedServiceMessageList"/>
 			</p:menuitem>
 		</p:submenu>
+		<p:menuitem value="#{i18n.action_search_input}" ajax="true" icon="pi pi-search" id="panData_mniSearch" onclick="PF('dlgSearchInput').show()"/>
 	</p:menubar>
 
-	<br/>
 
-	<p:dataTable id="panData" var="materializedServiceMessageViewItem" rows="50"
+	<p:dataTable id="panData" var="materializedServiceMessageViewItem" rows="#{materializedServiceMessageView.numberRows}"
+		selectionTextDisabled="false" allowUnsorting="true" resizeMode="expand" multiViewState="true" 
 		selectionMode="single"
 		selection="#{materializedServiceMessageView.selectedObject}"
 		loadingMessage="#{i18n.action_fetch_data}"
 		value="#{materializedServiceMessageView.materializedServiceMessagesList}" scrollable="false"
-		paginatorPosition="top" paginatorAlwaysVisible="false" paginator="true" resizableColumns="true"
+		paginatorPosition="top" paginatorAlwaysVisible="#{materializedServiceMessageView.paginatorAlwaysVisible}" paginator="true" resizableColumns="true"
 		rowKey="#{materializedServiceMessageViewItem.id}"
 		paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-		rowsPerPageTemplate="10,50,100,500,1000">
+		rowsPerPageTemplate="50,150,400,1000">
 		<p:ajax event="rowDblselect" listener="#{materializedServiceMessageView.onDoubleClick}"/>
 
-		<p:column sortBy="#{materializedServiceMessageViewItem.id}" width="120" rendered="#{materializedServiceMessageView.searchObject.searchFields[0].visible}" >
+		<p:column sortBy="#{materializedServiceMessageViewItem.id}" width="120" 
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[0].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[0].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedservicemessageview_id}"/>
 			</f:facet>
@@ -830,7 +859,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedServiceMessageViewItem.plant}" width="80" rendered="#{materializedServiceMessageView.searchObject.searchFields[1].visible}" >
+		<p:column sortBy="#{materializedServiceMessageViewItem.plant}" width="80" 
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[1].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[1].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_materializedentitiy_plant}"/>
 			</f:facet>
@@ -838,7 +868,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedServiceMessageViewItem.serviceOrder}" width="120" rendered="#{materializedServiceMessageView.searchObject.searchFields[2].visible}" >
+		<p:column sortBy="#{materializedServiceMessageViewItem.serviceOrder}" width="120" 
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[2].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[2].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedservicemessageview_serviceorder}"/>
 			</f:facet>
@@ -846,14 +877,16 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedServiceMessageViewItem.serviceOrderType}" width="80" rendered="#{materializedServiceMessageView.searchObject.searchFields[3].visible}" >
+		<p:column sortBy="#{materializedServiceMessageViewItem.serviceOrderType}" width="80" 
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[3].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[3].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedservicemessageview_serviceordertype}"/>
 			</f:facet>
 			<h:outputText value="#{materializedServiceMessageView.translateServiceOrderType(materializedServiceMessageViewItem.serviceOrderType)}"/>
 		</p:column>
 
-		<p:column sortBy="#{materializedServiceMessageViewItem.countryName}" width="150" rendered="#{materializedServiceMessageView.searchObject.searchFields[4].visible}" >
+		<p:column sortBy="#{materializedServiceMessageViewItem.countryName}" width="150" 
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[4].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[4].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedservicemessageview_countryname}"/>
 			</f:facet>
@@ -861,7 +894,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedServiceMessageViewItem.customerName}" width="200" rendered="#{materializedServiceMessageView.searchObject.searchFields[5].visible}" >
+		<p:column sortBy="#{materializedServiceMessageViewItem.customerName}" width="200" 
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[5].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[4].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedservicemessageview_customername}"/>
 			</f:facet>
@@ -869,7 +903,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedServiceMessageViewItem.externalSupplierName}" width="150" rendered="#{materializedServiceMessageView.searchObject.searchFields[6].visible}" >
+		<p:column sortBy="#{materializedServiceMessageViewItem.externalSupplierName}" width="150" 
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[6].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[6].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedservicemessageview_externalsuppliername}"/>
 			</f:facet>
@@ -877,7 +912,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedServiceMessageViewItem.supplierName}" width="200" rendered="#{materializedServiceMessageView.searchObject.searchFields[7].visible}" >
+		<p:column sortBy="#{materializedServiceMessageViewItem.supplierName}" width="200" 
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[7].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[7].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedservicemessageview_suppliername}"/>
 			</f:facet>
@@ -885,7 +921,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedServiceMessageViewItem.serialNumber}" width="120" rendered="#{materializedServiceMessageView.searchObject.searchFields[8].visible}" >
+		<p:column sortBy="#{materializedServiceMessageViewItem.serialNumber}" width="120" 
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[8].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[8].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedservicemessageview_serialnumber}"/>
 			</f:facet>
@@ -893,7 +930,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedServiceMessageViewItem.parentSerialNumber}" width="120" rendered="#{materializedServiceMessageView.searchObject.searchFields[9].visible}" >
+		<p:column sortBy="#{materializedServiceMessageViewItem.parentSerialNumber}" width="120" 
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[9].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[9].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedservicemessageview_parentserialnumber}"/>
 			</f:facet>
@@ -901,7 +939,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedServiceMessageViewItem.materialNumber}" width="150" rendered="#{materializedServiceMessageView.searchObject.searchFields[10].visible}" >
+		<p:column sortBy="#{materializedServiceMessageViewItem.materialNumber}" width="150" 
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[10].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[10].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_materializedentitiy_materialnumber}"/>
 			</f:facet>
@@ -909,7 +948,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedServiceMessageViewItem.sapNumber}" width="150" rendered="#{materializedServiceMessageView.searchObject.searchFields[11].visible}" >
+		<p:column sortBy="#{materializedServiceMessageViewItem.sapNumber}" width="150" 
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[11].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[11].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedservicemessageview_sapnumber}"/>
 			</f:facet>
@@ -917,7 +957,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedServiceMessageViewItem.materialType}" width="80" rendered="#{materializedServiceMessageView.searchObject.searchFields[12].visible}" >
+		<p:column sortBy="#{materializedServiceMessageViewItem.materialType}" width="80" 
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[12].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[12].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedservicemessageview_materialtype}"/>
 			</f:facet>
@@ -925,7 +966,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedServiceMessageViewItem.materialShortText}" width="250" rendered="#{materializedServiceMessageView.searchObject.searchFields[13].visible}" >
+		<p:column sortBy="#{materializedServiceMessageViewItem.materialShortText}" width="250" 
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[13].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[13].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_materializedentitiy_materialshorttext}"/>
 			</f:facet>
@@ -933,7 +975,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedServiceMessageViewItem.materialHierarchy}" width="150" rendered="#{materializedServiceMessageView.searchObject.searchFields[14].visible}" >
+		<p:column sortBy="#{materializedServiceMessageViewItem.materialHierarchy}" width="150" 
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[14].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[14].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_materializedentitiy_materialhierarchy}"/>
 			</f:facet>
@@ -941,7 +984,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedServiceMessageViewItem.revisionNumber}" width="100" rendered="#{materializedServiceMessageView.searchObject.searchFields[15].visible}" >
+		<p:column sortBy="#{materializedServiceMessageViewItem.revisionNumber}" width="100" 
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[15].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[15].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_materializedentitiy_revisionnumber}"/>
 			</f:facet>
@@ -949,7 +993,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedServiceMessageViewItem.ownerLocation}" width="100" rendered="#{materializedServiceMessageView.searchObject.searchFields[16].visible}" >
+		<p:column sortBy="#{materializedServiceMessageViewItem.ownerLocation}" width="100" 
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[16].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[16].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_materializedservicemessage_ownerlocation}"/>
 			</f:facet>
@@ -957,7 +1002,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedServiceMessageViewItem.parentMaterialNumber}" width="150" rendered="#{materializedServiceMessageView.searchObject.searchFields[17].visible}" >
+		<p:column sortBy="#{materializedServiceMessageViewItem.parentMaterialNumber}" width="150" 
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[17].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[17].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedservicemessageview_parentmaterialnumber}"/>
 			</f:facet>
@@ -965,7 +1011,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedServiceMessageViewItem.parentSapNumber}" width="150" rendered="#{materializedServiceMessageView.searchObject.searchFields[18].visible}" >
+		<p:column sortBy="#{materializedServiceMessageViewItem.parentSapNumber}" width="150" 
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[18].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[18].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedservicemessageview_parentsapnumber}"/>
 			</f:facet>
@@ -973,7 +1020,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedServiceMessageViewItem.parentMaterialType}" width="80" rendered="#{materializedServiceMessageView.searchObject.searchFields[19].visible}" >
+		<p:column sortBy="#{materializedServiceMessageViewItem.parentMaterialType}" width="80" 
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[19].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[19].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedservicemessageview_parentmaterialtype}"/>
 			</f:facet>
@@ -981,7 +1029,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedServiceMessageViewItem.parentMaterialShortText}" width="250" rendered="#{materializedServiceMessageView.searchObject.searchFields[20].visible}" >
+		<p:column sortBy="#{materializedServiceMessageViewItem.parentMaterialShortText}" width="250" 
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[20].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[20].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_materializedentitiy_parentmaterialshorttext}"/>
 			</f:facet>
@@ -989,7 +1038,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedServiceMessageViewItem.parentMaterialHierarchy}" width="150" rendered="#{materializedServiceMessageView.searchObject.searchFields[21].visible}" >
+		<p:column sortBy="#{materializedServiceMessageViewItem.parentMaterialHierarchy}" width="150" 
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[21].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[21].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedservicemessageview_parentmaterialhierarchy}"/>
 			</f:facet>
@@ -997,7 +1047,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedServiceMessageViewItem.parentRevisionNumber}" width="100" rendered="#{materializedServiceMessageView.searchObject.searchFields[22].visible}" >
+		<p:column sortBy="#{materializedServiceMessageViewItem.parentRevisionNumber}" width="100" 
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[22].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[22].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedservicemessageview_parentrevisionnumber}"/>
 			</f:facet>
@@ -1005,7 +1056,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedServiceMessageViewItem.rmaType}" width="80" rendered="#{materializedServiceMessageView.searchObject.searchFields[23].visible}" >
+		<p:column sortBy="#{materializedServiceMessageViewItem.rmaType}" width="80" 
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[23].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[23].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedservicemessageview_rmatype}"/>
 			</f:facet>
@@ -1013,7 +1065,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedServiceMessageViewItem.faultAnalysisCode}" width="120" rendered="#{materializedServiceMessageView.searchObject.searchFields[24].visible}" >
+		<p:column sortBy="#{materializedServiceMessageViewItem.faultAnalysisCode}" width="120" 
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[24].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[24].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedservicemessageview_faultanalysiscode}"/>
 			</f:facet>
@@ -1021,7 +1074,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedServiceMessageViewItem.symptomShortText}" width="250" rendered="#{materializedServiceMessageView.searchObject.searchFields[25].visible}" >
+		<p:column sortBy="#{materializedServiceMessageViewItem.symptomShortText}" width="250" 
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[25].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[25].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_materializedservicemessage_symptomshorttext}"/>
 			</f:facet>
@@ -1029,7 +1083,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedServiceMessageViewItem.serviceName}" width="100" rendered="#{materializedServiceMessageView.searchObject.searchFields[26].visible}" >
+		<p:column sortBy="#{materializedServiceMessageViewItem.serviceName}" width="100" 
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[26].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[26].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_materializedservicemessage_servicename}"/>
 			</f:facet>
@@ -1037,7 +1092,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedServiceMessageViewItem.errorCodeGroup}" width="150" rendered="#{materializedServiceMessageView.searchObject.searchFields[27].visible}" >
+		<p:column sortBy="#{materializedServiceMessageViewItem.errorCodeGroup}" width="150" 
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[27].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[27].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedservicemessageview_errorcodegroup}"/>
 			</f:facet>
@@ -1045,7 +1101,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedServiceMessageViewItem.errorCodeName}" width="150" rendered="#{materializedServiceMessageView.searchObject.searchFields[28].visible}" >
+		<p:column sortBy="#{materializedServiceMessageViewItem.errorCodeName}" width="150" 
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[28].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[28].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedservicemessageview_errorcodename}"/>
 			</f:facet>
@@ -1053,7 +1110,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedServiceMessageViewItem.errorShortText}" width="250" rendered="#{materializedServiceMessageView.searchObject.searchFields[29].visible}" >
+		<p:column sortBy="#{materializedServiceMessageViewItem.errorShortText}" width="250" 
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[29].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[29].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedservicemessageview_errorshorttext}"/>
 			</f:facet>
@@ -1061,7 +1119,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedServiceMessageViewItem.taskName}" width="120" rendered="#{materializedServiceMessageView.searchObject.searchFields[30].visible}" >
+		<p:column sortBy="#{materializedServiceMessageViewItem.taskName}" width="120" 
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[30].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[30].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedservicemessageview_taskname}"/>
 			</f:facet>
@@ -1069,7 +1128,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedServiceMessageViewItem.repairTaskShortText}" width="250" rendered="#{materializedServiceMessageView.searchObject.searchFields[31].visible}" >
+		<p:column sortBy="#{materializedServiceMessageViewItem.repairTaskShortText}" width="250" 
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[31].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[31].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_materializedservicemessage_repairtaskshorttext}"/>
 			</f:facet>
@@ -1077,7 +1137,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedServiceMessageViewItem.stateName}" width="120" rendered="#{materializedServiceMessageView.searchObject.searchFields[32].visible}" >
+		<p:column sortBy="#{materializedServiceMessageViewItem.stateName}" width="120" 
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[32].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[32].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedservicemessageview_statename}"/>
 			</f:facet>
@@ -1085,7 +1146,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedServiceMessageViewItem.internalArrivalDate}" width="110" rendered="#{materializedServiceMessageView.searchObject.searchFields[33].visible}" >
+		<p:column sortBy="#{materializedServiceMessageViewItem.internalArrivalDate}" width="110" 
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[33].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[33].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedservicemessageview_internalarrivaldate}"/>
 			</f:facet>
@@ -1096,7 +1158,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedServiceMessageViewItem.internalShipmentDate}" width="110" rendered="#{materializedServiceMessageView.searchObject.searchFields[34].visible}" >
+		<p:column sortBy="#{materializedServiceMessageViewItem.internalShipmentDate}" width="110" 
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[34].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[34].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedservicemessageview_internalshipmentdate}"/>
 			</f:facet>
@@ -1107,7 +1170,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedServiceMessageViewItem.basicStartDate}" width="110" rendered="#{materializedServiceMessageView.searchObject.searchFields[35].visible}" >
+		<p:column sortBy="#{materializedServiceMessageViewItem.basicStartDate}" width="110" 
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[35].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[35].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedservicemessageview_basicstartdate}"/>
 			</f:facet>
@@ -1118,7 +1182,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedServiceMessageViewItem.basicEndDate}" width="100" rendered="#{materializedServiceMessageView.searchObject.searchFields[36].visible}" >
+		<p:column sortBy="#{materializedServiceMessageViewItem.basicEndDate}" width="100" 
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[36].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[36].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_materializedservicemessage_basicenddate}"/>
 			</f:facet>
@@ -1129,7 +1194,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedServiceMessageViewItem.designator}" width="100" rendered="#{materializedServiceMessageView.searchObject.searchFields[37].visible}" >
+		<p:column sortBy="#{materializedServiceMessageViewItem.designator}" width="100" 
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[37].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[37].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_materializedservicemessage_designator}"/>
 			</f:facet>
@@ -1137,7 +1203,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedServiceMessageViewItem.defectComponent}" width="120" rendered="#{materializedServiceMessageView.searchObject.searchFields[38].visible}" >
+		<p:column sortBy="#{materializedServiceMessageViewItem.defectComponent}" width="120" 
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[38].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[38].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_materializedservicemessage_defectcomponent}"/>
 			</f:facet>
@@ -1145,7 +1212,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedServiceMessageViewItem.analysisText}" width="250" rendered="#{materializedServiceMessageView.searchObject.searchFields[39].visible}" >
+		<p:column sortBy="#{materializedServiceMessageViewItem.analysisText}" width="250" 
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[39].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[39].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_materializedservicemessage_analysistext}"/>
 			</f:facet>
@@ -1153,7 +1221,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedServiceMessageViewItem.internalReport}" width="250" rendered="#{materializedServiceMessageView.searchObject.searchFields[40].visible}" >
+		<p:column sortBy="#{materializedServiceMessageViewItem.internalReport}" width="250" 
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[40].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[40].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_materializedservicemessage_internalreport}"/>
 			</f:facet>
@@ -1161,7 +1230,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedServiceMessageViewItem.externalReport}" width="250" rendered="#{materializedServiceMessageView.searchObject.searchFields[41].visible}" >
+		<p:column sortBy="#{materializedServiceMessageViewItem.externalReport}" width="250" 
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[41].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[41].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_materializedservicemessage_externalreport}"/>
 			</f:facet>
@@ -1169,7 +1239,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedServiceMessageViewItem.customerReport}" width="150" rendered="#{materializedServiceMessageView.searchObject.searchFields[42].visible}" >
+		<p:column sortBy="#{materializedServiceMessageViewItem.customerReport}" width="150" 
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[42].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[42].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_materializedservicemessage_customerreport}"/>
 			</f:facet>
@@ -1177,14 +1248,16 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedServiceMessageViewItem.epidemicFailure}" width="80" rendered="#{materializedServiceMessageView.searchObject.searchFields[43].visible}" >
+		<p:column sortBy="#{materializedServiceMessageViewItem.epidemicFailure}" width="80" 
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[43].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[43].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedservicemessageview_epidemicfailure}"/>
 			</f:facet>
 			<p:selectBooleanCheckbox value="#{materializedServiceMessageViewItem.epidemicFailure}" disabled="true"/>
 		</p:column>
 
-		<p:column sortBy="#{materializedServiceMessageViewItem.errorId}" width="100" rendered="#{materializedServiceMessageView.searchObject.searchFields[44].visible}" >
+		<p:column sortBy="#{materializedServiceMessageViewItem.errorId}" width="100" 
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[44].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[44].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_materializedservicemessage_errorid}"/>
 			</f:facet>
@@ -1192,7 +1265,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedServiceMessageViewItem.origin}" width="100" rendered="#{materializedServiceMessageView.searchObject.searchFields[45].visible}" >
+		<p:column sortBy="#{materializedServiceMessageViewItem.origin}" width="100" 
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[45].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[45].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_materializedservicemessage_origin}"/>
 			</f:facet>
@@ -1200,14 +1274,16 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedServiceMessageViewItem.customerFailure}" width="80" rendered="#{materializedServiceMessageView.searchObject.searchFields[46].visible}" >
+		<p:column sortBy="#{materializedServiceMessageViewItem.customerFailure}" width="80" 
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[46].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[46].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedservicemessageview_customerfailure}"/>
 			</f:facet>
 			<p:selectBooleanCheckbox value="#{materializedServiceMessageViewItem.customerFailure}" disabled="true"/>
 		</p:column>
 
-		<p:column sortBy="#{materializedServiceMessageViewItem.customerGroup}" width="120" rendered="#{materializedServiceMessageView.searchObject.searchFields[47].visible}" >
+		<p:column sortBy="#{materializedServiceMessageViewItem.customerGroup}" width="120" 
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[47].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[47].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_materializedservicemessage_customergroup}"/>
 			</f:facet>
@@ -1215,7 +1291,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedServiceMessageViewItem.supplierArrivalDate}" width="100" rendered="#{materializedServiceMessageView.searchObject.searchFields[48].visible}" >
+		<p:column sortBy="#{materializedServiceMessageViewItem.supplierArrivalDate}" width="100" 
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[48].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[48].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedservicemessageview_supplierarrivaldate}"/>
 			</f:facet>
@@ -1226,7 +1303,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedServiceMessageViewItem.customerShipmentDate}" width="110" rendered="#{materializedServiceMessageView.searchObject.searchFields[49].visible}" >
+		<p:column sortBy="#{materializedServiceMessageViewItem.customerShipmentDate}" width="110" 
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[49].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[49].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedservicemessageview_customershipmentdate}"/>
 			</f:facet>
@@ -1237,7 +1315,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedServiceMessageViewItem.deliveryNoteNumber}" width="100" rendered="#{materializedServiceMessageView.searchObject.searchFields[50].visible}" >
+		<p:column sortBy="#{materializedServiceMessageViewItem.deliveryNoteNumber}" width="100" 
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[50].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[50].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedservicemessageview_deliverynotenumber}"/>
 			</f:facet>
@@ -1245,7 +1324,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedServiceMessageViewItem.repairDescription}" width="150" rendered="#{materializedServiceMessageView.searchObject.searchFields[51].visible}" >
+		<p:column sortBy="#{materializedServiceMessageViewItem.repairDescription}" width="150" 
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[51].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[51].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_materializedservicemessage_repairdescription}"/>
 			</f:facet>
@@ -1253,7 +1333,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedServiceMessageViewItem.assemblyDate}" width="80" rendered="#{materializedServiceMessageView.searchObject.searchFields[52].visible}" >
+		<p:column sortBy="#{materializedServiceMessageViewItem.assemblyDate}" width="80" 
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[52].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[52].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedservicemessageview_assemblydate}"/>
 			</f:facet>
@@ -1264,7 +1345,8 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{materializedServiceMessageViewItem.assemblyPO}" width="100" rendered="#{materializedServiceMessageView.searchObject.searchFields[53].visible}" >
+		<p:column sortBy="#{materializedServiceMessageViewItem.assemblyPO}" width="100" 
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[53].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[53].colOrder}" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedservicemessageview_assemblypo}"/>
 			</f:facet>
@@ -1279,32 +1361,44 @@
 	<h:outputText styleClass="label-field-mandatory" rendered="#{materializedServiceMessageView.searchObject.count}" value="#{materializedServiceMessageView.countResult}"/>
 	<p/>
 
-	<p:contextMenu for="panData">
+
+
+<!--Kontextmenü mit Möglichkeit, eine Zelle oder eine Zeile zu kopieren -->
+
+	<h:inputHidden id="cellText" value="#{materializedServiceMessageView.cellText}" />
+	<h:inputHidden id="rowCsv" value="#{materializedServiceMessageView.rowCsv}" />
+
+	<p:contextMenu for="panData" beforeShow="updateContextData(event)" >
 		<p:menuitem value="#{i18n.action_delete}" ajax="true" icon="pi pi-trash" id="panData_mniDelete" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR')}" onclick="PF('deleteConfirm').show()"/>
 		<p:menuitem value="#{i18n.action_copy}" ajax="true" icon="pi pi-copy" id="panData_mniCopy" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR')}" onclick="PF('copyConfirm').show()"/>
 		<p:menuitem value="#{i18n.action_refresh}" ajax="false" type="push" icon="pi pi-refresh" id="panData_mniRefresh" actionListener="#{materializedServiceMessageView.fetchMaterializedServiceMessages}"/>
+
+		<p:separator/>
+
+		<p:menuitem value="#{i18n.ctxmenu_copy_cell}" actionListener="#{materializedServiceMessageView.copyCellToClipboard}" icon="pi pi-copy" update="@none"/>
+		<p:menuitem value="#{i18n.ctxmenu_copy_row}" actionListener="#{materializedServiceMessageView.copyRowToClipboard}" icon="pi pi-copy" update="@none"/>
 	</p:contextMenu>
 
-	<p:confirmDialog modal="true" message="#{i18n.dialog_delete_question}" header="#{i18n.dialog_delete_title}" severity="alert" widgetVar="deleteConfirm">
+	<p:confirmDialog modal="true" closeOnEscape="true" message="#{i18n.dialog_delete_question}" header="#{i18n.dialog_delete_title}" severity="warn" widgetVar="deleteConfirm">
 		<p:commandButton value="#{i18n.command_yes}" oncomplete="PF('deleteConfirm').hide()" actionListener="#{materializedServiceMessageView.deleteMaterializedServiceMessage}" id="panData_cmdYesDelete" ajax="false"/>
 		<p:commandButton value="#{i18n.command_no}" onclick="PF('deleteConfirm').hide()" type="button"/>
 	</p:confirmDialog>
 
-	<p:confirmDialog modal="true" message="#{i18n.dialog_copy_question}" header="#{i18n.dialog_copy_title}" severity="info" widgetVar="copyConfirm">
+	<p:confirmDialog modal="true" closeOnEscape="true" message="#{i18n.dialog_copy_question}" header="#{i18n.dialog_copy_title}" severity="info" widgetVar="copyConfirm">
 		<p:commandButton value="#{i18n.command_yes}" oncomplete="PF('copyConfirm').hide()" action="#{materializedServiceMessageView.copy}" id="panData_cmdYesCopy" ajax="false"/>
 		<p:commandButton value="#{i18n.command_no}" onclick="PF('copyConfirm').hide()" type="button"/>
 	</p:confirmDialog>
 
-	<p:dialog header="#{i18n.search_input_dlg_save_query}" widgetVar="dlgSaveQuery" modal="true" height="100">
+	<p:dialog header="#{i18n.search_input_dlg_save_query}" closeOnEscape="true" id="dlgSaveQuery" widgetVar="dlgSaveQuery" modal="true" height="100">
 		<h:panelGrid columns="3">
 			<h:outputLabel value="#{i18n.search_input_lbl_save_query}" styleClass="label-field-mandatory"/>
-			<p:inputText id="txtQueryName" value="#{materializedServiceMessageView.savedQueryName}">
-			</p:inputText>
-			<p:commandButton value="#{i18n.command_save}" action="#{materializedServiceMessageView.saveNewQuery}" ajax="false" onclick="PF('dlgSaveQuery').hide()"/>
+			<p:inputText id="txtQueryName" value="#{materializedServiceMessageView.savedQueryName}" />
+			<p:commandButton id="saveQuery" value="#{i18n.command_save}" action="#{materializedServiceMessageView.saveNewQuery}" ajax="false" onclick="PF('dlgSaveQuery').hide()"/>
+			<p:defaultCommand target="saveQuery" scope="dlgSaveQuery"/>
 		</h:panelGrid>
 	</p:dialog>
 
-	<p:defaultCommand target=":form:cmdSearch"/>
+	<p:defaultCommand target=":form:cmdSearch" scope="dlgSearchInput" />
 
 </ui:define>
 </ui:composition>

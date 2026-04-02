@@ -171,7 +171,7 @@ public class NavigatorView implements Serializable {
         if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY)) {
             // Form group: Serial object
             final var itemGroup0004 = new DefaultTreeNode<>(FOLDER_TYPE, new TreeNavigatorItem(bundle.getString(FG_TOP_SERIAL_OBJECT)), root);
-            itemGroup0004.setExpanded(true);
+            itemGroup0004.setExpanded(false);
 
             // Aggr. shipment & arrivals
             if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY))
