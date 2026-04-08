@@ -713,10 +713,41 @@ body .ui-datatable .ui-datatable-data > tr > td {
 	white-space: normal;
 }
 
+
 .thnowrap > .ui-column-title,
 body .ui-datatable-data > tr > .tdnowrap {
-		white-space: nowrap !important;
+	white-space: nowrap !important;
 }
+
+#instant-custom-tooltip {
+	position: absolute;
+	background-color: #333333;
+	color: #ffffff;
+	padding: 5px 10px;
+	border-radius: 4px;
+	font-size: 12px;
+	white-space: nowrap;
+	z-index: 999999; /* Immer ganz oben */
+	box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+	display: none; /* Standardmäßig unsichtbar */
+	pointer-events: none; /* Extrem wichtig gegen Flackern! */
+}
+
+#instant-custom-tooltip::after {
+	content: "";
+	position: absolute;
+	top: 100%; /* Klebt exakt an der unteren Kante des schwarzen Kastens */	
+	/* Schiebt es in die Mitte
+	left: 50%;
+	*/
+	left: 30px; /* Pfeil links, etwas eingerückt */
+	margin-left: -6px; /* Zentriert es exakt (Hälfte der 6px Rahmenbreite) */
+	border-width: 6px; /* Wie groß die Nase sein soll */
+	border-style: solid;
+	/* Der Trick: Oben schwarz, rechts/unten/links unsichtbar = Dreieck */
+	border-color: #333333 transparent transparent transparent; 
+}
+
 
 body .ui-datatable .ui-datatable-data > tr.ui-state-highlight {
 	background: unset;

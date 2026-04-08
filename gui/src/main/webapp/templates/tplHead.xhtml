@@ -57,6 +57,63 @@ oder der Titel richtet sich nach dem Content (<ui:define name="title"/> in jedem
 				const val = td.textContent.trim();
 				return val;
 			}
+
+
+
+			//<![CDATA[
+			document.addEventListener('DOMContentLoaded', function() {
+			    // 1. Tooltip-Element genau einmal im gesamten Dokument erzeugen
+			    const tooltip = document.createElement('div');
+			    tooltip.id = 'instant-custom-tooltip';
+			    document.body.appendChild(tooltip);
+			
+			    // 2. Event Delegation: Wir lauschen global auf alle Maus-Bewegungen
+			    document.addEventListener('mouseover', function(e) {
+			        // Prüfen, ob das Element unter der Maus unsere Ziel-Klasse hat
+			        if (e.target && e.target.classList && e.target.classList.contains('pf-tooltip-target')) {
+			            const target = e.target;
+			            
+			            // Text aus dem 'title'-Attribut holen. 
+			            // Wir benennen es sofort in 'data-title' um, damit der 
+			            // träge, weiße Browser-Tooltip nicht mehr erscheint.
+			            let text = target.getAttribute('title');
+			            if (text) {
+			                target.setAttribute('data-title', text);
+			                target.removeAttribute('title');
+			            } else {
+			                text = target.getAttribute('data-title');
+			            }
+			
+			            // Wenn Text vorhanden ist, Tooltip sofort anzeigen
+			            if (text) {
+			                tooltip.textContent = text;
+			                tooltip.style.display = 'block';
+			                
+			                // Position berechnen: Zentriert über der Zelle
+			                const rect = target.getBoundingClientRect();
+			                
+			                // TOP: Y-Koordinate der Zelle + Scroll-Offset - Höhe des Tooltips - 6px Pfeil - 3px Abstand
+			                const topPos = rect.top + window.scrollY - tooltip.offsetHeight - 9;
+
+			                // LEFT (zentriert zum Text): X-Koordinate der Zelle + Scroll-Offset + Hälfte der Zellbreite - Hälfte der Tooltipbreite
+			                // const leftPos = rect.left + window.scrollX + (rect.width / 2) - (tooltip.offsetWidth / 2);
+			                // LEFT (linksbündig zur Zelle) + Offset für Padding der Zelle
+			                const leftPos = rect.left + window.scrollX - 10;
+
+			                tooltip.style.top = topPos + 'px';
+			                tooltip.style.left = leftPos + 'px';
+			            }
+			        }
+			    });
+			
+			    // 3. Wenn die Maus das Element verlässt, sofort verstecken
+			    document.addEventListener('mouseout', function(e) {
+			        if (e.target && e.target.classList && e.target.classList.contains('pf-tooltip-target')) {
+			            tooltip.style.display = 'none';
+			        }
+			    });
+			});
+			//]]>
 		</script>
 
 	</h:head>
