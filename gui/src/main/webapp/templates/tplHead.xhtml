@@ -62,72 +62,82 @@ oder der Titel richtet sich nach dem Content (<ui:define name="title"/> in jedem
 
 			//<![CDATA[
 			document.addEventListener('DOMContentLoaded', function() {
-			    // 1. Tooltip-Element genau einmal im gesamten Dokument erzeugen
-			    const tooltip = document.createElement('div');
-			    tooltip.id = 'instant-custom-tooltip';
-			    document.body.appendChild(tooltip);
+				// 1. Tooltip-Element genau einmal im gesamten Dokument erzeugen
+				const tooltip = document.createElement('div');
+				tooltip.id = 'instant-custom-tooltip';
+				document.body.appendChild(tooltip);
 			
-			    // 2. Event Delegation: Wir lauschen global auf alle Maus-Bewegungen
-			    document.addEventListener('mouseover', function(e) {
-			        // Prüfen, ob das Element unter der Maus unsere Ziel-Klasse hat
-			        if (e.target && e.target.classList && e.target.classList.contains('pf-tooltip-target')) {
-			            const target = e.target;
-			            
-			            // Text aus dem 'title'-Attribut holen. 
-			            // Wir benennen es sofort in 'data-title' um, damit der träge, weiße Browser-Tooltip nicht mehr erscheint.
-			            let text = target.getAttribute('title');
-			            if (text) {
-			                target.setAttribute('data-title', text);
-			                target.removeAttribute('title');
-			            } else {
-			                text = target.getAttribute('data-title');
-			            }
+				// 2. Event Delegation: Wir lauschen global auf alle Maus-Bewegungen
+				document.addEventListener('mouseover', function(e) {
+					// Prüfen, ob das Element unter der Maus unsere Ziel-Klasse hat
+					if (e.target && e.target.classList && e.target.classList.contains('pf-tooltip-target')) {
+						const target = e.target;
+
+						// Text aus dem 'title'-Attribut holen. 
+						// Wir benennen es sofort in 'data-title' um, damit der träge, weiße Browser-Tooltip nicht mehr erscheint.
+						let text = target.getAttribute('title');
+						if (text) {
+							target.setAttribute('data-title', text);
+							target.removeAttribute('title');
+						} else {
+							text = target.getAttribute('data-title');
+						}
+
+						 // Wir prüfen das Element selbst (span) und vorsichtshalber die Zelle (td), 
+						// je nachdem, wo das CSS "overflow: hidden" genau greift.
+						const isHeader = target.closest('th') !== null;
+						let shouldShow = isHeader;
+						if (!shouldShow) {
+							const parentCell = target.closest('td') || target.parentElement;
+							shouldShow = (target.scrollWidth > target.offsetWidth) || 
+										 (parentCell && parentCell.scrollWidth > parentCell.offsetWidth);
+						}
+
+						// Wenn Text vorhanden ist UND er abgeschnitten wurde, Tooltip sofort anzeigen
+						if (text && shouldShow) {
+							tooltip.textContent = text;
+							tooltip.style.display = 'block';
+							
+							// Position berechnen: Zentriert über der Zelle
+							const rect = target.getBoundingClientRect();
+							
+							// TOP: Y-Koordinate der Zelle + Scroll-Offset - Höhe des Tooltips - 6px Pfeil - 3px Abstand
+							const topPos = rect.top + window.scrollY - tooltip.offsetHeight - 9;
+
+							// LEFT (zentriert zum Text): X-Koordinate der Zelle + Scroll-Offset + Hälfte der Zellbreite - Hälfte der Tooltipbreite
+							// const leftPos = rect.left + window.scrollX + (rect.width / 2) - (tooltip.offsetWidth / 2);
+							// LEFT (linksbündig zur Zelle) + Offset für Padding der Zelle
+							let leftPos = rect.left + window.scrollX - 10;
+							let arrowPos = 30; // 30px Einzug für den Pfeil
+
+
+							// >--- KOLLISIONSERKENNUNG (Rechter Rand) --->
+							// Wo würde die rechte Kante des Tooltips auf dem Bildschirm landen?
+							const tooltipRightEdge = leftPos + tooltip.offsetWidth;
+							// Wo ist das absolute Limit des Browserfensters? (minus 15px Sicherheitsabstand)
+							const maxRightEdge = window.innerWidth + window.scrollX - 15;
+
+							if (tooltipRightEdge > maxRightEdge) {
+								const overflow = tooltipRightEdge - maxRightEdge;
+								leftPos = leftPos - overflow;   // Kasten nach links schieben
+								arrowPos = arrowPos + overflow; // Nase nach rechts schieben, damit sie über dem Text bleibt
+							}
+							// <--- KOLLISIONSERKENNUNG (Rechter Rand) ---<
+
+
+							tooltip.style.top = topPos + 'px';
+							tooltip.style.left = leftPos + 'px';
+							tooltip.style.setProperty('--arrow-pos', arrowPos + 'px');
+						}
+					}
+				});
 			
-			            // Wenn Text vorhanden ist, Tooltip sofort anzeigen
-			            if (text) {
-			                tooltip.textContent = text;
-			                tooltip.style.display = 'block';
-			                
-			                // Position berechnen: Zentriert über der Zelle
-			                const rect = target.getBoundingClientRect();
-			                
-			                // TOP: Y-Koordinate der Zelle + Scroll-Offset - Höhe des Tooltips - 6px Pfeil - 3px Abstand
-			                const topPos = rect.top + window.scrollY - tooltip.offsetHeight - 9;
-
-			                // LEFT (zentriert zum Text): X-Koordinate der Zelle + Scroll-Offset + Hälfte der Zellbreite - Hälfte der Tooltipbreite
-			                // const leftPos = rect.left + window.scrollX + (rect.width / 2) - (tooltip.offsetWidth / 2);
-			                // LEFT (linksbündig zur Zelle) + Offset für Padding der Zelle
-			                let leftPos = rect.left + window.scrollX - 10;
-			                let arrowPos = 30; // 30px Einzug für den Pfeil
-
-
-			                // >--- KOLLISIONSERKENNUNG (Rechter Rand) --->
-			                // Wo würde die rechte Kante des Tooltips auf dem Bildschirm landen?
-			                const tooltipRightEdge = leftPos + tooltip.offsetWidth;
-			                // Wo ist das absolute Limit des Browserfensters? (minus 15px Sicherheitsabstand)
-			                const maxRightEdge = window.innerWidth + window.scrollX - 15;
-
-			                if (tooltipRightEdge > maxRightEdge) {
-			                    const overflow = tooltipRightEdge - maxRightEdge;
-			                    leftPos = leftPos - overflow;   // Kasten nach links schieben
-			                    arrowPos = arrowPos + overflow; // Nase nach rechts schieben, damit sie über dem Text bleibt
-			                }
-			                // <--- KOLLISIONSERKENNUNG (Rechter Rand) ---<
-
-
-			                tooltip.style.top = topPos + 'px';
-			                tooltip.style.left = leftPos + 'px';
-			                tooltip.style.setProperty('--arrow-pos', arrowPos + 'px');
-			            }
-			        }
-			    });
-			
-			    // 3. Wenn die Maus das Element verlässt, sofort verstecken
-			    document.addEventListener('mouseout', function(e) {
-			        if (e.target && e.target.classList && e.target.classList.contains('pf-tooltip-target')) {
-			            tooltip.style.display = 'none';
-			        }
-			    });
+				// 3. Wenn die Maus das Element verlässt, sofort verstecken
+				document.addEventListener('mouseout', function(e) {
+					if (e.target && e.target.classList && e.target.classList.contains('pf-tooltip-target')) {
+						tooltip.style.display = 'none';
+					}
+				});
 			});
 			//]]>
 		</script>
