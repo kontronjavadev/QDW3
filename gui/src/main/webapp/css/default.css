@@ -726,7 +726,10 @@ body .ui-datatable-data > tr > .tdnowrap {
 	padding: 5px 10px;
 	border-radius: 4px;
 	font-size: 12px;
-	white-space: nowrap;
+	white-space: pre-wrap;
+	max-width: 400px; /* Ab 400 Pixel Breite bricht der Text automatisch um */
+	width: max-content;
+	word-wrap: break-word; /* Zerteilt auch extrem lange Wörter ohne Leerzeichen (z.B. lange IDs) */
 	z-index: 999999; /* Immer ganz oben */
 	box-shadow: 0 4px 6px rgba(0,0,0,0.3);
 	display: none; /* Standardmäßig unsichtbar */
@@ -739,8 +742,11 @@ body .ui-datatable-data > tr > .tdnowrap {
 	top: 100%; /* Klebt exakt an der unteren Kante des schwarzen Kastens */	
 	/* Schiebt es in die Mitte
 	left: 50%;
+	oder um 30px von links aus eingerückt
+	left: 30px;
 	*/
-	left: 30px; /* Pfeil links, etwas eingerückt */
+	/* Wenn JS keinen Wert liefert, sind 30px der Standardwert */
+	left: var(--arrow-pos, 30px);
 	margin-left: -6px; /* Zentriert es exakt (Hälfte der 6px Rahmenbreite) */
 	border-width: 6px; /* Wie groß die Nase sein soll */
 	border-style: solid;

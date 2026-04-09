@@ -74,8 +74,7 @@ oder der Titel richtet sich nach dem Content (<ui:define name="title"/> in jedem
 			            const target = e.target;
 			            
 			            // Text aus dem 'title'-Attribut holen. 
-			            // Wir benennen es sofort in 'data-title' um, damit der 
-			            // träge, weiße Browser-Tooltip nicht mehr erscheint.
+			            // Wir benennen es sofort in 'data-title' um, damit der träge, weiße Browser-Tooltip nicht mehr erscheint.
 			            let text = target.getAttribute('title');
 			            if (text) {
 			                target.setAttribute('data-title', text);
@@ -98,10 +97,27 @@ oder der Titel richtet sich nach dem Content (<ui:define name="title"/> in jedem
 			                // LEFT (zentriert zum Text): X-Koordinate der Zelle + Scroll-Offset + Hälfte der Zellbreite - Hälfte der Tooltipbreite
 			                // const leftPos = rect.left + window.scrollX + (rect.width / 2) - (tooltip.offsetWidth / 2);
 			                // LEFT (linksbündig zur Zelle) + Offset für Padding der Zelle
-			                const leftPos = rect.left + window.scrollX - 10;
+			                let leftPos = rect.left + window.scrollX - 10;
+			                let arrowPos = 30; // 30px Einzug für den Pfeil
+
+
+			                // >--- KOLLISIONSERKENNUNG (Rechter Rand) --->
+			                // Wo würde die rechte Kante des Tooltips auf dem Bildschirm landen?
+			                const tooltipRightEdge = leftPos + tooltip.offsetWidth;
+			                // Wo ist das absolute Limit des Browserfensters? (minus 15px Sicherheitsabstand)
+			                const maxRightEdge = window.innerWidth + window.scrollX - 15;
+
+			                if (tooltipRightEdge > maxRightEdge) {
+			                    const overflow = tooltipRightEdge - maxRightEdge;
+			                    leftPos = leftPos - overflow;   // Kasten nach links schieben
+			                    arrowPos = arrowPos + overflow; // Nase nach rechts schieben, damit sie über dem Text bleibt
+			                }
+			                // <--- KOLLISIONSERKENNUNG (Rechter Rand) ---<
+
 
 			                tooltip.style.top = topPos + 'px';
 			                tooltip.style.left = leftPos + 'px';
+			                tooltip.style.setProperty('--arrow-pos', arrowPos + 'px');
 			            }
 			        }
 			    });
