@@ -170,6 +170,7 @@ public interface TranslationKeys {
     String COL_MATERIALIZEDSERVICEMESSAGEVIEW_INTERNALSHIPMENTDATE = "col_materializedservicemessageview_internalshipmentdate";
     String COL_MATERIALIZEDSERVICEMESSAGEVIEW_MATERIALMATERIALNUMBER = "col_materializedservicemessageview_materialmaterialnumber";
     String COL_MATERIALIZEDSERVICEMESSAGEVIEW_MATERIALTYPE = "col_materializedservicemessageview_materialtype";
+    String COL_MATERIALIZEDSERVICEMESSAGEVIEW_OWNERLOCATION = "col_materializedservicemessageview_ownerlocation";
     String COL_MATERIALIZEDSERVICEMESSAGEVIEW_PARENTMATERIALHIERARCHY = "col_materializedservicemessageview_parentmaterialhierarchy";
     String COL_MATERIALIZEDSERVICEMESSAGEVIEW_PARENTMATERIALNUMBER = "col_materializedservicemessageview_parentmaterialnumber";
     String COL_MATERIALIZEDSERVICEMESSAGEVIEW_PARENTMATERIALTYPE = "col_materializedservicemessageview_parentmaterialtype";
@@ -661,6 +662,7 @@ public interface TranslationKeys {
     String LBL_ATTR_SERIALOBJECT_CUSTOMERSERIALNUMBER = "lbl_attr_serialobject_customerserialnumber";
     String LBL_ATTR_SERIALOBJECT_PRODUCTIONORDERNUMBER = "lbl_attr_serialobject_productionordernumber";
     String LBL_ATTR_SERIALOBJECT_SERIALNUMBER = "lbl_attr_serialobject_serialnumber";
+    String LBL_ATTR_SERVICEORDERTYPE_TOOLTIP = "lbl_attr_serviceordertype_tooltip";
     String LBL_ATTR_SHIPMENT_ORDERNUMBER = "lbl_attr_shipment_ordernumber";
     String LBL_ATTR_SHIPMENT_SHIPMENTDATE = "lbl_attr_shipment_shipmentdate";
     String LBL_ATTR_SHIPMENTDATE_TOOLTIP = "lbl_attr_shipmentdate_tooltip";

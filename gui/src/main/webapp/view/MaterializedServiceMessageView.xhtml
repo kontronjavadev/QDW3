@@ -878,9 +878,10 @@
 		</p:column>
 
 		<p:column sortBy="#{materializedServiceMessageViewItem.serviceOrderType}" width="80" 
-			rendered="#{materializedServiceMessageView.searchObject.searchFields[3].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[3].colOrder}" >
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[3].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[3].colOrder}" 
+			exportHeaderValue="#{i18n.lbl_attr_serviceordertype_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materializedservicemessageview_serviceordertype}"/>
+				<h:outputText value="#{i18n.col_materializedservicemessageview_serviceordertype}" title="#{i18n.lbl_attr_serviceordertype_tooltip}" styleClass="pf-tooltip-target" />
 			</f:facet>
 			<h:outputText value="#{materializedServiceMessageView.translateServiceOrderType(materializedServiceMessageViewItem.serviceOrderType)}"/>
 		</p:column>
@@ -930,9 +931,10 @@
 		</p:column>
 
 		<p:column sortBy="#{materializedServiceMessageViewItem.parentSerialNumber}" width="150" 
-			rendered="#{materializedServiceMessageView.searchObject.searchFields[9].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[9].colOrder}" >
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[9].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[9].colOrder}" 
+			exportHeaderValue="#{i18n.lbl_attr_parentserialnumber_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materializedservicemessageview_parentserialnumber}"/>
+				<h:outputText value="#{i18n.col_materializedservicemessageview_parentserialnumber}" title="#{i18n.lbl_attr_parentserialnumber_tooltip}" styleClass="pf-tooltip-target" />
 			</f:facet>
 			<h:outputText value="#{materializedServiceMessageViewItem.parentSerialNumber}" />
 		</p:column>
@@ -992,9 +994,10 @@
 		</p:column>
 
 		<p:column sortBy="#{materializedServiceMessageViewItem.ownerLocation}" width="100" 
-			rendered="#{materializedServiceMessageView.searchObject.searchFields[16].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[16].colOrder}" >
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[16].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[16].colOrder}" 
+			exportHeaderValue="#{i18n.lbl_attr_ownerlocation_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.lbl_attr_materializedservicemessage_ownerlocation}"/>
+				<h:outputText value="#{i18n.col_materializedservicemessageview_ownerlocation}" title="#{i18n.lbl_attr_ownerlocation_tooltip}" styleClass="pf-tooltip-target" />
 			</f:facet>
 			<h:outputText value="#{materializedServiceMessageViewItem.ownerLocation}">
 			</h:outputText>
@@ -1002,26 +1005,27 @@
 
 		<p:column sortBy="#{materializedServiceMessageViewItem.parentMaterialNumber}" width="150" 
 			rendered="#{materializedServiceMessageView.searchObject.searchFields[17].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[17].colOrder}" 
-			exportValue="#{materializedServiceMessageViewItem.parentMaterialNumber}" class="tdnowrap" >
+			exportValue="#{materializedServiceMessageViewItem.parentMaterialNumber}" exportHeaderValue="#{i18n.lbl_attr_parentmaterialnumber_tooltip}" class="thnowrap tdnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materializedservicemessageview_parentmaterialnumber}"/>
+				<h:outputText value="#{i18n.col_materializedservicemessageview_parentmaterialnumber}" title="#{i18n.lbl_attr_parentmaterialnumber_tooltip}" styleClass="pf-tooltip-target" />
 			</f:facet>
 			<h:outputText value="#{materializedServiceMessageViewItem.parentMaterialNumber}" title="#{materializedServiceMessageViewItem.parentMaterialNumber}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{materializedServiceMessageViewItem.parentSapNumber}" width="150" 
 			rendered="#{materializedServiceMessageView.searchObject.searchFields[18].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[18].colOrder}" 
-			exportValue="#{materializedServiceMessageViewItem.parentSapNumber}" class="tdnowrap" >
+			exportValue="#{materializedServiceMessageViewItem.parentSapNumber}" exportHeaderValue="#{i18n.lbl_attr_parentsapnumber_tooltip}" class="thnowrap tdnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materializedservicemessageview_parentsapnumber}"/>
+				<h:outputText value="#{i18n.col_materializedservicemessageview_parentsapnumber}" title="#{i18n.lbl_attr_parentsapnumber_tooltip}" styleClass="pf-tooltip-target" />
 			</f:facet>
 			<h:outputText value="#{materializedServiceMessageViewItem.parentSapNumber}" title="#{materializedServiceMessageViewItem.parentSapNumber}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{materializedServiceMessageViewItem.parentMaterialType}" width="80" 
-			rendered="#{materializedServiceMessageView.searchObject.searchFields[19].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[19].colOrder}" >
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[19].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[19].colOrder}" 
+			exportHeaderValue="#{i18n.lbl_attr_parentmaterialtype_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materializedservicemessageview_parentmaterialtype}"/>
+				<h:outputText value="#{i18n.col_materializedservicemessageview_parentmaterialtype}" title="#{i18n.lbl_attr_parentmaterialtype_tooltip}" styleClass="pf-tooltip-target" />
 			</f:facet>
 			<h:outputText value="#{materializedServiceMessageViewItem.parentMaterialType}">
 			</h:outputText>
@@ -1037,9 +1041,10 @@
 		</p:column>
 
 		<p:column sortBy="#{materializedServiceMessageViewItem.parentMaterialHierarchy}" width="150" 
-			rendered="#{materializedServiceMessageView.searchObject.searchFields[21].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[21].colOrder}" >
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[21].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[21].colOrder}" 
+			exportHeaderValue="#{i18n.lbl_attr_parentmaterialhierarchy_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materializedservicemessageview_parentmaterialhierarchy}"/>
+				<h:outputText value="#{i18n.col_materializedservicemessageview_parentmaterialhierarchy}" title="#{i18n.lbl_attr_parentmaterialhierarchy_tooltip}" styleClass="pf-tooltip-target" />
 			</f:facet>
 			<h:outputText value="#{materializedServiceMessageViewItem.parentMaterialHierarchy}">
 			</h:outputText>
@@ -1047,9 +1052,9 @@
 
 		<p:column sortBy="#{materializedServiceMessageViewItem.parentRevisionNumber}" width="100" 
 			rendered="#{materializedServiceMessageView.searchObject.searchFields[22].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[22].colOrder}" 
-			exportValue="#{materializedServiceMessageViewItem.parentRevisionNumber}" class="tdnowrap" >
+			exportValue="#{materializedServiceMessageViewItem.parentRevisionNumber}" exportHeaderValue="#{i18n.lbl_attr_parentrevisionnumber_tooltip}" class="thnowrap tdnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materializedservicemessageview_parentrevisionnumber}"/>
+				<h:outputText value="#{i18n.col_materializedservicemessageview_parentrevisionnumber}" title="#{i18n.lbl_attr_parentrevisionnumber_tooltip}" styleClass="pf-tooltip-target" />
 			</f:facet>
 			<h:outputText value="#{materializedServiceMessageViewItem.parentRevisionNumber}" title="#{materializedServiceMessageViewItem.parentRevisionNumber}" styleClass="pf-tooltip-target" />
 		</p:column>
@@ -1145,9 +1150,10 @@
 		</p:column>
 
 		<p:column sortBy="#{materializedServiceMessageViewItem.internalArrivalDate}" width="110" 
-			rendered="#{materializedServiceMessageView.searchObject.searchFields[33].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[33].colOrder}" >
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[33].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[33].colOrder}" 
+			exportHeaderValue="#{i18n.col_materializedservicemessageview_internalarrivaldate_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materializedservicemessageview_internalarrivaldate}"/>
+				<h:outputText value="#{i18n.col_materializedservicemessageview_internalarrivaldate}" title="#{i18n.col_materializedservicemessageview_internalarrivaldate_tooltip}" styleClass="pf-tooltip-target" />
 			</f:facet>
 			<h:outputText value="#{materializedServiceMessageViewItem.internalArrivalDate}">
 				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateConverter"/>
@@ -1157,9 +1163,10 @@
 		</p:column>
 
 		<p:column sortBy="#{materializedServiceMessageViewItem.internalShipmentDate}" width="110" 
-			rendered="#{materializedServiceMessageView.searchObject.searchFields[34].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[34].colOrder}" >
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[34].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[34].colOrder}" 
+			exportHeaderValue="#{i18n.col_materializedservicemessageview_internalshipmentdate_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materializedservicemessageview_internalshipmentdate}"/>
+				<h:outputText value="#{i18n.col_materializedservicemessageview_internalshipmentdate}" title="#{i18n.col_materializedservicemessageview_internalshipmentdate_tooltip}" styleClass="pf-tooltip-target" />
 			</f:facet>
 			<h:outputText value="#{materializedServiceMessageViewItem.internalShipmentDate}">
 				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateConverter"/>
@@ -1169,9 +1176,10 @@
 		</p:column>
 
 		<p:column sortBy="#{materializedServiceMessageViewItem.basicStartDate}" width="110" 
-			rendered="#{materializedServiceMessageView.searchObject.searchFields[35].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[35].colOrder}" >
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[35].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[35].colOrder}" 
+			exportHeaderValue="#{i18n.col_materializedservicemessageview_basicstartdate_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materializedservicemessageview_basicstartdate}"/>
+				<h:outputText value="#{i18n.col_materializedservicemessageview_basicstartdate}" title="#{i18n.col_materializedservicemessageview_basicstartdate_tooltip}" styleClass="pf-tooltip-target" />
 			</f:facet>
 			<h:outputText value="#{materializedServiceMessageViewItem.basicStartDate}">
 				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateConverter"/>
@@ -1183,7 +1191,7 @@
 		<p:column sortBy="#{materializedServiceMessageViewItem.basicEndDate}" width="100" 
 			rendered="#{materializedServiceMessageView.searchObject.searchFields[36].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[36].colOrder}" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.lbl_attr_materializedservicemessage_basicenddate}"/>
+				<h:outputText value="#{i18n.lbl_attr_materializedservicemessage_basicenddate}" />
 			</f:facet>
 			<h:outputText value="#{materializedServiceMessageViewItem.basicEndDate}">
 				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateConverter"/>
@@ -1247,9 +1255,10 @@
 		</p:column>
 
 		<p:column sortBy="#{materializedServiceMessageViewItem.epidemicFailure}" width="80" 
-			rendered="#{materializedServiceMessageView.searchObject.searchFields[43].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[43].colOrder}" >
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[43].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[43].colOrder}" 
+			exportHeaderValue="#{i18n.col_materializedservicemessageview_epidemicfailure_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materializedservicemessageview_epidemicfailure}"/>
+				<h:outputText value="#{i18n.col_materializedservicemessageview_epidemicfailure}" title="#{i18n.col_materializedservicemessageview_epidemicfailure_tooltip}" styleClass="pf-tooltip-target" />
 			</f:facet>
 			<p:selectBooleanCheckbox value="#{materializedServiceMessageViewItem.epidemicFailure}" disabled="true"/>
 		</p:column>
@@ -1273,9 +1282,10 @@
 		</p:column>
 
 		<p:column sortBy="#{materializedServiceMessageViewItem.customerFailure}" width="80" 
-			rendered="#{materializedServiceMessageView.searchObject.searchFields[46].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[46].colOrder}" >
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[46].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[46].colOrder}" 
+			exportHeaderValue="#{i18n.col_materializedservicemessageview_customerfailure_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materializedservicemessageview_customerfailure}"/>
+				<h:outputText value="#{i18n.col_materializedservicemessageview_customerfailure}" title="#{i18n.col_materializedservicemessageview_customerfailure_tooltip}" styleClass="pf-tooltip-target" />
 			</f:facet>
 			<p:selectBooleanCheckbox value="#{materializedServiceMessageViewItem.customerFailure}" disabled="true"/>
 		</p:column>
@@ -1290,9 +1300,10 @@
 		</p:column>
 
 		<p:column sortBy="#{materializedServiceMessageViewItem.supplierArrivalDate}" width="100" 
-			rendered="#{materializedServiceMessageView.searchObject.searchFields[48].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[48].colOrder}" >
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[48].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[48].colOrder}" 
+			exportHeaderValue="#{i18n.col_materializedservicemessageview_supplierarrivaldate_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materializedservicemessageview_supplierarrivaldate}"/>
+				<h:outputText value="#{i18n.col_materializedservicemessageview_supplierarrivaldate}" title="#{i18n.col_materializedservicemessageview_supplierarrivaldate_tooltip}" styleClass="pf-tooltip-target" />
 			</f:facet>
 			<h:outputText value="#{materializedServiceMessageViewItem.supplierArrivalDate}">
 				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateConverter"/>
@@ -1302,9 +1313,10 @@
 		</p:column>
 
 		<p:column sortBy="#{materializedServiceMessageViewItem.customerShipmentDate}" width="110" 
-			rendered="#{materializedServiceMessageView.searchObject.searchFields[49].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[49].colOrder}" >
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[49].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[49].colOrder}" 
+			exportHeaderValue="#{i18n.col_materializedservicemessageview_customershipmentdate_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materializedservicemessageview_customershipmentdate}"/>
+				<h:outputText value="#{i18n.col_materializedservicemessageview_customershipmentdate}" title="#{i18n.col_materializedservicemessageview_customershipmentdate_tooltip}" styleClass="pf-tooltip-target" />
 			</f:facet>
 			<h:outputText value="#{materializedServiceMessageViewItem.customerShipmentDate}">
 				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateConverter"/>
@@ -1314,9 +1326,10 @@
 		</p:column>
 
 		<p:column sortBy="#{materializedServiceMessageViewItem.deliveryNoteNumber}" width="100" 
-			rendered="#{materializedServiceMessageView.searchObject.searchFields[50].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[50].colOrder}" >
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[50].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[50].colOrder}" 
+			exportHeaderValue="#{i18n.col_materializedservicemessageview_deliverynotenumber_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materializedservicemessageview_deliverynotenumber}"/>
+				<h:outputText value="#{i18n.col_materializedservicemessageview_deliverynotenumber}" title="#{i18n.col_materializedservicemessageview_deliverynotenumber_tooltip}" styleClass="pf-tooltip-target" />
 			</f:facet>
 			<h:outputText value="#{materializedServiceMessageViewItem.deliveryNoteNumber}">
 			</h:outputText>
@@ -1332,9 +1345,10 @@
 		</p:column>
 
 		<p:column sortBy="#{materializedServiceMessageViewItem.assemblyDate}" width="80" 
-			rendered="#{materializedServiceMessageView.searchObject.searchFields[52].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[52].colOrder}" >
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[52].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[52].colOrder}" 
+			exportHeaderValue="#{i18n.lbl_attr_assemblydate_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materializedservicemessageview_assemblydate}"/>
+				<h:outputText value="#{i18n.col_materializedservicemessageview_assemblydate}" title="#{i18n.lbl_attr_assemblydate_tooltip}" styleClass="pf-tooltip-target" />
 			</f:facet>
 			<h:outputText value="#{materializedServiceMessageViewItem.assemblyDate}">
 				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateConverter"/>
@@ -1344,9 +1358,10 @@
 		</p:column>
 
 		<p:column sortBy="#{materializedServiceMessageViewItem.assemblyPO}" width="100" 
-			rendered="#{materializedServiceMessageView.searchObject.searchFields[53].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[53].colOrder}" >
+			rendered="#{materializedServiceMessageView.searchObject.searchFields[53].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[53].colOrder}" 
+			exportHeaderValue="#{i18n.lbl_attr_assemblypo_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materializedservicemessageview_assemblypo}"/>
+				<h:outputText value="#{i18n.col_materializedservicemessageview_assemblypo}" title="#{i18n.lbl_attr_assemblypo_tooltip}" styleClass="pf-tooltip-target" />
 			</f:facet>
 			<h:outputText value="#{materializedServiceMessageViewItem.assemblyPO}">
 			</h:outputText>

@@ -8449,7 +8449,7 @@
     <fields colIndex="14" width="250" title="Material short text" dTOAttribute="/400/@attributes.49"/>
     <fields colIndex="15" width="150" title="Material hierarchy" dTOAttribute="/400/@attributes.53"/>
     <fields colIndex="16" title="Revision no." dTOAttribute="/400/@attributes.57"/>
-    <fields colIndex="17" title="Owner location" dTOAttribute="/400/@attributes.38"/>
+    <fields colIndex="17" title="Owner loc." dTOAttribute="/400/@attributes.38"/>
     <fields colIndex="18" width="150" title="P. material number" dTOAttribute="/400/@attributes.46"/>
     <fields colIndex="19" width="150" title="P. SAP number" dTOAttribute="/400/@attributes.52"/>
     <fields colIndex="20" width="80" title="P. mat. type" dTOAttribute="/400/@attributes.48"/>
@@ -8483,7 +8483,7 @@
     <fields colIndex="48" width="120" title="Customer group" dTOAttribute="/400/@attributes.22"/>
     <fields colIndex="49" title="Sup. arrvl. date" fieldType="LOCAL_DATE" dTOAttribute="/400/@attributes.27"/>
     <fields colIndex="50" width="110" title="Cust. shipt. date" fieldType="LOCAL_DATE" dTOAttribute="/400/@attributes.28"/>
-    <fields colIndex="51" title="Deliv note no." dTOAttribute="/400/@attributes.33"/>
+    <fields colIndex="51" title="Deliv. note no." dTOAttribute="/400/@attributes.33"/>
     <fields colIndex="52" width="150" title="Repair description" dTOAttribute="/400/@attributes.37"/>
     <fields colIndex="53" width="80" title="Assy. date" fieldType="LOCAL_DATE" dTOAttribute="/400/@attributes.59"/>
     <fields colIndex="54" title="Assy. PO" dTOAttribute="/400/@attributes.60"/>
