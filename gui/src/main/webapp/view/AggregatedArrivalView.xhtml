@@ -338,8 +338,7 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_aggregatedarrivalview_suppliername}"/>
 			</f:facet>
-			<h:outputText value="#{aggregatedArrivalViewItem.supplierName}" id="supplierName"/>
-			<p:tooltip for="supplierName" value="#{aggregatedArrivalViewItem.supplierName}" position="top" showDelay="50"/>
+			<h:outputText value="#{aggregatedArrivalViewItem.supplierName}" title="#{aggregatedArrivalViewItem.supplierName}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{aggregatedArrivalViewItem.countryName}" width="150" 
@@ -348,8 +347,7 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_aggregatedarrivalview_countryname}"/>
 			</f:facet>
-			<h:outputText value="#{aggregatedArrivalViewItem.countryName}" id="countryName"/>
-			<p:tooltip for="countryName" value="#{aggregatedArrivalViewItem.countryName}" position="top" showDelay="50"/>
+			<h:outputText value="#{aggregatedArrivalViewItem.countryName}" title="#{aggregatedArrivalViewItem.countryName}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{aggregatedArrivalViewItem.matrevMatMaterialNumber}" width="150" 
@@ -358,8 +356,7 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_aggregatedarrivalview_matrevmatmaterialnumber}"/>
 			</f:facet>
-			<h:outputText value="#{aggregatedArrivalViewItem.matrevMatMaterialNumber}" id="matrevMatMaterialNumber"/>
-			<p:tooltip for="matrevMatMaterialNumber" value="#{aggregatedArrivalViewItem.matrevMatMaterialNumber}" position="top" showDelay="50"/>
+			<h:outputText value="#{aggregatedArrivalViewItem.matrevMatMaterialNumber}" title="#{aggregatedArrivalViewItem.matrevMatMaterialNumber}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{aggregatedArrivalViewItem.matrevMatSapNumber}" width="150" 
@@ -368,8 +365,7 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_aggregatedarrivalview_matrevmatsapnumber}"/>
 			</f:facet>
-			<h:outputText value="#{aggregatedArrivalViewItem.matrevMatSapNumber}" id="matrevMatSapNumber"/>
-			<p:tooltip for="matrevMatSapNumber" value="#{aggregatedArrivalViewItem.matrevMatSapNumber}" position="top" showDelay="50"/>
+			<h:outputText value="#{aggregatedArrivalViewItem.matrevMatSapNumber}" title="#{aggregatedArrivalViewItem.matrevMatSapNumber}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{aggregatedArrivalViewItem.matrevMatTypeCode}" width="80" 
@@ -387,8 +383,7 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_aggregatedarrivalview_matrevmatclasscode}"/>
 			</f:facet>
-			<h:outputText value="#{aggregatedArrivalViewItem.matrevMatClassCode}" id="matrevMatClassCode"/>
-			<p:tooltip for="matrevMatClassCode" value="#{aggregatedArrivalViewItem.matrevMatClassCode}" position="top" showDelay="50"/>
+			<h:outputText value="#{aggregatedArrivalViewItem.matrevMatClassCode}" title="#{aggregatedArrivalViewItem.matrevMatClassCode}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{aggregatedArrivalViewItem.matrevMatOwnerLocationCode}" width="100" 
@@ -406,8 +401,7 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_aggregatedarrivalview_matrevmatshorttext}"/>
 			</f:facet>
-			<h:outputText value="#{aggregatedArrivalViewItem.matrevMatShortText}" id="matrevMatShortText"/>
-			<p:tooltip for="matrevMatShortText" value="#{aggregatedArrivalViewItem.matrevMatShortText}" position="top" showDelay="50"/>
+			<h:outputText value="#{aggregatedArrivalViewItem.matrevMatShortText}" title="#{aggregatedArrivalViewItem.matrevMatShortText}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{aggregatedArrivalViewItem.matrevRevisionNumber}" width="100" 
@@ -416,16 +410,14 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_aggregatedarrivalview_matrevrevisionnumber}"/>
 			</f:facet>
-			<h:outputText value="#{aggregatedArrivalViewItem.matrevRevisionNumber}" id="matrevRevisionNumber"/>
-			<p:tooltip for="matrevRevisionNumber" value="#{aggregatedArrivalViewItem.matrevRevisionNumber}" position="top" showDelay="50"/>
+			<h:outputText value="#{aggregatedArrivalViewItem.matrevRevisionNumber}" title="#{aggregatedArrivalViewItem.matrevRevisionNumber}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{aggregatedArrivalViewItem.movementTypeCode}" width="80" 
 			rendered="#{aggregatedArrivalView.searchObject.searchFields[10].visible}" displayPriority="#{aggregatedArrivalView.searchObject.searchFields[10].colOrder}" 
 			exportHeaderValue="#{i18n.col_aggregatedarrivalview_movementtypecode_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_aggregatedarrivalview_movementtypecode}" id="movementtypecodeHeader"/>
-				<p:tooltip for="movementtypecodeHeader" value="#{i18n.col_aggregatedarrivalview_movementtypecode_tooltip}" position="top" showDelay="50"/>
+				<h:outputText value="#{i18n.col_aggregatedarrivalview_movementtypecode}" title="#{i18n.col_aggregatedarrivalview_movementtypecode_tooltip}" styleClass="pf-tooltip-target" />
 			</f:facet>
 			<h:outputText value="#{aggregatedArrivalViewItem.movementTypeCode}" />
 		</p:column>

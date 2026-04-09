@@ -394,8 +394,7 @@
 			rendered="#{arrivalView.searchObject.searchFields[3].visible}" displayPriority="#{arrivalView.searchObject.searchFields[3].colOrder}" 
 			exportHeaderValue="#{i18n.lbl_attr_movementtype_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_arrivalview_movementtypecode}" id="movementTypeCodeHeader"/>
-				<p:tooltip for="movementTypeCodeHeader" value="#{i18n.lbl_attr_movementtype_tooltip}" position="top" showDelay="50"/>
+				<h:outputText value="#{i18n.col_arrivalview_movementtypecode}" title="#{i18n.lbl_attr_movementtype_tooltip}" styleClass="pf-tooltip-target" />
 			</f:facet>
 			<h:outputText value="#{arrivalViewItem.movementTypeCode}">
 			</h:outputText>
@@ -428,8 +427,7 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_arrivalview_suppliername}"/>
 			</f:facet>
-			<h:outputText value="#{arrivalViewItem.supplierName}" id="supplierName" />
-			<p:tooltip for="supplierName" value="#{arrivalViewItem.supplierName}" position="top" showDelay="50"/>
+			<h:outputText value="#{arrivalViewItem.supplierName}" title="#{arrivalViewItem.supplierName}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{arrivalViewItem.matrevMatMaterialNumber}" width="150" 
@@ -438,8 +436,7 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_arrivalview_matrevmatmaterialnumber}"/>
 			</f:facet>
-			<h:outputText value="#{arrivalViewItem.matrevMatMaterialNumber}" id="matrevMatMaterialNumber" />
-			<p:tooltip for="matrevMatMaterialNumber" value="#{arrivalViewItem.matrevMatMaterialNumber}" position="top" showDelay="50"/>
+			<h:outputText value="#{arrivalViewItem.matrevMatMaterialNumber}" title="#{arrivalViewItem.matrevMatMaterialNumber}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{arrivalViewItem.matrevMatSapNumber}" width="150" 
@@ -448,8 +445,7 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_arrivalview_matrevmatsapnumber}"/>
 			</f:facet>
-			<h:outputText value="#{arrivalViewItem.matrevMatSapNumber}" id="matrevMatSapNumber" />
-			<p:tooltip for="matrevMatSapNumber" value="#{arrivalViewItem.matrevMatSapNumber}" position="top" showDelay="50"/>
+			<h:outputText value="#{arrivalViewItem.matrevMatSapNumber}" title="#{arrivalViewItem.matrevMatSapNumber}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{arrivalViewItem.matrevMatShortText}" width="250" 
@@ -458,8 +454,7 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_arrivalview_matrevmatshorttext}"/>
 			</f:facet>
-			<h:outputText value="#{arrivalViewItem.matrevMatShortText}" id="matrevMatShortText" />
-			<p:tooltip for="matrevMatShortText" value="#{arrivalViewItem.matrevMatShortText}" position="top" showDelay="50"/>
+			<h:outputText value="#{arrivalViewItem.matrevMatShortText}" title="#{arrivalViewItem.matrevMatShortText}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{arrivalViewItem.matrevMatOwnerLocationCode}" width="100" 
@@ -486,8 +481,7 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_arrivalview_matrevmatmaterialclasscode}"/>
 			</f:facet>
-			<h:outputText value="#{arrivalViewItem.matrevMatMaterialClassCode}" id="matrevMatMaterialClassCode" />
-			<p:tooltip for="matrevMatMaterialClassCode" value="#{arrivalViewItem.matrevMatMaterialClassCode}" position="top" showDelay="50"/>
+			<h:outputText value="#{arrivalViewItem.matrevMatMaterialClassCode}" title="#{arrivalViewItem.matrevMatMaterialClassCode}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{arrivalViewItem.matrevMatMaterialHierarchy}" width="150" 
@@ -505,8 +499,7 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_arrivalview_matrevrevisionnumber}"/>
 			</f:facet>
-			<h:outputText value="#{arrivalViewItem.matrevRevisionNumber}" id="matrevRevisionNumber" />
-			<p:tooltip for="matrevRevisionNumber" value="#{arrivalViewItem.matrevRevisionNumber}" position="top" showDelay="50"/>
+			<h:outputText value="#{arrivalViewItem.matrevRevisionNumber}" title="#{arrivalViewItem.matrevRevisionNumber}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{arrivalViewItem.creationDate}" width="120" 

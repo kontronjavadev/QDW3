@@ -366,8 +366,7 @@
 			rendered="#{aggregatedShipmentArrivalView.searchObject.searchFields[0].visible}" displayPriority="#{aggregatedShipmentArrivalView.searchObject.searchFields[0].colOrder}" 
 			exportHeaderValue="#{i18n.lbl_attr_shipmentplant_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_aggregatedshipmentarrivalview_plantcode}" id="plantCodeHeader"/>
-				<p:tooltip for="plantCodeHeader" value="#{i18n.lbl_attr_shipmentplant_tooltip}" position="top" showDelay="50"/>
+				<h:outputText value="#{i18n.col_aggregatedshipmentarrivalview_plantcode}" title="#{i18n.lbl_attr_shipmentplant_tooltip}" styleClass="pf-tooltip-target" />
 			</f:facet>
 			<h:outputText value="#{aggregatedShipmentArrivalViewItem.plantCode}">
 			</h:outputText>
@@ -379,8 +378,7 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_aggregatedshipmentarrivalview_customername}"/>
 			</f:facet>
-			<h:outputText value="#{aggregatedShipmentArrivalViewItem.customerName}" id="customerName"/>
-			<p:tooltip for="customerName" value="#{aggregatedShipmentArrivalViewItem.customerName}" position="top" showDelay="50"/>
+			<h:outputText value="#{aggregatedShipmentArrivalViewItem.customerName}" title="#{aggregatedShipmentArrivalViewItem.customerName}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{aggregatedShipmentArrivalViewItem.custCountryName}" width="150" 
@@ -389,8 +387,7 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_aggregatedshipmentarrivalview_custcountryname}"/>
 			</f:facet>
-			<h:outputText value="#{aggregatedShipmentArrivalViewItem.custCountryName}" id="custCountryName"/>
-			<p:tooltip for="custCountryName" value="#{aggregatedShipmentArrivalViewItem.custCountryName}" position="top" showDelay="50"/>
+			<h:outputText value="#{aggregatedShipmentArrivalViewItem.custCountryName}" title="#{aggregatedShipmentArrivalViewItem.custCountryName}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{aggregatedShipmentArrivalViewItem.supplierName}" width="200" 
@@ -399,16 +396,14 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_aggregatedshipmentarrivalview_suppliername}"/>
 			</f:facet>
-			<h:outputText value="#{aggregatedShipmentArrivalViewItem.supplierName}" id="supplierName"/>
-			<p:tooltip for="supplierName" value="#{aggregatedShipmentArrivalViewItem.supplierName}" position="top" showDelay="50"/>
+			<h:outputText value="#{aggregatedShipmentArrivalViewItem.supplierName}" title="#{aggregatedShipmentArrivalViewItem.supplierName}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{aggregatedShipmentArrivalViewItem.shipmentMovementTypeCode}" width="110" 
 			rendered="#{aggregatedShipmentArrivalView.searchObject.searchFields[4].visible}" displayPriority="#{aggregatedShipmentArrivalView.searchObject.searchFields[4].colOrder}" 
 			exportHeaderValue="#{i18n.lbl_attr_shipmentmovementtype_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_aggregatedshipmentarrivalview_shipmentmovementtypecode}" id="shipmentMovementTypeCodeHeader"/>
-				<p:tooltip for="shipmentMovementTypeCodeHeader" value="#{i18n.lbl_attr_shipmentmovementtype_tooltip}" position="top" showDelay="50"/>
+				<h:outputText value="#{i18n.col_aggregatedshipmentarrivalview_shipmentmovementtypecode}" title="#{i18n.lbl_attr_shipmentmovementtype_tooltip}" styleClass="pf-tooltip-target" />
 			</f:facet>
 			<h:outputText value="#{aggregatedShipmentArrivalViewItem.shipmentMovementTypeCode}">
 			</h:outputText>
@@ -418,8 +413,7 @@
 			rendered="#{aggregatedShipmentArrivalView.searchObject.searchFields[5].visible}" displayPriority="#{aggregatedShipmentArrivalView.searchObject.searchFields[5].colOrder}" 
 			exportHeaderValue="#{i18n.lbl_attr_arrivalmovementtype_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_aggregatedshipmentarrivalview_arrivalmovementtypecode}" id="arrivalMovementTypeCodeHeader"/>
-				<p:tooltip for="arrivalMovementTypeCodeHeader" value="#{i18n.lbl_attr_arrivalmovementtype_tooltip}" position="top" showDelay="50"/>
+				<h:outputText value="#{i18n.col_aggregatedshipmentarrivalview_arrivalmovementtypecode}" title="#{i18n.lbl_attr_arrivalmovementtype_tooltip}" styleClass="pf-tooltip-target" />
 			</f:facet>
 			<h:outputText value="#{aggregatedShipmentArrivalViewItem.arrivalMovementTypeCode}">
 			</h:outputText>
@@ -431,8 +425,7 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_aggregatedshipmentarrivalview_matrevmatmaterialnumber}"/>
 			</f:facet>
-			<h:outputText value="#{aggregatedShipmentArrivalViewItem.matrevMatMaterialNumber}" id="matrevMatMaterialNumber"/>
-			<p:tooltip for="matrevMatMaterialNumber" value="#{aggregatedShipmentArrivalViewItem.matrevMatMaterialNumber}" position="top" showDelay="50"/>
+			<h:outputText value="#{aggregatedShipmentArrivalViewItem.matrevMatMaterialNumber}" title="#{aggregatedShipmentArrivalViewItem.matrevMatMaterialNumber}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{aggregatedShipmentArrivalViewItem.matrevMatSapNumber}" width="150" 
@@ -441,8 +434,7 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_aggregatedshipmentarrivalview_matrevmatsapnumber}"/>
 			</f:facet>
-			<h:outputText value="#{aggregatedShipmentArrivalViewItem.matrevMatSapNumber}" id="matrevMatSapNumber"/>
-			<p:tooltip for="matrevMatSapNumber" value="#{aggregatedShipmentArrivalViewItem.matrevMatSapNumber}" position="top" showDelay="50"/>
+			<h:outputText value="#{aggregatedShipmentArrivalViewItem.matrevMatSapNumber}" title="#{aggregatedShipmentArrivalViewItem.matrevMatSapNumber}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{aggregatedShipmentArrivalViewItem.matrevMatShortText}" width="250" 
@@ -451,8 +443,7 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_aggregatedshipmentarrivalview_matrevmatshorttext}"/>
 			</f:facet>
-			<h:outputText value="#{aggregatedShipmentArrivalViewItem.matrevMatShortText}" id="matrevMatShortText"/>
-			<p:tooltip for="matrevMatShortText" value="#{aggregatedShipmentArrivalViewItem.matrevMatShortText}" position="top" showDelay="50"/>
+			<h:outputText value="#{aggregatedShipmentArrivalViewItem.matrevMatShortText}" title="#{aggregatedShipmentArrivalViewItem.matrevMatShortText}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{aggregatedShipmentArrivalViewItem.matrevMatMaterialHierarchy}" width="150" 
@@ -488,8 +479,7 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_aggregatedshipmentarrivalview_matrevmatmaterialclasscode}"/>
 			</f:facet>
-			<h:outputText value="#{aggregatedShipmentArrivalViewItem.matrevMatMaterialClassCode}" id="matrevMatMaterialClassCode"/>
-			<p:tooltip for="matrevMatMaterialClassCode" value="#{aggregatedShipmentArrivalViewItem.matrevMatMaterialClassCode}" position="top" showDelay="50"/>
+			<h:outputText value="#{aggregatedShipmentArrivalViewItem.matrevMatMaterialClassCode}" title="#{aggregatedShipmentArrivalViewItem.matrevMatMaterialClassCode}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{aggregatedShipmentArrivalViewItem.materialRevisionRevisionNumber}" width="100" 
@@ -498,8 +488,7 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_aggregatedshipmentarrivalview_materialrevisionrevisionnumber}"/>
 			</f:facet>
-			<h:outputText value="#{aggregatedShipmentArrivalViewItem.materialRevisionRevisionNumber}" id="materialRevisionRevisionNumber"/>
-			<p:tooltip for="materialRevisionRevisionNumber" value="#{aggregatedShipmentArrivalViewItem.materialRevisionRevisionNumber}" position="top" showDelay="50"/>
+			<h:outputText value="#{aggregatedShipmentArrivalViewItem.materialRevisionRevisionNumber}" title="#{aggregatedShipmentArrivalViewItem.materialRevisionRevisionNumber}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{aggregatedShipmentArrivalViewItem.year}" width="80" 

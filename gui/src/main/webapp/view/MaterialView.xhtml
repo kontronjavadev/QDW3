@@ -315,8 +315,7 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materialview_materialnumber}"/>
 			</f:facet>
-			<h:outputText value="#{materialViewItem.materialNumber}" id="materialNumber"/>
-			<p:tooltip for="materialNumber" value="#{materialViewItem.materialNumber}" position="top" showDelay="50"/>
+			<h:outputText value="#{materialViewItem.materialNumber}" title="#{materialViewItem.materialNumber}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{materialViewItem.sapNumber}" width="150" 
@@ -325,8 +324,7 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materialview_sapnumber}"/>
 			</f:facet>
-			<h:outputText value="#{materialViewItem.sapNumber}" id="sapNumber"/>
-			<p:tooltip for="sapNumber" value="#{materialViewItem.sapNumber}" position="top" showDelay="50"/>
+			<h:outputText value="#{materialViewItem.sapNumber}" title="#{materialViewItem.sapNumber}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{materialViewItem.materialTypeCode}" width="100" 
@@ -344,8 +342,7 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materialview_materialclasscode}"/>
 			</f:facet>
-			<h:outputText value="#{materialViewItem.materialClassCode}" id="materialClassCode"/>
-			<p:tooltip for="materialClassCode" value="#{materialViewItem.materialClassCode}" position="top" showDelay="50"/>
+			<h:outputText value="#{materialViewItem.materialClassCode}" title="#{materialViewItem.materialClassCode}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{materialViewItem.materialHierarchy}" width="150" 
@@ -363,8 +360,7 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_material_shorttext}"/>
 			</f:facet>
-			<h:outputText value="#{materialViewItem.shortText}" id="shortText"/>
-			<p:tooltip for="shortText" value="#{materialViewItem.shortText}" position="top" showDelay="50"/>
+			<h:outputText value="#{materialViewItem.shortText}" title="#{materialViewItem.shortText}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{materialViewItem.ownerLocationCode}" width="100" 
@@ -390,8 +386,7 @@
 			rendered="#{materialView.searchObject.searchFields[8].visible}" displayPriority="#{materialView.searchObject.searchFields[8].colOrder}" 
 			exportHeaderValue="#{i18n.col_materialview_searchsubassemblies_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materialview_searchsubassemblies}" id="searchSubAssembliesHeader" />
-				<p:tooltip for="searchSubAssembliesHeader" value="#{i18n.col_materialview_searchsubassemblies_tooltip}" position="top" showDelay="50" />
+				<h:outputText value="#{i18n.col_materialview_searchsubassemblies}" title="#{i18n.col_materialview_searchsubassemblies_tooltip}" styleClass="pf-tooltip-target" />
 			</f:facet>
 			<p:selectBooleanCheckbox value="#{materialViewItem.searchSubAssemblies}" disabled="true"/>
 		</p:column>
@@ -402,8 +397,7 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_material_comment}"/>
 			</f:facet>
-			<h:outputText value="#{materialViewItem.comment}" id="comment"/>
-			<p:tooltip for="comment" value="#{materialViewItem.comment}" position="top" showDelay="50"/>
+			<h:outputText value="#{materialViewItem.comment}" title="#{materialViewItem.comment}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{materialViewItem.creationDate}" width="120" 

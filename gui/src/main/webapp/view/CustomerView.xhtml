@@ -307,8 +307,7 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_customer_name}"/>
 			</f:facet>
-			<h:outputText value="#{customerViewItem.name}" id="name" />
-			<p:tooltip for="name" value="#{customerViewItem.name}" position="top" showDelay="50" />
+			<h:outputText value="#{customerViewItem.name}" title="#{customerViewItem.name}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{customerViewItem.street}" width="150" 
@@ -317,8 +316,7 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_customer_street}"/>
 			</f:facet>
-			<h:outputText value="#{customerViewItem.street}" id="street" />
-			<p:tooltip for="street" value="#{customerViewItem.street}" position="top" showDelay="50"/>
+			<h:outputText value="#{customerViewItem.street}" title="#{customerViewItem.street}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{customerViewItem.zipCode}" width="80" 
@@ -336,8 +334,7 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_customer_city}"/>
 			</f:facet>
-			<h:outputText value="#{customerViewItem.city}" id="city" />
-			<p:tooltip for="city" value="#{customerViewItem.city}" position="top" showDelay="50"/>
+			<h:outputText value="#{customerViewItem.city}" title="#{customerViewItem.city}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{customerViewItem.countryName}" width="100" 
@@ -363,8 +360,7 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_abstractfuntionalentity_shorttext}"/>
 			</f:facet>
-			<h:outputText value="#{customerViewItem.shortText}" id="shortText" />
-			<p:tooltip for="shortText" value="#{customerViewItem.shortText}" position="top" showDelay="50"/>
+			<h:outputText value="#{customerViewItem.shortText}" title="#{customerViewItem.shortText}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{customerViewItem.comment}" width="150" 
@@ -373,8 +369,7 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_abstractfuntionalentity_comment}"/>
 			</f:facet>
-			<h:outputText value="#{customerViewItem.comment}" id="comment" />
-			<p:tooltip for="comment" value="#{customerViewItem.comment}" position="top" showDelay="50"/>
+			<h:outputText value="#{customerViewItem.comment}" title="#{customerViewItem.comment}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{customerViewItem.creationDate}" width="120" 
