@@ -71,8 +71,7 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_abstractfunctionalactiveentity_shorttext}"/>
 			</f:facet>
-			<h:outputText value="#{businessUnitViewItem.shortText}" id="shortText"/>
-			<p:tooltip for="shortText" value="#{businessUnitViewItem.shortText}" position="top" showDelay="50"/>
+			<h:outputText value="#{businessUnitViewItem.shortText}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{businessUnitViewItem.comment}" width="250" 
@@ -80,8 +79,7 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_abstractfunctionalactiveentity_comment}"/>
 			</f:facet>
-			<h:outputText value="#{businessUnitViewItem.comment}" id="comment"/>
-			<p:tooltip for="comment" value="#{businessUnitViewItem.comment}" position="top" showDelay="50"/>
+			<h:outputText value="#{businessUnitViewItem.comment}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{businessUnitViewItem.active}" width="70" >

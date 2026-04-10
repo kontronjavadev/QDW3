@@ -508,8 +508,7 @@
 			rendered="#{materializedArrivalView.searchObject.searchFields[3].visible}" displayPriority="#{materializedArrivalView.searchObject.searchFields[3].colOrder}" 
 			exportHeaderValue="#{i18n.lbl_attr_parentserialnumber_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materializedarrivalview_parentserialnumber}" id="parentSerialNumberHeader" />
-				<p:tooltip for="parentSerialNumberHeader" value="#{i18n.lbl_attr_parentserialnumber_tooltip}" position="top" showDelay="50" />
+				<h:outputText value="#{i18n.col_materializedarrivalview_parentserialnumber}" title="#{i18n.lbl_attr_parentserialnumber_tooltip}" styleClass="pf-tooltip-target" />
 			</f:facet>
 			<h:outputText value="#{arrivalViewItem.parentSerialNumber}" />
 		</p:column>
@@ -540,8 +539,7 @@
 			rendered="#{materializedArrivalView.searchObject.searchFields[6].visible}" displayPriority="#{materializedArrivalView.searchObject.searchFields[6].colOrder}"  
 			exportHeaderValue="#{i18n.lbl_attr_assemblydate_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materializedarrivalview_assemblydate}" id="assemblyDateHeader" />
-				<p:tooltip for="assemblyDateHeader" value="#{i18n.lbl_attr_assemblydate_tooltip}" position="top" showDelay="50" />
+				<h:outputText value="#{i18n.col_materializedarrivalview_assemblydate}" title="#{i18n.lbl_attr_assemblydate_tooltip}" styleClass="pf-tooltip-target" />
 			</f:facet>
 			<h:outputText value="#{arrivalViewItem.assemblyDate}">
 				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateConverter"/>
@@ -554,8 +552,7 @@
 			rendered="#{materializedArrivalView.searchObject.searchFields[7].visible}" displayPriority="#{materializedArrivalView.searchObject.searchFields[7].colOrder}"  
 			exportHeaderValue="#{i18n.lbl_attr_assemblypo_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materializedarrivalview_assemblypo}" id="assemblyPOHeader" />
-				<p:tooltip for="assemblyPOHeader" value="#{i18n.lbl_attr_assemblypo_tooltip}" position="top" showDelay="50" />
+				<h:outputText value="#{i18n.col_materializedarrivalview_assemblypo}" title="#{i18n.lbl_attr_assemblypo_tooltip}" styleClass="pf-tooltip-target" />
 			</f:facet>
 			<h:outputText value="#{arrivalViewItem.assemblyPO}" />
 		</p:column>
@@ -568,8 +565,7 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedarrivalview_suppliername}"/>
 			</f:facet>
-			<h:outputText value="#{arrivalViewItem.supplierName}" id="supplierName" />
-			<p:tooltip for="supplierName" value="#{arrivalViewItem.supplierName}" position="top" showDelay="50"/>
+			<h:outputText value="#{arrivalViewItem.supplierName}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{arrivalViewItem.countryName}" width="100" 
@@ -578,8 +574,7 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedarrivalview_countryname}"/>
 			</f:facet>
-			<h:outputText value="#{arrivalViewItem.countryName}" id="countryName" />
-			<p:tooltip for="countryName" value="#{arrivalViewItem.countryName}" position="top" showDelay="50"/>
+			<h:outputText value="#{arrivalViewItem.countryName}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 
@@ -590,8 +585,7 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_materializedentitiy_revisionnumber}"/>
 			</f:facet>
-			<h:outputText value="#{arrivalViewItem.revisionNumber}" id="revisionNumber" />
-			<p:tooltip for="revisionNumber" value="#{arrivalViewItem.revisionNumber}" position="top" showDelay="50"/>
+			<h:outputText value="#{arrivalViewItem.revisionNumber}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{arrivalViewItem.parentRevisionNumber}" width="150" 
@@ -600,8 +594,7 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedarrivalview_parentrevisionnumber}"/>
 			</f:facet>
-			<h:outputText value="#{arrivalViewItem.parentRevisionNumber}" id="parentRevisionNumber" />
-			<p:tooltip for="parentRevisionNumber" value="#{arrivalViewItem.parentRevisionNumber}" position="top" showDelay="50"/>
+			<h:outputText value="#{arrivalViewItem.parentRevisionNumber}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 
@@ -612,8 +605,7 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedarrivalview_materialnumber}"/>
 			</f:facet>
-			<h:outputText value="#{arrivalViewItem.materialNumber}" id="materialNumber" />
-			<p:tooltip for="materialNumber" value="#{arrivalViewItem.materialNumber}" position="top" showDelay="50"/>
+			<h:outputText value="#{arrivalViewItem.materialNumber}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{arrivalViewItem.sapNumber}" width="150" 
@@ -622,8 +614,7 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedarrivalview_sapnumber}"/>
 			</f:facet>
-			<h:outputText value="#{arrivalViewItem.sapNumber}" id="sapNumber" />
-			<p:tooltip for="sapNumber" value="#{arrivalViewItem.sapNumber}" position="top" showDelay="50"/>
+			<h:outputText value="#{arrivalViewItem.sapNumber}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{arrivalViewItem.materialShortText}" width="250" 
@@ -632,8 +623,7 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_materializedentitiy_materialshorttext}"/>
 			</f:facet>
-			<h:outputText value="#{arrivalViewItem.materialShortText}" id="materialShortText" />
-			<p:tooltip for="materialShortText" value="#{arrivalViewItem.materialShortText}" position="top" showDelay="50"/>
+			<h:outputText value="#{arrivalViewItem.materialShortText}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{arrivalViewItem.materialHierarchy}" width="150" 
@@ -659,11 +649,9 @@
 			rendered="#{materializedArrivalView.searchObject.searchFields[17].visible}" displayPriority="#{materializedArrivalView.searchObject.searchFields[17].colOrder}" 
 			exportValue="#{arrivalViewItem.parentMaterialNumber}" exportHeaderValue="#{i18n.lbl_attr_parentmaterialnumber_tooltip}" class="tdnowrap thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materializedarrivalview_parentmaterialnumber}" id="parentMaterialNumberHeader" />
-				<p:tooltip for="parentMaterialNumberHeader" value="#{i18n.lbl_attr_parentmaterialnumber_tooltip}" position="top" showDelay="50" />
+				<h:outputText value="#{i18n.col_materializedarrivalview_parentmaterialnumber}" title="#{i18n.lbl_attr_parentmaterialnumber_tooltip}" styleClass="pf-tooltip-target" />
 			</f:facet>
-			<h:outputText value="#{arrivalViewItem.parentMaterialNumber}" id="parentMaterialNumber" />
-			<p:tooltip for="parentMaterialNumber" value="#{arrivalViewItem.parentMaterialNumber}" position="top" showDelay="50"/>
+			<h:outputText value="#{arrivalViewItem.parentMaterialNumber}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{arrivalViewItem.parentSapNumber}" width="150" 
@@ -672,8 +660,7 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materializedarrivalview_parentsapnumber}"/>
 			</f:facet>
-			<h:outputText value="#{arrivalViewItem.parentSapNumber}" id="parentSapNumber" />
-			<p:tooltip for="parentSapNumber" value="#{arrivalViewItem.parentSapNumber}" position="top" showDelay="50"/>
+			<h:outputText value="#{arrivalViewItem.parentSapNumber}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{arrivalViewItem.parentMaterialShortText}" width="250" 
@@ -682,8 +669,7 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_materializedentitiy_parentmaterialshorttext}"/>
 			</f:facet>
-			<h:outputText value="#{arrivalViewItem.parentMaterialShortText}" id="parentMaterialShortText" />
-			<p:tooltip for="parentMaterialShortText" value="#{arrivalViewItem.parentMaterialShortText}" position="top" showDelay="50"/>
+			<h:outputText value="#{arrivalViewItem.parentMaterialShortText}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{arrivalViewItem.parentMaterialHierarchy}" width="150" 
@@ -698,8 +684,7 @@
 			rendered="#{materializedArrivalView.searchObject.searchFields[21].visible}" displayPriority="#{materializedArrivalView.searchObject.searchFields[21].colOrder}"  
 			exportHeaderValue="#{i18n.lbl_attr_parentmaterialtype_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materializedarrivalview_parentmaterialtype}" id="parentMaterialTypeHeader" />
-				<p:tooltip for="parentMaterialTypeHeader" value="#{i18n.lbl_attr_parentmaterialtype_tooltip}" position="top" showDelay="50" />
+				<h:outputText value="#{i18n.col_materializedarrivalview_parentmaterialtype}" title="#{i18n.lbl_attr_parentmaterialtype_tooltip}" styleClass="pf-tooltip-target" />
 			</f:facet>
 			<h:outputText value="#{arrivalViewItem.parentMaterialType}" />
 		</p:column>
@@ -710,8 +695,7 @@
 			rendered="#{materializedArrivalView.searchObject.searchFields[22].visible}" displayPriority="#{materializedArrivalView.searchObject.searchFields[22].colOrder}" 
 			exportHeaderValue="#{i18n.lbl_attr_movementtype_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materializedarrivalview_movementtype}" id="movementTypeHeader" />
-				<p:tooltip for="movementTypeHeader" value="#{i18n.lbl_attr_movementtype_tooltip}" position="top" showDelay="50" />
+				<h:outputText value="#{i18n.col_materializedarrivalview_movementtype}" title="#{i18n.lbl_attr_movementtype_tooltip}" styleClass="pf-tooltip-target" />
 			</f:facet>
 			<h:outputText value="#{arrivalViewItem.movementType}" />
 		</p:column>
