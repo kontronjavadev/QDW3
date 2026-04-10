@@ -338,8 +338,7 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_serialobjectview_matmaterialnumber}"/>
 			</f:facet>
-			<h:outputText value="#{serialObjectViewItem.matMaterialNumber}" id="matMaterialNumber" />
-			<p:tooltip for="matMaterialNumber" value="#{serialObjectViewItem.matMaterialNumber}" position="top" showDelay="50" />
+			<h:outputText value="#{serialObjectViewItem.matMaterialNumber}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{serialObjectViewItem.matSapNumber}" width="150" 
@@ -348,8 +347,7 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_serialobjectview_matsapnumber}"/>
 			</f:facet>
-			<h:outputText value="#{serialObjectViewItem.matSapNumber}" id="matSapNumber" />
-			<p:tooltip for="matSapNumber" value="#{serialObjectViewItem.matSapNumber}" position="top" showDelay="50" />
+			<h:outputText value="#{serialObjectViewItem.matSapNumber}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{serialObjectViewItem.matMaterialHierarchy}" width="150" 
@@ -366,16 +364,14 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_serialobjectview_matshorttext}"/>
 			</f:facet>
-			<h:outputText value="#{serialObjectViewItem.matShortText}" id="matShortText" />
-			<p:tooltip for="matShortText" value="#{serialObjectViewItem.matShortText}" position="top" showDelay="50" />
+			<h:outputText value="#{serialObjectViewItem.matShortText}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{serialObjectViewItem.matOwnerLocationCode}" width="100" 
 			rendered="#{serialObjectView.searchObject.searchFields[5].visible}" displayPriority="#{serialObjectView.searchObject.searchFields[5].colOrder}" 
 			exportHeaderValue="#{i18n.lbl_attr_ownerlocation_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_serialobjectview_matownerlocationcode}" id="matOwnerLocationCode" />
-				<p:tooltip for="matOwnerLocationCode" value="#{i18n.lbl_attr_ownerlocation_tooltip}" position="top" showDelay="50" />
+				<h:outputText value="#{i18n.col_serialobjectview_matownerlocationcode}" title="#{i18n.lbl_attr_ownerlocation_tooltip}" styleClass="pf-tooltip-target" />
 			</f:facet>
 			<h:outputText value="#{serialObjectViewItem.matOwnerLocationCode}" />
 		</p:column>
@@ -394,16 +390,14 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_serialobjectview_matmaterialclasscode}"/>
 			</f:facet>
-			<h:outputText value="#{serialObjectViewItem.matMaterialClassCode}" id="matMaterialClassCode" />
-			<p:tooltip for="matMaterialClassCode" value="#{serialObjectViewItem.matMaterialClassCode}" position="top" showDelay="50" />
+			<h:outputText value="#{serialObjectViewItem.matMaterialClassCode}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{serialObjectViewItem.customerSerialNumber}" width="100" 
 			rendered="#{serialObjectView.searchObject.searchFields[8].visible}" displayPriority="#{serialObjectView.searchObject.searchFields[8].colOrder}" 
 			exportHeaderValue="#{i18n.lbl_attr_customerserialnumber_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_serialobjectview_customerserialnumber}" id="customerSerialNumber" />
-				<p:tooltip for="customerSerialNumber" value="#{i18n.lbl_attr_customerserialnumber_tooltip}" position="top" showDelay="50" />
+				<h:outputText value="#{i18n.col_serialobjectview_customerserialnumber}" title="#{i18n.lbl_attr_customerserialnumber_tooltip}" styleClass="pf-tooltip-target" />
 			</f:facet>
 			<h:outputText value="#{serialObjectViewItem.customerSerialNumber}" />
 		</p:column>
@@ -412,8 +406,7 @@
 			rendered="#{serialObjectView.searchObject.searchFields[9].visible}" displayPriority="#{serialObjectView.searchObject.searchFields[9].colOrder}" 
 			exportHeaderValue="#{i18n.lbl_attr_productionordernumber_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_serialobjectview_productionordernumber}" id="productionOrderNumber" />
-				<p:tooltip for="productionOrderNumber" value="#{i18n.lbl_attr_productionordernumber_tooltip}" position="top" showDelay="50" />
+				<h:outputText value="#{i18n.col_serialobjectview_productionordernumber}" title="#{i18n.lbl_attr_productionordernumber_tooltip}" styleClass="pf-tooltip-target" />
 			</f:facet>
 			<h:outputText value="#{serialObjectViewItem.productionOrderNumber}" />
 		</p:column>
@@ -422,8 +415,7 @@
 			rendered="#{serialObjectView.searchObject.searchFields[10].visible}" displayPriority="#{serialObjectView.searchObject.searchFields[10].colOrder}" 
 			exportHeaderValue="#{i18n.lbl_attr_assemblydate_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_serialobjectview_assemblydate}" id="assemblyDate" />
-				<p:tooltip for="assemblyDate" value="#{i18n.lbl_attr_assemblydate_tooltip}" position="top" showDelay="50" />
+				<h:outputText value="#{i18n.col_serialobjectview_assemblydate}" title="#{i18n.lbl_attr_assemblydate_tooltip}" styleClass="pf-tooltip-target" />
 			</f:facet>
 			<h:outputText value="#{serialObjectViewItem.assemblyDate}">
 				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateConverter"/>

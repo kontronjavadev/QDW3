@@ -332,8 +332,7 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materialrevisionview_materialmaterialnumber}"/>
 			</f:facet>
-			<h:outputText value="#{materialRevisionViewItem.materialMaterialNumber}" id="materialMaterialNumber"/>
-			<p:tooltip for="materialMaterialNumber" value="#{materialRevisionViewItem.materialMaterialNumber}" position="top" showDelay="50"/>
+			<h:outputText value="#{materialRevisionViewItem.materialMaterialNumber}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{materialRevisionViewItem.materialSapNumber}" width="150" 
@@ -342,8 +341,7 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materialrevisionview_materialsapnumber}"/>
 			</f:facet>
-			<h:outputText value="#{materialRevisionViewItem.materialSapNumber}" id="materialSapNumber"/>
-			<p:tooltip for="materialSapNumber" value="#{materialRevisionViewItem.materialSapNumber}" position="top" showDelay="50"/>
+			<h:outputText value="#{materialRevisionViewItem.materialSapNumber}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{materialRevisionViewItem.materialShortText}" width="250" 
@@ -352,8 +350,7 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materialrevisionview_materialshorttext}"/>
 			</f:facet>
-			<h:outputText value="#{materialRevisionViewItem.materialShortText}" id="materialShortText"/>
-			<p:tooltip for="materialShortText" value="#{materialRevisionViewItem.materialShortText}" position="top" showDelay="50"/>
+			<h:outputText value="#{materialRevisionViewItem.materialShortText}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{materialRevisionViewItem.ownerLocationCode}" width="100" 
@@ -389,8 +386,7 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materialrevisionview_materialclasscode}"/>
 			</f:facet>
-			<h:outputText value="#{materialRevisionViewItem.materialClassCode}" id="materialClassCode"/>
-			<p:tooltip for="materialClassCode" value="#{materialRevisionViewItem.materialClassCode}" position="top" showDelay="50"/>
+			<h:outputText value="#{materialRevisionViewItem.materialClassCode}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{materialRevisionViewItem.revisionNumber}" width="100" 
@@ -399,8 +395,7 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materialrevisionview_revisionnumber}"/>
 			</f:facet>
-			<h:outputText value="#{materialRevisionViewItem.revisionNumber}" id="revisionNumber"/>
-			<p:tooltip for="revisionNumber" value="#{materialRevisionViewItem.revisionNumber}" position="top" showDelay="50"/>
+			<h:outputText value="#{materialRevisionViewItem.revisionNumber}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{materialRevisionViewItem.rev2}" width="80" 
@@ -436,8 +431,7 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_materialrevision_comment}"/>
 			</f:facet>
-			<h:outputText value="#{materialRevisionViewItem.comment}" id="comment"/>
-			<p:tooltip for="comment" value="#{materialRevisionViewItem.comment}" position="top" showDelay="50"/>
+			<h:outputText value="#{materialRevisionViewItem.comment}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{materialRevisionViewItem.creationDate}" width="120" 

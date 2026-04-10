@@ -70,16 +70,14 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_abstractfunctionalactiveentity_shorttext}"/>
 			</f:facet>
-			<h:outputText value="#{verticalSectorViewItem.shortText}" id="shortText"/>
-			<p:tooltip for="shortText" value="#{verticalSectorViewItem.shortText}" position="top" showDelay="50"/>
+			<h:outputText value="#{verticalSectorViewItem.shortText}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{verticalSectorViewItem.comment}" width="250" exportValue="#{verticalSectorViewItem.comment}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_abstractfunctionalactiveentity_comment}"/>
 			</f:facet>
-			<h:outputText value="#{verticalSectorViewItem.comment}" id="comment"/>
-			<p:tooltip for="comment" value="#{verticalSectorViewItem.comment}" position="top" showDelay="50"/>
+			<h:outputText value="#{verticalSectorViewItem.comment}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{verticalSectorViewItem.active}" width="70" >

@@ -292,8 +292,7 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_supplier_name}"/>
 			</f:facet>
-			<h:outputText value="#{supplierViewItem.name}" id="name"/>
-			<p:tooltip for="name" value="#{supplierViewItem.name}" position="top" showDelay="50"/>
+			<h:outputText value="#{supplierViewItem.name}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{supplierViewItem.street}" width="150" 
@@ -302,8 +301,7 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_supplier_street}"/>
 			</f:facet>
-			<h:outputText value="#{supplierViewItem.street}" id="street"/>
-			<p:tooltip for="street" value="#{supplierViewItem.street}" position="top" showDelay="50"/>
+			<h:outputText value="#{supplierViewItem.street}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{supplierViewItem.zipCode}" width="80" 
@@ -321,8 +319,7 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_supplier_city}"/>
 			</f:facet>
-			<h:outputText value="#{supplierViewItem.city}" id="city"/>
-			<p:tooltip for="city" value="#{supplierViewItem.city}" position="top" showDelay="50"/>
+			<h:outputText value="#{supplierViewItem.city}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{supplierViewItem.countryName}" width="150" 
@@ -331,8 +328,7 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_supplierview_countryname}"/>
 			</f:facet>
-			<h:outputText value="#{supplierViewItem.countryName}" id="countryName"/>
-			<p:tooltip for="countryName" value="#{supplierViewItem.countryName}" position="top" showDelay="50"/>
+			<h:outputText value="#{supplierViewItem.countryName}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{supplierViewItem.shortText}" width="250" 
@@ -341,8 +337,7 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_abstractfuntionalentity_shorttext}"/>
 			</f:facet>
-			<h:outputText value="#{supplierViewItem.shortText}" id="shortText"/>
-			<p:tooltip for="shortText" value="#{supplierViewItem.shortText}" position="top" showDelay="50"/>
+			<h:outputText value="#{supplierViewItem.shortText}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{supplierViewItem.comment}" width="250" 
@@ -351,8 +346,7 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_abstractfuntionalentity_comment}"/>
 			</f:facet>
-			<h:outputText value="#{supplierViewItem.comment}" id="comment"/>
-			<p:tooltip for="comment" value="#{supplierViewItem.comment}" position="top" showDelay="50"/>
+			<h:outputText value="#{supplierViewItem.comment}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{supplierViewItem.creationDate}" width="120" 

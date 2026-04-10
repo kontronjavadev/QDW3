@@ -343,8 +343,7 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_tracebomview_matrevmatmaterialnumber}"/>
 			</f:facet>
-			<h:outputText value="#{traceBoMViewItem.matrevMatMaterialNumber}" id="matrevMatMaterialNumber" />
-			<p:tooltip for="matrevMatMaterialNumber" value="#{traceBoMViewItem.matrevMatMaterialNumber}" position="top" showDelay="50" />
+			<h:outputText value="#{traceBoMViewItem.matrevMatMaterialNumber}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{traceBoMViewItem.matrevMatSapNumber}" width="150" 
@@ -353,8 +352,7 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_tracebomview_matrevmatsapnumber}"/>
 			</f:facet>
-			<h:outputText value="#{traceBoMViewItem.matrevMatSapNumber}" id="matrevMatSapNumber" />
-			<p:tooltip for="matrevMatSapNumber" value="#{traceBoMViewItem.matrevMatSapNumber}" position="top" showDelay="50" />
+			<h:outputText value="#{traceBoMViewItem.matrevMatSapNumber}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{traceBoMViewItem.matrevMatShortText}" width="250" 
@@ -363,8 +361,7 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_tracebomview_matrevmatshorttext}"/>
 			</f:facet>
-			<h:outputText value="#{traceBoMViewItem.matrevMatShortText}" id="matrevMatShortText" />
-			<p:tooltip for="matrevMatShortText" value="#{traceBoMViewItem.matrevMatShortText}" position="top" showDelay="50" />
+			<h:outputText value="#{traceBoMViewItem.matrevMatShortText}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{traceBoMViewItem.matrevMatMaterialTypeCode}" width="80" 
@@ -400,8 +397,7 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_tracebomview_matrevrevisionnumber}"/>
 			</f:facet>
-			<h:outputText value="#{traceBoMViewItem.matrevRevisionNumber}" id="matrevRevisionNumber" />
-			<p:tooltip for="matrevRevisionNumber" value="#{traceBoMViewItem.matrevRevisionNumber}" position="top" showDelay="50" />
+			<h:outputText value="#{traceBoMViewItem.matrevRevisionNumber}"styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{traceBoMViewItem.supplierName}" width="200" 
@@ -410,16 +406,14 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_tracebomview_suppliername}"/>
 			</f:facet>
-			<h:outputText value="#{traceBoMViewItem.supplierName}" id="supplierName" />
-			<p:tooltip for="supplierName" value="#{traceBoMViewItem.supplierName}" position="top" showDelay="50" />
+			<h:outputText value="#{traceBoMViewItem.supplierName}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{traceBoMViewItem.productionDate}" width="80" 
 			rendered="#{traceBoMView.searchObject.searchFields[8].visible}" displayPriority="#{traceBoMView.searchObject.searchFields[8].colOrder}" 
 			exportHeaderValue="#{i18n.lbl_attr_productiondate_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_tracebomview_productiondate}" id="productionDateHeader"/>
-				<p:tooltip for="productionDateHeader" value="#{i18n.lbl_attr_productiondate_tooltip}" position="top" showDelay="50" />
+				<h:outputText value="#{i18n.col_tracebomview_productiondate}" title="#{i18n.lbl_attr_productiondate_tooltip}" styleClass="pf-tooltip-target" />
 			</f:facet>
 			<h:outputText value="#{traceBoMViewItem.productionDate}">
 				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateConverter"/>
@@ -432,11 +426,9 @@
 			rendered="#{traceBoMView.searchObject.searchFields[9].visible}" displayPriority="#{traceBoMView.searchObject.searchFields[9].colOrder}" 
 			exportHeaderValue="#{i18n.lbl_attr_deliverynotenumber_tooltip}" exportValue="#{traceBoMViewItem.deliveryNoteNumber}" class="thnowrap tdnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_tracebomview_deliverynotenumber}" id="deliveryNoteNumberHeader"/>
-				<p:tooltip for="deliveryNoteNumberHeader" value="#{i18n.lbl_attr_deliverynotenumber_tooltip}" position="top" showDelay="50" />
+				<h:outputText value="#{i18n.col_tracebomview_deliverynotenumber}" title="#{i18n.lbl_attr_deliverynotenumber_tooltip}" styleClass="pf-tooltip-target" />
 			</f:facet>
-			<h:outputText value="#{traceBoMViewItem.deliveryNoteNumber}" id="deliveryNoteNumber" />
-			<p:tooltip for="deliveryNoteNumber" value="#{traceBoMViewItem.deliveryNoteNumber}" position="top" showDelay="50" />
+			<h:outputText value="#{traceBoMViewItem.deliveryNoteNumber}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{traceBoMViewItem.orderNumber}" width="100" 

@@ -424,8 +424,7 @@
 			rendered="#{shipmentView.searchObject.searchFields[3].visible}" displayPriority="#{shipmentView.searchObject.searchFields[3].colOrder}"  
 			exportHeaderValue="#{i18n.lbl_attr_movementtype_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_shipmentview_movementtypecode}" id="movementTypeCodeHeader" />
-				<p:tooltip for="movementTypeCodeHeader" value="#{i18n.lbl_attr_movementtype_tooltip}" position="top" showDelay="50" />
+				<h:outputText value="#{i18n.col_shipmentview_movementtypecode}" title="#{i18n.lbl_attr_movementtype_tooltip}" styleClass="pf-tooltip-target" />
 			</f:facet>
 			<h:outputText value="#{shipmentViewItem.movementTypeCode}">
 			</h:outputText>
@@ -435,8 +434,7 @@
 			rendered="#{shipmentView.searchObject.searchFields[4].visible}" displayPriority="#{shipmentView.searchObject.searchFields[4].colOrder}"  
 			exportHeaderValue="#{i18n.lbl_attr_shipmentdate_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_shipmentview_shipmentdate}" id="shipmentDateHeader" />
-				<p:tooltip for="shipmentDateHeader" value="#{i18n.lbl_attr_shipmentdate_tooltip}" position="top" showDelay="50" />
+				<h:outputText value="#{i18n.col_shipmentview_shipmentdate}" title="#{i18n.lbl_attr_shipmentdate_tooltip}" styleClass="pf-tooltip-target" />
 			</f:facet>
 			<h:outputText value="#{shipmentViewItem.shipmentDate}">
 				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateConverter"/>
@@ -458,8 +456,7 @@
 			rendered="#{shipmentView.searchObject.searchFields[6].visible}" displayPriority="#{shipmentView.searchObject.searchFields[6].colOrder}"  
 			exportHeaderValue="#{i18n.lbl_attr_customercode_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_shipmentview_customercode}" id="customerCodeHeader" />
-				<p:tooltip for="customerCodeHeader" value="#{i18n.lbl_attr_customercode_tooltip}" position="top" showDelay="50" />
+				<h:outputText value="#{i18n.col_shipmentview_customercode}" title="#{i18n.lbl_attr_customercode_tooltip}" styleClass="pf-tooltip-target" />
 			</f:facet>
 			<h:outputText value="#{shipmentViewItem.customerCode}" />
 		</p:column>
@@ -470,8 +467,7 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_shipmentview_customername}"/>
 			</f:facet>
-			<h:outputText value="#{shipmentViewItem.customerName}" id="customerName" />
-			<p:tooltip for="customerName" value="#{shipmentViewItem.customerName}" position="top" showDelay="50" />
+			<h:outputText value="#{shipmentViewItem.customerName}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{shipmentViewItem.matrevMaterialMaterialNumber}" width="150" 
@@ -480,8 +476,7 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_shipmentview_matrevmaterialmaterialnumber}"/>
 			</f:facet>
-			<h:outputText value="#{shipmentViewItem.matrevMaterialMaterialNumber}" id="matrevMaterialMaterialNumber" />
-			<p:tooltip for="matrevMaterialMaterialNumber" value="#{shipmentViewItem.matrevMaterialMaterialNumber}" position="top" showDelay="50" />
+			<h:outputText value="#{shipmentViewItem.matrevMaterialMaterialNumber}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{shipmentViewItem.matrevMaterialSapNumber}" width="150" 
@@ -490,8 +485,7 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_shipmentview_matrevmaterialsapnumber}"/>
 			</f:facet>
-			<h:outputText value="#{shipmentViewItem.matrevMaterialSapNumber}" id="matrevMaterialSapNumber" />
-			<p:tooltip for="matrevMaterialSapNumber" value="#{shipmentViewItem.matrevMaterialSapNumber}" position="top" showDelay="50" />
+			<h:outputText value="#{shipmentViewItem.matrevMaterialSapNumber}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{shipmentViewItem.matrevRevisionNumber}" width="150" 
@@ -500,8 +494,7 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_shipmentview_matrevrevisionnumber}"/>
 			</f:facet>
-			<h:outputText value="#{shipmentViewItem.matrevRevisionNumber}" id="matrevRevisionNumber" />
-			<p:tooltip for="matrevRevisionNumber" value="#{shipmentViewItem.matrevRevisionNumber}" position="top" showDelay="50" />
+			<h:outputText value="#{shipmentViewItem.matrevRevisionNumber}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{shipmentViewItem.matrevMatMaterialTypeCode}" width="80" 
@@ -537,16 +530,14 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_shipmentview_matrevmaterialshorttext}"/>
 			</f:facet>
-			<h:outputText value="#{shipmentViewItem.matrevMaterialShortText}" id="matrevMaterialShortText" />
-			<p:tooltip for="matrevMaterialShortText" value="#{shipmentViewItem.matrevMaterialShortText}" position="top" showDelay="50" />
+			<h:outputText value="#{shipmentViewItem.matrevMaterialShortText}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{shipmentViewItem.matrevMatOwnerLocationCode}" width="100" 
 			rendered="#{shipmentView.searchObject.searchFields[15].visible}" displayPriority="#{shipmentView.searchObject.searchFields[15].colOrder}"  
 			exportHeaderValue="#{i18n.lbl_attr_ownerlocation_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_shipmentview_matrevmatownerlocationcode}" id="matrevMatOwnerLocationCodeHeader" />
-				<p:tooltip for="matrevMatOwnerLocationCodeHeader" value="#{i18n.lbl_attr_ownerlocation_tooltip}" position="top" showDelay="50" />
+				<h:outputText value="#{i18n.col_shipmentview_matrevmatownerlocationcode}" title="#{i18n.lbl_attr_ownerlocation_tooltip}" styleClass="pf-tooltip-target" />
 			</f:facet>
 			<h:outputText value="#{shipmentViewItem.matrevMatOwnerLocationCode}" />
 		</p:column>
