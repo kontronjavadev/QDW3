@@ -77,11 +77,20 @@ oder der Titel richtet sich nach dem Content (<ui:define name="title"/> in jedem
 						// Wir benennen es sofort in 'data-title' um, damit der träge, weiße Browser-Tooltip nicht mehr erscheint.
 						let text = target.getAttribute('title');
 						if (text) {
+							// erster hover: Attribut löschen, damit nicht der Browser den Tooltip anzeigt, sondern wir hier und in schön; Wert in data-title merken!  
 							target.setAttribute('data-title', text);
 							target.removeAttribute('title');
 						} else {
-							text = target.getAttribute('data-title');
+							// nachfolgende hover oder wenn kein title angegeben war: Wert aus gemerktem data-title verwenden oder ersatzweise Zellinhalt verwenden.
+							// So muss nur ein title angegeben werden, wenn er vom Zellinhalt abweicht. Wir wollen das nur bei Spaltenüberschriften, wo wir eine Abkürzung
+							// auflösen. Bei Zellen schneiden wir den Text ab und wollen im Tooltip den komlpetten Text sehen.
+							text = target.getAttribute('data-title') || target.textContent.trim();
 						}
+						// Ist kein Titel gesetzt, den Zell-Inhalt für den Tooltip verwenden
+						if (!text) {
+							text = target.textContent.trim();
+						}
+
 
 						 // Wir prüfen das Element selbst (span) und vorsichtshalber die Zelle (td), 
 						// je nachdem, wo das CSS "overflow: hidden" genau greift.
