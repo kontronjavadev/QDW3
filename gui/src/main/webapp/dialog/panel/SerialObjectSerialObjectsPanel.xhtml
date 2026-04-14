@@ -43,8 +43,7 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_serialobjectserialobjectspanel_materialmaterialnumber}"/>
 			</f:facet>
-			<h:outputText value="#{serialObjectSerialObjectsPanelItem.materialMaterialNumber}" id="materialMaterialNumber" />
-			<p:tooltip for="materialMaterialNumber" value="#{serialObjectSerialObjectsPanelItem.materialMaterialNumber}" position="top" showDelay="50"/>
+			<h:outputText value="#{serialObjectSerialObjectsPanelItem.materialMaterialNumber}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{serialObjectSerialObjectsPanelItem.materialSapNumber}" width="150" 
@@ -52,15 +51,13 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_serialobjectserialobjectspanel_materialsapnumber}"/>
 			</f:facet>
-			<h:outputText value="#{serialObjectSerialObjectsPanelItem.materialSapNumber}" id="materialSapNumber" />
-			<p:tooltip for="materialSapNumber" value="#{serialObjectSerialObjectsPanelItem.materialSapNumber}" position="top" showDelay="50"/>
+			<h:outputText value="#{serialObjectSerialObjectsPanelItem.materialSapNumber}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{serialObjectSerialObjectsPanelItem.customerSerialNumber}" width="100" 
 			exportHeaderValue="#{i18n.lbl_attr_customerserialnumber_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_serialobjectserialobjectspanel_customerserialnumber}" id="customerSerialNumberHeader"/>
-				<p:tooltip for="customerSerialNumberHeader" value="#{i18n.lbl_attr_customerserialnumber_tooltip}" position="top" showDelay="50" />
+				<h:outputText value="#{i18n.col_serialobjectserialobjectspanel_customerserialnumber}" title="#{i18n.lbl_attr_customerserialnumber_tooltip}" styleClass="pf-tooltip-target" />
 			</f:facet>
 			<h:outputText value="#{serialObjectSerialObjectsPanelItem.customerSerialNumber}" />
 		</p:column>
@@ -68,8 +65,7 @@
 		<p:column sortBy="#{serialObjectSerialObjectsPanelItem.productionOrderNumber}" width="100" 
 			exportHeaderValue="#{i18n.lbl_attr_productionordernumber_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_serialobjectserialobjectspanel_productionordernumber}" id="productionOrderNumberHeader"/>
-				<p:tooltip for="productionOrderNumberHeader" value="#{i18n.lbl_attr_productionordernumber_tooltip}" position="top" showDelay="50" />
+				<h:outputText value="#{i18n.col_serialobjectserialobjectspanel_productionordernumber}" title="#{i18n.lbl_attr_productionordernumber_tooltip}" styleClass="pf-tooltip-target" />
 			</f:facet>
 			<h:outputText value="#{serialObjectSerialObjectsPanelItem.productionOrderNumber}" />
 		</p:column>
@@ -77,8 +73,7 @@
 		<p:column sortBy="#{serialObjectSerialObjectsPanelItem.assemblyDate}" width="80" 
 			exportHeaderValue="#{i18n.lbl_attr_assemblydate_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_serialobjectserialobjectspanel_assemblydate}" id="assemblyDateHeader"/>
-				<p:tooltip for="assemblyDateHeader" value="#{i18n.lbl_attr_assemblydate_tooltip}" position="top" showDelay="50" />
+				<h:outputText value="#{i18n.col_serialobjectserialobjectspanel_assemblydate}" title="#{i18n.lbl_attr_assemblydate_tooltip}" styleClass="pf-tooltip-target" />
 			</f:facet>
 			<h:outputText value="#{serialObjectSerialObjectsPanelItem.assemblyDate}">
 				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateConverter"/>

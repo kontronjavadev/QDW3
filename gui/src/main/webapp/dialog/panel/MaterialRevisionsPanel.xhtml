@@ -33,8 +33,7 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materialrevisionspanel_revisionnumber}"/>
 			</f:facet>
-			<h:outputText value="#{materialRevisionsPanelItem.revisionNumber}" id="revisionNumber"/>
-			<p:tooltip for="revisionNumber" value="#{materialRevisionsPanelItem.revisionNumber}" position="top" showDelay="50"/>
+			<h:outputText value="#{materialRevisionsPanelItem.revisionNumber}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{materialRevisionsPanelItem.rev2}" width="80" >
@@ -65,8 +64,7 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_materialrevision_comment}"/>
 			</f:facet>
-			<h:outputText value="#{materialRevisionsPanelItem.comment}" id="comment"/>
-			<p:tooltip for="comment" value="#{materialRevisionsPanelItem.comment}" position="top" showDelay="50"/>
+			<h:outputText value="#{materialRevisionsPanelItem.comment}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{materialRevisionsPanelItem.creationDate}" width="120" >

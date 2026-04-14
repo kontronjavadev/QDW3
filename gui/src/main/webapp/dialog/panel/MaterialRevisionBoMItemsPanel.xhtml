@@ -49,8 +49,7 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materialrevisionbomitemspanel_materialmaterialnumber}"/>
 			</f:facet>
-			<h:outputText value="#{materialRevisionBoMItemsPanelItem.materialMaterialNumber}" id="materialMaterialNumber"/>
-			<p:tooltip for="materialMaterialNumber" value="#{materialRevisionBoMItemsPanelItem.materialMaterialNumber}" position="top" showDelay="50"/>
+			<h:outputText value="#{materialRevisionBoMItemsPanelItem.materialMaterialNumber}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{materialRevisionBoMItemsPanelItem.materialSapNumber}" width="150" 
@@ -58,8 +57,7 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materialrevisionbomitemspanel_materialsapnumber}"/>
 			</f:facet>
-			<h:outputText value="#{materialRevisionBoMItemsPanelItem.materialSapNumber}" id="materialSapNumber"/>
-			<p:tooltip for="materialSapNumber" value="#{materialRevisionBoMItemsPanelItem.materialSapNumber}" position="top" showDelay="50"/>
+			<h:outputText value="#{materialRevisionBoMItemsPanelItem.materialSapNumber}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{materialRevisionBoMItemsPanelItem.materialShortText}" width="250" 
@@ -67,8 +65,7 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_materialrevisionbomitemspanel_materialshorttext}"/>
 			</f:facet>
-			<h:outputText value="#{materialRevisionBoMItemsPanelItem.materialShortText}" id="materialShortText"/>
-			<p:tooltip for="materialShortText" value="#{materialRevisionBoMItemsPanelItem.materialShortText}" position="top" showDelay="50"/>
+			<h:outputText value="#{materialRevisionBoMItemsPanelItem.materialShortText}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{materialRevisionBoMItemsPanelItem.materialTypeCode}" width="100" >
@@ -101,8 +98,7 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_bomitem_label}"/>
 			</f:facet>
-			<h:outputText value="#{materialRevisionBoMItemsPanelItem.label}" id="label"/>
-			<p:tooltip for="label" value="#{materialRevisionBoMItemsPanelItem.label}" position="top" showDelay="50"/>
+			<h:outputText value="#{materialRevisionBoMItemsPanelItem.label}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{materialRevisionBoMItemsPanelItem.creationDate}" width="120" >

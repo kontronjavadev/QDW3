@@ -36,8 +36,7 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_tracebomillegaltracebomitemspanel_materialnumber}"/>
 			</f:facet>
-			<h:outputText value="#{traceBoMIllegalTraceBoMItemsPanelItem.materialNumber}" id="materialNumber" />
-			<p:tooltip for="materialNumber" value="#{traceBoMIllegalTraceBoMItemsPanelItem.materialNumber}" position="top" showDelay="50" />
+			<h:outputText value="#{traceBoMIllegalTraceBoMItemsPanelItem.materialNumber}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{traceBoMIllegalTraceBoMItemsPanelItem.manufacturer}" width="200" 
@@ -45,8 +44,7 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_illegaltracebomitem_manufacturer}"/>
 			</f:facet>
-			<h:outputText value="#{traceBoMIllegalTraceBoMItemsPanelItem.manufacturer}" id="manufacturer" />
-			<p:tooltip for="manufacturer" value="#{traceBoMIllegalTraceBoMItemsPanelItem.manufacturer}" position="top" showDelay="50" />
+			<h:outputText value="#{traceBoMIllegalTraceBoMItemsPanelItem.manufacturer}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{traceBoMIllegalTraceBoMItemsPanelItem.dateCode}" width="150" >
@@ -62,8 +60,7 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_illegaltracebomitem_ordercode}"/>
 			</f:facet>
-			<h:outputText value="#{traceBoMIllegalTraceBoMItemsPanelItem.orderCode}" id="orderCode" />
-			<p:tooltip for="orderCode" value="#{traceBoMIllegalTraceBoMItemsPanelItem.orderCode}" position="top" showDelay="50" />
+			<h:outputText value="#{traceBoMIllegalTraceBoMItemsPanelItem.orderCode}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{traceBoMIllegalTraceBoMItemsPanelItem.manufacturerRevision}" width="150" 
@@ -71,8 +68,7 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_illegaltracebomitem_manufacturerrevision}"/>
 			</f:facet>
-			<h:outputText value="#{traceBoMIllegalTraceBoMItemsPanelItem.manufacturerRevision}" id="manufacturerRevision" />
-			<p:tooltip for="manufacturerRevision" value="#{traceBoMIllegalTraceBoMItemsPanelItem.manufacturerRevision}" position="top" showDelay="50" />
+			<h:outputText value="#{traceBoMIllegalTraceBoMItemsPanelItem.manufacturerRevision}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{traceBoMIllegalTraceBoMItemsPanelItem.creationDate}" width="120" >
