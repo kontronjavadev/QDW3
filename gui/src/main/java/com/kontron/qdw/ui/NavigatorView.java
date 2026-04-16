@@ -264,6 +264,11 @@ public class NavigatorView implements Serializable {
             if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY))
                 new DefaultTreeNode<>(VIEW_TYPE, new TreeNavigatorItem(bundle.getString(FORM_MATERIALIZEDSERVICEMESSAGEVIEW_TITLE),
                         req.getContextPath() + "/view/MaterializedServiceMessageView.jsf"), itemGroup0005);
+
+            // Open service orders
+            if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY))
+                new DefaultTreeNode<>(VIEW_TYPE, new TreeNavigatorItem(bundle.getString(FORM_SERVICEMESSAGEOPENVIEW_TITLE),
+                        req.getContextPath() + "/view/ServiceMessageOpenView.jsf"), itemGroup0005);
         }
     }
 
