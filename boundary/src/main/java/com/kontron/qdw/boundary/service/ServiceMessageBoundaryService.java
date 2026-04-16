@@ -102,7 +102,7 @@ public class ServiceMessageBoundaryService {
         selectTokens.add(ServiceMessageOpenSearchDTO.SELECT_EXTERNALSUPPLIERNAME);
 
         searchObj.setFromClause(
-                "from ServiceMessage a join a.materialRevision c join c.material z join z.ownerLocation ac join z.materialClass ad join z.materialType ae left join a.externalSupplier b join a.plant d left join a.serialObject e left join a.serviceOrder f left join a.faultAnalysis h left join a.rMAType i left join a.repairErrorCode j left join a.repairLocation k left join a.repairService l left join a.repairState m left join a.repairTask n left join f.customer p left join p.country w where a.internalShipmentDate is null and f.type = ServiceOrderType.RMA");
+                "from ServiceMessage a join a.materialRevision c join c.material z join z.ownerLocation ac join z.materialClass ad join z.materialType ae left join a.externalSupplier b join a.plant d left join a.serialObject e left join a.serviceOrder f left join a.faultAnalysis h left join a.rMAType i left join a.repairErrorCode j left join a.repairLocation k left join a.repairService l left join a.repairState m left join a.repairTask n left join f.customer p left join p.country w where a.internalShipmentDate is null and f.serviceOrderType = ServiceOrderType.RMA");
 
         return repository.search(searchObj, ServiceMessageOpenSearchDTO.class, selectTokens);
     }
@@ -118,7 +118,7 @@ public class ServiceMessageBoundaryService {
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public long countAllServiceMessagesOpen(SearchDTO searchObj) {
         searchObj.setFromClause(
-                "from ServiceMessage a join a.materialRevision c join c.material z join z.ownerLocation ac join z.materialClass ad join z.materialType ae left join a.externalSupplier b join a.plant d left join a.serialObject e left join a.serviceOrder f left join a.faultAnalysis h left join a.rMAType i left join a.repairErrorCode j left join a.repairLocation k left join a.repairService l left join a.repairState m left join a.repairTask n left join f.customer p left join p.country w where a.internalShipmentDate is null and f.type = ServiceOrderType.RMA");
+                "from ServiceMessage a join a.materialRevision c join c.material z join z.ownerLocation ac join z.materialClass ad join z.materialType ae left join a.externalSupplier b join a.plant d left join a.serialObject e left join a.serviceOrder f left join a.faultAnalysis h left join a.rMAType i left join a.repairErrorCode j left join a.repairLocation k left join a.repairService l left join a.repairState m left join a.repairTask n left join f.customer p left join p.country w where a.internalShipmentDate is null and f.serviceOrderType = ServiceOrderType.RMA");
 
         return repository.count(searchObj);
     }
