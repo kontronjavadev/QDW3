@@ -17,6 +17,8 @@ import org.slf4j.*;
 import com.kontron.qdw.boundary.material.*;
 import java.lang.invoke.*;
 import com.kontron.qdw.ui.dialog.*;
+import com.kontron.qdw.ui.view.util.SuperView;
+
 import net.sourceforge.jbizmo.commons.webclient.primefaces.util.*;
 import jakarta.faces.application.FacesMessage;
 import java.util.*;
@@ -24,11 +26,13 @@ import jakarta.faces.view.*;
 import com.kontron.qdw.ui.*;
 import com.kontron.qdw.service.*;
 import com.kontron.qdw.dto.material.*;
+
+import net.sourceforge.jbizmo.commons.annotation.Customized;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
 
 @Named("serviceMessageOpenView")
 @ViewScoped
-public class ServiceMessageOpenView extends AbstractSearchableView implements Serializable {
+public class ServiceMessageOpenView extends SuperView implements Serializable {
     @Generated
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     @Generated
@@ -121,6 +125,257 @@ public class ServiceMessageOpenView extends AbstractSearchableView implements Se
     }
 
     /**
+     * Initialize view
+     */
+    @Customized
+    public void initView() {
+        logger.debug("Initialize view");
+
+        bundle = ResourceBundle.getBundle(DEFAULT_BUNDLE_NAME, userSession.getLocale());
+
+        // Check if user is allowed to open this page!
+        if (!userSession.checkAuthorization(true, ROLE_ADMINISTRATOR, ROLE_READONLY)) {
+            return;
+        }
+
+
+        formTitle = bundle.getString(FORM_SERVICEMESSAGEOPENVIEW_TITLE);
+
+        if (searchObj == null) {
+            // Check if previous search exists!
+            final SearchDTO lastSearch = queryManager.getLastQuery(userSession.getPrincipal().getId(), VIEW_ID);
+            if (lastSearch != null) {
+                searchObj = lastSearch;
+                prepareAfterLoad();
+            }
+            else {
+                initSearchObject();
+            }
+        }
+
+        initProperties();
+        fetchServiceMessages();
+
+        logger.debug("View initialization finished");
+    }
+
+    /**
+     * Initialize search object
+     */
+    @Customized
+    public void initSearchObject() {
+        searchObj = new SearchDTO();
+        int colOrderId = -1;
+
+        // Initialize search object
+        searchObj.setMaxResult(1000);
+        searchObj.setExactFilterMatch(true);
+        searchObj.setCaseSensitive(true);
+        searchObj.setCount(false);
+
+        refreshFormatSettings();
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_ID,
+                bundle.getString(COL_SERVICEMESSAGEOPENVIEW_ID), SearchFieldDataTypeEnum.LONG, 120);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_PLANTCODE,
+                bundle.getString(COL_SERVICEMESSAGEOPENVIEW_PLANTCODE), SearchFieldDataTypeEnum.STRING, 80);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_SERVICEORDERCODE,
+                bundle.getString(COL_SERVICEMESSAGEOPENVIEW_SERVICEORDERCODE), SearchFieldDataTypeEnum.STRING, 120);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_SERIALOBJECTSERIALNUMBER,
+                bundle.getString(COL_SERVICEMESSAGEOPENVIEW_SERIALOBJECTSERIALNUMBER), SearchFieldDataTypeEnum.STRING, 120);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_SERVORDERCUSTOMERNAME,
+                bundle.getString(COL_SERVICEMESSAGEOPENVIEW_SERVORDERCUSTOMERNAME), SearchFieldDataTypeEnum.STRING, 200);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_SERVORDERCUSTCOUNTRYNAME,
+                bundle.getString(COL_SERVICEMESSAGEOPENVIEW_SERVORDERCUSTCOUNTRYNAME), SearchFieldDataTypeEnum.STRING, 100);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_MATREVMATERIALMATERIALNUMBER,
+                bundle.getString(COL_SERVICEMESSAGEOPENVIEW_MATREVMATERIALMATERIALNUMBER), SearchFieldDataTypeEnum.STRING, 150);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_MATREVMATERIALSAPNUMBER,
+                bundle.getString(COL_SERVICEMESSAGEOPENVIEW_MATREVMATERIALSAPNUMBER), SearchFieldDataTypeEnum.STRING, 150);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_MATREVMATERIALSHORTTEXT,
+                bundle.getString(COL_SERVICEMESSAGEOPENVIEW_MATREVMATERIALSHORTTEXT), SearchFieldDataTypeEnum.STRING, 250);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_MATREVMATOWNERLOCATIONCODE,
+                bundle.getString(COL_SERVICEMESSAGEOPENVIEW_MATREVMATOWNERLOCATIONCODE), SearchFieldDataTypeEnum.STRING, 100);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_MATREVMATMATERIALTYPECODE,
+                bundle.getString(COL_SERVICEMESSAGEOPENVIEW_MATREVMATMATERIALTYPECODE), SearchFieldDataTypeEnum.STRING, 80);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_MATREVMATMATERIALCLASSCODE,
+                bundle.getString(COL_SERVICEMESSAGEOPENVIEW_MATREVMATMATERIALCLASSCODE), SearchFieldDataTypeEnum.STRING, 120);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_MATERIALREVISIONREVISIONNUMBER,
+                bundle.getString(COL_SERVICEMESSAGEOPENVIEW_MATERIALREVISIONREVISIONNUMBER), SearchFieldDataTypeEnum.STRING, 100);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_REPAIRSTATENAME,
+                bundle.getString(COL_SERVICEMESSAGEOPENVIEW_REPAIRSTATENAME), SearchFieldDataTypeEnum.STRING, 120);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_REPAIRERRORCODEGROUPNAME,
+                bundle.getString(COL_SERVICEMESSAGEOPENVIEW_REPAIRERRORCODEGROUPNAME), SearchFieldDataTypeEnum.STRING, 150);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_REPAIRERRORCODENAME,
+                bundle.getString(COL_SERVICEMESSAGEOPENVIEW_REPAIRERRORCODENAME), SearchFieldDataTypeEnum.STRING, 150);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_REPAIRERRORCODESHORTTEXT,
+                bundle.getString(COL_SERVICEMESSAGEOPENVIEW_REPAIRERRORCODESHORTTEXT), SearchFieldDataTypeEnum.STRING, 250);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_REPAIRLOCATIONCODE,
+                bundle.getString(COL_SERVICEMESSAGEOPENVIEW_REPAIRLOCATIONCODE), SearchFieldDataTypeEnum.STRING, 100);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_RMATYPECODE,
+                bundle.getString(COL_SERVICEMESSAGEOPENVIEW_RMATYPECODE), SearchFieldDataTypeEnum.STRING, 100);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_REPAIRSERVICENAME,
+                bundle.getString(COL_SERVICEMESSAGEOPENVIEW_REPAIRSERVICENAME), SearchFieldDataTypeEnum.STRING, 100);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_FAULTANALYSISCODE,
+                bundle.getString(COL_SERVICEMESSAGEOPENVIEW_FAULTANALYSISCODE), SearchFieldDataTypeEnum.STRING, 100);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_FAULTANALYSISSHORTTEXT,
+                bundle.getString(COL_SERVICEMESSAGEOPENVIEW_FAULTANALYSISSHORTTEXT), SearchFieldDataTypeEnum.STRING, 250);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_REPAIRTASKCODE,
+                bundle.getString(COL_SERVICEMESSAGEOPENVIEW_REPAIRTASKCODE), SearchFieldDataTypeEnum.STRING, 100);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_REPAIRTASKSHORTTEXT,
+                bundle.getString(COL_SERVICEMESSAGEOPENVIEW_REPAIRTASKSHORTTEXT), SearchFieldDataTypeEnum.STRING, 250);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_EXTERNALSUPPLIERNAME,
+                bundle.getString(COL_SERVICEMESSAGEOPENVIEW_EXTERNALSUPPLIERNAME), SearchFieldDataTypeEnum.STRING, 200);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_ERRORID,
+                bundle.getString(LBL_ATTR_SERVICEMESSAGE_ERRORID), SearchFieldDataTypeEnum.STRING, 100);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_ORIGIN,
+                bundle.getString(LBL_ATTR_SERVICEMESSAGE_ORIGIN), SearchFieldDataTypeEnum.STRING, 150);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_DESIGNATOR,
+                bundle.getString(LBL_ATTR_SERVICEMESSAGE_DESIGNATOR), SearchFieldDataTypeEnum.STRING, 100);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_DEFECTCOMPONENT,
+                bundle.getString(COL_SERVICEMESSAGEOPENVIEW_DEFECTCOMPONENT), SearchFieldDataTypeEnum.STRING, 120);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_INTERNALREPORT,
+                bundle.getString(LBL_ATTR_SERVICEMESSAGE_INTERNALREPORT), SearchFieldDataTypeEnum.STRING, 250);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_EXTERNALREPORT,
+                bundle.getString(LBL_ATTR_SERVICEMESSAGE_EXTERNALREPORT), SearchFieldDataTypeEnum.STRING, 250);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_CUSTOMERREPORT,
+                bundle.getString(LBL_ATTR_SERVICEMESSAGE_CUSTOMERREPORT), SearchFieldDataTypeEnum.STRING, 250);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_CUSTOMERFAILURE,
+                bundle.getString(COL_SERVICEMESSAGEOPENVIEW_CUSTOMERFAILURE), SearchFieldDataTypeEnum.BOOLEAN, 80);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_BASICSTARTDATE,
+                bundle.getString(COL_SERVICEMESSAGEOPENVIEW_BASICSTARTDATE), SearchFieldDataTypeEnum.LOCAL_DATE, 100, false);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_BASICFINISHDATE,
+                bundle.getString(COL_SERVICEMESSAGEOPENVIEW_BASICFINISHDATE), SearchFieldDataTypeEnum.LOCAL_DATE, 100, false);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_INTERNALARRIVALDATE,
+                bundle.getString(COL_SERVICEMESSAGEOPENVIEW_INTERNALARRIVALDATE), SearchFieldDataTypeEnum.LOCAL_DATE, 110, false);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_EPIDEMICFAILURE,
+                bundle.getString(COL_SERVICEMESSAGEOPENVIEW_EPIDEMICFAILURE), SearchFieldDataTypeEnum.BOOLEAN, 80);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_ANALYSISTEXT,
+                bundle.getString(LBL_ATTR_SERVICEMESSAGE_ANALYSISTEXT), SearchFieldDataTypeEnum.STRING, 250);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_DELIVERYNOTENUMBER,
+                bundle.getString(COL_SERVICEMESSAGEOPENVIEW_DELIVERYNOTENUMBER), SearchFieldDataTypeEnum.STRING, 100);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_SERVICEMESSAGEID,
+                bundle.getString(COL_SERVICEMESSAGEOPENVIEW_SERVICEMESSAGEID), SearchFieldDataTypeEnum.STRING, 100);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_CAUSETEXT,
+                bundle.getString(LBL_ATTR_SERVICEMESSAGE_CAUSETEXT), SearchFieldDataTypeEnum.STRING, 250);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_REPAIRDESCRIPTION,
+                bundle.getString(LBL_ATTR_SERVICEMESSAGE_REPAIRDESCRIPTION), SearchFieldDataTypeEnum.STRING, 250);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_CREATIONDATE,
+                bundle.getString(LBL_ATTR_ABSTRACTENTITYWITHID_CREATIONDATE), SearchFieldDataTypeEnum.LOCAL_DATE_TIME, 120);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_LASTUPDATE,
+                bundle.getString(LBL_ATTR_ABSTRACTENTITYWITHID_LASTUPDATE), SearchFieldDataTypeEnum.LOCAL_DATE_TIME, 120);
+
+
+        visibleFields = new DualListModel<>();
+        visibleFields.setSource(new ArrayList<>());
+        visibleFields.setTarget(new ArrayList<>());
+
+        for (final SearchFieldDTO d : searchObj.getSearchFields()) {
+            if (!d.isVisible()) {
+                visibleFields.getSource().add(d);
+            }
+            else {
+                visibleFields.getTarget().add(d);
+            }
+        }
+    }
+
+    /**
+     * Perform data fetch operation
+     */
+    @Customized
+    public void fetchServiceMessages() {
+        logger.debug("Perform data fetch operation");
+
+        try {
+            preSearch();
+        }
+        catch (final SearchInputFieldValidationException e) {
+            MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_INFO, SEARCH_INPUT_VALIDATION, "", e.getSearchFieldName());
+            return;
+        }
+
+        refreshFormatSettings();
+        setCountFilterDependent(2);
+
+        try {
+            serviceMessagesList = serviceMessageService.searchAllServiceMessagesOpen(searchObj);
+
+            if (searchObj.isCount()) {
+                if (serviceMessagesList.size() == searchObj.getMaxResult()) {
+                    countResult = serviceMessageService.countAllServiceMessagesOpen(searchObj);
+                }
+                else {
+                    countResult = serviceMessagesList.size();
+                }
+            }
+
+            queryManager.saveQuery(userSession.getPrincipal().getId(), VIEW_ID, null, searchObj);
+        }
+        catch (final Exception e) {
+            logger.error("Error while fetching data!", e);
+
+            MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_ERROR, OPERATION_FETCH_FAIL, e);
+        }
+        finally {
+            postSearch();
+        }
+    }
+
+    @Override
+    protected String getViewName() {
+        return VIEW_ID;
+    }
+
+    @Override
+    public void resetSearchObject() {
+        initSearchObject();
+        fetchServiceMessages();
+    }
+
+    /**
      * @return the list of elements
      */
     @Generated
@@ -203,8 +458,9 @@ public class ServiceMessageOpenView extends AbstractSearchableView implements Se
     public String openViewServiceMessageDialog() {
         var url = "";
 
-        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY))
+        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY)) {
             url = ViewServiceMessageDialog.PAGE_INIT_URL + selectedObject.getId();
+        }
 
         return url;
     }
@@ -252,6 +508,7 @@ public class ServiceMessageOpenView extends AbstractSearchableView implements Se
     /**
      * @return the name of the selected saved query
      */
+    @Override
     @Generated
     public String getSelectedSavedQuery() {
         return selectedSavedQuery;
@@ -283,291 +540,6 @@ public class ServiceMessageOpenView extends AbstractSearchableView implements Se
         searchObj.setNumberFormat(userSession.getNumberFormat());
         searchObj.setDecimalSeparator(DecimalFormatSymbols.getInstance(userSession.getLocale()).getDecimalSeparator());
         searchObj.setGroupingSeparator(DecimalFormatSymbols.getInstance(userSession.getLocale()).getGroupingSeparator());
-    }
-
-    /**
-     * Initialize search object
-     */
-    @Generated
-    public void initSearchObject() {
-        searchObj = new SearchDTO();
-        int colOrderId = -1;
-
-        // Initialize search object
-        searchObj.setMaxResult(1000);
-        searchObj.setExactFilterMatch(true);
-        searchObj.setCaseSensitive(false);
-        searchObj.setCount(false);
-
-        refreshFormatSettings();
-
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_ID, bundle.getString(COL_SERVICEMESSAGEOPENVIEW_ID),
-                SearchFieldDataTypeEnum.LONG, 120);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_PLANTCODE,
-                bundle.getString(COL_SERVICEMESSAGEOPENVIEW_PLANTCODE), SearchFieldDataTypeEnum.STRING, 80);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_SERVICEORDERCODE,
-                bundle.getString(COL_SERVICEMESSAGEOPENVIEW_SERVICEORDERCODE), SearchFieldDataTypeEnum.STRING, 120);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_SERIALOBJECTSERIALNUMBER,
-                bundle.getString(COL_SERVICEMESSAGEOPENVIEW_SERIALOBJECTSERIALNUMBER), SearchFieldDataTypeEnum.STRING, 120);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_SERVORDERCUSTOMERNAME,
-                bundle.getString(COL_SERVICEMESSAGEOPENVIEW_SERVORDERCUSTOMERNAME), SearchFieldDataTypeEnum.STRING, 200);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_SERVORDERCUSTCOUNTRYNAME,
-                bundle.getString(COL_SERVICEMESSAGEOPENVIEW_SERVORDERCUSTCOUNTRYNAME), SearchFieldDataTypeEnum.STRING, 100);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_MATREVMATERIALMATERIALNUMBER,
-                bundle.getString(COL_SERVICEMESSAGEOPENVIEW_MATREVMATERIALMATERIALNUMBER), SearchFieldDataTypeEnum.STRING, 150);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_MATREVMATERIALSAPNUMBER,
-                bundle.getString(COL_SERVICEMESSAGEOPENVIEW_MATREVMATERIALSAPNUMBER), SearchFieldDataTypeEnum.STRING, 150);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_MATREVMATERIALSHORTTEXT,
-                bundle.getString(COL_SERVICEMESSAGEOPENVIEW_MATREVMATERIALSHORTTEXT), SearchFieldDataTypeEnum.STRING, 250);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_MATREVMATOWNERLOCATIONCODE,
-                bundle.getString(COL_SERVICEMESSAGEOPENVIEW_MATREVMATOWNERLOCATIONCODE), SearchFieldDataTypeEnum.STRING, 100);
-
-        final var f11 = new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_MATREVMATMATERIALTYPECODE,
-                bundle.getString(COL_SERVICEMESSAGEOPENVIEW_MATREVMATMATERIALTYPECODE), SearchFieldDataTypeEnum.STRING, 80);
-        f11.setVisible(false);
-
-
-        final var f12 = new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_MATREVMATMATERIALCLASSCODE,
-                bundle.getString(COL_SERVICEMESSAGEOPENVIEW_MATREVMATMATERIALCLASSCODE), SearchFieldDataTypeEnum.STRING, 120);
-        f12.setVisible(false);
-
-
-        final var f13 = new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_MATERIALREVISIONREVISIONNUMBER,
-                bundle.getString(COL_SERVICEMESSAGEOPENVIEW_MATERIALREVISIONREVISIONNUMBER), SearchFieldDataTypeEnum.STRING, 100);
-        f13.setVisible(false);
-
-
-        final var f14 = new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_REPAIRSTATENAME,
-                bundle.getString(COL_SERVICEMESSAGEOPENVIEW_REPAIRSTATENAME), SearchFieldDataTypeEnum.STRING, 120);
-        f14.setVisible(false);
-
-
-        final var f15 = new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_REPAIRERRORCODEGROUPNAME,
-                bundle.getString(COL_SERVICEMESSAGEOPENVIEW_REPAIRERRORCODEGROUPNAME), SearchFieldDataTypeEnum.STRING, 150);
-        f15.setVisible(false);
-
-
-        final var f16 = new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_REPAIRERRORCODENAME,
-                bundle.getString(COL_SERVICEMESSAGEOPENVIEW_REPAIRERRORCODENAME), SearchFieldDataTypeEnum.STRING, 150);
-        f16.setVisible(false);
-
-
-        final var f17 = new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_REPAIRERRORCODESHORTTEXT,
-                bundle.getString(COL_SERVICEMESSAGEOPENVIEW_REPAIRERRORCODESHORTTEXT), SearchFieldDataTypeEnum.STRING, 250);
-        f17.setVisible(false);
-
-
-        final var f18 = new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_REPAIRLOCATIONCODE,
-                bundle.getString(COL_SERVICEMESSAGEOPENVIEW_REPAIRLOCATIONCODE), SearchFieldDataTypeEnum.STRING, 100);
-        f18.setVisible(false);
-
-
-        final var f19 = new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_RMATYPECODE,
-                bundle.getString(COL_SERVICEMESSAGEOPENVIEW_RMATYPECODE), SearchFieldDataTypeEnum.STRING, 100);
-        f19.setVisible(false);
-
-
-        final var f20 = new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_REPAIRSERVICENAME,
-                bundle.getString(COL_SERVICEMESSAGEOPENVIEW_REPAIRSERVICENAME), SearchFieldDataTypeEnum.STRING, 100);
-        f20.setVisible(false);
-
-
-        final var f21 = new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_FAULTANALYSISCODE,
-                bundle.getString(COL_SERVICEMESSAGEOPENVIEW_FAULTANALYSISCODE), SearchFieldDataTypeEnum.STRING, 100);
-        f21.setVisible(false);
-
-
-        final var f22 = new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_FAULTANALYSISSHORTTEXT,
-                bundle.getString(COL_SERVICEMESSAGEOPENVIEW_FAULTANALYSISSHORTTEXT), SearchFieldDataTypeEnum.STRING, 250);
-        f22.setVisible(false);
-
-
-        final var f23 = new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_REPAIRTASKCODE,
-                bundle.getString(COL_SERVICEMESSAGEOPENVIEW_REPAIRTASKCODE), SearchFieldDataTypeEnum.STRING, 100);
-        f23.setVisible(false);
-
-
-        final var f24 = new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_REPAIRTASKSHORTTEXT,
-                bundle.getString(COL_SERVICEMESSAGEOPENVIEW_REPAIRTASKSHORTTEXT), SearchFieldDataTypeEnum.STRING, 250);
-        f24.setVisible(false);
-
-
-        final var f25 = new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_EXTERNALSUPPLIERNAME,
-                bundle.getString(COL_SERVICEMESSAGEOPENVIEW_EXTERNALSUPPLIERNAME), SearchFieldDataTypeEnum.STRING, 200);
-        f25.setVisible(false);
-
-
-        final var f26 = new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_ERRORID,
-                bundle.getString(LBL_ATTR_SERVICEMESSAGE_ERRORID), SearchFieldDataTypeEnum.STRING, 100);
-        f26.setVisible(false);
-
-
-        final var f27 = new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_ORIGIN,
-                bundle.getString(LBL_ATTR_SERVICEMESSAGE_ORIGIN), SearchFieldDataTypeEnum.STRING, 150);
-        f27.setVisible(false);
-
-
-        final var f28 = new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_DESIGNATOR,
-                bundle.getString(LBL_ATTR_SERVICEMESSAGE_DESIGNATOR), SearchFieldDataTypeEnum.STRING, 100);
-        f28.setVisible(false);
-
-
-        final var f29 = new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_DEFECTCOMPONENT,
-                bundle.getString(COL_SERVICEMESSAGEOPENVIEW_DEFECTCOMPONENT), SearchFieldDataTypeEnum.STRING, 120);
-        f29.setVisible(false);
-
-
-        final var f30 = new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_INTERNALREPORT,
-                bundle.getString(LBL_ATTR_SERVICEMESSAGE_INTERNALREPORT), SearchFieldDataTypeEnum.STRING, 250);
-        f30.setVisible(false);
-
-
-        final var f31 = new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_EXTERNALREPORT,
-                bundle.getString(LBL_ATTR_SERVICEMESSAGE_EXTERNALREPORT), SearchFieldDataTypeEnum.STRING, 250);
-        f31.setVisible(false);
-
-
-        final var f32 = new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_CUSTOMERREPORT,
-                bundle.getString(LBL_ATTR_SERVICEMESSAGE_CUSTOMERREPORT), SearchFieldDataTypeEnum.STRING, 250);
-        f32.setVisible(false);
-
-
-        final var f33 = new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_CUSTOMERFAILURE,
-                bundle.getString(COL_SERVICEMESSAGEOPENVIEW_CUSTOMERFAILURE), SearchFieldDataTypeEnum.BOOLEAN, 80);
-        f33.setVisible(false);
-
-
-        final var f34 = new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_BASICSTARTDATE,
-                bundle.getString(COL_SERVICEMESSAGEOPENVIEW_BASICSTARTDATE), SearchFieldDataTypeEnum.LOCAL_DATE, 100, false);
-        f34.setVisible(false);
-
-
-        final var f35 = new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_BASICFINISHDATE,
-                bundle.getString(COL_SERVICEMESSAGEOPENVIEW_BASICFINISHDATE), SearchFieldDataTypeEnum.LOCAL_DATE, 100, false);
-        f35.setVisible(false);
-
-
-        final var f36 = new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_INTERNALARRIVALDATE,
-                bundle.getString(COL_SERVICEMESSAGEOPENVIEW_INTERNALARRIVALDATE), SearchFieldDataTypeEnum.LOCAL_DATE, 110, false);
-        f36.setVisible(false);
-
-
-        final var f37 = new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_EPIDEMICFAILURE,
-                bundle.getString(COL_SERVICEMESSAGEOPENVIEW_EPIDEMICFAILURE), SearchFieldDataTypeEnum.BOOLEAN, 80);
-        f37.setVisible(false);
-
-
-        final var f38 = new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_ANALYSISTEXT,
-                bundle.getString(LBL_ATTR_SERVICEMESSAGE_ANALYSISTEXT), SearchFieldDataTypeEnum.STRING, 250);
-        f38.setVisible(false);
-
-
-        final var f39 = new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_DELIVERYNOTENUMBER,
-                bundle.getString(COL_SERVICEMESSAGEOPENVIEW_DELIVERYNOTENUMBER), SearchFieldDataTypeEnum.STRING, 100);
-        f39.setVisible(false);
-
-
-        final var f40 = new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_SERVICEMESSAGEID,
-                bundle.getString(COL_SERVICEMESSAGEOPENVIEW_SERVICEMESSAGEID), SearchFieldDataTypeEnum.STRING, 100);
-        f40.setVisible(false);
-
-
-        final var f41 = new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_CAUSETEXT,
-                bundle.getString(LBL_ATTR_SERVICEMESSAGE_CAUSETEXT), SearchFieldDataTypeEnum.STRING, 250);
-        f41.setVisible(false);
-
-
-        final var f42 = new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_REPAIRDESCRIPTION,
-                bundle.getString(LBL_ATTR_SERVICEMESSAGE_REPAIRDESCRIPTION), SearchFieldDataTypeEnum.STRING, 250);
-        f42.setVisible(false);
-
-
-        final var f43 = new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_CREATIONDATE,
-                bundle.getString(LBL_ATTR_ABSTRACTENTITYWITHID_CREATIONDATE), SearchFieldDataTypeEnum.LOCAL_DATE_TIME, 120);
-        f43.setVisible(false);
-
-
-        final var f44 = new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceMessageOpenSearchDTO.SELECT_LASTUPDATE,
-                bundle.getString(LBL_ATTR_ABSTRACTENTITYWITHID_LASTUPDATE), SearchFieldDataTypeEnum.LOCAL_DATE_TIME, 120);
-        f44.setVisible(false);
-
-
-        visibleFields = new DualListModel<>();
-        visibleFields.setSource(new ArrayList<>());
-        visibleFields.setTarget(new ArrayList<>());
-
-        for (final SearchFieldDTO d : searchObj.getSearchFields())
-            if (!d.isVisible())
-                visibleFields.getSource().add(d);
-            else
-                visibleFields.getTarget().add(d);
-    }
-
-    /**
-     * Initialize view
-     */
-    @Generated
-    public void initView() {
-        logger.debug("Initialize view");
-
-        bundle = ResourceBundle.getBundle(DEFAULT_BUNDLE_NAME, userSession.getLocale());
-
-        // Check if user is allowed to open this page!
-        if (!userSession.checkAuthorization(true, ROLE_ADMINISTRATOR, ROLE_READONLY))
-            return;
-
-
-        formTitle = bundle.getString(FORM_SERVICEMESSAGEOPENVIEW_TITLE);
-
-        // Check if previous search exists!
-        final SearchDTO lastSearch = queryManager.getLastQuery(userSession.getPrincipal().getId(), VIEW_ID);
-
-        if (lastSearch != null) {
-            searchObj = lastSearch;
-
-            prepareAfterLoad();
-        }
-        else
-            initSearchObject();
-
-        fetchServiceMessages();
-
-        logger.debug("View initialization finished");
-    }
-
-    /**
-     * Perform data fetch operation
-     */
-    @Generated
-    public void fetchServiceMessages() {
-        logger.debug("Perform data fetch operation");
-
-        try {
-            preSearch();
-        }
-        catch (final SearchInputFieldValidationException e) {
-            MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_INFO, SEARCH_INPUT_VALIDATION, "", e.getSearchFieldName());
-            return;
-        }
-
-        refreshFormatSettings();
-
-        try {
-            serviceMessagesList = serviceMessageService.searchAllServiceMessagesOpen(searchObj);
-
-            if (searchObj.isCount())
-                countResult = serviceMessageService.countAllServiceMessagesOpen(searchObj);
-
-            queryManager.saveQuery(userSession.getPrincipal().getId(), VIEW_ID, null, searchObj);
-        }
-        catch (final Exception e) {
-            logger.error("Error while fetching data!", e);
-
-            MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_ERROR, OPERATION_FETCH_FAIL, e);
-        }
-        finally {
-            postSearch();
-        }
     }
 
     /**
@@ -614,8 +586,9 @@ public class ServiceMessageOpenView extends AbstractSearchableView implements Se
         try {
             final Collection<CustomerListDTO> items = customerService.findCustomers(query + "%");
 
-            for (final CustomerListDTO item : items)
+            for (final CustomerListDTO item : items) {
                 results.add(item.getName());
+            }
         }
         catch (final Exception e) {
             logger.error("Error while searching for auto-complete items by using the entered text '{}'!", query, e);
@@ -636,8 +609,9 @@ public class ServiceMessageOpenView extends AbstractSearchableView implements Se
         try {
             final Collection<CountryListDTO> items = countryService.findCountries(query + "%");
 
-            for (final CountryListDTO item : items)
+            for (final CountryListDTO item : items) {
                 results.add(item.getName());
+            }
         }
         catch (final Exception e) {
             logger.error("Error while searching for auto-complete items by using the entered text '{}'!", query, e);
@@ -658,8 +632,9 @@ public class ServiceMessageOpenView extends AbstractSearchableView implements Se
         try {
             final Collection<MaterialListDTO> items = materialService.findMaterials(query + "%");
 
-            for (final MaterialListDTO item : items)
+            for (final MaterialListDTO item : items) {
                 results.add(item.getMaterialNumber());
+            }
         }
         catch (final Exception e) {
             logger.error("Error while searching for auto-complete items by using the entered text '{}'!", query, e);
@@ -680,8 +655,9 @@ public class ServiceMessageOpenView extends AbstractSearchableView implements Se
         try {
             final Collection<RepairStateListDTO> items = repairStateService.findRepairStates(query + "%");
 
-            for (final RepairStateListDTO item : items)
+            for (final RepairStateListDTO item : items) {
                 results.add(item.getName());
+            }
         }
         catch (final Exception e) {
             logger.error("Error while searching for auto-complete items by using the entered text '{}'!", query, e);
@@ -702,8 +678,9 @@ public class ServiceMessageOpenView extends AbstractSearchableView implements Se
         try {
             final Collection<RepairErrorCodeListDTO> items = repairErrorCodeService.findRepairErrorCodes(query + "%");
 
-            for (final RepairErrorCodeListDTO item : items)
+            for (final RepairErrorCodeListDTO item : items) {
                 results.add(item.getName());
+            }
         }
         catch (final Exception e) {
             logger.error("Error while searching for auto-complete items by using the entered text '{}'!", query, e);
@@ -724,8 +701,9 @@ public class ServiceMessageOpenView extends AbstractSearchableView implements Se
         try {
             final Collection<RepairServiceListDTO> items = repairServiceService.findRepairServices(query + "%");
 
-            for (final RepairServiceListDTO item : items)
+            for (final RepairServiceListDTO item : items) {
                 results.add(item.getName());
+            }
         }
         catch (final Exception e) {
             logger.error("Error while searching for auto-complete items by using the entered text '{}'!", query, e);
@@ -746,8 +724,9 @@ public class ServiceMessageOpenView extends AbstractSearchableView implements Se
         try {
             final Collection<SupplierListDTO> items = supplierService.findSuppliers(query + "%");
 
-            for (final SupplierListDTO item : items)
+            for (final SupplierListDTO item : items) {
                 results.add(item.getName());
+            }
         }
         catch (final Exception e) {
             logger.error("Error while searching for auto-complete items by using the entered text '{}'!", query, e);
@@ -788,8 +767,9 @@ public class ServiceMessageOpenView extends AbstractSearchableView implements Se
         final var items = new SelectItem[savedQueries.size()];
         int i = 0;
 
-        for (final String item : savedQueries)
+        for (final String item : savedQueries) {
             items[i++] = new SelectItem(item, item);
+        }
 
         return items;
     }
@@ -799,8 +779,9 @@ public class ServiceMessageOpenView extends AbstractSearchableView implements Se
      */
     @Generated
     public void deleteSavedQuery() {
-        if (selectedSavedQuery == null)
+        if (selectedSavedQuery == null) {
             return;
+        }
 
         logger.debug("Delete saved query");
 
@@ -815,8 +796,9 @@ public class ServiceMessageOpenView extends AbstractSearchableView implements Se
      */
     @Generated
     public void runSavedQuery() {
-        if (selectedSavedQuery == null)
+        if (selectedSavedQuery == null) {
             return;
+        }
 
         logger.debug("Run saved query");
 
