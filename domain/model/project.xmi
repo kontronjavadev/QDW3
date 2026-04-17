@@ -9462,42 +9462,41 @@
       </methodParameters>
     </repositoryMethods>
   </net.sourceforge.jbizmo.model.repository:Repository>
-  <net.sourceforge.jbizmo.model.client:Form name="ViewServiceMessageDialog" formType="READONLY" formGroup="/396" title="View service message" formPanels="/416 /417 /418" dTO="/419" roles="/0/@roles.0 /0/@roles.1">
+  <net.sourceforge.jbizmo.model.client:Form name="ViewServiceMessageDialog" formType="READONLY" formGroup="/396" title="View service order" formPanels="/416 /417 /418" dTO="/419" roles="/0/@roles.0 /0/@roles.1">
     <actions name="actionGet" boundaryMethod="/407/@boundaryMethods.4" type="READ"/>
     <domainObject href="package-service.xmi#//@domainObjects.1"/>
   </net.sourceforge.jbizmo.model.client:Form>
   <net.sourceforge.jbizmo.model.client:FormPanel name="panServiceMessage" label="Basic data" form="/415">
     <fields name="cboServiceOrder" label="RMA" readonly="true" fieldType="FORM_LINK" width="140" dTOAttribute="/419/@attributes.24"/>
-    <fields name="txtSerialObjectSerialNumber" rowIndex="2" label="Serial no." readonly="true" width="140" dTOAttribute="/419/@attributes.32"/>
-    <fields name="cboSerialObject" colIndex="2" rowIndex="2" label="Serial object" readonly="true" fieldType="FORM_LINK" width="140" dTOAttribute="/419/@attributes.23"/>
-    <fields name="cboMaterialRevisionMaterial" rowIndex="3" label="Material" readonly="true" fieldType="FORM_LINK" width="140" dTOAttribute="/419/@attributes.33"/>
-    <fields name="txtMaterialSapNumber" colIndex="2" rowIndex="3" label="SAP no." readonly="true" width="140" dTOAttribute="/419/@attributes.34"/>
-    <fields name="cboMaterialRevision" rowIndex="4" label="Revision" readonly="true" fieldType="FORM_LINK" width="140" dTOAttribute="/419/@attributes.21"/>
-    <fields name="cboPlant" rowIndex="5" label="Plant" readonly="true" fieldType="FORM_LINK" width="140" dTOAttribute="/419/@attributes.22"/>
-    <fields name="txtOrigin" colIndex="2" rowIndex="5" label="Origin" readonly="true" mandatory="false" width="140" dTOAttribute="/419/@attributes.12"/>
-    <fields name="cboRepairErrorCode" rowIndex="6" label="Cause code" readonly="true" mandatory="false" fieldType="FORM_LINK" width="140" dTOAttribute="/419/@attributes.27"/>
-    <fields name="cboRepairState" colIndex="2" rowIndex="6" label="Repair state" readonly="true" fieldType="FORM_LINK" width="140" dTOAttribute="/419/@attributes.30"/>
-    <fields name="cboRepairTask" rowIndex="7" label="Repair task" readonly="true" mandatory="false" fieldType="FORM_LINK" width="140" dTOAttribute="/419/@attributes.31"/>
-    <fields name="cboRepairLocation" colIndex="2" rowIndex="7" label="Repair location" readonly="true" mandatory="false" fieldType="FORM_LINK" width="140" dTOAttribute="/419/@attributes.28"/>
-    <fields name="cboRMAType" rowIndex="8" label="RMA type" readonly="true" mandatory="false" fieldType="FORM_LINK" width="140" dTOAttribute="/419/@attributes.26"/>
-    <fields name="cboRepairService" colIndex="2" rowIndex="8" label="Repair service" readonly="true" mandatory="false" fieldType="FORM_LINK" width="140" dTOAttribute="/419/@attributes.29"/>
-    <fields name="cboExternalSupplier" rowIndex="9" label="Workcenter" spanCols="true" readonly="true" mandatory="false" fieldType="FORM_LINK" width="140" dTOAttribute="/419/@attributes.20"/>
-    <fields name="txtErrorId" rowIndex="10" label="Error id" readonly="true" mandatory="false" width="140" dTOAttribute="/419/@attributes.9"/>
-    <fields name="txtFaultAnalysis" colIndex="2" rowIndex="10" label="Symptom" readonly="true" mandatory="false" fieldType="PROPOSAL_TEXT" width="140" dTOAttribute="/419/@attributes.25"/>
-    <fields name="txtDefectComponent" rowIndex="11" label="Defect component" readonly="true" mandatory="false" width="140" dTOAttribute="/419/@attributes.5"/>
-    <fields name="txtDesignator" colIndex="2" rowIndex="11" label="Designator" readonly="true" mandatory="false" width="140" dTOAttribute="/419/@attributes.7"/>
-    <fields name="txtAnalysisText" rowIndex="12" label="Analysis text" spanCols="true" readonly="true" mandatory="false" width="140" dTOAttribute="/419/@attributes.0"/>
-    <fields name="txtInternalArrivalDate" rowIndex="13" label="Repair arrival date" readonly="true" mandatory="false" fieldType="DATE" width="140" dTOAttribute="/419/@attributes.10"/>
-    <fields name="txtInternalShipmentDate" colIndex="2" rowIndex="13" label="Repair shipment date" readonly="true" mandatory="false" fieldType="DATE" width="140" dTOAttribute="/419/@attributes.11"/>
-    <fields name="txtBasicStartDate" rowIndex="14" label="Basic start date" readonly="true" mandatory="false" fieldType="DATE" width="100" dTOAttribute="/419/@attributes.2"/>
-    <fields name="txtBasicFinishDate" colIndex="2" rowIndex="14" label="Basic finish date" readonly="true" mandatory="false" fieldType="DATE" width="100" dTOAttribute="/419/@attributes.1"/>
-    <fields name="chkCustomerFailure" rowIndex="15" label="Customer failure" readonly="true" fieldType="CHECKBOX" dTOAttribute="/419/@attributes.4"/>
-    <fields name="chkEpidemicFailure" colIndex="2" rowIndex="15" label="Epidemic failure" readonly="true" fieldType="CHECKBOX" dTOAttribute="/419/@attributes.8"/>
-    <fields name="txtDeliveryNoteNumber" rowIndex="16" label="Delivery note no." readonly="true" mandatory="false" width="140" dTOAttribute="/419/@attributes.6"/>
-    <fields name="txtServiceMessageId" colIndex="2" rowIndex="16" label="Service notification no," readonly="true" mandatory="false" width="140" dTOAttribute="/419/@attributes.15"/>
-    <fields name="txtCauseText" rowIndex="17" label="Cause text" spanCols="true" readonly="true" mandatory="false" fieldType="MULTI_LINE_TEXT" dTOAttribute="/419/@attributes.3"/>
-    <fields name="txtRepairDescription" rowIndex="18" label="Repair description" spanCols="true" readonly="true" mandatory="false" fieldType="MULTI_LINE_TEXT" dTOAttribute="/419/@attributes.14"/>
-    <fields name="txtRebuildFlag" rowIndex="19" visible="false" label="Rebuild flag" readonly="true" width="120" dTOAttribute="/419/@attributes.13"/>
+    <fields name="cboSerialObject" colIndex="2" label="Serial object" readonly="true" fieldType="FORM_LINK" width="140" dTOAttribute="/419/@attributes.23"/>
+    <fields name="cboMaterialRevisionMaterial" rowIndex="2" label="Material" readonly="true" fieldType="FORM_LINK" width="140" dTOAttribute="/419/@attributes.32"/>
+    <fields name="txtMaterialSapNumber" colIndex="2" rowIndex="2" label="SAP no." readonly="true" width="140" dTOAttribute="/419/@attributes.33"/>
+    <fields name="cboMaterialRevision" rowIndex="3" label="Revision" readonly="true" fieldType="FORM_LINK" width="140" dTOAttribute="/419/@attributes.21"/>
+    <fields name="cboPlant" colIndex="2" rowIndex="3" label="Plant" readonly="true" fieldType="FORM_LINK" width="140" dTOAttribute="/419/@attributes.22"/>
+    <fields name="cboRepairErrorCode" rowIndex="4" label="Cause code" readonly="true" mandatory="false" fieldType="FORM_LINK" width="140" dTOAttribute="/419/@attributes.27"/>
+    <fields name="cboRepairState" colIndex="2" rowIndex="4" label="Repair state" readonly="true" fieldType="FORM_LINK" width="140" dTOAttribute="/419/@attributes.30"/>
+    <fields name="cboRepairTask" rowIndex="5" label="Repair task" readonly="true" mandatory="false" fieldType="FORM_LINK" width="140" dTOAttribute="/419/@attributes.31"/>
+    <fields name="cboRepairLocation" colIndex="2" rowIndex="5" label="Repair location" readonly="true" mandatory="false" fieldType="FORM_LINK" width="140" dTOAttribute="/419/@attributes.28"/>
+    <fields name="cboRMAType" rowIndex="6" label="RMA type" readonly="true" mandatory="false" fieldType="FORM_LINK" width="140" dTOAttribute="/419/@attributes.26"/>
+    <fields name="cboRepairService" colIndex="2" rowIndex="6" label="Repair service" readonly="true" mandatory="false" fieldType="FORM_LINK" width="140" dTOAttribute="/419/@attributes.29"/>
+    <fields name="cboExternalSupplier" rowIndex="7" label="Workcenter" readonly="true" mandatory="false" fieldType="FORM_LINK" width="140" dTOAttribute="/419/@attributes.20"/>
+    <fields name="txtOrigin" colIndex="2" rowIndex="7" label="Origin" readonly="true" mandatory="false" width="140" dTOAttribute="/419/@attributes.12"/>
+    <fields name="txtErrorId" rowIndex="8" label="Error id" readonly="true" mandatory="false" width="140" dTOAttribute="/419/@attributes.9"/>
+    <fields name="txtFaultAnalysis" colIndex="2" rowIndex="8" label="Symptom" readonly="true" mandatory="false" fieldType="PROPOSAL_TEXT" width="140" dTOAttribute="/419/@attributes.25"/>
+    <fields name="txtDefectComponent" rowIndex="9" label="Defect component" readonly="true" mandatory="false" width="140" dTOAttribute="/419/@attributes.5"/>
+    <fields name="txtDesignator" colIndex="2" rowIndex="9" label="Designator" readonly="true" mandatory="false" width="140" dTOAttribute="/419/@attributes.7"/>
+    <fields name="txtAnalysisText" rowIndex="10" label="Analysis text" spanCols="true" readonly="true" mandatory="false" width="140" dTOAttribute="/419/@attributes.0"/>
+    <fields name="txtInternalArrivalDate" rowIndex="11" label="Repair arrival date" readonly="true" mandatory="false" fieldType="DATE" width="140" dTOAttribute="/419/@attributes.10"/>
+    <fields name="txtInternalShipmentDate" colIndex="2" rowIndex="11" label="Repair shipment date" readonly="true" mandatory="false" fieldType="DATE" width="140" dTOAttribute="/419/@attributes.11"/>
+    <fields name="txtBasicStartDate" rowIndex="12" label="Basic start date" readonly="true" mandatory="false" fieldType="DATE" width="100" dTOAttribute="/419/@attributes.2"/>
+    <fields name="txtBasicFinishDate" colIndex="2" rowIndex="12" label="Basic finish date" readonly="true" mandatory="false" fieldType="DATE" width="100" dTOAttribute="/419/@attributes.1"/>
+    <fields name="chkCustomerFailure" rowIndex="13" label="Customer failure" readonly="true" fieldType="CHECKBOX" dTOAttribute="/419/@attributes.4"/>
+    <fields name="chkEpidemicFailure" colIndex="2" rowIndex="13" label="Epidemic failure" readonly="true" fieldType="CHECKBOX" dTOAttribute="/419/@attributes.8"/>
+    <fields name="txtDeliveryNoteNumber" rowIndex="14" label="Delivery note no." readonly="true" mandatory="false" width="140" dTOAttribute="/419/@attributes.6"/>
+    <fields name="txtServiceMessageId" colIndex="2" rowIndex="14" label="Service notification no," readonly="true" mandatory="false" width="140" dTOAttribute="/419/@attributes.15"/>
+    <fields name="txtCauseText" rowIndex="15" label="Cause text" spanCols="true" readonly="true" mandatory="false" fieldType="MULTI_LINE_TEXT" dTOAttribute="/419/@attributes.3"/>
+    <fields name="txtRepairDescription" rowIndex="16" label="Repair description" spanCols="true" readonly="true" mandatory="false" fieldType="MULTI_LINE_TEXT" dTOAttribute="/419/@attributes.14"/>
+    <fields name="txtRebuildFlag" rowIndex="17" visible="false" label="Rebuild flag" readonly="true" width="120" dTOAttribute="/419/@attributes.13"/>
   </net.sourceforge.jbizmo.model.client:FormPanel>
   <net.sourceforge.jbizmo.model.client:FormPanel name="panAdministration" colIndex="3" label="Administration data" form="/415">
     <fields name="txtId" label="Transaction Id" readonly="true" width="120" dTOAttribute="/419/@attributes.16"/>
@@ -9506,9 +9505,9 @@
     <fields name="txtLastUpdate" rowIndex="4" label="Last update" readonly="true" mandatory="false" fieldType="DATE_TIME" width="120" dTOAttribute="/419/@attributes.19"/>
   </net.sourceforge.jbizmo.model.client:FormPanel>
   <net.sourceforge.jbizmo.model.client:FormPanel name="panComments" colIndex="2" label="Comments" form="/415">
-    <fields name="txtInternalReport" label="Internal report" spanCols="true" readonly="true" mandatory="false" fieldType="MULTI_LINE_TEXT" dTOAttribute="/419/@attributes.35"/>
-    <fields name="txtExternalReport" rowIndex="2" label="External report" spanCols="true" readonly="true" mandatory="false" fieldType="MULTI_LINE_TEXT" dTOAttribute="/419/@attributes.36"/>
-    <fields name="txtCustomerReport" rowIndex="3" label="Customer report" spanCols="true" readonly="true" mandatory="false" fieldType="MULTI_LINE_TEXT" dTOAttribute="/419/@attributes.37"/>
+    <fields name="txtInternalReport" label="Internal report" spanCols="true" readonly="true" mandatory="false" fieldType="MULTI_LINE_TEXT" dTOAttribute="/419/@attributes.34"/>
+    <fields name="txtExternalReport" rowIndex="2" label="External report" spanCols="true" readonly="true" mandatory="false" fieldType="MULTI_LINE_TEXT" dTOAttribute="/419/@attributes.35"/>
+    <fields name="txtCustomerReport" rowIndex="3" label="Customer report" spanCols="true" readonly="true" mandatory="false" fieldType="MULTI_LINE_TEXT" dTOAttribute="/419/@attributes.36"/>
   </net.sourceforge.jbizmo.model.client:FormPanel>
   <net.sourceforge.jbizmo.model.dto:DTOBean name="ServiceMessageDTO" comment="Data transfer object for service message objects" namespace="/258" standardConversion="true">
     <domainObject href="package-service.xmi#//@domainObjects.1"/>
@@ -9607,10 +9606,6 @@
     </attributes>
     <attributes name="repairTask" referencedDTOBean="/425">
       <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-service.xmi#//@domainObjects.1/@associations.12"/>
-    </attributes>
-    <attributes name="serialObjectSerialNumber">
-      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-service.xmi#//@domainObjects.1/@associations.3"/>
-      <domainAttribute href="package-serial.xmi#//@domainObjects.0/@attributes.0"/>
     </attributes>
     <attributes name="materialRevisionMaterial" referencedDTOBean="/191">
       <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-material.xmi#//@domainObjects.3/@associations.0"/>

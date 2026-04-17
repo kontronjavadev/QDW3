@@ -1,9 +1,9 @@
 package com.kontron.qdw.dto.service;
 
-import com.kontron.qdw.dto.serial.*;
-import java.time.*;
 import java.io.Serializable;
 import com.kontron.qdw.dto.material.*;
+import com.kontron.qdw.dto.serial.*;
+import java.time.*;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
 import com.kontron.qdw.dto.base.*;
 
@@ -74,8 +74,6 @@ public class ServiceMessageDTO implements Serializable {
     public static final String ATTR_REPAIRSTATE = "repairState";
     @Generated
     public static final String ATTR_REPAIRTASK = "repairTask";
-    @Generated
-    public static final String ATTR_SERIALOBJECTSERIALNUMBER = "serialObjectSerialNumber";
     @Generated
     public static final String ATTR_MATERIALREVISIONMATERIAL = "materialRevisionMaterial";
     @Generated
@@ -151,8 +149,6 @@ public class ServiceMessageDTO implements Serializable {
     @Generated
     private RepairTaskListDTO repairTask;
     @Generated
-    private String serialObjectSerialNumber;
-    @Generated
     private MaterialListDTO materialRevisionMaterial;
     @Generated
     private String materialSapNumber;
@@ -201,7 +197,6 @@ public class ServiceMessageDTO implements Serializable {
      * @param version
      * @param creationDate
      * @param lastUpdate
-     * @param serialObjectSerialNumber
      * @param materialSapNumber
      * @param internalReport
      * @param externalReport
@@ -211,8 +206,8 @@ public class ServiceMessageDTO implements Serializable {
     public ServiceMessageDTO(String analysisText, LocalDate basicFinishDate, LocalDate basicStartDate, String causeText, boolean customerFailure,
             String defectComponent, String deliveryNoteNumber, String designator, boolean epidemicFailure, String errorId,
             LocalDate internalArrivalDate, LocalDate internalShipmentDate, String origin, int rebuildFlag, String repairDescription,
-            String serviceMessageId, long id, int version, LocalDateTime creationDate, LocalDateTime lastUpdate, String serialObjectSerialNumber,
-            String materialSapNumber, String internalReport, String externalReport, String customerReport) {
+            String serviceMessageId, long id, int version, LocalDateTime creationDate, LocalDateTime lastUpdate, String materialSapNumber,
+            String internalReport, String externalReport, String customerReport) {
         this.analysisText = analysisText;
         this.basicFinishDate = basicFinishDate;
         this.basicStartDate = basicStartDate;
@@ -233,7 +228,6 @@ public class ServiceMessageDTO implements Serializable {
         this.version = version;
         this.creationDate = creationDate;
         this.lastUpdate = lastUpdate;
-        this.serialObjectSerialNumber = serialObjectSerialNumber;
         this.materialSapNumber = materialSapNumber;
         this.internalReport = internalReport;
         this.externalReport = externalReport;
@@ -750,22 +744,6 @@ public class ServiceMessageDTO implements Serializable {
     @Generated
     public void setRepairTask(RepairTaskListDTO repairTask) {
         this.repairTask = repairTask;
-    }
-
-    /**
-     * @return the serial number of the serial object
-     */
-    @Generated
-    public String getSerialObjectSerialNumber() {
-        return this.serialObjectSerialNumber;
-    }
-
-    /**
-     * @param serialObjectSerialNumber the serial number of the serial object to set
-     */
-    @Generated
-    public void setSerialObjectSerialNumber(String serialObjectSerialNumber) {
-        this.serialObjectSerialNumber = serialObjectSerialNumber;
     }
 
     /**

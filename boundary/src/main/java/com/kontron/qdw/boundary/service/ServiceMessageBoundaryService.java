@@ -245,7 +245,6 @@ public class ServiceMessageBoundaryService {
             dto.getRepairTask().setCode(serviceMessage.getRepairTask().getCode());
         }
 
-        dto.setSerialObjectSerialNumber(serviceMessage.getSerialObject().getSerialNumber());
         dto.setMaterialRevisionMaterial(new MaterialListDTO());
         dto.getMaterialRevisionMaterial().setId(serviceMessage.getMaterialRevision().getMaterial().getId());
         dto.getMaterialRevisionMaterial().setMaterialNumber(serviceMessage.getMaterialRevision().getMaterial().getMaterialNumber());
