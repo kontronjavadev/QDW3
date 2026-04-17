@@ -9,6 +9,7 @@ import net.sourceforge.jbizmo.commons.jpa.*;
 import jakarta.ejb.*;
 import jakarta.validation.*;
 import net.sourceforge.jbizmo.commons.repository.*;
+import net.sourceforge.jbizmo.commons.annotation.Customized;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
 import com.kontron.qdw.domain.base.*;
 
@@ -35,7 +36,7 @@ public class ServiceMessageRepository extends AbstractRepository<ServiceMessage,
      * @throws ConstraintViolationException if the validation of the persistent attributes has failed
      * @return the new service message
      */
-    @Generated
+    @Customized
     public ServiceMessage copy(ServiceMessage sourceObject, ServiceMessage targetObject, long loggedOnUserId) {
         boolean flushAndRefresh = false;
 
@@ -43,6 +44,7 @@ public class ServiceMessageRepository extends AbstractRepository<ServiceMessage,
             flushAndRefresh = true;
 
             targetObject = new ServiceMessage();
+            targetObject.setId(0L);
             targetObject.setSerialObject(sourceObject.getSerialObject());
             targetObject.setServiceOrder(sourceObject.getServiceOrder());
         }

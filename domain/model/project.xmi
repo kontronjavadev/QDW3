@@ -4293,9 +4293,9 @@
   <net.sourceforge.jbizmo.model.java:Namespace name="serial" parent="/1" javaTypes="/299 /301 /337 /350 /360 /369" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="serial" parent="/3" javaTypes="/295 /310 /306 /335 /296 /330 /336 /349 /355 /359 /364 /368 /373 /379 /383 /387 /391" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="serial" parent="/4" project="/0"/>
-  <net.sourceforge.jbizmo.model.java:Namespace name="service" parent="/2" javaTypes="/408" project="/0"/>
-  <net.sourceforge.jbizmo.model.java:Namespace name="service" parent="/1" javaTypes="/407" project="/0"/>
-  <net.sourceforge.jbizmo.model.java:Namespace name="service" parent="/3" javaTypes="/406" project="/0"/>
+  <net.sourceforge.jbizmo.model.java:Namespace name="service" parent="/2" javaTypes="/408 /414" project="/0"/>
+  <net.sourceforge.jbizmo.model.java:Namespace name="service" parent="/1" javaTypes="/407 /413" project="/0"/>
+  <net.sourceforge.jbizmo.model.java:Namespace name="service" parent="/3" javaTypes="/406 /412" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="service" parent="/4" project="/0"/>
   <net.sourceforge.jbizmo.model.client:Form name="AggregatedArrivalView" formType="SEARCHABLE_VIEW" formGroup="/247" title="Aggregated arrivals" formPanels="/261" dTO="/263" roles="/0/@roles.0 /0/@roles.1" boundaryMethod="/264/@boundaryMethods.0">
     <actions name="actionDelete" description="Delete selected aggregated arrival" boundaryMethod="/264/@boundaryMethods.2" type="DELETE"/>
@@ -8423,7 +8423,7 @@
       <associationList xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-mv.xmi#//@domainObjects.2/@associations.1"/>
     </attributes>
   </net.sourceforge.jbizmo.model.dto:DTOBean>
-  <net.sourceforge.jbizmo.model.client:FormGroup name="Service" groupOrder="5" forms="/397 /403" roles="/0/@roles.0 /0/@roles.1" project="/0">
+  <net.sourceforge.jbizmo.model.client:FormGroup name="Service" groupOrder="5" forms="/397 /403 /409" roles="/0/@roles.0 /0/@roles.1" project="/0">
     <childGroups name="Master data" parentGroup="/396" roles="/0/@roles.0"/>
   </net.sourceforge.jbizmo.model.client:FormGroup>
   <net.sourceforge.jbizmo.model.client:Form name="MaterializedServiceMessageView" formType="SEARCHABLE_VIEW" formGroup="/396" title="Materialized service orders" formPanels="/398" dTO="/400" roles="/0/@roles.0 /0/@roles.1" boundaryMethod="/401/@boundaryMethods.0">
@@ -9305,6 +9305,153 @@
       <methodParameters name="id" type="/0/@allSupportedTypes.2"/>
       <methodParameters name="material" hint="failureMaterials">
         <type href="package-material.xmi#//@domainObjects.2"/>
+      </methodParameters>
+    </repositoryMethods>
+  </net.sourceforge.jbizmo.model.repository:Repository>
+  <net.sourceforge.jbizmo.model.client:Form name="ViewServiceOrderDialog" formType="READONLY" formGroup="/396" title="View RMA" formPanels="/410 /411" dTO="/412" roles="/0/@roles.0 /0/@roles.1">
+    <actions name="actionGet" boundaryMethod="/413/@boundaryMethods.0" type="READ"/>
+    <domainObject href="package-service.xmi#//@domainObjects.0"/>
+  </net.sourceforge.jbizmo.model.client:Form>
+  <net.sourceforge.jbizmo.model.client:FormPanel name="panServiceOrder" label="Basic data" form="/409">
+    <fields name="txtCode" label="RMA no." readonly="true" width="140" dTOAttribute="/412/@attributes.2"/>
+    <fields name="cboServiceOrderType" colIndex="2" label="Type" readonly="true" fieldType="ENUM_COMBOBOX" width="140" dTOAttribute="/412/@attributes.1"/>
+    <fields name="txtDocumentDate" rowIndex="2" label="Document date" readonly="true" fieldType="DATE" width="140" dTOAttribute="/412/@attributes.0"/>
+    <fields name="txtShortText" rowIndex="3" label="Short text" readonly="true" mandatory="false" width="140" dTOAttribute="/412/@attributes.3"/>
+    <fields name="chkActive" colIndex="2" rowIndex="3" label="Active" readonly="true" fieldType="CHECKBOX" dTOAttribute="/412/@attributes.5"/>
+    <fields name="txtCustomer" rowIndex="4" label="Customer" spanCols="true" readonly="true" mandatory="false" fieldType="PROPOSAL_TEXT" width="140" dTOAttribute="/412/@attributes.9"/>
+    <fields name="txtSupplier" rowIndex="5" label="Supplier" spanCols="true" readonly="true" mandatory="false" fieldType="PROPOSAL_TEXT" width="140" dTOAttribute="/412/@attributes.10"/>
+    <fields name="txtComment" rowIndex="6" label="Comment" spanCols="true" readonly="true" mandatory="false" fieldType="MULTI_LINE_TEXT" dTOAttribute="/412/@attributes.4"/>
+  </net.sourceforge.jbizmo.model.client:FormPanel>
+  <net.sourceforge.jbizmo.model.client:FormPanel name="panAdministration" colIndex="2" label="Administration data" form="/409">
+    <fields name="txtCreationDate" label="Creation date" readonly="true" fieldType="DATE_TIME" width="120" dTOAttribute="/412/@attributes.6"/>
+    <fields name="txtLastUpdate" rowIndex="2" label="Last update" readonly="true" mandatory="false" fieldType="DATE_TIME" width="120" dTOAttribute="/412/@attributes.7"/>
+    <fields name="txtVersion" rowIndex="3" label="Version" readonly="true" width="120" dTOAttribute="/412/@attributes.8"/>
+  </net.sourceforge.jbizmo.model.client:FormPanel>
+  <net.sourceforge.jbizmo.model.dto:DTOBean name="ServiceOrderDTO" comment="Data transfer object for service order objects" namespace="/258" standardConversion="true">
+    <domainObject href="package-service.xmi#//@domainObjects.0"/>
+    <attributes name="documentDate">
+      <domainAttribute href="package-service.xmi#//@domainObjects.0/@attributes.0"/>
+    </attributes>
+    <attributes name="serviceOrderType">
+      <domainAttribute href="package-service.xmi#//@domainObjects.0/@attributes.1"/>
+    </attributes>
+    <attributes name="code">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.0"/>
+    </attributes>
+    <attributes name="shortText">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.1"/>
+    </attributes>
+    <attributes name="comment">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.2"/>
+    </attributes>
+    <attributes name="active">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.3"/>
+    </attributes>
+    <attributes name="creationDate">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.4"/>
+    </attributes>
+    <attributes name="lastUpdate">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.5"/>
+    </attributes>
+    <attributes name="version">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.6"/>
+    </attributes>
+    <attributes name="customer" referencedDTOBean="/345">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-service.xmi#//@domainObjects.0/@associations.0"/>
+    </attributes>
+    <attributes name="supplier" referencedDTOBean="/297">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-service.xmi#//@domainObjects.0/@associations.1"/>
+    </attributes>
+  </net.sourceforge.jbizmo.model.dto:DTOBean>
+  <net.sourceforge.jbizmo.model.boundary:BoundaryBean name="ServiceOrderBoundaryServiceBean" comment="Boundary service for service order objects" namespace="/257" interfaceName="ServiceOrderBoundaryService" repository="/414">
+    <domainObject href="package-service.xmi#//@domainObjects.0"/>
+    <boundaryMethods name="findServiceOrderById" comment="Find service order by its ID" returnType="/412" methodType="FIND_BY_ID" serviceMethod="/414/@repositoryMethods.0">
+      <methodParameters name="code" type="/0/@allSupportedTypes.12"/>
+    </boundaryMethods>
+  </net.sourceforge.jbizmo.model.boundary:BoundaryBean>
+  <net.sourceforge.jbizmo.model.repository:Repository name="ServiceOrderRepository" comment="Create, read, update and delete services for service order objects." namespace="/256">
+    <domainObject href="package-service.xmi#//@domainObjects.0"/>
+    <repositoryMethods name="findById" javaType="/414" transactionType="REQUIRED" methodType="FIND_BY_ID">
+      <returnType href="package-service.xmi#//@domainObjects.0"/>
+      <methodParameters name="code" type="/0/@allSupportedTypes.12"/>
+    </repositoryMethods>
+    <repositoryMethods name="findById" javaType="/414" transactionType="REQUIRED" methodType="FIND_EXISTING">
+      <returnType href="package-service.xmi#//@domainObjects.0"/>
+      <methodParameters name="code" type="/0/@allSupportedTypes.12"/>
+      <methodParameters name="mustExist" type="/0/@allSupportedTypes.4"/>
+    </repositoryMethods>
+    <repositoryMethods name="findById" javaType="/414" transactionType="REQUIRED" methodType="FIND_BY_OBJECT">
+      <returnType href="package-service.xmi#//@domainObjects.0"/>
+      <methodParameters name="serviceOrder">
+        <type href="package-service.xmi#//@domainObjects.0"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="deleteAll" javaType="/414" returnType="/0/@allSupportedTypes.0" transactionType="REQUIRED" methodType="DELETE_ALL"/>
+    <repositoryMethods name="merge" javaType="/414" transactionType="REQUIRED" methodType="MERGE">
+      <returnType href="package-service.xmi#//@domainObjects.0"/>
+      <methodParameters name="serviceOrder">
+        <type href="package-service.xmi#//@domainObjects.0"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="persist" javaType="/414" transactionType="REQUIRED" methodType="PERSIST">
+      <returnType href="package-service.xmi#//@domainObjects.0"/>
+      <methodParameters name="serviceOrder">
+        <type href="package-service.xmi#//@domainObjects.0"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="copy" javaType="/414" transactionType="REQUIRED" methodType="COPY">
+      <returnType href="package-service.xmi#//@domainObjects.0"/>
+      <methodParameters name="sourceObject">
+        <type href="package-service.xmi#//@domainObjects.0"/>
+      </methodParameters>
+      <methodParameters name="targetObject">
+        <type href="package-service.xmi#//@domainObjects.0"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="delete" javaType="/414" returnType="/0/@allSupportedTypes.0" transactionType="REQUIRED" methodType="DELETE">
+      <methodParameters name="code" type="/0/@allSupportedTypes.12"/>
+    </repositoryMethods>
+    <repositoryMethods name="findAll" javaType="/414" returnTypeModifier="List" transactionType="REQUIRED">
+      <returnType href="package-service.xmi#//@domainObjects.0"/>
+    </repositoryMethods>
+    <repositoryMethods name="existsById" javaType="/414" returnType="/0/@allSupportedTypes.4" transactionType="REQUIRED" methodType="EXISTS_BY_ID">
+      <methodParameters name="code" type="/0/@allSupportedTypes.12"/>
+    </repositoryMethods>
+    <repositoryMethods name="count" javaType="/414" returnType="/0/@allSupportedTypes.7" transactionType="REQUIRED" methodType="COUNT_ALL"/>
+    <repositoryMethods name="search" javaType="/414" returnTypeModifier="List" transactionType="REQUIRED" methodType="SEARCH">
+      <returnType href="package-service.xmi#//@domainObjects.0"/>
+    </repositoryMethods>
+    <repositoryMethods name="count" javaType="/414" returnType="/0/@allSupportedTypes.7" transactionType="REQUIRED" methodType="COUNT"/>
+    <repositoryMethods name="getCustomer" javaType="/414" transactionType="REQUIRED" methodType="GET_ASSOCIATION" hint="NQ_GET_CUSTOMER">
+      <returnType href="package-base.xmi#//@domainObjects.12"/>
+      <methodParameters xsi:type="net.sourceforge.jbizmo.model.repository:RepositoryMethodParameter" name="code" type="/0/@allSupportedTypes.12">
+        <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-service.xmi#//@domainObjects.0/@associations.0"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="getSupplier" javaType="/414" transactionType="REQUIRED" methodType="GET_ASSOCIATION" hint="NQ_GET_SUPPLIER">
+      <returnType href="package-base.xmi#//@domainObjects.13"/>
+      <methodParameters xsi:type="net.sourceforge.jbizmo.model.repository:RepositoryMethodParameter" name="code" type="/0/@allSupportedTypes.12">
+        <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-service.xmi#//@domainObjects.0/@associations.1"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="getServiceMessages" javaType="/414" returnTypeModifier="List" transactionType="REQUIRED" methodType="GET_ASSOCIATION" hint="NQ_GET_SERVICEMESSAGES">
+      <returnType href="package-service.xmi#//@domainObjects.1"/>
+      <methodParameters xsi:type="net.sourceforge.jbizmo.model.repository:RepositoryMethodParameter" name="code" type="/0/@allSupportedTypes.12">
+        <association xsi:type="net.sourceforge.net.model.domain:OneToManyAssociation" href="package-service.xmi#//@domainObjects.0/@associations.2"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="setCustomer" javaType="/414" returnType="/0/@allSupportedTypes.0" transactionType="REQUIRED" methodType="CHANGE_PARENT">
+      <methodParameters name="code" type="/0/@allSupportedTypes.12"/>
+      <methodParameters xsi:type="net.sourceforge.jbizmo.model.repository:RepositoryMethodParameter" name="customer">
+        <type href="package-base.xmi#//@domainObjects.12"/>
+        <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-service.xmi#//@domainObjects.0/@associations.0"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="setSupplier" javaType="/414" returnType="/0/@allSupportedTypes.0" transactionType="REQUIRED" methodType="CHANGE_PARENT">
+      <methodParameters name="code" type="/0/@allSupportedTypes.12"/>
+      <methodParameters xsi:type="net.sourceforge.jbizmo.model.repository:RepositoryMethodParameter" name="supplier">
+        <type href="package-base.xmi#//@domainObjects.13"/>
+        <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-service.xmi#//@domainObjects.0/@associations.1"/>
       </methodParameters>
     </repositoryMethods>
   </net.sourceforge.jbizmo.model.repository:Repository>

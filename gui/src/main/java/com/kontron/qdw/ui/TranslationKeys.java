@@ -421,6 +421,8 @@ public interface TranslationKeys {
     String FIELD_VIEWSERIALOBJECTDIALOG_TXTPARENTOBJECTSERIALNUMBER = "field_viewserialobjectdialog_txtparentobjectserialnumber";
     String FIELD_VIEWSERIALOBJECTDIALOG_TXTPRODUCTIONORDERNUMBER = "field_viewserialobjectdialog_txtproductionordernumber";
     String FIELD_VIEWSERIALOBJECTDIALOG_TXTSERIALNUMBER = "field_viewserialobjectdialog_txtserialnumber";
+    String FIELD_VIEWSERVICEORDERDIALOG_CBOSERVICEORDERTYPE = "field_viewserviceorderdialog_cboserviceordertype";
+    String FIELD_VIEWSERVICEORDERDIALOG_TXTCODE = "field_viewserviceorderdialog_txtcode";
     String FIELD_VIEWSHIPMENTDIALOG_TXTID = "field_viewshipmentdialog_txtid";
     String FIELD_VIEWTRACEBOMDIALOG_CBOMATERIALREVISION = "field_viewtracebomdialog_cbomaterialrevision";
     String FIELD_VIEWTRACEBOMDIALOG_CBOMATERIALREVISIONMATERIAL = "field_viewtracebomdialog_cbomaterialrevisionmaterial";
@@ -498,6 +500,7 @@ public interface TranslationKeys {
     String FORM_VIEWMATERIALREVISIONDIALOG_TITLE = "form_viewmaterialrevisiondialog_title";
     String FORM_VIEWROLEDIALOG_TITLE = "form_viewroledialog_title";
     String FORM_VIEWSERIALOBJECTDIALOG_TITLE = "form_viewserialobjectdialog_title";
+    String FORM_VIEWSERVICEORDERDIALOG_TITLE = "form_viewserviceorderdialog_title";
     String FORM_VIEWSHIPMENTDIALOG_TITLE = "form_viewshipmentdialog_title";
     String FORM_VIEWSUPPLIERDIALOG_TITLE = "form_viewsupplierdialog_title";
     String FORM_VIEWTRACEBOMDIALOG_TITLE = "form_viewtracebomdialog_title";
@@ -525,6 +528,8 @@ public interface TranslationKeys {
     String LBL_ASSOC_SERIALOBJECT_MATERIAL = "lbl_assoc_serialobject_material";
     String LBL_ASSOC_SERIALOBJECT_PARENTOBJECT = "lbl_assoc_serialobject_parentobject";
     String LBL_ASSOC_SERIALOBJECT_TRACEBOM = "lbl_assoc_serialobject_tracebom";
+    String LBL_ASSOC_SERVICEORDER_CUSTOMER = "lbl_assoc_serviceorder_customer";
+    String LBL_ASSOC_SERVICEORDER_SUPPLIER = "lbl_assoc_serviceorder_supplier";
     String LBL_ASSOC_SHIPMENT_CUSTOMER = "lbl_assoc_shipment_customer";
     String LBL_ASSOC_SHIPMENT_MATERIALREVISION = "lbl_assoc_shipment_materialrevision";
     String LBL_ASSOC_SHIPMENT_MOVEMENTTYPE = "lbl_assoc_shipment_movementtype";
@@ -727,6 +732,8 @@ public interface TranslationKeys {
     String LBL_ATTR_SERVICEMESSAGE_ORIGIN = "lbl_attr_servicemessage_origin";
     String LBL_ATTR_SERVICEMESSAGE_REPAIRDESCRIPTION = "lbl_attr_servicemessage_repairdescription";
     String LBL_ATTR_SERVICEMESSAGE_SERVICEMESSAGEID = "lbl_attr_servicemessage_servicemessageid";
+    String LBL_ATTR_SERVICEORDER_DOCUMENTDATE = "lbl_attr_serviceorder_documentdate";
+    String LBL_ATTR_SERVICEORDER_SERVICEORDERTYPE = "lbl_attr_serviceorder_serviceordertype";
     String LBL_ATTR_SERVICEORDERTYPE_TOOLTIP = "lbl_attr_serviceordertype_tooltip";
     String LBL_ATTR_SHIPMENT_ORDERNUMBER = "lbl_attr_shipment_ordernumber";
     String LBL_ATTR_SHIPMENT_SHIPMENTDATE = "lbl_attr_shipment_shipmentdate";
