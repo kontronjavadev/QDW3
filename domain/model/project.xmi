@@ -8423,7 +8423,7 @@
       <associationList xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-mv.xmi#//@domainObjects.2/@associations.1"/>
     </attributes>
   </net.sourceforge.jbizmo.model.dto:DTOBean>
-  <net.sourceforge.jbizmo.model.client:FormGroup name="Service" groupOrder="5" forms="/397 /403 /409 /415" roles="/0/@roles.0 /0/@roles.1" project="/0">
+  <net.sourceforge.jbizmo.model.client:FormGroup name="Service" groupOrder="5" forms="/397 /403 /415 /409" roles="/0/@roles.0 /0/@roles.1" project="/0">
     <childGroups name="Master data" parentGroup="/396" roles="/0/@roles.0"/>
   </net.sourceforge.jbizmo.model.client:FormGroup>
   <net.sourceforge.jbizmo.model.client:Form name="MaterializedServiceMessageView" formType="SEARCHABLE_VIEW" formGroup="/396" title="Materialized service orders" formPanels="/398" dTO="/400" roles="/0/@roles.0 /0/@roles.1" boundaryMethod="/401/@boundaryMethods.0">
@@ -8794,6 +8794,7 @@
   <net.sourceforge.jbizmo.model.client:Form name="ServiceMessageOpenView" formType="SEARCHABLE_VIEW" formGroup="/396" title="Open service orders" formPanels="/404" dTO="/406" roles="/0/@roles.0 /0/@roles.1" boundaryMethod="/407/@boundaryMethods.0">
     <actions name="actionDelete" description="Delete selected service message" boundaryMethod="/407/@boundaryMethods.2" roles="/0/@roles.0" type="DELETE"/>
     <actions name="actionCopy" description="Create copy of selected service message" boundaryMethod="/407/@boundaryMethods.3" roles="/0/@roles.0" type="COPY"/>
+    <actions name="actionGet" description="View service message" targetForm="/415" roles="/0/@roles.0 /0/@roles.1" type="READ"/>
     <domainObject href="package-service.xmi#//@domainObjects.1"/>
   </net.sourceforge.jbizmo.model.client:Form>
   <net.sourceforge.jbizmo.model.client:FormPanel name="ServiceMessagePanel" form="/403" formTable="/405" dTO="/406" boundaryMethod="/407/@boundaryMethods.1"/>

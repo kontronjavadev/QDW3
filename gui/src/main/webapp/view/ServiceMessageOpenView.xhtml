@@ -216,9 +216,9 @@
 				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_13" id="s_13" value="#{serviceMessageOpenView.searchObject.searchFields[13].sortOrder}">
 					<f:selectItems value="#{serviceMessageOpenView.sortOrderList}"/>
 				</p:selectOneMenu>
-				<p:inputText id="fi_13" value="#{serviceMessageOpenView.searchObject.searchFields[13].stringCriterion}" size="30"/>
+				<p:autoComplete minQueryLength="2" maxResults="10" completeMethod="#{serviceMessageOpenView.onCompleteRepairStateName}" id="fi_13" value="#{serviceMessageOpenView.searchObject.searchFields[13].stringCriterion}" size="30"/>
 				<h:panelGroup id="p_13">
-					<p:inputText id="b_13" rendered="#{serviceMessageOpenView.searchObject.searchFields[13].between}" value="#{serviceMessageOpenView.searchObject.searchFields[13].stringBetweenCriterion}" size="30"/>
+				<p:autoComplete minQueryLength="2" rendered="#{serviceMessageOpenView.searchObject.searchFields[13].between}" maxResults="10" completeMethod="#{serviceMessageOpenView.onCompleteRepairStateName}" id="b_13" value="#{serviceMessageOpenView.searchObject.searchFields[13].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
 				<h:outputLabel styleClass="label-field-optional" for="fi_14" value="#{serviceMessageOpenView.searchObject.searchFields[14].colLabel}"/>
@@ -242,9 +242,9 @@
 				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_15" id="s_15" value="#{serviceMessageOpenView.searchObject.searchFields[15].sortOrder}">
 					<f:selectItems value="#{serviceMessageOpenView.sortOrderList}"/>
 				</p:selectOneMenu>
-				<p:inputText id="fi_15" value="#{serviceMessageOpenView.searchObject.searchFields[15].stringCriterion}" size="30"/>
+				<p:autoComplete minQueryLength="2" maxResults="10" completeMethod="#{serviceMessageOpenView.onCompleteRepairErrorCodeName}" id="fi_15" value="#{serviceMessageOpenView.searchObject.searchFields[15].stringCriterion}" size="30"/>
 				<h:panelGroup id="p_15">
-					<p:inputText id="b_15" rendered="#{serviceMessageOpenView.searchObject.searchFields[15].between}" value="#{serviceMessageOpenView.searchObject.searchFields[15].stringBetweenCriterion}" size="30"/>
+				<p:autoComplete minQueryLength="2" rendered="#{serviceMessageOpenView.searchObject.searchFields[15].between}" maxResults="10" completeMethod="#{serviceMessageOpenView.onCompleteRepairErrorCodeName}" id="b_15" value="#{serviceMessageOpenView.searchObject.searchFields[15].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
 				<h:outputLabel styleClass="label-field-optional" for="fi_16" value="#{serviceMessageOpenView.searchObject.searchFields[16].colLabel}"/>
@@ -294,9 +294,9 @@
 				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_19" id="s_19" value="#{serviceMessageOpenView.searchObject.searchFields[19].sortOrder}">
 					<f:selectItems value="#{serviceMessageOpenView.sortOrderList}"/>
 				</p:selectOneMenu>
-				<p:inputText id="fi_19" value="#{serviceMessageOpenView.searchObject.searchFields[19].stringCriterion}" size="30"/>
+				<p:autoComplete minQueryLength="2" maxResults="10" completeMethod="#{serviceMessageOpenView.onCompleteRepairServiceName}" id="fi_19" value="#{serviceMessageOpenView.searchObject.searchFields[19].stringCriterion}" size="30"/>
 				<h:panelGroup id="p_19">
-					<p:inputText id="b_19" rendered="#{serviceMessageOpenView.searchObject.searchFields[19].between}" value="#{serviceMessageOpenView.searchObject.searchFields[19].stringBetweenCriterion}" size="30"/>
+				<p:autoComplete minQueryLength="2" rendered="#{serviceMessageOpenView.searchObject.searchFields[19].between}" maxResults="10" completeMethod="#{serviceMessageOpenView.onCompleteRepairServiceName}" id="b_19" value="#{serviceMessageOpenView.searchObject.searchFields[19].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
 				<h:outputLabel styleClass="label-field-optional" for="fi_20" value="#{serviceMessageOpenView.searchObject.searchFields[20].colLabel}"/>
@@ -1064,6 +1064,9 @@
 	<p:contextMenu for="panData">
 		<p:menuitem value="#{i18n.action_delete}" ajax="true" icon="pi pi-trash" id="panData_mniDelete" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR')}" onclick="PF('deleteConfirm').show()"/>
 		<p:menuitem value="#{i18n.action_copy}" ajax="true" icon="pi pi-copy" id="panData_mniCopy" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR')}" onclick="PF('copyConfirm').show()"/>
+		<p:menuitem value="#{i18n.action_view}" ajax="true" icon="pi pi-file" id="panData_mniView" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY')}" action="#{serviceMessageOpenView.openViewServiceMessageDialog}">
+			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{serviceMessageOpenView.currentPageURL}"/>
+		</p:menuitem>
 		<p:menuitem value="#{i18n.action_refresh}" ajax="false" type="push" icon="pi pi-refresh" id="panData_mniRefresh" actionListener="#{serviceMessageOpenView.fetchServiceMessages}"/>
 	</p:contextMenu>
 

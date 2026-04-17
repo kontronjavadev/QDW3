@@ -1,29 +1,30 @@
 package com.kontron.qdw.ui.view;
 
+import org.primefaces.model.DualListModel;
+import net.sourceforge.jbizmo.commons.webclient.primefaces.search.*;
+import static com.kontron.qdw.ui.TranslationKeys.*;
+import com.kontron.qdw.dto.base.*;
+import com.kontron.qdw.boundary.service.*;
+import com.kontron.qdw.dto.service.*;
+import java.text.*;
+import static com.kontron.qdw.ui.UserSession.*;
+import jakarta.faces.model.*;
+import jakarta.inject.*;
+import net.sourceforge.jbizmo.commons.search.dto.*;
+import java.io.*;
 import com.kontron.qdw.boundary.base.*;
 import org.slf4j.*;
 import com.kontron.qdw.boundary.material.*;
 import java.lang.invoke.*;
-import org.primefaces.model.DualListModel;
-import net.sourceforge.jbizmo.commons.webclient.primefaces.search.*;
-import static com.kontron.qdw.ui.TranslationKeys.*;
+import com.kontron.qdw.ui.dialog.*;
 import net.sourceforge.jbizmo.commons.webclient.primefaces.util.*;
-import com.kontron.qdw.dto.base.*;
-import com.kontron.qdw.boundary.service.*;
-import com.kontron.qdw.dto.service.*;
 import jakarta.faces.application.FacesMessage;
 import java.util.*;
 import jakarta.faces.view.*;
-import java.text.*;
-import static com.kontron.qdw.ui.UserSession.*;
 import com.kontron.qdw.ui.*;
 import com.kontron.qdw.service.*;
 import com.kontron.qdw.dto.material.*;
-import jakarta.faces.model.*;
-import jakarta.inject.*;
-import net.sourceforge.jbizmo.commons.search.dto.*;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
-import java.io.*;
 
 @Named("serviceMessageOpenView")
 @ViewScoped
@@ -55,6 +56,12 @@ public class ServiceMessageOpenView extends AbstractSearchableView implements Se
     @Generated
     private final transient MaterialBoundaryService materialService;
     @Generated
+    private final transient RepairStateBoundaryService repairStateService;
+    @Generated
+    private final transient RepairErrorCodeBoundaryService repairErrorCodeService;
+    @Generated
+    private final transient RepairServiceBoundaryService repairServiceService;
+    @Generated
     private final transient SupplierBoundaryService supplierService;
     @Generated
     public static final String VIEW_ID = "com.kontron.qdw.ui.view.ServiceMessageOpenView";
@@ -75,6 +82,9 @@ public class ServiceMessageOpenView extends AbstractSearchableView implements Se
         this.customerService = null;
         this.countryService = null;
         this.materialService = null;
+        this.repairStateService = null;
+        this.repairErrorCodeService = null;
+        this.repairServiceService = null;
         this.supplierService = null;
         this.queryManager = null;
     }
@@ -86,6 +96,9 @@ public class ServiceMessageOpenView extends AbstractSearchableView implements Se
      * @param customerService
      * @param countryService
      * @param materialService
+     * @param repairStateService
+     * @param repairErrorCodeService
+     * @param repairServiceService
      * @param supplierService
      * @param queryManager
      */
@@ -93,12 +106,16 @@ public class ServiceMessageOpenView extends AbstractSearchableView implements Se
     @Generated
     public ServiceMessageOpenView(UserSession userSession, ServiceMessageBoundaryService serviceMessageService,
             CustomerBoundaryService customerService, CountryBoundaryService countryService, MaterialBoundaryService materialService,
-            SupplierBoundaryService supplierService, SavedQueryService queryManager) {
+            RepairStateBoundaryService repairStateService, RepairErrorCodeBoundaryService repairErrorCodeService,
+            RepairServiceBoundaryService repairServiceService, SupplierBoundaryService supplierService, SavedQueryService queryManager) {
         this.userSession = userSession;
         this.serviceMessageService = serviceMessageService;
         this.customerService = customerService;
         this.countryService = countryService;
         this.materialService = materialService;
+        this.repairStateService = repairStateService;
+        this.repairErrorCodeService = repairErrorCodeService;
+        this.repairServiceService = repairServiceService;
         this.supplierService = supplierService;
         this.queryManager = queryManager;
     }
@@ -132,7 +149,9 @@ public class ServiceMessageOpenView extends AbstractSearchableView implements Se
      */
     @Generated
     public void onDoubleClick() {
-        // No appropriate form found!
+        logger.debug("Handle double-click event");
+
+        userSession.redirectTo(getCurrentPageURL(), openViewServiceMessageDialog());
     }
 
     /**
@@ -174,6 +193,20 @@ public class ServiceMessageOpenView extends AbstractSearchableView implements Se
 
         fetchServiceMessages();
         return "";
+    }
+
+    /**
+     * Open dialog
+     * @return the navigation target
+     */
+    @Generated
+    public String openViewServiceMessageDialog() {
+        var url = "";
+
+        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY))
+            url = ViewServiceMessageDialog.PAGE_INIT_URL + selectedObject.getId();
+
+        return url;
     }
 
     /**
@@ -627,6 +660,72 @@ public class ServiceMessageOpenView extends AbstractSearchableView implements Se
 
             for (final MaterialListDTO item : items)
                 results.add(item.getMaterialNumber());
+        }
+        catch (final Exception e) {
+            logger.error("Error while searching for auto-complete items by using the entered text '{}'!", query, e);
+        }
+
+        return results;
+    }
+
+    /**
+     * Callback method for auto-complete field
+     * @param query the filter criterion inserted by the user
+     * @return a list containing all proposals
+     */
+    @Generated
+    public List<String> onCompleteRepairStateName(String query) {
+        final var results = new ArrayList<String>();
+
+        try {
+            final Collection<RepairStateListDTO> items = repairStateService.findRepairStates(query + "%");
+
+            for (final RepairStateListDTO item : items)
+                results.add(item.getName());
+        }
+        catch (final Exception e) {
+            logger.error("Error while searching for auto-complete items by using the entered text '{}'!", query, e);
+        }
+
+        return results;
+    }
+
+    /**
+     * Callback method for auto-complete field
+     * @param query the filter criterion inserted by the user
+     * @return a list containing all proposals
+     */
+    @Generated
+    public List<String> onCompleteRepairErrorCodeName(String query) {
+        final var results = new ArrayList<String>();
+
+        try {
+            final Collection<RepairErrorCodeListDTO> items = repairErrorCodeService.findRepairErrorCodes(query + "%");
+
+            for (final RepairErrorCodeListDTO item : items)
+                results.add(item.getName());
+        }
+        catch (final Exception e) {
+            logger.error("Error while searching for auto-complete items by using the entered text '{}'!", query, e);
+        }
+
+        return results;
+    }
+
+    /**
+     * Callback method for auto-complete field
+     * @param query the filter criterion inserted by the user
+     * @return a list containing all proposals
+     */
+    @Generated
+    public List<String> onCompleteRepairServiceName(String query) {
+        final var results = new ArrayList<String>();
+
+        try {
+            final Collection<RepairServiceListDTO> items = repairServiceService.findRepairServices(query + "%");
+
+            for (final RepairServiceListDTO item : items)
+                results.add(item.getName());
         }
         catch (final Exception e) {
             logger.error("Error while searching for auto-complete items by using the entered text '{}'!", query, e);
