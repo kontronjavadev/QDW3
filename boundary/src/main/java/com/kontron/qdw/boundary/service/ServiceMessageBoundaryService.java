@@ -1,16 +1,19 @@
 package com.kontron.qdw.boundary.service;
 
-import java.util.*;
-import jakarta.validation.ConstraintViolationException;
-import com.kontron.qdw.repository.service.*;
 import com.kontron.qdw.domain.service.*;
 import net.sourceforge.jbizmo.commons.search.exception.*;
+import com.kontron.qdw.dto.base.*;
+import com.kontron.qdw.dto.service.*;
+import java.util.*;
+import jakarta.validation.ConstraintViolationException;
+import com.kontron.qdw.dto.serial.*;
+import com.kontron.qdw.repository.service.*;
+import com.kontron.qdw.dto.material.*;
 import jakarta.inject.*;
 import jakarta.ejb.*;
 import jakarta.annotation.security.*;
 import net.sourceforge.jbizmo.commons.search.dto.*;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
-import com.kontron.qdw.dto.service.*;
 
 @Stateless
 public class ServiceMessageBoundaryService {
@@ -149,6 +152,109 @@ public class ServiceMessageBoundaryService {
         final ServiceMessage targetObject = repository.copy(sourceObject, null, loggedOnUserId);
 
         return targetObject.getId();
+    }
+
+    /**
+     * Find service message by its ID
+     * @param id
+     * @return the service message object
+     */
+    @Generated
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public ServiceMessageDTO findServiceMessageById(long id) {
+        // Find persistent object
+        final ServiceMessage serviceMessage = repository.findById(id, true);
+
+        final var dto = new ServiceMessageDTO();
+        dto.setAnalysisText(serviceMessage.getAnalysisText());
+        dto.setBasicFinishDate(serviceMessage.getBasicFinishDate());
+        dto.setBasicStartDate(serviceMessage.getBasicStartDate());
+        dto.setCauseText(serviceMessage.getCauseText());
+        dto.setCustomerFailure(serviceMessage.isCustomerFailure());
+        dto.setDefectComponent(serviceMessage.getDefectComponent());
+        dto.setDeliveryNoteNumber(serviceMessage.getDeliveryNoteNumber());
+        dto.setDesignator(serviceMessage.getDesignator());
+        dto.setEpidemicFailure(serviceMessage.isEpidemicFailure());
+        dto.setErrorId(serviceMessage.getErrorId());
+        dto.setInternalArrivalDate(serviceMessage.getInternalArrivalDate());
+        dto.setInternalShipmentDate(serviceMessage.getInternalShipmentDate());
+        dto.setOrigin(serviceMessage.getOrigin());
+        dto.setRebuildFlag(serviceMessage.getRebuildFlag());
+        dto.setRepairDescription(serviceMessage.getRepairDescription());
+        dto.setServiceMessageId(serviceMessage.getServiceMessageId());
+        dto.setId(serviceMessage.getId());
+        dto.setVersion(serviceMessage.getVersion());
+        dto.setCreationDate(serviceMessage.getCreationDate());
+        dto.setLastUpdate(serviceMessage.getLastUpdate());
+
+        if (serviceMessage.getExternalSupplier() != null) {
+            dto.setExternalSupplier(new SupplierListDTO());
+            dto.getExternalSupplier().setCode(serviceMessage.getExternalSupplier().getCode());
+            dto.getExternalSupplier().setName(serviceMessage.getExternalSupplier().getName());
+        }
+
+        dto.setMaterialRevision(new MaterialRevisionListDTO());
+        dto.getMaterialRevision().setId(serviceMessage.getMaterialRevision().getId());
+        dto.getMaterialRevision().setRevisionNumber(serviceMessage.getMaterialRevision().getRevisionNumber());
+        dto.setPlant(new PlantListDTO());
+        dto.getPlant().setCode(serviceMessage.getPlant().getCode());
+        dto.setSerialObject(new SerialObjectListDTO());
+        dto.getSerialObject().setId(serviceMessage.getSerialObject().getId());
+        dto.getSerialObject().setSerialNumber(serviceMessage.getSerialObject().getSerialNumber());
+        dto.setServiceOrder(new ServiceOrderListDTO());
+        dto.getServiceOrder().setCode(serviceMessage.getServiceOrder().getCode());
+
+        if (serviceMessage.getFaultAnalysis() != null) {
+            dto.setFaultAnalysis(new FaultAnalysisListDTO());
+            dto.getFaultAnalysis().setCode(serviceMessage.getFaultAnalysis().getCode());
+        }
+
+
+        if (serviceMessage.getrMAType() != null) {
+            dto.setrMAType(new RMATypeListDTO());
+            dto.getrMAType().setCode(serviceMessage.getrMAType().getCode());
+        }
+
+
+        if (serviceMessage.getRepairErrorCode() != null) {
+            dto.setRepairErrorCode(new RepairErrorCodeListDTO());
+            dto.getRepairErrorCode().setCode(serviceMessage.getRepairErrorCode().getCode());
+            dto.getRepairErrorCode().setName(serviceMessage.getRepairErrorCode().getName());
+        }
+
+
+        if (serviceMessage.getRepairLocation() != null) {
+            dto.setRepairLocation(new RepairLocationListDTO());
+            dto.getRepairLocation().setCode(serviceMessage.getRepairLocation().getCode());
+        }
+
+
+        if (serviceMessage.getRepairService() != null) {
+            dto.setRepairService(new RepairServiceListDTO());
+            dto.getRepairService().setCode(serviceMessage.getRepairService().getCode());
+            dto.getRepairService().setName(serviceMessage.getRepairService().getName());
+        }
+
+        dto.setRepairState(new RepairStateListDTO());
+        dto.getRepairState().setCode(serviceMessage.getRepairState().getCode());
+        dto.getRepairState().setName(serviceMessage.getRepairState().getName());
+
+        if (serviceMessage.getRepairTask() != null) {
+            dto.setRepairTask(new RepairTaskListDTO());
+            dto.getRepairTask().setCode(serviceMessage.getRepairTask().getCode());
+        }
+
+        dto.setSerialObjectSerialNumber(serviceMessage.getSerialObject().getSerialNumber());
+        dto.setMaterialRevisionMaterial(new MaterialListDTO());
+        dto.getMaterialRevisionMaterial().setId(serviceMessage.getMaterialRevision().getMaterial().getId());
+        dto.getMaterialRevisionMaterial().setMaterialNumber(serviceMessage.getMaterialRevision().getMaterial().getMaterialNumber());
+        dto.setMaterialSapNumber(serviceMessage.getMaterialRevision().getMaterial().getSapNumber());
+        dto.setInternalReport(serviceMessage.getInternalReport());
+        dto.setExternalReport(serviceMessage.getExternalReport());
+        dto.setCustomerReport(serviceMessage.getCustomerReport());
+
+        return dto;
     }
 
 }

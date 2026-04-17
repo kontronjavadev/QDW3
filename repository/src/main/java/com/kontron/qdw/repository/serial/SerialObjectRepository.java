@@ -2,8 +2,9 @@ package com.kontron.qdw.repository.serial;
 
 import com.kontron.qdw.domain.serial.*;
 import java.util.*;
-import com.kontron.qdw.domain.material.*;
+import com.kontron.qdw.repository.service.*;
 import com.kontron.qdw.domain.service.*;
+import com.kontron.qdw.domain.material.*;
 import jakarta.persistence.*;
 import net.sourceforge.jbizmo.commons.jpa.*;
 import jakarta.inject.*;
@@ -23,6 +24,8 @@ public class SerialObjectRepository extends AbstractRepository<SerialObject, Lon
     @Generated
     private final ArrivalRepository arrivalManager;
     @Generated
+    private final ServiceMessageRepository serviceMessageManager;
+    @Generated
     private final ShipmentRepository shipmentManager;
 
     /**
@@ -31,18 +34,22 @@ public class SerialObjectRepository extends AbstractRepository<SerialObject, Lon
     @Generated
     public SerialObjectRepository() {
         this.arrivalManager = null;
+        this.serviceMessageManager = null;
         this.shipmentManager = null;
     }
 
     /**
      * Constructor for injecting all required beans
      * @param arrivalManager
+     * @param serviceMessageManager
      * @param shipmentManager
      */
     @Inject
     @Generated
-    public SerialObjectRepository(ArrivalRepository arrivalManager, ShipmentRepository shipmentManager) {
+    public SerialObjectRepository(ArrivalRepository arrivalManager, ServiceMessageRepository serviceMessageManager,
+            ShipmentRepository shipmentManager) {
         this.arrivalManager = arrivalManager;
+        this.serviceMessageManager = serviceMessageManager;
         this.shipmentManager = shipmentManager;
     }
 
@@ -146,6 +153,14 @@ public class SerialObjectRepository extends AbstractRepository<SerialObject, Lon
 
             newShipment = shipmentManager.copy(shipment, newShipment, loggedOnUserId);
             targetObject.getShipments().add(newShipment);
+        }
+
+        for (final ServiceMessage serviceMessage : sourceObject.getServiceMessages()) {
+            var newServiceMessage = new ServiceMessage();
+            newServiceMessage.setSerialObject(targetObject);
+
+            newServiceMessage = serviceMessageManager.copy(serviceMessage, newServiceMessage, loggedOnUserId);
+            targetObject.getServiceMessages().add(newServiceMessage);
         }
 
         if (flushAndRefresh) {

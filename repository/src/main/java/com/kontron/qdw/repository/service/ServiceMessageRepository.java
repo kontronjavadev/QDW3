@@ -8,8 +8,8 @@ import jakarta.persistence.*;
 import net.sourceforge.jbizmo.commons.jpa.*;
 import jakarta.ejb.*;
 import jakarta.validation.*;
-import net.sourceforge.jbizmo.commons.repository.*;
 import net.sourceforge.jbizmo.commons.annotation.Customized;
+import net.sourceforge.jbizmo.commons.repository.*;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
 import com.kontron.qdw.domain.base.*;
 
@@ -17,16 +17,6 @@ import com.kontron.qdw.domain.base.*;
 public class ServiceMessageRepository extends AbstractRepository<ServiceMessage, Long> {
     @Generated
     private static final String PARAM_ID = "id";
-
-    /**
-     * Find a persistent service message by using the primary key of the provided object
-     * @param serviceMessage
-     * @return the service message or null if the object could not be found
-     */
-    @Generated
-    public ServiceMessage findById(ServiceMessage serviceMessage) {
-        return findById(serviceMessage.getId());
-    }
 
     /**
      * Create a deep copy of the given service message
@@ -93,6 +83,16 @@ public class ServiceMessageRepository extends AbstractRepository<ServiceMessage,
         }
 
         return targetObject;
+    }
+
+    /**
+     * Find a persistent service message by using the primary key of the provided object
+     * @param serviceMessage
+     * @return the service message or null if the object could not be found
+     */
+    @Generated
+    public ServiceMessage findById(ServiceMessage serviceMessage) {
+        return findById(serviceMessage.getId());
     }
 
     /**
