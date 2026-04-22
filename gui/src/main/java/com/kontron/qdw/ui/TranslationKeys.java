@@ -283,7 +283,9 @@ public interface TranslationKeys {
     String COL_SERIALOBJECTWITHTRACEBOMVIEW_SEROBJTBOMPRODUCTIONDATE = "col_serialobjectwithtracebomview_serobjtbomproductiondate";
     String COL_SERIALOBJECTWITHTRACEBOMVIEW_SEROBJTBOMSUPPLIERNAME = "col_serialobjectwithtracebomview_serobjtbomsuppliername";
     String COL_SERVICEMESSAGEOPENVIEW_BASICFINISHDATE = "col_servicemessageopenview_basicfinishdate";
+    String COL_SERVICEMESSAGEOPENVIEW_BASICFINISHDATE_TOOLTIP = "col_servicemessageopenview_basicfinishdate_tooltip";
     String COL_SERVICEMESSAGEOPENVIEW_BASICSTARTDATE = "col_servicemessageopenview_basicstartdate";
+    String COL_SERVICEMESSAGEOPENVIEW_BASICSTARTDATE_TOOLTIP = "col_servicemessageopenview_basicstartdate_tooltip";
     String COL_SERVICEMESSAGEOPENVIEW_CUSTOMERFAILURE = "col_servicemessageopenview_customerfailure";
     String COL_SERVICEMESSAGEOPENVIEW_DEFECTCOMPONENT = "col_servicemessageopenview_defectcomponent";
     String COL_SERVICEMESSAGEOPENVIEW_DELIVERYNOTENUMBER = "col_servicemessageopenview_deliverynotenumber";
@@ -305,6 +307,7 @@ public interface TranslationKeys {
     String COL_SERVICEMESSAGEOPENVIEW_REPAIRERRORCODENAME = "col_servicemessageopenview_repairerrorcodename";
     String COL_SERVICEMESSAGEOPENVIEW_REPAIRERRORCODESHORTTEXT = "col_servicemessageopenview_repairerrorcodeshorttext";
     String COL_SERVICEMESSAGEOPENVIEW_REPAIRLOCATIONCODE = "col_servicemessageopenview_repairlocationcode";
+    String COL_SERVICEMESSAGEOPENVIEW_REPAIRLOCATIONCODE_TOOLTIP = "col_servicemessageopenview_repairlocationcode_tooltip";
     String COL_SERVICEMESSAGEOPENVIEW_REPAIRSERVICENAME = "col_servicemessageopenview_repairservicename";
     String COL_SERVICEMESSAGEOPENVIEW_REPAIRSTATENAME = "col_servicemessageopenview_repairstatename";
     String COL_SERVICEMESSAGEOPENVIEW_REPAIRTASKCODE = "col_servicemessageopenview_repairtaskcode";
@@ -453,6 +456,7 @@ public interface TranslationKeys {
     String FORM_CREATENEWBUSINESSUNITDIALOG_TITLE = "form_createnewbusinessunitdialog_title";
     String FORM_CREATENEWCOUNTRYDIALOG_TITLE = "form_createnewcountrydialog_title";
     String FORM_CREATENEWCUSTOMERDIALOG_TITLE = "form_createnewcustomerdialog_title";
+    String FORM_CREATENEWFAULTANALYSISDIALOG_TITLE = "form_createnewfaultanalysisdialog_title";
     String FORM_CREATENEWLOCATIONDIALOG_TITLE = "form_createnewlocationdialog_title";
     String FORM_CREATENEWMATERIALCLASSDIALOG_TITLE = "form_createnewmaterialclassdialog_title";
     String FORM_CREATENEWMATERIALDIALOG_TITLE = "form_createnewmaterialdialog_title";
@@ -469,6 +473,7 @@ public interface TranslationKeys {
     String FORM_EDITBUSINESSUNITDIALOG_TITLE = "form_editbusinessunitdialog_title";
     String FORM_EDITCOUNTRYDIALOG_TITLE = "form_editcountrydialog_title";
     String FORM_EDITCUSTOMERDIALOG_TITLE = "form_editcustomerdialog_title";
+    String FORM_EDITFAULTANALYSISDIALOG_TITLE = "form_editfaultanalysisdialog_title";
     String FORM_EDITLOCATIONDIALOG_TITLE = "form_editlocationdialog_title";
     String FORM_EDITMATERIALCLASSDIALOG_TITLE = "form_editmaterialclassdialog_title";
     String FORM_EDITMATERIALDIALOG_TITLE = "form_editmaterialdialog_title";
@@ -481,6 +486,7 @@ public interface TranslationKeys {
     String FORM_EDITUSERDIALOG_TITLE = "form_edituserdialog_title";
     String FORM_EDITUSERSETTINGSDIALOG_TITLE = "form_editusersettingsdialog_title";
     String FORM_EDITVERTICALSECTORDIALOG_TITLE = "form_editverticalsectordialog_title";
+    String FORM_FAULTANALYSISVIEW_TITLE = "form_faultanalysisview_title";
     String FORM_LOCATIONVIEW_TITLE = "form_locationview_title";
     String FORM_MATERIALCLASSVIEW_TITLE = "form_materialclassview_title";
     String FORM_MATERIALIZEDARRIVALSHIPMENTVIEW_TITLE = "form_materializedarrivalshipmentview_title";
@@ -508,6 +514,7 @@ public interface TranslationKeys {
     String FORM_VERTICALSECTORVIEW_TITLE = "form_verticalsectorview_title";
     String FORM_VIEWARRIVALDIALOG_TITLE = "form_viewarrivaldialog_title";
     String FORM_VIEWBOMITEMDIALOG_TITLE = "form_viewbomitemdialog_title";
+    String FORM_VIEWFAULTANALYSISDIALOG_TITLE = "form_viewfaultanalysisdialog_title";
     String FORM_VIEWILLEGALTRACEBOMITEMDIALOG_TITLE = "form_viewillegaltracebomitemdialog_title";
     String FORM_VIEWMATERIALDIALOG_TITLE = "form_viewmaterialdialog_title";
     String FORM_VIEWMATERIALREVISIONDIALOG_TITLE = "form_viewmaterialrevisiondialog_title";
@@ -532,6 +539,7 @@ public interface TranslationKeys {
     String LBL_ASSOC_BOMITEM_MATERIALREVISION = "lbl_assoc_bomitem_materialrevision";
     String LBL_ASSOC_CUSTOMER_COUNTRY = "lbl_assoc_customer_country";
     String LBL_ASSOC_CUSTOMER_VERTICALSECTOR = "lbl_assoc_customer_verticalsector";
+    String LBL_ASSOC_FAULTANALYSIS_MAPPEDTO = "lbl_assoc_faultanalysis_mappedto";
     String LBL_ASSOC_ILLEGALTRACEBOMITEM_TRACEBOM = "lbl_assoc_illegaltracebomitem_tracebom";
     String LBL_ASSOC_MATERIAL_MATERIALCLASS = "lbl_assoc_material_materialclass";
     String LBL_ASSOC_MATERIAL_MATERIALTYPE = "lbl_assoc_material_materialtype";
@@ -606,9 +614,12 @@ public interface TranslationKeys {
     String LBL_ATTR_CUSTOMER_STREET = "lbl_attr_customer_street";
     String LBL_ATTR_CUSTOMER_ZIPCODE = "lbl_attr_customer_zipcode";
     String LBL_ATTR_CUSTOMERCODE_TOOLTIP = "lbl_attr_customercode_tooltip";
+    String LBL_ATTR_CUSTOMERFAILURE_TOOLTIP = "lbl_attr_customerfailure_tooltip";
     String LBL_ATTR_CUSTOMERORDERNUMBER_TOOLTIP = "lbl_attr_customerordernumber_tooltip";
     String LBL_ATTR_CUSTOMERSERIALNUMBER_TOOLTIP = "lbl_attr_customerserialnumber_tooltip";
+    String LBL_ATTR_DEFECTCOMPONENT_TOOLTIP = "lbl_attr_defectcomponent_tooltip";
     String LBL_ATTR_DELIVERYNOTENUMBER_TOOLTIP = "lbl_attr_deliverynotenumber_tooltip";
+    String LBL_ATTR_EPIDEMICFAILURE_TOOLTIP = "lbl_attr_epidemicfailure_tooltip";
     String LBL_ATTR_ILLEGALTRACEBOMITEM_DATECODE = "lbl_attr_illegaltracebomitem_datecode";
     String LBL_ATTR_ILLEGALTRACEBOMITEM_MANUFACTURER = "lbl_attr_illegaltracebomitem_manufacturer";
     String LBL_ATTR_ILLEGALTRACEBOMITEM_MANUFACTURERREVISION = "lbl_attr_illegaltracebomitem_manufacturerrevision";
@@ -732,6 +743,7 @@ public interface TranslationKeys {
     String LBL_ATTR_PRODUCTIONDATE_TOOLTIP = "lbl_attr_productiondate_tooltip";
     String LBL_ATTR_PRODUCTIONORDERNUMBER_TOOLTIP = "lbl_attr_productionordernumber_tooltip";
     String LBL_ATTR_PURCHASEORDERNUMBER_TOOLTIP = "lbl_attr_purchaseordernumber_tooltip";
+    String LBL_ATTR_REPAIRARRIVALDATE_TOOLTIP = "lbl_attr_repairarrivaldate_tooltip";
     String LBL_ATTR_REPAIRERRORCODE_GROUPNAME = "lbl_attr_repairerrorcode_groupname";
     String LBL_ATTR_REPAIRERRORCODE_NAME = "lbl_attr_repairerrorcode_name";
     String LBL_ATTR_REPAIRSERVICE_NAME = "lbl_attr_repairservice_name";
@@ -759,6 +771,7 @@ public interface TranslationKeys {
     String LBL_ATTR_SERVICEMESSAGE_ORIGIN = "lbl_attr_servicemessage_origin";
     String LBL_ATTR_SERVICEMESSAGE_REPAIRDESCRIPTION = "lbl_attr_servicemessage_repairdescription";
     String LBL_ATTR_SERVICEMESSAGE_SERVICEMESSAGEID = "lbl_attr_servicemessage_servicemessageid";
+    String LBL_ATTR_SERVICENOTIFICATIONNUMBER_TOOLTIP = "lbl_attr_servicenotificationnumber_tooltip";
     String LBL_ATTR_SERVICEORDER_DOCUMENTDATE = "lbl_attr_serviceorder_documentdate";
     String LBL_ATTR_SERVICEORDER_SERVICEORDERTYPE = "lbl_attr_serviceorder_serviceordertype";
     String LBL_ATTR_SERVICEORDERTYPE_TOOLTIP = "lbl_attr_serviceordertype_tooltip";

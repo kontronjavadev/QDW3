@@ -2,7 +2,6 @@ package com.kontron.qdw.domain.mv;
 
 import jakarta.validation.constraints.*;
 import com.kontron.qdw.domain.serial.*;
-import java.util.*;
 import java.time.*;
 import com.kontron.qdw.domain.material.*;
 import jakarta.persistence.*;

@@ -163,9 +163,8 @@ public class NavigatorView implements Serializable {
                         req.getContextPath() + "/view/MaterialRevisionView.jsf"), itemGroup0003);
 
             if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY, ROLE_SUPERUSER))
-                new DefaultTreeNode<>(VIEW_TYPE,
-                        new TreeNavigatorItem(bundle.getString(FORM_MATERIALVIEW_TITLE), req.getContextPath() + "/view/MaterialView.jsf"),
-                        itemGroup0003);
+                new DefaultTreeNode<>(VIEW_TYPE, new TreeNavigatorItem(bundle.getString(FORM_MATERIALVIEW_TITLE),
+                        req.getContextPath() + "/view/MaterialView.jsf"), itemGroup0003);
         }
 
         if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY)) {
@@ -258,6 +257,11 @@ public class NavigatorView implements Serializable {
                 final var itemGroup0006 = new DefaultTreeNode<>(FOLDER_TYPE, new TreeNavigatorItem(bundle.getString(FG_SERVICE_MASTER_DATA)),
                         itemGroup0005);
                 itemGroup0006.setExpanded(true);
+
+                // Symptoms
+                if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR))
+                    new DefaultTreeNode<>(VIEW_TYPE, new TreeNavigatorItem(bundle.getString(FORM_FAULTANALYSISVIEW_TITLE),
+                            req.getContextPath() + "/view/FaultAnalysisView.jsf"), itemGroup0006);
             }
 
             // Materialized service orders

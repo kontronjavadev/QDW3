@@ -4295,7 +4295,7 @@
   <net.sourceforge.jbizmo.model.java:Namespace name="serial" parent="/4" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="service" parent="/2" javaTypes="/408 /414 /429 /431 /433 /435 /437 /439 /441" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="service" parent="/1" javaTypes="/407 /413 /428 /430 /432 /434 /436 /438 /440" project="/0"/>
-  <net.sourceforge.jbizmo.model.java:Namespace name="service" parent="/3" javaTypes="/406 /412 /419 /427 /426 /422 /423 /425 /421 /424 /420" project="/0"/>
+  <net.sourceforge.jbizmo.model.java:Namespace name="service" parent="/3" javaTypes="/406 /412 /419 /427 /426 /422 /423 /425 /421 /424 /420 /445 /449 /452 /456" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="service" parent="/4" project="/0"/>
   <net.sourceforge.jbizmo.model.client:Form name="AggregatedArrivalView" formType="SEARCHABLE_VIEW" formGroup="/247" title="Aggregated arrivals" formPanels="/261" dTO="/263" roles="/0/@roles.0 /0/@roles.1" boundaryMethod="/264/@boundaryMethods.0">
     <actions name="actionDelete" description="Delete selected aggregated arrival" boundaryMethod="/264/@boundaryMethods.2" type="DELETE"/>
@@ -8424,7 +8424,7 @@
     </attributes>
   </net.sourceforge.jbizmo.model.dto:DTOBean>
   <net.sourceforge.jbizmo.model.client:FormGroup name="Service" groupOrder="5" forms="/397 /403 /415 /409" roles="/0/@roles.0 /0/@roles.1" project="/0">
-    <childGroups name="Master data" parentGroup="/396" roles="/0/@roles.0"/>
+    <childGroups name="Master data" parentGroup="/396" forms="/450 /446 /453 /442" roles="/0/@roles.0"/>
   </net.sourceforge.jbizmo.model.client:FormGroup>
   <net.sourceforge.jbizmo.model.client:Form name="MaterializedServiceMessageView" formType="SEARCHABLE_VIEW" formGroup="/396" title="Materialized service orders" formPanels="/398" dTO="/400" roles="/0/@roles.0 /0/@roles.1" boundaryMethod="/401/@boundaryMethods.0">
     <actions name="actionDelete" description="Delete selected materialized service message" boundaryMethod="/401/@boundaryMethods.2" type="DELETE"/>
@@ -10171,6 +10171,25 @@
     <boundaryMethods name="findFaultAnalyses" comment="Search for fault analysis objects" returnType="/423" returnTypeModifier="List" queryStatement="from FaultAnalysis a" customStatement="" methodType="SEARCH_BY_FILTER" serviceMethod="/441/@repositoryMethods.0">
       <methodParameters name="filter" type="/0/@allSupportedTypes.12"/>
     </boundaryMethods>
+    <boundaryMethods name="findFaultAnalysisById" comment="Find fault analysis by its ID" returnType="/445" methodType="FIND_BY_ID" serviceMethod="/441/@repositoryMethods.0">
+      <methodParameters name="code" type="/0/@allSupportedTypes.12"/>
+    </boundaryMethods>
+    <boundaryMethods name="updateFaultAnalysis" comment="Update existing fault analysis object" returnType="/0/@allSupportedTypes.0" methodType="UPDATE" serviceMethod="/441/@repositoryMethods.4">
+      <methodParameters name="object" type="/449"/>
+    </boundaryMethods>
+    <boundaryMethods name="getFaultAnalysisForUpdate" comment="Find fault analysis by its ID" returnType="/449" methodType="FIND_BY_ID" serviceMethod="/441/@repositoryMethods.0">
+      <methodParameters name="code" type="/0/@allSupportedTypes.12"/>
+    </boundaryMethods>
+    <boundaryMethods name="createFaultAnalysis" comment="Create new fault analysis" returnType="/452" methodType="CREATE" serviceMethod="/441/@repositoryMethods.5">
+      <methodParameters name="object" type="/452"/>
+    </boundaryMethods>
+    <boundaryMethods name="searchAllFaultAnalyses" comment="Search for fault analysis objects" returnType="/456" returnTypeModifier="List" queryStatement="from FaultAnalysis a" customStatement="" methodType="SEARCH" serviceMethod="/441/@repositoryMethods.11"/>
+    <boundaryMethods name="deleteFaultAnalysis" comment="Delete existing fault analysis" returnType="/0/@allSupportedTypes.0" serviceMethod="/441/@repositoryMethods.7">
+      <methodParameters name="code" type="/0/@allSupportedTypes.12"/>
+    </boundaryMethods>
+    <boundaryMethods name="copy" comment="Create copy of selected fault analysis" returnType="/0/@allSupportedTypes.12" methodType="COPY" serviceMethod="/441/@repositoryMethods.6">
+      <methodParameters name="sourceObjectId" type="/0/@allSupportedTypes.12"/>
+    </boundaryMethods>
   </net.sourceforge.jbizmo.model.boundary:BoundaryBean>
   <net.sourceforge.jbizmo.model.repository:Repository name="FaultAnalysisRepository" comment="Create, read, update and delete services for fault analysis objects." namespace="/256">
     <domainObject href="package-service.xmi#//@domainObjects.8"/>
@@ -10239,4 +10258,149 @@
       </methodParameters>
     </repositoryMethods>
   </net.sourceforge.jbizmo.model.repository:Repository>
+  <net.sourceforge.jbizmo.model.client:Form name="ViewFaultAnalysisDialog" formType="READONLY" formGroup="/396/@childGroups.0" title="View symptom" formPanels="/443 /444" dTO="/445" roles="/0/@roles.0">
+    <actions name="actionGet" boundaryMethod="/440/@boundaryMethods.1" type="READ"/>
+    <domainObject href="package-service.xmi#//@domainObjects.8"/>
+  </net.sourceforge.jbizmo.model.client:Form>
+  <net.sourceforge.jbizmo.model.client:FormPanel name="panFaultAnalysis" label="Basic data" form="/442">
+    <fields name="txtCode" label="Code" readonly="true" width="140" dTOAttribute="/445/@attributes.0"/>
+    <fields name="cboMappedTo" colIndex="2" label="Mapped to" readonly="true" mandatory="false" fieldType="FORM_LINK" width="140" dTOAttribute="/445/@attributes.6"/>
+    <fields name="txtShortText" rowIndex="2" label="Short text" spanCols="true" readonly="true" mandatory="false" width="140" dTOAttribute="/445/@attributes.1"/>
+    <fields name="txtComment" rowIndex="3" label="Comment" spanCols="true" readonly="true" mandatory="false" fieldType="MULTI_LINE_TEXT" dTOAttribute="/445/@attributes.2"/>
+  </net.sourceforge.jbizmo.model.client:FormPanel>
+  <net.sourceforge.jbizmo.model.client:FormPanel name="panAdministration" colIndex="2" label="Administration data" form="/442">
+    <fields name="txtCreationDate" label="Creation date" readonly="true" fieldType="DATE_TIME" width="120" dTOAttribute="/445/@attributes.3"/>
+    <fields name="txtLastUpdate" rowIndex="2" label="Last update" readonly="true" mandatory="false" fieldType="DATE_TIME" width="120" dTOAttribute="/445/@attributes.4"/>
+    <fields name="txtVersion" rowIndex="3" label="Version" readonly="true" width="120" dTOAttribute="/445/@attributes.5"/>
+  </net.sourceforge.jbizmo.model.client:FormPanel>
+  <net.sourceforge.jbizmo.model.dto:DTOBean name="FaultAnalysisDTO" comment="Data transfer object for fault analysis objects" namespace="/258" standardConversion="true">
+    <domainObject href="package-service.xmi#//@domainObjects.8"/>
+    <attributes name="code">
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.0"/>
+    </attributes>
+    <attributes name="shortText">
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.1"/>
+    </attributes>
+    <attributes name="comment">
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.2"/>
+    </attributes>
+    <attributes name="creationDate">
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.3"/>
+    </attributes>
+    <attributes name="lastUpdate">
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.4"/>
+    </attributes>
+    <attributes name="version">
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.5"/>
+    </attributes>
+    <attributes name="mappedTo" referencedDTOBean="/423">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-service.xmi#//@domainObjects.8/@associations.0"/>
+    </attributes>
+  </net.sourceforge.jbizmo.model.dto:DTOBean>
+  <net.sourceforge.jbizmo.model.client:Form name="EditFaultAnalysisDialog" formGroup="/396/@childGroups.0" title="Edit symptom" formPanels="/447 /448" dTO="/449" roles="/0/@roles.0">
+    <actions name="actionUpdate" boundaryMethod="/440/@boundaryMethods.2" type="UPDATE"/>
+    <domainObject href="package-service.xmi#//@domainObjects.8"/>
+  </net.sourceforge.jbizmo.model.client:Form>
+  <net.sourceforge.jbizmo.model.client:FormPanel name="panFaultAnalysis" label="Basic data" form="/446">
+    <fields name="txtCode" label="Code" readonly="true" width="140" dTOAttribute="/449/@attributes.0"/>
+    <fields name="cboMappedTo" colIndex="2" label="Mapped to" mandatory="false" fieldType="PROPOSAL_TEXT" width="140" dTOAttribute="/449/@attributes.6"/>
+    <fields name="txtShortText" rowIndex="2" label="Short text" spanCols="true" mandatory="false" width="140" dTOAttribute="/449/@attributes.1"/>
+    <fields name="txtComment" rowIndex="3" label="Comment" spanCols="true" mandatory="false" fieldType="MULTI_LINE_TEXT" dTOAttribute="/449/@attributes.2"/>
+  </net.sourceforge.jbizmo.model.client:FormPanel>
+  <net.sourceforge.jbizmo.model.client:FormPanel name="panAdministration" colIndex="2" label="Administration data" form="/446">
+    <fields name="txtCreationDate" label="Creation date" readonly="true" fieldType="DATE_TIME" width="120" dTOAttribute="/449/@attributes.3"/>
+    <fields name="txtLastUpdate" rowIndex="2" label="Last update" readonly="true" mandatory="false" fieldType="DATE_TIME" width="120" dTOAttribute="/449/@attributes.4"/>
+    <fields name="txtVersion" rowIndex="3" label="Version" readonly="true" width="120" dTOAttribute="/449/@attributes.5"/>
+  </net.sourceforge.jbizmo.model.client:FormPanel>
+  <net.sourceforge.jbizmo.model.dto:DTOBean name="FaultAnalysisUpdateDTO" comment="Data transfer object for fault analysis objects" namespace="/258" standardConversion="true">
+    <domainObject href="package-service.xmi#//@domainObjects.8"/>
+    <attributes name="code">
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.0"/>
+    </attributes>
+    <attributes name="shortText">
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.1"/>
+    </attributes>
+    <attributes name="comment">
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.2"/>
+    </attributes>
+    <attributes name="creationDate">
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.3"/>
+    </attributes>
+    <attributes name="lastUpdate">
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.4"/>
+    </attributes>
+    <attributes name="version">
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.5"/>
+    </attributes>
+    <attributes name="mappedTo" referencedDTOBean="/423">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-service.xmi#//@domainObjects.8/@associations.0"/>
+    </attributes>
+  </net.sourceforge.jbizmo.model.dto:DTOBean>
+  <net.sourceforge.jbizmo.model.client:Form name="CreateNewFaultAnalysisDialog" formType="CREATE" formGroup="/396/@childGroups.0" title="Create new symptom" formPanels="/451" dTO="/452" roles="/0/@roles.0">
+    <actions name="actionCreate" boundaryMethod="/440/@boundaryMethods.4"/>
+    <domainObject href="package-service.xmi#//@domainObjects.8"/>
+  </net.sourceforge.jbizmo.model.client:Form>
+  <net.sourceforge.jbizmo.model.client:FormPanel name="panFaultAnalysis" label="Basic data" form="/450">
+    <fields name="txtCode" label="Code" width="140" dTOAttribute="/452/@attributes.0"/>
+    <fields name="cboMappedTo" colIndex="2" label="Mapped to" mandatory="false" fieldType="PROPOSAL_TEXT" width="140" dTOAttribute="/452/@attributes.5"/>
+    <fields name="txtShortText" rowIndex="2" label="Short text" spanCols="true" mandatory="false" width="140" dTOAttribute="/452/@attributes.1"/>
+    <fields name="txtComment" rowIndex="3" label="Comment" spanCols="true" mandatory="false" fieldType="MULTI_LINE_TEXT" dTOAttribute="/452/@attributes.2"/>
+    <fields name="txtCreationDate" rowIndex="4" visible="false" label="Creation date" readonly="true" fieldType="DATE_TIME" width="120" dTOAttribute="/452/@attributes.3"/>
+    <fields name="txtVersion" rowIndex="5" visible="false" label="Version" readonly="true" width="120" dTOAttribute="/452/@attributes.4"/>
+  </net.sourceforge.jbizmo.model.client:FormPanel>
+  <net.sourceforge.jbizmo.model.dto:DTOBean name="FaultAnalysisCreateDTO" comment="Data transfer object for fault analysis objects" namespace="/258" standardConversion="true">
+    <domainObject href="package-service.xmi#//@domainObjects.8"/>
+    <attributes name="code">
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.0"/>
+    </attributes>
+    <attributes name="shortText">
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.1"/>
+    </attributes>
+    <attributes name="comment">
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.2"/>
+    </attributes>
+    <attributes name="creationDate">
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.3"/>
+    </attributes>
+    <attributes name="version">
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.5"/>
+    </attributes>
+    <attributes name="mappedTo" referencedDTOBean="/423">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-service.xmi#//@domainObjects.8/@associations.0"/>
+    </attributes>
+  </net.sourceforge.jbizmo.model.dto:DTOBean>
+  <net.sourceforge.jbizmo.model.client:Form name="FaultAnalysisView" formType="SIMPLE_VIEW" formGroup="/396/@childGroups.0" title="Symptoms" formPanels="/454" dTO="/456" roles="/0/@roles.0" boundaryMethod="/440/@boundaryMethods.5">
+    <actions name="actionDelete" description="Delete selected fault analysis" boundaryMethod="/440/@boundaryMethods.6" roles="/0/@roles.0" type="DELETE"/>
+    <actions name="actionCreate" description="Create new fault analysis" targetForm="/450" roles="/0/@roles.0"/>
+    <actions name="actionUpdate" description="Edit fault analysis" targetForm="/446" roles="/0/@roles.0" type="UPDATE"/>
+    <actions name="actionGet" description="View fault analysis" targetForm="/442" roles="/0/@roles.0" type="READ"/>
+    <actions name="actionCopy" description="Create copy of selected fault analysis" boundaryMethod="/440/@boundaryMethods.7" roles="/0/@roles.0" type="COPY"/>
+    <domainObject href="package-service.xmi#//@domainObjects.8"/>
+  </net.sourceforge.jbizmo.model.client:Form>
+  <net.sourceforge.jbizmo.model.client:FormPanel name="FaultAnalysisPanel" form="/453" formTable="/455" dTO="/456"/>
+  <net.sourceforge.jbizmo.model.client:FormTable name="FaultAnalysisTable" formPanel="/454">
+    <fields identifier="true" width="150" title="Code" dTOAttribute="/456/@attributes.0"/>
+    <fields colIndex="2" width="250" title="Short text" dTOAttribute="/456/@attributes.1"/>
+    <fields colIndex="3" width="250" title="Comment" dTOAttribute="/456/@attributes.2"/>
+    <fields colIndex="4" width="120" title="Creation date" fieldType="LOCAL_DATE_TIME" dTOAttribute="/456/@attributes.3"/>
+    <fields colIndex="5" width="120" title="Last update" fieldType="LOCAL_DATE_TIME" dTOAttribute="/456/@attributes.4"/>
+  </net.sourceforge.jbizmo.model.client:FormTable>
+  <net.sourceforge.jbizmo.model.dto:DTOBean name="FaultAnalysisSearchDTO" comment="DTO for fault analysis objects" namespace="/258">
+    <domainObject href="package-service.xmi#//@domainObjects.8"/>
+    <attributes name="code" selectToken="a.code">
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.0"/>
+    </attributes>
+    <attributes name="shortText" selectToken="a.shortText">
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.1"/>
+    </attributes>
+    <attributes name="comment" selectToken="a.comment">
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.2"/>
+    </attributes>
+    <attributes name="creationDate" selectToken="a.creationDate">
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.3"/>
+    </attributes>
+    <attributes name="lastUpdate" selectToken="a.lastUpdate">
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.4"/>
+    </attributes>
+  </net.sourceforge.jbizmo.model.dto:DTOBean>
 </xmi:XMI>

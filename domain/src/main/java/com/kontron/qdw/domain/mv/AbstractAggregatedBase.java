@@ -1,6 +1,5 @@
 package com.kontron.qdw.domain.mv;
 
-import jakarta.validation.constraints.*;
 import jakarta.persistence.*;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
 
