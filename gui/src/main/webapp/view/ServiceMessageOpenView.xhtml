@@ -138,9 +138,9 @@
 				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_7" id="s_7" value="#{serviceMessageOpenView.searchObject.searchFields[7].sortOrder}">
 					<f:selectItems value="#{serviceMessageOpenView.sortOrderList}"/>
 				</p:selectOneMenu>
-				<p:inputText id="fi_7" value="#{serviceMessageOpenView.searchObject.searchFields[7].stringCriterion}" size="30"/>
+				<p:autoComplete minQueryLength="2" maxResults="10" completeMethod="#{serviceMessageOpenView.onCompleteSapNumber}" id="fi_7" value="#{serviceMessageOpenView.searchObject.searchFields[7].stringCriterion}" size="30"/>
 				<h:panelGroup id="p_7">
-					<p:inputText id="b_7" rendered="#{serviceMessageOpenView.searchObject.searchFields[7].between}" value="#{serviceMessageOpenView.searchObject.searchFields[7].stringBetweenCriterion}" size="30"/>
+				<p:autoComplete minQueryLength="2" rendered="#{serviceMessageOpenView.searchObject.searchFields[7].between}" maxResults="10" completeMethod="#{serviceMessageOpenView.onCompleteMaterialMaterialNumber}" id="b_7" value="#{serviceMessageOpenView.searchObject.searchFields[7].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
 				<h:outputLabel styleClass="label-field-optional" for="fi_8" value="#{serviceMessageOpenView.searchObject.searchFields[8].colLabel}"/>
