@@ -4295,7 +4295,7 @@
   <net.sourceforge.jbizmo.model.java:Namespace name="serial" parent="/4" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="service" parent="/2" javaTypes="/408 /414 /429 /431 /433 /435 /437 /439 /441" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="service" parent="/1" javaTypes="/407 /413 /428 /430 /432 /434 /436 /438 /440" project="/0"/>
-  <net.sourceforge.jbizmo.model.java:Namespace name="service" parent="/3" javaTypes="/406 /412 /419 /427 /426 /422 /423 /425 /421 /424 /420 /445 /449 /452 /456" project="/0"/>
+  <net.sourceforge.jbizmo.model.java:Namespace name="service" parent="/3" javaTypes="/406 /412 /419 /427 /426 /422 /423 /425 /421 /424 /420 /445 /449 /452 /456 /460 /464 /467 /471" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="service" parent="/4" project="/0"/>
   <net.sourceforge.jbizmo.model.client:Form name="AggregatedArrivalView" formType="SEARCHABLE_VIEW" formGroup="/247" title="Aggregated arrivals" formPanels="/261" dTO="/263" roles="/0/@roles.0 /0/@roles.1" boundaryMethod="/264/@boundaryMethods.0">
     <actions name="actionDelete" description="Delete selected aggregated arrival" boundaryMethod="/264/@boundaryMethods.2" type="DELETE"/>
@@ -8424,7 +8424,7 @@
     </attributes>
   </net.sourceforge.jbizmo.model.dto:DTOBean>
   <net.sourceforge.jbizmo.model.client:FormGroup name="Service" groupOrder="5" forms="/397 /403 /415 /409" roles="/0/@roles.0 /0/@roles.1" project="/0">
-    <childGroups name="Master data" parentGroup="/396" forms="/450 /446 /453 /442" roles="/0/@roles.0"/>
+    <childGroups name="Master data" parentGroup="/396" forms="/450 /465 /446 /461 /453 /442 /457 /468" roles="/0/@roles.0"/>
   </net.sourceforge.jbizmo.model.client:FormGroup>
   <net.sourceforge.jbizmo.model.client:Form name="MaterializedServiceMessageView" formType="SEARCHABLE_VIEW" formGroup="/396" title="Materialized service orders" formPanels="/398" dTO="/400" roles="/0/@roles.0 /0/@roles.1" boundaryMethod="/401/@boundaryMethods.0">
     <actions name="actionDelete" description="Delete selected materialized service message" boundaryMethod="/401/@boundaryMethods.2" type="DELETE"/>
@@ -9691,6 +9691,25 @@
     <boundaryMethods name="findListRepairErrorCode" comment="Find repair error code by its ID" returnType="/424" methodType="FIND_BY_ID" serviceMethod="/429/@repositoryMethods.0">
       <methodParameters name="id" type="/0/@allSupportedTypes.12"/>
     </boundaryMethods>
+    <boundaryMethods name="findRepairErrorCodeById" comment="Find repair error code by its ID" returnType="/460" methodType="FIND_BY_ID" serviceMethod="/429/@repositoryMethods.0">
+      <methodParameters name="code" type="/0/@allSupportedTypes.12"/>
+    </boundaryMethods>
+    <boundaryMethods name="updateRepairErrorCode" comment="Update existing repair error code object" returnType="/0/@allSupportedTypes.0" methodType="UPDATE" serviceMethod="/429/@repositoryMethods.4">
+      <methodParameters name="object" type="/464"/>
+    </boundaryMethods>
+    <boundaryMethods name="getRepairErrorCodeForUpdate" comment="Find repair error code by its ID" returnType="/464" methodType="FIND_BY_ID" serviceMethod="/429/@repositoryMethods.0">
+      <methodParameters name="code" type="/0/@allSupportedTypes.12"/>
+    </boundaryMethods>
+    <boundaryMethods name="createRepairErrorCode" comment="Create new repair error code" returnType="/467" methodType="CREATE" serviceMethod="/429/@repositoryMethods.5">
+      <methodParameters name="object" type="/467"/>
+    </boundaryMethods>
+    <boundaryMethods name="searchAllRepairErrorCodes" comment="Search for repair error code objects" returnType="/471" returnTypeModifier="List" queryStatement="from RepairErrorCode a" customStatement="" methodType="SEARCH" serviceMethod="/429/@repositoryMethods.15"/>
+    <boundaryMethods name="deleteRepairErrorCode" comment="Delete existing repair error code" returnType="/0/@allSupportedTypes.0" serviceMethod="/429/@repositoryMethods.7">
+      <methodParameters name="code" type="/0/@allSupportedTypes.12"/>
+    </boundaryMethods>
+    <boundaryMethods name="copy" comment="Create copy of selected repair error code" returnType="/0/@allSupportedTypes.12" methodType="COPY" serviceMethod="/429/@repositoryMethods.6">
+      <methodParameters name="sourceObjectId" type="/0/@allSupportedTypes.12"/>
+    </boundaryMethods>
   </net.sourceforge.jbizmo.model.boundary:BoundaryBean>
   <net.sourceforge.jbizmo.model.repository:Repository name="RepairErrorCodeRepository" comment="Create, read, update and delete services for repair error code objects." namespace="/256">
     <domainObject href="package-service.xmi#//@domainObjects.5"/>
@@ -10401,6 +10420,199 @@
     </attributes>
     <attributes name="lastUpdate" selectToken="a.lastUpdate">
       <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.4"/>
+    </attributes>
+  </net.sourceforge.jbizmo.model.dto:DTOBean>
+  <net.sourceforge.jbizmo.model.client:Form name="ViewRepairErrorCodeDialog" formType="READONLY" formGroup="/396/@childGroups.0" title="View cause code" formPanels="/458 /459" dTO="/460" roles="/0/@roles.0">
+    <actions name="actionGet" boundaryMethod="/428/@boundaryMethods.2" type="READ"/>
+    <domainObject href="package-service.xmi#//@domainObjects.5"/>
+  </net.sourceforge.jbizmo.model.client:Form>
+  <net.sourceforge.jbizmo.model.client:FormPanel name="panRepairErrorCode" label="Basic data" form="/457">
+    <fields name="txtCode" label="Code" readonly="true" width="140" dTOAttribute="/460/@attributes.2"/>
+    <fields name="chkActive" colIndex="2" label="Active" readonly="true" fieldType="CHECKBOX" dTOAttribute="/460/@attributes.5"/>
+    <fields name="txtName" rowIndex="2" label="Name" readonly="true" width="140" dTOAttribute="/460/@attributes.0"/>
+    <fields name="txtShortText" colIndex="2" rowIndex="2" label="Short text" readonly="true" mandatory="false" width="140" dTOAttribute="/460/@attributes.3"/>
+    <fields name="txtGroupName" rowIndex="3" label="Group name" readonly="true" mandatory="false" width="140" dTOAttribute="/460/@attributes.1"/>
+    <fields name="cboMappedTo" colIndex="2" rowIndex="3" label="Mapped to" readonly="true" mandatory="false" fieldType="FORM_LINK" width="140" dTOAttribute="/460/@attributes.9"/>
+    <fields name="txtComment" rowIndex="4" label="Comment" spanCols="true" readonly="true" mandatory="false" fieldType="MULTI_LINE_TEXT" dTOAttribute="/460/@attributes.4"/>
+  </net.sourceforge.jbizmo.model.client:FormPanel>
+  <net.sourceforge.jbizmo.model.client:FormPanel name="panAdministration" colIndex="2" label="Administration data" form="/457">
+    <fields name="txtCreationDate" label="Creation date" readonly="true" fieldType="DATE_TIME" width="120" dTOAttribute="/460/@attributes.6"/>
+    <fields name="txtLastUpdate" rowIndex="2" label="Last update" readonly="true" mandatory="false" fieldType="DATE_TIME" width="120" dTOAttribute="/460/@attributes.7"/>
+    <fields name="txtVersion" rowIndex="3" label="Version" readonly="true" width="120" dTOAttribute="/460/@attributes.8"/>
+  </net.sourceforge.jbizmo.model.client:FormPanel>
+  <net.sourceforge.jbizmo.model.dto:DTOBean name="RepairErrorCodeDTO" comment="Data transfer object for repair error code objects" namespace="/258" standardConversion="true">
+    <domainObject href="package-service.xmi#//@domainObjects.5"/>
+    <attributes name="name">
+      <domainAttribute href="package-service.xmi#//@domainObjects.5/@attributes.0"/>
+    </attributes>
+    <attributes name="groupName">
+      <domainAttribute href="package-service.xmi#//@domainObjects.5/@attributes.1"/>
+    </attributes>
+    <attributes name="code">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.0"/>
+    </attributes>
+    <attributes name="shortText">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.1"/>
+    </attributes>
+    <attributes name="comment">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.2"/>
+    </attributes>
+    <attributes name="active">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.3"/>
+    </attributes>
+    <attributes name="creationDate">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.4"/>
+    </attributes>
+    <attributes name="lastUpdate">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.5"/>
+    </attributes>
+    <attributes name="version">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.6"/>
+    </attributes>
+    <attributes name="mappedTo" referencedDTOBean="/424">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-service.xmi#//@domainObjects.5/@associations.0"/>
+    </attributes>
+  </net.sourceforge.jbizmo.model.dto:DTOBean>
+  <net.sourceforge.jbizmo.model.client:Form name="EditRepairErrorCodeDialog" formGroup="/396/@childGroups.0" title="Edit cause code" formPanels="/462 /463" dTO="/464" roles="/0/@roles.0">
+    <actions name="actionUpdate" boundaryMethod="/428/@boundaryMethods.3" type="UPDATE"/>
+    <domainObject href="package-service.xmi#//@domainObjects.5"/>
+  </net.sourceforge.jbizmo.model.client:Form>
+  <net.sourceforge.jbizmo.model.client:FormPanel name="panRepairErrorCode" label="Basic data" form="/461">
+    <fields name="txtCode" label="Code" readonly="true" width="140" dTOAttribute="/464/@attributes.2"/>
+    <fields name="chkActive" colIndex="2" label="Active" fieldType="CHECKBOX" dTOAttribute="/464/@attributes.5"/>
+    <fields name="txtName" rowIndex="2" label="Name" width="140" dTOAttribute="/464/@attributes.0"/>
+    <fields name="txtShortText" colIndex="2" rowIndex="2" label="Short text" mandatory="false" width="140" dTOAttribute="/464/@attributes.3"/>
+    <fields name="txtGroupName" rowIndex="3" label="Group name" mandatory="false" width="140" dTOAttribute="/464/@attributes.1"/>
+    <fields name="cboMappedTo" colIndex="2" rowIndex="3" label="Mapped to" mandatory="false" fieldType="PROPOSAL_TEXT" width="140" dTOAttribute="/464/@attributes.9"/>
+    <fields name="txtComment" rowIndex="4" label="Comment" spanCols="true" mandatory="false" fieldType="MULTI_LINE_TEXT" dTOAttribute="/464/@attributes.4"/>
+  </net.sourceforge.jbizmo.model.client:FormPanel>
+  <net.sourceforge.jbizmo.model.client:FormPanel name="panAdministration" colIndex="2" label="Administration data" form="/461">
+    <fields name="txtCreationDate" label="Creation date" readonly="true" fieldType="DATE_TIME" width="120" dTOAttribute="/464/@attributes.6"/>
+    <fields name="txtLastUpdate" rowIndex="2" label="Last update" readonly="true" mandatory="false" fieldType="DATE_TIME" width="120" dTOAttribute="/464/@attributes.7"/>
+    <fields name="txtVersion" rowIndex="3" label="Version" readonly="true" width="120" dTOAttribute="/464/@attributes.8"/>
+  </net.sourceforge.jbizmo.model.client:FormPanel>
+  <net.sourceforge.jbizmo.model.dto:DTOBean name="RepairErrorCodeUpdateDTO" comment="Data transfer object for repair error code objects" namespace="/258" standardConversion="true">
+    <domainObject href="package-service.xmi#//@domainObjects.5"/>
+    <attributes name="name">
+      <domainAttribute href="package-service.xmi#//@domainObjects.5/@attributes.0"/>
+    </attributes>
+    <attributes name="groupName">
+      <domainAttribute href="package-service.xmi#//@domainObjects.5/@attributes.1"/>
+    </attributes>
+    <attributes name="code">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.0"/>
+    </attributes>
+    <attributes name="shortText">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.1"/>
+    </attributes>
+    <attributes name="comment">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.2"/>
+    </attributes>
+    <attributes name="active">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.3"/>
+    </attributes>
+    <attributes name="creationDate">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.4"/>
+    </attributes>
+    <attributes name="lastUpdate">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.5"/>
+    </attributes>
+    <attributes name="version">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.6"/>
+    </attributes>
+    <attributes name="mappedTo" referencedDTOBean="/424">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-service.xmi#//@domainObjects.5/@associations.0"/>
+    </attributes>
+  </net.sourceforge.jbizmo.model.dto:DTOBean>
+  <net.sourceforge.jbizmo.model.client:Form name="CreateNewRepairErrorCodeDialog" formType="CREATE" formGroup="/396/@childGroups.0" title="Create new cause code" formPanels="/466" dTO="/467" roles="/0/@roles.0">
+    <actions name="actionCreate" boundaryMethod="/428/@boundaryMethods.5"/>
+    <domainObject href="package-service.xmi#//@domainObjects.5"/>
+  </net.sourceforge.jbizmo.model.client:Form>
+  <net.sourceforge.jbizmo.model.client:FormPanel name="panRepairErrorCode" label="Basic data" form="/465">
+    <fields name="txtCode" label="Code" width="140" dTOAttribute="/467/@attributes.2"/>
+    <fields name="chkActive" colIndex="2" label="Active" fieldType="CHECKBOX" defaultValue="USE_DEFAULT" dTOAttribute="/467/@attributes.5"/>
+    <fields name="txtName" rowIndex="2" label="Name" width="140" dTOAttribute="/467/@attributes.0"/>
+    <fields name="txtShortText" colIndex="2" rowIndex="2" label="Short text" mandatory="false" width="140" dTOAttribute="/467/@attributes.3"/>
+    <fields name="txtGroupName" rowIndex="3" label="Group name" mandatory="false" width="140" dTOAttribute="/467/@attributes.1"/>
+    <fields name="cboMappedTo" colIndex="2" rowIndex="3" label="Mapped to" mandatory="false" fieldType="PROPOSAL_TEXT" width="140" dTOAttribute="/467/@attributes.8"/>
+    <fields name="txtComment" rowIndex="4" label="Comment" spanCols="true" mandatory="false" fieldType="MULTI_LINE_TEXT" dTOAttribute="/467/@attributes.4"/>
+    <fields name="txtCreationDate" rowIndex="5" visible="false" label="Creation date" readonly="true" fieldType="DATE_TIME" width="120" dTOAttribute="/467/@attributes.6"/>
+    <fields name="txtVersion" rowIndex="6" visible="false" label="Version" readonly="true" width="120" dTOAttribute="/467/@attributes.7"/>
+  </net.sourceforge.jbizmo.model.client:FormPanel>
+  <net.sourceforge.jbizmo.model.dto:DTOBean name="RepairErrorCodeCreateDTO" comment="Data transfer object for repair error code objects" namespace="/258" standardConversion="true">
+    <domainObject href="package-service.xmi#//@domainObjects.5"/>
+    <attributes name="name">
+      <domainAttribute href="package-service.xmi#//@domainObjects.5/@attributes.0"/>
+    </attributes>
+    <attributes name="groupName">
+      <domainAttribute href="package-service.xmi#//@domainObjects.5/@attributes.1"/>
+    </attributes>
+    <attributes name="code">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.0"/>
+    </attributes>
+    <attributes name="shortText">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.1"/>
+    </attributes>
+    <attributes name="comment">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.2"/>
+    </attributes>
+    <attributes name="active">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.3"/>
+    </attributes>
+    <attributes name="creationDate">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.4"/>
+    </attributes>
+    <attributes name="version">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.6"/>
+    </attributes>
+    <attributes name="mappedTo" referencedDTOBean="/424">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-service.xmi#//@domainObjects.5/@associations.0"/>
+    </attributes>
+  </net.sourceforge.jbizmo.model.dto:DTOBean>
+  <net.sourceforge.jbizmo.model.client:Form name="RepairErrorCodeView" formType="SIMPLE_VIEW" formGroup="/396/@childGroups.0" title="Repair cause codes" formPanels="/469" dTO="/471" roles="/0/@roles.0" boundaryMethod="/428/@boundaryMethods.6">
+    <actions name="actionDelete" description="Delete selected repair error code" boundaryMethod="/428/@boundaryMethods.7" roles="/0/@roles.0" type="DELETE"/>
+    <actions name="actionCreate" description="Create new repair error code" targetForm="/465" roles="/0/@roles.0"/>
+    <actions name="actionUpdate" description="Edit repair error code" targetForm="/461" roles="/0/@roles.0" type="UPDATE"/>
+    <actions name="actionGet" description="View repair error code" targetForm="/457" roles="/0/@roles.0" type="READ"/>
+    <actions name="actionCopy" description="Create copy of selected repair error code" boundaryMethod="/428/@boundaryMethods.8" roles="/0/@roles.0" type="COPY"/>
+    <domainObject href="package-service.xmi#//@domainObjects.5"/>
+  </net.sourceforge.jbizmo.model.client:Form>
+  <net.sourceforge.jbizmo.model.client:FormPanel name="RepairErrorCodePanel" form="/468" formTable="/470" dTO="/471"/>
+  <net.sourceforge.jbizmo.model.client:FormTable name="RepairErrorCodeTable" formPanel="/469">
+    <fields identifier="true" title="Code" dTOAttribute="/471/@attributes.2"/>
+    <fields colIndex="2" width="250" title="Name" dTOAttribute="/471/@attributes.0"/>
+    <fields colIndex="3" width="250" title="Short text" dTOAttribute="/471/@attributes.3"/>
+    <fields colIndex="4" width="150" title="Group name" dTOAttribute="/471/@attributes.1"/>
+    <fields colIndex="5" width="150" title="Comment" dTOAttribute="/471/@attributes.4"/>
+    <fields colIndex="6" width="70" title="Active" fieldType="BOOLEAN" dTOAttribute="/471/@attributes.5"/>
+    <fields colIndex="7" width="120" title="Creation date" fieldType="LOCAL_DATE_TIME" dTOAttribute="/471/@attributes.6"/>
+    <fields colIndex="8" width="120" title="Last update" fieldType="LOCAL_DATE_TIME" dTOAttribute="/471/@attributes.7"/>
+  </net.sourceforge.jbizmo.model.client:FormTable>
+  <net.sourceforge.jbizmo.model.dto:DTOBean name="RepairErrorCodeSearchDTO" comment="DTO for repair error code objects" namespace="/258">
+    <domainObject href="package-service.xmi#//@domainObjects.5"/>
+    <attributes name="name" selectToken="a.name">
+      <domainAttribute href="package-service.xmi#//@domainObjects.5/@attributes.0"/>
+    </attributes>
+    <attributes name="groupName" selectToken="a.groupName">
+      <domainAttribute href="package-service.xmi#//@domainObjects.5/@attributes.1"/>
+    </attributes>
+    <attributes name="code" selectToken="a.code">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.0"/>
+    </attributes>
+    <attributes name="shortText" selectToken="a.shortText">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.1"/>
+    </attributes>
+    <attributes name="comment" selectToken="a.comment">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.2"/>
+    </attributes>
+    <attributes name="active" selectToken="a.active">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.3"/>
+    </attributes>
+    <attributes name="creationDate" selectToken="a.creationDate">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.4"/>
+    </attributes>
+    <attributes name="lastUpdate" selectToken="a.lastUpdate">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.5"/>
     </attributes>
   </net.sourceforge.jbizmo.model.dto:DTOBean>
 </xmi:XMI>

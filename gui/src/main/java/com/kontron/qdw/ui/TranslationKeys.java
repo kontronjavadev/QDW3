@@ -464,6 +464,7 @@ public interface TranslationKeys {
     String FORM_CREATENEWMOVEMENTTYPEDIALOG_TITLE = "form_createnewmovementtypedialog_title";
     String FORM_CREATENEWNOTIFICATIONDIALOG_TITLE = "form_createnewnotificationdialog_title";
     String FORM_CREATENEWPLANTDIALOG_TITLE = "form_createnewplantdialog_title";
+    String FORM_CREATENEWREPAIRERRORCODEDIALOG_TITLE = "form_createnewrepairerrorcodedialog_title";
     String FORM_CREATENEWROLEDIALOG_TITLE = "form_createnewroledialog_title";
     String FORM_CREATENEWSUPPLIERDIALOG_TITLE = "form_createnewsupplierdialog_title";
     String FORM_CREATENEWUSERDIALOG_TITLE = "form_createnewuserdialog_title";
@@ -482,6 +483,7 @@ public interface TranslationKeys {
     String FORM_EDITMOVEMENTTYPEDIALOG_TITLE = "form_editmovementtypedialog_title";
     String FORM_EDITNOTIFICATIONDIALOG_TITLE = "form_editnotificationdialog_title";
     String FORM_EDITPLANTDIALOG_TITLE = "form_editplantdialog_title";
+    String FORM_EDITREPAIRERRORCODEDIALOG_TITLE = "form_editrepairerrorcodedialog_title";
     String FORM_EDITSUPPLIERDIALOG_TITLE = "form_editsupplierdialog_title";
     String FORM_EDITUSERDIALOG_TITLE = "form_edituserdialog_title";
     String FORM_EDITUSERSETTINGSDIALOG_TITLE = "form_editusersettingsdialog_title";
@@ -500,6 +502,7 @@ public interface TranslationKeys {
     String FORM_NOTIFICATIONUSERRELVIEW_TITLE = "form_notificationuserrelview_title";
     String FORM_NOTIFICATIONVIEW_TITLE = "form_notificationview_title";
     String FORM_PLANTVIEW_TITLE = "form_plantview_title";
+    String FORM_REPAIRERRORCODEVIEW_TITLE = "form_repairerrorcodeview_title";
     String FORM_RESETPASSWORDDIALOG_INVALIDLINK = "form_resetpassworddialog_invalidlink";
     String FORM_RESETPASSWORDDIALOG_TITLE = "form_resetpassworddialog_title";
     String FORM_ROLEVIEW_TITLE = "form_roleview_title";
@@ -518,6 +521,7 @@ public interface TranslationKeys {
     String FORM_VIEWILLEGALTRACEBOMITEMDIALOG_TITLE = "form_viewillegaltracebomitemdialog_title";
     String FORM_VIEWMATERIALDIALOG_TITLE = "form_viewmaterialdialog_title";
     String FORM_VIEWMATERIALREVISIONDIALOG_TITLE = "form_viewmaterialrevisiondialog_title";
+    String FORM_VIEWREPAIRERRORCODEDIALOG_TITLE = "form_viewrepairerrorcodedialog_title";
     String FORM_VIEWROLEDIALOG_TITLE = "form_viewroledialog_title";
     String FORM_VIEWSERIALOBJECTDIALOG_TITLE = "form_viewserialobjectdialog_title";
     String FORM_VIEWSERVICEMESSAGEDIALOG_TITLE = "form_viewservicemessagedialog_title";
@@ -547,6 +551,7 @@ public interface TranslationKeys {
     String LBL_ASSOC_MATERIALREVISION_MATERIAL = "lbl_assoc_materialrevision_material";
     String LBL_ASSOC_MATERIALREVISION_PLANT = "lbl_assoc_materialrevision_plant";
     String LBL_ASSOC_NOTIFICATION_INITIATOR = "lbl_assoc_notification_initiator";
+    String LBL_ASSOC_REPAIRERRORCODE_MAPPEDTO = "lbl_assoc_repairerrorcode_mappedto";
     String LBL_ASSOC_SERIALOBJECT_MATERIAL = "lbl_assoc_serialobject_material";
     String LBL_ASSOC_SERIALOBJECT_PARENTOBJECT = "lbl_assoc_serialobject_parentobject";
     String LBL_ASSOC_SERIALOBJECT_TRACEBOM = "lbl_assoc_serialobject_tracebom";
