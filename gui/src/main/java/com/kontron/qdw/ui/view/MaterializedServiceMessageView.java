@@ -16,10 +16,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.kontron.qdw.boundary.mv.MaterializedServiceMessageBoundaryService;
+import com.kontron.qdw.boundary.service.FaultAnalysisBoundaryService;
 import com.kontron.qdw.domain.mv.ServiceOrderType;
 import com.kontron.qdw.dto.mv.MaterializedServiceMessageSearchDTO;
 import com.kontron.qdw.service.SavedQueryService;
 import com.kontron.qdw.ui.UserSession;
+import com.kontron.qdw.ui.view.util.OnCompleteHelper;
 import com.kontron.qdw.ui.view.util.SuperView;
 
 import jakarta.faces.application.FacesMessage;
@@ -54,6 +56,8 @@ public class MaterializedServiceMessageView extends SuperView implements Seriali
     @Generated
     private final transient MaterializedServiceMessageBoundaryService materializedServiceMessageService;
     @Generated
+    private final transient FaultAnalysisBoundaryService faultAnalysisService;
+    @Generated
     public static final String PAGE_URL = "/view/MaterializedServiceMessageView.jsf?faces-redirect=true";
     @Generated
     private String formTitle = "";
@@ -68,28 +72,23 @@ public class MaterializedServiceMessageView extends SuperView implements Seriali
     @Generated
     private String selectedSavedQuery;
 
-    /**
-     * Default constructor
-     */
+
+
     @Generated
     public MaterializedServiceMessageView() {
-        this.userSession = null;
-        this.materializedServiceMessageService = null;
-        this.queryManager = null;
+        userSession = null;
+        materializedServiceMessageService = null;
+        faultAnalysisService = null;
+        queryManager = null;
     }
 
-    /**
-     * Constructor for injecting all required beans
-     * @param userSession
-     * @param materializedServiceMessageService
-     * @param queryManager
-     */
     @Inject
     @Generated
     public MaterializedServiceMessageView(UserSession userSession, MaterializedServiceMessageBoundaryService materializedServiceMessageService,
-            SavedQueryService queryManager) {
+            FaultAnalysisBoundaryService faultAnalysisService, SavedQueryService queryManager) {
         this.userSession = userSession;
         this.materializedServiceMessageService = materializedServiceMessageService;
+        this.faultAnalysisService = faultAnalysisService;
         this.queryManager = queryManager;
     }
 
@@ -375,6 +374,14 @@ public class MaterializedServiceMessageView extends SuperView implements Seriali
         initSearchObject();
         fetchMaterializedServiceMessages();
     }
+
+
+
+    public List<String> onCompleteSymptom(String query) {
+        return OnCompleteHelper.onCompleteSymptom(faultAnalysisService, query);
+    }
+
+
 
     /**
      * @return the list of elements

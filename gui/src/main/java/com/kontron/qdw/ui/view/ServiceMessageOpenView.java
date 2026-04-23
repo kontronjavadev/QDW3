@@ -67,6 +67,8 @@ public class ServiceMessageOpenView extends SuperView implements Serializable {
     @Generated
     private final transient SupplierBoundaryService supplierService;
     @Generated
+    private final transient FaultAnalysisBoundaryService faultAnalysisService;
+    @Generated
     public static final String VIEW_ID = "com.kontron.qdw.ui.view.ServiceMessageOpenView";
     @Generated
     private final transient SavedQueryService queryManager;
@@ -75,42 +77,31 @@ public class ServiceMessageOpenView extends SuperView implements Serializable {
     @Generated
     private String selectedSavedQuery;
 
-    /**
-     * Default constructor
-     */
+
+
     @Generated
     public ServiceMessageOpenView() {
-        this.userSession = null;
-        this.serviceMessageService = null;
-        this.customerService = null;
-        this.countryService = null;
-        this.materialService = null;
-        this.repairStateService = null;
-        this.repairErrorCodeService = null;
-        this.repairServiceService = null;
-        this.supplierService = null;
-        this.queryManager = null;
+        userSession = null;
+        serviceMessageService = null;
+        customerService = null;
+        countryService = null;
+        materialService = null;
+        repairStateService = null;
+        repairErrorCodeService = null;
+        repairServiceService = null;
+        supplierService = null;
+        queryManager = null;
+        faultAnalysisService = null;
     }
 
-    /**
-     * Constructor for injecting all required beans
-     * @param userSession
-     * @param serviceMessageService
-     * @param customerService
-     * @param countryService
-     * @param materialService
-     * @param repairStateService
-     * @param repairErrorCodeService
-     * @param repairServiceService
-     * @param supplierService
-     * @param queryManager
-     */
     @Inject
     @Generated
     public ServiceMessageOpenView(UserSession userSession, ServiceMessageBoundaryService serviceMessageService,
             CustomerBoundaryService customerService, CountryBoundaryService countryService, MaterialBoundaryService materialService,
             RepairStateBoundaryService repairStateService, RepairErrorCodeBoundaryService repairErrorCodeService,
-            RepairServiceBoundaryService repairServiceService, SupplierBoundaryService supplierService, SavedQueryService queryManager) {
+            RepairServiceBoundaryService repairServiceService, SupplierBoundaryService supplierService,
+            FaultAnalysisBoundaryService faultAnalysisService,
+            SavedQueryService queryManager) {
         this.userSession = userSession;
         this.serviceMessageService = serviceMessageService;
         this.customerService = customerService;
@@ -120,8 +111,11 @@ public class ServiceMessageOpenView extends SuperView implements Serializable {
         this.repairErrorCodeService = repairErrorCodeService;
         this.repairServiceService = repairServiceService;
         this.supplierService = supplierService;
+        this.faultAnalysisService = faultAnalysisService;
         this.queryManager = queryManager;
     }
+
+
 
     /**
      * Initialize view
@@ -375,6 +369,7 @@ public class ServiceMessageOpenView extends SuperView implements Serializable {
     }
 
 
+
     /**
      * Callback method for auto-complete field
      * @param query the filter criterion inserted by the user
@@ -387,6 +382,10 @@ public class ServiceMessageOpenView extends SuperView implements Serializable {
 
     public List<String> onCompleteSapNumber(String query) {
         return OnCompleteHelper.onCompleteSapNumber(materialService, query);
+    }
+
+    public List<String> onCompleteSymptom(String query) {
+        return OnCompleteHelper.onCompleteSymptom(faultAnalysisService, query);
     }
 
     /**
