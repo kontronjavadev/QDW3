@@ -465,6 +465,7 @@ public interface TranslationKeys {
     String FORM_CREATENEWNOTIFICATIONDIALOG_TITLE = "form_createnewnotificationdialog_title";
     String FORM_CREATENEWPLANTDIALOG_TITLE = "form_createnewplantdialog_title";
     String FORM_CREATENEWREPAIRERRORCODEDIALOG_TITLE = "form_createnewrepairerrorcodedialog_title";
+    String FORM_CREATENEWREPAIRLOCATIONDIALOG_TITLE = "form_createnewrepairlocationdialog_title";
     String FORM_CREATENEWROLEDIALOG_TITLE = "form_createnewroledialog_title";
     String FORM_CREATENEWSUPPLIERDIALOG_TITLE = "form_createnewsupplierdialog_title";
     String FORM_CREATENEWUSERDIALOG_TITLE = "form_createnewuserdialog_title";
@@ -484,6 +485,7 @@ public interface TranslationKeys {
     String FORM_EDITNOTIFICATIONDIALOG_TITLE = "form_editnotificationdialog_title";
     String FORM_EDITPLANTDIALOG_TITLE = "form_editplantdialog_title";
     String FORM_EDITREPAIRERRORCODEDIALOG_TITLE = "form_editrepairerrorcodedialog_title";
+    String FORM_EDITREPAIRLOCATIONDIALOG_TITLE = "form_editrepairlocationdialog_title";
     String FORM_EDITSUPPLIERDIALOG_TITLE = "form_editsupplierdialog_title";
     String FORM_EDITUSERDIALOG_TITLE = "form_edituserdialog_title";
     String FORM_EDITUSERSETTINGSDIALOG_TITLE = "form_editusersettingsdialog_title";
@@ -503,6 +505,7 @@ public interface TranslationKeys {
     String FORM_NOTIFICATIONVIEW_TITLE = "form_notificationview_title";
     String FORM_PLANTVIEW_TITLE = "form_plantview_title";
     String FORM_REPAIRERRORCODEVIEW_TITLE = "form_repairerrorcodeview_title";
+    String FORM_REPAIRLOCATIONVIEW_TITLE = "form_repairlocationview_title";
     String FORM_RESETPASSWORDDIALOG_INVALIDLINK = "form_resetpassworddialog_invalidlink";
     String FORM_RESETPASSWORDDIALOG_TITLE = "form_resetpassworddialog_title";
     String FORM_ROLEVIEW_TITLE = "form_roleview_title";
@@ -522,6 +525,7 @@ public interface TranslationKeys {
     String FORM_VIEWMATERIALDIALOG_TITLE = "form_viewmaterialdialog_title";
     String FORM_VIEWMATERIALREVISIONDIALOG_TITLE = "form_viewmaterialrevisiondialog_title";
     String FORM_VIEWREPAIRERRORCODEDIALOG_TITLE = "form_viewrepairerrorcodedialog_title";
+    String FORM_VIEWREPAIRLOCATIONDIALOG_TITLE = "form_viewrepairlocationdialog_title";
     String FORM_VIEWROLEDIALOG_TITLE = "form_viewroledialog_title";
     String FORM_VIEWSERIALOBJECTDIALOG_TITLE = "form_viewserialobjectdialog_title";
     String FORM_VIEWSERVICEMESSAGEDIALOG_TITLE = "form_viewservicemessagedialog_title";

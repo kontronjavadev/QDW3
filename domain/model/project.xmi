@@ -4295,7 +4295,7 @@
   <net.sourceforge.jbizmo.model.java:Namespace name="serial" parent="/4" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="service" parent="/2" javaTypes="/408 /414 /429 /431 /433 /435 /437 /439 /441" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="service" parent="/1" javaTypes="/407 /413 /428 /430 /432 /434 /436 /438 /440" project="/0"/>
-  <net.sourceforge.jbizmo.model.java:Namespace name="service" parent="/3" javaTypes="/406 /412 /419 /427 /426 /422 /423 /425 /421 /424 /420 /445 /449 /452 /456 /460 /464 /467 /471" project="/0"/>
+  <net.sourceforge.jbizmo.model.java:Namespace name="service" parent="/3" javaTypes="/406 /412 /419 /427 /426 /422 /423 /425 /421 /424 /420 /445 /449 /452 /456 /460 /464 /467 /471 /475 /478 /482 /486" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="service" parent="/4" project="/0"/>
   <net.sourceforge.jbizmo.model.client:Form name="AggregatedArrivalView" formType="SEARCHABLE_VIEW" formGroup="/247" title="Aggregated arrivals" formPanels="/261" dTO="/263" roles="/0/@roles.0 /0/@roles.1" boundaryMethod="/264/@boundaryMethods.0">
     <actions name="actionDelete" description="Delete selected aggregated arrival" boundaryMethod="/264/@boundaryMethods.2" type="DELETE"/>
@@ -8424,7 +8424,7 @@
     </attributes>
   </net.sourceforge.jbizmo.model.dto:DTOBean>
   <net.sourceforge.jbizmo.model.client:FormGroup name="Service" groupOrder="5" forms="/397 /403 /415 /409" roles="/0/@roles.0 /0/@roles.1" project="/0">
-    <childGroups name="Master data" parentGroup="/396" forms="/450 /465 /446 /461 /453 /442 /457 /468" roles="/0/@roles.0"/>
+    <childGroups name="Master data" parentGroup="/396" forms="/450 /465 /476 /446 /461 /479 /453 /468 /442 /457 /472 /483" roles="/0/@roles.0"/>
   </net.sourceforge.jbizmo.model.client:FormGroup>
   <net.sourceforge.jbizmo.model.client:Form name="MaterializedServiceMessageView" formType="SEARCHABLE_VIEW" formGroup="/396" title="Materialized service orders" formPanels="/398" dTO="/400" roles="/0/@roles.0 /0/@roles.1" boundaryMethod="/401/@boundaryMethods.0">
     <actions name="actionDelete" description="Delete selected materialized service message" boundaryMethod="/401/@boundaryMethods.2" type="DELETE"/>
@@ -9969,6 +9969,25 @@
     <boundaryMethods name="findRepairLocations" comment="Search for repair location objects" returnType="/427" returnTypeModifier="List" queryStatement="from RepairLocation a" customStatement="" methodType="SEARCH_BY_FILTER" serviceMethod="/435/@repositoryMethods.0">
       <methodParameters name="filter" type="/0/@allSupportedTypes.12"/>
     </boundaryMethods>
+    <boundaryMethods name="findRepairLocationById" comment="Find repair location by its ID" returnType="/475" methodType="FIND_BY_ID" serviceMethod="/435/@repositoryMethods.0">
+      <methodParameters name="code" type="/0/@allSupportedTypes.12"/>
+    </boundaryMethods>
+    <boundaryMethods name="createRepairLocation" comment="Create new repair location" returnType="/478" methodType="CREATE" serviceMethod="/435/@repositoryMethods.5">
+      <methodParameters name="object" type="/478"/>
+    </boundaryMethods>
+    <boundaryMethods name="updateRepairLocation" comment="Update existing repair location object" returnType="/0/@allSupportedTypes.0" methodType="UPDATE" serviceMethod="/435/@repositoryMethods.4">
+      <methodParameters name="object" type="/482"/>
+    </boundaryMethods>
+    <boundaryMethods name="getRepairLocationForUpdate" comment="Find repair location by its ID" returnType="/482" methodType="FIND_BY_ID" serviceMethod="/435/@repositoryMethods.0">
+      <methodParameters name="code" type="/0/@allSupportedTypes.12"/>
+    </boundaryMethods>
+    <boundaryMethods name="deleteRepairLocation" comment="Delete existing repair location" returnType="/0/@allSupportedTypes.0" serviceMethod="/435/@repositoryMethods.7">
+      <methodParameters name="code" type="/0/@allSupportedTypes.12"/>
+    </boundaryMethods>
+    <boundaryMethods name="copy" comment="Create copy of selected repair location" returnType="/0/@allSupportedTypes.12" methodType="COPY" serviceMethod="/435/@repositoryMethods.6">
+      <methodParameters name="sourceObjectId" type="/0/@allSupportedTypes.12"/>
+    </boundaryMethods>
+    <boundaryMethods name="searchAllRepairLocations" comment="Search for repair location objects" returnType="/486" returnTypeModifier="List" queryStatement="from RepairLocation a" customStatement="" methodType="SEARCH" serviceMethod="/435/@repositoryMethods.11"/>
   </net.sourceforge.jbizmo.model.boundary:BoundaryBean>
   <net.sourceforge.jbizmo.model.repository:Repository name="RepairLocationRepository" comment="Create, read, update and delete services for repair location objects." namespace="/256">
     <domainObject href="package-service.xmi#//@domainObjects.2"/>
@@ -10613,6 +10632,139 @@
     </attributes>
     <attributes name="lastUpdate" selectToken="a.lastUpdate">
       <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.5"/>
+    </attributes>
+  </net.sourceforge.jbizmo.model.dto:DTOBean>
+  <net.sourceforge.jbizmo.model.client:Form name="ViewRepairLocationDialog" formType="READONLY" formGroup="/396/@childGroups.0" title="View repair location" formPanels="/473 /474" dTO="/475" roles="/0/@roles.0">
+    <actions name="actionGet" boundaryMethod="/434/@boundaryMethods.1" type="READ"/>
+    <domainObject href="package-service.xmi#//@domainObjects.2"/>
+  </net.sourceforge.jbizmo.model.client:Form>
+  <net.sourceforge.jbizmo.model.client:FormPanel name="panRepairLocation" label="Basic data" form="/472">
+    <fields name="txtCode" label="Code" readonly="true" width="140" dTOAttribute="/475/@attributes.0"/>
+    <fields name="txtShortText" colIndex="2" label="Short text" readonly="true" mandatory="false" width="140" dTOAttribute="/475/@attributes.1"/>
+    <fields name="txtComment" rowIndex="2" label="Comment" spanCols="true" readonly="true" mandatory="false" fieldType="MULTI_LINE_TEXT" dTOAttribute="/475/@attributes.2"/>
+  </net.sourceforge.jbizmo.model.client:FormPanel>
+  <net.sourceforge.jbizmo.model.client:FormPanel name="panAdministration" colIndex="2" label="Administration data" form="/472">
+    <fields name="txtCreationDate" label="Creation date" readonly="true" fieldType="DATE_TIME" width="120" dTOAttribute="/475/@attributes.3"/>
+    <fields name="txtLastUpdate" rowIndex="2" label="Last update" readonly="true" mandatory="false" fieldType="DATE_TIME" width="120" dTOAttribute="/475/@attributes.4"/>
+    <fields name="txtVersion" rowIndex="3" label="Version" readonly="true" width="120" dTOAttribute="/475/@attributes.5"/>
+  </net.sourceforge.jbizmo.model.client:FormPanel>
+  <net.sourceforge.jbizmo.model.dto:DTOBean name="RepairLocationDTO" comment="Data transfer object for repair location objects" namespace="/258" standardConversion="true">
+    <domainObject href="package-service.xmi#//@domainObjects.2"/>
+    <attributes name="code">
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.0"/>
+    </attributes>
+    <attributes name="shortText">
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.1"/>
+    </attributes>
+    <attributes name="comment">
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.2"/>
+    </attributes>
+    <attributes name="creationDate">
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.3"/>
+    </attributes>
+    <attributes name="lastUpdate">
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.4"/>
+    </attributes>
+    <attributes name="version">
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.5"/>
+    </attributes>
+  </net.sourceforge.jbizmo.model.dto:DTOBean>
+  <net.sourceforge.jbizmo.model.client:Form name="CreateNewRepairLocationDialog" formType="CREATE" formGroup="/396/@childGroups.0" title="Create new repair location" formPanels="/477" dTO="/478" roles="/0/@roles.0">
+    <actions name="actionCreate" boundaryMethod="/434/@boundaryMethods.2"/>
+    <domainObject href="package-service.xmi#//@domainObjects.2"/>
+  </net.sourceforge.jbizmo.model.client:Form>
+  <net.sourceforge.jbizmo.model.client:FormPanel name="panRepairLocation" label="Basic data" form="/476">
+    <fields name="txtCode" label="Code" width="140" dTOAttribute="/478/@attributes.0"/>
+    <fields name="txtShortText" colIndex="2" label="Short text" mandatory="false" width="140" dTOAttribute="/478/@attributes.1"/>
+    <fields name="txtComment" rowIndex="2" label="Comment" spanCols="true" mandatory="false" fieldType="MULTI_LINE_TEXT" dTOAttribute="/478/@attributes.2"/>
+    <fields name="txtCreationDate" rowIndex="3" visible="false" label="Creation date" readonly="true" fieldType="DATE_TIME" width="120" dTOAttribute="/478/@attributes.3"/>
+    <fields name="txtVersion" rowIndex="4" visible="false" label="Version" readonly="true" width="120" dTOAttribute="/478/@attributes.4"/>
+  </net.sourceforge.jbizmo.model.client:FormPanel>
+  <net.sourceforge.jbizmo.model.dto:DTOBean name="RepairLocationCreateDTO" comment="Data transfer object for repair location objects" namespace="/258" standardConversion="true">
+    <domainObject href="package-service.xmi#//@domainObjects.2"/>
+    <attributes name="code">
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.0"/>
+    </attributes>
+    <attributes name="shortText">
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.1"/>
+    </attributes>
+    <attributes name="comment">
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.2"/>
+    </attributes>
+    <attributes name="creationDate">
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.3"/>
+    </attributes>
+    <attributes name="version">
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.5"/>
+    </attributes>
+  </net.sourceforge.jbizmo.model.dto:DTOBean>
+  <net.sourceforge.jbizmo.model.client:Form name="EditRepairLocationDialog" formGroup="/396/@childGroups.0" title="Edit repair location" formPanels="/480 /481" dTO="/482" roles="/0/@roles.0">
+    <actions name="actionUpdate" boundaryMethod="/434/@boundaryMethods.3" type="UPDATE"/>
+    <domainObject href="package-service.xmi#//@domainObjects.2"/>
+  </net.sourceforge.jbizmo.model.client:Form>
+  <net.sourceforge.jbizmo.model.client:FormPanel name="panRepairLocation" label="Basic data" form="/479">
+    <fields name="txtCode" label="Code" readonly="true" width="140" dTOAttribute="/482/@attributes.0"/>
+    <fields name="txtShortText" colIndex="2" label="Short text" mandatory="false" width="140" dTOAttribute="/482/@attributes.1"/>
+    <fields name="txtComment" rowIndex="2" label="Comment" spanCols="true" mandatory="false" fieldType="MULTI_LINE_TEXT" dTOAttribute="/482/@attributes.2"/>
+  </net.sourceforge.jbizmo.model.client:FormPanel>
+  <net.sourceforge.jbizmo.model.client:FormPanel name="panAdministration" colIndex="2" label="Administration data" form="/479">
+    <fields name="txtCreationDate" label="Creation date" readonly="true" fieldType="DATE_TIME" width="120" dTOAttribute="/482/@attributes.3"/>
+    <fields name="txtLastUpdate" rowIndex="2" label="Last update" readonly="true" mandatory="false" fieldType="DATE_TIME" width="120" dTOAttribute="/482/@attributes.4"/>
+    <fields name="txtVersion" rowIndex="3" label="Version" readonly="true" width="120" dTOAttribute="/482/@attributes.5"/>
+  </net.sourceforge.jbizmo.model.client:FormPanel>
+  <net.sourceforge.jbizmo.model.dto:DTOBean name="RepairLocationUpdateDTO" comment="Data transfer object for repair location objects" namespace="/258" standardConversion="true">
+    <domainObject href="package-service.xmi#//@domainObjects.2"/>
+    <attributes name="code">
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.0"/>
+    </attributes>
+    <attributes name="shortText">
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.1"/>
+    </attributes>
+    <attributes name="comment">
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.2"/>
+    </attributes>
+    <attributes name="creationDate">
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.3"/>
+    </attributes>
+    <attributes name="lastUpdate">
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.4"/>
+    </attributes>
+    <attributes name="version">
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.5"/>
+    </attributes>
+  </net.sourceforge.jbizmo.model.dto:DTOBean>
+  <net.sourceforge.jbizmo.model.client:Form name="RepairLocationView" formType="SIMPLE_VIEW" formGroup="/396/@childGroups.0" title="Repair locations" formPanels="/484" dTO="/486" roles="/0/@roles.0" boundaryMethod="/434/@boundaryMethods.7">
+    <actions name="actionDelete" description="Delete selected repair location" boundaryMethod="/434/@boundaryMethods.5" roles="/0/@roles.0" type="DELETE"/>
+    <actions name="actionCreate" description="Create new repair location" targetForm="/476" roles="/0/@roles.0"/>
+    <actions name="actionUpdate" description="Edit repair location" targetForm="/479" roles="/0/@roles.0" type="UPDATE"/>
+    <actions name="actionGet" description="View repair location" targetForm="/472" roles="/0/@roles.0" type="READ"/>
+    <actions name="actionCopy" description="Create copy of selected repair location" boundaryMethod="/434/@boundaryMethods.6" roles="/0/@roles.0" type="COPY"/>
+    <domainObject href="package-service.xmi#//@domainObjects.2"/>
+  </net.sourceforge.jbizmo.model.client:Form>
+  <net.sourceforge.jbizmo.model.client:FormPanel name="RepairLocationPanel" form="/483" formTable="/485" dTO="/486"/>
+  <net.sourceforge.jbizmo.model.client:FormTable name="RepairLocationTable" formPanel="/484">
+    <fields identifier="true" width="120" title="Code" dTOAttribute="/486/@attributes.0"/>
+    <fields colIndex="2" width="250" title="Short text" dTOAttribute="/486/@attributes.1"/>
+    <fields colIndex="3" width="250" title="Comment" dTOAttribute="/486/@attributes.2"/>
+    <fields colIndex="4" width="120" title="Creation date" fieldType="LOCAL_DATE_TIME" dTOAttribute="/486/@attributes.3"/>
+    <fields colIndex="5" width="120" title="Last update" fieldType="LOCAL_DATE_TIME" dTOAttribute="/486/@attributes.4"/>
+  </net.sourceforge.jbizmo.model.client:FormTable>
+  <net.sourceforge.jbizmo.model.dto:DTOBean name="RepairLocationSearchDTO" comment="DTO for repair location objects" namespace="/258">
+    <domainObject href="package-service.xmi#//@domainObjects.2"/>
+    <attributes name="code" selectToken="a.code">
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.0"/>
+    </attributes>
+    <attributes name="shortText" selectToken="a.shortText">
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.1"/>
+    </attributes>
+    <attributes name="comment" selectToken="a.comment">
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.2"/>
+    </attributes>
+    <attributes name="creationDate" selectToken="a.creationDate">
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.3"/>
+    </attributes>
+    <attributes name="lastUpdate" selectToken="a.lastUpdate">
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.4"/>
     </attributes>
   </net.sourceforge.jbizmo.model.dto:DTOBean>
 </xmi:XMI>
