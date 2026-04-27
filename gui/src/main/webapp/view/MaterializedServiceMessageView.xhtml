@@ -107,9 +107,9 @@
 				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_4" id="s_4" value="#{materializedServiceMessageView.searchObject.searchFields[4].sortOrder}">
 					<f:selectItems value="#{materializedServiceMessageView.sortOrderList}"/>
 				</p:selectOneMenu>
-				<p:inputText id="fi_4" value="#{materializedServiceMessageView.searchObject.searchFields[4].stringCriterion}" size="30"/>
+				<p:autoComplete minQueryLength="2" maxResults="10" completeMethod="#{materializedServiceMessageView.onCompleteCountryName}" id="fi_4" value="#{materializedServiceMessageView.searchObject.searchFields[4].stringCriterion}" size="30"/>
 				<h:panelGroup id="p_4">
-					<p:inputText id="b_4" rendered="#{materializedServiceMessageView.searchObject.searchFields[4].between}" value="#{materializedServiceMessageView.searchObject.searchFields[4].stringBetweenCriterion}" size="30"/>
+					<p:autoComplete minQueryLength="2" rendered="#{materializedServiceMessageView.searchObject.searchFields[4].between}" maxResults="10" completeMethod="#{materializedServiceMessageView.onCompleteCountryName}" id="b_4" value="#{materializedServiceMessageView.searchObject.searchFields[4].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
 <!-- Customer -->
@@ -121,9 +121,9 @@
 				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_5" id="s_5" value="#{materializedServiceMessageView.searchObject.searchFields[5].sortOrder}">
 					<f:selectItems value="#{materializedServiceMessageView.sortOrderList}"/>
 				</p:selectOneMenu>
-				<p:inputText id="fi_5" value="#{materializedServiceMessageView.searchObject.searchFields[5].stringCriterion}" size="30"/>
+				<p:autoComplete minQueryLength="2" maxResults="10" completeMethod="#{materializedServiceMessageView.onCompleteCustomerName}" id="fi_5" value="#{materializedServiceMessageView.searchObject.searchFields[5].stringCriterion}" size="30"/>
 				<h:panelGroup id="p_5">
-					<p:inputText id="b_5" rendered="#{materializedServiceMessageView.searchObject.searchFields[5].between}" value="#{materializedServiceMessageView.searchObject.searchFields[5].stringBetweenCriterion}" size="30"/>
+					<p:autoComplete minQueryLength="2" rendered="#{materializedServiceMessageView.searchObject.searchFields[5].between}" maxResults="10" completeMethod="#{materializedServiceMessageView.onCompleteCustomerName}" id="b_5" value="#{materializedServiceMessageView.searchObject.searchFields[5].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
 <!-- Work center (ext. Supplier) -->
@@ -135,9 +135,9 @@
 				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_6" id="s_6" value="#{materializedServiceMessageView.searchObject.searchFields[6].sortOrder}">
 					<f:selectItems value="#{materializedServiceMessageView.sortOrderList}"/>
 				</p:selectOneMenu>
-				<p:inputText id="fi_6" value="#{materializedServiceMessageView.searchObject.searchFields[6].stringCriterion}" size="30"/>
+				<p:autoComplete minQueryLength="2" maxResults="10" completeMethod="#{materializedServiceMessageView.onCompleteSupplierName}" id="fi_6" value="#{materializedServiceMessageView.searchObject.searchFields[6].stringCriterion}" size="30"/>
 				<h:panelGroup id="p_6">
-					<p:inputText id="b_6" rendered="#{materializedServiceMessageView.searchObject.searchFields[6].between}" value="#{materializedServiceMessageView.searchObject.searchFields[6].stringBetweenCriterion}" size="30"/>
+					<p:autoComplete minQueryLength="2" rendered="#{materializedServiceMessageView.searchObject.searchFields[6].between}" maxResults="10" completeMethod="#{materializedServiceMessageView.onCompleteSupplierName}" id="b_6" value="#{materializedServiceMessageView.searchObject.searchFields[6].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
 <!-- Supplier -->
@@ -149,9 +149,9 @@
 				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_7" id="s_7" value="#{materializedServiceMessageView.searchObject.searchFields[7].sortOrder}">
 					<f:selectItems value="#{materializedServiceMessageView.sortOrderList}"/>
 				</p:selectOneMenu>
-				<p:inputText id="fi_7" value="#{materializedServiceMessageView.searchObject.searchFields[7].stringCriterion}" size="30"/>
+				<p:autoComplete minQueryLength="2" maxResults="10" completeMethod="#{materializedServiceMessageView.onCompleteSupplierName}" id="fi_7" value="#{materializedServiceMessageView.searchObject.searchFields[7].stringCriterion}" size="30"/>
 				<h:panelGroup id="p_7">
-					<p:inputText id="b_7" rendered="#{materializedServiceMessageView.searchObject.searchFields[7].between}" value="#{materializedServiceMessageView.searchObject.searchFields[7].stringBetweenCriterion}" size="30"/>
+					<p:autoComplete minQueryLength="2" rendered="#{materializedServiceMessageView.searchObject.searchFields[7].between}" maxResults="10" completeMethod="#{materializedServiceMessageView.onCompleteSupplierName}" id="b_7" value="#{materializedServiceMessageView.searchObject.searchFields[7].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
 <!-- Serial no. -->
@@ -191,9 +191,9 @@
 				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_10" id="s_10" value="#{materializedServiceMessageView.searchObject.searchFields[10].sortOrder}">
 					<f:selectItems value="#{materializedServiceMessageView.sortOrderList}"/>
 				</p:selectOneMenu>
-				<p:inputText id="fi_10" value="#{materializedServiceMessageView.searchObject.searchFields[10].stringCriterion}" size="30"/>
+				<p:autoComplete minQueryLength="2" maxResults="10" completeMethod="#{materializedServiceMessageView.onCompleteMaterialNumber}" id="fi_10" value="#{materializedServiceMessageView.searchObject.searchFields[10].stringCriterion}" size="30"/>
 				<h:panelGroup id="p_10">
-					<p:inputText id="b_10" rendered="#{materializedServiceMessageView.searchObject.searchFields[10].between}" value="#{materializedServiceMessageView.searchObject.searchFields[10].stringBetweenCriterion}" size="30"/>
+					<p:autoComplete minQueryLength="2" rendered="#{materializedServiceMessageView.searchObject.searchFields[10].between}" maxResults="10" completeMethod="#{materializedServiceMessageView.onCompleteMaterialNumber}" id="b_10" value="#{materializedServiceMessageView.searchObject.searchFields[10].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
 <!-- SAP no. -->
@@ -205,9 +205,9 @@
 				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_11" id="s_11" value="#{materializedServiceMessageView.searchObject.searchFields[11].sortOrder}">
 					<f:selectItems value="#{materializedServiceMessageView.sortOrderList}"/>
 				</p:selectOneMenu>
-				<p:inputText id="fi_11" value="#{materializedServiceMessageView.searchObject.searchFields[11].stringCriterion}" size="30"/>
+				<p:autoComplete minQueryLength="2" maxResults="10" completeMethod="#{materializedServiceMessageView.onCompleteSapNumber}" id="fi_11" value="#{materializedServiceMessageView.searchObject.searchFields[11].stringCriterion}" size="30"/>
 				<h:panelGroup id="p_11">
-					<p:inputText id="b_11" rendered="#{materializedServiceMessageView.searchObject.searchFields[11].between}" value="#{materializedServiceMessageView.searchObject.searchFields[11].stringBetweenCriterion}" size="30"/>
+					<p:autoComplete minQueryLength="2" rendered="#{materializedServiceMessageView.searchObject.searchFields[11].between}" maxResults="10" completeMethod="#{materializedServiceMessageView.onCompleteSapNumber}" id="b_11" value="#{materializedServiceMessageView.searchObject.searchFields[11].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
 <!-- mat type -->
@@ -219,9 +219,9 @@
 				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_12" id="s_12" value="#{materializedServiceMessageView.searchObject.searchFields[12].sortOrder}">
 					<f:selectItems value="#{materializedServiceMessageView.sortOrderList}"/>
 				</p:selectOneMenu>
-				<p:inputText id="fi_12" value="#{materializedServiceMessageView.searchObject.searchFields[12].stringCriterion}" size="30"/>
+				<p:autoComplete minQueryLength="1" maxResults="10" completeMethod="#{materializedServiceMessageView.onCompleteMatTypeCode}" id="fi_12" value="#{materializedServiceMessageView.searchObject.searchFields[12].stringCriterion}" size="30"/>
 				<h:panelGroup id="p_12">
-					<p:inputText id="b_12" rendered="#{materializedServiceMessageView.searchObject.searchFields[12].between}" value="#{materializedServiceMessageView.searchObject.searchFields[12].stringBetweenCriterion}" size="30"/>
+					<p:autoComplete minQueryLength="1" rendered="#{materializedServiceMessageView.searchObject.searchFields[12].between}" maxResults="10" completeMethod="#{materializedServiceMessageView.onCompleteMatTypeCode}" id="b_12" value="#{materializedServiceMessageView.searchObject.searchFields[12].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
 <!-- mat short text -->
@@ -289,9 +289,9 @@
 				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_17" id="s_17" value="#{materializedServiceMessageView.searchObject.searchFields[17].sortOrder}">
 					<f:selectItems value="#{materializedServiceMessageView.sortOrderList}"/>
 				</p:selectOneMenu>
-				<p:inputText id="fi_17" value="#{materializedServiceMessageView.searchObject.searchFields[17].stringCriterion}" size="30"/>
+				<p:autoComplete minQueryLength="2" maxResults="10" completeMethod="#{materializedServiceMessageView.onCompleteMaterialNumber}" id="fi_17" value="#{materializedServiceMessageView.searchObject.searchFields[17].stringCriterion}" size="30"/>
 				<h:panelGroup id="p_17">
-					<p:inputText id="b_17" rendered="#{materializedServiceMessageView.searchObject.searchFields[17].between}" value="#{materializedServiceMessageView.searchObject.searchFields[17].stringBetweenCriterion}" size="30"/>
+					<p:autoComplete minQueryLength="2" rendered="#{materializedServiceMessageView.searchObject.searchFields[17].between}" maxResults="10" completeMethod="#{materializedServiceMessageView.onCompleteMaterialNumber}" id="b_17" value="#{materializedServiceMessageView.searchObject.searchFields[17].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
 <!-- P. SAP no. -->
@@ -303,9 +303,9 @@
 				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_18" id="s_18" value="#{materializedServiceMessageView.searchObject.searchFields[18].sortOrder}">
 					<f:selectItems value="#{materializedServiceMessageView.sortOrderList}"/>
 				</p:selectOneMenu>
-				<p:inputText id="fi_18" value="#{materializedServiceMessageView.searchObject.searchFields[18].stringCriterion}" size="30"/>
+				<p:autoComplete minQueryLength="2" maxResults="10" completeMethod="#{materializedServiceMessageView.onCompleteSapNumber}" id="fi_18" value="#{materializedServiceMessageView.searchObject.searchFields[18].stringCriterion}" size="30"/>
 				<h:panelGroup id="p_18">
-					<p:inputText id="b_18" rendered="#{materializedServiceMessageView.searchObject.searchFields[18].between}" value="#{materializedServiceMessageView.searchObject.searchFields[18].stringBetweenCriterion}" size="30"/>
+					<p:autoComplete minQueryLength="2" rendered="#{materializedServiceMessageView.searchObject.searchFields[18].between}" maxResults="10" completeMethod="#{materializedServiceMessageView.onCompleteSapNumber}" id="b_18" value="#{materializedServiceMessageView.searchObject.searchFields[18].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
 <!-- P.mat type -->
@@ -317,9 +317,9 @@
 				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_19" id="s_19" value="#{materializedServiceMessageView.searchObject.searchFields[19].sortOrder}">
 					<f:selectItems value="#{materializedServiceMessageView.sortOrderList}"/>
 				</p:selectOneMenu>
-				<p:inputText id="fi_19" value="#{materializedServiceMessageView.searchObject.searchFields[19].stringCriterion}" size="30"/>
+				<p:autoComplete minQueryLength="1" maxResults="10" completeMethod="#{materializedServiceMessageView.onCompleteMatTypeCode}" id="fi_19" value="#{materializedServiceMessageView.searchObject.searchFields[19].stringCriterion}" size="30"/>
 				<h:panelGroup id="p_19">
-					<p:inputText id="b_19" rendered="#{materializedServiceMessageView.searchObject.searchFields[19].between}" value="#{materializedServiceMessageView.searchObject.searchFields[19].stringBetweenCriterion}" size="30"/>
+					<p:autoComplete minQueryLength="1" rendered="#{materializedServiceMessageView.searchObject.searchFields[19].between}" maxResults="10" completeMethod="#{materializedServiceMessageView.onCompleteMatTypeCode}" id="b_19" value="#{materializedServiceMessageView.searchObject.searchFields[19].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
 <!-- P. mat short text -->
@@ -373,9 +373,9 @@
 				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_23" id="s_23" value="#{materializedServiceMessageView.searchObject.searchFields[23].sortOrder}">
 					<f:selectItems value="#{materializedServiceMessageView.sortOrderList}"/>
 				</p:selectOneMenu>
-				<p:inputText id="fi_23" value="#{materializedServiceMessageView.searchObject.searchFields[23].stringCriterion}" size="30"/>
+				<p:autoComplete minQueryLength="1" maxResults="10" completeMethod="#{materializedServiceMessageView.onCompleteRmaTypeCode}" id="fi_23" value="#{materializedServiceMessageView.searchObject.searchFields[23].stringCriterion}" size="30"/>
 				<h:panelGroup id="p_23">
-					<p:inputText id="b_23" rendered="#{materializedServiceMessageView.searchObject.searchFields[23].between}" value="#{materializedServiceMessageView.searchObject.searchFields[23].stringBetweenCriterion}" size="30"/>
+					<p:autoComplete minQueryLength="1" rendered="#{materializedServiceMessageView.searchObject.searchFields[23].between}" maxResults="10" completeMethod="#{materializedServiceMessageView.onCompleteRmaTypeCode}" id="b_23" value="#{materializedServiceMessageView.searchObject.searchFields[23].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
 <!-- Symptom -->
@@ -387,9 +387,9 @@
 				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_24" id="s_24" value="#{materializedServiceMessageView.searchObject.searchFields[24].sortOrder}">
 					<f:selectItems value="#{materializedServiceMessageView.sortOrderList}"/>
 				</p:selectOneMenu>
-				<p:autoComplete minQueryLength="1" maxResults="10" completeMethod="#{materializedServiceMessageView.onCompleteSymptom}" id="fi_24" value="#{materializedServiceMessageView.searchObject.searchFields[24].stringCriterion}" size="30"/>
+				<p:autoComplete minQueryLength="1" maxResults="10" completeMethod="#{materializedServiceMessageView.onCompleteSymptomCode}" id="fi_24" value="#{materializedServiceMessageView.searchObject.searchFields[24].stringCriterion}" size="30"/>
 				<h:panelGroup id="p_24">
-					<p:autoComplete minQueryLength="1" rendered="#{materializedServiceMessageView.searchObject.searchFields[24].between}" maxResults="10" completeMethod="#{materializedServiceMessageView.onCompleteSymptom}" id="b_24" value="#{materializedServiceMessageView.searchObject.searchFields[24].stringBetweenCriterion}" size="30"/>
+					<p:autoComplete minQueryLength="1" rendered="#{materializedServiceMessageView.searchObject.searchFields[24].between}" maxResults="10" completeMethod="#{materializedServiceMessageView.onCompleteSymptomCode}" id="b_24" value="#{materializedServiceMessageView.searchObject.searchFields[24].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
 <!-- Symptom short text -->
@@ -406,7 +406,7 @@
 					<p:inputText id="b_25" rendered="#{materializedServiceMessageView.searchObject.searchFields[25].between}" value="#{materializedServiceMessageView.searchObject.searchFields[25].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
-<!--  -->
+<!-- Service name -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_26" value="#{materializedServiceMessageView.searchObject.searchFields[26].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_26" value="#{materializedServiceMessageView.searchObject.searchFields[26].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_26" value="#{materializedServiceMessageView.textOperators}" var="advInputItem26" itemValue="#{advInputItem26}" itemLabel="#{advInputItem26.description}"/>
@@ -420,7 +420,7 @@
 					<p:inputText id="b_26" rendered="#{materializedServiceMessageView.searchObject.searchFields[26].between}" value="#{materializedServiceMessageView.searchObject.searchFields[26].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
-<!--  -->
+<!-- Cause code group -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_27" value="#{materializedServiceMessageView.searchObject.searchFields[27].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_27" value="#{materializedServiceMessageView.searchObject.searchFields[27].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_27" value="#{materializedServiceMessageView.textOperators}" var="advInputItem27" itemValue="#{advInputItem27}" itemLabel="#{advInputItem27.description}"/>
@@ -429,12 +429,13 @@
 				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_27" id="s_27" value="#{materializedServiceMessageView.searchObject.searchFields[27].sortOrder}">
 					<f:selectItems value="#{materializedServiceMessageView.sortOrderList}"/>
 				</p:selectOneMenu>
-				<p:inputText id="fi_27" value="#{materializedServiceMessageView.searchObject.searchFields[27].stringCriterion}" size="30"/>
+				<!-- => repair error codes: group name -->
+				<p:autoComplete minQueryLength="2" maxResults="10" completeMethod="#{materializedServiceMessageView.onCompleteRepairErrorCodeGroupName}" id="fi_27" value="#{materializedServiceMessageView.searchObject.searchFields[27].stringCriterion}" size="30"/>
 				<h:panelGroup id="p_27">
-					<p:inputText id="b_27" rendered="#{materializedServiceMessageView.searchObject.searchFields[27].between}" value="#{materializedServiceMessageView.searchObject.searchFields[27].stringBetweenCriterion}" size="30"/>
+					<p:autoComplete minQueryLength="2" rendered="#{materializedServiceMessageView.searchObject.searchFields[27].between}" maxResults="10" completeMethod="#{materializedServiceMessageView.onCompleteRepairErrorCodeGroupName}" id="b_27" value="#{materializedServiceMessageView.searchObject.searchFields[27].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
-<!--  -->
+<!-- Cause code name -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_28" value="#{materializedServiceMessageView.searchObject.searchFields[28].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_28" value="#{materializedServiceMessageView.searchObject.searchFields[28].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_28" value="#{materializedServiceMessageView.textOperators}" var="advInputItem28" itemValue="#{advInputItem28}" itemLabel="#{advInputItem28.description}"/>
@@ -443,12 +444,13 @@
 				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_28" id="s_28" value="#{materializedServiceMessageView.searchObject.searchFields[28].sortOrder}">
 					<f:selectItems value="#{materializedServiceMessageView.sortOrderList}"/>
 				</p:selectOneMenu>
-				<p:inputText id="fi_28" value="#{materializedServiceMessageView.searchObject.searchFields[28].stringCriterion}" size="30"/>
+				<!-- => repair error codes: name -->
+				<p:autoComplete minQueryLength="2" maxResults="10" completeMethod="#{materializedServiceMessageView.onCompleteRepairErrorCodeName}" id="fi_28" value="#{materializedServiceMessageView.searchObject.searchFields[28].stringCriterion}" size="30"/>
 				<h:panelGroup id="p_28">
-					<p:inputText id="b_28" rendered="#{materializedServiceMessageView.searchObject.searchFields[28].between}" value="#{materializedServiceMessageView.searchObject.searchFields[28].stringBetweenCriterion}" size="30"/>
+					<p:autoComplete minQueryLength="2" rendered="#{materializedServiceMessageView.searchObject.searchFields[28].between}" maxResults="10" completeMethod="#{materializedServiceMessageView.onCompleteRepairErrorCodeName}" id="b_28" value="#{materializedServiceMessageView.searchObject.searchFields[28].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
-<!--  -->
+<!-- Cause short text -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_29" value="#{materializedServiceMessageView.searchObject.searchFields[29].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_29" value="#{materializedServiceMessageView.searchObject.searchFields[29].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_29" value="#{materializedServiceMessageView.textOperators}" var="advInputItem29" itemValue="#{advInputItem29}" itemLabel="#{advInputItem29.description}"/>
@@ -462,7 +464,7 @@
 					<p:inputText id="b_29" rendered="#{materializedServiceMessageView.searchObject.searchFields[29].between}" value="#{materializedServiceMessageView.searchObject.searchFields[29].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
-<!--  -->
+<!-- Repair task name -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_30" value="#{materializedServiceMessageView.searchObject.searchFields[30].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_30" value="#{materializedServiceMessageView.searchObject.searchFields[30].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_30" value="#{materializedServiceMessageView.textOperators}" var="advInputItem30" itemValue="#{advInputItem30}" itemLabel="#{advInputItem30.description}"/>
@@ -471,11 +473,12 @@
 				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_30" id="s_30" value="#{materializedServiceMessageView.searchObject.searchFields[30].sortOrder}">
 					<f:selectItems value="#{materializedServiceMessageView.sortOrderList}"/>
 				</p:selectOneMenu>
-				<p:inputText id="fi_30" value="#{materializedServiceMessageView.searchObject.searchFields[30].stringCriterion}" size="30"/>
+				<p:autoComplete minQueryLength="1" maxResults="10" completeMethod="#{materializedServiceMessageView.onCompleteRepairTaskCode}" id="fi_30" value="#{materializedServiceMessageView.searchObject.searchFields[30].stringCriterion}" size="30"/>
 				<h:panelGroup id="p_30">
-					<p:inputText id="b_30" rendered="#{materializedServiceMessageView.searchObject.searchFields[30].between}" value="#{materializedServiceMessageView.searchObject.searchFields[30].stringBetweenCriterion}" size="30"/>
+					<p:autoComplete minQueryLength="1" rendered="#{materializedServiceMessageView.searchObject.searchFields[30].between}" maxResults="10" completeMethod="#{materializedServiceMessageView.onCompleteRepairTaskCode}" id="b_30" value="#{materializedServiceMessageView.searchObject.searchFields[30].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
+<!-- Repair task short text -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_31" value="#{materializedServiceMessageView.searchObject.searchFields[31].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_31" value="#{materializedServiceMessageView.searchObject.searchFields[31].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_31" value="#{materializedServiceMessageView.textOperators}" var="advInputItem31" itemValue="#{advInputItem31}" itemLabel="#{advInputItem31.description}"/>
@@ -489,6 +492,7 @@
 					<p:inputText id="b_31" rendered="#{materializedServiceMessageView.searchObject.searchFields[31].between}" value="#{materializedServiceMessageView.searchObject.searchFields[31].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
+<!-- Repair state -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_32" value="#{materializedServiceMessageView.searchObject.searchFields[32].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_32" value="#{materializedServiceMessageView.searchObject.searchFields[32].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_32" value="#{materializedServiceMessageView.textOperators}" var="advInputItem32" itemValue="#{advInputItem32}" itemLabel="#{advInputItem32.description}"/>
@@ -497,11 +501,12 @@
 				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_32" id="s_32" value="#{materializedServiceMessageView.searchObject.searchFields[32].sortOrder}">
 					<f:selectItems value="#{materializedServiceMessageView.sortOrderList}"/>
 				</p:selectOneMenu>
-				<p:inputText id="fi_32" value="#{materializedServiceMessageView.searchObject.searchFields[32].stringCriterion}" size="30"/>
+				<p:autoComplete minQueryLength="2" maxResults="10" completeMethod="#{materializedServiceMessageView.onCompleteRepairStateName}" id="fi_32" value="#{materializedServiceMessageView.searchObject.searchFields[32].stringCriterion}" size="30"/>
 				<h:panelGroup id="p_32">
-					<p:inputText id="b_32" rendered="#{materializedServiceMessageView.searchObject.searchFields[32].between}" value="#{materializedServiceMessageView.searchObject.searchFields[32].stringBetweenCriterion}" size="30"/>
+					<p:autoComplete minQueryLength="2" rendered="#{materializedServiceMessageView.searchObject.searchFields[32].between}" maxResults="10" completeMethod="#{materializedServiceMessageView.onCompleteRepairStateName}" id="b_32" value="#{materializedServiceMessageView.searchObject.searchFields[32].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
+<!-- Rep. arrvl. date -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_33" value="#{materializedServiceMessageView.searchObject.searchFields[33].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_33" value="#{materializedServiceMessageView.searchObject.searchFields[33].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_33" value="#{materializedServiceMessageView.dateOperators}" var="advInputItem33" itemValue="#{advInputItem33}" itemLabel="#{advInputItem33.description}"/>
@@ -515,6 +520,7 @@
 					<p:datePicker id="fb_33" value="#{materializedServiceMessageView.searchObject.searchFields[33].dateBetweenCriterion}" pattern="#{userSession.dateFormat}" size="20" showButtonBar="true" showIcon="true" rendered="#{materializedServiceMessageView.searchObject.searchFields[33].between}"/>
 				</h:panelGroup>
 
+<!-- Rep. shipt. date -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_34" value="#{materializedServiceMessageView.searchObject.searchFields[34].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_34" value="#{materializedServiceMessageView.searchObject.searchFields[34].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_34" value="#{materializedServiceMessageView.dateOperators}" var="advInputItem34" itemValue="#{advInputItem34}" itemLabel="#{advInputItem34.description}"/>
@@ -528,6 +534,7 @@
 					<p:datePicker id="fb_34" value="#{materializedServiceMessageView.searchObject.searchFields[34].dateBetweenCriterion}" pattern="#{userSession.dateFormat}" size="20" showButtonBar="true" showIcon="true" rendered="#{materializedServiceMessageView.searchObject.searchFields[34].between}"/>
 				</h:panelGroup>
 
+<!-- Basic strt. date -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_35" value="#{materializedServiceMessageView.searchObject.searchFields[35].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_35" value="#{materializedServiceMessageView.searchObject.searchFields[35].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_35" value="#{materializedServiceMessageView.dateOperators}" var="advInputItem35" itemValue="#{advInputItem35}" itemLabel="#{advInputItem35.description}"/>
@@ -541,6 +548,7 @@
 					<p:datePicker id="fb_35" value="#{materializedServiceMessageView.searchObject.searchFields[35].dateBetweenCriterion}" pattern="#{userSession.dateFormat}" size="20" showButtonBar="true" showIcon="true" rendered="#{materializedServiceMessageView.searchObject.searchFields[35].between}"/>
 				</h:panelGroup>
 
+<!-- Basic end date -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_36" value="#{materializedServiceMessageView.searchObject.searchFields[36].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_36" value="#{materializedServiceMessageView.searchObject.searchFields[36].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_36" value="#{materializedServiceMessageView.dateOperators}" var="advInputItem36" itemValue="#{advInputItem36}" itemLabel="#{advInputItem36.description}"/>
@@ -554,6 +562,7 @@
 					<p:datePicker id="fb_36" value="#{materializedServiceMessageView.searchObject.searchFields[36].dateBetweenCriterion}" pattern="#{userSession.dateFormat}" size="20" showButtonBar="true" showIcon="true" rendered="#{materializedServiceMessageView.searchObject.searchFields[36].between}"/>
 				</h:panelGroup>
 
+<!-- Designator -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_37" value="#{materializedServiceMessageView.searchObject.searchFields[37].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_37" value="#{materializedServiceMessageView.searchObject.searchFields[37].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_37" value="#{materializedServiceMessageView.textOperators}" var="advInputItem37" itemValue="#{advInputItem37}" itemLabel="#{advInputItem37.description}"/>
@@ -567,6 +576,7 @@
 					<p:inputText id="b_37" rendered="#{materializedServiceMessageView.searchObject.searchFields[37].between}" value="#{materializedServiceMessageView.searchObject.searchFields[37].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
+<!-- Defect component -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_38" value="#{materializedServiceMessageView.searchObject.searchFields[38].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_38" value="#{materializedServiceMessageView.searchObject.searchFields[38].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_38" value="#{materializedServiceMessageView.textOperators}" var="advInputItem38" itemValue="#{advInputItem38}" itemLabel="#{advInputItem38.description}"/>
@@ -580,6 +590,7 @@
 					<p:inputText id="b_38" rendered="#{materializedServiceMessageView.searchObject.searchFields[38].between}" value="#{materializedServiceMessageView.searchObject.searchFields[38].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
+<!-- Analysis text -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_39" value="#{materializedServiceMessageView.searchObject.searchFields[39].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_39" value="#{materializedServiceMessageView.searchObject.searchFields[39].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_39" value="#{materializedServiceMessageView.textOperators}" var="advInputItem39" itemValue="#{advInputItem39}" itemLabel="#{advInputItem39.description}"/>
@@ -593,6 +604,7 @@
 					<p:inputText id="b_39" rendered="#{materializedServiceMessageView.searchObject.searchFields[39].between}" value="#{materializedServiceMessageView.searchObject.searchFields[39].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
+<!-- Internal report -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_40" value="#{materializedServiceMessageView.searchObject.searchFields[40].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_40" value="#{materializedServiceMessageView.searchObject.searchFields[40].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_40" value="#{materializedServiceMessageView.textOperators}" var="advInputItem40" itemValue="#{advInputItem40}" itemLabel="#{advInputItem40.description}"/>
@@ -606,6 +618,7 @@
 					<p:inputText id="b_40" rendered="#{materializedServiceMessageView.searchObject.searchFields[40].between}" value="#{materializedServiceMessageView.searchObject.searchFields[40].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
+<!-- External report -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_41" value="#{materializedServiceMessageView.searchObject.searchFields[41].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_41" value="#{materializedServiceMessageView.searchObject.searchFields[41].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_41" value="#{materializedServiceMessageView.textOperators}" var="advInputItem41" itemValue="#{advInputItem41}" itemLabel="#{advInputItem41.description}"/>
@@ -619,6 +632,7 @@
 					<p:inputText id="b_41" rendered="#{materializedServiceMessageView.searchObject.searchFields[41].between}" value="#{materializedServiceMessageView.searchObject.searchFields[41].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
+<!-- Customer report -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_42" value="#{materializedServiceMessageView.searchObject.searchFields[42].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_42" value="#{materializedServiceMessageView.searchObject.searchFields[42].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_42" value="#{materializedServiceMessageView.textOperators}" var="advInputItem42" itemValue="#{advInputItem42}" itemLabel="#{advInputItem42.description}"/>
@@ -632,6 +646,7 @@
 					<p:inputText id="b_42" rendered="#{materializedServiceMessageView.searchObject.searchFields[42].between}" value="#{materializedServiceMessageView.searchObject.searchFields[42].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
+<!-- Epi. failure -->
 				<h:outputLabel styleClass="label-field-optional" for="fc_43" value="#{materializedServiceMessageView.searchObject.searchFields[43].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_43" value="#{materializedServiceMessageView.searchObject.searchFields[43].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_43" value="#{materializedServiceMessageView.boolOperators}" var="advInputItem43" itemValue="#{advInputItem43}" itemLabel="#{advInputItem43.description}"/>
@@ -647,6 +662,7 @@
 				</p:selectOneMenu>
 				<h:panelGroup id="p_43"/>
 
+<!-- Error id -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_44" value="#{materializedServiceMessageView.searchObject.searchFields[44].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_44" value="#{materializedServiceMessageView.searchObject.searchFields[44].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_44" value="#{materializedServiceMessageView.textOperators}" var="advInputItem44" itemValue="#{advInputItem44}" itemLabel="#{advInputItem44.description}"/>
@@ -660,6 +676,7 @@
 					<p:inputText id="b_44" rendered="#{materializedServiceMessageView.searchObject.searchFields[44].between}" value="#{materializedServiceMessageView.searchObject.searchFields[44].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
+<!-- Origin -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_45" value="#{materializedServiceMessageView.searchObject.searchFields[45].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_45" value="#{materializedServiceMessageView.searchObject.searchFields[45].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_45" value="#{materializedServiceMessageView.textOperators}" var="advInputItem45" itemValue="#{advInputItem45}" itemLabel="#{advInputItem45.description}"/>
@@ -673,6 +690,7 @@
 					<p:inputText id="b_45" rendered="#{materializedServiceMessageView.searchObject.searchFields[45].between}" value="#{materializedServiceMessageView.searchObject.searchFields[45].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
+<!-- Cust. failure -->
 				<h:outputLabel styleClass="label-field-optional" for="fc_46" value="#{materializedServiceMessageView.searchObject.searchFields[46].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_46" value="#{materializedServiceMessageView.searchObject.searchFields[46].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_46" value="#{materializedServiceMessageView.boolOperators}" var="advInputItem46" itemValue="#{advInputItem46}" itemLabel="#{advInputItem46.description}"/>
@@ -688,6 +706,7 @@
 				</p:selectOneMenu>
 				<h:panelGroup id="p_46"/>
 
+<!-- Customer group -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_47" value="#{materializedServiceMessageView.searchObject.searchFields[47].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_47" value="#{materializedServiceMessageView.searchObject.searchFields[47].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_47" value="#{materializedServiceMessageView.textOperators}" var="advInputItem47" itemValue="#{advInputItem47}" itemLabel="#{advInputItem47.description}"/>
@@ -701,6 +720,7 @@
 					<p:inputText id="b_47" rendered="#{materializedServiceMessageView.searchObject.searchFields[47].between}" value="#{materializedServiceMessageView.searchObject.searchFields[47].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
+<!-- Sup. arrvl. date -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_48" value="#{materializedServiceMessageView.searchObject.searchFields[48].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_48" value="#{materializedServiceMessageView.searchObject.searchFields[48].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_48" value="#{materializedServiceMessageView.dateOperators}" var="advInputItem48" itemValue="#{advInputItem48}" itemLabel="#{advInputItem48.description}"/>
@@ -714,6 +734,7 @@
 					<p:datePicker id="fb_48" value="#{materializedServiceMessageView.searchObject.searchFields[48].dateBetweenCriterion}" pattern="#{userSession.dateFormat}" size="20" showButtonBar="true" showIcon="true" rendered="#{materializedServiceMessageView.searchObject.searchFields[48].between}"/>
 				</h:panelGroup>
 
+<!-- Cust. shipt. date -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_49" value="#{materializedServiceMessageView.searchObject.searchFields[49].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_49" value="#{materializedServiceMessageView.searchObject.searchFields[49].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_49" value="#{materializedServiceMessageView.dateOperators}" var="advInputItem49" itemValue="#{advInputItem49}" itemLabel="#{advInputItem49.description}"/>
@@ -727,6 +748,7 @@
 					<p:datePicker id="fb_49" value="#{materializedServiceMessageView.searchObject.searchFields[49].dateBetweenCriterion}" pattern="#{userSession.dateFormat}" size="20" showButtonBar="true" showIcon="true" rendered="#{materializedServiceMessageView.searchObject.searchFields[49].between}"/>
 				</h:panelGroup>
 
+<!-- Deliv. note no. -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_50" value="#{materializedServiceMessageView.searchObject.searchFields[50].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_50" value="#{materializedServiceMessageView.searchObject.searchFields[50].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_50" value="#{materializedServiceMessageView.textOperators}" var="advInputItem50" itemValue="#{advInputItem50}" itemLabel="#{advInputItem50.description}"/>
@@ -740,6 +762,7 @@
 					<p:inputText id="b_50" rendered="#{materializedServiceMessageView.searchObject.searchFields[50].between}" value="#{materializedServiceMessageView.searchObject.searchFields[50].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
+<!-- Repair description -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_51" value="#{materializedServiceMessageView.searchObject.searchFields[51].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_51" value="#{materializedServiceMessageView.searchObject.searchFields[51].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_51" value="#{materializedServiceMessageView.textOperators}" var="advInputItem51" itemValue="#{advInputItem51}" itemLabel="#{advInputItem51.description}"/>
@@ -753,6 +776,7 @@
 					<p:inputText id="b_51" rendered="#{materializedServiceMessageView.searchObject.searchFields[51].between}" value="#{materializedServiceMessageView.searchObject.searchFields[51].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
+<!-- Assy. date -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_52" value="#{materializedServiceMessageView.searchObject.searchFields[52].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_52" value="#{materializedServiceMessageView.searchObject.searchFields[52].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_52" value="#{materializedServiceMessageView.dateOperators}" var="advInputItem52" itemValue="#{advInputItem52}" itemLabel="#{advInputItem52.description}"/>
@@ -766,6 +790,7 @@
 					<p:datePicker id="fb_52" value="#{materializedServiceMessageView.searchObject.searchFields[52].dateBetweenCriterion}" pattern="#{userSession.dateFormat}" size="20" showButtonBar="true" showIcon="true" rendered="#{materializedServiceMessageView.searchObject.searchFields[52].between}"/>
 				</h:panelGroup>
 
+<!-- Assy. PO -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_53" value="#{materializedServiceMessageView.searchObject.searchFields[53].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_53" value="#{materializedServiceMessageView.searchObject.searchFields[53].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_53" value="#{materializedServiceMessageView.textOperators}" var="advInputItem53" itemValue="#{advInputItem53}" itemLabel="#{advInputItem53.description}"/>

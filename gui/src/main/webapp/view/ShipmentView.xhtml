@@ -90,9 +90,9 @@
 				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_3" id="s_3" value="#{shipmentView.searchObject.searchFields[3].sortOrder}">
 					<f:selectItems value="#{shipmentView.sortOrderList}"/>
 				</p:selectOneMenu>
-				<p:autoComplete minQueryLength="1" maxResults="10" completeMethod="#{shipmentView.onCompleteMvtType}" id="fi_3" value="#{shipmentView.searchObject.searchFields[3].stringCriterion}" size="30"/>
+				<p:autoComplete minQueryLength="1" maxResults="10" completeMethod="#{shipmentView.onCompleteMvtTypeCode}" id="fi_3" value="#{shipmentView.searchObject.searchFields[3].stringCriterion}" size="30"/>
 				<h:panelGroup id="p_3">
-					<p:autoComplete minQueryLength="1" rendered="#{shipmentView.searchObject.searchFields[3].between}" maxResults="10" completeMethod="#{shipmentView.onCompleteMvtType}" id="b_3" value="#{shipmentView.searchObject.searchFields[3].stringBetweenCriterion}" size="30"/>
+					<p:autoComplete minQueryLength="1" rendered="#{shipmentView.searchObject.searchFields[3].between}" maxResults="10" completeMethod="#{shipmentView.onCompleteMvtTypeCode}" id="b_3" value="#{shipmentView.searchObject.searchFields[3].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
 <!-- shipment date -->
@@ -202,9 +202,9 @@
 				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_11" id="s_11" value="#{shipmentView.searchObject.searchFields[11].sortOrder}">
 					<f:selectItems value="#{shipmentView.sortOrderList}"/>
 				</p:selectOneMenu>
-				<p:autoComplete minQueryLength="1" maxResults="10" completeMethod="#{shipmentView.onCompleteMatType}" id="fi_11" value="#{shipmentView.searchObject.searchFields[11].stringCriterion}" size="30"/>
+				<p:autoComplete minQueryLength="1" maxResults="10" completeMethod="#{shipmentView.onCompleteMatTypeCode}" id="fi_11" value="#{shipmentView.searchObject.searchFields[11].stringCriterion}" size="30"/>
 				<h:panelGroup id="p_11">
-					<p:autoComplete minQueryLength="1" rendered="#{shipmentView.searchObject.searchFields[11].between}" maxResults="10" completeMethod="#{shipmentView.onCompleteMatType}" id="b_11" value="#{shipmentView.searchObject.searchFields[11].stringBetweenCriterion}" size="30"/>
+					<p:autoComplete minQueryLength="1" rendered="#{shipmentView.searchObject.searchFields[11].between}" maxResults="10" completeMethod="#{shipmentView.onCompleteMatTypeCode}" id="b_11" value="#{shipmentView.searchObject.searchFields[11].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
 <!-- material class -->

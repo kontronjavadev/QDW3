@@ -15,8 +15,17 @@ import org.primefaces.model.DualListModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.kontron.qdw.boundary.base.CountryBoundaryService;
+import com.kontron.qdw.boundary.base.CustomerBoundaryService;
+import com.kontron.qdw.boundary.base.SupplierBoundaryService;
+import com.kontron.qdw.boundary.material.MaterialBoundaryService;
+import com.kontron.qdw.boundary.material.MaterialTypeBoundaryService;
 import com.kontron.qdw.boundary.mv.MaterializedServiceMessageBoundaryService;
 import com.kontron.qdw.boundary.service.FaultAnalysisBoundaryService;
+import com.kontron.qdw.boundary.service.RMATypeBoundaryService;
+import com.kontron.qdw.boundary.service.RepairErrorCodeBoundaryService;
+import com.kontron.qdw.boundary.service.RepairStateBoundaryService;
+import com.kontron.qdw.boundary.service.RepairTaskBoundaryService;
 import com.kontron.qdw.domain.mv.ServiceOrderType;
 import com.kontron.qdw.dto.mv.MaterializedServiceMessageSearchDTO;
 import com.kontron.qdw.service.SavedQueryService;
@@ -57,6 +66,16 @@ public class MaterializedServiceMessageView extends SuperView implements Seriali
     private final transient MaterializedServiceMessageBoundaryService materializedServiceMessageService;
     @Generated
     private final transient FaultAnalysisBoundaryService faultAnalysisService;
+    private final transient RMATypeBoundaryService rMATypeService;
+    private final transient RepairErrorCodeBoundaryService errorCodeService;
+    private final transient RepairTaskBoundaryService repairTaskService;
+    private final transient RepairStateBoundaryService repairStateService;
+    private final transient CountryBoundaryService countryService;
+    private final transient CustomerBoundaryService customerBoundaryService;
+    private final transient SupplierBoundaryService supplierService;
+    private final transient MaterialBoundaryService materialService;
+    private final transient MaterialTypeBoundaryService matTypeService;
+
     @Generated
     public static final String PAGE_URL = "/view/MaterializedServiceMessageView.jsf?faces-redirect=true";
     @Generated
@@ -78,18 +97,41 @@ public class MaterializedServiceMessageView extends SuperView implements Seriali
     public MaterializedServiceMessageView() {
         userSession = null;
         materializedServiceMessageService = null;
-        faultAnalysisService = null;
         queryManager = null;
+
+        faultAnalysisService = null;
+        rMATypeService = null;
+        errorCodeService = null;
+        repairTaskService = null;
+        repairStateService = null;
+        countryService = null;
+        customerBoundaryService = null;
+        supplierService = null;
+        materialService = null;
+        matTypeService = null;
     }
 
     @Inject
     @Generated
     public MaterializedServiceMessageView(UserSession userSession, MaterializedServiceMessageBoundaryService materializedServiceMessageService,
-            FaultAnalysisBoundaryService faultAnalysisService, SavedQueryService queryManager) {
+            SavedQueryService queryManager, FaultAnalysisBoundaryService faultAnalysisService, RMATypeBoundaryService rMATypeService,
+            RepairErrorCodeBoundaryService errorCodeService, RepairTaskBoundaryService repairTaskService,
+            RepairStateBoundaryService repairStateService, CountryBoundaryService countryService, CustomerBoundaryService customerBoundaryService,
+            SupplierBoundaryService supplierService, MaterialBoundaryService materialService, MaterialTypeBoundaryService matTypeService) {
         this.userSession = userSession;
         this.materializedServiceMessageService = materializedServiceMessageService;
-        this.faultAnalysisService = faultAnalysisService;
         this.queryManager = queryManager;
+
+        this.faultAnalysisService = faultAnalysisService;
+        this.rMATypeService = rMATypeService;
+        this.errorCodeService = errorCodeService;
+        this.repairTaskService = repairTaskService;
+        this.repairStateService = repairStateService;
+        this.countryService = countryService;
+        this.customerBoundaryService = customerBoundaryService;
+        this.supplierService = supplierService;
+        this.materialService = materialService;
+        this.matTypeService = matTypeService;
     }
 
 
@@ -377,8 +419,52 @@ public class MaterializedServiceMessageView extends SuperView implements Seriali
 
 
 
-    public List<String> onCompleteSymptom(String query) {
-        return OnCompleteHelper.onCompleteSymptom(faultAnalysisService, query);
+    public List<String> onCompleteCountryName(String searchText) {
+        return OnCompleteHelper.onCompleteCountryName(countryService, searchText);
+    }
+
+    public List<String> onCompleteCustomerName(String searchText) {
+        return OnCompleteHelper.onCompleteCustomerName(customerBoundaryService, searchText);
+    }
+
+    public List<String> onCompleteSupplierName(String searchText) {
+        return OnCompleteHelper.onCompleteSupplierName(supplierService, searchText);
+    }
+
+    public List<String> onCompleteSymptomCode(String query) {
+        return OnCompleteHelper.onCompleteSymptomCode(faultAnalysisService, query);
+    }
+
+    public List<String> onCompleteMaterialNumber(String searchText) {
+        return OnCompleteHelper.onCompleteMaterialNumber(materialService, searchText);
+    }
+
+    public List<String> onCompleteSapNumber(String searchText) {
+        return OnCompleteHelper.onCompleteSapNumber(materialService, searchText);
+    }
+
+    public List<String> onCompleteMatTypeCode(String searchText) {
+        return OnCompleteHelper.onCompleteMatTypeCode(matTypeService, searchText);
+    }
+
+    public List<String> onCompleteRmaTypeCode(String searchText) {
+        return OnCompleteHelper.onCompleteRmaTypeCode(rMATypeService, searchText);
+    }
+
+    public List<String> onCompleteRepairErrorCodeName(String searchText) {
+        return OnCompleteHelper.onCompleteRepairErrorCodeName(errorCodeService, searchText);
+    }
+
+    public List<String> onCompleteRepairErrorCodeGroupName(String searchText) {
+        return OnCompleteHelper.onCompleteRepairErrorCodeGroupName(errorCodeService, searchText);
+    }
+
+    public List<String> onCompleteRepairTaskCode(String searchText) {
+        return OnCompleteHelper.onCompleteRepairTaskCode(repairTaskService, searchText);
+    }
+
+    public List<String> onCompleteRepairStateName(String searchText) {
+        return OnCompleteHelper.onCompleteRepairStateName(repairStateService, searchText);
     }
 
 

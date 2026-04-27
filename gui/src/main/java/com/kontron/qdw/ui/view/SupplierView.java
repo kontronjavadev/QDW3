@@ -3,6 +3,8 @@ package com.kontron.qdw.ui.view;
 import com.kontron.qdw.boundary.base.*;
 import org.slf4j.*;
 import java.lang.invoke.*;
+
+import com.kontron.qdw.ui.view.util.OnCompleteHelper;
 import com.kontron.qdw.ui.view.util.SuperView;
 import org.primefaces.model.DualListModel;
 import net.sourceforge.jbizmo.commons.webclient.primefaces.search.*;
@@ -298,8 +300,9 @@ public class SupplierView extends SuperView implements Serializable {
             return "";
         }
 
-        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR))
+        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR)) {
             url = EditSupplierDialog.PAGE_INIT_URL + java.net.URLEncoder.encode(newId, java.nio.charset.StandardCharsets.UTF_8);
+        }
 
         userSession.setLastPage(getCurrentPageURL());
         return url;
@@ -313,8 +316,9 @@ public class SupplierView extends SuperView implements Serializable {
     public String openCreateNewSupplierDialog() {
         var url = "";
 
-        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR))
+        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR)) {
             url = CreateNewSupplierDialog.PAGE_INIT_URL;
+        }
 
         return url;
     }
@@ -327,8 +331,9 @@ public class SupplierView extends SuperView implements Serializable {
     public String openEditSupplierDialog() {
         var url = "";
 
-        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR))
+        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR)) {
             url = EditSupplierDialog.PAGE_INIT_URL + java.net.URLEncoder.encode(selectedObject.getCode(), java.nio.charset.StandardCharsets.UTF_8);
+        }
 
         return url;
     }
@@ -376,6 +381,7 @@ public class SupplierView extends SuperView implements Serializable {
     /**
      * @return the name of the selected saved query
      */
+    @Override
     @Generated
     public String getSelectedSavedQuery() {
         return selectedSavedQuery;
@@ -446,21 +452,9 @@ public class SupplierView extends SuperView implements Serializable {
      * @param query the filter criterion inserted by the user
      * @return a list containing all proposals
      */
-    @Generated
+    @Customized
     public List<String> onCompleteCountryName(String query) {
-        final var results = new ArrayList<String>();
-
-        try {
-            final Collection<CountryListDTO> items = countryService.findCountries(query + "%");
-
-            for (final CountryListDTO item : items)
-                results.add(item.getName());
-        }
-        catch (final Exception e) {
-            logger.error("Error while searching for auto-complete items by using the entered text '{}'!", query, e);
-        }
-
-        return results;
+        return OnCompleteHelper.onCompleteCountryName(countryService, query);
     }
 
     /**
@@ -495,8 +489,9 @@ public class SupplierView extends SuperView implements Serializable {
         final var items = new SelectItem[savedQueries.size()];
         int i = 0;
 
-        for (final String item : savedQueries)
+        for (final String item : savedQueries) {
             items[i++] = new SelectItem(item, item);
+        }
 
         return items;
     }
@@ -506,8 +501,9 @@ public class SupplierView extends SuperView implements Serializable {
      */
     @Generated
     public void deleteSavedQuery() {
-        if (selectedSavedQuery == null)
+        if (selectedSavedQuery == null) {
             return;
+        }
 
         logger.debug("Delete saved query");
 
@@ -522,8 +518,9 @@ public class SupplierView extends SuperView implements Serializable {
      */
     @Generated
     public void runSavedQuery() {
-        if (selectedSavedQuery == null)
+        if (selectedSavedQuery == null) {
             return;
+        }
 
         logger.debug("Run saved query");
 

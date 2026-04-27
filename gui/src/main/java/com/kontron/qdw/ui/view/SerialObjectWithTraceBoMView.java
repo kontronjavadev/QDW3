@@ -315,8 +315,8 @@ public class SerialObjectWithTraceBoMView extends SuperView implements Serializa
         return OnCompleteHelper.onCompleteSupplierName(supplierService, query);
     }
 
-    public List<String> onCompleteMatType(String query) {
-        return OnCompleteHelper.onCompleteMatType(matTypeService, query);
+    public List<String> onCompleteMatTypeCode(String query) {
+        return OnCompleteHelper.onCompleteMatTypeCode(matTypeService, query);
     }
 
 

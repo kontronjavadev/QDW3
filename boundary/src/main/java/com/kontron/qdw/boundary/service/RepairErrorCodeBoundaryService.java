@@ -38,6 +38,31 @@ public class RepairErrorCodeBoundaryService {
         this.repository = repository;
     }
 
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public List<RepairErrorCodeGroupListDTO> findRepairErrorCodesGroup(String filter) {
+        // Collect the select tokens of all fields that should be fetched
+        final var selectTokens = new ArrayList<String>();
+        selectTokens.add(RepairErrorCodeGroupListDTO.SELECT_CODE);
+        selectTokens.add(RepairErrorCodeGroupListDTO.SELECT_GROUP_NAME);
+
+        // Initialize the search object
+        final var searchObj = new SearchDTO();
+        searchObj.setExactFilterMatch(true);
+        searchObj.setCaseSensitive(true);
+        searchObj.setMaxResult(SMALL_LIST_SIZE);
+        searchObj.setFromClause("from RepairErrorCode a");
+
+        if (filter != null && !filter.isEmpty() && !filter.equals(WILDCARD)) {
+            final var filterField = searchObj.addSearchField(RepairErrorCodeGroupListDTO.SELECT_GROUP_NAME, SearchFieldDataTypeEnum.STRING);
+            filterField.setFilterCriteria(filter + WILDCARD);
+            filterField.setSortIndex(1);
+            filterField.setSortOrder(SortDirectionEnum.ASC);
+        }
+
+        return repository.search(searchObj, RepairErrorCodeGroupListDTO.class, selectTokens);
+    }
+
     /**
      * Search for repair error code objects
      * @param filter
@@ -142,10 +167,12 @@ public class RepairErrorCodeBoundaryService {
         repairErrorCode.setActive(object.isActive());
         repairErrorCode.setVersion(object.getVersion());
 
-        if (object.getMappedTo() == null || object.getMappedTo().getCode().isEmpty())
+        if (object.getMappedTo() == null || object.getMappedTo().getCode().isEmpty()) {
             repairErrorCode.setMappedTo(null);
-        else
+        }
+        else {
             repairErrorCode.setMappedTo(repository.getReference(RepairErrorCode.class, object.getMappedTo().getCode()));
+        }
 
 
         repository.merge(repairErrorCode, true, false);
@@ -204,10 +231,12 @@ public class RepairErrorCodeBoundaryService {
         newRepairErrorCode.setComment(object.getComment() != null ? object.getComment().trim() : null);
         newRepairErrorCode.setActive(object.isActive());
 
-        if (object.getMappedTo() == null || object.getMappedTo().getCode().isEmpty())
+        if (object.getMappedTo() == null || object.getMappedTo().getCode().isEmpty()) {
             newRepairErrorCode.setMappedTo(null);
-        else
+        }
+        else {
             newRepairErrorCode.setMappedTo(repository.getReference(RepairErrorCode.class, object.getMappedTo().getCode()));
+        }
 
 
         newRepairErrorCode = repository.persist(newRepairErrorCode, true, true, true);

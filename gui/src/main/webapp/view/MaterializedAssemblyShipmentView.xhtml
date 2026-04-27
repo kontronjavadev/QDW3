@@ -174,9 +174,9 @@
 				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_9" id="s_9" value="#{materializedAssemblyShipmentView.searchObject.searchFields[9].sortOrder}">
 					<f:selectItems value="#{materializedAssemblyShipmentView.sortOrderList}"/>
 				</p:selectOneMenu>
-				<p:autoComplete minQueryLength="2" maxResults="10" completeMethod="#{materializedAssemblyShipmentView.onCompleteCountry}" id="fi_9" value="#{materializedAssemblyShipmentView.searchObject.searchFields[9].stringCriterion}" size="30"/>
+				<p:autoComplete minQueryLength="2" maxResults="10" completeMethod="#{materializedAssemblyShipmentView.onCompleteCountryName}" id="fi_9" value="#{materializedAssemblyShipmentView.searchObject.searchFields[9].stringCriterion}" size="30"/>
 				<h:panelGroup id="p_9">
-					<p:autoComplete minQueryLength="2" rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[9].between}" maxResults="10" completeMethod="#{materializedAssemblyShipmentView.onCompleteCountry}" id="b_9" value="#{materializedAssemblyShipmentView.searchObject.searchFields[9].stringBetweenCriterion}" size="30"/>
+					<p:autoComplete minQueryLength="2" rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[9].between}" maxResults="10" completeMethod="#{materializedAssemblyShipmentView.onCompleteCountryName}" id="b_9" value="#{materializedAssemblyShipmentView.searchObject.searchFields[9].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
 <!-- shipment date -->
@@ -244,9 +244,9 @@
 				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_14" id="s_14" value="#{materializedAssemblyShipmentView.searchObject.searchFields[14].sortOrder}">
 					<f:selectItems value="#{materializedAssemblyShipmentView.sortOrderList}"/>
 				</p:selectOneMenu>
-				<p:autoComplete minQueryLength="1" maxResults="10" completeMethod="#{materializedAssemblyShipmentView.onCompleteMvtType}" id="fi_14" value="#{materializedAssemblyShipmentView.searchObject.searchFields[14].stringCriterion}" size="30"/>
+				<p:autoComplete minQueryLength="1" maxResults="10" completeMethod="#{materializedAssemblyShipmentView.onCompleteMvtTypeCode}" id="fi_14" value="#{materializedAssemblyShipmentView.searchObject.searchFields[14].stringCriterion}" size="30"/>
 				<h:panelGroup id="p_14">
-					<p:autoComplete minQueryLength="1" rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[14].between}" maxResults="10" completeMethod="#{materializedAssemblyShipmentView.onCompleteMvtType}" id="b_14" value="#{materializedAssemblyShipmentView.searchObject.searchFields[14].stringBetweenCriterion}" size="30"/>
+					<p:autoComplete minQueryLength="1" rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[14].between}" maxResults="10" completeMethod="#{materializedAssemblyShipmentView.onCompleteMvtTypeCode}" id="b_14" value="#{materializedAssemblyShipmentView.searchObject.searchFields[14].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
 <!-- arrival movement type -->
@@ -258,9 +258,9 @@
 				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_15" id="s_15" value="#{materializedAssemblyShipmentView.searchObject.searchFields[15].sortOrder}">
 					<f:selectItems value="#{materializedAssemblyShipmentView.sortOrderList}"/>
 				</p:selectOneMenu>
-				<p:autoComplete minQueryLength="1" maxResults="10" completeMethod="#{materializedAssemblyShipmentView.onCompleteMvtType}" id="fi_15" value="#{materializedAssemblyShipmentView.searchObject.searchFields[15].stringCriterion}" size="30"/>
+				<p:autoComplete minQueryLength="1" maxResults="10" completeMethod="#{materializedAssemblyShipmentView.onCompleteMvtTypeCode}" id="fi_15" value="#{materializedAssemblyShipmentView.searchObject.searchFields[15].stringCriterion}" size="30"/>
 				<h:panelGroup id="p_15">
-					<p:autoComplete minQueryLength="1" rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[15].between}" maxResults="10" completeMethod="#{materializedAssemblyShipmentView.onCompleteMvtType}" id="b_15" value="#{materializedAssemblyShipmentView.searchObject.searchFields[15].stringBetweenCriterion}" size="30"/>
+					<p:autoComplete minQueryLength="1" rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[15].between}" maxResults="10" completeMethod="#{materializedAssemblyShipmentView.onCompleteMvtTypeCode}" id="b_15" value="#{materializedAssemblyShipmentView.searchObject.searchFields[15].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
 <!-- customer order no. -->
@@ -342,9 +342,9 @@
 				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_21" id="s_21" value="#{materializedAssemblyShipmentView.searchObject.searchFields[21].sortOrder}">
 					<f:selectItems value="#{materializedAssemblyShipmentView.sortOrderList}"/>
 				</p:selectOneMenu>
-				<p:autoComplete minQueryLength="1" maxResults="10" completeMethod="#{materializedAssemblyShipmentView.onCompleteMatType}" id="fi_21" value="#{materializedAssemblyShipmentView.searchObject.searchFields[21].stringCriterion}" size="30"/>
+				<p:autoComplete minQueryLength="1" maxResults="10" completeMethod="#{materializedAssemblyShipmentView.onCompleteMatTypeCode}" id="fi_21" value="#{materializedAssemblyShipmentView.searchObject.searchFields[21].stringCriterion}" size="30"/>
 				<h:panelGroup id="p_21">
-					<p:autoComplete minQueryLength="1" rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[21].between}" maxResults="10" completeMethod="#{materializedAssemblyShipmentView.onCompleteMatType}" id="b_21" value="#{materializedAssemblyShipmentView.searchObject.searchFields[21].stringBetweenCriterion}" size="30"/>
+					<p:autoComplete minQueryLength="1" rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[21].between}" maxResults="10" completeMethod="#{materializedAssemblyShipmentView.onCompleteMatTypeCode}" id="b_21" value="#{materializedAssemblyShipmentView.searchObject.searchFields[21].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
 <!-- mat. hierarchy -->
@@ -426,9 +426,9 @@
 				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_27" id="s_27" value="#{materializedAssemblyShipmentView.searchObject.searchFields[27].sortOrder}">
 					<f:selectItems value="#{materializedAssemblyShipmentView.sortOrderList}"/>
 				</p:selectOneMenu>
-				<p:autoComplete minQueryLength="1" maxResults="10" completeMethod="#{materializedAssemblyShipmentView.onCompleteMatType}" id="fi_27" value="#{materializedAssemblyShipmentView.searchObject.searchFields[27].stringCriterion}" size="30"/>
+				<p:autoComplete minQueryLength="1" maxResults="10" completeMethod="#{materializedAssemblyShipmentView.onCompleteMatTypeCode}" id="fi_27" value="#{materializedAssemblyShipmentView.searchObject.searchFields[27].stringCriterion}" size="30"/>
 				<h:panelGroup id="p_27">
-					<p:autoComplete minQueryLength="1" rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[27].between}" maxResults="10" completeMethod="#{materializedAssemblyShipmentView.onCompleteMatType}" id="b_27" value="#{materializedAssemblyShipmentView.searchObject.searchFields[27].stringBetweenCriterion}" size="30"/>
+					<p:autoComplete minQueryLength="1" rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[27].between}" maxResults="10" completeMethod="#{materializedAssemblyShipmentView.onCompleteMatTypeCode}" id="b_27" value="#{materializedAssemblyShipmentView.searchObject.searchFields[27].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
 <!-- p. mat. hierarchy -->

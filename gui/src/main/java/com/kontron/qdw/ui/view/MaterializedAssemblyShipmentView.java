@@ -344,16 +344,16 @@ public class MaterializedAssemblyShipmentView extends SuperView implements Seria
         return OnCompleteHelper.onCompleteCustomerName(customerService, query);
     }
 
-    public List<String> onCompleteCountry(String query) {
-        return OnCompleteHelper.onCompleteCountry(countryService, query);
+    public List<String> onCompleteCountryName(String query) {
+        return OnCompleteHelper.onCompleteCountryName(countryService, query);
     }
 
-    public List<String> onCompleteMatType(String query) {
-        return OnCompleteHelper.onCompleteMatType(matTypeService, query);
+    public List<String> onCompleteMatTypeCode(String query) {
+        return OnCompleteHelper.onCompleteMatTypeCode(matTypeService, query);
     }
 
     public List<String> onCompleteMvtType(String query) {
-        return OnCompleteHelper.onCompleteMvtType(mvtTypeService, query);
+        return OnCompleteHelper.onCompleteMvtTypeCode(mvtTypeService, query);
     }
 
 

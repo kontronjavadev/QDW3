@@ -202,9 +202,9 @@
 				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_11" id="s_11" value="#{serialObjectWithTraceBoMView.searchObject.searchFields[11].sortOrder}">
 					<f:selectItems value="#{serialObjectWithTraceBoMView.sortOrderList}"/>
 				</p:selectOneMenu>
-				<p:autoComplete minQueryLength="1" maxResults="10" completeMethod="#{serialObjectWithTraceBoMView.onCompleteMatType}" id="fi_11" value="#{serialObjectWithTraceBoMView.searchObject.searchFields[11].stringCriterion}" size="30"/>
+				<p:autoComplete minQueryLength="1" maxResults="10" completeMethod="#{serialObjectWithTraceBoMView.onCompleteMatTypeCode}" id="fi_11" value="#{serialObjectWithTraceBoMView.searchObject.searchFields[11].stringCriterion}" size="30"/>
 				<h:panelGroup id="p_11">
-					<p:autoComplete minQueryLength="1" rendered="#{serialObjectWithTraceBoMView.searchObject.searchFields[11].between}" maxResults="10" completeMethod="#{serialObjectWithTraceBoMView.onCompleteMatType}" id="b_11" value="#{serialObjectWithTraceBoMView.searchObject.searchFields[11].stringBetweenCriterion}" size="30"/>
+					<p:autoComplete minQueryLength="1" rendered="#{serialObjectWithTraceBoMView.searchObject.searchFields[11].between}" maxResults="10" completeMethod="#{serialObjectWithTraceBoMView.onCompleteMatTypeCode}" id="b_11" value="#{serialObjectWithTraceBoMView.searchObject.searchFields[11].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
 <!-- Material class -->

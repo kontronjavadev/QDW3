@@ -132,9 +132,9 @@
 				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_6" id="s_6" value="#{serialObjectView.searchObject.searchFields[6].sortOrder}">
 					<f:selectItems value="#{serialObjectView.sortOrderList}"/>
 				</p:selectOneMenu>
-				<p:autoComplete minQueryLength="1" maxResults="10" completeMethod="#{serialObjectView.onCompleteMatType}" id="fi_6" value="#{serialObjectView.searchObject.searchFields[6].stringCriterion}" size="30"/>
+				<p:autoComplete minQueryLength="1" maxResults="10" completeMethod="#{serialObjectView.onCompleteMatTypeCode}" id="fi_6" value="#{serialObjectView.searchObject.searchFields[6].stringCriterion}" size="30"/>
 				<h:panelGroup id="p_6">
-					<p:autoComplete minQueryLength="1" rendered="#{serialObjectView.searchObject.searchFields[6].between}" maxResults="10" completeMethod="#{serialObjectView.onCompleteMatType}" id="b_6" value="#{serialObjectView.searchObject.searchFields[6].stringBetweenCriterion}" size="30"/>
+					<p:autoComplete minQueryLength="1" rendered="#{serialObjectView.searchObject.searchFields[6].between}" maxResults="10" completeMethod="#{serialObjectView.onCompleteMatTypeCode}" id="b_6" value="#{serialObjectView.searchObject.searchFields[6].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
 <!-- Material class -->

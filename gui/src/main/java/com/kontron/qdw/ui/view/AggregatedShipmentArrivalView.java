@@ -5,7 +5,6 @@ import com.kontron.qdw.boundary.mv.*;
 import org.primefaces.model.DualListModel;
 import net.sourceforge.jbizmo.commons.webclient.primefaces.search.*;
 import static com.kontron.qdw.ui.TranslationKeys.*;
-import com.kontron.qdw.dto.base.*;
 import java.text.*;
 import static com.kontron.qdw.ui.UserSession.*;
 import jakarta.faces.model.*;
@@ -16,6 +15,8 @@ import com.kontron.qdw.boundary.base.*;
 import org.slf4j.*;
 import com.kontron.qdw.boundary.material.*;
 import java.lang.invoke.*;
+
+import com.kontron.qdw.ui.view.util.OnCompleteHelper;
 import com.kontron.qdw.ui.view.util.SuperView;
 import net.sourceforge.jbizmo.commons.webclient.primefaces.util.*;
 import jakarta.faces.application.FacesMessage;
@@ -450,21 +451,9 @@ public class AggregatedShipmentArrivalView extends SuperView implements Serializ
      * @param query the filter criterion inserted by the user
      * @return a list containing all proposals
      */
-    @Generated
+    @Customized
     public List<String> onCompleteCountryName(String query) {
-        final var results = new ArrayList<String>();
-
-        try {
-            final Collection<CountryListDTO> items = countryService.findCountries(query + "%");
-
-            for (final CountryListDTO item : items)
-                results.add(item.getName());
-        }
-        catch (final Exception e) {
-            logger.error("Error while searching for auto-complete items by using the entered text '{}'!", query, e);
-        }
-
-        return results;
+        return OnCompleteHelper.onCompleteCountryName(countryService, query);
     }
 
     /**
@@ -479,8 +468,9 @@ public class AggregatedShipmentArrivalView extends SuperView implements Serializ
         try {
             final Collection<MaterialListDTO> items = materialService.findMaterials(query + "%");
 
-            for (final MaterialListDTO item : items)
+            for (final MaterialListDTO item : items) {
                 results.add(item.getMaterialNumber());
+            }
         }
         catch (final Exception e) {
             logger.error("Error while searching for auto-complete items by using the entered text '{}'!", query, e);
@@ -521,8 +511,9 @@ public class AggregatedShipmentArrivalView extends SuperView implements Serializ
         final var items = new SelectItem[savedQueries.size()];
         int i = 0;
 
-        for (final String item : savedQueries)
+        for (final String item : savedQueries) {
             items[i++] = new SelectItem(item, item);
+        }
 
         return items;
     }
@@ -532,8 +523,9 @@ public class AggregatedShipmentArrivalView extends SuperView implements Serializ
      */
     @Generated
     public void deleteSavedQuery() {
-        if (selectedSavedQuery == null)
+        if (selectedSavedQuery == null) {
             return;
+        }
 
         logger.debug("Delete saved query");
 
@@ -548,8 +540,9 @@ public class AggregatedShipmentArrivalView extends SuperView implements Serializ
      */
     @Generated
     public void runSavedQuery() {
-        if (selectedSavedQuery == null)
+        if (selectedSavedQuery == null) {
             return;
+        }
 
         logger.debug("Run saved query");
 

@@ -322,12 +322,12 @@ public class ShipmentView extends SuperView implements Serializable {
         return OnCompleteHelper.onCompleteCustomerName(customerService, query);
     }
 
-    public List<String> onCompleteMatType(String query) {
-        return OnCompleteHelper.onCompleteMatType(matTypeService, query);
+    public List<String> onCompleteMatTypeCode(String query) {
+        return OnCompleteHelper.onCompleteMatTypeCode(matTypeService, query);
     }
 
-    public List<String> onCompleteMvtType(String query) {
-        return OnCompleteHelper.onCompleteMvtType(mvtTypeService, query);
+    public List<String> onCompleteMvtTypeCode(String query) {
+        return OnCompleteHelper.onCompleteMvtTypeCode(mvtTypeService, query);
     }
 
 
@@ -563,8 +563,9 @@ public class ShipmentView extends SuperView implements Serializable {
         final var items = new SelectItem[savedQueries.size()];
         int i = 0;
 
-        for (final String item : savedQueries)
+        for (final String item : savedQueries) {
             items[i++] = new SelectItem(item, item);
+        }
 
         return items;
     }
@@ -574,8 +575,9 @@ public class ShipmentView extends SuperView implements Serializable {
      */
     @Generated
     public void deleteSavedQuery() {
-        if (selectedSavedQuery == null)
+        if (selectedSavedQuery == null) {
             return;
+        }
 
         logger.debug("Delete saved query");
 
@@ -590,8 +592,9 @@ public class ShipmentView extends SuperView implements Serializable {
      */
     @Generated
     public void runSavedQuery() {
-        if (selectedSavedQuery == null)
+        if (selectedSavedQuery == null) {
             return;
+        }
 
         logger.debug("Run saved query");
 

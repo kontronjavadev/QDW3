@@ -4295,7 +4295,7 @@
   <net.sourceforge.jbizmo.model.java:Namespace name="serial" parent="/4" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="service" parent="/2" javaTypes="/408 /414 /429 /431 /433 /435 /437 /439 /441" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="service" parent="/1" javaTypes="/407 /413 /428 /430 /432 /434 /436 /438 /440" project="/0"/>
-  <net.sourceforge.jbizmo.model.java:Namespace name="service" parent="/3" javaTypes="/406 /412 /419 /427 /426 /422 /423 /425 /421 /424 /420 /445 /449 /452 /456 /460 /464 /467 /471 /475 /478 /482 /486 /489 /493 /497 /501 /505 /509 /512 /516 /520 /524 /527 /531 /535 /539 /542 /546" project="/0"/>
+  <net.sourceforge.jbizmo.model.java:Namespace name="service" parent="/3" javaTypes="/452 /445 /423 /456 /449 /467 /460 /424 /471 /464 /478 /475 /427 /486 /482 /489 /497 /422 /501 /493 /512 /505 /426 /516 /509 /527 /520 /425 /531 /524 /542 /535 /420 /546 /539 /419 /406 /412 /421 /547" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="service" parent="/4" project="/0"/>
   <net.sourceforge.jbizmo.model.client:Form name="AggregatedArrivalView" formType="SEARCHABLE_VIEW" formGroup="/247" title="Aggregated arrivals" formPanels="/261" dTO="/263" roles="/0/@roles.0 /0/@roles.1" boundaryMethod="/264/@boundaryMethods.0">
     <actions name="actionDelete" description="Delete selected aggregated arrival" boundaryMethod="/264/@boundaryMethods.2" type="DELETE"/>
@@ -8424,7 +8424,7 @@
     </attributes>
   </net.sourceforge.jbizmo.model.dto:DTOBean>
   <net.sourceforge.jbizmo.model.client:FormGroup name="Service" groupOrder="5" forms="/397 /403 /415 /409" roles="/0/@roles.0 /0/@roles.1" project="/0">
-    <childGroups name="Master data" parentGroup="/396" forms="/450 /465 /476 /487 /510 /525 /540 /446 /461 /479 /490 /506 /521 /536 /453 /468 /483 /498 /513 /528 /442 /457 /472 /494 /502 /517 /532 /543" roles="/0/@roles.0"/>
+    <childGroups name="Master data" parentGroup="/396" forms="/450 /465 /476 /487 /510 /525 /540 /446 /461 /479 /490 /506 /521 /536 /453 /468 /483 /498 /513 /528 /543 /442 /457 /472 /494 /502 /517 /532" roles="/0/@roles.0"/>
   </net.sourceforge.jbizmo.model.client:FormGroup>
   <net.sourceforge.jbizmo.model.client:Form name="MaterializedServiceMessageView" formType="SEARCHABLE_VIEW" formGroup="/396" title="Materialized service orders" formPanels="/398" dTO="/400" roles="/0/@roles.0 /0/@roles.1" boundaryMethod="/401/@boundaryMethods.0">
     <actions name="actionDelete" description="Delete selected materialized service message" boundaryMethod="/401/@boundaryMethods.2" type="DELETE"/>
@@ -11429,6 +11429,15 @@
     </attributes>
     <attributes name="lastUpdate" selectToken="a.lastUpdate">
       <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.4"/>
+    </attributes>
+  </net.sourceforge.jbizmo.model.dto:DTOBean>
+  <net.sourceforge.jbizmo.model.dto:DTOBean name="RepairErrorCodeGroupListDTO" comment="Instances of this class represent data transfer objects that are mapped to repair error code domain objects" namespace="/258" standardConversion="true" createdManually="true">
+    <domainObject href="package-service.xmi#//@domainObjects.5"/>
+    <attributes name="code">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.0"/>
+    </attributes>
+    <attributes name="groupName">
+      <domainAttribute href="package-service.xmi#//@domainObjects.5/@attributes.1"/>
     </attributes>
   </net.sourceforge.jbizmo.model.dto:DTOBean>
 </xmi:XMI>

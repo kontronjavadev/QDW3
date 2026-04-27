@@ -370,118 +370,57 @@ public class ServiceMessageOpenView extends SuperView implements Serializable {
 
 
 
-    /**
-     * Callback method for auto-complete field
-     * @param query the filter criterion inserted by the user
-     * @return a list containing all proposals
-     */
     @Customized
-    public List<String> onCompleteMaterialMaterialNumber(String query) {
-        return OnCompleteHelper.onCompleteMaterialNumber(materialService, query);
+    public List<String> onCompleteMaterialMaterialNumber(String searchText) {
+        return OnCompleteHelper.onCompleteMaterialNumber(materialService, searchText);
     }
 
-    public List<String> onCompleteSapNumber(String query) {
-        return OnCompleteHelper.onCompleteSapNumber(materialService, query);
+    public List<String> onCompleteSapNumber(String searchText) {
+        return OnCompleteHelper.onCompleteSapNumber(materialService, searchText);
     }
 
-    public List<String> onCompleteSymptom(String query) {
-        return OnCompleteHelper.onCompleteSymptom(faultAnalysisService, query);
+    public List<String> onCompleteSymptomCode(String searchText) {
+        return OnCompleteHelper.onCompleteSymptomCode(faultAnalysisService, searchText);
     }
 
-    /**
-     * Callback method for auto-complete field
-     * @param query the filter criterion inserted by the user
-     * @return a list containing all proposals
-     */
     @Customized
-    public List<String> onCompleteSupplierName(String query) {
-        return OnCompleteHelper.onCompleteSupplierName(supplierService, query);
+    public List<String> onCompleteSupplierName(String searchText) {
+        return OnCompleteHelper.onCompleteSupplierName(supplierService, searchText);
     }
 
-    /**
-     * Callback method for auto-complete field
-     * @param query the filter criterion inserted by the user
-     * @return a list containing all proposals
-     */
     @Customized
-    public List<String> onCompleteCustomerName(String query) {
-        return OnCompleteHelper.onCompleteCustomerName(customerService, query);
+    public List<String> onCompleteCustomerName(String searchText) {
+        return OnCompleteHelper.onCompleteCustomerName(customerService, searchText);
     }
 
-    /**
-     * Callback method for auto-complete field
-     * @param query the filter criterion inserted by the user
-     * @return a list containing all proposals
-     */
     @Customized
-    public List<String> onCompleteCountryName(String query) {
-        return OnCompleteHelper.onCompleteCountry(countryService, query);
+    public List<String> onCompleteCountryName(String searchText) {
+        return OnCompleteHelper.onCompleteCountryName(countryService, searchText);
     }
 
-    /**
-     * Callback method for auto-complete field
-     * @param query the filter criterion inserted by the user
-     * @return a list containing all proposals
-     */
+    @Customized
+    public List<String> onCompleteRepairStateName(String searchText) {
+        return OnCompleteHelper.onCompleteRepairStateName(repairStateService, searchText);
+    }
+
+    @Customized
+    public List<String> onCompleteRepairErrorCodeName(String searchText) {
+        return OnCompleteHelper.onCompleteRepairErrorCodeName(repairErrorCodeService, searchText);
+    }
+
     @Generated
-    public List<String> onCompleteRepairStateName(String query) {
+    public List<String> onCompleteRepairServiceName(String searchText) {
         final var results = new ArrayList<String>();
 
         try {
-            final Collection<RepairStateListDTO> items = repairStateService.findRepairStates(query + "%");
-
-            for (final RepairStateListDTO item : items) {
-                results.add(item.getName());
-            }
-        }
-        catch (final Exception e) {
-            logger.error("Error while searching for auto-complete items by using the entered text '{}'!", query, e);
-        }
-
-        return results;
-    }
-
-    /**
-     * Callback method for auto-complete field
-     * @param query the filter criterion inserted by the user
-     * @return a list containing all proposals
-     */
-    @Generated
-    public List<String> onCompleteRepairErrorCodeName(String query) {
-        final var results = new ArrayList<String>();
-
-        try {
-            final Collection<RepairErrorCodeListDTO> items = repairErrorCodeService.findRepairErrorCodes(query + "%");
-
-            for (final RepairErrorCodeListDTO item : items) {
-                results.add(item.getName());
-            }
-        }
-        catch (final Exception e) {
-            logger.error("Error while searching for auto-complete items by using the entered text '{}'!", query, e);
-        }
-
-        return results;
-    }
-
-    /**
-     * Callback method for auto-complete field
-     * @param query the filter criterion inserted by the user
-     * @return a list containing all proposals
-     */
-    @Generated
-    public List<String> onCompleteRepairServiceName(String query) {
-        final var results = new ArrayList<String>();
-
-        try {
-            final Collection<RepairServiceListDTO> items = repairServiceService.findRepairServices(query + "%");
+            final Collection<RepairServiceListDTO> items = repairServiceService.findRepairServices(searchText + "%");
 
             for (final RepairServiceListDTO item : items) {
                 results.add(item.getName());
             }
         }
         catch (final Exception e) {
-            logger.error("Error while searching for auto-complete items by using the entered text '{}'!", query, e);
+            logger.error("Error while searching for auto-complete items by using the entered text '{}'!", searchText, e);
         }
 
         return results;
