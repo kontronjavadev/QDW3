@@ -4295,7 +4295,7 @@
   <net.sourceforge.jbizmo.model.java:Namespace name="serial" parent="/4" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="service" parent="/2" javaTypes="/408 /414 /429 /431 /433 /435 /437 /439 /441" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="service" parent="/1" javaTypes="/407 /413 /428 /430 /432 /434 /436 /438 /440" project="/0"/>
-  <net.sourceforge.jbizmo.model.java:Namespace name="service" parent="/3" javaTypes="/406 /412 /419 /427 /426 /422 /423 /425 /421 /424 /420 /445 /449 /452 /456 /460 /464 /467 /471 /475 /478 /482 /486 /489 /493 /497 /501 /505 /509 /512 /516 /520 /524 /527 /531" project="/0"/>
+  <net.sourceforge.jbizmo.model.java:Namespace name="service" parent="/3" javaTypes="/406 /412 /419 /427 /426 /422 /423 /425 /421 /424 /420 /445 /449 /452 /456 /460 /464 /467 /471 /475 /478 /482 /486 /489 /493 /497 /501 /505 /509 /512 /516 /520 /524 /527 /531 /535 /539 /542 /546" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="service" parent="/4" project="/0"/>
   <net.sourceforge.jbizmo.model.client:Form name="AggregatedArrivalView" formType="SEARCHABLE_VIEW" formGroup="/247" title="Aggregated arrivals" formPanels="/261" dTO="/263" roles="/0/@roles.0 /0/@roles.1" boundaryMethod="/264/@boundaryMethods.0">
     <actions name="actionDelete" description="Delete selected aggregated arrival" boundaryMethod="/264/@boundaryMethods.2" type="DELETE"/>
@@ -8424,7 +8424,7 @@
     </attributes>
   </net.sourceforge.jbizmo.model.dto:DTOBean>
   <net.sourceforge.jbizmo.model.client:FormGroup name="Service" groupOrder="5" forms="/397 /403 /415 /409" roles="/0/@roles.0 /0/@roles.1" project="/0">
-    <childGroups name="Master data" parentGroup="/396" forms="/450 /465 /476 /487 /510 /525 /446 /461 /479 /490 /506 /521 /453 /468 /483 /498 /513 /442 /457 /472 /494 /502 /517 /528" roles="/0/@roles.0"/>
+    <childGroups name="Master data" parentGroup="/396" forms="/450 /465 /476 /487 /510 /525 /540 /446 /461 /479 /490 /506 /521 /536 /453 /468 /483 /498 /513 /528 /442 /457 /472 /494 /502 /517 /532 /543" roles="/0/@roles.0"/>
   </net.sourceforge.jbizmo.model.client:FormGroup>
   <net.sourceforge.jbizmo.model.client:Form name="MaterializedServiceMessageView" formType="SEARCHABLE_VIEW" formGroup="/396" title="Materialized service orders" formPanels="/398" dTO="/400" roles="/0/@roles.0 /0/@roles.1" boundaryMethod="/401/@boundaryMethods.0">
     <actions name="actionDelete" description="Delete selected materialized service message" boundaryMethod="/401/@boundaryMethods.2" type="DELETE"/>
@@ -10086,6 +10086,25 @@
     <boundaryMethods name="findRMATypes" comment="Search for RMA type objects" returnType="/420" returnTypeModifier="List" queryStatement="from RMAType a" customStatement="" methodType="SEARCH_BY_FILTER" serviceMethod="/437/@repositoryMethods.0">
       <methodParameters name="filter" type="/0/@allSupportedTypes.12"/>
     </boundaryMethods>
+    <boundaryMethods name="findRMATypeById" comment="Find RMA type by its ID" returnType="/535" methodType="FIND_BY_ID" serviceMethod="/437/@repositoryMethods.0">
+      <methodParameters name="code" type="/0/@allSupportedTypes.12"/>
+    </boundaryMethods>
+    <boundaryMethods name="updateRMAType" comment="Update existing RMA type object" returnType="/0/@allSupportedTypes.0" methodType="UPDATE" serviceMethod="/437/@repositoryMethods.4">
+      <methodParameters name="object" type="/539"/>
+    </boundaryMethods>
+    <boundaryMethods name="getRMATypeForUpdate" comment="Find RMA type by its ID" returnType="/539" methodType="FIND_BY_ID" serviceMethod="/437/@repositoryMethods.0">
+      <methodParameters name="code" type="/0/@allSupportedTypes.12"/>
+    </boundaryMethods>
+    <boundaryMethods name="createRMAType" comment="Create new RMA type" returnType="/542" methodType="CREATE" serviceMethod="/437/@repositoryMethods.5">
+      <methodParameters name="object" type="/542"/>
+    </boundaryMethods>
+    <boundaryMethods name="searchAllRMATypes" comment="Search for RMA type objects" returnType="/546" returnTypeModifier="List" queryStatement="from RMAType a" customStatement="" methodType="SEARCH" serviceMethod="/437/@repositoryMethods.11"/>
+    <boundaryMethods name="deleteRMAType" comment="Delete existing RMA type" returnType="/0/@allSupportedTypes.0" serviceMethod="/437/@repositoryMethods.7">
+      <methodParameters name="code" type="/0/@allSupportedTypes.12"/>
+    </boundaryMethods>
+    <boundaryMethods name="copy" comment="Create copy of selected RMA type" returnType="/0/@allSupportedTypes.12" methodType="COPY" serviceMethod="/437/@repositoryMethods.6">
+      <methodParameters name="sourceObjectId" type="/0/@allSupportedTypes.12"/>
+    </boundaryMethods>
   </net.sourceforge.jbizmo.model.boundary:BoundaryBean>
   <net.sourceforge.jbizmo.model.repository:Repository name="RMATypeRepository" comment="Create, read, update and delete services for RMA type objects." namespace="/256">
     <domainObject href="package-service.xmi#//@domainObjects.3"/>
@@ -11206,8 +11225,8 @@
   </net.sourceforge.jbizmo.model.client:Form>
   <net.sourceforge.jbizmo.model.client:FormPanel name="panRepairTask" label="Basic data" form="/525">
     <fields name="txtCode" label="Code" width="140" dTOAttribute="/527/@attributes.0"/>
-    <fields name="txtShortText" colIndex="2" label="Short text" mandatory="false" width="140" dTOAttribute="/527/@attributes.1"/>
-    <fields name="cboMappedTo" rowIndex="2" label="Mapped to" mandatory="false" fieldType="PROPOSAL_TEXT" width="140" dTOAttribute="/527/@attributes.5"/>
+    <fields name="cboMappedTo" colIndex="2" label="Mapped to" mandatory="false" fieldType="PROPOSAL_TEXT" width="140" dTOAttribute="/527/@attributes.5"/>
+    <fields name="txtShortText" rowIndex="2" label="Short text" spanCols="true" mandatory="false" width="140" dTOAttribute="/527/@attributes.1"/>
     <fields name="txtComment" rowIndex="3" label="Comment" spanCols="true" mandatory="false" fieldType="MULTI_LINE_TEXT" dTOAttribute="/527/@attributes.2"/>
     <fields name="txtCreationDate" rowIndex="4" visible="false" label="Creation date" readonly="true" fieldType="DATE_TIME" width="120" dTOAttribute="/527/@attributes.3"/>
     <fields name="txtVersion" rowIndex="5" visible="false" label="Version" readonly="true" width="120" dTOAttribute="/527/@attributes.4"/>
@@ -11251,6 +11270,151 @@
   </net.sourceforge.jbizmo.model.client:FormTable>
   <net.sourceforge.jbizmo.model.dto:DTOBean name="RepairTaskSearchDTO" comment="DTO for repair task objects" namespace="/258">
     <domainObject href="package-service.xmi#//@domainObjects.7"/>
+    <attributes name="code" selectToken="a.code">
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.0"/>
+    </attributes>
+    <attributes name="shortText" selectToken="a.shortText">
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.1"/>
+    </attributes>
+    <attributes name="comment" selectToken="a.comment">
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.2"/>
+    </attributes>
+    <attributes name="creationDate" selectToken="a.creationDate">
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.3"/>
+    </attributes>
+    <attributes name="lastUpdate" selectToken="a.lastUpdate">
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.4"/>
+    </attributes>
+  </net.sourceforge.jbizmo.model.dto:DTOBean>
+  <net.sourceforge.jbizmo.model.client:Form name="ViewRMATypeDialog" formType="READONLY" formGroup="/396/@childGroups.0" title="View RMA type" formPanels="/533 /534" dTO="/535" roles="/0/@roles.0">
+    <actions name="actionGet" boundaryMethod="/436/@boundaryMethods.1" type="READ"/>
+    <domainObject href="package-service.xmi#//@domainObjects.3"/>
+  </net.sourceforge.jbizmo.model.client:Form>
+  <net.sourceforge.jbizmo.model.client:FormPanel name="panRMAType" label="Basic data" form="/532">
+    <fields name="txtCode" label="Code" readonly="true" width="140" dTOAttribute="/535/@attributes.0"/>
+    <fields name="txtShortText" colIndex="2" label="Short text" readonly="true" mandatory="false" width="140" dTOAttribute="/535/@attributes.1"/>
+    <fields name="cboMappedTo" rowIndex="2" label="Mapped to" readonly="true" mandatory="false" fieldType="FORM_LINK" width="140" dTOAttribute="/535/@attributes.6"/>
+    <fields name="txtComment" rowIndex="3" label="Comment" spanCols="true" readonly="true" mandatory="false" fieldType="MULTI_LINE_TEXT" dTOAttribute="/535/@attributes.2"/>
+  </net.sourceforge.jbizmo.model.client:FormPanel>
+  <net.sourceforge.jbizmo.model.client:FormPanel name="panAdministration" colIndex="2" label="Administration data" form="/532">
+    <fields name="txtCreationDate" label="Creation date" readonly="true" fieldType="DATE_TIME" width="120" dTOAttribute="/535/@attributes.3"/>
+    <fields name="txtLastUpdate" rowIndex="2" label="Last update" readonly="true" mandatory="false" fieldType="DATE_TIME" width="120" dTOAttribute="/535/@attributes.4"/>
+    <fields name="txtVersion" rowIndex="3" label="Version" readonly="true" width="120" dTOAttribute="/535/@attributes.5"/>
+  </net.sourceforge.jbizmo.model.client:FormPanel>
+  <net.sourceforge.jbizmo.model.dto:DTOBean name="RMATypeDTO" comment="Data transfer object for RMA type objects" namespace="/258" standardConversion="true">
+    <domainObject href="package-service.xmi#//@domainObjects.3"/>
+    <attributes name="code">
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.0"/>
+    </attributes>
+    <attributes name="shortText">
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.1"/>
+    </attributes>
+    <attributes name="comment">
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.2"/>
+    </attributes>
+    <attributes name="creationDate">
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.3"/>
+    </attributes>
+    <attributes name="lastUpdate">
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.4"/>
+    </attributes>
+    <attributes name="version">
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.5"/>
+    </attributes>
+    <attributes name="mappedTo" referencedDTOBean="/420">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-service.xmi#//@domainObjects.3/@associations.0"/>
+    </attributes>
+  </net.sourceforge.jbizmo.model.dto:DTOBean>
+  <net.sourceforge.jbizmo.model.client:Form name="EditRMATypeDialog" formGroup="/396/@childGroups.0" title="Edit RMA type" formPanels="/537 /538" dTO="/539" roles="/0/@roles.0">
+    <actions name="actionUpdate" boundaryMethod="/436/@boundaryMethods.2" type="UPDATE"/>
+    <domainObject href="package-service.xmi#//@domainObjects.3"/>
+  </net.sourceforge.jbizmo.model.client:Form>
+  <net.sourceforge.jbizmo.model.client:FormPanel name="panRMAType" label="Basic data" form="/536">
+    <fields name="txtCode" label="Code" readonly="true" width="140" dTOAttribute="/539/@attributes.0"/>
+    <fields name="txtShortText" colIndex="2" label="Short text" mandatory="false" width="140" dTOAttribute="/539/@attributes.1"/>
+    <fields name="cboMappedTo" rowIndex="2" label="Mapped to" mandatory="false" fieldType="PROPOSAL_TEXT" width="140" dTOAttribute="/539/@attributes.6"/>
+    <fields name="txtComment" rowIndex="3" label="Comment" spanCols="true" mandatory="false" fieldType="MULTI_LINE_TEXT" dTOAttribute="/539/@attributes.2"/>
+  </net.sourceforge.jbizmo.model.client:FormPanel>
+  <net.sourceforge.jbizmo.model.client:FormPanel name="panAdministration" colIndex="2" label="Administration data" form="/536">
+    <fields name="txtCreationDate" label="Creation date" readonly="true" fieldType="DATE_TIME" width="120" dTOAttribute="/539/@attributes.3"/>
+    <fields name="txtLastUpdate" rowIndex="2" label="Last update" readonly="true" mandatory="false" fieldType="DATE_TIME" width="120" dTOAttribute="/539/@attributes.4"/>
+    <fields name="txtVersion" rowIndex="3" label="Version" readonly="true" width="120" dTOAttribute="/539/@attributes.5"/>
+  </net.sourceforge.jbizmo.model.client:FormPanel>
+  <net.sourceforge.jbizmo.model.dto:DTOBean name="RMATypeUpdateDTO" comment="Data transfer object for RMA type objects" namespace="/258" standardConversion="true">
+    <domainObject href="package-service.xmi#//@domainObjects.3"/>
+    <attributes name="code">
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.0"/>
+    </attributes>
+    <attributes name="shortText">
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.1"/>
+    </attributes>
+    <attributes name="comment">
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.2"/>
+    </attributes>
+    <attributes name="creationDate">
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.3"/>
+    </attributes>
+    <attributes name="lastUpdate">
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.4"/>
+    </attributes>
+    <attributes name="version">
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.5"/>
+    </attributes>
+    <attributes name="mappedTo" referencedDTOBean="/420">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-service.xmi#//@domainObjects.3/@associations.0"/>
+    </attributes>
+  </net.sourceforge.jbizmo.model.dto:DTOBean>
+  <net.sourceforge.jbizmo.model.client:Form name="CreateNewRMATypeDialog" formType="CREATE" formGroup="/396/@childGroups.0" title="Create new RMA type" formPanels="/541" dTO="/542" roles="/0/@roles.0">
+    <actions name="actionCreate" boundaryMethod="/436/@boundaryMethods.4"/>
+    <domainObject href="package-service.xmi#//@domainObjects.3"/>
+  </net.sourceforge.jbizmo.model.client:Form>
+  <net.sourceforge.jbizmo.model.client:FormPanel name="panRMAType" label="Basic data" form="/540">
+    <fields name="txtCode" label="Code" width="140" dTOAttribute="/542/@attributes.0"/>
+    <fields name="txtShortText" colIndex="2" label="Short text" mandatory="false" width="140" dTOAttribute="/542/@attributes.1"/>
+    <fields name="cboMappedTo" rowIndex="2" label="Mapped to" mandatory="false" fieldType="PROPOSAL_TEXT" width="140" dTOAttribute="/542/@attributes.5"/>
+    <fields name="txtComment" rowIndex="3" label="Comment" spanCols="true" mandatory="false" fieldType="MULTI_LINE_TEXT" dTOAttribute="/542/@attributes.2"/>
+    <fields name="txtCreationDate" rowIndex="4" visible="false" label="Creation date" readonly="true" fieldType="DATE_TIME" width="120" dTOAttribute="/542/@attributes.3"/>
+    <fields name="txtVersion" rowIndex="5" visible="false" label="Version" readonly="true" width="120" dTOAttribute="/542/@attributes.4"/>
+  </net.sourceforge.jbizmo.model.client:FormPanel>
+  <net.sourceforge.jbizmo.model.dto:DTOBean name="RMATypeCreateDTO" comment="Data transfer object for RMA type objects" namespace="/258" standardConversion="true">
+    <domainObject href="package-service.xmi#//@domainObjects.3"/>
+    <attributes name="code">
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.0"/>
+    </attributes>
+    <attributes name="shortText">
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.1"/>
+    </attributes>
+    <attributes name="comment">
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.2"/>
+    </attributes>
+    <attributes name="creationDate">
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.3"/>
+    </attributes>
+    <attributes name="version">
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.5"/>
+    </attributes>
+    <attributes name="mappedTo" referencedDTOBean="/420">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-service.xmi#//@domainObjects.3/@associations.0"/>
+    </attributes>
+  </net.sourceforge.jbizmo.model.dto:DTOBean>
+  <net.sourceforge.jbizmo.model.client:Form name="RMATypeView" formType="SIMPLE_VIEW" formGroup="/396/@childGroups.0" title="RMA types" formPanels="/544" dTO="/546" roles="/0/@roles.0" boundaryMethod="/436/@boundaryMethods.5">
+    <actions name="actionDelete" description="Delete selected RMA type" boundaryMethod="/436/@boundaryMethods.6" roles="/0/@roles.0" type="DELETE"/>
+    <actions name="actionCreate" description="Create new RMA type" targetForm="/540" roles="/0/@roles.0"/>
+    <actions name="actionUpdate" description="Edit RMA type" targetForm="/536" roles="/0/@roles.0" type="UPDATE"/>
+    <actions name="actionGet" description="View RMA type" targetForm="/532" roles="/0/@roles.0" type="READ"/>
+    <actions name="actionCopy" description="Create copy of selected RMA type" boundaryMethod="/436/@boundaryMethods.7" roles="/0/@roles.0" type="COPY"/>
+    <domainObject href="package-service.xmi#//@domainObjects.3"/>
+  </net.sourceforge.jbizmo.model.client:Form>
+  <net.sourceforge.jbizmo.model.client:FormPanel name="RMATypePanel" form="/543" formTable="/545" dTO="/546"/>
+  <net.sourceforge.jbizmo.model.client:FormTable name="RMATypeTable" formPanel="/544">
+    <fields identifier="true" title="Code" dTOAttribute="/546/@attributes.0"/>
+    <fields colIndex="2" width="250" title="Short text" dTOAttribute="/546/@attributes.1"/>
+    <fields colIndex="3" width="250" title="Comment" dTOAttribute="/546/@attributes.2"/>
+    <fields colIndex="4" width="120" title="Creation date" fieldType="LOCAL_DATE_TIME" dTOAttribute="/546/@attributes.3"/>
+    <fields colIndex="5" width="120" title="Last update" fieldType="LOCAL_DATE_TIME" dTOAttribute="/546/@attributes.4"/>
+  </net.sourceforge.jbizmo.model.client:FormTable>
+  <net.sourceforge.jbizmo.model.dto:DTOBean name="RMATypeSearchDTO" comment="DTO for rma type objects" namespace="/258">
+    <domainObject href="package-service.xmi#//@domainObjects.3"/>
     <attributes name="code" selectToken="a.code">
       <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.0"/>
     </attributes>

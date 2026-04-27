@@ -85,17 +85,16 @@ public class NavigatorView implements Serializable {
             itemGroup0001.setExpanded(false);
 
             if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_USER_ADMINISTRATOR))
-                new DefaultTreeNode<>(VIEW_TYPE,
-                        new TreeNavigatorItem(bundle.getString(FORM_USERVIEW_TITLE), req.getContextPath() + "/view/UserView.jsf"), itemGroup0001);
+                new DefaultTreeNode<>(VIEW_TYPE, new TreeNavigatorItem(bundle.getString(FORM_USERVIEW_TITLE),
+                        req.getContextPath() + "/view/UserView.jsf"), itemGroup0001);
 
             if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_USER_ADMINISTRATOR))
-                new DefaultTreeNode<>(VIEW_TYPE,
-                        new TreeNavigatorItem(bundle.getString(FORM_ROLEVIEW_TITLE), req.getContextPath() + "/view/RoleView.jsf"), itemGroup0001);
+                new DefaultTreeNode<>(VIEW_TYPE, new TreeNavigatorItem(bundle.getString(FORM_ROLEVIEW_TITLE),
+                        req.getContextPath() + "/view/RoleView.jsf"), itemGroup0001);
 
             if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_MAINTAINER))
-                new DefaultTreeNode<>(VIEW_TYPE,
-                        new TreeNavigatorItem(bundle.getString(FORM_NOTIFICATIONVIEW_TITLE), req.getContextPath() + "/view/NotificationView.jsf"),
-                        itemGroup0001);
+                new DefaultTreeNode<>(VIEW_TYPE, new TreeNavigatorItem(bundle.getString(FORM_NOTIFICATIONVIEW_TITLE),
+                        req.getContextPath() + "/view/NotificationView.jsf"), itemGroup0001);
         }
 
         if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR)) {
@@ -104,53 +103,44 @@ public class NavigatorView implements Serializable {
             itemGroup0002.setExpanded(false);
 
             if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR))
-                new DefaultTreeNode<>(VIEW_TYPE,
-                        new TreeNavigatorItem(bundle.getString(FORM_BUSINESSUNITVIEW_TITLE), req.getContextPath() + "/view/BusinessUnitView.jsf"),
-                        itemGroup0002);
+                new DefaultTreeNode<>(VIEW_TYPE, new TreeNavigatorItem(bundle.getString(FORM_BUSINESSUNITVIEW_TITLE),
+                        req.getContextPath() + "/view/BusinessUnitView.jsf"), itemGroup0002);
 
             if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR))
-                new DefaultTreeNode<>(VIEW_TYPE,
-                        new TreeNavigatorItem(bundle.getString(FORM_COUNTRYVIEW_TITLE), req.getContextPath() + "/view/CountryView.jsf"),
-                        itemGroup0002);
+                new DefaultTreeNode<>(VIEW_TYPE, new TreeNavigatorItem(bundle.getString(FORM_COUNTRYVIEW_TITLE),
+                        req.getContextPath() + "/view/CountryView.jsf"), itemGroup0002);
 
             if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR))
-                new DefaultTreeNode<>(VIEW_TYPE,
-                        new TreeNavigatorItem(bundle.getString(FORM_CUSTOMERVIEW_TITLE), req.getContextPath() + "/view/CustomerView.jsf"),
-                        itemGroup0002);
+                new DefaultTreeNode<>(VIEW_TYPE, new TreeNavigatorItem(bundle.getString(FORM_CUSTOMERVIEW_TITLE),
+                        req.getContextPath() + "/view/CustomerView.jsf"), itemGroup0002);
 
             if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR))
-                new DefaultTreeNode<>(VIEW_TYPE,
-                        new TreeNavigatorItem(bundle.getString(FORM_LOCATIONVIEW_TITLE), req.getContextPath() + "/view/LocationView.jsf"),
-                        itemGroup0002);
+                new DefaultTreeNode<>(VIEW_TYPE, new TreeNavigatorItem(bundle.getString(FORM_LOCATIONVIEW_TITLE),
+                        req.getContextPath() + "/view/LocationView.jsf"), itemGroup0002);
 
             if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR))
-                new DefaultTreeNode<>(VIEW_TYPE,
-                        new TreeNavigatorItem(bundle.getString(FORM_MATERIALCLASSVIEW_TITLE), req.getContextPath() + "/view/MaterialClassView.jsf"),
-                        itemGroup0002);
+                new DefaultTreeNode<>(VIEW_TYPE, new TreeNavigatorItem(bundle.getString(FORM_MATERIALCLASSVIEW_TITLE),
+                        req.getContextPath() + "/view/MaterialClassView.jsf"), itemGroup0002);
 
             if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR))
-                new DefaultTreeNode<>(VIEW_TYPE,
-                        new TreeNavigatorItem(bundle.getString(FORM_MATERIALTYPEVIEW_TITLE), req.getContextPath() + "/view/MaterialTypeView.jsf"),
-                        itemGroup0002);
+                new DefaultTreeNode<>(VIEW_TYPE, new TreeNavigatorItem(bundle.getString(FORM_MATERIALTYPEVIEW_TITLE),
+                        req.getContextPath() + "/view/MaterialTypeView.jsf"), itemGroup0002);
 
             if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR))
-                new DefaultTreeNode<>(VIEW_TYPE,
-                        new TreeNavigatorItem(bundle.getString(FORM_MOVEMENTTYPEVIEW_TITLE), req.getContextPath() + "/view/MovementTypeView.jsf"),
-                        itemGroup0002);
+                new DefaultTreeNode<>(VIEW_TYPE, new TreeNavigatorItem(bundle.getString(FORM_MOVEMENTTYPEVIEW_TITLE),
+                        req.getContextPath() + "/view/MovementTypeView.jsf"), itemGroup0002);
 
             if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR))
-                new DefaultTreeNode<>(VIEW_TYPE,
-                        new TreeNavigatorItem(bundle.getString(FORM_PLANTVIEW_TITLE), req.getContextPath() + "/view/PlantView.jsf"), itemGroup0002);
+                new DefaultTreeNode<>(VIEW_TYPE, new TreeNavigatorItem(bundle.getString(FORM_PLANTVIEW_TITLE),
+                        req.getContextPath() + "/view/PlantView.jsf"), itemGroup0002);
 
             if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR))
-                new DefaultTreeNode<>(VIEW_TYPE,
-                        new TreeNavigatorItem(bundle.getString(FORM_SUPPLIERVIEW_TITLE), req.getContextPath() + "/view/SupplierView.jsf"),
-                        itemGroup0002);
+                new DefaultTreeNode<>(VIEW_TYPE, new TreeNavigatorItem(bundle.getString(FORM_SUPPLIERVIEW_TITLE),
+                        req.getContextPath() + "/view/SupplierView.jsf"), itemGroup0002);
 
             if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR))
-                new DefaultTreeNode<>(VIEW_TYPE,
-                        new TreeNavigatorItem(bundle.getString(FORM_VERTICALSECTORVIEW_TITLE), req.getContextPath() + "/view/VerticalSectorView.jsf"),
-                        itemGroup0002);
+                new DefaultTreeNode<>(VIEW_TYPE, new TreeNavigatorItem(bundle.getString(FORM_VERTICALSECTORVIEW_TITLE),
+                        req.getContextPath() + "/view/VerticalSectorView.jsf"), itemGroup0002);
         }
 
         if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY, ROLE_SUPERUSER)) {
@@ -280,15 +270,18 @@ public class NavigatorView implements Serializable {
 
                 // Repair states
                 if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR))
-                    new DefaultTreeNode<>(VIEW_TYPE,
-                            new TreeNavigatorItem(bundle.getString(FORM_REPAIRSTATEVIEW_TITLE), req.getContextPath() + "/view/RepairStateView.jsf"),
-                            itemGroup0006);
+                    new DefaultTreeNode<>(VIEW_TYPE, new TreeNavigatorItem(bundle.getString(FORM_REPAIRSTATEVIEW_TITLE),
+                            req.getContextPath() + "/view/RepairStateView.jsf"), itemGroup0006);
 
                 // Repair tasks
                 if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR))
-                    new DefaultTreeNode<>(VIEW_TYPE,
-                            new TreeNavigatorItem(bundle.getString(FORM_REPAIRTASKVIEW_TITLE), req.getContextPath() + "/view/RepairTaskView.jsf"),
-                            itemGroup0006);
+                    new DefaultTreeNode<>(VIEW_TYPE, new TreeNavigatorItem(bundle.getString(FORM_REPAIRTASKVIEW_TITLE),
+                            req.getContextPath() + "/view/RepairTaskView.jsf"), itemGroup0006);
+
+                // RMA types
+                if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR))
+                    new DefaultTreeNode<>(VIEW_TYPE, new TreeNavigatorItem(bundle.getString(FORM_RMATYPEVIEW_TITLE),
+                            req.getContextPath() + "/view/RMATypeView.jsf"), itemGroup0006);
             }
 
             // Materialized service orders
