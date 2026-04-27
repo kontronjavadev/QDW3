@@ -256,7 +256,7 @@ public class NavigatorView implements Serializable {
                 // Form group: Master data
                 final var itemGroup0006 = new DefaultTreeNode<>(FOLDER_TYPE, new TreeNavigatorItem(bundle.getString(FG_SERVICE_MASTER_DATA)),
                         itemGroup0005);
-                itemGroup0006.setExpanded(true);
+                itemGroup0006.setExpanded(false);
 
                 // Symptoms
                 if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR))
@@ -282,6 +282,12 @@ public class NavigatorView implements Serializable {
                 if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR))
                     new DefaultTreeNode<>(VIEW_TYPE,
                             new TreeNavigatorItem(bundle.getString(FORM_REPAIRSTATEVIEW_TITLE), req.getContextPath() + "/view/RepairStateView.jsf"),
+                            itemGroup0006);
+
+                // Repair tasks
+                if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR))
+                    new DefaultTreeNode<>(VIEW_TYPE,
+                            new TreeNavigatorItem(bundle.getString(FORM_REPAIRTASKVIEW_TITLE), req.getContextPath() + "/view/RepairTaskView.jsf"),
                             itemGroup0006);
             }
 
