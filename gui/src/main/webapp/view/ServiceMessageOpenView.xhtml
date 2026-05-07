@@ -244,9 +244,9 @@
 				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_14" id="s_14" value="#{serviceMessageOpenView.searchObject.searchFields[14].sortOrder}">
 					<f:selectItems value="#{serviceMessageOpenView.sortOrderList}"/>
 				</p:selectOneMenu>
-				<p:autoComplete minQueryLength="2" maxResults="10" completeMethod="#{serviceMessageOpenView.onCompleteRepairErrorCodeGroupName}" id="fi_14" value="#{serviceMessageOpenView.searchObject.searchFields[14].stringCriterion}" size="30"/>
+				<p:autoComplete minQueryLength="1" maxResults="10" completeMethod="#{serviceMessageOpenView.onCompleteRepairErrorCodeGroupName}" id="fi_14" value="#{serviceMessageOpenView.searchObject.searchFields[14].stringCriterion}" size="30"/>
 				<h:panelGroup id="p_14">
-					<p:autoComplete minQueryLength="2" rendered="#{serviceMessageOpenView.searchObject.searchFields[14].between}" maxResults="10" completeMethod="#{serviceMessageOpenView.onCompleteRepairErrorCodeGroupName}" id="b_14" value="#{serviceMessageOpenView.searchObject.searchFields[14].stringBetweenCriterion}" size="30"/>
+					<p:autoComplete minQueryLength="1" rendered="#{serviceMessageOpenView.searchObject.searchFields[14].between}" maxResults="10" completeMethod="#{serviceMessageOpenView.onCompleteRepairErrorCodeGroupName}" id="b_14" value="#{serviceMessageOpenView.searchObject.searchFields[14].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
 <!-- Cause code -->
@@ -356,9 +356,9 @@
 				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_22" id="s_22" value="#{serviceMessageOpenView.searchObject.searchFields[22].sortOrder}">
 					<f:selectItems value="#{serviceMessageOpenView.sortOrderList}"/>
 				</p:selectOneMenu>
-				<p:autoComplete minQueryLength="2" maxResults="10" completeMethod="#{serviceMessageOpenView.onCompleteRepairTaskCode}" id="fi_27" value="#{serviceMessageOpenView.searchObject.searchFields[27].stringCriterion}" size="30"/>
-				<h:panelGroup id="p_27">
-					<p:autoComplete minQueryLength="2" rendered="#{serviceMessageOpenView.searchObject.searchFields[27].between}" maxResults="10" completeMethod="#{serviceMessageOpenView.onCompleteRepairTaskCode}" id="b_27" value="#{serviceMessageOpenView.searchObject.searchFields[27].stringBetweenCriterion}" size="30"/>
+				<p:autoComplete minQueryLength="2" maxResults="10" completeMethod="#{serviceMessageOpenView.onCompleteRepairTaskCode}" id="fi_22" value="#{serviceMessageOpenView.searchObject.searchFields[22].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_22">
+					<p:autoComplete minQueryLength="2" rendered="#{serviceMessageOpenView.searchObject.searchFields[22].between}" maxResults="10" completeMethod="#{serviceMessageOpenView.onCompleteRepairTaskCode}" id="b_22" value="#{serviceMessageOpenView.searchObject.searchFields[22].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
 <!-- Repair task short text -->

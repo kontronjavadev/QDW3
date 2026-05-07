@@ -116,6 +116,7 @@ public final class OnCompleteHelper {
             Collection<D> items = search.apply(searchTextSupplier.get());
             return items.stream()
                     .map(resultMapper)
+                    .distinct()
                     .collect(Collectors.toCollection(ArrayList::new));
         }
         catch (final Exception e) {

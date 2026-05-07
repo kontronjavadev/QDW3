@@ -430,9 +430,9 @@
 					<f:selectItems value="#{materializedServiceMessageView.sortOrderList}"/>
 				</p:selectOneMenu>
 				<!-- => repair error codes: group name -->
-				<p:autoComplete minQueryLength="2" maxResults="10" completeMethod="#{materializedServiceMessageView.onCompleteRepairErrorCodeGroupName}" id="fi_27" value="#{materializedServiceMessageView.searchObject.searchFields[27].stringCriterion}" size="30"/>
+				<p:autoComplete minQueryLength="1" maxResults="10" completeMethod="#{materializedServiceMessageView.onCompleteRepairErrorCodeGroupName}" id="fi_27" value="#{materializedServiceMessageView.searchObject.searchFields[27].stringCriterion}" size="30"/>
 				<h:panelGroup id="p_27">
-					<p:autoComplete minQueryLength="2" rendered="#{materializedServiceMessageView.searchObject.searchFields[27].between}" maxResults="10" completeMethod="#{materializedServiceMessageView.onCompleteRepairErrorCodeGroupName}" id="b_27" value="#{materializedServiceMessageView.searchObject.searchFields[27].stringBetweenCriterion}" size="30"/>
+					<p:autoComplete minQueryLength="1" rendered="#{materializedServiceMessageView.searchObject.searchFields[27].between}" maxResults="10" completeMethod="#{materializedServiceMessageView.onCompleteRepairErrorCodeGroupName}" id="b_27" value="#{materializedServiceMessageView.searchObject.searchFields[27].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
 <!-- Cause code name -->
