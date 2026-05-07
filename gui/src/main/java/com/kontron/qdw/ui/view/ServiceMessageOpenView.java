@@ -66,8 +66,12 @@ public class ServiceMessageOpenView extends SuperView implements Serializable {
     private final transient RepairServiceBoundaryService repairServiceService;
     @Generated
     private final transient SupplierBoundaryService supplierService;
-    @Generated
+
     private final transient FaultAnalysisBoundaryService faultAnalysisService;
+    private final transient MaterialTypeBoundaryService matTypeService;
+    private final transient RMATypeBoundaryService rMATypeService;
+    private final transient RepairTaskBoundaryService repairTaskService;
+
     @Generated
     public static final String VIEW_ID = "com.kontron.qdw.ui.view.ServiceMessageOpenView";
     @Generated
@@ -90,8 +94,12 @@ public class ServiceMessageOpenView extends SuperView implements Serializable {
         repairErrorCodeService = null;
         repairServiceService = null;
         supplierService = null;
-        queryManager = null;
         faultAnalysisService = null;
+        matTypeService = null;
+        rMATypeService = null;
+        repairTaskService = null;
+
+        queryManager = null;
     }
 
     @Inject
@@ -101,6 +109,7 @@ public class ServiceMessageOpenView extends SuperView implements Serializable {
             RepairStateBoundaryService repairStateService, RepairErrorCodeBoundaryService repairErrorCodeService,
             RepairServiceBoundaryService repairServiceService, SupplierBoundaryService supplierService,
             FaultAnalysisBoundaryService faultAnalysisService,
+            MaterialTypeBoundaryService matTypeService, RMATypeBoundaryService rMATypeService, RepairTaskBoundaryService repairTaskService,
             SavedQueryService queryManager) {
         this.userSession = userSession;
         this.serviceMessageService = serviceMessageService;
@@ -112,6 +121,10 @@ public class ServiceMessageOpenView extends SuperView implements Serializable {
         this.repairServiceService = repairServiceService;
         this.supplierService = supplierService;
         this.faultAnalysisService = faultAnalysisService;
+        this.matTypeService = matTypeService;
+        this.rMATypeService = rMATypeService;
+        this.repairTaskService = repairTaskService;
+
         this.queryManager = queryManager;
     }
 
@@ -379,10 +392,6 @@ public class ServiceMessageOpenView extends SuperView implements Serializable {
         return OnCompleteHelper.onCompleteSapNumber(materialService, searchText);
     }
 
-    public List<String> onCompleteSymptomCode(String searchText) {
-        return OnCompleteHelper.onCompleteSymptomCode(faultAnalysisService, searchText);
-    }
-
     @Customized
     public List<String> onCompleteSupplierName(String searchText) {
         return OnCompleteHelper.onCompleteSupplierName(supplierService, searchText);
@@ -406,6 +415,26 @@ public class ServiceMessageOpenView extends SuperView implements Serializable {
     @Customized
     public List<String> onCompleteRepairErrorCodeName(String searchText) {
         return OnCompleteHelper.onCompleteRepairErrorCodeName(repairErrorCodeService, searchText);
+    }
+
+    public List<String> onCompleteSymptomCode(String query) {
+        return OnCompleteHelper.onCompleteSymptomCode(faultAnalysisService, query);
+    }
+
+    public List<String> onCompleteRepairErrorCodeGroupName(String searchText) {
+        return OnCompleteHelper.onCompleteRepairErrorCodeGroupName(repairErrorCodeService, searchText);
+    }
+
+    public List<String> onCompleteMatTypeCode(String searchText) {
+        return OnCompleteHelper.onCompleteMatTypeCode(matTypeService, searchText);
+    }
+
+    public List<String> onCompleteRmaTypeCode(String searchText) {
+        return OnCompleteHelper.onCompleteRmaTypeCode(rMATypeService, searchText);
+    }
+
+    public List<String> onCompleteRepairTaskCode(String searchText) {
+        return OnCompleteHelper.onCompleteRepairTaskCode(repairTaskService, searchText);
     }
 
     @Generated

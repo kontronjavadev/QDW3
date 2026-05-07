@@ -67,7 +67,7 @@ public class MaterializedServiceMessageView extends SuperView implements Seriali
     @Generated
     private final transient FaultAnalysisBoundaryService faultAnalysisService;
     private final transient RMATypeBoundaryService rMATypeService;
-    private final transient RepairErrorCodeBoundaryService errorCodeService;
+    private final transient RepairErrorCodeBoundaryService repairErrorCodeService;
     private final transient RepairTaskBoundaryService repairTaskService;
     private final transient RepairStateBoundaryService repairStateService;
     private final transient CountryBoundaryService countryService;
@@ -101,7 +101,7 @@ public class MaterializedServiceMessageView extends SuperView implements Seriali
 
         faultAnalysisService = null;
         rMATypeService = null;
-        errorCodeService = null;
+        repairErrorCodeService = null;
         repairTaskService = null;
         repairStateService = null;
         countryService = null;
@@ -115,7 +115,7 @@ public class MaterializedServiceMessageView extends SuperView implements Seriali
     @Generated
     public MaterializedServiceMessageView(UserSession userSession, MaterializedServiceMessageBoundaryService materializedServiceMessageService,
             SavedQueryService queryManager, FaultAnalysisBoundaryService faultAnalysisService, RMATypeBoundaryService rMATypeService,
-            RepairErrorCodeBoundaryService errorCodeService, RepairTaskBoundaryService repairTaskService,
+            RepairErrorCodeBoundaryService repairErrorCodeService, RepairTaskBoundaryService repairTaskService,
             RepairStateBoundaryService repairStateService, CountryBoundaryService countryService, CustomerBoundaryService customerBoundaryService,
             SupplierBoundaryService supplierService, MaterialBoundaryService materialService, MaterialTypeBoundaryService matTypeService) {
         this.userSession = userSession;
@@ -124,7 +124,7 @@ public class MaterializedServiceMessageView extends SuperView implements Seriali
 
         this.faultAnalysisService = faultAnalysisService;
         this.rMATypeService = rMATypeService;
-        this.errorCodeService = errorCodeService;
+        this.repairErrorCodeService = repairErrorCodeService;
         this.repairTaskService = repairTaskService;
         this.repairStateService = repairStateService;
         this.countryService = countryService;
@@ -452,11 +452,11 @@ public class MaterializedServiceMessageView extends SuperView implements Seriali
     }
 
     public List<String> onCompleteRepairErrorCodeName(String searchText) {
-        return OnCompleteHelper.onCompleteRepairErrorCodeName(errorCodeService, searchText);
+        return OnCompleteHelper.onCompleteRepairErrorCodeName(repairErrorCodeService, searchText);
     }
 
     public List<String> onCompleteRepairErrorCodeGroupName(String searchText) {
-        return OnCompleteHelper.onCompleteRepairErrorCodeGroupName(errorCodeService, searchText);
+        return OnCompleteHelper.onCompleteRepairErrorCodeGroupName(repairErrorCodeService, searchText);
     }
 
     public List<String> onCompleteRepairTaskCode(String searchText) {

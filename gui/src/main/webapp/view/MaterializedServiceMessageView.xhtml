@@ -464,7 +464,7 @@
 					<p:inputText id="b_29" rendered="#{materializedServiceMessageView.searchObject.searchFields[29].between}" value="#{materializedServiceMessageView.searchObject.searchFields[29].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
-<!-- Repair task name -->
+<!-- Repair task -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_30" value="#{materializedServiceMessageView.searchObject.searchFields[30].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{materializedServiceMessageView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_30" value="#{materializedServiceMessageView.searchObject.searchFields[30].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
 					<f:selectItems update="b_30" value="#{materializedServiceMessageView.textOperators}" var="advInputItem30" itemValue="#{advInputItem30}" itemLabel="#{advInputItem30.description}"/>
