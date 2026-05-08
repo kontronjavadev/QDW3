@@ -30,6 +30,7 @@ import com.kontron.qdw.domain.mv.ServiceOrderType;
 import com.kontron.qdw.dto.mv.MaterializedServiceMessageSearchDTO;
 import com.kontron.qdw.service.SavedQueryService;
 import com.kontron.qdw.ui.UserSession;
+import com.kontron.qdw.ui.dialog.ViewServiceMessageDialog;
 import com.kontron.qdw.ui.view.util.OnCompleteHelper;
 import com.kontron.qdw.ui.view.util.SuperView;
 
@@ -508,7 +509,23 @@ public class MaterializedServiceMessageView extends SuperView implements Seriali
      */
     @Generated
     public void onDoubleClick() {
-        // No appropriate form found!
+        logger.debug("Handle double-click event");
+        userSession.redirectTo(getCurrentPageURL(), openViewServiceMessageDialog());
+    }
+
+    /**
+     * Open dialog
+     * @return the navigation target
+     */
+    @Generated
+    public String openViewServiceMessageDialog() {
+        var url = "";
+
+        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY)) {
+            url = ViewServiceMessageDialog.PAGE_INIT_URL + selectedObject.getId();
+        }
+
+        return url;
     }
 
     /**
