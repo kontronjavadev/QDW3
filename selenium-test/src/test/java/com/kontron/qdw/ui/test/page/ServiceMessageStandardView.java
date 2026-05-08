@@ -1,8 +1,8 @@
 package com.kontron.qdw.ui.test.page;
 
-import net.sourceforge.jbizmo.commons.selenium.page.imp.primefaces.*;
 import net.sourceforge.jbizmo.commons.selenium.junit.*;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
+import net.sourceforge.jbizmo.commons.selenium.page.imp.primefaces.*;
 
 public class ServiceMessageStandardView extends AbstractSearchPageObject {
     @Generated

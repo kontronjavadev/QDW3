@@ -325,7 +325,7 @@ public class ServiceMessageBoundaryService {
         selectTokens.add(ServiceMessageStandardSearchDTO.SELECT_EXTERNALSUPPLIERNAME);
 
         searchObj.setFromClause(
-                "from ServiceMessage a left join a.materialRevision c left join c.material z left join z.ownerLocation ac left join z.materialClass ad left join z.materialType ae left join a.externalSupplier b left join a.plant d left join a.serialObject e left join a.serviceOrder f left join a.faultAnalysis h left join a.rMAType i left join a.repairErrorCode j left join a.repairLocation k left join a.repairService l left join a.repairState m left join a.repairTask n left join f.customer p left join p.country w");
+                "from ServiceMessage a join a.materialRevision c join c.material z join z.ownerLocation ac join z.materialClass ad join z.materialType ae left join a.externalSupplier b join a.plant d join a.serialObject e join a.serviceOrder f left join a.faultAnalysis h left join a.rMAType i left join a.repairErrorCode j left join a.repairLocation k left join a.repairService l join a.repairState m left join a.repairTask n left join f.customer p join p.country w");
 
         return repository.search(searchObj, ServiceMessageStandardSearchDTO.class, selectTokens);
     }
@@ -341,7 +341,7 @@ public class ServiceMessageBoundaryService {
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public long countAllServiceMessagesStandard(SearchDTO searchObj) {
         searchObj.setFromClause(
-                "from ServiceMessage a left join a.materialRevision c left join c.material z left join z.ownerLocation ac left join z.materialClass ad left join z.materialType ae left join a.externalSupplier b left join a.plant d left join a.serialObject e left join a.serviceOrder f left join a.faultAnalysis h left join a.rMAType i left join a.repairErrorCode j left join a.repairLocation k left join a.repairService l left join a.repairState m left join a.repairTask n left join f.customer p left join p.country w");
+                "from ServiceMessage a join a.materialRevision c join c.material z join z.ownerLocation ac join z.materialClass ad join z.materialType ae left join a.externalSupplier b join a.plant d join a.serialObject e join a.serviceOrder f left join a.faultAnalysis h left join a.rMAType i left join a.repairErrorCode j left join a.repairLocation k left join a.repairService l join a.repairState m left join a.repairTask n left join f.customer p join p.country w");
 
         return repository.count(searchObj);
     }
