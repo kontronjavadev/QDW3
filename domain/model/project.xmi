@@ -8461,9 +8461,9 @@
     <fields colIndex="26" width="250" title="Symptom short text" dTOAttribute="/400/@attributes.35"/>
     <fields colIndex="27" title="Service name" dTOAttribute="/400/@attributes.3"/>
     <fields colIndex="28" width="150" title="Cause code group" dTOAttribute="/400/@attributes.34"/>
-    <fields colIndex="29" width="150" title="Cause code name" dTOAttribute="/400/@attributes.30"/>
+    <fields colIndex="29" width="150" title="Cause code" dTOAttribute="/400/@attributes.30"/>
     <fields colIndex="30" width="250" title="Cause short text" dTOAttribute="/400/@attributes.39"/>
-    <fields colIndex="31" width="120" title="Repair task name" dTOAttribute="/400/@attributes.4"/>
+    <fields colIndex="31" width="120" title="Repair task" dTOAttribute="/400/@attributes.4"/>
     <fields colIndex="32" width="250" title="Repair task short text" dTOAttribute="/400/@attributes.36"/>
     <fields colIndex="33" width="120" title="Repair state" dTOAttribute="/400/@attributes.5"/>
     <fields colIndex="34" width="110" title="Rep. arrvl. date" fieldType="LOCAL_DATE" dTOAttribute="/400/@attributes.6"/>

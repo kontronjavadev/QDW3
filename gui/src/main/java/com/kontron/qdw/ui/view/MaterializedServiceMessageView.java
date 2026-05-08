@@ -65,7 +65,7 @@ public class MaterializedServiceMessageView extends SuperView implements Seriali
     private transient ResourceBundle bundle;
     @Generated
     private final transient MaterializedServiceMessageBoundaryService materializedServiceMessageService;
-    @Generated
+
     private final transient FaultAnalysisBoundaryService faultAnalysisService;
     private final transient RMATypeBoundaryService rMATypeService;
     private final transient RepairErrorCodeBoundaryService repairErrorCodeService;
@@ -507,17 +507,12 @@ public class MaterializedServiceMessageView extends SuperView implements Seriali
     /**
      * Event that will be fired if user performs a double-click on a grid row
      */
-    @Generated
+    @Customized
     public void onDoubleClick() {
         logger.debug("Handle double-click event");
         userSession.redirectTo(getCurrentPageURL(), openViewServiceMessageDialog());
     }
 
-    /**
-     * Open dialog
-     * @return the navigation target
-     */
-    @Generated
     public String openViewServiceMessageDialog() {
         var url = "";
 
