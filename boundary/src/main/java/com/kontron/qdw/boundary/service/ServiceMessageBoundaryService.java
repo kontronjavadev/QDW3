@@ -256,4 +256,94 @@ public class ServiceMessageBoundaryService {
         return dto;
     }
 
+    /**
+     * Search for service message objects
+     * @param searchObj a generic container that holds filter criteria
+     * @return a list of service message objects
+     * @throws GeneralSearchException if the search operation has failed
+     */
+    @Generated
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public List<ServiceMessageStandardSearchDTO> searchAllServiceMessagesStandard(SearchDTO searchObj) {
+        // Collect the select tokens of all fields that should be fetched
+        final var selectTokens = new ArrayList<String>();
+        selectTokens.add(ServiceMessageStandardSearchDTO.SELECT_ANALYSISTEXT);
+        selectTokens.add(ServiceMessageStandardSearchDTO.SELECT_BASICFINISHDATE);
+        selectTokens.add(ServiceMessageStandardSearchDTO.SELECT_BASICSTARTDATE);
+        selectTokens.add(ServiceMessageStandardSearchDTO.SELECT_CAUSETEXT);
+        selectTokens.add(ServiceMessageStandardSearchDTO.SELECT_CUSTOMERFAILURE);
+        selectTokens.add(ServiceMessageStandardSearchDTO.SELECT_CUSTOMERREPORT);
+        selectTokens.add(ServiceMessageStandardSearchDTO.SELECT_DEFECTCOMPONENT);
+        selectTokens.add(ServiceMessageStandardSearchDTO.SELECT_DELIVERYNOTENUMBER);
+        selectTokens.add(ServiceMessageStandardSearchDTO.SELECT_DESIGNATOR);
+        selectTokens.add(ServiceMessageStandardSearchDTO.SELECT_EPIDEMICFAILURE);
+        selectTokens.add(ServiceMessageStandardSearchDTO.SELECT_ERRORID);
+        selectTokens.add(ServiceMessageStandardSearchDTO.SELECT_EXTERNALREPORT);
+        selectTokens.add(ServiceMessageStandardSearchDTO.SELECT_INTERNALARRIVALDATE);
+        selectTokens.add(ServiceMessageStandardSearchDTO.SELECT_INTERNALREPORT);
+        selectTokens.add(ServiceMessageStandardSearchDTO.SELECT_INTERNALSHIPMENTDATE);
+        selectTokens.add(ServiceMessageStandardSearchDTO.SELECT_ORIGIN);
+        selectTokens.add(ServiceMessageStandardSearchDTO.SELECT_REPAIRDESCRIPTION);
+        selectTokens.add(ServiceMessageStandardSearchDTO.SELECT_SERVICEMESSAGEID);
+        selectTokens.add(ServiceMessageStandardSearchDTO.SELECT_ID);
+        selectTokens.add(ServiceMessageStandardSearchDTO.SELECT_CREATIONDATE);
+        selectTokens.add(ServiceMessageStandardSearchDTO.SELECT_LASTUPDATE);
+        selectTokens.add(ServiceMessageStandardSearchDTO.SELECT_PLANTCODE);
+        selectTokens.add(ServiceMessageStandardSearchDTO.SELECT_SERVICEORDERCODE);
+        selectTokens.add(ServiceMessageStandardSearchDTO.SELECT_REPAIRSTATENAME);
+        selectTokens.add(ServiceMessageStandardSearchDTO.SELECT_REPAIRSTATECODE);
+        selectTokens.add(ServiceMessageStandardSearchDTO.SELECT_MATERIALREVISIONID);
+        selectTokens.add(ServiceMessageStandardSearchDTO.SELECT_SERIALOBJECTID);
+        selectTokens.add(ServiceMessageStandardSearchDTO.SELECT_SERIALOBJECTSERIALNUMBER);
+        selectTokens.add(ServiceMessageStandardSearchDTO.SELECT_SERVORDCUSTOMERCODE);
+        selectTokens.add(ServiceMessageStandardSearchDTO.SELECT_SERVORDCUSTOMERNAME);
+        selectTokens.add(ServiceMessageStandardSearchDTO.SELECT_SERVORDCUSTCOUNTRYCODE);
+        selectTokens.add(ServiceMessageStandardSearchDTO.SELECT_SERVORDCUSTCOUNTRYNAME);
+        selectTokens.add(ServiceMessageStandardSearchDTO.SELECT_MATREVMATERIALID);
+        selectTokens.add(ServiceMessageStandardSearchDTO.SELECT_MATREVMATMATERIALNUMBER);
+        selectTokens.add(ServiceMessageStandardSearchDTO.SELECT_MATREVMATSAPNUMBER);
+        selectTokens.add(ServiceMessageStandardSearchDTO.SELECT_MATREVMATSHORTTEXT);
+        selectTokens.add(ServiceMessageStandardSearchDTO.SELECT_MATREVMATOWNERLOCATIONCODE);
+        selectTokens.add(ServiceMessageStandardSearchDTO.SELECT_MATREVMATMATERIALTYPECODE);
+        selectTokens.add(ServiceMessageStandardSearchDTO.SELECT_MATREVMATMATERIALCLASSCODE);
+        selectTokens.add(ServiceMessageStandardSearchDTO.SELECT_MATREVREVISIONNUMBER);
+        selectTokens.add(ServiceMessageStandardSearchDTO.SELECT_SERVICEORDERCOMMENT);
+        selectTokens.add(ServiceMessageStandardSearchDTO.SELECT_REPAIRERRORCODECODE);
+        selectTokens.add(ServiceMessageStandardSearchDTO.SELECT_REPAIRERRORCODEGROUPNAME);
+        selectTokens.add(ServiceMessageStandardSearchDTO.SELECT_REPAIRERRORCODENAME);
+        selectTokens.add(ServiceMessageStandardSearchDTO.SELECT_REPAIRERRORCODESHORTTEXT);
+        selectTokens.add(ServiceMessageStandardSearchDTO.SELECT_REPAIRLOCATIONCODE);
+        selectTokens.add(ServiceMessageStandardSearchDTO.SELECT_RMATYPECODE);
+        selectTokens.add(ServiceMessageStandardSearchDTO.SELECT_REPAIRSERVICECODE);
+        selectTokens.add(ServiceMessageStandardSearchDTO.SELECT_REPAIRSERVICENAME);
+        selectTokens.add(ServiceMessageStandardSearchDTO.SELECT_FAULTANALYSISCODE);
+        selectTokens.add(ServiceMessageStandardSearchDTO.SELECT_FAULTANALYSISSHORTTEXT);
+        selectTokens.add(ServiceMessageStandardSearchDTO.SELECT_REPAIRTASKCODE);
+        selectTokens.add(ServiceMessageStandardSearchDTO.SELECT_REPAIRTASKSHORTTEXT);
+        selectTokens.add(ServiceMessageStandardSearchDTO.SELECT_EXTERNALSUPPLIERCODE);
+        selectTokens.add(ServiceMessageStandardSearchDTO.SELECT_EXTERNALSUPPLIERNAME);
+
+        searchObj.setFromClause(
+                "from ServiceMessage a left join a.materialRevision c left join c.material z left join z.ownerLocation ac left join z.materialClass ad left join z.materialType ae left join a.externalSupplier b left join a.plant d left join a.serialObject e left join a.serviceOrder f left join a.faultAnalysis h left join a.rMAType i left join a.repairErrorCode j left join a.repairLocation k left join a.repairService l left join a.repairState m left join a.repairTask n left join f.customer p left join p.country w");
+
+        return repository.search(searchObj, ServiceMessageStandardSearchDTO.class, selectTokens);
+    }
+
+    /**
+     * Count service message objects
+     * @param searchObj the query criteria
+     * @return the number of objects a query would return
+     * @throws GeneralSearchException if the count operation has failed
+     */
+    @Generated
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public long countAllServiceMessagesStandard(SearchDTO searchObj) {
+        searchObj.setFromClause(
+                "from ServiceMessage a left join a.materialRevision c left join c.material z left join z.ownerLocation ac left join z.materialClass ad left join z.materialType ae left join a.externalSupplier b left join a.plant d left join a.serialObject e left join a.serviceOrder f left join a.faultAnalysis h left join a.rMAType i left join a.repairErrorCode j left join a.repairLocation k left join a.repairService l left join a.repairState m left join a.repairTask n left join f.customer p left join p.country w");
+
+        return repository.count(searchObj);
+    }
+
 }
