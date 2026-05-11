@@ -21,6 +21,7 @@ import com.kontron.qdw.boundary.material.MaterialTypeBoundaryService;
 import com.kontron.qdw.boundary.service.FaultAnalysisBoundaryService;
 import com.kontron.qdw.boundary.service.RMATypeBoundaryService;
 import com.kontron.qdw.boundary.service.RepairErrorCodeBoundaryService;
+import com.kontron.qdw.boundary.service.RepairServiceBoundaryService;
 import com.kontron.qdw.boundary.service.RepairStateBoundaryService;
 import com.kontron.qdw.boundary.service.RepairTaskBoundaryService;
 import com.kontron.qdw.dto.base.CountryListDTO;
@@ -34,6 +35,7 @@ import com.kontron.qdw.dto.service.FaultAnalysisListDTO;
 import com.kontron.qdw.dto.service.RMATypeListDTO;
 import com.kontron.qdw.dto.service.RepairErrorCodeGroupListDTO;
 import com.kontron.qdw.dto.service.RepairErrorCodeListDTO;
+import com.kontron.qdw.dto.service.RepairServiceListDTO;
 import com.kontron.qdw.dto.service.RepairStateListDTO;
 import com.kontron.qdw.dto.service.RepairTaskListDTO;
 
@@ -97,6 +99,10 @@ public final class OnCompleteHelper {
 
     public static List<String> onCompleteRepairStateName(RepairStateBoundaryService repairStateService, String searchText) {
         return onCompleteContains(repairStateService::findRepairStates, searchText, RepairStateListDTO::getName);
+    }
+
+    public static List<String> onCompleteRepairServiceName(RepairServiceBoundaryService repairServiceService, String searchText) {
+        return onCompleteStartsWith(repairServiceService::findRepairServices, searchText, RepairServiceListDTO::getName);
     }
 
 

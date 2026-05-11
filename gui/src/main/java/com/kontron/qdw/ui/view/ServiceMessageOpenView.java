@@ -417,6 +417,11 @@ public class ServiceMessageOpenView extends SuperView implements Serializable {
         return OnCompleteHelper.onCompleteRepairErrorCodeName(repairErrorCodeService, searchText);
     }
 
+    @Customized
+    public List<String> onCompleteRepairServiceName(String searchText) {
+        return OnCompleteHelper.onCompleteRepairServiceName(repairServiceService, searchText);
+    }
+
     public List<String> onCompleteSymptomCode(String query) {
         return OnCompleteHelper.onCompleteSymptomCode(faultAnalysisService, query);
     }
@@ -435,24 +440,6 @@ public class ServiceMessageOpenView extends SuperView implements Serializable {
 
     public List<String> onCompleteRepairTaskCode(String searchText) {
         return OnCompleteHelper.onCompleteRepairTaskCode(repairTaskService, searchText);
-    }
-
-    @Generated
-    public List<String> onCompleteRepairServiceName(String searchText) {
-        final var results = new ArrayList<String>();
-
-        try {
-            final Collection<RepairServiceListDTO> items = repairServiceService.findRepairServices(searchText + "%");
-
-            for (final RepairServiceListDTO item : items) {
-                results.add(item.getName());
-            }
-        }
-        catch (final Exception e) {
-            logger.error("Error while searching for auto-complete items by using the entered text '{}'!", searchText, e);
-        }
-
-        return results;
     }
 
 
