@@ -780,54 +780,55 @@
 		</p:column>
 
 		<p:column sortBy="#{serviceMessageStandardViewItem.servordCustomerName}" width="200" 
-			rendered="#{serviceMessageStandardView.searchObject.searchFields[4].visible}" displayPriority="#{serviceMessageStandardView.searchObject.searchFields[4].colOrder}" >
+			rendered="#{serviceMessageStandardView.searchObject.searchFields[4].visible}" displayPriority="#{serviceMessageStandardView.searchObject.searchFields[4].colOrder}" 
+			exportValue="#{serviceMessageStandardViewItem.servordCustomerName}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_servicemessagestandardview_servordcustomername}"/>
 			</f:facet>
-			<h:outputText value="#{serviceMessageStandardViewItem.servordCustomerName}">
-			</h:outputText>
+			<h:outputText value="#{serviceMessageStandardViewItem.servordCustomerName}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{serviceMessageStandardViewItem.servordCustCountryName}" width="150" 
-			rendered="#{serviceMessageStandardView.searchObject.searchFields[5].visible}" displayPriority="#{serviceMessageStandardView.searchObject.searchFields[5].colOrder}" >
+			rendered="#{serviceMessageStandardView.searchObject.searchFields[5].visible}" displayPriority="#{serviceMessageStandardView.searchObject.searchFields[5].colOrder}" 
+			exportValue="#{serviceMessageStandardViewItem.servordCustCountryName}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_servicemessagestandardview_servordcustcountryname}"/>
 			</f:facet>
-			<h:outputText value="#{serviceMessageStandardViewItem.servordCustCountryName}">
-			</h:outputText>
+			<h:outputText value="#{serviceMessageStandardViewItem.servordCustCountryName}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{serviceMessageStandardViewItem.matrevMatMaterialNumber}" width="150" 
-			rendered="#{serviceMessageStandardView.searchObject.searchFields[6].visible}" displayPriority="#{serviceMessageStandardView.searchObject.searchFields[6].colOrder}" >
+			rendered="#{serviceMessageStandardView.searchObject.searchFields[6].visible}" displayPriority="#{serviceMessageStandardView.searchObject.searchFields[6].colOrder}" 
+			exportValue="#{serviceMessageStandardViewItem.matrevMatMaterialNumber}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_servicemessagestandardview_matrevmatmaterialnumber}"/>
 			</f:facet>
-			<h:outputText value="#{serviceMessageStandardViewItem.matrevMatMaterialNumber}">
-			</h:outputText>
+			<h:outputText value="#{serviceMessageStandardViewItem.matrevMatMaterialNumber}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{serviceMessageStandardViewItem.matrevMatSapNumber}" width="150" 
-			rendered="#{serviceMessageStandardView.searchObject.searchFields[7].visible}" displayPriority="#{serviceMessageStandardView.searchObject.searchFields[7].colOrder}" >
+			rendered="#{serviceMessageStandardView.searchObject.searchFields[7].visible}" displayPriority="#{serviceMessageStandardView.searchObject.searchFields[7].colOrder}" 
+			exportValue="#{serviceMessageStandardViewItem.matrevMatSapNumber}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_servicemessagestandardview_matrevmatsapnumber}"/>
 			</f:facet>
-			<h:outputText value="#{serviceMessageStandardViewItem.matrevMatSapNumber}">
-			</h:outputText>
+			<h:outputText value="#{serviceMessageStandardViewItem.matrevMatSapNumber}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{serviceMessageStandardViewItem.matrevMatShortText}" width="250" 
-			rendered="#{serviceMessageStandardView.searchObject.searchFields[8].visible}" displayPriority="#{serviceMessageStandardView.searchObject.searchFields[8].colOrder}" >
+			rendered="#{serviceMessageStandardView.searchObject.searchFields[8].visible}" displayPriority="#{serviceMessageStandardView.searchObject.searchFields[8].colOrder}" 
+			exportValue="#{serviceMessageStandardViewItem.matrevMatShortText}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_servicemessagestandardview_matrevmatshorttext}"/>
 			</f:facet>
-			<h:outputText value="#{serviceMessageStandardViewItem.matrevMatShortText}">
-			</h:outputText>
+			<h:outputText value="#{serviceMessageStandardViewItem.matrevMatShortText}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{serviceMessageStandardViewItem.matrevMatOwnerLocationCode}" width="100" 
-			rendered="#{serviceMessageStandardView.searchObject.searchFields[9].visible}" displayPriority="#{serviceMessageStandardView.searchObject.searchFields[9].colOrder}" >
+			rendered="#{serviceMessageStandardView.searchObject.searchFields[9].visible}" displayPriority="#{serviceMessageStandardView.searchObject.searchFields[9].colOrder}" 
+			exportHeaderValue="#{i18n.lbl_attr_ownerlocation_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_servicemessagestandardview_matrevmatownerlocationcode}"/>
+				<h:outputText value="#{i18n.col_servicemessagestandardview_matrevmatownerlocationcode}" title="#{i18n.lbl_attr_ownerlocation_tooltip}" styleClass="pf-tooltip-target" />
 			</f:facet>
 			<h:outputText value="#{serviceMessageStandardViewItem.matrevMatOwnerLocationCode}">
 			</h:outputText>
@@ -843,72 +844,73 @@
 		</p:column>
 
 		<p:column sortBy="#{serviceMessageStandardViewItem.matrevMatMaterialClassCode}" width="100" 
-			rendered="#{serviceMessageStandardView.searchObject.searchFields[11].visible}" displayPriority="#{serviceMessageStandardView.searchObject.searchFields[11].colOrder}" >
+			rendered="#{serviceMessageStandardView.searchObject.searchFields[11].visible}" displayPriority="#{serviceMessageStandardView.searchObject.searchFields[11].colOrder}" 
+			exportValue="#{serviceMessageStandardViewItem.matrevMatMaterialClassCode}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_servicemessagestandardview_matrevmatmaterialclasscode}"/>
 			</f:facet>
-			<h:outputText value="#{serviceMessageStandardViewItem.matrevMatMaterialClassCode}">
-			</h:outputText>
+			<h:outputText value="#{serviceMessageStandardViewItem.matrevMatMaterialClassCode}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{serviceMessageStandardViewItem.matrevRevisionNumber}" width="150" 
-			rendered="#{serviceMessageStandardView.searchObject.searchFields[12].visible}" displayPriority="#{serviceMessageStandardView.searchObject.searchFields[12].colOrder}" >
+			rendered="#{serviceMessageStandardView.searchObject.searchFields[12].visible}" displayPriority="#{serviceMessageStandardView.searchObject.searchFields[12].colOrder}" 
+			exportValue="#{serviceMessageStandardViewItem.matrevRevisionNumber}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_servicemessagestandardview_matrevrevisionnumber}"/>
 			</f:facet>
-			<h:outputText value="#{serviceMessageStandardViewItem.matrevRevisionNumber}">
-			</h:outputText>
+			<h:outputText value="#{serviceMessageStandardViewItem.matrevRevisionNumber}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{serviceMessageStandardViewItem.serviceOrderComment}" width="250" 
-			rendered="#{serviceMessageStandardView.searchObject.searchFields[13].visible}" displayPriority="#{serviceMessageStandardView.searchObject.searchFields[13].colOrder}" >
+			rendered="#{serviceMessageStandardView.searchObject.searchFields[13].visible}" displayPriority="#{serviceMessageStandardView.searchObject.searchFields[13].colOrder}" 
+			exportValue="#{serviceMessageStandardViewItem.serviceOrderComment}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_servicemessagestandardview_serviceordercomment}"/>
 			</f:facet>
-			<h:outputText value="#{serviceMessageStandardViewItem.serviceOrderComment}">
-			</h:outputText>
+			<h:outputText value="#{serviceMessageStandardViewItem.serviceOrderComment}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{serviceMessageStandardViewItem.repairStateName}" width="120" 
-			rendered="#{serviceMessageStandardView.searchObject.searchFields[14].visible}" displayPriority="#{serviceMessageStandardView.searchObject.searchFields[14].colOrder}" >
+			rendered="#{serviceMessageStandardView.searchObject.searchFields[14].visible}" displayPriority="#{serviceMessageStandardView.searchObject.searchFields[14].colOrder}" 
+			exportValue="#{serviceMessageStandardViewItem.repairStateName}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_servicemessagestandardview_repairstatename}"/>
 			</f:facet>
-			<h:outputText value="#{serviceMessageStandardViewItem.repairStateName}">
-			</h:outputText>
+			<h:outputText value="#{serviceMessageStandardViewItem.repairStateName}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{serviceMessageStandardViewItem.repairErrorCodeGroupName}" width="150" 
-			rendered="#{serviceMessageStandardView.searchObject.searchFields[15].visible}" displayPriority="#{serviceMessageStandardView.searchObject.searchFields[15].colOrder}" >
+			rendered="#{serviceMessageStandardView.searchObject.searchFields[15].visible}" displayPriority="#{serviceMessageStandardView.searchObject.searchFields[15].colOrder}" 
+			exportValue="#{serviceMessageStandardViewItem.repairErrorCodeGroupName}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_servicemessagestandardview_repairerrorcodegroupname}"/>
 			</f:facet>
-			<h:outputText value="#{serviceMessageStandardViewItem.repairErrorCodeGroupName}">
-			</h:outputText>
+			<h:outputText value="#{serviceMessageStandardViewItem.repairErrorCodeGroupName}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{serviceMessageStandardViewItem.repairErrorCodeName}" width="150" 
-			rendered="#{serviceMessageStandardView.searchObject.searchFields[16].visible}" displayPriority="#{serviceMessageStandardView.searchObject.searchFields[16].colOrder}" >
+			rendered="#{serviceMessageStandardView.searchObject.searchFields[16].visible}" displayPriority="#{serviceMessageStandardView.searchObject.searchFields[16].colOrder}" 
+			exportValue="#{serviceMessageStandardViewItem.repairErrorCodeName}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_servicemessagestandardview_repairerrorcodename}"/>
 			</f:facet>
-			<h:outputText value="#{serviceMessageStandardViewItem.repairErrorCodeName}">
-			</h:outputText>
+			<h:outputText value="#{serviceMessageStandardViewItem.repairErrorCodeName}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{serviceMessageStandardViewItem.repairErrorCodeShortText}" width="250" 
-			rendered="#{serviceMessageStandardView.searchObject.searchFields[17].visible}" displayPriority="#{serviceMessageStandardView.searchObject.searchFields[17].colOrder}" >
+			rendered="#{serviceMessageStandardView.searchObject.searchFields[17].visible}" displayPriority="#{serviceMessageStandardView.searchObject.searchFields[17].colOrder}" 
+			exportValue="#{serviceMessageStandardViewItem.repairErrorCodeShortText}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_servicemessagestandardview_repairerrorcodeshorttext}"/>
 			</f:facet>
-			<h:outputText value="#{serviceMessageStandardViewItem.repairErrorCodeShortText}">
-			</h:outputText>
+			<h:outputText value="#{serviceMessageStandardViewItem.repairErrorCodeShortText}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{serviceMessageStandardViewItem.repairLocationCode}" width="100" 
-			rendered="#{serviceMessageStandardView.searchObject.searchFields[18].visible}" displayPriority="#{serviceMessageStandardView.searchObject.searchFields[18].colOrder}" >
+			rendered="#{serviceMessageStandardView.searchObject.searchFields[18].visible}" displayPriority="#{serviceMessageStandardView.searchObject.searchFields[18].colOrder}" 
+			exportHeaderValue="#{i18n.lbl_attr_repairlocation_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_servicemessagestandardview_repairlocationcode}"/>
+				<h:outputText value="#{i18n.col_servicemessagestandardview_repairlocationcode}" title="#{i18n.lbl_attr_repairlocation_tooltip}" styleClass="pf-tooltip-target" />
 			</f:facet>
 			<h:outputText value="#{serviceMessageStandardViewItem.repairLocationCode}">
 			</h:outputText>
@@ -933,48 +935,48 @@
 		</p:column>
 
 		<p:column sortBy="#{serviceMessageStandardViewItem.faultAnalysisCode}" width="120" 
-			rendered="#{serviceMessageStandardView.searchObject.searchFields[21].visible}" displayPriority="#{serviceMessageStandardView.searchObject.searchFields[21].colOrder}" >
+			rendered="#{serviceMessageStandardView.searchObject.searchFields[21].visible}" displayPriority="#{serviceMessageStandardView.searchObject.searchFields[21].colOrder}" 
+			exportValue="#{serviceMessageStandardViewItem.faultAnalysisCode}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_servicemessagestandardview_faultanalysiscode}"/>
 			</f:facet>
-			<h:outputText value="#{serviceMessageStandardViewItem.faultAnalysisCode}">
-			</h:outputText>
+			<h:outputText value="#{serviceMessageStandardViewItem.faultAnalysisCode}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{serviceMessageStandardViewItem.faultAnalysisShortText}" width="250" 
-			rendered="#{serviceMessageStandardView.searchObject.searchFields[22].visible}" displayPriority="#{serviceMessageStandardView.searchObject.searchFields[22].colOrder}" >
+			rendered="#{serviceMessageStandardView.searchObject.searchFields[22].visible}" displayPriority="#{serviceMessageStandardView.searchObject.searchFields[22].colOrder}" 
+			exportValue="#{serviceMessageStandardViewItem.faultAnalysisShortText}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_servicemessagestandardview_faultanalysisshorttext}"/>
 			</f:facet>
-			<h:outputText value="#{serviceMessageStandardViewItem.faultAnalysisShortText}">
-			</h:outputText>
+			<h:outputText value="#{serviceMessageStandardViewItem.faultAnalysisShortText}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{serviceMessageStandardViewItem.repairTaskCode}" width="120" 
-			rendered="#{serviceMessageStandardView.searchObject.searchFields[23].visible}" displayPriority="#{serviceMessageStandardView.searchObject.searchFields[23].colOrder}" >
+			rendered="#{serviceMessageStandardView.searchObject.searchFields[23].visible}" displayPriority="#{serviceMessageStandardView.searchObject.searchFields[23].colOrder}" 
+			exportValue="#{serviceMessageStandardViewItem.repairTaskCode}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_servicemessagestandardview_repairtaskcode}"/>
 			</f:facet>
-			<h:outputText value="#{serviceMessageStandardViewItem.repairTaskCode}">
-			</h:outputText>
+			<h:outputText value="#{serviceMessageStandardViewItem.repairTaskCode}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{serviceMessageStandardViewItem.repairTaskShortText}" width="250" 
-			rendered="#{serviceMessageStandardView.searchObject.searchFields[24].visible}" displayPriority="#{serviceMessageStandardView.searchObject.searchFields[24].colOrder}" >
+			rendered="#{serviceMessageStandardView.searchObject.searchFields[24].visible}" displayPriority="#{serviceMessageStandardView.searchObject.searchFields[24].colOrder}" 
+			exportValue="#{serviceMessageStandardViewItem.repairTaskShortText}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_servicemessagestandardview_repairtaskshorttext}"/>
 			</f:facet>
-			<h:outputText value="#{serviceMessageStandardViewItem.repairTaskShortText}">
-			</h:outputText>
+			<h:outputText value="#{serviceMessageStandardViewItem.repairTaskShortText}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{serviceMessageStandardViewItem.externalSupplierName}" width="200" 
-			rendered="#{serviceMessageStandardView.searchObject.searchFields[25].visible}" displayPriority="#{serviceMessageStandardView.searchObject.searchFields[25].colOrder}" >
+			rendered="#{serviceMessageStandardView.searchObject.searchFields[25].visible}" displayPriority="#{serviceMessageStandardView.searchObject.searchFields[25].colOrder}" 
+			exportValue="#{serviceMessageStandardViewItem.externalSupplierName}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_servicemessagestandardview_externalsuppliername}"/>
 			</f:facet>
-			<h:outputText value="#{serviceMessageStandardViewItem.externalSupplierName}">
-			</h:outputText>
+			<h:outputText value="#{serviceMessageStandardViewItem.externalSupplierName}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{serviceMessageStandardViewItem.errorId}" width="100" 
@@ -1005,53 +1007,55 @@
 		</p:column>
 
 		<p:column sortBy="#{serviceMessageStandardViewItem.defectComponent}" width="120" 
-			rendered="#{serviceMessageStandardView.searchObject.searchFields[29].visible}" displayPriority="#{serviceMessageStandardView.searchObject.searchFields[29].colOrder}" >
+			rendered="#{serviceMessageStandardView.searchObject.searchFields[29].visible}" displayPriority="#{serviceMessageStandardView.searchObject.searchFields[29].colOrder}" 
+			exportValue="#{serviceMessageStandardViewItem.defectComponent}" exportHeaderValue="#{i18n.lbl_attr_defectcomponent_tooltip}" class="thnowrap tdnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_servicemessagestandardview_defectcomponent}"/>
+				<h:outputText value="#{i18n.col_servicemessagestandardview_defectcomponent}" title="#{i18n.lbl_attr_defectcomponent_tooltip}" styleClass="pf-tooltip-target" />
 			</f:facet>
-			<h:outputText value="#{serviceMessageStandardViewItem.defectComponent}">
-			</h:outputText>
+			<h:outputText value="#{serviceMessageStandardViewItem.defectComponent}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{serviceMessageStandardViewItem.internalReport}" width="250" 
-			rendered="#{serviceMessageStandardView.searchObject.searchFields[30].visible}" displayPriority="#{serviceMessageStandardView.searchObject.searchFields[30].colOrder}" >
+			rendered="#{serviceMessageStandardView.searchObject.searchFields[30].visible}" displayPriority="#{serviceMessageStandardView.searchObject.searchFields[30].colOrder}" 
+			exportValue="#{serviceMessageStandardViewItem.internalReport}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_servicemessage_internalreport}"/>
 			</f:facet>
-			<h:outputText value="#{serviceMessageStandardViewItem.internalReport}">
-			</h:outputText>
+			<h:outputText value="#{serviceMessageStandardViewItem.internalReport}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{serviceMessageStandardViewItem.externalReport}" width="250" 
-			rendered="#{serviceMessageStandardView.searchObject.searchFields[31].visible}" displayPriority="#{serviceMessageStandardView.searchObject.searchFields[31].colOrder}" >
+			rendered="#{serviceMessageStandardView.searchObject.searchFields[31].visible}" displayPriority="#{serviceMessageStandardView.searchObject.searchFields[31].colOrder}" 
+			exportValue="#{serviceMessageStandardViewItem.externalReport}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_servicemessage_externalreport}"/>
 			</f:facet>
-			<h:outputText value="#{serviceMessageStandardViewItem.externalReport}">
-			</h:outputText>
+			<h:outputText value="#{serviceMessageStandardViewItem.externalReport}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{serviceMessageStandardViewItem.customerReport}" width="250" 
-			rendered="#{serviceMessageStandardView.searchObject.searchFields[32].visible}" displayPriority="#{serviceMessageStandardView.searchObject.searchFields[32].colOrder}" >
+			rendered="#{serviceMessageStandardView.searchObject.searchFields[32].visible}" displayPriority="#{serviceMessageStandardView.searchObject.searchFields[32].colOrder}" 
+			exportValue="#{serviceMessageStandardViewItem.customerReport}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_servicemessage_customerreport}"/>
 			</f:facet>
-			<h:outputText value="#{serviceMessageStandardViewItem.customerReport}">
-			</h:outputText>
+			<h:outputText value="#{serviceMessageStandardViewItem.customerReport}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{serviceMessageStandardViewItem.customerFailure}" width="80" 
-			rendered="#{serviceMessageStandardView.searchObject.searchFields[33].visible}" displayPriority="#{serviceMessageStandardView.searchObject.searchFields[33].colOrder}" >
+			rendered="#{serviceMessageStandardView.searchObject.searchFields[33].visible}" displayPriority="#{serviceMessageStandardView.searchObject.searchFields[33].colOrder}" 
+			exportHeaderValue="#{i18n.lbl_attr_customerfailure_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_servicemessagestandardview_customerfailure}"/>
+				<h:outputText value="#{i18n.col_servicemessagestandardview_customerfailure}" title="#{i18n.lbl_attr_customerfailure_tooltip}" styleClass="pf-tooltip-target" />
 			</f:facet>
 			<p:selectBooleanCheckbox value="#{serviceMessageStandardViewItem.customerFailure}" disabled="true"/>
 		</p:column>
 
 		<p:column sortBy="#{serviceMessageStandardViewItem.basicStartDate}" width="100" 
-			rendered="#{serviceMessageStandardView.searchObject.searchFields[34].visible}" displayPriority="#{serviceMessageStandardView.searchObject.searchFields[34].colOrder}" >
+			rendered="#{serviceMessageStandardView.searchObject.searchFields[34].visible}" displayPriority="#{serviceMessageStandardView.searchObject.searchFields[34].colOrder}" 
+			exportHeaderValue="#{i18n.lbl_attr_basicstartdate_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_servicemessagestandardview_basicstartdate}"/>
+				<h:outputText value="#{i18n.col_servicemessagestandardview_basicstartdate}" title="#{i18n.lbl_attr_basicstartdate_tooltip}" styleClass="pf-tooltip-target" />
 			</f:facet>
 			<h:outputText value="#{serviceMessageStandardViewItem.basicStartDate}">
 				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateConverter"/>
@@ -1061,9 +1065,10 @@
 		</p:column>
 
 		<p:column sortBy="#{serviceMessageStandardViewItem.basicFinishDate}" width="100" 
-			rendered="#{serviceMessageStandardView.searchObject.searchFields[35].visible}" displayPriority="#{serviceMessageStandardView.searchObject.searchFields[35].colOrder}" >
+			rendered="#{serviceMessageStandardView.searchObject.searchFields[35].visible}" displayPriority="#{serviceMessageStandardView.searchObject.searchFields[35].colOrder}" 
+			exportHeaderValue="#{i18n.lbl_attr_basicfinishdate_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_servicemessagestandardview_basicfinishdate}"/>
+				<h:outputText value="#{i18n.col_servicemessagestandardview_basicfinishdate}" title="#{i18n.lbl_attr_basicfinishdate_tooltip}" styleClass="pf-tooltip-target" />
 			</f:facet>
 			<h:outputText value="#{serviceMessageStandardViewItem.basicFinishDate}">
 				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateConverter"/>
@@ -1073,9 +1078,10 @@
 		</p:column>
 
 		<p:column sortBy="#{serviceMessageStandardViewItem.internalArrivalDate}" width="110" 
-			rendered="#{serviceMessageStandardView.searchObject.searchFields[36].visible}" displayPriority="#{serviceMessageStandardView.searchObject.searchFields[36].colOrder}" >
+			rendered="#{serviceMessageStandardView.searchObject.searchFields[36].visible}" displayPriority="#{serviceMessageStandardView.searchObject.searchFields[36].colOrder}" 
+			exportHeaderValue="#{i18n.lbl_attr_repairarrivaldate_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_servicemessagestandardview_internalarrivaldate}"/>
+				<h:outputText value="#{i18n.col_servicemessagestandardview_internalarrivaldate}" title="#{i18n.lbl_attr_repairarrivaldate_tooltip}" styleClass="pf-tooltip-target" />
 			</f:facet>
 			<h:outputText value="#{serviceMessageStandardViewItem.internalArrivalDate}">
 				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateConverter"/>
@@ -1085,9 +1091,10 @@
 		</p:column>
 
 		<p:column sortBy="#{serviceMessageStandardViewItem.internalShipmentDate}" width="110" 
-			rendered="#{serviceMessageStandardView.searchObject.searchFields[37].visible}" displayPriority="#{serviceMessageStandardView.searchObject.searchFields[37].colOrder}" >
+			rendered="#{serviceMessageStandardView.searchObject.searchFields[37].visible}" displayPriority="#{serviceMessageStandardView.searchObject.searchFields[37].colOrder}" 
+			exportHeaderValue="#{i18n.lbl_attr_repairshipmentdate_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_servicemessagestandardview_internalshipmentdate}"/>
+				<h:outputText value="#{i18n.col_servicemessagestandardview_internalshipmentdate}" title="#{i18n.lbl_attr_repairshipmentdate_tooltip}" styleClass="pf-tooltip-target" />
 			</f:facet>
 			<h:outputText value="#{serviceMessageStandardViewItem.internalShipmentDate}">
 				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateConverter"/>
@@ -1097,56 +1104,59 @@
 		</p:column>
 
 		<p:column sortBy="#{serviceMessageStandardViewItem.epidemicFailure}" width="80" 
-			rendered="#{serviceMessageStandardView.searchObject.searchFields[38].visible}" displayPriority="#{serviceMessageStandardView.searchObject.searchFields[38].colOrder}" >
+			rendered="#{serviceMessageStandardView.searchObject.searchFields[38].visible}" displayPriority="#{serviceMessageStandardView.searchObject.searchFields[38].colOrder}" 
+			exportHeaderValue="#{i18n.lbl_attr_epidemicfailure_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_servicemessagestandardview_epidemicfailure}"/>
+				<h:outputText value="#{i18n.col_servicemessagestandardview_epidemicfailure}" title="#{i18n.lbl_attr_epidemicfailure_tooltip}" styleClass="pf-tooltip-target" />
 			</f:facet>
 			<p:selectBooleanCheckbox value="#{serviceMessageStandardViewItem.epidemicFailure}" disabled="true"/>
 		</p:column>
 
 		<p:column sortBy="#{serviceMessageStandardViewItem.analysisText}" width="250" 
-			rendered="#{serviceMessageStandardView.searchObject.searchFields[39].visible}" displayPriority="#{serviceMessageStandardView.searchObject.searchFields[39].colOrder}" >
+			rendered="#{serviceMessageStandardView.searchObject.searchFields[39].visible}" displayPriority="#{serviceMessageStandardView.searchObject.searchFields[39].colOrder}" 
+			exportValue="#{serviceMessageStandardViewItem.analysisText}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_servicemessage_analysistext}"/>
 			</f:facet>
-			<h:outputText value="#{serviceMessageStandardViewItem.analysisText}">
-			</h:outputText>
+			<h:outputText value="#{serviceMessageStandardViewItem.analysisText}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{serviceMessageStandardViewItem.deliveryNoteNumber}" width="100" 
-			rendered="#{serviceMessageStandardView.searchObject.searchFields[40].visible}" displayPriority="#{serviceMessageStandardView.searchObject.searchFields[40].colOrder}" >
+			rendered="#{serviceMessageStandardView.searchObject.searchFields[40].visible}" displayPriority="#{serviceMessageStandardView.searchObject.searchFields[40].colOrder}" 
+			exportHeaderValue="#{i18n.lbl_attr_deliverynotenumber_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_servicemessagestandardview_deliverynotenumber}"/>
+				<h:outputText value="#{i18n.col_servicemessagestandardview_deliverynotenumber}" title="#{i18n.lbl_attr_deliverynotenumber_tooltip}" styleClass="pf-tooltip-target" />
 			</f:facet>
 			<h:outputText value="#{serviceMessageStandardViewItem.deliveryNoteNumber}">
 			</h:outputText>
 		</p:column>
 
 		<p:column sortBy="#{serviceMessageStandardViewItem.serviceMessageId}" width="100" 
-			rendered="#{serviceMessageStandardView.searchObject.searchFields[41].visible}" displayPriority="#{serviceMessageStandardView.searchObject.searchFields[41].colOrder}" >
+			rendered="#{serviceMessageStandardView.searchObject.searchFields[41].visible}" displayPriority="#{serviceMessageStandardView.searchObject.searchFields[41].colOrder}" 
+			exportHeaderValue="#{i18n.lbl_attr_servicenotificationnumber_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_servicemessagestandardview_servicemessageid}"/>
+				<h:outputText value="#{i18n.col_servicemessagestandardview_servicemessageid}" title="#{i18n.lbl_attr_servicenotificationnumber_tooltip}" styleClass="pf-tooltip-target" />
 			</f:facet>
 			<h:outputText value="#{serviceMessageStandardViewItem.serviceMessageId}">
 			</h:outputText>
 		</p:column>
 
 		<p:column sortBy="#{serviceMessageStandardViewItem.causeText}" width="250" 
-			rendered="#{serviceMessageStandardView.searchObject.searchFields[42].visible}" displayPriority="#{serviceMessageStandardView.searchObject.searchFields[42].colOrder}" >
+			rendered="#{serviceMessageStandardView.searchObject.searchFields[42].visible}" displayPriority="#{serviceMessageStandardView.searchObject.searchFields[42].colOrder}" 
+			exportValue="#{serviceMessageStandardViewItem.causeText}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_servicemessage_causetext}"/>
 			</f:facet>
-			<h:outputText value="#{serviceMessageStandardViewItem.causeText}">
-			</h:outputText>
+			<h:outputText value="#{serviceMessageStandardViewItem.causeText}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{serviceMessageStandardViewItem.repairDescription}" width="250" 
-			rendered="#{serviceMessageStandardView.searchObject.searchFields[43].visible}" displayPriority="#{serviceMessageStandardView.searchObject.searchFields[43].colOrder}" >
+			rendered="#{serviceMessageStandardView.searchObject.searchFields[43].visible}" displayPriority="#{serviceMessageStandardView.searchObject.searchFields[43].colOrder}" 
+			exportValue="#{serviceMessageStandardViewItem.repairDescription}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_servicemessage_repairdescription}"/>
 			</f:facet>
-			<h:outputText value="#{serviceMessageStandardViewItem.repairDescription}">
-			</h:outputText>
+			<h:outputText value="#{serviceMessageStandardViewItem.repairDescription}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{serviceMessageStandardViewItem.creationDate}" width="120" 

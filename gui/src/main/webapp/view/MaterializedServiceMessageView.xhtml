@@ -1207,9 +1207,9 @@
 
 		<p:column sortBy="#{materializedServiceMessageViewItem.internalArrivalDate}" width="110" 
 			rendered="#{materializedServiceMessageView.searchObject.searchFields[33].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[33].colOrder}" 
-			exportHeaderValue="#{i18n.col_materializedservicemessageview_internalarrivaldate_tooltip}" class="thnowrap" >
+			exportHeaderValue="#{i18n.lbl_attr_repairarrivaldate_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materializedservicemessageview_internalarrivaldate}" title="#{i18n.col_materializedservicemessageview_internalarrivaldate_tooltip}" styleClass="pf-tooltip-target" />
+				<h:outputText value="#{i18n.col_materializedservicemessageview_internalarrivaldate}" title="#{i18n.lbl_attr_repairarrivaldate_tooltip}" styleClass="pf-tooltip-target" />
 			</f:facet>
 			<h:outputText value="#{materializedServiceMessageViewItem.internalArrivalDate}">
 				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateConverter"/>
@@ -1220,9 +1220,9 @@
 
 		<p:column sortBy="#{materializedServiceMessageViewItem.internalShipmentDate}" width="110" 
 			rendered="#{materializedServiceMessageView.searchObject.searchFields[34].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[34].colOrder}" 
-			exportHeaderValue="#{i18n.col_materializedservicemessageview_internalshipmentdate_tooltip}" class="thnowrap" >
+			exportHeaderValue="#{i18n.lbl_attr_repairshipmentdate_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materializedservicemessageview_internalshipmentdate}" title="#{i18n.col_materializedservicemessageview_internalshipmentdate_tooltip}" styleClass="pf-tooltip-target" />
+				<h:outputText value="#{i18n.col_materializedservicemessageview_internalshipmentdate}" title="#{i18n.lbl_attr_repairshipmentdate_tooltip}" styleClass="pf-tooltip-target" />
 			</f:facet>
 			<h:outputText value="#{materializedServiceMessageViewItem.internalShipmentDate}">
 				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateConverter"/>
@@ -1233,9 +1233,9 @@
 
 		<p:column sortBy="#{materializedServiceMessageViewItem.basicStartDate}" width="110" 
 			rendered="#{materializedServiceMessageView.searchObject.searchFields[35].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[35].colOrder}" 
-			exportHeaderValue="#{i18n.col_materializedservicemessageview_basicstartdate_tooltip}" class="thnowrap" >
+			exportHeaderValue="#{i18n.lbl_attr_basicstartdate_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materializedservicemessageview_basicstartdate}" title="#{i18n.col_materializedservicemessageview_basicstartdate_tooltip}" styleClass="pf-tooltip-target" />
+				<h:outputText value="#{i18n.col_materializedservicemessageview_basicstartdate}" title="#{i18n.lbl_attr_basicstartdate_tooltip}" styleClass="pf-tooltip-target" />
 			</f:facet>
 			<h:outputText value="#{materializedServiceMessageViewItem.basicStartDate}">
 				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateConverter"/>
@@ -1312,9 +1312,9 @@
 
 		<p:column sortBy="#{materializedServiceMessageViewItem.epidemicFailure}" width="80" 
 			rendered="#{materializedServiceMessageView.searchObject.searchFields[43].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[43].colOrder}" 
-			exportHeaderValue="#{i18n.col_materializedservicemessageview_epidemicfailure_tooltip}" class="thnowrap" >
+			exportHeaderValue="#{i18n.lbl_attr_epidemicfailure_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materializedservicemessageview_epidemicfailure}" title="#{i18n.col_materializedservicemessageview_epidemicfailure_tooltip}" styleClass="pf-tooltip-target" />
+				<h:outputText value="#{i18n.col_materializedservicemessageview_epidemicfailure}" title="#{i18n.lbl_attr_epidemicfailure_tooltip}" styleClass="pf-tooltip-target" />
 			</f:facet>
 			<p:selectBooleanCheckbox value="#{materializedServiceMessageViewItem.epidemicFailure}" disabled="true"/>
 		</p:column>
@@ -1339,9 +1339,9 @@
 
 		<p:column sortBy="#{materializedServiceMessageViewItem.customerFailure}" width="80" 
 			rendered="#{materializedServiceMessageView.searchObject.searchFields[46].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[46].colOrder}" 
-			exportHeaderValue="#{i18n.col_materializedservicemessageview_customerfailure_tooltip}" class="thnowrap" >
+			exportHeaderValue="#{i18n.lbl_attr_customerfailure_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materializedservicemessageview_customerfailure}" title="#{i18n.col_materializedservicemessageview_customerfailure_tooltip}" styleClass="pf-tooltip-target" />
+				<h:outputText value="#{i18n.col_materializedservicemessageview_customerfailure}" title="#{i18n.lbl_attr_customerfailure_tooltip}" styleClass="pf-tooltip-target" />
 			</f:facet>
 			<p:selectBooleanCheckbox value="#{materializedServiceMessageViewItem.customerFailure}" disabled="true"/>
 		</p:column>
@@ -1383,9 +1383,9 @@
 
 		<p:column sortBy="#{materializedServiceMessageViewItem.deliveryNoteNumber}" width="100" 
 			rendered="#{materializedServiceMessageView.searchObject.searchFields[50].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[50].colOrder}" 
-			exportHeaderValue="#{i18n.col_materializedservicemessageview_deliverynotenumber_tooltip}" class="thnowrap" >
+			exportHeaderValue="#{i18n.lbl_attr_deliverynotenumber_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materializedservicemessageview_deliverynotenumber}" title="#{i18n.col_materializedservicemessageview_deliverynotenumber_tooltip}" styleClass="pf-tooltip-target" />
+				<h:outputText value="#{i18n.col_materializedservicemessageview_deliverynotenumber}" title="#{i18n.lbl_attr_deliverynotenumber_tooltip}" styleClass="pf-tooltip-target" />
 			</f:facet>
 			<h:outputText value="#{materializedServiceMessageViewItem.deliveryNoteNumber}">
 			</h:outputText>
