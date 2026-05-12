@@ -66,6 +66,12 @@ public class ServiceMessageStandardView extends SuperView implements Serializabl
     private final transient RepairServiceBoundaryService repairServiceService;
     @Generated
     private final transient SupplierBoundaryService supplierService;
+
+    private final transient FaultAnalysisBoundaryService faultAnalysisService;
+    private final transient MaterialTypeBoundaryService matTypeService;
+    private final transient RMATypeBoundaryService rMATypeService;
+    private final transient RepairTaskBoundaryService repairTaskService;
+
     @Generated
     public static final String VIEW_ID = "com.kontron.qdw.ui.view.ServiceMessageStandardView";
     @Generated
@@ -75,42 +81,35 @@ public class ServiceMessageStandardView extends SuperView implements Serializabl
     @Generated
     private String selectedSavedQuery;
 
-    /**
-     * Default constructor
-     */
+
     @Generated
     public ServiceMessageStandardView() {
-        this.userSession = null;
-        this.serviceMessageService = null;
-        this.customerService = null;
-        this.countryService = null;
-        this.materialService = null;
-        this.repairStateService = null;
-        this.repairErrorCodeService = null;
-        this.repairServiceService = null;
-        this.supplierService = null;
+        userSession = null;
+        serviceMessageService = null;
+        customerService = null;
+        countryService = null;
+        materialService = null;
+        repairStateService = null;
+        repairErrorCodeService = null;
+        repairServiceService = null;
+        supplierService = null;
+
+        faultAnalysisService = null;
+        matTypeService = null;
+        rMATypeService = null;
+        repairTaskService = null;
+
         this.queryManager = null;
     }
 
-    /**
-     * Constructor for injecting all required beans
-     * @param userSession
-     * @param serviceMessageService
-     * @param customerService
-     * @param countryService
-     * @param materialService
-     * @param repairStateService
-     * @param repairErrorCodeService
-     * @param repairServiceService
-     * @param supplierService
-     * @param queryManager
-     */
     @Inject
     @Generated
     public ServiceMessageStandardView(UserSession userSession, ServiceMessageBoundaryService serviceMessageService,
             CustomerBoundaryService customerService, CountryBoundaryService countryService, MaterialBoundaryService materialService,
             RepairStateBoundaryService repairStateService, RepairErrorCodeBoundaryService repairErrorCodeService,
-            RepairServiceBoundaryService repairServiceService, SupplierBoundaryService supplierService, SavedQueryService queryManager) {
+            RepairServiceBoundaryService repairServiceService, SupplierBoundaryService supplierService,
+            FaultAnalysisBoundaryService faultAnalysisService, MaterialTypeBoundaryService matTypeService, RMATypeBoundaryService rMATypeService,
+            RepairTaskBoundaryService repairTaskService, SavedQueryService queryManager) {
         this.userSession = userSession;
         this.serviceMessageService = serviceMessageService;
         this.customerService = customerService;
@@ -120,6 +119,11 @@ public class ServiceMessageStandardView extends SuperView implements Serializabl
         this.repairErrorCodeService = repairErrorCodeService;
         this.repairServiceService = repairServiceService;
         this.supplierService = supplierService;
+        this.faultAnalysisService = faultAnalysisService;
+        this.matTypeService = matTypeService;
+        this.rMATypeService = rMATypeService;
+        this.repairTaskService = repairTaskService;
+
         this.queryManager = queryManager;
     }
 
@@ -410,6 +414,30 @@ public class ServiceMessageStandardView extends SuperView implements Serializabl
     @Customized
     public List<String> onCompleteSupplierName(String searchText) {
         return OnCompleteHelper.onCompleteSupplierName(supplierService, searchText);
+    }
+
+    public List<String> onCompleteSapNumber(String searchText) {
+        return OnCompleteHelper.onCompleteSapNumber(materialService, searchText);
+    }
+
+    public List<String> onCompleteMatTypeCode(String searchText) {
+        return OnCompleteHelper.onCompleteMatTypeCode(matTypeService, searchText);
+    }
+
+    public List<String> onCompleteRepairErrorCodeGroupName(String searchText) {
+        return OnCompleteHelper.onCompleteRepairErrorCodeGroupName(repairErrorCodeService, searchText);
+    }
+
+    public List<String> onCompleteRmaTypeCode(String searchText) {
+        return OnCompleteHelper.onCompleteRmaTypeCode(rMATypeService, searchText);
+    }
+
+    public List<String> onCompleteSymptomCode(String query) {
+        return OnCompleteHelper.onCompleteSymptomCode(faultAnalysisService, query);
+    }
+
+    public List<String> onCompleteRepairTaskCode(String searchText) {
+        return OnCompleteHelper.onCompleteRepairTaskCode(repairTaskService, searchText);
     }
 
 

@@ -80,6 +80,7 @@
 				<h:panelGroup id="p_2">
 					<p:inputText id="b_2" rendered="#{serviceMessageStandardView.searchObject.searchFields[2].between}" value="#{serviceMessageStandardView.searchObject.searchFields[2].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
+
 <!-- Serial no. -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_3" value="#{serviceMessageStandardView.searchObject.searchFields[3].colLabel}"/>
 				<p:selectOneMenu valueChangeListener="#{serviceMessageStandardView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_3" value="#{serviceMessageStandardView.searchObject.searchFields[3].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
