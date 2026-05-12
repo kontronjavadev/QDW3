@@ -47,24 +47,19 @@ public final class OnCompleteHelper {
         // private ctor für Helperklassen
     }
 
-    public static List<String> onCompleteMaterialNumber(MaterialBoundaryService materialService, String searchText) {
-        return onCompleteStartsWith(materialService::findMaterials, searchText, MaterialListDTO::getMaterialNumber);
-    }
 
-    public static List<String> onCompleteSapNumber(MaterialBoundaryService materialService, String searchText) {
-        return onCompleteStartsWith(materialService::findMaterialsBySapNumber, searchText, MaterialListSapDTO::getSapNumber);
-    }
 
-    public static List<String> onCompleteSupplierName(SupplierBoundaryService supplierService, String searchText) {
-        return onCompleteStartsWith(supplierService::findSuppliers, searchText, SupplierListDTO::getName);
+    public static List<String> onCompleteCountryName(CountryBoundaryService countryService, String searchText) {
+        return onCompleteContains(countryService::findCountries, searchText, CountryListDTO::getName);
     }
 
     public static List<String> onCompleteCustomerName(CustomerBoundaryService customerBoundaryService, String searchText) {
         return onCompleteStartsWith(customerBoundaryService::findCustomers, searchText, CustomerListDTO::getName);
     }
 
-    public static List<String> onCompleteCountryName(CountryBoundaryService countryService, String searchText) {
-        return onCompleteContains(countryService::findCountries, searchText, CountryListDTO::getName);
+
+    public static List<String> onCompleteMaterialNumber(MaterialBoundaryService materialService, String searchText) {
+        return onCompleteStartsWith(materialService::findMaterials, searchText, MaterialListDTO::getMaterialNumber);
     }
 
     public static List<String> onCompleteMatTypeCode(MaterialTypeBoundaryService matTypeService, String searchText) {
@@ -75,12 +70,10 @@ public final class OnCompleteHelper {
         return onCompleteContains(mvtTypeService::findMovementTypes, searchText, MovementTypeListDTO::getCode);
     }
 
-    public static List<String> onCompleteSymptomCode(FaultAnalysisBoundaryService faultAnalysisService, String searchText) {
-        return onCompleteContains(faultAnalysisService::findFaultAnalyses, searchText, FaultAnalysisListDTO::getCode);
-    }
 
-    public static List<String> onCompleteRmaTypeCode(RMATypeBoundaryService rMATypeService, String searchText) {
-        return onCompleteContains(rMATypeService::findRMATypes, searchText, RMATypeListDTO::getCode);
+    /** auch "cause group" */
+    public static List<String> onCompleteRepairErrorCodeGroupName(RepairErrorCodeBoundaryService repairErrorCodeService, String searchText) {
+        return onCompleteContains(repairErrorCodeService::findRepairErrorCodesGroup, searchText, RepairErrorCodeGroupListDTO::getGroupName);
     }
 
     /** auch "cause code" */
@@ -88,21 +81,33 @@ public final class OnCompleteHelper {
         return onCompleteContains(repairErrorCodeService::findRepairErrorCodes, searchText, RepairErrorCodeListDTO::getName);
     }
 
-    /** auch "cause group" */
-    public static List<String> onCompleteRepairErrorCodeGroupName(RepairErrorCodeBoundaryService repairErrorCodeService, String searchText) {
-        return onCompleteContains(repairErrorCodeService::findRepairErrorCodesGroup, searchText, RepairErrorCodeGroupListDTO::getGroupName);
-    }
-
-    public static List<String> onCompleteRepairTaskCode(RepairTaskBoundaryService repairTaskService, String searchText) {
-        return onCompleteContains(repairTaskService::findRepairTasks, searchText, RepairTaskListDTO::getCode);
+    public static List<String> onCompleteRepairServiceName(RepairServiceBoundaryService repairServiceService, String searchText) {
+        return onCompleteStartsWith(repairServiceService::findRepairServices, searchText, RepairServiceListDTO::getName);
     }
 
     public static List<String> onCompleteRepairStateName(RepairStateBoundaryService repairStateService, String searchText) {
         return onCompleteContains(repairStateService::findRepairStates, searchText, RepairStateListDTO::getName);
     }
 
-    public static List<String> onCompleteRepairServiceName(RepairServiceBoundaryService repairServiceService, String searchText) {
-        return onCompleteStartsWith(repairServiceService::findRepairServices, searchText, RepairServiceListDTO::getName);
+    public static List<String> onCompleteRepairTaskCode(RepairTaskBoundaryService repairTaskService, String searchText) {
+        return onCompleteContains(repairTaskService::findRepairTasks, searchText, RepairTaskListDTO::getCode);
+    }
+
+    public static List<String> onCompleteRmaTypeCode(RMATypeBoundaryService rMATypeService, String searchText) {
+        return onCompleteContains(rMATypeService::findRMATypes, searchText, RMATypeListDTO::getCode);
+    }
+
+
+    public static List<String> onCompleteSapNumber(MaterialBoundaryService materialService, String searchText) {
+        return onCompleteStartsWith(materialService::findMaterialsBySapNumber, searchText, MaterialListSapDTO::getSapNumber);
+    }
+
+    public static List<String> onCompleteSupplierName(SupplierBoundaryService supplierService, String searchText) {
+        return onCompleteStartsWith(supplierService::findSuppliers, searchText, SupplierListDTO::getName);
+    }
+
+    public static List<String> onCompleteSymptomCode(FaultAnalysisBoundaryService faultAnalysisService, String searchText) {
+        return onCompleteContains(faultAnalysisService::findFaultAnalyses, searchText, FaultAnalysisListDTO::getCode);
     }
 
 
