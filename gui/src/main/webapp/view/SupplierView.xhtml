@@ -196,7 +196,7 @@
 			<p:tab title="#{i18n.search_input_saved_query_title}">
 				<h:panelGrid columns="1">
 					<h:outputLabel styleClass="label-field-mandatory" value="#{i18n.search_input_lbl_saved_query}"/>
-					<p:selectOneListbox id="savedQueryList" value="#{supplierView.selectedSavedQuery}" style="#{sizeServiceBean.searchQueriesHeight()}; width:480px">
+					<p:selectOneListbox id="savedQueryList" value="#{supplierView.selectedSavedQuery}" style="#{sizeServiceBean.searchQueriesHeight()}; width:946px" styleClass="flex-listbox" >
 						<f:selectItems value="#{supplierView.savedQueries}"/>
 					</p:selectOneListbox>
 					<h:panelGrid columns="3">
