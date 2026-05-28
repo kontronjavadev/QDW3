@@ -1,0 +1,347 @@
+<ui:composition xmlns="https://jakarta.ee/xml/ns/jakartaee"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:h="jakarta.faces.html"
+	xmlns:f="jakarta.faces.core"
+	xmlns:p="http://primefaces.org/ui">
+
+	<p:menubar>
+		<p:submenu icon="pi pi-file" label="#{i18n.mnu_file}" id="gridServiceOrderServiceMessagesPanel_mniFile">
+		</p:submenu>
+		<p:submenu icon="pi pi-refresh" label="#{i18n.mnu_view}">
+			<p:menuitem value="#{i18n.action_refresh}" ajax="false" icon="pi pi-refresh" actionListener="#{serviceOrderServiceMessagesPanel.fetchServiceMessages}"/>
+		</p:submenu>
+		<p:submenu icon="pi pi-print" label="#{i18n.mnu_export}">
+			<p:menuitem value="#{i18n.action_export_xls}" ajax="false" icon="pi pi-file-excel">
+				<p:dataExporter type="xls" target="gridServiceOrderServiceMessagesPanel" fileName="ServiceMessageList"/>
+			</p:menuitem>
+			<p:menuitem value="#{i18n.action_export_pdf}" ajax="false" icon="pi pi-file-pdf">
+				<p:dataExporter type="pdf" target="gridServiceOrderServiceMessagesPanel" fileName="ServiceMessageList"/>
+			</p:menuitem>
+		</p:submenu>
+	</p:menubar>
+
+	<br/>
+
+	<p:dataTable id="gridServiceOrderServiceMessagesPanel" var="serviceOrderServiceMessagesPanelItem" rows="50"
+		selectionMode="single"
+		selection="#{serviceOrderServiceMessagesPanel.selItemOfServiceMessages}"
+		loadingMessage="#{i18n.action_fetch_data}"
+		value="#{serviceOrderServiceMessagesPanel.serviceMessagesList}" scrollable="false"
+		paginatorPosition="top" paginatorAlwaysVisible="false" paginator="true" resizableColumns="true"
+		rowKey="#{serviceOrderServiceMessagesPanelItem.id}"
+		paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+		rowsPerPageTemplate="10,50,100,500,1000">
+		<p:ajax event="rowDblselect" listener="#{serviceOrderServiceMessagesPanel.onServiceMessagesGridDoubleClick}"/>
+
+		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.id}" width="100" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_abstractentitywithid_id}"/>
+			</f:facet>
+			<h:outputText value="#{serviceOrderServiceMessagesPanelItem.id}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.plantCode}" width="80" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serviceorderservicemessagespanel_plantcode}"/>
+			</f:facet>
+			<h:outputText value="#{serviceOrderServiceMessagesPanelItem.plantCode}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.serialObjectSerialNumber}" width="100" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serviceorderservicemessagespanel_serialobjectserialnumber}"/>
+			</f:facet>
+			<h:outputText value="#{serviceOrderServiceMessagesPanelItem.serialObjectSerialNumber}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.matrevMatMaterialNumber}" width="150" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serviceorderservicemessagespanel_matrevmatmaterialnumber}"/>
+			</f:facet>
+			<h:outputText value="#{serviceOrderServiceMessagesPanelItem.matrevMatMaterialNumber}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.matrevMatSapNumber}" width="150" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serviceorderservicemessagespanel_matrevmatsapnumber}"/>
+			</f:facet>
+			<h:outputText value="#{serviceOrderServiceMessagesPanelItem.matrevMatSapNumber}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.matrevRevisionNumber}" width="150" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serviceorderservicemessagespanel_matrevrevisionnumber}"/>
+			</f:facet>
+			<h:outputText value="#{serviceOrderServiceMessagesPanelItem.matrevRevisionNumber}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.rMATypeCode}" width="105" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serviceorderservicemessagespanel_rmatypecode}"/>
+			</f:facet>
+			<h:outputText value="#{serviceOrderServiceMessagesPanelItem.rMATypeCode}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.repairStateCode}" width="120" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serviceorderservicemessagespanel_repairstatecode}"/>
+			</f:facet>
+			<h:outputText value="#{serviceOrderServiceMessagesPanelItem.repairStateCode}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.repairServiceCode}" width="100" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serviceorderservicemessagespanel_repairservicecode}"/>
+			</f:facet>
+			<h:outputText value="#{serviceOrderServiceMessagesPanelItem.repairServiceCode}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.repairLocationCode}" width="100" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serviceorderservicemessagespanel_repairlocationcode}"/>
+			</f:facet>
+			<h:outputText value="#{serviceOrderServiceMessagesPanelItem.repairLocationCode}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.repairErrorCodeGroupName}" width="150" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serviceorderservicemessagespanel_repairerrorcodegroupname}"/>
+			</f:facet>
+			<h:outputText value="#{serviceOrderServiceMessagesPanelItem.repairErrorCodeGroupName}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.repairErrorCodeCode}" width="150" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serviceorderservicemessagespanel_repairerrorcodecode}"/>
+			</f:facet>
+			<h:outputText value="#{serviceOrderServiceMessagesPanelItem.repairErrorCodeCode}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.repairTaskCode}" width="120" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serviceorderservicemessagespanel_repairtaskcode}"/>
+			</f:facet>
+			<h:outputText value="#{serviceOrderServiceMessagesPanelItem.repairTaskCode}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.repairTaskShortText}" width="250" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serviceorderservicemessagespanel_repairtaskshorttext}"/>
+			</f:facet>
+			<h:outputText value="#{serviceOrderServiceMessagesPanelItem.repairTaskShortText}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.faultAnalysisCode}" width="120" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serviceorderservicemessagespanel_faultanalysiscode}"/>
+			</f:facet>
+			<h:outputText value="#{serviceOrderServiceMessagesPanelItem.faultAnalysisCode}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.faultAnalysisShortText}" width="250" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serviceorderservicemessagespanel_faultanalysisshorttext}"/>
+			</f:facet>
+			<h:outputText value="#{serviceOrderServiceMessagesPanelItem.faultAnalysisShortText}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.internalArrivalDate}" width="110" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serviceorderservicemessagespanel_internalarrivaldate}"/>
+			</f:facet>
+			<h:outputText value="#{serviceOrderServiceMessagesPanelItem.internalArrivalDate}">
+				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateConverter"/>
+				<f:attribute name="pattern" value="#{userSession.dateFormat}"/>
+				<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.internalShipmentDate}" width="110" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serviceorderservicemessagespanel_internalshipmentdate}"/>
+			</f:facet>
+			<h:outputText value="#{serviceOrderServiceMessagesPanelItem.internalShipmentDate}">
+				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateConverter"/>
+				<f:attribute name="pattern" value="#{userSession.dateFormat}"/>
+				<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.basicStartDate}" width="100" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serviceorderservicemessagespanel_basicstartdate}"/>
+			</f:facet>
+			<h:outputText value="#{serviceOrderServiceMessagesPanelItem.basicStartDate}">
+				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateConverter"/>
+				<f:attribute name="pattern" value="#{userSession.dateFormat}"/>
+				<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.basicFinishDate}" width="100" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serviceorderservicemessagespanel_basicfinishdate}"/>
+			</f:facet>
+			<h:outputText value="#{serviceOrderServiceMessagesPanelItem.basicFinishDate}">
+				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateConverter"/>
+				<f:attribute name="pattern" value="#{userSession.dateFormat}"/>
+				<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.externalSupplierName}" width="200" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serviceorderservicemessagespanel_externalsuppliername}"/>
+			</f:facet>
+			<h:outputText value="#{serviceOrderServiceMessagesPanelItem.externalSupplierName}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.customerFailure}" width="80" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serviceorderservicemessagespanel_customerfailure}"/>
+			</f:facet>
+			<p:selectBooleanCheckbox value="#{serviceOrderServiceMessagesPanelItem.customerFailure}" disabled="true"/>
+		</p:column>
+
+		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.errorId}" width="100" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_servicemessage_errorid}"/>
+			</f:facet>
+			<h:outputText value="#{serviceOrderServiceMessagesPanelItem.errorId}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.origin}" width="150" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_servicemessage_origin}"/>
+			</f:facet>
+			<h:outputText value="#{serviceOrderServiceMessagesPanelItem.origin}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.defectComponent}" width="100" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serviceorderservicemessagespanel_defectcomponent}"/>
+			</f:facet>
+			<h:outputText value="#{serviceOrderServiceMessagesPanelItem.defectComponent}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.designator}" width="100" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_servicemessage_designator}"/>
+			</f:facet>
+			<h:outputText value="#{serviceOrderServiceMessagesPanelItem.designator}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.epidemicFailure}" width="80" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serviceorderservicemessagespanel_epidemicfailure}"/>
+			</f:facet>
+			<p:selectBooleanCheckbox value="#{serviceOrderServiceMessagesPanelItem.epidemicFailure}" disabled="true"/>
+		</p:column>
+
+		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.analysisText}" width="250" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serviceorderservicemessagespanel_analysistext}"/>
+			</f:facet>
+			<h:outputText value="#{serviceOrderServiceMessagesPanelItem.analysisText}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.deliveryNoteNumber}" width="100" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serviceorderservicemessagespanel_deliverynotenumber}"/>
+			</f:facet>
+			<h:outputText value="#{serviceOrderServiceMessagesPanelItem.deliveryNoteNumber}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.serviceMessageId}" width="100" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serviceorderservicemessagespanel_servicemessageid}"/>
+			</f:facet>
+			<h:outputText value="#{serviceOrderServiceMessagesPanelItem.serviceMessageId}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.causeText}" width="250" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_servicemessage_causetext}"/>
+			</f:facet>
+			<h:outputText value="#{serviceOrderServiceMessagesPanelItem.causeText}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.repairDescription}" width="250" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_servicemessage_repairdescription}"/>
+			</f:facet>
+			<h:outputText value="#{serviceOrderServiceMessagesPanelItem.repairDescription}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.creationDate}" width="120" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_abstractentitywithid_creationdate}"/>
+			</f:facet>
+			<h:outputText value="#{serviceOrderServiceMessagesPanelItem.creationDate}">
+				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateTimeConverter"/>
+				<f:attribute name="pattern" value="#{userSession.dateTimeFormat}"/>
+				<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.lastUpdate}" width="120" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_abstractentitywithid_lastupdate}"/>
+			</f:facet>
+			<h:outputText value="#{serviceOrderServiceMessagesPanelItem.lastUpdate}">
+				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateTimeConverter"/>
+				<f:attribute name="pattern" value="#{userSession.dateTimeFormat}"/>
+				<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
+			</h:outputText>
+		</p:column>
+	</p:dataTable>
+	<p/>
+
+	<h:outputText styleClass="label-field-mandatory" value="#{i18n.result_total_number_records} #{serviceOrderServiceMessagesPanel.serviceMessagesList.size()}"/>
+
+	<p:contextMenu for="gridServiceOrderServiceMessagesPanel">
+		<p:menuitem value="#{i18n.action_delete}" ajax="true" icon="pi pi-trash" id="gridServiceOrderServiceMessagesPanel_mniDelete" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR') and not serviceOrderServiceMessagesPanel.readOnly}" onclick="PF('deleteConfirmServiceMessages').show()"/>
+		<p:menuitem value="#{i18n.action_view}" ajax="true" icon="pi pi-file" id="gridServiceOrderServiceMessagesPanel_mniView" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY')}" action="#{serviceOrderServiceMessagesPanel.openViewServiceMessageDialog}">
+			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{serviceOrderServiceMessagesPanel.currentPageURL}"/>
+		</p:menuitem>
+		<p:menuitem value="#{i18n.action_copy}" ajax="true" icon="pi pi-copy" id="gridServiceOrderServiceMessagesPanel_mniCopy" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR') and not serviceOrderServiceMessagesPanel.readOnly}" onclick="PF('copyConfirmServiceMessages').show()"/>
+		<p:menuitem value="#{i18n.action_refresh}" ajax="false" type="push" icon="pi pi-refresh" id="gridServiceOrderServiceMessagesPanel_mniRefresh" actionListener="#{serviceOrderServiceMessagesPanel.fetchServiceMessages}"/>
+	</p:contextMenu>
+
+	<p:confirmDialog modal="true" message="#{i18n.dialog_delete_question}" header="#{i18n.dialog_delete_title}" severity="alert" widgetVar="deleteConfirmServiceMessages">
+		<p:commandButton value="#{i18n.command_yes}" oncomplete="PF('deleteConfirmServiceMessages').hide()" actionListener="#{serviceOrderServiceMessagesPanel.deleteServiceMessage}" id="gridServiceOrderServiceMessagesPanel_cmdYesDelete" ajax="false"/>
+		<p:commandButton value="#{i18n.command_no}" onclick="PF('deleteConfirmServiceMessages').hide()" type="button"/>
+	</p:confirmDialog>
+
+	<p:confirmDialog modal="true" message="#{i18n.dialog_copy_question}" header="#{i18n.dialog_copy_title}" severity="info" widgetVar="copyConfirmServiceMessages">
+		<p:commandButton value="#{i18n.command_yes}" oncomplete="PF('copyConfirmServiceMessages').hide()" action="#{serviceOrderServiceMessagesPanel.copy}" id="gridServiceOrderServiceMessagesPanel_cmdYesCopy" ajax="false"/>
+		<p:commandButton value="#{i18n.command_no}" onclick="PF('copyConfirmServiceMessages').hide()" type="button"/>
+	</p:confirmDialog>
+
+</ui:composition>
