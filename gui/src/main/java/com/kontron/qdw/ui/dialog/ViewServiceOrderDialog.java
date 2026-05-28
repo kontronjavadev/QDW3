@@ -11,6 +11,7 @@ import java.util.*;
 import jakarta.faces.view.*;
 import static com.kontron.qdw.ui.UserSession.*;
 import com.kontron.qdw.ui.*;
+import com.kontron.qdw.ui.panel.*;
 import jakarta.inject.*;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
 import java.io.*;
@@ -36,6 +37,8 @@ public class ViewServiceOrderDialog implements Serializable {
     private String formTitle = "";
     @Generated
     private transient ResourceBundle bundle;
+    @Generated
+    private final ServiceOrderServiceMessagesPanel panServiceMessages;
 
     /**
      * Default constructor
@@ -44,18 +47,22 @@ public class ViewServiceOrderDialog implements Serializable {
     public ViewServiceOrderDialog() {
         this.serviceOrderService = null;
         this.userSession = null;
+        this.panServiceMessages = null;
     }
 
     /**
      * Constructor for injecting all required beans
      * @param serviceOrderService
      * @param userSession
+     * @param panServiceMessages
      */
     @Inject
     @Generated
-    public ViewServiceOrderDialog(ServiceOrderBoundaryService serviceOrderService, UserSession userSession) {
+    public ViewServiceOrderDialog(ServiceOrderBoundaryService serviceOrderService, UserSession userSession,
+            ServiceOrderServiceMessagesPanel panServiceMessages) {
         this.serviceOrderService = serviceOrderService;
         this.userSession = userSession;
+        this.panServiceMessages = panServiceMessages;
     }
 
     /**
@@ -125,6 +132,12 @@ public class ViewServiceOrderDialog implements Serializable {
 
             serviceOrder = serviceOrderService.findServiceOrderById(selectedObjectId);
 
+            panServiceMessages.setSelectedObjectId(selectedObjectId);
+            panServiceMessages.setCurrentPageURL(ViewServiceOrderDialog.PAGE_INIT_URL + selectedObjectId);
+            panServiceMessages.setReadOnly(true);
+            panServiceMessages.initView();
+
+
             formTitle = bundle.getString(FORM_VIEWSERVICEORDERDIALOG_TITLE) + " '" + selectedObjectId + "'";
 
             logger.debug("Dialog initialization finished");
@@ -153,6 +166,15 @@ public class ViewServiceOrderDialog implements Serializable {
     @Generated
     public String getCurrentPageURL() {
         return ViewServiceOrderDialog.PAGE_INIT_URL + java.net.URLEncoder.encode(selectedObjectId, java.nio.charset.StandardCharsets.UTF_8);
+    }
+
+    /**
+     * @return the navigation target
+     */
+    @Generated
+    public String openViewSupplierDialogLink() {
+        return ViewSupplierDialog.PAGE_INIT_URL
+                + java.net.URLEncoder.encode(serviceOrder.getSupplier().getCode(), java.nio.charset.StandardCharsets.UTF_8);
     }
 
 }

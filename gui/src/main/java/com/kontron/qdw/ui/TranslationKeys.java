@@ -940,6 +940,7 @@ public interface TranslationKeys {
     String PANEL_VIEWROLEDIALOG_USERS_TITLE = "panel_viewroledialog_users_title";
     String PANEL_VIEWSERIALOBJECTDIALOG_PANSERIALOBJECTS_TITLE = "panel_viewserialobjectdialog_panserialobjects_title";
     String PANEL_VIEWSERVICEMESSAGEDIALOG_PANCOMMENTS_TITLE = "panel_viewservicemessagedialog_pancomments_title";
+    String PANEL_VIEWSERVICEORDERDIALOG_PANSERVICEMESSAGES_TITLE = "panel_viewserviceorderdialog_panservicemessages_title";
     String PANEL_VIEWTRACEBOMDIALOG_PANILLEGALTRACEBOMITEMS_TITLE = "panel_viewtracebomdialog_panillegaltracebomitems_title";
     String PANEL_VIEWTRACEBOMDIALOG_PANTRACEBOMITEMS_TITLE = "panel_viewtracebomdialog_pantracebomitems_title";
     String PICK_LIST_ADD = "pick_list_add";

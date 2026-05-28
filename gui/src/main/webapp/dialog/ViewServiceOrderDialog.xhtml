@@ -51,29 +51,34 @@
 			<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
 		</p:inputText>
 		<p:tooltip for="txtDocumentDate" value=""/>
-		<h:outputLabel/>
-		<h:outputLabel/>
-		<h:outputLabel/>
-
-		<h:outputLabel value="#{i18n.lbl_attr_abstractfunctionalactiveentity_shorttext}:" for="txtShortText" styleClass="label-field-optional"/>
-		<p:inputText id="txtShortText" value="#{viewServiceOrderDialog.serviceOrder.shortText}" readonly="true">
-		</p:inputText>
-		<p:tooltip for="txtShortText" value=""/>
 
 		<h:outputLabel value="#{i18n.lbl_attr_abstractfunctionalactiveentity_active}:" for="chkActive" styleClass="label-field-optional"/>
 		<p:selectBooleanCheckbox id="chkActive" value="#{viewServiceOrderDialog.serviceOrder.active}" disabled="true"/>
 		<p:tooltip for="chkActive" value=""/>
 
-		<h:outputLabel value="#{i18n.lbl_assoc_serviceorder_customer}:" for="txtCustomer" styleClass="label-field-optional"/>
-		<p:inputText readonly="true" id="txtCustomer" value="#{viewServiceOrderDialog.serviceOrder.customer.name}"/>
-		<p:tooltip for="txtCustomer" value=""/>
+		<h:outputLabel value="#{i18n.lbl_attr_abstractfunctionalactiveentity_shorttext}:" for="txtShortText" styleClass="label-field-optional"/>
+		<p:inputText id="txtShortText" value="#{viewServiceOrderDialog.serviceOrder.shortText}" readonly="true">
+		</p:inputText>
+		<p:tooltip for="txtShortText" value=""/>
 		<h:outputLabel/>
 		<h:outputLabel/>
 		<h:outputLabel/>
 
-		<h:outputLabel value="#{i18n.lbl_assoc_serviceorder_supplier}:" for="txtSupplier" styleClass="label-field-optional"/>
-		<p:inputText readonly="true" id="txtSupplier" value="#{viewServiceOrderDialog.serviceOrder.supplier.name}"/>
-		<p:tooltip for="txtSupplier" value=""/>
+		<h:outputLabel value="#{i18n.lbl_assoc_serviceorder_customer}:" for="cboCustomer" styleClass="label-field-optional"/>
+		<h:outputText styleClass="label-field-value" id="cboCustomer" value="#{viewServiceOrderDialog.serviceOrder.customer.name}"/>
+		<p:tooltip for="cboCustomer" value=""/>
+		<h:outputLabel/>
+		<h:outputLabel/>
+		<h:outputLabel/>
+
+		<h:outputLabel value="#{i18n.lbl_assoc_serviceorder_supplier}:" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR')}" for="cboSupplier" styleClass="label-field-optional"/>
+		<p:commandLink rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR')}" id="cboSupplier" style="font-weight: bold;color: #0063ac" action="#{viewServiceOrderDialog.openViewSupplierDialogLink}">
+			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{viewServiceOrderDialog.currentPageURL}"/>
+			<h:outputText value="#{viewServiceOrderDialog.serviceOrder.supplier.name}"/>
+		</p:commandLink>
+		<h:outputLabel value="#{i18n.lbl_assoc_serviceorder_supplier}:" rendered="#{!userSession.checkAuthorizationString('ADMINISTRATOR')}" for="cboSupplierAltLbl" styleClass="label-field-optional"/>
+		<h:outputText styleClass="label-field-value" rendered="#{!userSession.checkAuthorizationString('ADMINISTRATOR')}" id="cboSupplierAltLbl" value="#{viewServiceOrderDialog.serviceOrder.supplier.name}"/>
+		<p:tooltip for="cboSupplier" value=""/>
 		<h:outputLabel/>
 		<h:outputLabel/>
 		<h:outputLabel/>
@@ -116,6 +121,20 @@
 	</p:tab>
 	</p:tabView>
 
+
+	<p:panel>
+	<h:panelGrid columns="1">
+		<h:outputText styleClass="header-label" value="#{i18n.panel_viewserviceorderdialog_panservicemessages_title}"/>
+	</h:panelGrid>
+
+	<h:panelGrid columns="1">
+
+		<ui:include src="panel/ServiceOrderServiceMessagesPanel.xhtml"/>
+
+	</h:panelGrid>
+	</p:panel>
+
+	<p/>
 
 	<h:panelGrid columns="1">
 		<p:commandButton id="cmdBack" icon="pi pi-caret-left" value="#{i18n.command_back}" action="#{userSession.getLastPage}" immediate="true" ajax="false"/>
