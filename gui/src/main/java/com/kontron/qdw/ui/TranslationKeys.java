@@ -586,6 +586,7 @@ public interface TranslationKeys {
     String FORM_VERTICALSECTORVIEW_TITLE = "form_verticalsectorview_title";
     String FORM_VIEWARRIVALDIALOG_TITLE = "form_viewarrivaldialog_title";
     String FORM_VIEWBOMITEMDIALOG_TITLE = "form_viewbomitemdialog_title";
+    String FORM_VIEWCUSTOMERDIALOG_TITLE = "form_viewcustomerdialog_title";
     String FORM_VIEWFAULTANALYSISDIALOG_TITLE = "form_viewfaultanalysisdialog_title";
     String FORM_VIEWILLEGALTRACEBOMITEMDIALOG_TITLE = "form_viewillegaltracebomitemdialog_title";
     String FORM_VIEWMATERIALDIALOG_TITLE = "form_viewmaterialdialog_title";

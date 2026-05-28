@@ -1,8 +1,8 @@
 package com.kontron.qdw.dto.service;
 
+import java.io.Serializable;
 import com.kontron.qdw.domain.mv.*;
 import java.time.*;
-import java.io.Serializable;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
 import com.kontron.qdw.dto.base.*;
 

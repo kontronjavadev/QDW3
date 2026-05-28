@@ -32,6 +32,8 @@ public class CustomerDTO implements Serializable {
     @Generated
     public static final String ATTR_VERTICALSECTOR = "verticalSector";
     @Generated
+    public static final String ATTR_LASTUPDATE = "lastUpdate";
+    @Generated
     private String name;
     @Generated
     private String street;
@@ -55,6 +57,8 @@ public class CustomerDTO implements Serializable {
     private CountryListDTO country;
     @Generated
     private VerticalSectorListDTO verticalSector;
+    @Generated
+    private LocalDateTime lastUpdate;
 
     /**
      * Default constructor
@@ -95,10 +99,11 @@ public class CustomerDTO implements Serializable {
      * @param comment
      * @param creationDate
      * @param version
+     * @param lastUpdate
      */
     @Generated
     public CustomerDTO(String name, String street, String zipCode, String city, boolean internal, String code, String shortText, String comment,
-            LocalDateTime creationDate, int version) {
+            LocalDateTime creationDate, int version, LocalDateTime lastUpdate) {
         this.name = name;
         this.street = street;
         this.zipCode = zipCode;
@@ -109,6 +114,7 @@ public class CustomerDTO implements Serializable {
         this.comment = comment;
         this.creationDate = creationDate;
         this.version = version;
+        this.lastUpdate = lastUpdate;
     }
 
     /**
@@ -301,6 +307,22 @@ public class CustomerDTO implements Serializable {
     @Generated
     public void setVerticalSector(VerticalSectorListDTO verticalSector) {
         this.verticalSector = verticalSector;
+    }
+
+    /**
+     * @return the last update
+     */
+    @Generated
+    public LocalDateTime getLastUpdate() {
+        return this.lastUpdate;
+    }
+
+    /**
+     * @param lastUpdate the last update to set
+     */
+    @Generated
+    public void setLastUpdate(LocalDateTime lastUpdate) {
+        this.lastUpdate = lastUpdate;
     }
 
     /* (non-Javadoc)

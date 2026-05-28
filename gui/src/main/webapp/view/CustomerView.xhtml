@@ -60,9 +60,9 @@
 				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_1" id="s_1" value="#{customerView.searchObject.searchFields[1].sortOrder}">
 					<f:selectItems value="#{customerView.sortOrderList}"/>
 				</p:selectOneMenu>
-				<p:inputText id="fi_1" value="#{customerView.searchObject.searchFields[1].stringCriterion}" size="30"/>
+				<p:autoComplete minQueryLength="2" maxResults="10" completeMethod="#{customerView.onCompleteCustomerName}" id="fi_1" value="#{customerView.searchObject.searchFields[1].stringCriterion}" size="30"/>
 				<h:panelGroup id="p_1">
-					<p:inputText id="b_1" rendered="#{customerView.searchObject.searchFields[1].between}" value="#{customerView.searchObject.searchFields[1].stringBetweenCriterion}" size="30"/>
+				<p:autoComplete minQueryLength="2" rendered="#{customerView.searchObject.searchFields[1].between}" maxResults="10" completeMethod="#{customerView.onCompleteCustomerName}" id="b_1" value="#{customerView.searchObject.searchFields[1].stringBetweenCriterion}" size="30"/>
 				</h:panelGroup>
 
 				<h:outputLabel styleClass="label-field-optional" for="fi_2" value="#{customerView.searchObject.searchFields[2].colLabel}"/>
@@ -419,6 +419,9 @@
 			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{customerView.currentPageURL}"/>
 		</p:menuitem>
 		<p:menuitem value="#{i18n.action_copy}" ajax="true" icon="pi pi-copy" id="panData_mniCopy" rendered="false" onclick="PF('copyConfirm').show()"/>
+		<p:menuitem value="#{i18n.action_view}" ajax="true" icon="pi pi-file" id="panData_mniView" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY')}" action="#{customerView.openViewCustomerDialog}">
+			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{customerView.currentPageURL}"/>
+		</p:menuitem>
 		<p:menuitem value="#{i18n.action_refresh}" ajax="false" type="push" icon="pi pi-refresh" id="panData_mniRefresh" actionListener="#{customerView.fetchCustomers}"/>
 
 		<p:separator/>

@@ -153,7 +153,7 @@
   <net.sourceforge.jbizmo.model.java:Namespace name="dto" parent="/0/@rootNamespace" childNamespaces="/8 /110 /250 /254 /258" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="exchange" parent="/0/@rootNamespace" childNamespaces="/9 /111 /251 /255 /259" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="ui.test" parent="/0/@rootNamespace" project="/0"/>
-  <net.sourceforge.jbizmo.model.client:FormGroup name="Master data" groupOrder="1" forms="/47 /77 /51 /69 /81 /96 /114 /126 /138 /150 /174 /158 /92 /41 /73 /88 /100 /118 /130 /142 /154 /178 /162 /104 /122 /134 /146 /166 /182 /170 /311" roles="/0/@roles.0" project="/0"/>
+  <net.sourceforge.jbizmo.model.client:FormGroup name="Master data" groupOrder="1" forms="/47 /77 /51 /69 /81 /96 /114 /126 /138 /150 /174 /158 /92 /41 /73 /88 /100 /118 /130 /142 /154 /178 /162 /104 /122 /134 /146 /166 /182 /170 /556 /311" roles="/0/@roles.0" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="base" parent="/1" javaTypes="/45 /72 /86 /99 /141 /277 /67 /153 /14 /177 /13 /64 /87" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="base" parent="/3" javaTypes="/16 /53 /161 /50 /44 /71 /85 /80 /76 /83 /95 /91 /98 /234 /107 /103 /140 /298 /149 /145 /281 /285 /275 /65 /152 /214 /169 /157 /37 /40 /15 /34 /176 /314 /297 /185 /181 /25 /276 /68 /63 /21 /30 /160 /84 /173 /165 /345" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="base" parent="/4" project="/0"/>
@@ -1862,6 +1862,9 @@
     <boundaryMethods name="findListCustomer" comment="Find customer by its ID" returnType="/345" methodType="FIND_BY_ID" serviceMethod="/60/@repositoryMethods.0">
       <methodParameters name="id" type="/0/@allSupportedTypes.12"/>
     </boundaryMethods>
+    <boundaryMethods name="findCustomerById" comment="Find customer by its ID" returnType="/83" methodType="FIND_BY_ID" serviceMethod="/60/@repositoryMethods.0">
+      <methodParameters name="code" type="/0/@allSupportedTypes.12"/>
+    </boundaryMethods>
   </net.sourceforge.jbizmo.model.boundary:BoundaryBean>
   <net.sourceforge.jbizmo.model.boundary:BoundaryBean name="VerticalSectorBoundaryServiceBean" comment="Boundary service for vertical sector objects" namespace="/7" interfaceName="VerticalSectorBoundaryService" repository="/58">
     <domainObject href="package-base.xmi#//@domainObjects.10"/>
@@ -1953,6 +1956,7 @@
     <actions name="actionCreate" description="Create new customer" targetForm="/81" roles="/0/@roles.0"/>
     <actions name="actionUpdate" description="Edit customer" targetForm="/88" roles="/0/@roles.0" type="UPDATE"/>
     <actions name="actionCopy" description="Create copy of selected customer" boundaryMethod="/86/@boundaryMethods.6" type="COPY"/>
+    <actions name="actionGet" description="View customer" targetForm="/556" roles="/0/@roles.0 /0/@roles.1" type="READ"/>
     <domainObject href="package-base.xmi#//@domainObjects.12"/>
   </net.sourceforge.jbizmo.model.client:Form>
   <net.sourceforge.jbizmo.model.client:FormPanel name="CustomerPanel" form="/92" formTable="/94" dTO="/95" boundaryMethod="/86/@boundaryMethods.4"/>
@@ -11919,4 +11923,25 @@
     </attributes>
   </net.sourceforge.jbizmo.model.dto:DTOBean>
   <net.sourceforge.jbizmo.model.client:FormPanel name="panServiceMessages" rowIndex="2" label="Service orders" form="/409" basePanel="/552"/>
+  <net.sourceforge.jbizmo.model.client:Form name="ViewCustomerDialog" formType="READONLY" formGroup="/6" title="View customer" formPanels="/557 /558" dTO="/83" roles="/0/@roles.0 /0/@roles.1">
+    <actions name="actionGet" boundaryMethod="/86/@boundaryMethods.9" type="READ"/>
+    <domainObject href="package-base.xmi#//@domainObjects.12"/>
+  </net.sourceforge.jbizmo.model.client:Form>
+  <net.sourceforge.jbizmo.model.client:FormPanel name="panCustomer" label="Basic data" form="/556">
+    <fields name="txtCode" label="Code" readonly="true" width="140" dTOAttribute="/83/@attributes.5"/>
+    <fields name="chkInternal" colIndex="2" label="Internal" readonly="true" fieldType="CHECKBOX" dTOAttribute="/83/@attributes.4"/>
+    <fields name="txtName" rowIndex="2" label="Name" readonly="true" mandatory="false" width="140" dTOAttribute="/83/@attributes.0"/>
+    <fields name="txtShortText" rowIndex="3" label="Short text" readonly="true" mandatory="false" width="140" dTOAttribute="/83/@attributes.6"/>
+    <fields name="cboVerticalSector" colIndex="2" rowIndex="3" label="Vertical sector" readonly="true" mandatory="false" fieldType="FORM_LINK" width="140" dTOAttribute="/83/@attributes.11"/>
+    <fields name="txtStreet" rowIndex="4" label="Street" readonly="true" mandatory="false" width="140" dTOAttribute="/83/@attributes.1"/>
+    <fields name="txtZipCode" rowIndex="5" label="Zip code" readonly="true" mandatory="false" width="140" dTOAttribute="/83/@attributes.2"/>
+    <fields name="txtCity" colIndex="2" rowIndex="5" label="City" readonly="true" mandatory="false" width="140" dTOAttribute="/83/@attributes.3"/>
+    <fields name="cboCountry" rowIndex="6" label="Country" readonly="true" fieldType="FORM_LINK" width="140" dTOAttribute="/83/@attributes.10"/>
+    <fields name="txtComment" rowIndex="7" label="Comment" spanCols="true" readonly="true" mandatory="false" fieldType="MULTI_LINE_TEXT" dTOAttribute="/83/@attributes.7"/>
+  </net.sourceforge.jbizmo.model.client:FormPanel>
+  <net.sourceforge.jbizmo.model.client:FormPanel name="panAdministration" colIndex="2" label="Administration data" form="/556">
+    <fields name="txtCreationDate" label="Creation date" readonly="true" fieldType="DATE_TIME" width="120" dTOAttribute="/83/@attributes.8"/>
+    <fields name="txtLastUpdate" rowIndex="2" label="Last update" readonly="true" mandatory="false" fieldType="DATE_TIME" width="120" dTOAttribute="/83/@attributes.12"/>
+    <fields name="txtVersion" rowIndex="3" label="Version" readonly="true" width="120" dTOAttribute="/83/@attributes.9"/>
+  </net.sourceforge.jbizmo.model.client:FormPanel>
 </xmi:XMI>

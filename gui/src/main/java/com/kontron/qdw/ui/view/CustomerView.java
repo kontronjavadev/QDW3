@@ -238,6 +238,18 @@ public class CustomerView extends SuperView implements Serializable {
         fetchCustomers();
     }
 
+
+
+    @Customized
+    public List<String> onCompleteCountryName(String query) {
+        return OnCompleteHelper.onCompleteCountryName(countryService, query);
+    }
+
+    @Customized
+    public List<String> onCompleteCustomerName(String query) {
+        return OnCompleteHelper.onCompleteCustomerName(customerService, query);
+    }
+
     /**
      * @return the list of elements
      */
@@ -269,7 +281,11 @@ public class CustomerView extends SuperView implements Serializable {
     public void onDoubleClick() {
         logger.debug("Handle double-click event");
 
-        userSession.redirectTo(getCurrentPageURL(), openEditCustomerDialog());
+        if (userSession.redirectTo(getCurrentPageURL(), openEditCustomerDialog())) {
+            return;
+        }
+
+        userSession.redirectTo(getCurrentPageURL(), openViewCustomerDialog());
     }
 
     /**
@@ -345,6 +361,21 @@ public class CustomerView extends SuperView implements Serializable {
 
         if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR)) {
             url = EditCustomerDialog.PAGE_INIT_URL + java.net.URLEncoder.encode(selectedObject.getCode(), java.nio.charset.StandardCharsets.UTF_8);
+        }
+
+        return url;
+    }
+
+    /**
+     * Open dialog
+     * @return the navigation target
+     */
+    @Generated
+    public String openViewCustomerDialog() {
+        var url = "";
+
+        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY)) {
+            url = ViewCustomerDialog.PAGE_INIT_URL + java.net.URLEncoder.encode(selectedObject.getCode(), java.nio.charset.StandardCharsets.UTF_8);
         }
 
         return url;
@@ -457,16 +488,6 @@ public class CustomerView extends SuperView implements Serializable {
         finally {
             postSearch();
         }
-    }
-
-    /**
-     * Callback method for auto-complete field
-     * @param query the filter criterion inserted by the user
-     * @return a list containing all proposals
-     */
-    @Customized
-    public List<String> onCompleteCountryName(String query) {
-        return OnCompleteHelper.onCompleteCountryName(countryService, query);
     }
 
     /**

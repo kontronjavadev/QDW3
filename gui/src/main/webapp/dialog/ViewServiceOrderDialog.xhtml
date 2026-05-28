@@ -64,8 +64,13 @@
 		<h:outputLabel/>
 		<h:outputLabel/>
 
-		<h:outputLabel value="#{i18n.lbl_assoc_serviceorder_customer}:" for="cboCustomer" styleClass="label-field-optional"/>
-		<h:outputText styleClass="label-field-value" id="cboCustomer" value="#{viewServiceOrderDialog.serviceOrder.customer.name}"/>
+		<h:outputLabel value="#{i18n.lbl_assoc_serviceorder_customer}:" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY')}" for="cboCustomer" styleClass="label-field-optional"/>
+		<p:commandLink rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY')}" id="cboCustomer" style="font-weight: bold;color: #0063ac" action="#{viewServiceOrderDialog.openViewCustomerDialogLink}">
+			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{viewServiceOrderDialog.currentPageURL}"/>
+			<h:outputText value="#{viewServiceOrderDialog.serviceOrder.customer.name}"/>
+		</p:commandLink>
+		<h:outputLabel value="#{i18n.lbl_assoc_serviceorder_customer}:" rendered="#{!userSession.checkAuthorizationString('ADMINISTRATOR;READONLY')}" for="cboCustomerAltLbl" styleClass="label-field-optional"/>
+		<h:outputText styleClass="label-field-value" rendered="#{!userSession.checkAuthorizationString('ADMINISTRATOR;READONLY')}" id="cboCustomerAltLbl" value="#{viewServiceOrderDialog.serviceOrder.customer.name}"/>
 		<p:tooltip for="cboCustomer" value=""/>
 		<h:outputLabel/>
 		<h:outputLabel/>

@@ -10,9 +10,9 @@ import java.util.*;
 import jakarta.inject.*;
 import jakarta.ejb.*;
 import jakarta.annotation.security.*;
+import net.sourceforge.jbizmo.commons.annotation.Customized;
 import net.sourceforge.jbizmo.commons.repository.*;
 import net.sourceforge.jbizmo.commons.search.dto.*;
-import net.sourceforge.jbizmo.commons.annotation.Customized;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
 import static net.sourceforge.jbizmo.commons.jpa.AbstractRepository.SMALL_LIST_SIZE;
 
@@ -266,6 +266,43 @@ public class CustomerBoundaryService {
         final var dto = new CustomerListDTO();
         dto.setCode(customer.getCode());
         dto.setName(customer.getName());
+
+        return dto;
+    }
+
+    /**
+     * Find customer by its ID
+     * @param code
+     * @return the customer object
+     */
+    @Generated
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public CustomerDTO findCustomerById(String code) {
+        // Find persistent object
+        final Customer customer = repository.findById(code, true);
+
+        final var dto = new CustomerDTO();
+        dto.setName(customer.getName());
+        dto.setStreet(customer.getStreet());
+        dto.setZipCode(customer.getZipCode());
+        dto.setCity(customer.getCity());
+        dto.setInternal(customer.isInternal());
+        dto.setCode(customer.getCode());
+        dto.setShortText(customer.getShortText());
+        dto.setComment(customer.getComment());
+        dto.setCreationDate(customer.getCreationDate());
+        dto.setVersion(customer.getVersion());
+        dto.setCountry(new CountryListDTO());
+        dto.getCountry().setCode(customer.getCountry().getCode());
+        dto.getCountry().setName(customer.getCountry().getName());
+
+        if (customer.getVerticalSector() != null) {
+            dto.setVerticalSector(new VerticalSectorListDTO());
+            dto.getVerticalSector().setCode(customer.getVerticalSector().getCode());
+        }
+
+        dto.setLastUpdate(customer.getLastUpdate());
 
         return dto;
     }
