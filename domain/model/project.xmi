@@ -4299,7 +4299,7 @@
   <net.sourceforge.jbizmo.model.java:Namespace name="serial" parent="/4" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="service" parent="/2" javaTypes="/408 /414 /429 /431 /433 /435 /437 /439 /441" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="service" parent="/1" javaTypes="/407 /413 /428 /430 /432 /434 /436 /438 /440" project="/0"/>
-  <net.sourceforge.jbizmo.model.java:Namespace name="service" parent="/3" javaTypes="/452 /445 /423 /456 /449 /467 /460 /424 /471 /464 /478 /475 /427 /486 /482 /489 /497 /422 /501 /493 /512 /505 /426 /516 /509 /527 /520 /425 /531 /524 /542 /535 /420 /546 /539 /419 /406 /412 /421 /547 /551 /554" project="/0"/>
+  <net.sourceforge.jbizmo.model.java:Namespace name="service" parent="/3" javaTypes="/452 /445 /423 /456 /449 /467 /460 /424 /471 /464 /478 /475 /427 /486 /482 /489 /497 /422 /501 /493 /512 /505 /426 /516 /509 /527 /520 /425 /531 /524 /542 /535 /420 /546 /539 /419 /406 /412 /421 /547 /551 /554 /562" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="service" parent="/4" project="/0"/>
   <net.sourceforge.jbizmo.model.client:Form name="AggregatedArrivalView" formType="SEARCHABLE_VIEW" formGroup="/247" title="Aggregated arrivals" formPanels="/261" dTO="/263" roles="/0/@roles.0 /0/@roles.1" boundaryMethod="/264/@boundaryMethods.0">
     <actions name="actionDelete" description="Delete selected aggregated arrival" boundaryMethod="/264/@boundaryMethods.2" type="DELETE"/>
@@ -8427,7 +8427,7 @@
       <associationList xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-mv.xmi#//@domainObjects.2/@associations.1"/>
     </attributes>
   </net.sourceforge.jbizmo.model.dto:DTOBean>
-  <net.sourceforge.jbizmo.model.client:FormGroup name="Service" groupOrder="5" forms="/397 /403 /548 /415 /409" panels="/552" roles="/0/@roles.0 /0/@roles.1" project="/0">
+  <net.sourceforge.jbizmo.model.client:FormGroup name="Service" groupOrder="5" forms="/397 /403 /548 /415 /409 /559" panels="/552" roles="/0/@roles.0 /0/@roles.1" project="/0">
     <childGroups name="Master data" parentGroup="/396" forms="/450 /465 /476 /487 /510 /525 /540 /446 /461 /479 /490 /506 /521 /536 /453 /468 /483 /498 /513 /528 /543 /442 /457 /472 /494 /502 /517 /532" roles="/0/@roles.0"/>
   </net.sourceforge.jbizmo.model.client:FormGroup>
   <net.sourceforge.jbizmo.model.client:Form name="MaterializedServiceMessageView" formType="SEARCHABLE_VIEW" formGroup="/396" title="Materialized service orders" formPanels="/398" dTO="/400" roles="/0/@roles.0 /0/@roles.1" boundaryMethod="/401/@boundaryMethods.0">
@@ -9383,6 +9383,14 @@
     </boundaryMethods>
     <boundaryMethods name="getServiceMessagesOfServiceOrder" comment="Get all service messages of a given service order" returnType="/554" returnTypeModifier="List" queryStatement="from ServiceOrder x join x.serviceMessages a left join a.externalSupplier b left join a.materialRevision c left join a.plant d left join a.serialObject e left join a.serviceOrder f left join a.faultAnalysis h left join a.rMAType i left join a.repairErrorCode j left join a.repairLocation k left join a.repairService l left join a.repairState m left join a.repairTask n left join c.material u" customStatement="" methodType="FIND_BY_PARENT" serviceMethod="/414/@repositoryMethods.11">
       <methodParameters name="id" type="/0/@allSupportedTypes.12"/>
+    </boundaryMethods>
+    <boundaryMethods name="searchAllServiceOrders" comment="Search for service order objects" returnType="/562" returnTypeModifier="List" queryStatement="from ServiceOrder a left join a.customer b left join a.supplier c" customStatement="" methodType="SEARCH" serviceMethod="/414/@repositoryMethods.11"/>
+    <boundaryMethods name="countAllServiceOrders" comment="Count service order objects" returnType="/0/@allSupportedTypes.2" queryStatement="from ServiceOrder a left join a.customer b left join a.supplier c" customStatement="" methodType="COUNT" serviceMethod="/414/@repositoryMethods.12"/>
+    <boundaryMethods name="deleteServiceOrder" comment="Delete existing service order" returnType="/0/@allSupportedTypes.0" serviceMethod="/414/@repositoryMethods.7">
+      <methodParameters name="code" type="/0/@allSupportedTypes.12"/>
+    </boundaryMethods>
+    <boundaryMethods name="copy" comment="Create copy of selected service order" returnType="/0/@allSupportedTypes.12" methodType="COPY" serviceMethod="/414/@repositoryMethods.6">
+      <methodParameters name="sourceObjectId" type="/0/@allSupportedTypes.12"/>
     </boundaryMethods>
   </net.sourceforge.jbizmo.model.boundary:BoundaryBean>
   <net.sourceforge.jbizmo.model.repository:Repository name="ServiceOrderRepository" comment="Create, read, update and delete services for service order objects." namespace="/256">
@@ -11944,4 +11952,68 @@
     <fields name="txtLastUpdate" rowIndex="2" label="Last update" readonly="true" mandatory="false" fieldType="DATE_TIME" width="120" dTOAttribute="/83/@attributes.12"/>
     <fields name="txtVersion" rowIndex="3" label="Version" readonly="true" width="120" dTOAttribute="/83/@attributes.9"/>
   </net.sourceforge.jbizmo.model.client:FormPanel>
+  <net.sourceforge.jbizmo.model.client:Form name="ServiceOrderView" formType="SEARCHABLE_VIEW" formGroup="/396" title="RMAs" formPanels="/560" dTO="/562" roles="/0/@roles.0 /0/@roles.1" boundaryMethod="/413/@boundaryMethods.3">
+    <actions name="actionDelete" description="Delete selected service order" boundaryMethod="/413/@boundaryMethods.5" roles="/0/@roles.0" type="DELETE"/>
+    <actions name="actionGet" description="View service order" targetForm="/409" roles="/0/@roles.0 /0/@roles.1" type="READ"/>
+    <actions name="actionCopy" description="Create copy of selected service order" boundaryMethod="/413/@boundaryMethods.6" roles="/0/@roles.0" type="COPY"/>
+    <domainObject href="package-service.xmi#//@domainObjects.0"/>
+  </net.sourceforge.jbizmo.model.client:Form>
+  <net.sourceforge.jbizmo.model.client:FormPanel name="ServiceOrderPanel" form="/559" formTable="/561" dTO="/562" boundaryMethod="/413/@boundaryMethods.4"/>
+  <net.sourceforge.jbizmo.model.client:FormTable name="ServiceOrderTable" formPanel="/560">
+    <fields identifier="true" title="RMA no." dTOAttribute="/562/@attributes.2"/>
+    <fields colIndex="2" title="Type" fieldType="ENUM" dTOAttribute="/562/@attributes.1"/>
+    <fields colIndex="3" width="80" title="Doc. date" fieldType="LOCAL_DATE" dTOAttribute="/562/@attributes.0"/>
+    <fields colIndex="4" width="200" title="Customer" dTOAttribute="/562/@attributes.9"/>
+    <fields colIndex="5" width="200" title="Supplier" dTOAttribute="/562/@attributes.11"/>
+    <fields colIndex="6" width="150" title="Short text" dTOAttribute="/562/@attributes.3"/>
+    <fields colIndex="7" width="200" title="Comment" dTOAttribute="/562/@attributes.4"/>
+    <fields colIndex="8" width="70" title="Active" fieldType="BOOLEAN" dTOAttribute="/562/@attributes.5"/>
+    <fields colIndex="9" width="120" title="Creation date" fieldType="LOCAL_DATE_TIME" dTOAttribute="/562/@attributes.6"/>
+    <fields colIndex="10" width="120" title="Last update" fieldType="LOCAL_DATE_TIME" dTOAttribute="/562/@attributes.7"/>
+    <fields colIndex="11" visible="false" title="Supplier code" dTOAttribute="/562/@attributes.10"/>
+    <fields colIndex="12" visible="false" title="Customer code" dTOAttribute="/562/@attributes.8"/>
+  </net.sourceforge.jbizmo.model.client:FormTable>
+  <net.sourceforge.jbizmo.model.dto:DTOBean name="ServiceOrderSearchDTO" comment="DTO for service order objects" namespace="/258">
+    <domainObject href="package-service.xmi#//@domainObjects.0"/>
+    <attributes name="documentDate" selectToken="a.documentDate">
+      <domainAttribute href="package-service.xmi#//@domainObjects.0/@attributes.0"/>
+    </attributes>
+    <attributes name="serviceOrderType" selectToken="a.serviceOrderType">
+      <domainAttribute href="package-service.xmi#//@domainObjects.0/@attributes.1"/>
+    </attributes>
+    <attributes name="code" selectToken="a.code">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.0"/>
+    </attributes>
+    <attributes name="shortText" selectToken="a.shortText">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.1"/>
+    </attributes>
+    <attributes name="comment" selectToken="a.comment">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.2"/>
+    </attributes>
+    <attributes name="active" selectToken="a.active">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.3"/>
+    </attributes>
+    <attributes name="creationDate" selectToken="a.creationDate">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.4"/>
+    </attributes>
+    <attributes name="lastUpdate" selectToken="a.lastUpdate">
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.5"/>
+    </attributes>
+    <attributes name="customerCode" selectToken="b.code">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-service.xmi#//@domainObjects.0/@associations.0"/>
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.0"/>
+    </attributes>
+    <attributes name="customerName" selectToken="b.name">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-service.xmi#//@domainObjects.0/@associations.0"/>
+      <domainAttribute href="package-base.xmi#//@domainObjects.12/@attributes.0"/>
+    </attributes>
+    <attributes name="supplierCode" selectToken="c.code">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-service.xmi#//@domainObjects.0/@associations.1"/>
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.0"/>
+    </attributes>
+    <attributes name="supplierName" selectToken="c.name">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-service.xmi#//@domainObjects.0/@associations.1"/>
+      <domainAttribute href="package-base.xmi#//@domainObjects.13/@attributes.0"/>
+    </attributes>
+  </net.sourceforge.jbizmo.model.dto:DTOBean>
 </xmi:XMI>

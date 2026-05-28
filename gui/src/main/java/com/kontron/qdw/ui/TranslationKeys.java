@@ -371,6 +371,11 @@ public interface TranslationKeys {
     String COL_SERVICEORDERSERVICEMESSAGESPANEL_RMATYPECODE = "col_serviceorderservicemessagespanel_rmatypecode";
     String COL_SERVICEORDERSERVICEMESSAGESPANEL_SERIALOBJECTSERIALNUMBER = "col_serviceorderservicemessagespanel_serialobjectserialnumber";
     String COL_SERVICEORDERSERVICEMESSAGESPANEL_SERVICEMESSAGEID = "col_serviceorderservicemessagespanel_servicemessageid";
+    String COL_SERVICEORDERVIEW_CODE = "col_serviceorderview_code";
+    String COL_SERVICEORDERVIEW_CUSTOMERNAME = "col_serviceorderview_customername";
+    String COL_SERVICEORDERVIEW_DOCUMENTDATE = "col_serviceorderview_documentdate";
+    String COL_SERVICEORDERVIEW_SERVICEORDERTYPE = "col_serviceorderview_serviceordertype";
+    String COL_SERVICEORDERVIEW_SUPPLIERNAME = "col_serviceorderview_suppliername";
     String COL_SHIPMENTVIEW_CUSTOMERCODE = "col_shipmentview_customercode";
     String COL_SHIPMENTVIEW_CUSTOMERNAME = "col_shipmentview_customername";
     String COL_SHIPMENTVIEW_ID = "col_shipmentview_id";
@@ -579,6 +584,7 @@ public interface TranslationKeys {
     String FORM_SERIALOBJECTWITHTRACEBOMVIEW_TITLE = "form_serialobjectwithtracebomview_title";
     String FORM_SERVICEMESSAGEOPENVIEW_TITLE = "form_servicemessageopenview_title";
     String FORM_SERVICEMESSAGESTANDARDVIEW_TITLE = "form_servicemessagestandardview_title";
+    String FORM_SERVICEORDERVIEW_TITLE = "form_serviceorderview_title";
     String FORM_SHIPMENTVIEW_TITLE = "form_shipmentview_title";
     String FORM_SUPPLIERVIEW_TITLE = "form_supplierview_title";
     String FORM_TRACEBOMVIEW_TITLE = "form_tracebomview_title";

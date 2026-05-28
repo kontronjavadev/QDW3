@@ -7,6 +7,7 @@ import static net.sourceforge.jbizmo.commons.jpa.AbstractRepository.WILDCARD;
 import com.kontron.qdw.dto.base.*;
 import com.kontron.qdw.dto.service.*;
 import java.util.*;
+import jakarta.validation.ConstraintViolationException;
 import com.kontron.qdw.repository.service.*;
 import jakarta.inject.*;
 import jakarta.ejb.*;
@@ -173,6 +174,79 @@ public class ServiceOrderBoundaryService {
         parentFilterField.setFilterCriteria(id);
 
         return repository.search(searchObj, ServiceOrderServiceMessagesDTO.class, selectTokens);
+    }
+
+    /**
+     * Search for service order objects
+     * @param searchObj a generic container that holds filter criteria
+     * @return a list of service order objects
+     * @throws GeneralSearchException if the search operation has failed
+     */
+    @Generated
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public List<ServiceOrderSearchDTO> searchAllServiceOrders(SearchDTO searchObj) {
+        // Collect the select tokens of all fields that should be fetched
+        final var selectTokens = new ArrayList<String>();
+        selectTokens.add(ServiceOrderSearchDTO.SELECT_DOCUMENTDATE);
+        selectTokens.add(ServiceOrderSearchDTO.SELECT_SERVICEORDERTYPE);
+        selectTokens.add(ServiceOrderSearchDTO.SELECT_CODE);
+        selectTokens.add(ServiceOrderSearchDTO.SELECT_SHORTTEXT);
+        selectTokens.add(ServiceOrderSearchDTO.SELECT_COMMENT);
+        selectTokens.add(ServiceOrderSearchDTO.SELECT_ACTIVE);
+        selectTokens.add(ServiceOrderSearchDTO.SELECT_CREATIONDATE);
+        selectTokens.add(ServiceOrderSearchDTO.SELECT_LASTUPDATE);
+        selectTokens.add(ServiceOrderSearchDTO.SELECT_CUSTOMERCODE);
+        selectTokens.add(ServiceOrderSearchDTO.SELECT_CUSTOMERNAME);
+        selectTokens.add(ServiceOrderSearchDTO.SELECT_SUPPLIERCODE);
+        selectTokens.add(ServiceOrderSearchDTO.SELECT_SUPPLIERNAME);
+
+        searchObj.setFromClause("from ServiceOrder a left join a.customer b left join a.supplier c");
+
+        return repository.search(searchObj, ServiceOrderSearchDTO.class, selectTokens);
+    }
+
+    /**
+     * Count service order objects
+     * @param searchObj the query criteria
+     * @return the number of objects a query would return
+     * @throws GeneralSearchException if the count operation has failed
+     */
+    @Generated
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public long countAllServiceOrders(SearchDTO searchObj) {
+        searchObj.setFromClause("from ServiceOrder a left join a.customer b left join a.supplier c");
+
+        return repository.count(searchObj);
+    }
+
+    /**
+     * Delete existing service order
+     * @param code the ID of the object to be deleted
+     */
+    @Generated
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public void deleteServiceOrder(String code) {
+        repository.delete(code);
+    }
+
+    /**
+     * Create copy of selected service order
+     * @param sourceObjectId
+     * @param loggedOnUserId
+     * @throws ConstraintViolationException if the validation of one or more persistent attribute values has failed
+     * @return the id of the new object
+     */
+    @Generated
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public String copy(String sourceObjectId, long loggedOnUserId) {
+        final ServiceOrder sourceObject = repository.findById(sourceObjectId);
+        final ServiceOrder targetObject = repository.copy(sourceObject, null, loggedOnUserId);
+
+        return targetObject.getCode();
     }
 
 }
