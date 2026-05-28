@@ -26,7 +26,7 @@
 		</p:ajaxStatus>
 	</h:panelGrid>
 
-	<p:growl id="growl" showDetail="true" skipDetailIfEqualsSummary="true" />
+	<p:growl id="growl" showDetail="true" skipDetailIfEqualsSummary="true" keepAlive="true" life="10000" />
 
 	<p:menubar>
 		<p:submenu icon="pi pi-file" label="#{i18n.mnu_file}" id="panData_mniFile" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR')}" >

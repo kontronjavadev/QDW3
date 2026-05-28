@@ -26,7 +26,7 @@
 		</p:ajaxStatus>
 	</h:panelGrid>
 
-	<p:growl id="growl" showDetail="true" skipDetailIfEqualsSummary="true" />
+	<p:growl id="growl" showDetail="true" skipDetailIfEqualsSummary="true" keepAlive="true" life="10000" />
 
 	<p:dialog height="auto" width="1000" id="dlgSearchInput" closeOnEscape="true" header="#{i18n.search_input_dlg}" widgetVar="dlgSearchInput" modal="true" >
 		<p:tabView id="tabViewSearchInput" dynamic="false">
