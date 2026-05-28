@@ -5,24 +5,19 @@
 	xmlns:p="http://primefaces.org/ui">
 
 	<p:menubar>
-		<p:submenu icon="pi pi-file" label="#{i18n.mnu_file}" id="gridServiceOrderServiceMessagesPanel_mniFile">
-		</p:submenu>
 		<p:submenu icon="pi pi-refresh" label="#{i18n.mnu_view}">
 			<p:menuitem value="#{i18n.action_refresh}" ajax="false" icon="pi pi-refresh" actionListener="#{serviceOrderServiceMessagesPanel.fetchServiceMessages}"/>
 		</p:submenu>
 		<p:submenu icon="pi pi-print" label="#{i18n.mnu_export}">
 			<p:menuitem value="#{i18n.action_export_xls}" ajax="false" icon="pi pi-file-excel">
-				<p:dataExporter type="xls" target="gridServiceOrderServiceMessagesPanel" fileName="ServiceMessageList"/>
-			</p:menuitem>
-			<p:menuitem value="#{i18n.action_export_pdf}" ajax="false" icon="pi pi-file-pdf">
-				<p:dataExporter type="pdf" target="gridServiceOrderServiceMessagesPanel" fileName="ServiceMessageList"/>
+				<p:dataExporter type="xlsxstream" target="gridServiceOrderServiceMessagesPanel" fileName="ServiceMessageList"/>
 			</p:menuitem>
 		</p:submenu>
 	</p:menubar>
 
-	<br/>
 
 	<p:dataTable id="gridServiceOrderServiceMessagesPanel" var="serviceOrderServiceMessagesPanelItem" rows="50"
+		selectionTextDisabled="false" allowUnsorting="true" resizeMode="expand" multiViewState="true" 
 		selectionMode="single"
 		selection="#{serviceOrderServiceMessagesPanel.selItemOfServiceMessages}"
 		loadingMessage="#{i18n.action_fetch_data}"
@@ -30,7 +25,7 @@
 		paginatorPosition="top" paginatorAlwaysVisible="false" paginator="true" resizableColumns="true"
 		rowKey="#{serviceOrderServiceMessagesPanelItem.id}"
 		paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-		rowsPerPageTemplate="10,50,100,500,1000">
+		rowsPerPageTemplate="50,150,400,1000,{ShowAll|'All'}">
 		<p:ajax event="rowDblselect" listener="#{serviceOrderServiceMessagesPanel.onServiceMessagesGridDoubleClick}"/>
 
 		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.id}" width="100" >
@@ -57,31 +52,31 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.matrevMatMaterialNumber}" width="150" >
+		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.matrevMatMaterialNumber}" width="150" 
+			exportValue="#{serviceOrderServiceMessagesPanelItem.matrevMatMaterialNumber}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_serviceorderservicemessagespanel_matrevmatmaterialnumber}"/>
 			</f:facet>
-			<h:outputText value="#{serviceOrderServiceMessagesPanelItem.matrevMatMaterialNumber}">
-			</h:outputText>
+			<h:outputText value="#{serviceOrderServiceMessagesPanelItem.matrevMatMaterialNumber}" styleClass="pf-tooltip-target" />
 		</p:column>
 
-		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.matrevMatSapNumber}" width="150" >
+		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.matrevMatSapNumber}" width="150" 
+			exportValue="#{serviceOrderServiceMessagesPanelItem.matrevMatSapNumber}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_serviceorderservicemessagespanel_matrevmatsapnumber}"/>
 			</f:facet>
-			<h:outputText value="#{serviceOrderServiceMessagesPanelItem.matrevMatSapNumber}">
-			</h:outputText>
+			<h:outputText value="#{serviceOrderServiceMessagesPanelItem.matrevMatSapNumber}" styleClass="pf-tooltip-target" />
 		</p:column>
 
-		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.matrevRevisionNumber}" width="150" >
+		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.matrevRevisionNumber}" width="150" 
+			exportValue="#{serviceOrderServiceMessagesPanelItem.matrevRevisionNumber}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_serviceorderservicemessagespanel_matrevrevisionnumber}"/>
 			</f:facet>
-			<h:outputText value="#{serviceOrderServiceMessagesPanelItem.matrevRevisionNumber}">
-			</h:outputText>
+			<h:outputText value="#{serviceOrderServiceMessagesPanelItem.matrevRevisionNumber}" styleClass="pf-tooltip-target" />
 		</p:column>
 
-		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.rMATypeCode}" width="105" >
+		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.rMATypeCode}" width="100" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_serviceorderservicemessagespanel_rmatypecode}"/>
 			</f:facet>
@@ -105,65 +100,67 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.repairLocationCode}" width="100" >
+		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.repairLocationCode}" width="100" 
+			exportHeaderValue="#{i18n.lbl_attr_repairlocation_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_serviceorderservicemessagespanel_repairlocationcode}"/>
+				<h:outputText value="#{i18n.col_serviceorderservicemessagespanel_repairlocationcode}" title="#{i18n.lbl_attr_repairlocation_tooltip}" styleClass="pf-tooltip-target" />
 			</f:facet>
 			<h:outputText value="#{serviceOrderServiceMessagesPanelItem.repairLocationCode}">
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.repairErrorCodeGroupName}" width="150" >
+		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.repairErrorCodeGroupName}" width="150" 
+			exportValue="#{serviceOrderServiceMessagesPanelItem.repairErrorCodeGroupName}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_serviceorderservicemessagespanel_repairerrorcodegroupname}"/>
 			</f:facet>
-			<h:outputText value="#{serviceOrderServiceMessagesPanelItem.repairErrorCodeGroupName}">
-			</h:outputText>
+			<h:outputText value="#{serviceOrderServiceMessagesPanelItem.repairErrorCodeGroupName}" styleClass="pf-tooltip-target" />
 		</p:column>
 
-		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.repairErrorCodeCode}" width="150" >
+		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.repairErrorCodeCode}" width="150" 
+			exportValue="#{serviceOrderServiceMessagesPanelItem.repairErrorCodeCode}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_serviceorderservicemessagespanel_repairerrorcodecode}"/>
 			</f:facet>
-			<h:outputText value="#{serviceOrderServiceMessagesPanelItem.repairErrorCodeCode}">
-			</h:outputText>
+			<h:outputText value="#{serviceOrderServiceMessagesPanelItem.repairErrorCodeCode}" styleClass="pf-tooltip-target" />
 		</p:column>
 
-		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.repairTaskCode}" width="120" >
+		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.repairTaskCode}" width="120" 
+			exportValue="#{serviceOrderServiceMessagesPanelItem.repairTaskCode}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_serviceorderservicemessagespanel_repairtaskcode}"/>
 			</f:facet>
-			<h:outputText value="#{serviceOrderServiceMessagesPanelItem.repairTaskCode}">
-			</h:outputText>
+			<h:outputText value="#{serviceOrderServiceMessagesPanelItem.repairTaskCode}" styleClass="pf-tooltip-target" />
 		</p:column>
 
-		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.repairTaskShortText}" width="250" >
+		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.repairTaskShortText}" width="250" 
+			exportValue="#{serviceOrderServiceMessagesPanelItem.repairTaskShortText}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_serviceorderservicemessagespanel_repairtaskshorttext}"/>
 			</f:facet>
-			<h:outputText value="#{serviceOrderServiceMessagesPanelItem.repairTaskShortText}">
-			</h:outputText>
+			<h:outputText value="#{serviceOrderServiceMessagesPanelItem.repairTaskShortText}" styleClass="pf-tooltip-target" />
 		</p:column>
 
-		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.faultAnalysisCode}" width="120" >
+		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.faultAnalysisCode}" width="120" 
+			exportValue="#{serviceOrderServiceMessagesPanelItem.faultAnalysisCode}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_serviceorderservicemessagespanel_faultanalysiscode}"/>
 			</f:facet>
-			<h:outputText value="#{serviceOrderServiceMessagesPanelItem.faultAnalysisCode}">
-			</h:outputText>
+			<h:outputText value="#{serviceOrderServiceMessagesPanelItem.faultAnalysisCode}" styleClass="pf-tooltip-target" />
 		</p:column>
 
-		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.faultAnalysisShortText}" width="250" >
+		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.faultAnalysisShortText}" width="250" 
+			exportValue="#{serviceOrderServiceMessagesPanelItem.faultAnalysisShortText}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_serviceorderservicemessagespanel_faultanalysisshorttext}"/>
 			</f:facet>
-			<h:outputText value="#{serviceOrderServiceMessagesPanelItem.faultAnalysisShortText}">
-			</h:outputText>
+			<h:outputText value="#{serviceOrderServiceMessagesPanelItem.faultAnalysisShortText}" styleClass="pf-tooltip-target" />
 		</p:column>
 
-		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.internalArrivalDate}" width="110" >
+		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.internalArrivalDate}" width="110" 
+			exportHeaderValue="#{i18n.lbl_attr_repairarrivaldate_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_serviceorderservicemessagespanel_internalarrivaldate}"/>
+				<h:outputText value="#{i18n.col_serviceorderservicemessagespanel_internalarrivaldate}" title="#{i18n.lbl_attr_repairarrivaldate_tooltip}" styleClass="pf-tooltip-target" />
 			</f:facet>
 			<h:outputText value="#{serviceOrderServiceMessagesPanelItem.internalArrivalDate}">
 				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateConverter"/>
@@ -172,9 +169,10 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.internalShipmentDate}" width="110" >
+		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.internalShipmentDate}" width="110" 
+			exportHeaderValue="#{i18n.lbl_attr_repairshipmentdate_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_serviceorderservicemessagespanel_internalshipmentdate}"/>
+				<h:outputText value="#{i18n.col_serviceorderservicemessagespanel_internalshipmentdate}" title="#{i18n.lbl_attr_repairshipmentdate_tooltip}" styleClass="pf-tooltip-target" />
 			</f:facet>
 			<h:outputText value="#{serviceOrderServiceMessagesPanelItem.internalShipmentDate}">
 				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateConverter"/>
@@ -183,9 +181,10 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.basicStartDate}" width="100" >
+		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.basicStartDate}" width="100" 
+			exportHeaderValue="#{i18n.lbl_attr_basicstartdate_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_serviceorderservicemessagespanel_basicstartdate}"/>
+				<h:outputText value="#{i18n.col_serviceorderservicemessagespanel_basicstartdate}" title="#{i18n.lbl_attr_basicstartdate_tooltip}" styleClass="pf-tooltip-target" />
 			</f:facet>
 			<h:outputText value="#{serviceOrderServiceMessagesPanelItem.basicStartDate}">
 				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateConverter"/>
@@ -194,9 +193,10 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.basicFinishDate}" width="100" >
+		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.basicFinishDate}" width="100" 
+			exportHeaderValue="#{i18n.lbl_attr_basicfinishdate_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_serviceorderservicemessagespanel_basicfinishdate}"/>
+				<h:outputText value="#{i18n.col_serviceorderservicemessagespanel_basicfinishdate}" title="#{i18n.lbl_attr_basicfinishdate_tooltip}" styleClass="pf-tooltip-target" />
 			</f:facet>
 			<h:outputText value="#{serviceOrderServiceMessagesPanelItem.basicFinishDate}">
 				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateConverter"/>
@@ -205,17 +205,18 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.externalSupplierName}" width="200" >
+		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.externalSupplierName}" width="200" 
+			exportValue="#{serviceOrderServiceMessagesPanelItem.externalSupplierName}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_serviceorderservicemessagespanel_externalsuppliername}"/>
 			</f:facet>
-			<h:outputText value="#{serviceOrderServiceMessagesPanelItem.externalSupplierName}">
-			</h:outputText>
+			<h:outputText value="#{serviceOrderServiceMessagesPanelItem.externalSupplierName}" styleClass="pf-tooltip-target" />
 		</p:column>
 
-		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.customerFailure}" width="80" >
+		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.customerFailure}" width="80" 
+			exportHeaderValue="#{i18n.lbl_attr_customerfailure_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_serviceorderservicemessagespanel_customerfailure}"/>
+				<h:outputText value="#{i18n.col_serviceorderservicemessagespanel_customerfailure}" title="#{i18n.lbl_attr_customerfailure_tooltip}" styleClass="pf-tooltip-target" />
 			</f:facet>
 			<p:selectBooleanCheckbox value="#{serviceOrderServiceMessagesPanelItem.customerFailure}" disabled="true"/>
 		</p:column>
@@ -236,12 +237,12 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.defectComponent}" width="100" >
+		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.defectComponent}" width="100" 
+			exportValue="#{serviceOrderServiceMessagesPanelItem.defectComponent}" exportHeaderValue="#{i18n.lbl_attr_defectcomponent_tooltip}" class="tdnowrap thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_serviceorderservicemessagespanel_defectcomponent}"/>
+				<h:outputText value="#{i18n.col_serviceorderservicemessagespanel_defectcomponent}" title="#{i18n.lbl_attr_defectcomponent_tooltip}" styleClass="pf-tooltip-target" />
 			</f:facet>
-			<h:outputText value="#{serviceOrderServiceMessagesPanelItem.defectComponent}">
-			</h:outputText>
+			<h:outputText value="#{serviceOrderServiceMessagesPanelItem.defectComponent}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.designator}" width="100" >
@@ -252,51 +253,54 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.epidemicFailure}" width="80" >
+		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.epidemicFailure}" width="80" 
+			exportHeaderValue="#{i18n.lbl_attr_epidemicfailure_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_serviceorderservicemessagespanel_epidemicfailure}"/>
+				<h:outputText value="#{i18n.col_serviceorderservicemessagespanel_epidemicfailure}" title="#{i18n.lbl_attr_epidemicfailure_tooltip}" styleClass="pf-tooltip-target" />
 			</f:facet>
 			<p:selectBooleanCheckbox value="#{serviceOrderServiceMessagesPanelItem.epidemicFailure}" disabled="true"/>
 		</p:column>
 
-		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.analysisText}" width="250" >
+		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.analysisText}" width="250" 
+			exportValue="#{serviceOrderServiceMessagesPanelItem.analysisText}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_serviceorderservicemessagespanel_analysistext}"/>
 			</f:facet>
-			<h:outputText value="#{serviceOrderServiceMessagesPanelItem.analysisText}">
-			</h:outputText>
+			<h:outputText value="#{serviceOrderServiceMessagesPanelItem.analysisText}" styleClass="pf-tooltip-target" />
 		</p:column>
 
-		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.deliveryNoteNumber}" width="100" >
+		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.deliveryNoteNumber}" width="100" 
+			exportHeaderValue="#{i18n.lbl_attr_deliverynotenumber_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_serviceorderservicemessagespanel_deliverynotenumber}"/>
+				<h:outputText value="#{i18n.col_serviceorderservicemessagespanel_deliverynotenumber}" title="#{i18n.lbl_attr_deliverynotenumber_tooltip}" styleClass="pf-tooltip-target" />
 			</f:facet>
 			<h:outputText value="#{serviceOrderServiceMessagesPanelItem.deliveryNoteNumber}">
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.serviceMessageId}" width="100" >
+		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.serviceMessageId}" width="100" 
+			exportHeaderValue="#{i18n.lbl_attr_servicenotificationnumber_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_serviceorderservicemessagespanel_servicemessageid}"/>
+				<h:outputText value="#{i18n.col_serviceorderservicemessagespanel_servicemessageid}" title="#{i18n.lbl_attr_servicenotificationnumber_tooltip}" styleClass="pf-tooltip-target" />
 			</f:facet>
 			<h:outputText value="#{serviceOrderServiceMessagesPanelItem.serviceMessageId}">
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.causeText}" width="250" >
+		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.causeText}" width="250" 
+			exportValue="#{serviceOrderServiceMessagesPanelItem.causeText}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_servicemessage_causetext}"/>
 			</f:facet>
-			<h:outputText value="#{serviceOrderServiceMessagesPanelItem.causeText}">
-			</h:outputText>
+			<h:outputText value="#{serviceOrderServiceMessagesPanelItem.causeText}" styleClass="pf-tooltip-target" />
 		</p:column>
 
-		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.repairDescription}" width="250" >
+		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.repairDescription}" width="250" 
+			exportValue="#{serviceOrderServiceMessagesPanelItem.repairDescription}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_servicemessage_repairdescription}"/>
 			</f:facet>
-			<h:outputText value="#{serviceOrderServiceMessagesPanelItem.repairDescription}">
-			</h:outputText>
+			<h:outputText value="#{serviceOrderServiceMessagesPanelItem.repairDescription}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.creationDate}" width="120" >
@@ -325,21 +329,33 @@
 
 	<h:outputText styleClass="label-field-mandatory" value="#{i18n.result_total_number_records} #{serviceOrderServiceMessagesPanel.serviceMessagesList.size()}"/>
 
-	<p:contextMenu for="gridServiceOrderServiceMessagesPanel">
+
+
+<!--Kontextmenü mit Möglichkeit, eine Zelle oder eine Zeile zu kopieren -->
+
+	<h:inputHidden id="cellText" value="#{serviceOrderServiceMessagesPanel.cellText}" />
+	<h:inputHidden id="rowCsv" value="#{serviceOrderServiceMessagesPanel.rowCsv}" />
+
+	<p:contextMenu for="gridServiceOrderServiceMessagesPanel" beforeShow="updateContextData(event)" >
 		<p:menuitem value="#{i18n.action_delete}" ajax="true" icon="pi pi-trash" id="gridServiceOrderServiceMessagesPanel_mniDelete" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR') and not serviceOrderServiceMessagesPanel.readOnly}" onclick="PF('deleteConfirmServiceMessages').show()"/>
 		<p:menuitem value="#{i18n.action_view}" ajax="true" icon="pi pi-file" id="gridServiceOrderServiceMessagesPanel_mniView" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY')}" action="#{serviceOrderServiceMessagesPanel.openViewServiceMessageDialog}">
 			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{serviceOrderServiceMessagesPanel.currentPageURL}"/>
 		</p:menuitem>
 		<p:menuitem value="#{i18n.action_copy}" ajax="true" icon="pi pi-copy" id="gridServiceOrderServiceMessagesPanel_mniCopy" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR') and not serviceOrderServiceMessagesPanel.readOnly}" onclick="PF('copyConfirmServiceMessages').show()"/>
 		<p:menuitem value="#{i18n.action_refresh}" ajax="false" type="push" icon="pi pi-refresh" id="gridServiceOrderServiceMessagesPanel_mniRefresh" actionListener="#{serviceOrderServiceMessagesPanel.fetchServiceMessages}"/>
+
+		<p:separator/>
+
+		<p:menuitem value="#{i18n.ctxmenu_copy_cell}" actionListener="#{serviceOrderServiceMessagesPanel.copyCellToClipboard}" icon="pi pi-copy" update="@none"/>
+		<p:menuitem value="#{i18n.ctxmenu_copy_row}" actionListener="#{serviceOrderServiceMessagesPanel.copyRowToClipboard}" icon="pi pi-copy" update="@none"/>
 	</p:contextMenu>
 
-	<p:confirmDialog modal="true" message="#{i18n.dialog_delete_question}" header="#{i18n.dialog_delete_title}" severity="alert" widgetVar="deleteConfirmServiceMessages">
+	<p:confirmDialog modal="true" closeOnEscape="true" message="#{i18n.dialog_delete_question}" header="#{i18n.dialog_delete_title}" severity="warn" widgetVar="deleteConfirmServiceMessages">
 		<p:commandButton value="#{i18n.command_yes}" oncomplete="PF('deleteConfirmServiceMessages').hide()" actionListener="#{serviceOrderServiceMessagesPanel.deleteServiceMessage}" id="gridServiceOrderServiceMessagesPanel_cmdYesDelete" ajax="false"/>
 		<p:commandButton value="#{i18n.command_no}" onclick="PF('deleteConfirmServiceMessages').hide()" type="button"/>
 	</p:confirmDialog>
 
-	<p:confirmDialog modal="true" message="#{i18n.dialog_copy_question}" header="#{i18n.dialog_copy_title}" severity="info" widgetVar="copyConfirmServiceMessages">
+	<p:confirmDialog modal="true" closeOnEscape="true" message="#{i18n.dialog_copy_question}" header="#{i18n.dialog_copy_title}" severity="info" widgetVar="copyConfirmServiceMessages">
 		<p:commandButton value="#{i18n.command_yes}" oncomplete="PF('copyConfirmServiceMessages').hide()" action="#{serviceOrderServiceMessagesPanel.copy}" id="gridServiceOrderServiceMessagesPanel_cmdYesCopy" ajax="false"/>
 		<p:commandButton value="#{i18n.command_no}" onclick="PF('copyConfirmServiceMessages').hide()" type="button"/>
 	</p:confirmDialog>

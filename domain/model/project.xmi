@@ -11740,10 +11740,10 @@
     <fields colIndex="4" width="150" title="Material no." dTOAttribute="/554/@attributes.25"/>
     <fields colIndex="5" width="150" title="SAP no." dTOAttribute="/554/@attributes.26"/>
     <fields colIndex="6" width="150" title="Revision no." dTOAttribute="/554/@attributes.27"/>
-    <fields colIndex="7" width="105" title="RMA type code" dTOAttribute="/554/@attributes.28"/>
+    <fields colIndex="7" title="RMA type" dTOAttribute="/554/@attributes.28"/>
     <fields colIndex="8" width="120" title="Repair state" dTOAttribute="/554/@attributes.20"/>
     <fields colIndex="9" title="Repair service" dTOAttribute="/554/@attributes.29"/>
-    <fields colIndex="10" title="Repair location" dTOAttribute="/554/@attributes.30"/>
+    <fields colIndex="10" title="Repair loc." dTOAttribute="/554/@attributes.30"/>
     <fields colIndex="11" width="150" title="Cause group" dTOAttribute="/554/@attributes.32"/>
     <fields colIndex="12" width="150" title="Cause code" dTOAttribute="/554/@attributes.31"/>
     <fields colIndex="13" width="120" title="Repair task" dTOAttribute="/554/@attributes.33"/>
