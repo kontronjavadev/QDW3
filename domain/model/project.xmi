@@ -5304,16 +5304,15 @@
   <net.sourceforge.jbizmo.model.client:FormPanel name="panArrival" label="Basic data" form="/292">
     <fields name="cboPlant" label="Plant" readonly="true" fieldType="FORM_LINK" width="140" dTOAttribute="/295/@attributes.8"/>
     <fields name="cboSupplier" colIndex="2" label="Supplier" readonly="true" fieldType="FORM_LINK" width="150" dTOAttribute="/295/@attributes.10"/>
-    <fields name="txtSerialObjectSerialNumber" rowIndex="2" label="Serial number" readonly="true" width="140" dTOAttribute="/295/@attributes.11"/>
-    <fields name="cboSerialObject" colIndex="2" rowIndex="2" label="Serial object" readonly="true" fieldType="FORM_LINK" width="140" dTOAttribute="/295/@attributes.9"/>
+    <fields name="cboSerialObject" rowIndex="2" label="Serial object" readonly="true" fieldType="FORM_LINK" width="140" dTOAttribute="/295/@attributes.9"/>
+    <fields name="txtOrderNumber" colIndex="2" rowIndex="2" label="Order no." readonly="true" width="140" dTOAttribute="/295/@attributes.1"/>
     <fields name="txtArrivalDate" rowIndex="3" label="Arrival date" readonly="true" fieldType="DATE" width="140" dTOAttribute="/295/@attributes.0"/>
-    <fields name="txtOrderNumber" colIndex="2" rowIndex="3" label="Order no." readonly="true" width="140" dTOAttribute="/295/@attributes.1"/>
-    <fields name="cboMaterialRevisionMaterial" rowIndex="4" label="Material" readonly="true" fieldType="FORM_LINK" width="140" dTOAttribute="/295/@attributes.12"/>
-    <fields name="txtMaterialSapNumber" colIndex="2" rowIndex="4" label="SAP no." readonly="true" width="140" dTOAttribute="/295/@attributes.13"/>
+    <fields name="cboMaterialRevisionMaterial" rowIndex="4" label="Material" readonly="true" fieldType="FORM_LINK" width="140" dTOAttribute="/295/@attributes.11"/>
+    <fields name="txtMaterialSapNumber" colIndex="2" rowIndex="4" label="SAP no." readonly="true" width="140" dTOAttribute="/295/@attributes.12"/>
     <fields name="cboMaterialRevision" rowIndex="5" label="Revision" readonly="true" fieldType="FORM_LINK" width="140" dTOAttribute="/295/@attributes.6"/>
-    <fields name="txtMaterialShortText" rowIndex="6" label="Short text" spanCols="true" readonly="true" dTOAttribute="/295/@attributes.16"/>
-    <fields name="cboMaterialRevisionMaterialType" rowIndex="7" label="Material type" readonly="true" fieldType="FORM_LINK" width="140" dTOAttribute="/295/@attributes.14"/>
-    <fields name="cboMaterialRevisionMaterialClass" colIndex="2" rowIndex="7" label="Material class" readonly="true" fieldType="FORM_LINK" width="140" dTOAttribute="/295/@attributes.15"/>
+    <fields name="txtMaterialShortText" rowIndex="6" label="Short text" spanCols="true" readonly="true" dTOAttribute="/295/@attributes.15"/>
+    <fields name="cboMaterialRevisionMaterialType" rowIndex="7" label="Material type" readonly="true" fieldType="FORM_LINK" width="140" dTOAttribute="/295/@attributes.13"/>
+    <fields name="cboMaterialRevisionMaterialClass" colIndex="2" rowIndex="7" label="Material class" readonly="true" fieldType="FORM_LINK" width="140" dTOAttribute="/295/@attributes.14"/>
     <fields name="cboMovementType" rowIndex="8" label="Movement type" readonly="true" fieldType="FORM_LINK" width="140" dTOAttribute="/295/@attributes.7"/>
   </net.sourceforge.jbizmo.model.client:FormPanel>
   <net.sourceforge.jbizmo.model.client:FormPanel name="panAdministration" colIndex="2" label="Administration data" form="/292">
@@ -5356,10 +5355,6 @@
     </attributes>
     <attributes name="supplier" referencedDTOBean="/297">
       <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-serial.xmi#//@domainObjects.2/@associations.4"/>
-    </attributes>
-    <attributes name="serialObjectSerialNumber">
-      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-serial.xmi#//@domainObjects.2/@associations.3"/>
-      <domainAttribute href="package-serial.xmi#//@domainObjects.0/@attributes.0"/>
     </attributes>
     <attributes name="materialRevisionMaterial" referencedDTOBean="/191">
       <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-material.xmi#//@domainObjects.3/@associations.0"/>
@@ -6577,12 +6572,10 @@
     <fields name="txtCustomerSerialNumber" colIndex="2" label="Customer serial no." readonly="true" mandatory="false" width="140" dTOAttribute="/335/@attributes.2"/>
     <fields name="txtProductionOrderNumber" rowIndex="2" label="PO no." readonly="true" mandatory="false" width="140" dTOAttribute="/335/@attributes.3"/>
     <fields name="txtAssemblyDate" colIndex="2" rowIndex="2" label="Assembly date" readonly="true" mandatory="false" fieldType="DATE" width="140" dTOAttribute="/335/@attributes.1"/>
-    <fields name="txtParentObjectSerialNumber" rowIndex="3" label="Parent serial no." readonly="true" mandatory="false" width="140" dTOAttribute="/335/@attributes.11"/>
-    <fields name="cboParentObject" colIndex="2" rowIndex="3" label="Parent serial object" readonly="true" mandatory="false" fieldType="FORM_LINK" width="140" dTOAttribute="/335/@attributes.9"/>
-    <fields name="cboTraceBom" rowIndex="4" label="Trace BoM" readonly="true" mandatory="false" fieldType="FORM_LINK" width="140" dTOAttribute="/335/@attributes.10"/>
-    <fields name="cboMaterial" colIndex="2" rowIndex="4" label="Material" readonly="true" fieldType="FORM_LINK" width="140" dTOAttribute="/335/@attributes.8"/>
-    <fields name="txtMaterialMaterialNumber" rowIndex="5" label="Material no." readonly="true" width="140" dTOAttribute="/335/@attributes.12"/>
-    <fields name="txtMaterialSapNumber" colIndex="2" rowIndex="5" label="SAP no." readonly="true" width="140" dTOAttribute="/335/@attributes.13"/>
+    <fields name="cboParentObject" rowIndex="3" label="Parent serial object" readonly="true" mandatory="false" fieldType="FORM_LINK" width="140" dTOAttribute="/335/@attributes.9"/>
+    <fields name="cboTraceBom" colIndex="2" rowIndex="3" label="Trace BoM" readonly="true" mandatory="false" fieldType="FORM_LINK" width="140" dTOAttribute="/335/@attributes.10"/>
+    <fields name="cboMaterial" rowIndex="4" label="Material" readonly="true" fieldType="FORM_LINK" width="140" dTOAttribute="/335/@attributes.8"/>
+    <fields name="txtMaterialSapNumber" colIndex="2" rowIndex="4" label="SAP no." readonly="true" width="140" dTOAttribute="/335/@attributes.11"/>
   </net.sourceforge.jbizmo.model.client:FormPanel>
   <net.sourceforge.jbizmo.model.client:FormPanel name="panAdministration" colIndex="2" label="Administration data" form="/331">
     <fields name="txtId" label="Id" readonly="true" width="120" dTOAttribute="/335/@attributes.4"/>
@@ -6625,14 +6618,6 @@
     </attributes>
     <attributes name="traceBom" referencedDTOBean="/336">
       <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-serial.xmi#//@domainObjects.0/@associations.6"/>
-    </attributes>
-    <attributes name="parentObjectSerialNumber">
-      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-serial.xmi#//@domainObjects.0/@associations.1"/>
-      <domainAttribute href="package-serial.xmi#//@domainObjects.0/@attributes.0"/>
-    </attributes>
-    <attributes name="materialMaterialNumber">
-      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-serial.xmi#//@domainObjects.0/@associations.0"/>
-      <domainAttribute href="package-material.xmi#//@domainObjects.2/@attributes.0"/>
     </attributes>
     <attributes name="materialSapNumber">
       <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-serial.xmi#//@domainObjects.0/@associations.0"/>
@@ -7276,18 +7261,17 @@
     <domainObject href="package-serial.xmi#//@domainObjects.3"/>
   </net.sourceforge.jbizmo.model.client:Form>
   <net.sourceforge.jbizmo.model.client:FormPanel name="panShipment" label="Basic data" form="/352">
-    <fields name="txtSerialObjectSerialNumber" label="Serial number" readonly="true" width="140" dTOAttribute="/355/@attributes.11"/>
-    <fields name="cboSerialObject" colIndex="2" label="Serial object" readonly="true" fieldType="FORM_LINK" width="140" dTOAttribute="/355/@attributes.10"/>
-    <fields name="txtOrderNumber" rowIndex="2" label="Order number" readonly="true" width="140" dTOAttribute="/355/@attributes.0"/>
-    <fields name="cboPlant" colIndex="2" rowIndex="2" label="Plant" readonly="true" fieldType="FORM_LINK" width="140" dTOAttribute="/355/@attributes.9"/>
-    <fields name="cboCustomer" rowIndex="3" label="Customer" spanCols="true" readonly="true" fieldType="FORM_LINK" width="140" dTOAttribute="/355/@attributes.6"/>
-    <fields name="cboMaterialRevisionMaterial" rowIndex="4" label="Material" readonly="true" fieldType="FORM_LINK" width="140" dTOAttribute="/355/@attributes.12"/>
-    <fields name="cboMaterialRevision" colIndex="2" rowIndex="4" label="Material revision" readonly="true" fieldType="FORM_LINK" width="140" dTOAttribute="/355/@attributes.7"/>
-    <fields name="txtMaterialShortText" rowIndex="5" label="Short text" spanCols="true" readonly="true" dTOAttribute="/355/@attributes.13"/>
-    <fields name="cboMaterialRevisionMaterialType" rowIndex="6" label="Material type" readonly="true" fieldType="FORM_LINK" width="140" dTOAttribute="/355/@attributes.14"/>
-    <fields name="cboMaterialRevisionMaterialClass" colIndex="2" rowIndex="6" label="Material class" readonly="true" fieldType="FORM_LINK" width="140" dTOAttribute="/355/@attributes.15"/>
-    <fields name="txtShipmentDate" rowIndex="7" label="Shipment date" readonly="true" fieldType="DATE" width="140" dTOAttribute="/355/@attributes.1"/>
-    <fields name="cboMovementType" colIndex="2" rowIndex="7" label="Movement type" readonly="true" fieldType="FORM_LINK" width="140" dTOAttribute="/355/@attributes.8"/>
+    <fields name="cboSerialObject" label="Serial object" readonly="true" fieldType="FORM_LINK" width="140" dTOAttribute="/355/@attributes.10"/>
+    <fields name="txtOrderNumber" colIndex="2" label="Order number" readonly="true" width="140" dTOAttribute="/355/@attributes.0"/>
+    <fields name="cboPlant" rowIndex="2" label="Plant" readonly="true" fieldType="FORM_LINK" width="140" dTOAttribute="/355/@attributes.9"/>
+    <fields name="cboCustomer" colIndex="2" rowIndex="2" label="Customer" readonly="true" fieldType="FORM_LINK" width="140" dTOAttribute="/355/@attributes.6"/>
+    <fields name="cboMaterialRevisionMaterial" rowIndex="3" label="Material" readonly="true" fieldType="FORM_LINK" width="140" dTOAttribute="/355/@attributes.11"/>
+    <fields name="cboMaterialRevision" colIndex="2" rowIndex="3" label="Material revision" readonly="true" fieldType="FORM_LINK" width="140" dTOAttribute="/355/@attributes.7"/>
+    <fields name="txtMaterialShortText" rowIndex="4" label="Short text" spanCols="true" readonly="true" dTOAttribute="/355/@attributes.12"/>
+    <fields name="cboMaterialRevisionMaterialType" rowIndex="5" label="Material type" readonly="true" fieldType="FORM_LINK" width="140" dTOAttribute="/355/@attributes.13"/>
+    <fields name="cboMaterialRevisionMaterialClass" colIndex="2" rowIndex="5" label="Material class" readonly="true" fieldType="FORM_LINK" width="140" dTOAttribute="/355/@attributes.14"/>
+    <fields name="txtShipmentDate" rowIndex="6" label="Shipment date" readonly="true" fieldType="DATE" width="140" dTOAttribute="/355/@attributes.1"/>
+    <fields name="cboMovementType" colIndex="2" rowIndex="6" label="Movement type" readonly="true" fieldType="FORM_LINK" width="140" dTOAttribute="/355/@attributes.8"/>
   </net.sourceforge.jbizmo.model.client:FormPanel>
   <net.sourceforge.jbizmo.model.client:FormPanel name="panAdministration" colIndex="2" label="Administration data" form="/352">
     <fields name="txtId" label="Transac. id" readonly="true" width="120" dTOAttribute="/355/@attributes.2"/>
@@ -7329,10 +7313,6 @@
     </attributes>
     <attributes name="serialObject" referencedDTOBean="/296">
       <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-serial.xmi#//@domainObjects.3/@associations.4"/>
-    </attributes>
-    <attributes name="serialObjectSerialNumber">
-      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-serial.xmi#//@domainObjects.3/@associations.4"/>
-      <domainAttribute href="package-serial.xmi#//@domainObjects.0/@attributes.0"/>
     </attributes>
     <attributes name="materialRevisionMaterial" referencedDTOBean="/191">
       <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-material.xmi#//@domainObjects.3/@associations.0"/>

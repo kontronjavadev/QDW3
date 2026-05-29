@@ -167,6 +167,15 @@ public class ViewShipmentDialog implements Serializable {
      * @return the navigation target
      */
     @Generated
+    public String openViewCustomerDialogLink() {
+        return ViewCustomerDialog.PAGE_INIT_URL
+                + java.net.URLEncoder.encode(shipment.getCustomer().getCode(), java.nio.charset.StandardCharsets.UTF_8);
+    }
+
+    /**
+     * @return the navigation target
+     */
+    @Generated
     public String openViewMaterialDialogLink() {
         return ViewMaterialDialog.PAGE_INIT_URL + shipment.getMaterialRevisionMaterial().getId();
     }

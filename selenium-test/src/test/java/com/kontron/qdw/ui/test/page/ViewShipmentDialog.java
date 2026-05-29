@@ -1,14 +1,12 @@
 package com.kontron.qdw.ui.test.page;
 
-import net.sourceforge.jbizmo.commons.selenium.page.imp.primefaces.*;
 import net.sourceforge.jbizmo.commons.selenium.junit.*;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
+import net.sourceforge.jbizmo.commons.selenium.page.imp.primefaces.*;
 
 public class ViewShipmentDialog extends AbstractPageObject {
     @Generated
     public static final String RESOURCE_PATH = "/dialog/ViewShipmentDialog.jsf";
-    @Generated
-    public static final String FIELD_ID_TXTSERIALOBJECTSERIALNUMBER = "form:tabview1:txtSerialObjectSerialNumber";
     @Generated
     public static final String FIELD_ID_CBOSERIALOBJECT = "form:tabview1:cboSerialObject";
     @Generated

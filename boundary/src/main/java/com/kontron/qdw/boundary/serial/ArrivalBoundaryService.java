@@ -198,16 +198,19 @@ public class ArrivalBoundaryService {
         dto.setMaterialRevision(new MaterialRevisionListDTO());
         dto.getMaterialRevision().setId(arrival.getMaterialRevision().getId());
         dto.getMaterialRevision().setRevisionNumber(arrival.getMaterialRevision().getRevisionNumber());
+        if (arrival.getMaterialRevision().getPlant() != null) {
+            dto.getMaterialRevision().setPlantCode(arrival.getMaterialRevision().getPlant().getCode());
+        }
         dto.setMovementType(new MovementTypeListDTO());
         dto.getMovementType().setCode(arrival.getMovementType().getCode());
         dto.setPlant(new PlantListDTO());
         dto.getPlant().setCode(arrival.getPlant().getCode());
         dto.setSerialObject(new SerialObjectListDTO());
         dto.getSerialObject().setId(arrival.getSerialObject().getId());
+        dto.getSerialObject().setSerialNumber(arrival.getSerialObject().getSerialNumber());
         dto.setSupplier(new SupplierListDTO());
         dto.getSupplier().setCode(arrival.getSupplier().getCode());
         dto.getSupplier().setName(arrival.getSupplier().getName());
-        dto.setSerialObjectSerialNumber(arrival.getSerialObject().getSerialNumber());
         dto.setMaterialRevisionMaterial(new MaterialListDTO());
         dto.getMaterialRevisionMaterial().setId(arrival.getMaterialRevision().getMaterial().getId());
         dto.getMaterialRevisionMaterial().setMaterialNumber(arrival.getMaterialRevision().getMaterial().getMaterialNumber());

@@ -1,8 +1,8 @@
 package com.kontron.qdw.ui.test.page;
 
-import net.sourceforge.jbizmo.commons.selenium.page.imp.primefaces.*;
 import net.sourceforge.jbizmo.commons.selenium.junit.*;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
+import net.sourceforge.jbizmo.commons.selenium.page.imp.primefaces.*;
 
 public class ViewArrivalDialog extends AbstractPageObject {
     @Generated
@@ -12,13 +12,11 @@ public class ViewArrivalDialog extends AbstractPageObject {
     @Generated
     public static final String FIELD_ID_CBOSUPPLIER = "form:tabview1:cboSupplier";
     @Generated
-    public static final String FIELD_ID_TXTSERIALOBJECTSERIALNUMBER = "form:tabview1:txtSerialObjectSerialNumber";
-    @Generated
     public static final String FIELD_ID_CBOSERIALOBJECT = "form:tabview1:cboSerialObject";
     @Generated
-    public static final String FIELD_ID_TXTARRIVALDATE = "form:tabview1:txtArrivalDate";
-    @Generated
     public static final String FIELD_ID_TXTORDERNUMBER = "form:tabview1:txtOrderNumber";
+    @Generated
+    public static final String FIELD_ID_TXTARRIVALDATE = "form:tabview1:txtArrivalDate";
     @Generated
     public static final String FIELD_ID_CBOMATERIALREVISIONMATERIAL = "form:tabview1:cboMaterialRevisionMaterial";
     @Generated

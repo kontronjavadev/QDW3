@@ -35,11 +35,6 @@
 	<p:tab id="tabPanShipment" title="#{i18n.panel_basic_title}">
 	<h:panelGrid columns="6">
 
-		<h:outputLabel value="#{i18n.lbl_attr_serialobject_serialnumber}:" for="txtSerialObjectSerialNumber" styleClass="label-field-optional"/>
-		<p:inputText id="txtSerialObjectSerialNumber" value="#{viewShipmentDialog.shipment.serialObjectSerialNumber}" readonly="true">
-		</p:inputText>
-		<p:tooltip for="txtSerialObjectSerialNumber" value=""/>
-
 		<h:outputLabel value="#{i18n.lbl_assoc_shipment_serialobject}:" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY')}" for="cboSerialObject" styleClass="label-field-optional"/>
 		<p:commandLink rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY')}" id="cboSerialObject" style="font-weight: bold;color: #0063ac" action="#{viewShipmentDialog.openViewSerialObjectDialogLink}">
 			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{viewShipmentDialog.currentPageURL}"/>
@@ -58,12 +53,14 @@
 		<h:outputText styleClass="label-field-value" id="cboPlant" value="#{viewShipmentDialog.shipment.plant.code}"/>
 		<p:tooltip for="cboPlant" value=""/>
 
-		<h:outputLabel value="#{i18n.lbl_assoc_shipment_customer}:" for="cboCustomer" styleClass="label-field-optional"/>
-		<h:outputText styleClass="label-field-value" id="cboCustomer" value="#{viewShipmentDialog.shipment.customer.name}"/>
+		<h:outputLabel value="#{i18n.lbl_assoc_shipment_customer}:" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY')}" for="cboCustomer" styleClass="label-field-optional"/>
+		<p:commandLink rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY')}" id="cboCustomer" style="font-weight: bold;color: #0063ac" action="#{viewShipmentDialog.openViewCustomerDialogLink}">
+			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{viewShipmentDialog.currentPageURL}"/>
+			<h:outputText value="#{viewShipmentDialog.shipment.customer.name}"/>
+		</p:commandLink>
+		<h:outputLabel value="#{i18n.lbl_assoc_shipment_customer}:" rendered="#{!userSession.checkAuthorizationString('ADMINISTRATOR;READONLY')}" for="cboCustomerAltLbl" styleClass="label-field-optional"/>
+		<h:outputText styleClass="label-field-value" rendered="#{!userSession.checkAuthorizationString('ADMINISTRATOR;READONLY')}" id="cboCustomerAltLbl" value="#{viewShipmentDialog.shipment.customer.name}"/>
 		<p:tooltip for="cboCustomer" value=""/>
-		<h:outputLabel/>
-		<h:outputLabel/>
-		<h:outputLabel/>
 
 		<h:outputLabel value="#{i18n.lbl_assoc_materialrevision_material}:" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;SUPERUSER')}" for="cboMaterialRevisionMaterial" styleClass="label-field-optional"/>
 		<p:commandLink rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;SUPERUSER')}" id="cboMaterialRevisionMaterial" style="font-weight: bold;color: #0063ac" action="#{viewShipmentDialog.openViewMaterialDialogLink}">
@@ -77,10 +74,10 @@
 		<h:outputLabel value="#{i18n.lbl_assoc_shipment_materialrevision}:" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;SUPERUSER')}" for="cboMaterialRevision" styleClass="label-field-optional"/>
 		<p:commandLink rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;SUPERUSER')}" id="cboMaterialRevision" style="font-weight: bold;color: #0063ac" action="#{viewShipmentDialog.openViewMaterialRevisionDialogLink}">
 			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{viewShipmentDialog.currentPageURL}"/>
-			<h:outputText value="#{viewShipmentDialog.shipment.materialRevision.revisionNumber}"/>
+			<h:outputText value="#{viewShipmentDialog.shipment.materialRevision.toString()}"/>
 		</p:commandLink>
 		<h:outputLabel value="#{i18n.lbl_assoc_shipment_materialrevision}:" rendered="#{!userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;SUPERUSER')}" for="cboMaterialRevisionAltLbl" styleClass="label-field-optional"/>
-		<h:outputText styleClass="label-field-value" rendered="#{!userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;SUPERUSER')}" id="cboMaterialRevisionAltLbl" value="#{viewShipmentDialog.shipment.materialRevision.revisionNumber}"/>
+		<h:outputText styleClass="label-field-value" rendered="#{!userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;SUPERUSER')}" id="cboMaterialRevisionAltLbl" value="#{viewShipmentDialog.shipment.materialRevision.toString()}"/>
 		<p:tooltip for="cboMaterialRevision" value=""/>
 
 		<h:outputLabel value="#{i18n.lbl_attr_material_shorttext}:" for="txtMaterialShortText" styleClass="label-field-optional"/>

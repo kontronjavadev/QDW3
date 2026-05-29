@@ -200,6 +200,9 @@ public class ServiceMessageBoundaryService {
         dto.setMaterialRevision(new MaterialRevisionListDTO());
         dto.getMaterialRevision().setId(serviceMessage.getMaterialRevision().getId());
         dto.getMaterialRevision().setRevisionNumber(serviceMessage.getMaterialRevision().getRevisionNumber());
+        if (serviceMessage.getMaterialRevision().getPlant() != null) {
+            dto.getMaterialRevision().setPlantCode(serviceMessage.getMaterialRevision().getPlant().getCode());
+        }
         dto.setPlant(new PlantListDTO());
         dto.getPlant().setCode(serviceMessage.getPlant().getCode());
         dto.setSerialObject(new SerialObjectListDTO());

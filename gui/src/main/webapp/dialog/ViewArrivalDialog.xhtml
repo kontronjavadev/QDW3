@@ -48,14 +48,19 @@
 		<h:outputText styleClass="label-field-value" rendered="#{!userSession.checkAuthorizationString('ADMINISTRATOR')}" id="cboSupplierAltLbl" value="#{viewArrivalDialog.arrival.supplier.name}"/>
 		<p:tooltip for="cboSupplier" value=""/>
 
-		<h:outputLabel value="#{i18n.lbl_attr_serialobject_serialnumber}:" for="txtSerialObjectSerialNumber" styleClass="label-field-optional"/>
-		<p:inputText id="txtSerialObjectSerialNumber" value="#{viewArrivalDialog.arrival.serialObjectSerialNumber}" readonly="true">
-		</p:inputText>
-		<p:tooltip for="txtSerialObjectSerialNumber" value=""/>
-
-		<h:outputLabel value="#{i18n.lbl_assoc_arrival_serialobject}:" for="cboSerialObject" styleClass="label-field-optional"/>
-		<h:outputText styleClass="label-field-value" id="cboSerialObject" value="#{viewArrivalDialog.arrival.serialObject.id}"/>
+		<h:outputLabel value="#{i18n.lbl_assoc_arrival_serialobject}:" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY')}" for="cboSerialObject" styleClass="label-field-optional"/>
+		<p:commandLink rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY')}" id="cboSerialObject" style="font-weight: bold;color: #0063ac" action="#{viewArrivalDialog.openViewSerialObjectDialogLink}">
+			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{viewArrivalDialog.currentPageURL}"/>
+			<h:outputText value="#{viewArrivalDialog.arrival.serialObject.serialNumber}"/>
+		</p:commandLink>
+		<h:outputLabel value="#{i18n.lbl_assoc_arrival_serialobject}:" rendered="#{!userSession.checkAuthorizationString('ADMINISTRATOR;READONLY')}" for="cboSerialObjectAltLbl" styleClass="label-field-optional"/>
+		<h:outputText styleClass="label-field-value" rendered="#{!userSession.checkAuthorizationString('ADMINISTRATOR;READONLY')}" id="cboSerialObjectAltLbl" value="#{viewArrivalDialog.arrival.serialObject.serialNumber}"/>
 		<p:tooltip for="cboSerialObject" value=""/>
+
+		<h:outputLabel value="#{i18n.field_viewarrivaldialog_txtordernumber}:" for="txtOrderNumber" styleClass="label-field-optional"/>
+		<p:inputText id="txtOrderNumber" value="#{viewArrivalDialog.arrival.orderNumber}" readonly="true">
+		</p:inputText>
+		<p:tooltip for="txtOrderNumber" value=""/>
 
 		<h:outputLabel value="#{i18n.lbl_attr_arrival_arrivaldate}:" for="txtArrivalDate" styleClass="label-field-optional"/>
 		<p:inputText id="txtArrivalDate" value="#{viewArrivalDialog.arrival.arrivalDate}" readonly="true">
@@ -64,11 +69,9 @@
 			<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
 		</p:inputText>
 		<p:tooltip for="txtArrivalDate" value=""/>
-
-		<h:outputLabel value="#{i18n.field_viewarrivaldialog_txtordernumber}:" for="txtOrderNumber" styleClass="label-field-optional"/>
-		<p:inputText id="txtOrderNumber" value="#{viewArrivalDialog.arrival.orderNumber}" readonly="true">
-		</p:inputText>
-		<p:tooltip for="txtOrderNumber" value=""/>
+		<h:outputLabel/>
+		<h:outputLabel/>
+		<h:outputLabel/>
 
 		<h:outputLabel value="#{i18n.lbl_assoc_materialrevision_material}:" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;SUPERUSER')}" for="cboMaterialRevisionMaterial" styleClass="label-field-optional"/>
 		<p:commandLink rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;SUPERUSER')}" id="cboMaterialRevisionMaterial" style="font-weight: bold;color: #0063ac" action="#{viewArrivalDialog.openViewMaterialDialogLink}">
@@ -87,10 +90,10 @@
 		<h:outputLabel value="#{i18n.field_viewarrivaldialog_cbomaterialrevision}:" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;SUPERUSER')}" for="cboMaterialRevision" styleClass="label-field-optional"/>
 		<p:commandLink rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;SUPERUSER')}" id="cboMaterialRevision" style="font-weight: bold;color: #0063ac" action="#{viewArrivalDialog.openViewMaterialRevisionDialogLink}">
 			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{viewArrivalDialog.currentPageURL}"/>
-			<h:outputText value="#{viewArrivalDialog.arrival.materialRevision.toRevNrString()}"/>
+			<h:outputText value="#{viewArrivalDialog.arrival.materialRevision.toString()}"/>
 		</p:commandLink>
 		<h:outputLabel value="#{i18n.field_viewarrivaldialog_cbomaterialrevision}:" rendered="#{!userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;SUPERUSER')}" for="cboMaterialRevisionAltLbl" styleClass="label-field-optional"/>
-		<h:outputText styleClass="label-field-value" rendered="#{!userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;SUPERUSER')}" id="cboMaterialRevisionAltLbl" value="#{viewArrivalDialog.arrival.materialRevision.toRevNrString()}"/>
+		<h:outputText styleClass="label-field-value" rendered="#{!userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;SUPERUSER')}" id="cboMaterialRevisionAltLbl" value="#{viewArrivalDialog.arrival.materialRevision.toString()}"/>
 		<p:tooltip for="cboMaterialRevision" value=""/>
 		<h:outputLabel/>
 		<h:outputLabel/>

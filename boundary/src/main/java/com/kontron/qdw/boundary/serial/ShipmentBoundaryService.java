@@ -146,6 +146,9 @@ public class ShipmentBoundaryService {
         dto.setMaterialRevision(new MaterialRevisionListDTO());
         dto.getMaterialRevision().setId(shipment.getMaterialRevision().getId());
         dto.getMaterialRevision().setRevisionNumber(shipment.getMaterialRevision().getRevisionNumber());
+        if (shipment.getMaterialRevision().getPlant() != null) {
+            dto.getMaterialRevision().setPlantCode(shipment.getMaterialRevision().getPlant().getCode());
+        }
         dto.setMovementType(new MovementTypeListDTO());
         dto.getMovementType().setCode(shipment.getMovementType().getCode());
         dto.setPlant(new PlantListDTO());
@@ -153,7 +156,6 @@ public class ShipmentBoundaryService {
         dto.setSerialObject(new SerialObjectListDTO());
         dto.getSerialObject().setId(shipment.getSerialObject().getId());
         dto.getSerialObject().setSerialNumber(shipment.getSerialObject().getSerialNumber());
-        dto.setSerialObjectSerialNumber(shipment.getSerialObject().getSerialNumber());
         dto.setMaterialRevisionMaterial(new MaterialListDTO());
         dto.getMaterialRevisionMaterial().setId(shipment.getMaterialRevision().getMaterial().getId());
         dto.getMaterialRevisionMaterial().setMaterialNumber(shipment.getMaterialRevision().getMaterial().getMaterialNumber());

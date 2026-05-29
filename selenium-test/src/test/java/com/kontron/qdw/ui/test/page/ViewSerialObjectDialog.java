@@ -1,8 +1,8 @@
 package com.kontron.qdw.ui.test.page;
 
-import net.sourceforge.jbizmo.commons.selenium.page.imp.primefaces.*;
 import net.sourceforge.jbizmo.commons.selenium.junit.*;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
+import net.sourceforge.jbizmo.commons.selenium.page.imp.primefaces.*;
 
 public class ViewSerialObjectDialog extends AbstractPageObject {
     @Generated
@@ -16,15 +16,11 @@ public class ViewSerialObjectDialog extends AbstractPageObject {
     @Generated
     public static final String FIELD_ID_TXTASSEMBLYDATE = "form:tabview1:txtAssemblyDate";
     @Generated
-    public static final String FIELD_ID_TXTPARENTOBJECTSERIALNUMBER = "form:tabview1:txtParentObjectSerialNumber";
-    @Generated
     public static final String FIELD_ID_CBOPARENTOBJECT = "form:tabview1:cboParentObject";
     @Generated
     public static final String FIELD_ID_CBOTRACEBOM = "form:tabview1:cboTraceBom";
     @Generated
     public static final String FIELD_ID_CBOMATERIAL = "form:tabview1:cboMaterial";
-    @Generated
-    public static final String FIELD_ID_TXTMATERIALMATERIALNUMBER = "form:tabview1:txtMaterialMaterialNumber";
     @Generated
     public static final String FIELD_ID_TXTMATERIALSAPNUMBER = "form:tabview1:txtMaterialSapNumber";
     @Generated

@@ -182,11 +182,6 @@ public class SerialObjectBoundaryService {
             dto.getTraceBom().setId(serialObject.getTraceBom().getId());
         }
 
-
-        if (serialObject.getParentObject() != null)
-            dto.setParentObjectSerialNumber(serialObject.getParentObject().getSerialNumber());
-
-        dto.setMaterialMaterialNumber(serialObject.getMaterial().getMaterialNumber());
         dto.setMaterialSapNumber(serialObject.getMaterial().getSapNumber());
 
         return dto;

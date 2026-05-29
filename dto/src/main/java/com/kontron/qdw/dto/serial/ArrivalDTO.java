@@ -1,8 +1,8 @@
 package com.kontron.qdw.dto.serial;
 
-import java.time.*;
 import java.io.Serializable;
 import com.kontron.qdw.dto.material.*;
+import java.time.*;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
 import com.kontron.qdw.dto.base.*;
 
@@ -31,8 +31,6 @@ public class ArrivalDTO implements Serializable {
     public static final String ATTR_SERIALOBJECT = "serialObject";
     @Generated
     public static final String ATTR_SUPPLIER = "supplier";
-    @Generated
-    public static final String ATTR_SERIALOBJECTSERIALNUMBER = "serialObjectSerialNumber";
     @Generated
     public static final String ATTR_MATERIALREVISIONMATERIAL = "materialRevisionMaterial";
     @Generated
@@ -65,8 +63,6 @@ public class ArrivalDTO implements Serializable {
     private SerialObjectListDTO serialObject;
     @Generated
     private SupplierListDTO supplier;
-    @Generated
-    private String serialObjectSerialNumber;
     @Generated
     private MaterialListDTO materialRevisionMaterial;
     @Generated
@@ -102,20 +98,18 @@ public class ArrivalDTO implements Serializable {
      * @param version
      * @param creationDate
      * @param lastUpdate
-     * @param serialObjectSerialNumber
      * @param materialSapNumber
      * @param materialShortText
      */
     @Generated
     public ArrivalDTO(LocalDate arrivalDate, String orderNumber, long id, int version, LocalDateTime creationDate, LocalDateTime lastUpdate,
-            String serialObjectSerialNumber, String materialSapNumber, String materialShortText) {
+            String materialSapNumber, String materialShortText) {
         this.arrivalDate = arrivalDate;
         this.orderNumber = orderNumber;
         this.id = id;
         this.version = version;
         this.creationDate = creationDate;
         this.lastUpdate = lastUpdate;
-        this.serialObjectSerialNumber = serialObjectSerialNumber;
         this.materialSapNumber = materialSapNumber;
         this.materialShortText = materialShortText;
     }
@@ -294,22 +288,6 @@ public class ArrivalDTO implements Serializable {
     @Generated
     public void setSupplier(SupplierListDTO supplier) {
         this.supplier = supplier;
-    }
-
-    /**
-     * @return the serial number of the serial object
-     */
-    @Generated
-    public String getSerialObjectSerialNumber() {
-        return this.serialObjectSerialNumber;
-    }
-
-    /**
-     * @param serialObjectSerialNumber the serial number of the serial object to set
-     */
-    @Generated
-    public void setSerialObjectSerialNumber(String serialObjectSerialNumber) {
-        this.serialObjectSerialNumber = serialObjectSerialNumber;
     }
 
     /**

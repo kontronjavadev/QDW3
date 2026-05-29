@@ -58,11 +58,6 @@
 		</p:inputText>
 		<p:tooltip for="txtAssemblyDate" value=""/>
 
-		<h:outputLabel value="#{i18n.field_viewserialobjectdialog_txtparentobjectserialnumber}:" for="txtParentObjectSerialNumber" styleClass="label-field-optional"/>
-		<p:inputText id="txtParentObjectSerialNumber" value="#{viewSerialObjectDialog.serialObject.parentObjectSerialNumber}" readonly="true">
-		</p:inputText>
-		<p:tooltip for="txtParentObjectSerialNumber" value=""/>
-
 		<h:outputLabel value="#{i18n.field_viewserialobjectdialog_cboparentobject}:" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY')}" for="cboParentObject" styleClass="label-field-optional"/>
 		<p:commandLink rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY')}" id="cboParentObject" style="font-weight: bold;color: #0063ac" action="#{viewSerialObjectDialog.openViewSerialObjectDialogLink}">
 			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{viewSerialObjectDialog.currentPageURL}"/>
@@ -89,11 +84,6 @@
 		<h:outputLabel value="#{i18n.lbl_assoc_serialobject_material}:" rendered="#{!userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;SUPERUSER')}" for="cboMaterialAltLbl" styleClass="label-field-optional"/>
 		<h:outputText styleClass="label-field-value" rendered="#{!userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;SUPERUSER')}" id="cboMaterialAltLbl" value="#{viewSerialObjectDialog.serialObject.material.materialNumber}"/>
 		<p:tooltip for="cboMaterial" value=""/>
-
-		<h:outputLabel value="#{i18n.field_viewserialobjectdialog_txtmaterialmaterialnumber}:" for="txtMaterialMaterialNumber" styleClass="label-field-optional"/>
-		<p:inputText id="txtMaterialMaterialNumber" value="#{viewSerialObjectDialog.serialObject.materialMaterialNumber}" readonly="true">
-		</p:inputText>
-		<p:tooltip for="txtMaterialMaterialNumber" value=""/>
 
 		<h:outputLabel value="#{i18n.field_viewserialobjectdialog_txtmaterialsapnumber}:" for="txtMaterialSapNumber" styleClass="label-field-optional"/>
 		<p:inputText id="txtMaterialSapNumber" value="#{viewSerialObjectDialog.serialObject.materialSapNumber}" readonly="true">

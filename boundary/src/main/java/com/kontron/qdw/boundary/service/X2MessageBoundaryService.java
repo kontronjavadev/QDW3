@@ -101,6 +101,9 @@ public class X2MessageBoundaryService {
         dto.setMaterialRevision(new MaterialRevisionListDTO());
         dto.getMaterialRevision().setId(x2Message.getMaterialRevision().getId());
         dto.getMaterialRevision().setRevisionNumber(x2Message.getMaterialRevision().getRevisionNumber());
+        if (x2Message.getMaterialRevision().getPlant() != null) {
+            dto.getMaterialRevision().setPlantCode(x2Message.getMaterialRevision().getPlant().getCode());
+        }
 
         if (x2Message.getRepairErrorCode() != null) {
             dto.setRepairErrorCode(new RepairErrorCodeListDTO());

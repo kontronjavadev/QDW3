@@ -1,8 +1,8 @@
 package com.kontron.qdw.dto.serial;
 
-import java.time.*;
 import java.io.Serializable;
 import com.kontron.qdw.dto.material.*;
+import java.time.*;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
 import com.kontron.qdw.dto.base.*;
 
@@ -31,8 +31,6 @@ public class ShipmentDTO implements Serializable {
     public static final String ATTR_PLANT = "plant";
     @Generated
     public static final String ATTR_SERIALOBJECT = "serialObject";
-    @Generated
-    public static final String ATTR_SERIALOBJECTSERIALNUMBER = "serialObjectSerialNumber";
     @Generated
     public static final String ATTR_MATERIALREVISIONMATERIAL = "materialRevisionMaterial";
     @Generated
@@ -63,8 +61,6 @@ public class ShipmentDTO implements Serializable {
     private PlantListDTO plant;
     @Generated
     private SerialObjectListDTO serialObject;
-    @Generated
-    private String serialObjectSerialNumber;
     @Generated
     private MaterialListDTO materialRevisionMaterial;
     @Generated
@@ -98,19 +94,17 @@ public class ShipmentDTO implements Serializable {
      * @param version
      * @param creationDate
      * @param lastUpdate
-     * @param serialObjectSerialNumber
      * @param materialShortText
      */
     @Generated
     public ShipmentDTO(String orderNumber, LocalDate shipmentDate, long id, int version, LocalDateTime creationDate, LocalDateTime lastUpdate,
-            String serialObjectSerialNumber, String materialShortText) {
+            String materialShortText) {
         this.orderNumber = orderNumber;
         this.shipmentDate = shipmentDate;
         this.id = id;
         this.version = version;
         this.creationDate = creationDate;
         this.lastUpdate = lastUpdate;
-        this.serialObjectSerialNumber = serialObjectSerialNumber;
         this.materialShortText = materialShortText;
     }
 
@@ -288,22 +282,6 @@ public class ShipmentDTO implements Serializable {
     @Generated
     public void setSerialObject(SerialObjectListDTO serialObject) {
         this.serialObject = serialObject;
-    }
-
-    /**
-     * @return the serial number of the serial object
-     */
-    @Generated
-    public String getSerialObjectSerialNumber() {
-        return this.serialObjectSerialNumber;
-    }
-
-    /**
-     * @param serialObjectSerialNumber the serial number of the serial object to set
-     */
-    @Generated
-    public void setSerialObjectSerialNumber(String serialObjectSerialNumber) {
-        this.serialObjectSerialNumber = serialObjectSerialNumber;
     }
 
     /**

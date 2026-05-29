@@ -1,8 +1,8 @@
 package com.kontron.qdw.dto.serial;
 
-import java.time.*;
 import java.io.Serializable;
 import com.kontron.qdw.dto.material.*;
+import java.time.*;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
 
 public class SerialObjectDTO implements Serializable {
@@ -31,10 +31,6 @@ public class SerialObjectDTO implements Serializable {
     @Generated
     public static final String ATTR_TRACEBOM = "traceBom";
     @Generated
-    public static final String ATTR_PARENTOBJECTSERIALNUMBER = "parentObjectSerialNumber";
-    @Generated
-    public static final String ATTR_MATERIALMATERIALNUMBER = "materialMaterialNumber";
-    @Generated
     public static final String ATTR_MATERIALSAPNUMBER = "materialSapNumber";
     @Generated
     private String serialNumber;
@@ -58,10 +54,6 @@ public class SerialObjectDTO implements Serializable {
     private SerialObjectListDTO parentObject;
     @Generated
     private TraceBoMListDTO traceBom;
-    @Generated
-    private String parentObjectSerialNumber;
-    @Generated
-    private String materialMaterialNumber;
     @Generated
     private String materialSapNumber;
 
@@ -91,14 +83,11 @@ public class SerialObjectDTO implements Serializable {
      * @param version
      * @param creationDate
      * @param lastUpdate
-     * @param parentObjectSerialNumber
-     * @param materialMaterialNumber
      * @param materialSapNumber
      */
     @Generated
     public SerialObjectDTO(String serialNumber, LocalDate assemblyDate, String customerSerialNumber, String productionOrderNumber, long id,
-            int version, LocalDateTime creationDate, LocalDateTime lastUpdate, String parentObjectSerialNumber, String materialMaterialNumber,
-            String materialSapNumber) {
+            int version, LocalDateTime creationDate, LocalDateTime lastUpdate, String materialSapNumber) {
         this.serialNumber = serialNumber;
         this.assemblyDate = assemblyDate;
         this.customerSerialNumber = customerSerialNumber;
@@ -107,8 +96,6 @@ public class SerialObjectDTO implements Serializable {
         this.version = version;
         this.creationDate = creationDate;
         this.lastUpdate = lastUpdate;
-        this.parentObjectSerialNumber = parentObjectSerialNumber;
-        this.materialMaterialNumber = materialMaterialNumber;
         this.materialSapNumber = materialSapNumber;
     }
 
@@ -286,38 +273,6 @@ public class SerialObjectDTO implements Serializable {
     @Generated
     public void setTraceBom(TraceBoMListDTO traceBom) {
         this.traceBom = traceBom;
-    }
-
-    /**
-     * @return the serial number of the serial object
-     */
-    @Generated
-    public String getParentObjectSerialNumber() {
-        return this.parentObjectSerialNumber;
-    }
-
-    /**
-     * @param parentObjectSerialNumber the serial number of the serial object to set
-     */
-    @Generated
-    public void setParentObjectSerialNumber(String parentObjectSerialNumber) {
-        this.parentObjectSerialNumber = parentObjectSerialNumber;
-    }
-
-    /**
-     * @return the material number of the material
-     */
-    @Generated
-    public String getMaterialMaterialNumber() {
-        return this.materialMaterialNumber;
-    }
-
-    /**
-     * @param materialMaterialNumber the material number of the material to set
-     */
-    @Generated
-    public void setMaterialMaterialNumber(String materialMaterialNumber) {
-        this.materialMaterialNumber = materialMaterialNumber;
     }
 
     /**

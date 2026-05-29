@@ -168,6 +168,14 @@ public class ViewArrivalDialog implements Serializable {
      * @return the navigation target
      */
     @Generated
+    public String openViewSerialObjectDialogLink() {
+        return ViewSerialObjectDialog.PAGE_INIT_URL + arrival.getSerialObject().getId();
+    }
+
+    /**
+     * @return the navigation target
+     */
+    @Generated
     public String openViewMaterialDialogLink() {
         return ViewMaterialDialog.PAGE_INIT_URL + arrival.getMaterialRevisionMaterial().getId();
     }
