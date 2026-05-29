@@ -3024,6 +3024,7 @@
     <actions name="actionCreate" description="Create new supplier" targetForm="/174" roles="/0/@roles.0"/>
     <actions name="actionUpdate" description="Edit supplier" targetForm="/178" roles="/0/@roles.0" type="UPDATE"/>
     <actions name="actionCopy" description="Create copy of selected supplier" boundaryMethod="/177/@boundaryMethods.6" type="COPY"/>
+    <actions name="actionGet" description="View supplier" targetForm="/311" roles="/0/@roles.0" type="READ"/>
     <domainObject href="package-base.xmi#//@domainObjects.13"/>
   </net.sourceforge.jbizmo.model.client:Form>
   <net.sourceforge.jbizmo.model.client:FormPanel name="SupplierPanel" form="/182" formTable="/184" dTO="/185" boundaryMethod="/177/@boundaryMethods.4"/>
@@ -8427,7 +8428,7 @@
       <associationList xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-mv.xmi#//@domainObjects.2/@associations.1"/>
     </attributes>
   </net.sourceforge.jbizmo.model.dto:DTOBean>
-  <net.sourceforge.jbizmo.model.client:FormGroup name="Service" groupOrder="5" forms="/397 /403 /548 /415 /409 /559" panels="/552" roles="/0/@roles.0 /0/@roles.1" project="/0">
+  <net.sourceforge.jbizmo.model.client:FormGroup name="Service" groupOrder="5" forms="/397 /403 /548 /559 /415 /409" panels="/552" roles="/0/@roles.0 /0/@roles.1" project="/0">
     <childGroups name="Master data" parentGroup="/396" forms="/450 /465 /476 /487 /510 /525 /540 /446 /461 /479 /490 /506 /521 /536 /453 /468 /483 /498 /513 /528 /543 /442 /457 /472 /494 /502 /517 /532" roles="/0/@roles.0"/>
   </net.sourceforge.jbizmo.model.client:FormGroup>
   <net.sourceforge.jbizmo.model.client:Form name="MaterializedServiceMessageView" formType="SEARCHABLE_VIEW" formGroup="/396" title="Materialized service orders" formPanels="/398" dTO="/400" roles="/0/@roles.0 /0/@roles.1" boundaryMethod="/401/@boundaryMethods.0">

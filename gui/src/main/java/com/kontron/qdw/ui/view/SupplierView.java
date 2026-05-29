@@ -226,6 +226,18 @@ public class SupplierView extends SuperView implements Serializable {
         fetchSuppliers();
     }
 
+
+
+    @Customized
+    public List<String> onCompleteSupplierName(String query) {
+        return OnCompleteHelper.onCompleteSupplierName(supplierService, query);
+    }
+
+    @Customized
+    public List<String> onCompleteCountryName(String query) {
+        return OnCompleteHelper.onCompleteCountryName(countryService, query);
+    }
+
     /**
      * @return the list of elements
      */
@@ -253,11 +265,15 @@ public class SupplierView extends SuperView implements Serializable {
     /**
      * Event that will be fired if user performs a double-click on a grid row
      */
-    @Generated
+    @Customized
     public void onDoubleClick() {
         logger.debug("Handle double-click event");
 
-        userSession.redirectTo(getCurrentPageURL(), openEditSupplierDialog());
+        if (userSession.redirectTo(getCurrentPageURL(), openEditSupplierDialog())) {
+            return;
+        }
+
+        userSession.redirectTo(getCurrentPageURL(), openViewSupplierDialog());
     }
 
     /**
@@ -333,6 +349,21 @@ public class SupplierView extends SuperView implements Serializable {
 
         if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR)) {
             url = EditSupplierDialog.PAGE_INIT_URL + java.net.URLEncoder.encode(selectedObject.getCode(), java.nio.charset.StandardCharsets.UTF_8);
+        }
+
+        return url;
+    }
+
+    /**
+     * Open dialog
+     * @return the navigation target
+     */
+    @Generated
+    public String openViewSupplierDialog() {
+        var url = "";
+
+        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR)) {
+            url = ViewSupplierDialog.PAGE_INIT_URL + java.net.URLEncoder.encode(selectedObject.getCode(), java.nio.charset.StandardCharsets.UTF_8);
         }
 
         return url;
@@ -445,16 +476,6 @@ public class SupplierView extends SuperView implements Serializable {
         finally {
             postSearch();
         }
-    }
-
-    /**
-     * Callback method for auto-complete field
-     * @param query the filter criterion inserted by the user
-     * @return a list containing all proposals
-     */
-    @Customized
-    public List<String> onCompleteCountryName(String query) {
-        return OnCompleteHelper.onCompleteCountryName(countryService, query);
     }
 
     /**

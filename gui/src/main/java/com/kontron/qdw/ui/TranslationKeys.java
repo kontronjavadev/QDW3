@@ -709,6 +709,7 @@ public interface TranslationKeys {
     String LBL_ATTR_CUSTOMERSERIALNUMBER_TOOLTIP = "lbl_attr_customerserialnumber_tooltip";
     String LBL_ATTR_DEFECTCOMPONENT_TOOLTIP = "lbl_attr_defectcomponent_tooltip";
     String LBL_ATTR_DELIVERYNOTENUMBER_TOOLTIP = "lbl_attr_deliverynotenumber_tooltip";
+    String LBL_ATTR_DOCUMENTDATE_TOOLTIP = "lbl_attr_documentdate_tooltip";
     String LBL_ATTR_EPIDEMICFAILURE_TOOLTIP = "lbl_attr_epidemicfailure_tooltip";
     String LBL_ATTR_ILLEGALTRACEBOMITEM_DATECODE = "lbl_attr_illegaltracebomitem_datecode";
     String LBL_ATTR_ILLEGALTRACEBOMITEM_MANUFACTURER = "lbl_attr_illegaltracebomitem_manufacturer";
