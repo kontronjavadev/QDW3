@@ -11,6 +11,7 @@ import java.util.*;
 import jakarta.faces.view.*;
 import static com.kontron.qdw.ui.UserSession.*;
 import com.kontron.qdw.ui.*;
+import com.kontron.qdw.ui.panel.*;
 import jakarta.inject.*;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
 import java.io.*;
@@ -36,6 +37,10 @@ public class ViewServiceMessageDialog implements Serializable {
     private String formTitle = "";
     @Generated
     private transient ResourceBundle bundle;
+    @Generated
+    private final ServiceMessageFailureMaterialsPanel panFailureMaterials;
+    @Generated
+    private final ServiceMessageX2MessagesPanel panX2Messages;
 
     /**
      * Default constructor
@@ -44,18 +49,25 @@ public class ViewServiceMessageDialog implements Serializable {
     public ViewServiceMessageDialog() {
         this.serviceMessageService = null;
         this.userSession = null;
+        this.panFailureMaterials = null;
+        this.panX2Messages = null;
     }
 
     /**
      * Constructor for injecting all required beans
      * @param serviceMessageService
      * @param userSession
+     * @param panFailureMaterials
+     * @param panX2Messages
      */
     @Inject
     @Generated
-    public ViewServiceMessageDialog(ServiceMessageBoundaryService serviceMessageService, UserSession userSession) {
+    public ViewServiceMessageDialog(ServiceMessageBoundaryService serviceMessageService, UserSession userSession,
+            ServiceMessageFailureMaterialsPanel panFailureMaterials, ServiceMessageX2MessagesPanel panX2Messages) {
         this.serviceMessageService = serviceMessageService;
         this.userSession = userSession;
+        this.panFailureMaterials = panFailureMaterials;
+        this.panX2Messages = panX2Messages;
     }
 
     /**
@@ -125,6 +137,17 @@ public class ViewServiceMessageDialog implements Serializable {
 
             serviceMessage = serviceMessageService.findServiceMessageById(selectedObjectId);
 
+            panFailureMaterials.setSelectedObjectId(selectedObjectId);
+            panFailureMaterials.setCurrentPageURL(ViewServiceMessageDialog.PAGE_INIT_URL + selectedObjectId);
+            panFailureMaterials.initView();
+
+
+            panX2Messages.setSelectedObjectId(selectedObjectId);
+            panX2Messages.setCurrentPageURL(ViewServiceMessageDialog.PAGE_INIT_URL + selectedObjectId);
+            panX2Messages.setReadOnly(true);
+            panX2Messages.initView();
+
+
             formTitle = bundle.getString(FORM_VIEWSERVICEMESSAGEDIALOG_TITLE) + " '" + selectedObjectId + "'";
 
             logger.debug("Dialog initialization finished");
@@ -186,6 +209,60 @@ public class ViewServiceMessageDialog implements Serializable {
     @Generated
     public String openViewMaterialRevisionDialogLink() {
         return ViewMaterialRevisionDialog.PAGE_INIT_URL + serviceMessage.getMaterialRevision().getId();
+    }
+
+    /**
+     * @return the navigation target
+     */
+    @Generated
+    public String openViewRepairErrorCodeDialogLink() {
+        return ViewRepairErrorCodeDialog.PAGE_INIT_URL
+                + java.net.URLEncoder.encode(serviceMessage.getRepairErrorCode().getCode(), java.nio.charset.StandardCharsets.UTF_8);
+    }
+
+    /**
+     * @return the navigation target
+     */
+    @Generated
+    public String openViewRepairStateDialogLink() {
+        return ViewRepairStateDialog.PAGE_INIT_URL
+                + java.net.URLEncoder.encode(serviceMessage.getRepairState().getCode(), java.nio.charset.StandardCharsets.UTF_8);
+    }
+
+    /**
+     * @return the navigation target
+     */
+    @Generated
+    public String openViewRepairTaskDialogLink() {
+        return ViewRepairTaskDialog.PAGE_INIT_URL
+                + java.net.URLEncoder.encode(serviceMessage.getRepairTask().getCode(), java.nio.charset.StandardCharsets.UTF_8);
+    }
+
+    /**
+     * @return the navigation target
+     */
+    @Generated
+    public String openViewRepairLocationDialogLink() {
+        return ViewRepairLocationDialog.PAGE_INIT_URL
+                + java.net.URLEncoder.encode(serviceMessage.getRepairLocation().getCode(), java.nio.charset.StandardCharsets.UTF_8);
+    }
+
+    /**
+     * @return the navigation target
+     */
+    @Generated
+    public String openViewRMATypeDialogLink() {
+        return ViewRMATypeDialog.PAGE_INIT_URL
+                + java.net.URLEncoder.encode(serviceMessage.getrMAType().getCode(), java.nio.charset.StandardCharsets.UTF_8);
+    }
+
+    /**
+     * @return the navigation target
+     */
+    @Generated
+    public String openViewRepairServiceDialogLink() {
+        return ViewRepairServiceDialog.PAGE_INIT_URL
+                + java.net.URLEncoder.encode(serviceMessage.getRepairService().getCode(), java.nio.charset.StandardCharsets.UTF_8);
     }
 
     /**

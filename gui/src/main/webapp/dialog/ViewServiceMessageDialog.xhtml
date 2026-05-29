@@ -47,10 +47,10 @@
 		<h:outputLabel value="#{i18n.lbl_assoc_servicemessage_serialobject}:" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY')}" for="cboSerialObject" styleClass="label-field-optional"/>
 		<p:commandLink rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY')}" id="cboSerialObject" style="font-weight: bold;color: #0063ac" action="#{viewServiceMessageDialog.openViewSerialObjectDialogLink}">
 			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{viewServiceMessageDialog.currentPageURL}"/>
-			<h:outputText value="#{viewServiceMessageDialog.serviceMessage.serialObject.serialNumber}"/>
+			<h:outputText value="#{viewServiceMessageDialog.serviceMessage.serialObject.id}"/>
 		</p:commandLink>
 		<h:outputLabel value="#{i18n.lbl_assoc_servicemessage_serialobject}:" rendered="#{!userSession.checkAuthorizationString('ADMINISTRATOR;READONLY')}" for="cboSerialObjectAltLbl" styleClass="label-field-optional"/>
-		<h:outputText styleClass="label-field-value" rendered="#{!userSession.checkAuthorizationString('ADMINISTRATOR;READONLY')}" id="cboSerialObjectAltLbl" value="#{viewServiceMessageDialog.serviceMessage.serialObject.serialNumber}"/>
+		<h:outputText styleClass="label-field-value" rendered="#{!userSession.checkAuthorizationString('ADMINISTRATOR;READONLY')}" id="cboSerialObjectAltLbl" value="#{viewServiceMessageDialog.serviceMessage.serialObject.id}"/>
 		<p:tooltip for="cboSerialObject" value=""/>
 
 		<h:outputLabel value="#{i18n.lbl_assoc_materialrevision_material}:" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;SUPERUSER')}" for="cboMaterialRevisionMaterial" styleClass="label-field-optional"/>
@@ -70,38 +70,68 @@
 		<h:outputLabel value="#{i18n.field_viewservicemessagedialog_cbomaterialrevision}:" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;SUPERUSER')}" for="cboMaterialRevision" styleClass="label-field-optional"/>
 		<p:commandLink rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;SUPERUSER')}" id="cboMaterialRevision" style="font-weight: bold;color: #0063ac" action="#{viewServiceMessageDialog.openViewMaterialRevisionDialogLink}">
 			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{viewServiceMessageDialog.currentPageURL}"/>
-			<h:outputText value="#{viewServiceMessageDialog.serviceMessage.materialRevision.revisionNumber}"/>
+			<h:outputText value="#{viewServiceMessageDialog.serviceMessage.materialRevision.id}"/>
 		</p:commandLink>
 		<h:outputLabel value="#{i18n.field_viewservicemessagedialog_cbomaterialrevision}:" rendered="#{!userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;SUPERUSER')}" for="cboMaterialRevisionAltLbl" styleClass="label-field-optional"/>
-		<h:outputText styleClass="label-field-value" rendered="#{!userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;SUPERUSER')}" id="cboMaterialRevisionAltLbl" value="#{viewServiceMessageDialog.serviceMessage.materialRevision.revisionNumber}"/>
+		<h:outputText styleClass="label-field-value" rendered="#{!userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;SUPERUSER')}" id="cboMaterialRevisionAltLbl" value="#{viewServiceMessageDialog.serviceMessage.materialRevision.id}"/>
 		<p:tooltip for="cboMaterialRevision" value=""/>
 
 		<h:outputLabel value="#{i18n.lbl_assoc_servicemessage_plant}:" for="cboPlant" styleClass="label-field-optional"/>
 		<h:outputText styleClass="label-field-value" id="cboPlant" value="#{viewServiceMessageDialog.serviceMessage.plant.code}"/>
 		<p:tooltip for="cboPlant" value=""/>
 
-		<h:outputLabel value="#{i18n.field_viewservicemessagedialog_cborepairerrorcode}:" for="cboRepairErrorCode" styleClass="label-field-optional"/>
-		<h:outputText styleClass="label-field-value" id="cboRepairErrorCode" value="#{viewServiceMessageDialog.serviceMessage.repairErrorCode.name}"/>
+		<h:outputLabel value="#{i18n.field_viewservicemessagedialog_cborepairerrorcode}:" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR')}" for="cboRepairErrorCode" styleClass="label-field-optional"/>
+		<p:commandLink rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR')}" id="cboRepairErrorCode" style="font-weight: bold;color: #0063ac" action="#{viewServiceMessageDialog.openViewRepairErrorCodeDialogLink}">
+			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{viewServiceMessageDialog.currentPageURL}"/>
+			<h:outputText value="#{viewServiceMessageDialog.serviceMessage.repairErrorCode.name}"/>
+		</p:commandLink>
+		<h:outputLabel value="#{i18n.field_viewservicemessagedialog_cborepairerrorcode}:" rendered="#{!userSession.checkAuthorizationString('ADMINISTRATOR')}" for="cboRepairErrorCodeAltLbl" styleClass="label-field-optional"/>
+		<h:outputText styleClass="label-field-value" rendered="#{!userSession.checkAuthorizationString('ADMINISTRATOR')}" id="cboRepairErrorCodeAltLbl" value="#{viewServiceMessageDialog.serviceMessage.repairErrorCode.name}"/>
 		<p:tooltip for="cboRepairErrorCode" value=""/>
 
-		<h:outputLabel value="#{i18n.lbl_assoc_servicemessage_repairstate}:" for="cboRepairState" styleClass="label-field-optional"/>
-		<h:outputText styleClass="label-field-value" id="cboRepairState" value="#{viewServiceMessageDialog.serviceMessage.repairState.name}"/>
+		<h:outputLabel value="#{i18n.lbl_assoc_servicemessage_repairstate}:" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR')}" for="cboRepairState" styleClass="label-field-optional"/>
+		<p:commandLink rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR')}" id="cboRepairState" style="font-weight: bold;color: #0063ac" action="#{viewServiceMessageDialog.openViewRepairStateDialogLink}">
+			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{viewServiceMessageDialog.currentPageURL}"/>
+			<h:outputText value="#{viewServiceMessageDialog.serviceMessage.repairState.name}"/>
+		</p:commandLink>
+		<h:outputLabel value="#{i18n.lbl_assoc_servicemessage_repairstate}:" rendered="#{!userSession.checkAuthorizationString('ADMINISTRATOR')}" for="cboRepairStateAltLbl" styleClass="label-field-optional"/>
+		<h:outputText styleClass="label-field-value" rendered="#{!userSession.checkAuthorizationString('ADMINISTRATOR')}" id="cboRepairStateAltLbl" value="#{viewServiceMessageDialog.serviceMessage.repairState.name}"/>
 		<p:tooltip for="cboRepairState" value=""/>
 
-		<h:outputLabel value="#{i18n.lbl_assoc_servicemessage_repairtask}:" for="cboRepairTask" styleClass="label-field-optional"/>
-		<h:outputText styleClass="label-field-value" id="cboRepairTask" value="#{viewServiceMessageDialog.serviceMessage.repairTask.code}"/>
+		<h:outputLabel value="#{i18n.lbl_assoc_servicemessage_repairtask}:" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR')}" for="cboRepairTask" styleClass="label-field-optional"/>
+		<p:commandLink rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR')}" id="cboRepairTask" style="font-weight: bold;color: #0063ac" action="#{viewServiceMessageDialog.openViewRepairTaskDialogLink}">
+			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{viewServiceMessageDialog.currentPageURL}"/>
+			<h:outputText value="#{viewServiceMessageDialog.serviceMessage.repairTask.code}"/>
+		</p:commandLink>
+		<h:outputLabel value="#{i18n.lbl_assoc_servicemessage_repairtask}:" rendered="#{!userSession.checkAuthorizationString('ADMINISTRATOR')}" for="cboRepairTaskAltLbl" styleClass="label-field-optional"/>
+		<h:outputText styleClass="label-field-value" rendered="#{!userSession.checkAuthorizationString('ADMINISTRATOR')}" id="cboRepairTaskAltLbl" value="#{viewServiceMessageDialog.serviceMessage.repairTask.code}"/>
 		<p:tooltip for="cboRepairTask" value=""/>
 
-		<h:outputLabel value="#{i18n.lbl_assoc_servicemessage_repairlocation}:" for="cboRepairLocation" styleClass="label-field-optional"/>
-		<h:outputText styleClass="label-field-value" id="cboRepairLocation" value="#{viewServiceMessageDialog.serviceMessage.repairLocation.code}"/>
+		<h:outputLabel value="#{i18n.lbl_assoc_servicemessage_repairlocation}:" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR')}" for="cboRepairLocation" styleClass="label-field-optional"/>
+		<p:commandLink rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR')}" id="cboRepairLocation" style="font-weight: bold;color: #0063ac" action="#{viewServiceMessageDialog.openViewRepairLocationDialogLink}">
+			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{viewServiceMessageDialog.currentPageURL}"/>
+			<h:outputText value="#{viewServiceMessageDialog.serviceMessage.repairLocation.code}"/>
+		</p:commandLink>
+		<h:outputLabel value="#{i18n.lbl_assoc_servicemessage_repairlocation}:" rendered="#{!userSession.checkAuthorizationString('ADMINISTRATOR')}" for="cboRepairLocationAltLbl" styleClass="label-field-optional"/>
+		<h:outputText styleClass="label-field-value" rendered="#{!userSession.checkAuthorizationString('ADMINISTRATOR')}" id="cboRepairLocationAltLbl" value="#{viewServiceMessageDialog.serviceMessage.repairLocation.code}"/>
 		<p:tooltip for="cboRepairLocation" value=""/>
 
-		<h:outputLabel value="#{i18n.field_viewservicemessagedialog_cbormatype}:" for="cboRMAType" styleClass="label-field-optional"/>
-		<h:outputText styleClass="label-field-value" id="cboRMAType" value="#{viewServiceMessageDialog.serviceMessage.rMAType.code}"/>
+		<h:outputLabel value="#{i18n.field_viewservicemessagedialog_cbormatype}:" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR')}" for="cboRMAType" styleClass="label-field-optional"/>
+		<p:commandLink rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR')}" id="cboRMAType" style="font-weight: bold;color: #0063ac" action="#{viewServiceMessageDialog.openViewRMATypeDialogLink}">
+			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{viewServiceMessageDialog.currentPageURL}"/>
+			<h:outputText value="#{viewServiceMessageDialog.serviceMessage.rMAType.code}"/>
+		</p:commandLink>
+		<h:outputLabel value="#{i18n.field_viewservicemessagedialog_cbormatype}:" rendered="#{!userSession.checkAuthorizationString('ADMINISTRATOR')}" for="cboRMATypeAltLbl" styleClass="label-field-optional"/>
+		<h:outputText styleClass="label-field-value" rendered="#{!userSession.checkAuthorizationString('ADMINISTRATOR')}" id="cboRMATypeAltLbl" value="#{viewServiceMessageDialog.serviceMessage.rMAType.code}"/>
 		<p:tooltip for="cboRMAType" value=""/>
 
-		<h:outputLabel value="#{i18n.lbl_assoc_servicemessage_repairservice}:" for="cboRepairService" styleClass="label-field-optional"/>
-		<h:outputText styleClass="label-field-value" id="cboRepairService" value="#{viewServiceMessageDialog.serviceMessage.repairService.name}"/>
+		<h:outputLabel value="#{i18n.lbl_assoc_servicemessage_repairservice}:" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR')}" for="cboRepairService" styleClass="label-field-optional"/>
+		<p:commandLink rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR')}" id="cboRepairService" style="font-weight: bold;color: #0063ac" action="#{viewServiceMessageDialog.openViewRepairServiceDialogLink}">
+			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{viewServiceMessageDialog.currentPageURL}"/>
+			<h:outputText value="#{viewServiceMessageDialog.serviceMessage.repairService.name}"/>
+		</p:commandLink>
+		<h:outputLabel value="#{i18n.lbl_assoc_servicemessage_repairservice}:" rendered="#{!userSession.checkAuthorizationString('ADMINISTRATOR')}" for="cboRepairServiceAltLbl" styleClass="label-field-optional"/>
+		<h:outputText styleClass="label-field-value" rendered="#{!userSession.checkAuthorizationString('ADMINISTRATOR')}" id="cboRepairServiceAltLbl" value="#{viewServiceMessageDialog.serviceMessage.repairService.name}"/>
 		<p:tooltip for="cboRepairService" value=""/>
 
 		<h:outputLabel value="#{i18n.field_viewservicemessagedialog_cboexternalsupplier}:" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR')}" for="cboExternalSupplier" styleClass="label-field-optional"/>
@@ -230,6 +260,20 @@
 		<p:inputTextarea style="width:200px;height:80px;" id="txtCustomerReport" value="#{viewServiceMessageDialog.serviceMessage.customerReport}" readonly="true">
 		</p:inputTextarea>
 		<p:tooltip for="txtCustomerReport" value=""/>
+
+	</h:panelGrid>
+	</p:tab>
+	<p:tab id="tabPanFailureMaterials" title="#{i18n.panel_viewservicemessagedialog_panfailurematerials_title}">
+	<h:panelGrid columns="1">
+
+		<ui:include src="panel/ServiceMessageFailureMaterialsPanel.xhtml"/>
+
+	</h:panelGrid>
+	</p:tab>
+	<p:tab id="tabPanX2Messages" title="#{i18n.panel_viewservicemessagedialog_panx2messages_title}">
+	<h:panelGrid columns="1">
+
+		<ui:include src="panel/ServiceMessageX2MessagesPanel.xhtml"/>
 
 	</h:panelGrid>
 	</p:tab>

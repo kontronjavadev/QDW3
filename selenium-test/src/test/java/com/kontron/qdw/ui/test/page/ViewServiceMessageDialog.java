@@ -80,11 +80,19 @@ public class ViewServiceMessageDialog extends AbstractPageObject {
     @Generated
     public static final String FIELD_ID_TXTCUSTOMERREPORT = "form:tabview1:txtCustomerReport";
     @Generated
+    public static final String TAB_PAGE_PANX2MESSAGES = "form:tabview1:tabPanX2Messages";
+    @Generated
     public static final String TAB_PAGE_PANADMINISTRATION = "form:tabview1:tabPanAdministration";
     @Generated
     public static final String TAB_PAGE_PANSERVICEMESSAGE = "form:tabview1:tabPanServiceMessage";
     @Generated
+    public static final String TAB_PAGE_PANFAILUREMATERIALS = "form:tabview1:tabPanFailureMaterials";
+    @Generated
     public static final String TAB_PAGE_PANCOMMENTS = "form:tabview1:tabPanComments";
+    @Generated
+    private final ServiceMessageFailureMaterialsPanel gridPanelFailureMaterials;
+    @Generated
+    private final ServiceMessageX2MessagesPanel gridPanelX2Messages;
 
     /**
      * Constructor
@@ -93,6 +101,25 @@ public class ViewServiceMessageDialog extends AbstractPageObject {
     @Generated
     public ViewServiceMessageDialog(SeleniumTestContext testContext) {
         super(testContext);
+
+        gridPanelFailureMaterials = new ServiceMessageFailureMaterialsPanel(testContext, "form:tabview1:gridServiceMessageFailureMaterialsPanel");
+        gridPanelX2Messages = new ServiceMessageX2MessagesPanel(testContext, "form:tabview1:gridServiceMessageX2MessagesPanel");
+    }
+
+    /**
+     * @return the grid panel that contains all materials of this service message
+     */
+    @Generated
+    public ServiceMessageFailureMaterialsPanel getGridPanelFailureMaterials() {
+        return gridPanelFailureMaterials;
+    }
+
+    /**
+     * @return the grid panel that contains all X2 messages of this service message
+     */
+    @Generated
+    public ServiceMessageX2MessagesPanel getGridPanelX2Messages() {
+        return gridPanelX2Messages;
     }
 
 }

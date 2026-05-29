@@ -8428,7 +8428,7 @@
       <associationList xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-mv.xmi#//@domainObjects.2/@associations.1"/>
     </attributes>
   </net.sourceforge.jbizmo.model.dto:DTOBean>
-  <net.sourceforge.jbizmo.model.client:FormGroup name="Service" groupOrder="5" forms="/397 /403 /548 /559 /415 /409" panels="/563 /552 /566" roles="/0/@roles.0 /0/@roles.1" project="/0">
+  <net.sourceforge.jbizmo.model.client:FormGroup name="Service" groupOrder="5" forms="/397 /403 /548 /559 /415 /409" panels="/563 /566 /552" roles="/0/@roles.0 /0/@roles.1" project="/0">
     <childGroups name="Master data" parentGroup="/396" forms="/450 /465 /476 /487 /510 /525 /540 /446 /461 /479 /490 /506 /521 /536 /453 /468 /483 /498 /513 /528 /543 /442 /457 /472 /494 /502 /517 /532" roles="/0/@roles.0"/>
   </net.sourceforge.jbizmo.model.client:FormGroup>
   <net.sourceforge.jbizmo.model.client:Form name="MaterializedServiceMessageView" formType="SEARCHABLE_VIEW" formGroup="/396" title="Materialized service orders" formPanels="/398" dTO="/400" roles="/0/@roles.0 /0/@roles.1" boundaryMethod="/401/@boundaryMethods.0">
@@ -9486,7 +9486,7 @@
       </methodParameters>
     </repositoryMethods>
   </net.sourceforge.jbizmo.model.repository:Repository>
-  <net.sourceforge.jbizmo.model.client:Form name="ViewServiceMessageDialog" formType="READONLY" formGroup="/396" title="View service order" formPanels="/416 /417 /418" dTO="/419" roles="/0/@roles.0 /0/@roles.1">
+  <net.sourceforge.jbizmo.model.client:Form name="ViewServiceMessageDialog" formType="READONLY" formGroup="/396" title="View service order" formPanels="/416 /417 /418 /571 /572" dTO="/419" roles="/0/@roles.0 /0/@roles.1">
     <actions name="actionGet" boundaryMethod="/407/@boundaryMethods.4" type="READ"/>
     <domainObject href="package-service.xmi#//@domainObjects.1"/>
   </net.sourceforge.jbizmo.model.client:Form>
@@ -9522,7 +9522,7 @@
     <fields name="txtRepairDescription" rowIndex="16" label="Repair description" spanCols="true" readonly="true" mandatory="false" fieldType="MULTI_LINE_TEXT" dTOAttribute="/419/@attributes.14"/>
     <fields name="txtRebuildFlag" rowIndex="17" visible="false" label="Rebuild flag" readonly="true" width="120" dTOAttribute="/419/@attributes.13"/>
   </net.sourceforge.jbizmo.model.client:FormPanel>
-  <net.sourceforge.jbizmo.model.client:FormPanel name="panAdministration" colIndex="3" label="Administration data" form="/415">
+  <net.sourceforge.jbizmo.model.client:FormPanel name="panAdministration" colIndex="5" label="Administration data" form="/415">
     <fields name="txtId" label="Transaction Id" readonly="true" width="120" dTOAttribute="/419/@attributes.16"/>
     <fields name="txtVersion" rowIndex="2" label="Version" readonly="true" width="120" dTOAttribute="/419/@attributes.17"/>
     <fields name="txtCreationDate" rowIndex="3" label="Creation date" readonly="true" fieldType="DATE_TIME" width="120" dTOAttribute="/419/@attributes.18"/>
@@ -12369,4 +12369,6 @@
       </methodParameters>
     </repositoryMethods>
   </net.sourceforge.jbizmo.model.repository:Repository>
+  <net.sourceforge.jbizmo.model.client:FormPanel name="panFailureMaterials" colIndex="3" label="Failure materials" form="/415" basePanel="/563"/>
+  <net.sourceforge.jbizmo.model.client:FormPanel name="panX2Messages" colIndex="4" label="X2 notifications" form="/415" basePanel="/566"/>
 </xmi:XMI>
