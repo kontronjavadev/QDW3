@@ -132,10 +132,10 @@
 
 <!--Kontextmenü mit Möglichkeit, eine Zelle oder eine Zeile zu kopieren -->
 
-	<h:inputHidden id="cellText" value="#{serviceMessageFailureMaterialsPanel.cellText}" />
-	<h:inputHidden id="rowCsv" value="#{serviceMessageFailureMaterialsPanel.rowCsv}" />
+	<h:inputHidden id="failmatcellText" value="#{serviceMessageFailureMaterialsPanel.cellText}" />
+	<h:inputHidden id="failmatrowCsv" value="#{serviceMessageFailureMaterialsPanel.rowCsv}" />
 
-	<p:contextMenu for="gridServiceMessageFailureMaterialsPanel" beforeShow="updateContextData(event)" >
+	<p:contextMenu for="gridServiceMessageFailureMaterialsPanel" beforeShow="updateContextData(event, 'form:tabview1', 'failmat')" >
 		<p:menuitem value="#{i18n.action_view}" ajax="true" icon="pi pi-file" id="gridServiceMessageFailureMaterialsPanel_mniView" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;SUPERUSER')}" action="#{serviceMessageFailureMaterialsPanel.openViewMaterialDialog}">
 			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{serviceMessageFailureMaterialsPanel.currentPageURL}"/>
 		</p:menuitem>
