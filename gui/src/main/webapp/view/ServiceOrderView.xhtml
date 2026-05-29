@@ -297,9 +297,10 @@
 		</p:column>
 
 		<p:column sortBy="#{serviceOrderViewItem.documentDate}" width="80" 
-			rendered="#{serviceOrderView.searchObject.searchFields[2].visible}" displayPriority="#{serviceOrderView.searchObject.searchFields[2].colOrder}" >
+			rendered="#{serviceOrderView.searchObject.searchFields[2].visible}" displayPriority="#{serviceOrderView.searchObject.searchFields[2].colOrder}" 
+			exportHeaderValue="#{i18n.lbl_attr_documentdate_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_serviceorderview_documentdate}"/>
+				<h:outputText value="#{i18n.col_serviceorderview_documentdate}" title="#{i18n.lbl_attr_documentdate_tooltip}" styleClass="pf-tooltip-target" />
 			</f:facet>
 			<h:outputText value="#{serviceOrderViewItem.documentDate}">
 				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateConverter"/>
@@ -309,39 +310,39 @@
 		</p:column>
 
 		<p:column sortBy="#{serviceOrderViewItem.customerName}" width="200" 
-			rendered="#{serviceOrderView.searchObject.searchFields[3].visible}" displayPriority="#{serviceOrderView.searchObject.searchFields[3].colOrder}" >
+			rendered="#{serviceOrderView.searchObject.searchFields[3].visible}" displayPriority="#{serviceOrderView.searchObject.searchFields[3].colOrder}" 
+			exportValue="#{serviceOrderViewItem.customerName}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_serviceorderview_customername}"/>
 			</f:facet>
-			<h:outputText value="#{serviceOrderViewItem.customerName}">
-			</h:outputText>
+			<h:outputText value="#{serviceOrderViewItem.customerName}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{serviceOrderViewItem.supplierName}" width="200" 
-			rendered="#{serviceOrderView.searchObject.searchFields[4].visible}" displayPriority="#{serviceOrderView.searchObject.searchFields[4].colOrder}" >
+			rendered="#{serviceOrderView.searchObject.searchFields[4].visible}" displayPriority="#{serviceOrderView.searchObject.searchFields[4].colOrder}" 
+			exportValue="#{serviceOrderViewItem.supplierName}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_serviceorderview_suppliername}"/>
 			</f:facet>
-			<h:outputText value="#{serviceOrderViewItem.supplierName}">
-			</h:outputText>
+			<h:outputText value="#{serviceOrderViewItem.supplierName}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{serviceOrderViewItem.shortText}" width="150" 
-			rendered="#{serviceOrderView.searchObject.searchFields[5].visible}" displayPriority="#{serviceOrderView.searchObject.searchFields[5].colOrder}" >
+			rendered="#{serviceOrderView.searchObject.searchFields[5].visible}" displayPriority="#{serviceOrderView.searchObject.searchFields[5].colOrder}" 
+			exportValue="#{serviceOrderViewItem.shortText}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_abstractfunctionalactiveentity_shorttext}"/>
 			</f:facet>
-			<h:outputText value="#{serviceOrderViewItem.shortText}">
-			</h:outputText>
+			<h:outputText value="#{serviceOrderViewItem.shortText}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{serviceOrderViewItem.comment}" width="200" 
-			rendered="#{serviceOrderView.searchObject.searchFields[6].visible}" displayPriority="#{serviceOrderView.searchObject.searchFields[6].colOrder}" >
+			rendered="#{serviceOrderView.searchObject.searchFields[6].visible}" displayPriority="#{serviceOrderView.searchObject.searchFields[6].colOrder}" 
+			exportValue="#{serviceOrderViewItem.comment}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_abstractfunctionalactiveentity_comment}"/>
 			</f:facet>
-			<h:outputText value="#{serviceOrderViewItem.comment}">
-			</h:outputText>
+			<h:outputText value="#{serviceOrderViewItem.comment}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{serviceOrderViewItem.active}" width="70" 
