@@ -11,6 +11,7 @@ import java.util.*;
 import jakarta.faces.view.*;
 import static com.kontron.qdw.ui.UserSession.*;
 import com.kontron.qdw.ui.*;
+import com.kontron.qdw.ui.dialog.ViewX2MessageDialog;
 import com.kontron.qdw.ui.view.util.CopyClipboard;
 
 import jakarta.inject.*;
@@ -145,7 +146,9 @@ public class ServiceMessageX2MessagesPanel extends CopyClipboard implements Seri
      */
     @Generated
     public void onX2MessagesGridDoubleClick() {
-        // No appropriate form found!
+        logger.debug("Handle double-click event");
+
+        userSession.redirectTo(getCurrentPageURL(), openViewX2MessageDialog());
     }
 
     /**
@@ -187,6 +190,20 @@ public class ServiceMessageX2MessagesPanel extends CopyClipboard implements Seri
 
         fetchX2Messages();
         return "";
+    }
+
+    /**
+     * Open dialog
+     * @return the navigation target
+     */
+    @Generated
+    public String openViewX2MessageDialog() {
+        var url = "";
+
+        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY))
+            url = ViewX2MessageDialog.PAGE_INIT_URL + selItemOfX2Messages.getId();
+
+        return url;
     }
 
     /**

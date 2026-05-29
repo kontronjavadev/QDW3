@@ -186,6 +186,9 @@
 	<p:contextMenu for="gridServiceMessageX2MessagesPanel" beforeShow="updateContextData(event, 'form:tabview1', 'x2msg')" >
 		<p:menuitem value="#{i18n.action_delete}" ajax="true" icon="pi pi-trash" id="gridServiceMessageX2MessagesPanel_mniDelete" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR') and not serviceMessageX2MessagesPanel.readOnly}" onclick="PF('deleteConfirmX2Messages').show()"/>
 		<p:menuitem value="#{i18n.action_copy}" ajax="true" icon="pi pi-copy" id="gridServiceMessageX2MessagesPanel_mniCopy" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR') and not serviceMessageX2MessagesPanel.readOnly}" onclick="PF('copyConfirmX2Messages').show()"/>
+		<p:menuitem value="#{i18n.action_view}" ajax="true" icon="pi pi-file" id="gridServiceMessageX2MessagesPanel_mniView" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY')}" action="#{serviceMessageX2MessagesPanel.openViewX2MessageDialog}">
+			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{serviceMessageX2MessagesPanel.currentPageURL}"/>
+		</p:menuitem>
 		<p:menuitem value="#{i18n.action_refresh}" ajax="false" type="push" icon="pi pi-refresh" id="gridServiceMessageX2MessagesPanel_mniRefresh" actionListener="#{serviceMessageX2MessagesPanel.fetchX2Messages}"/>
 
 		<p:separator/>

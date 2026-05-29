@@ -4300,7 +4300,7 @@
   <net.sourceforge.jbizmo.model.java:Namespace name="serial" parent="/4" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="service" parent="/2" javaTypes="/408 /414 /429 /431 /433 /435 /437 /439 /441 /570" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="service" parent="/1" javaTypes="/407 /413 /428 /430 /432 /434 /436 /438 /440 /569" project="/0"/>
-  <net.sourceforge.jbizmo.model.java:Namespace name="service" parent="/3" javaTypes="/452 /445 /423 /456 /449 /467 /460 /424 /471 /464 /478 /475 /427 /486 /482 /489 /497 /422 /501 /493 /512 /505 /426 /516 /509 /527 /520 /425 /531 /524 /542 /535 /420 /546 /539 /419 /406 /412 /421 /547 /551 /554 /562 /568" project="/0"/>
+  <net.sourceforge.jbizmo.model.java:Namespace name="service" parent="/3" javaTypes="/452 /445 /423 /456 /449 /467 /460 /424 /471 /464 /478 /475 /427 /486 /482 /489 /497 /422 /501 /493 /512 /505 /426 /516 /509 /527 /520 /425 /531 /524 /542 /535 /420 /546 /539 /419 /406 /412 /421 /547 /551 /554 /562 /568 /577 /576" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="service" parent="/4" project="/0"/>
   <net.sourceforge.jbizmo.model.client:Form name="AggregatedArrivalView" formType="SEARCHABLE_VIEW" formGroup="/247" title="Aggregated arrivals" formPanels="/261" dTO="/263" roles="/0/@roles.0 /0/@roles.1" boundaryMethod="/264/@boundaryMethods.0">
     <actions name="actionDelete" description="Delete selected aggregated arrival" boundaryMethod="/264/@boundaryMethods.2" type="DELETE"/>
@@ -8428,7 +8428,7 @@
       <associationList xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-mv.xmi#//@domainObjects.2/@associations.1"/>
     </attributes>
   </net.sourceforge.jbizmo.model.dto:DTOBean>
-  <net.sourceforge.jbizmo.model.client:FormGroup name="Service" groupOrder="5" forms="/397 /403 /548 /559 /415 /409" panels="/563 /566 /552" roles="/0/@roles.0 /0/@roles.1" project="/0">
+  <net.sourceforge.jbizmo.model.client:FormGroup name="Service" groupOrder="5" forms="/397 /403 /548 /559 /415 /409 /573" panels="/563 /566 /552" roles="/0/@roles.0 /0/@roles.1" project="/0">
     <childGroups name="Master data" parentGroup="/396" forms="/450 /465 /476 /487 /510 /525 /540 /446 /461 /479 /490 /506 /521 /536 /453 /468 /483 /498 /513 /528 /543 /442 /457 /472 /494 /502 /517 /532" roles="/0/@roles.0"/>
   </net.sourceforge.jbizmo.model.client:FormGroup>
   <net.sourceforge.jbizmo.model.client:Form name="MaterializedServiceMessageView" formType="SEARCHABLE_VIEW" formGroup="/396" title="Materialized service orders" formPanels="/398" dTO="/400" roles="/0/@roles.0 /0/@roles.1" boundaryMethod="/401/@boundaryMethods.0">
@@ -9089,6 +9089,9 @@
     </boundaryMethods>
     <boundaryMethods name="getX2MessagesOfServiceMessage" comment="Get all X2 messages of a given service message" returnType="/568" returnTypeModifier="List" queryStatement="from ServiceMessage x join x.x2Messages a left join a.defectMaterial b left join a.faultAnalysis c left join a.materialRevision d left join a.repairErrorCode e left join a.repairState f left join a.repairTask g left join a.serialObject h left join a.serviceMessage i left join d.material p" customStatement="" methodType="FIND_BY_PARENT" serviceMethod="/408/@repositoryMethods.11">
       <methodParameters name="id" type="/0/@allSupportedTypes.2"/>
+    </boundaryMethods>
+    <boundaryMethods name="findServiceMessages" comment="Search for service message objects" returnType="/577" returnTypeModifier="List" queryStatement="from ServiceMessage a" customStatement="" methodType="SEARCH_BY_FILTER" serviceMethod="/408/@repositoryMethods.0">
+      <methodParameters name="filter" type="/0/@allSupportedTypes.12"/>
     </boundaryMethods>
   </net.sourceforge.jbizmo.model.boundary:BoundaryBean>
   <net.sourceforge.jbizmo.model.repository:Repository name="ServiceMessageRepository" comment="Create, read, update and delete services for service message objects." namespace="/256">
@@ -12086,6 +12089,7 @@
   <net.sourceforge.jbizmo.model.client:FormPanel name="ServiceMessageX2MessagesPanel" formGroup="/396" label="X2 messages of a service message" formTable="/567" dTO="/568" boundaryMethod="/407/@boundaryMethods.8">
     <actions name="actionDelete" description="Delete selected X2 message" boundaryMethod="/569/@boundaryMethods.0" roles="/0/@roles.0" type="DELETE"/>
     <actions name="actionCopy" description="Create copy of selected X2 message" boundaryMethod="/569/@boundaryMethods.1" roles="/0/@roles.0" type="COPY"/>
+    <actions name="actionGet" description="View X2 message" targetForm="/573" roles="/0/@roles.0 /0/@roles.1" type="READ"/>
     <association xsi:type="net.sourceforge.net.model.domain:OneToManyAssociation" href="package-service.xmi#//@domainObjects.1/@associations.13"/>
   </net.sourceforge.jbizmo.model.client:FormPanel>
   <net.sourceforge.jbizmo.model.client:FormTable name="X2MessageTable" formPanel="/566">
@@ -12209,6 +12213,9 @@
     </boundaryMethods>
     <boundaryMethods name="copy" comment="Create copy of selected X2 message" returnType="/0/@allSupportedTypes.2" methodType="COPY" serviceMethod="/570/@repositoryMethods.6">
       <methodParameters name="sourceObjectId" type="/0/@allSupportedTypes.2"/>
+    </boundaryMethods>
+    <boundaryMethods name="findX2MessageById" comment="Find X2 message by its ID" returnType="/576" methodType="FIND_BY_ID" serviceMethod="/570/@repositoryMethods.0">
+      <methodParameters name="id" type="/0/@allSupportedTypes.2"/>
     </boundaryMethods>
   </net.sourceforge.jbizmo.model.boundary:BoundaryBean>
   <net.sourceforge.jbizmo.model.repository:Repository name="X2MessageRepository" comment="Create, read, update and delete services for X2 message objects." namespace="/256">
@@ -12371,4 +12378,104 @@
   </net.sourceforge.jbizmo.model.repository:Repository>
   <net.sourceforge.jbizmo.model.client:FormPanel name="panFailureMaterials" colIndex="3" label="Failure materials" form="/415" basePanel="/563"/>
   <net.sourceforge.jbizmo.model.client:FormPanel name="panX2Messages" colIndex="4" label="X2 notifications" form="/415" basePanel="/566"/>
+  <net.sourceforge.jbizmo.model.client:Form name="ViewX2MessageDialog" formType="READONLY" formGroup="/396" title="View X2 message" formPanels="/574 /575" dTO="/576" roles="/0/@roles.0 /0/@roles.1">
+    <actions name="actionGet" boundaryMethod="/569/@boundaryMethods.2" type="READ"/>
+    <domainObject href="package-service.xmi#//@domainObjects.9"/>
+  </net.sourceforge.jbizmo.model.client:Form>
+  <net.sourceforge.jbizmo.model.client:FormPanel name="panX2Message" label="Basic data" form="/573">
+    <fields name="cboServiceMessage" label="Service order" readonly="true" fieldType="FORM_LINK" width="140" dTOAttribute="/576/@attributes.17"/>
+    <fields name="cboSerialObject" colIndex="2" label="Serial object" readonly="true" fieldType="FORM_LINK" width="140" dTOAttribute="/576/@attributes.16"/>
+    <fields name="cboMaterialRevisionMaterial" rowIndex="2" label="Material" readonly="true" fieldType="FORM_LINK" width="140" dTOAttribute="/576/@attributes.18"/>
+    <fields name="txtMaterialSapNumber" colIndex="2" rowIndex="2" label="Sap number" readonly="true" width="140" dTOAttribute="/576/@attributes.19"/>
+    <fields name="cboMaterialRevision" rowIndex="3" label="Material revision" readonly="true" fieldType="FORM_LINK" width="140" dTOAttribute="/576/@attributes.12"/>
+    <fields name="txtDefectComponent" colIndex="2" rowIndex="3" label="Defect component" readonly="true" mandatory="false" width="140" dTOAttribute="/576/@attributes.3"/>
+    <fields name="cboRepairTask" rowIndex="4" label="Repair task" readonly="true" mandatory="false" fieldType="FORM_LINK" width="140" dTOAttribute="/576/@attributes.15"/>
+    <fields name="cboRepairErrorCode" colIndex="2" rowIndex="4" label="Repair error code" readonly="true" mandatory="false" fieldType="FORM_LINK" width="140" dTOAttribute="/576/@attributes.13"/>
+    <fields name="txtWorkCenter" rowIndex="5" label="Work center" readonly="true" mandatory="false" width="140" dTOAttribute="/576/@attributes.5"/>
+    <fields name="cboRepairState" colIndex="2" rowIndex="5" label="Repair state" readonly="true" fieldType="FORM_LINK" width="140" dTOAttribute="/576/@attributes.14"/>
+    <fields name="cboDefectMaterial" rowIndex="6" label="Defect material" readonly="true" mandatory="false" fieldType="FORM_LINK" width="140" dTOAttribute="/576/@attributes.10"/>
+    <fields name="txtDesignator" colIndex="2" rowIndex="6" label="Designator" readonly="true" mandatory="false" width="140" dTOAttribute="/576/@attributes.4"/>
+    <fields name="cboFaultAnalysis" rowIndex="7" label="Symptom" readonly="true" mandatory="false" fieldType="FORM_LINK" width="140" dTOAttribute="/576/@attributes.11"/>
+    <fields name="txtAnalysisText" rowIndex="8" label="Analysis text" spanCols="true" readonly="true" mandatory="false" width="140" dTOAttribute="/576/@attributes.0"/>
+    <fields name="txtCauseText" rowIndex="9" label="Cause text" spanCols="true" readonly="true" mandatory="false" dTOAttribute="/576/@attributes.1"/>
+    <fields name="txtCustomerReport" rowIndex="10" label="Customer report" spanCols="true" readonly="true" mandatory="false" fieldType="MULTI_LINE_TEXT" dTOAttribute="/576/@attributes.2"/>
+  </net.sourceforge.jbizmo.model.client:FormPanel>
+  <net.sourceforge.jbizmo.model.client:FormPanel name="panAdministration" colIndex="2" label="Administration data" form="/573">
+    <fields name="txtId" label="Id" readonly="true" width="120" dTOAttribute="/576/@attributes.6"/>
+    <fields name="txtVersion" rowIndex="2" label="Version" readonly="true" width="120" dTOAttribute="/576/@attributes.7"/>
+    <fields name="txtCreationDate" rowIndex="3" label="Creation date" readonly="true" fieldType="DATE_TIME" width="120" dTOAttribute="/576/@attributes.8"/>
+    <fields name="txtLastUpdate" rowIndex="4" label="Last update" readonly="true" mandatory="false" fieldType="DATE_TIME" width="120" dTOAttribute="/576/@attributes.9"/>
+  </net.sourceforge.jbizmo.model.client:FormPanel>
+  <net.sourceforge.jbizmo.model.dto:DTOBean name="X2MessageDTO" comment="Data transfer object for X2 message objects" namespace="/258" standardConversion="true">
+    <domainObject href="package-service.xmi#//@domainObjects.9"/>
+    <attributes name="analysisText">
+      <domainAttribute href="package-service.xmi#//@domainObjects.9/@attributes.0"/>
+    </attributes>
+    <attributes name="causeText">
+      <domainAttribute href="package-service.xmi#//@domainObjects.9/@attributes.1"/>
+    </attributes>
+    <attributes name="customerReport">
+      <domainAttribute href="package-service.xmi#//@domainObjects.9/@attributes.2"/>
+    </attributes>
+    <attributes name="defectComponent">
+      <domainAttribute href="package-service.xmi#//@domainObjects.9/@attributes.3"/>
+    </attributes>
+    <attributes name="designator">
+      <domainAttribute href="package-service.xmi#//@domainObjects.9/@attributes.4"/>
+    </attributes>
+    <attributes name="workCenter">
+      <domainAttribute href="package-service.xmi#//@domainObjects.9/@attributes.5"/>
+    </attributes>
+    <attributes name="id">
+      <domainAttribute href="package-base.xmi#//@domainObjects.0/@attributes.0"/>
+    </attributes>
+    <attributes name="version">
+      <domainAttribute href="package-base.xmi#//@domainObjects.0/@attributes.1"/>
+    </attributes>
+    <attributes name="creationDate">
+      <domainAttribute href="package-base.xmi#//@domainObjects.0/@attributes.2"/>
+    </attributes>
+    <attributes name="lastUpdate">
+      <domainAttribute href="package-base.xmi#//@domainObjects.0/@attributes.3"/>
+    </attributes>
+    <attributes name="defectMaterial" referencedDTOBean="/191">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-service.xmi#//@domainObjects.9/@associations.0"/>
+    </attributes>
+    <attributes name="faultAnalysis" referencedDTOBean="/423">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-service.xmi#//@domainObjects.9/@associations.1"/>
+    </attributes>
+    <attributes name="materialRevision" referencedDTOBean="/192">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-service.xmi#//@domainObjects.9/@associations.2"/>
+    </attributes>
+    <attributes name="repairErrorCode" referencedDTOBean="/424">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-service.xmi#//@domainObjects.9/@associations.3"/>
+    </attributes>
+    <attributes name="repairState" referencedDTOBean="/426">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-service.xmi#//@domainObjects.9/@associations.4"/>
+    </attributes>
+    <attributes name="repairTask" referencedDTOBean="/425">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-service.xmi#//@domainObjects.9/@associations.5"/>
+    </attributes>
+    <attributes name="serialObject" referencedDTOBean="/296">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-service.xmi#//@domainObjects.9/@associations.6"/>
+    </attributes>
+    <attributes name="serviceMessage" referencedDTOBean="/577">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-service.xmi#//@domainObjects.9/@associations.7"/>
+    </attributes>
+    <attributes name="matrevMaterial" referencedDTOBean="/191">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-material.xmi#//@domainObjects.3/@associations.0"/>
+      <associationList xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-service.xmi#//@domainObjects.9/@associations.2"/>
+    </attributes>
+    <attributes name="materialSapNumber">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-material.xmi#//@domainObjects.3/@associations.0"/>
+      <domainAttribute href="package-material.xmi#//@domainObjects.2/@attributes.1"/>
+      <associationList xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-service.xmi#//@domainObjects.9/@associations.2"/>
+    </attributes>
+  </net.sourceforge.jbizmo.model.dto:DTOBean>
+  <net.sourceforge.jbizmo.model.dto:DTOBean name="ServiceMessageListDTO" comment="Data transfer object for service message objects" namespace="/258">
+    <domainObject href="package-service.xmi#//@domainObjects.1"/>
+    <attributes name="id" selectToken="a.id">
+      <domainAttribute href="package-base.xmi#//@domainObjects.0/@attributes.0"/>
+    </attributes>
+  </net.sourceforge.jbizmo.model.dto:DTOBean>
 </xmi:XMI>

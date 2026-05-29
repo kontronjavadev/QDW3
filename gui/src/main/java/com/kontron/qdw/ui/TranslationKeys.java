@@ -517,6 +517,8 @@ public interface TranslationKeys {
     String FIELD_VIEWTRACEBOMDIALOG_CBOMATERIALREVISIONMATERIAL = "field_viewtracebomdialog_cbomaterialrevisionmaterial";
     String FIELD_VIEWTRACEBOMDIALOG_TXTMATERIALSAPNUMBER = "field_viewtracebomdialog_txtmaterialsapnumber";
     String FIELD_VIEWTRACEBOMITEMDIALOG_CBOTRACEBOM = "field_viewtracebomitemdialog_cbotracebom";
+    String FIELD_VIEWX2MESSAGEDIALOG_CBOFAULTANALYSIS = "field_viewx2messagedialog_cbofaultanalysis";
+    String FIELD_VIEWX2MESSAGEDIALOG_CBOSERVICEMESSAGE = "field_viewx2messagedialog_cboservicemessage";
     String FORM_ADDBOMITEMDIALOG_TITLE = "form_addbomitemdialog_title";
     String FORM_AGGREGATEDARRIVALVIEW_TITLE = "form_aggregatedarrivalview_title";
     String FORM_AGGREGATEDSHIPMENTARRIVALVIEW_TITLE = "form_aggregatedshipmentarrivalview_title";
@@ -626,6 +628,7 @@ public interface TranslationKeys {
     String FORM_VIEWSUPPLIERDIALOG_TITLE = "form_viewsupplierdialog_title";
     String FORM_VIEWTRACEBOMDIALOG_TITLE = "form_viewtracebomdialog_title";
     String FORM_VIEWTRACEBOMITEMDIALOG_TITLE = "form_viewtracebomitemdialog_title";
+    String FORM_VIEWX2MESSAGEDIALOG_TITLE = "form_viewx2messagedialog_title";
     String ILLEGAL_ITEM_SELECTED = "illegal_item_selected";
     String INVALID_MAIL_ADDRESS = "invalid_mail_address";
     String LABEL_LIST_ENTER_FILTER = "label_list_enter_filter";
@@ -678,6 +681,14 @@ public interface TranslationKeys {
     String LBL_ASSOC_TRACEBOMITEM_MATERIAL = "lbl_assoc_tracebomitem_material";
     String LBL_ASSOC_TRACEBOMITEM_TRACEBOM = "lbl_assoc_tracebomitem_tracebom";
     String LBL_ASSOC_VERTICALSECTOR_BUSINESSUNIT = "lbl_assoc_verticalsector_businessunit";
+    String LBL_ASSOC_X2MESSAGE_DEFECTMATERIAL = "lbl_assoc_x2message_defectmaterial";
+    String LBL_ASSOC_X2MESSAGE_FAULTANALYSIS = "lbl_assoc_x2message_faultanalysis";
+    String LBL_ASSOC_X2MESSAGE_MATERIALREVISION = "lbl_assoc_x2message_materialrevision";
+    String LBL_ASSOC_X2MESSAGE_REPAIRERRORCODE = "lbl_assoc_x2message_repairerrorcode";
+    String LBL_ASSOC_X2MESSAGE_REPAIRSTATE = "lbl_assoc_x2message_repairstate";
+    String LBL_ASSOC_X2MESSAGE_REPAIRTASK = "lbl_assoc_x2message_repairtask";
+    String LBL_ASSOC_X2MESSAGE_SERIALOBJECT = "lbl_assoc_x2message_serialobject";
+    String LBL_ASSOC_X2MESSAGE_SERVICEMESSAGE = "lbl_assoc_x2message_servicemessage";
     String LBL_ATTR_ABSTRACTAGGREGATEDBASE_MONTH = "lbl_attr_abstractaggregatedbase_month";
     String LBL_ATTR_ABSTRACTAGGREGATEDBASE_YEAR = "lbl_attr_abstractaggregatedbase_year";
     String LBL_ATTR_ABSTRACTENTITYWITHID_CREATIONDATE = "lbl_attr_abstractentitywithid_creationdate";
