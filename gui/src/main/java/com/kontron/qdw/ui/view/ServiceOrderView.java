@@ -7,6 +7,8 @@ import java.lang.invoke.*;
 import org.primefaces.model.DualListModel;
 import net.sourceforge.jbizmo.commons.webclient.primefaces.search.*;
 import com.kontron.qdw.ui.dialog.*;
+import com.kontron.qdw.ui.view.util.SuperView;
+
 import static com.kontron.qdw.ui.TranslationKeys.*;
 import net.sourceforge.jbizmo.commons.webclient.primefaces.util.*;
 import com.kontron.qdw.dto.base.*;
@@ -22,12 +24,13 @@ import com.kontron.qdw.service.*;
 import jakarta.faces.model.*;
 import jakarta.inject.*;
 import net.sourceforge.jbizmo.commons.search.dto.*;
+import net.sourceforge.jbizmo.commons.annotation.Customized;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
 import java.io.*;
 
 @Named("serviceOrderView")
 @ViewScoped
-public class ServiceOrderView extends AbstractSearchableView implements Serializable {
+public class ServiceOrderView extends SuperView implements Serializable {
     @Generated
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     @Generated
@@ -91,6 +94,149 @@ public class ServiceOrderView extends AbstractSearchableView implements Serializ
         this.supplierService = supplierService;
         this.queryManager = queryManager;
     }
+
+
+
+    /**
+     * Initialize view
+     */
+    @Customized
+    public void initView() {
+        logger.debug("Initialize view");
+
+        bundle = ResourceBundle.getBundle(DEFAULT_BUNDLE_NAME, userSession.getLocale());
+
+        // Check if user is allowed to open this page!
+        if (!userSession.checkAuthorization(true, ROLE_ADMINISTRATOR, ROLE_READONLY)) {
+            return;
+        }
+
+
+        formTitle = bundle.getString(FORM_SERVICEORDERVIEW_TITLE);
+
+        if (searchObj == null) {
+            // Check if previous search exists!
+            final SearchDTO lastSearch = queryManager.getLastQuery(userSession.getPrincipal().getId(), VIEW_ID);
+            if (lastSearch != null) {
+                searchObj = lastSearch;
+                prepareAfterLoad();
+            }
+            else {
+                initSearchObject();
+            }
+        }
+
+        initProperties();
+        fetchServiceOrders();
+
+        logger.debug("View initialization finished");
+    }
+
+    /**
+     * Initialize search object
+     */
+    @Customized
+    public void initSearchObject() {
+        searchObj = new SearchDTO();
+        int colOrderId = -1;
+
+        // Initialize search object
+        searchObj.setMaxResult(1000);
+        searchObj.setExactFilterMatch(true);
+        searchObj.setCaseSensitive(true);
+        searchObj.setCount(false);
+
+        refreshFormatSettings();
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceOrderSearchDTO.SELECT_CODE,
+                bundle.getString(COL_SERVICEORDERVIEW_CODE), SearchFieldDataTypeEnum.STRING, 100);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceOrderSearchDTO.SELECT_SERVICEORDERTYPE,
+                bundle.getString(COL_SERVICEORDERVIEW_SERVICEORDERTYPE), SearchFieldDataTypeEnum.ENUM, 100);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceOrderSearchDTO.SELECT_DOCUMENTDATE,
+                bundle.getString(COL_SERVICEORDERVIEW_DOCUMENTDATE), SearchFieldDataTypeEnum.LOCAL_DATE, 80, false);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceOrderSearchDTO.SELECT_CUSTOMERNAME,
+                bundle.getString(COL_SERVICEORDERVIEW_CUSTOMERNAME), SearchFieldDataTypeEnum.STRING, 200);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceOrderSearchDTO.SELECT_SUPPLIERNAME,
+                bundle.getString(COL_SERVICEORDERVIEW_SUPPLIERNAME), SearchFieldDataTypeEnum.STRING, 200);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceOrderSearchDTO.SELECT_SHORTTEXT,
+                bundle.getString(LBL_ATTR_ABSTRACTFUNCTIONALACTIVEENTITY_SHORTTEXT), SearchFieldDataTypeEnum.STRING, 150);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceOrderSearchDTO.SELECT_COMMENT,
+                bundle.getString(LBL_ATTR_ABSTRACTFUNCTIONALACTIVEENTITY_COMMENT), SearchFieldDataTypeEnum.STRING, 200);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceOrderSearchDTO.SELECT_ACTIVE,
+                bundle.getString(LBL_ATTR_ABSTRACTFUNCTIONALACTIVEENTITY_ACTIVE), SearchFieldDataTypeEnum.BOOLEAN, 70);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceOrderSearchDTO.SELECT_CREATIONDATE,
+                bundle.getString(LBL_ATTR_ABSTRACTFUNCTIONALACTIVEENTITY_CREATIONDATE), SearchFieldDataTypeEnum.LOCAL_DATE_TIME, 120);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceOrderSearchDTO.SELECT_LASTUPDATE,
+                bundle.getString(LBL_ATTR_ABSTRACTFUNCTIONALACTIVEENTITY_LASTUPDATE), SearchFieldDataTypeEnum.LOCAL_DATE_TIME, 120);
+
+        visibleFields = new DualListModel<>();
+        visibleFields.setSource(new ArrayList<>());
+        visibleFields.setTarget(searchObj.getSearchFields());
+    }
+
+    /**
+     * Perform data fetch operation
+     */
+    @Customized
+    public void fetchServiceOrders() {
+        logger.debug("Perform data fetch operation");
+
+        try {
+            preSearch();
+        }
+        catch (final SearchInputFieldValidationException e) {
+            MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_INFO, SEARCH_INPUT_VALIDATION, "", e.getSearchFieldName());
+            return;
+        }
+
+        refreshFormatSettings();
+        setCountFilterDependent();
+
+        try {
+            serviceOrdersList = serviceOrderService.searchAllServiceOrders(searchObj);
+
+            if (searchObj.isCount()) {
+                if (serviceOrdersList.size() == searchObj.getMaxResult()) {
+                    countResult = serviceOrderService.countAllServiceOrders(searchObj);
+                }
+                else {
+                    countResult = serviceOrdersList.size();
+                }
+            }
+
+            queryManager.saveQuery(userSession.getPrincipal().getId(), VIEW_ID, null, searchObj);
+        }
+        catch (final Exception e) {
+            logger.error("Error while fetching data!", e);
+
+            MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_ERROR, OPERATION_FETCH_FAIL, e);
+        }
+        finally {
+            postSearch();
+        }
+    }
+
+    @Override
+    protected String getViewName() {
+        return VIEW_ID;
+    }
+
+    @Override
+    public void resetSearchObject() {
+        initSearchObject();
+        fetchServiceOrders();
+    }
+
+
 
     /**
      * @return the list of elements
@@ -185,9 +331,10 @@ public class ServiceOrderView extends AbstractSearchableView implements Serializ
     public String openViewServiceOrderDialog() {
         var url = "";
 
-        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY))
+        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY)) {
             url = ViewServiceOrderDialog.PAGE_INIT_URL
                     + java.net.URLEncoder.encode(selectedObject.getCode(), java.nio.charset.StandardCharsets.UTF_8);
+        }
 
         return url;
     }
@@ -235,6 +382,7 @@ public class ServiceOrderView extends AbstractSearchableView implements Serializ
     /**
      * @return the name of the selected saved query
      */
+    @Override
     @Generated
     public String getSelectedSavedQuery() {
         return selectedSavedQuery;
@@ -266,115 +414,6 @@ public class ServiceOrderView extends AbstractSearchableView implements Serializ
         searchObj.setNumberFormat(userSession.getNumberFormat());
         searchObj.setDecimalSeparator(DecimalFormatSymbols.getInstance(userSession.getLocale()).getDecimalSeparator());
         searchObj.setGroupingSeparator(DecimalFormatSymbols.getInstance(userSession.getLocale()).getGroupingSeparator());
-    }
-
-    /**
-     * Initialize search object
-     */
-    @Generated
-    public void initSearchObject() {
-        searchObj = new SearchDTO();
-        int colOrderId = -1;
-
-        // Initialize search object
-        searchObj.setMaxResult(1000);
-        searchObj.setExactFilterMatch(true);
-        searchObj.setCaseSensitive(false);
-        searchObj.setCount(false);
-
-        refreshFormatSettings();
-
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceOrderSearchDTO.SELECT_CODE, bundle.getString(COL_SERVICEORDERVIEW_CODE),
-                SearchFieldDataTypeEnum.STRING, 100);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceOrderSearchDTO.SELECT_SERVICEORDERTYPE,
-                bundle.getString(COL_SERVICEORDERVIEW_SERVICEORDERTYPE), SearchFieldDataTypeEnum.ENUM, 100);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceOrderSearchDTO.SELECT_DOCUMENTDATE, bundle.getString(COL_SERVICEORDERVIEW_DOCUMENTDATE),
-                SearchFieldDataTypeEnum.LOCAL_DATE, 80, false);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceOrderSearchDTO.SELECT_CUSTOMERNAME, bundle.getString(COL_SERVICEORDERVIEW_CUSTOMERNAME),
-                SearchFieldDataTypeEnum.STRING, 200);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceOrderSearchDTO.SELECT_SUPPLIERNAME, bundle.getString(COL_SERVICEORDERVIEW_SUPPLIERNAME),
-                SearchFieldDataTypeEnum.STRING, 200);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceOrderSearchDTO.SELECT_SHORTTEXT,
-                bundle.getString(LBL_ATTR_ABSTRACTFUNCTIONALACTIVEENTITY_SHORTTEXT), SearchFieldDataTypeEnum.STRING, 150);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceOrderSearchDTO.SELECT_COMMENT,
-                bundle.getString(LBL_ATTR_ABSTRACTFUNCTIONALACTIVEENTITY_COMMENT), SearchFieldDataTypeEnum.STRING, 200);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceOrderSearchDTO.SELECT_ACTIVE,
-                bundle.getString(LBL_ATTR_ABSTRACTFUNCTIONALACTIVEENTITY_ACTIVE), SearchFieldDataTypeEnum.BOOLEAN, 70);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceOrderSearchDTO.SELECT_CREATIONDATE,
-                bundle.getString(LBL_ATTR_ABSTRACTFUNCTIONALACTIVEENTITY_CREATIONDATE), SearchFieldDataTypeEnum.LOCAL_DATE_TIME, 120);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, ServiceOrderSearchDTO.SELECT_LASTUPDATE,
-                bundle.getString(LBL_ATTR_ABSTRACTFUNCTIONALACTIVEENTITY_LASTUPDATE), SearchFieldDataTypeEnum.LOCAL_DATE_TIME, 120);
-
-        visibleFields = new DualListModel<>();
-        visibleFields.setSource(new ArrayList<>());
-        visibleFields.setTarget(searchObj.getSearchFields());
-    }
-
-    /**
-     * Initialize view
-     */
-    @Generated
-    public void initView() {
-        logger.debug("Initialize view");
-
-        bundle = ResourceBundle.getBundle(DEFAULT_BUNDLE_NAME, userSession.getLocale());
-
-        // Check if user is allowed to open this page!
-        if (!userSession.checkAuthorization(true, ROLE_ADMINISTRATOR, ROLE_READONLY))
-            return;
-
-
-        formTitle = bundle.getString(FORM_SERVICEORDERVIEW_TITLE);
-
-        // Check if previous search exists!
-        final SearchDTO lastSearch = queryManager.getLastQuery(userSession.getPrincipal().getId(), VIEW_ID);
-
-        if (lastSearch != null) {
-            searchObj = lastSearch;
-
-            prepareAfterLoad();
-        }
-        else
-            initSearchObject();
-
-        fetchServiceOrders();
-
-        logger.debug("View initialization finished");
-    }
-
-    /**
-     * Perform data fetch operation
-     */
-    @Generated
-    public void fetchServiceOrders() {
-        logger.debug("Perform data fetch operation");
-
-        try {
-            preSearch();
-        }
-        catch (final SearchInputFieldValidationException e) {
-            MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_INFO, SEARCH_INPUT_VALIDATION, "", e.getSearchFieldName());
-            return;
-        }
-
-        refreshFormatSettings();
-
-        try {
-            serviceOrdersList = serviceOrderService.searchAllServiceOrders(searchObj);
-
-            if (searchObj.isCount())
-                countResult = serviceOrderService.countAllServiceOrders(searchObj);
-
-            queryManager.saveQuery(userSession.getPrincipal().getId(), VIEW_ID, null, searchObj);
-        }
-        catch (final Exception e) {
-            logger.error("Error while fetching data!", e);
-
-            MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_ERROR, OPERATION_FETCH_FAIL, e);
-        }
-        finally {
-            postSearch();
-        }
     }
 
     /**
@@ -421,8 +460,9 @@ public class ServiceOrderView extends AbstractSearchableView implements Serializ
         try {
             final Collection<CustomerListDTO> items = customerService.findCustomers(query + "%");
 
-            for (final CustomerListDTO item : items)
+            for (final CustomerListDTO item : items) {
                 results.add(item.getName());
+            }
         }
         catch (final Exception e) {
             logger.error("Error while searching for auto-complete items by using the entered text '{}'!", query, e);
@@ -443,8 +483,9 @@ public class ServiceOrderView extends AbstractSearchableView implements Serializ
         try {
             final Collection<SupplierListDTO> items = supplierService.findSuppliers(query + "%");
 
-            for (final SupplierListDTO item : items)
+            for (final SupplierListDTO item : items) {
                 results.add(item.getName());
+            }
         }
         catch (final Exception e) {
             logger.error("Error while searching for auto-complete items by using the entered text '{}'!", query, e);
@@ -485,8 +526,9 @@ public class ServiceOrderView extends AbstractSearchableView implements Serializ
         final var items = new SelectItem[savedQueries.size()];
         int i = 0;
 
-        for (final String item : savedQueries)
+        for (final String item : savedQueries) {
             items[i++] = new SelectItem(item, item);
+        }
 
         return items;
     }
@@ -496,8 +538,9 @@ public class ServiceOrderView extends AbstractSearchableView implements Serializ
      */
     @Generated
     public void deleteSavedQuery() {
-        if (selectedSavedQuery == null)
+        if (selectedSavedQuery == null) {
             return;
+        }
 
         logger.debug("Delete saved query");
 
@@ -512,8 +555,9 @@ public class ServiceOrderView extends AbstractSearchableView implements Serializ
      */
     @Generated
     public void runSavedQuery() {
-        if (selectedSavedQuery == null)
+        if (selectedSavedQuery == null) {
             return;
+        }
 
         logger.debug("Run saved query");
 
