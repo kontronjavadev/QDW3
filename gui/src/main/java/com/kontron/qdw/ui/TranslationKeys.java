@@ -276,6 +276,11 @@ public interface TranslationKeys {
     String COL_SERIALOBJECTWITHTRACEBOMVIEW_SEROBJTBOMORDERNUMBER = "col_serialobjectwithtracebomview_serobjtbomordernumber";
     String COL_SERIALOBJECTWITHTRACEBOMVIEW_SEROBJTBOMPRODUCTIONDATE = "col_serialobjectwithtracebomview_serobjtbomproductiondate";
     String COL_SERIALOBJECTWITHTRACEBOMVIEW_SEROBJTBOMSUPPLIERNAME = "col_serialobjectwithtracebomview_serobjtbomsuppliername";
+    String COL_SERVICEMESSAGEFAILUREMATERIALSPANEL_MATERIALCLASSCODE = "col_servicemessagefailurematerialspanel_materialclasscode";
+    String COL_SERVICEMESSAGEFAILUREMATERIALSPANEL_MATERIALNUMBER = "col_servicemessagefailurematerialspanel_materialnumber";
+    String COL_SERVICEMESSAGEFAILUREMATERIALSPANEL_MATERIALTYPECODE = "col_servicemessagefailurematerialspanel_materialtypecode";
+    String COL_SERVICEMESSAGEFAILUREMATERIALSPANEL_OWNERLOCATIONCODE = "col_servicemessagefailurematerialspanel_ownerlocationcode";
+    String COL_SERVICEMESSAGEFAILUREMATERIALSPANEL_SAPNUMBER = "col_servicemessagefailurematerialspanel_sapnumber";
     String COL_SERVICEMESSAGEOPENVIEW_BASICFINISHDATE = "col_servicemessageopenview_basicfinishdate";
     String COL_SERVICEMESSAGEOPENVIEW_BASICSTARTDATE = "col_servicemessageopenview_basicstartdate";
     String COL_SERVICEMESSAGEOPENVIEW_CUSTOMERFAILURE = "col_servicemessageopenview_customerfailure";

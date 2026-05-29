@@ -2,6 +2,7 @@ package com.kontron.qdw.boundary.service;
 
 import com.kontron.qdw.domain.service.*;
 import net.sourceforge.jbizmo.commons.search.exception.*;
+import static net.sourceforge.jbizmo.commons.jpa.AbstractRepository.MAX_LIST_SIZE;
 import com.kontron.qdw.dto.base.*;
 import com.kontron.qdw.dto.service.*;
 import java.util.*;
@@ -344,6 +345,45 @@ public class ServiceMessageBoundaryService {
                 "from ServiceMessage a join a.materialRevision c join c.material z join z.ownerLocation ac join z.materialClass ad join z.materialType ae left join a.externalSupplier b join a.plant d join a.serialObject e join a.serviceOrder f left join a.faultAnalysis h left join a.rMAType i left join a.repairErrorCode j left join a.repairLocation k left join a.repairService l join a.repairState m left join a.repairTask n left join f.customer p join p.country w where f.serviceOrderType = ServiceOrderType.RMA");
 
         return repository.count(searchObj);
+    }
+
+    /**
+     * Get all materials of a given service message
+     * @param id
+     * @return a list of material objects
+     * @throws GeneralSearchException if the search operation has failed
+     */
+    @Generated
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public List<ServiceMessageFailureMaterialsDTO> getFailureMaterialsOfServiceMessage(long id) {
+        // Collect the select tokens of all fields that should be fetched
+        final var selectTokens = new ArrayList<String>();
+        selectTokens.add(ServiceMessageFailureMaterialsDTO.SELECT_MATERIALNUMBER);
+        selectTokens.add(ServiceMessageFailureMaterialsDTO.SELECT_SAPNUMBER);
+        selectTokens.add(ServiceMessageFailureMaterialsDTO.SELECT_SHORTTEXT);
+        selectTokens.add(ServiceMessageFailureMaterialsDTO.SELECT_COMMENT);
+        selectTokens.add(ServiceMessageFailureMaterialsDTO.SELECT_FITVALUE);
+        selectTokens.add(ServiceMessageFailureMaterialsDTO.SELECT_MATERIALHIERARCHY);
+        selectTokens.add(ServiceMessageFailureMaterialsDTO.SELECT_ID);
+        selectTokens.add(ServiceMessageFailureMaterialsDTO.SELECT_CREATIONDATE);
+        selectTokens.add(ServiceMessageFailureMaterialsDTO.SELECT_LASTUPDATE);
+        selectTokens.add(ServiceMessageFailureMaterialsDTO.SELECT_OWNERLOCATIONCODE);
+        selectTokens.add(ServiceMessageFailureMaterialsDTO.SELECT_MATERIALCLASSCODE);
+        selectTokens.add(ServiceMessageFailureMaterialsDTO.SELECT_MATERIALTYPECODE);
+
+        // Initialize the search object
+        final var searchObj = new SearchDTO();
+        searchObj.setExactFilterMatch(true);
+        searchObj.setCaseSensitive(true);
+        searchObj.setMaxResult(MAX_LIST_SIZE);
+        searchObj
+                .setFromClause("from ServiceMessage x join x.failureMaterials a join a.ownerLocation b join a.materialClass c join a.materialType d");
+
+        final var parentFilterField = searchObj.addSearchField("x.id", SearchFieldDataTypeEnum.LONG);
+        parentFilterField.setFilterCriteria(Long.toString(id));
+
+        return repository.search(searchObj, ServiceMessageFailureMaterialsDTO.class, selectTokens);
     }
 
 }

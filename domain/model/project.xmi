@@ -2148,7 +2148,7 @@
   </net.sourceforge.jbizmo.model.dto:DTOBean>
   <net.sourceforge.jbizmo.model.java:Namespace name="material" parent="/2" javaTypes="/194 /113 /198 /196 /112" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="material" parent="/1" javaTypes="/193 /197 /117 /195 /129" project="/0"/>
-  <net.sourceforge.jbizmo.model.java:Namespace name="material" parent="/3" javaTypes="/208 /202 /190 /116 /233 /125 /121 /242 /239 /191 /205 /219 /192 /226 /223 /213 /246 /128 /232 /137 /133 /231 /321" project="/0"/>
+  <net.sourceforge.jbizmo.model.java:Namespace name="material" parent="/3" javaTypes="/208 /202 /190 /116 /233 /125 /121 /242 /239 /191 /205 /219 /192 /226 /223 /213 /246 /128 /232 /137 /133 /231 /321 /565" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="material" parent="/4" project="/0"/>
   <net.sourceforge.jbizmo.model.repository:Repository name="MaterialTypeRepository" comment="Create, read, update and delete services for material type objects." namespace="/108">
     <domainObject href="package-material.xmi#//@domainObjects.0"/>
@@ -8428,7 +8428,7 @@
       <associationList xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-mv.xmi#//@domainObjects.2/@associations.1"/>
     </attributes>
   </net.sourceforge.jbizmo.model.dto:DTOBean>
-  <net.sourceforge.jbizmo.model.client:FormGroup name="Service" groupOrder="5" forms="/397 /403 /548 /559 /415 /409" panels="/552" roles="/0/@roles.0 /0/@roles.1" project="/0">
+  <net.sourceforge.jbizmo.model.client:FormGroup name="Service" groupOrder="5" forms="/397 /403 /548 /559 /415 /409" panels="/552 /563" roles="/0/@roles.0 /0/@roles.1" project="/0">
     <childGroups name="Master data" parentGroup="/396" forms="/450 /465 /476 /487 /510 /525 /540 /446 /461 /479 /490 /506 /521 /536 /453 /468 /483 /498 /513 /528 /543 /442 /457 /472 /494 /502 /517 /532" roles="/0/@roles.0"/>
   </net.sourceforge.jbizmo.model.client:FormGroup>
   <net.sourceforge.jbizmo.model.client:Form name="MaterializedServiceMessageView" formType="SEARCHABLE_VIEW" formGroup="/396" title="Materialized service orders" formPanels="/398" dTO="/400" roles="/0/@roles.0 /0/@roles.1" boundaryMethod="/401/@boundaryMethods.0">
@@ -9084,6 +9084,9 @@
     </boundaryMethods>
     <boundaryMethods name="searchAllServiceMessagesStandard" comment="Search for service message objects" returnType="/551" returnTypeModifier="List" queryStatement="from ServiceMessage a join a.materialRevision c join c.material z join z.ownerLocation ac join z.materialClass ad join z.materialType ae left join a.externalSupplier b join a.plant d join a.serialObject e join a.serviceOrder f left join a.faultAnalysis h left join a.rMAType i left join a.repairErrorCode j left join a.repairLocation k left join a.repairService l join a.repairState m left join a.repairTask n left join f.customer p join p.country w" customStatement="where f.serviceOrderType = ServiceOrderType.RMA" methodType="SEARCH" serviceMethod="/408/@repositoryMethods.11"/>
     <boundaryMethods name="countAllServiceMessagesStandard" comment="Count service message objects" returnType="/0/@allSupportedTypes.2" queryStatement="from ServiceMessage a join a.materialRevision c join c.material z join z.ownerLocation ac join z.materialClass ad join z.materialType ae left join a.externalSupplier b join a.plant d join a.serialObject e join a.serviceOrder f left join a.faultAnalysis h left join a.rMAType i left join a.repairErrorCode j left join a.repairLocation k left join a.repairService l join a.repairState m left join a.repairTask n left join f.customer p join p.country w" customStatement="where f.serviceOrderType = ServiceOrderType.RMA" methodType="COUNT" serviceMethod="/408/@repositoryMethods.12"/>
+    <boundaryMethods name="getFailureMaterialsOfServiceMessage" comment="Get all materials of a given service message" returnType="/565" returnTypeModifier="List" queryStatement="from ServiceMessage x join x.failureMaterials a join a.ownerLocation b join a.materialClass c join a.materialType d" customStatement="" methodType="FIND_BY_PARENT" serviceMethod="/408/@repositoryMethods.11">
+      <methodParameters name="id" type="/0/@allSupportedTypes.2"/>
+    </boundaryMethods>
   </net.sourceforge.jbizmo.model.boundary:BoundaryBean>
   <net.sourceforge.jbizmo.model.repository:Repository name="ServiceMessageRepository" comment="Create, read, update and delete services for service message objects." namespace="/256">
     <domainObject href="package-service.xmi#//@domainObjects.1"/>
@@ -12015,6 +12018,66 @@
     <attributes name="supplierName" selectToken="c.name">
       <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-service.xmi#//@domainObjects.0/@associations.1"/>
       <domainAttribute href="package-base.xmi#//@domainObjects.13/@attributes.0"/>
+    </attributes>
+  </net.sourceforge.jbizmo.model.dto:DTOBean>
+  <net.sourceforge.jbizmo.model.client:FormPanel name="ServiceMessageFailureMaterialsPanel" formGroup="/396" label="Materials of a service message" formTable="/564" dTO="/565" boundaryMethod="/407/@boundaryMethods.7">
+    <actions name="actionGet" description="View material" targetForm="/235" roles="/0/@roles.0 /0/@roles.1 /0/@roles.2" type="READ"/>
+    <association xsi:type="net.sourceforge.net.model.domain:ManyToManyAssociation" href="package-service.xmi#//@domainObjects.1/@associations.5"/>
+  </net.sourceforge.jbizmo.model.client:FormPanel>
+  <net.sourceforge.jbizmo.model.client:FormTable name="MaterialTable" formPanel="/563">
+    <fields width="150" title="Material no." dTOAttribute="/565/@attributes.0"/>
+    <fields colIndex="2" width="150" title="SAP no." dTOAttribute="/565/@attributes.1"/>
+    <fields colIndex="3" width="80" title="Mat. type" dTOAttribute="/565/@attributes.11"/>
+    <fields colIndex="4" width="120" title="Material class" dTOAttribute="/565/@attributes.10"/>
+    <fields colIndex="5" width="150" title="Material hierarchy" dTOAttribute="/565/@attributes.5"/>
+    <fields colIndex="6" title="Owner loc." dTOAttribute="/565/@attributes.9"/>
+    <fields colIndex="7" width="250" title="Short text" dTOAttribute="/565/@attributes.2"/>
+    <fields colIndex="8" width="80" title="Fit value" fieldType="DOUBLE" dTOAttribute="/565/@attributes.4"/>
+    <fields colIndex="9" width="150" title="Comment" dTOAttribute="/565/@attributes.3"/>
+    <fields colIndex="10" width="120" title="Creation date" fieldType="LOCAL_DATE_TIME" dTOAttribute="/565/@attributes.7"/>
+    <fields colIndex="11" width="120" title="Last update" fieldType="LOCAL_DATE_TIME" dTOAttribute="/565/@attributes.8"/>
+    <fields colIndex="12" visible="false" identifier="true" width="80" title="Id" fieldType="LONG" dTOAttribute="/565/@attributes.6"/>
+  </net.sourceforge.jbizmo.model.client:FormTable>
+  <net.sourceforge.jbizmo.model.dto:DTOBean name="ServiceMessageFailureMaterialsDTO" comment="DTO for material objects" namespace="/110">
+    <domainObject href="package-material.xmi#//@domainObjects.2"/>
+    <attributes name="materialNumber" selectToken="a.materialNumber">
+      <domainAttribute href="package-material.xmi#//@domainObjects.2/@attributes.0"/>
+    </attributes>
+    <attributes name="sapNumber" selectToken="a.sapNumber">
+      <domainAttribute href="package-material.xmi#//@domainObjects.2/@attributes.1"/>
+    </attributes>
+    <attributes name="shortText" selectToken="a.shortText">
+      <domainAttribute href="package-material.xmi#//@domainObjects.2/@attributes.2"/>
+    </attributes>
+    <attributes name="comment" selectToken="a.comment">
+      <domainAttribute href="package-material.xmi#//@domainObjects.2/@attributes.3"/>
+    </attributes>
+    <attributes name="fitValue" selectToken="a.fitValue">
+      <domainAttribute href="package-material.xmi#//@domainObjects.2/@attributes.4"/>
+    </attributes>
+    <attributes name="materialHierarchy" selectToken="a.materialHierarchy">
+      <domainAttribute href="package-material.xmi#//@domainObjects.2/@attributes.5"/>
+    </attributes>
+    <attributes name="id" selectToken="a.id">
+      <domainAttribute href="package-base.xmi#//@domainObjects.0/@attributes.0"/>
+    </attributes>
+    <attributes name="creationDate" selectToken="a.creationDate">
+      <domainAttribute href="package-base.xmi#//@domainObjects.0/@attributes.2"/>
+    </attributes>
+    <attributes name="lastUpdate" selectToken="a.lastUpdate">
+      <domainAttribute href="package-base.xmi#//@domainObjects.0/@attributes.3"/>
+    </attributes>
+    <attributes name="ownerLocationCode" selectToken="b.code">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-material.xmi#//@domainObjects.2/@associations.0"/>
+      <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.0"/>
+    </attributes>
+    <attributes name="materialClassCode" selectToken="c.code">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-material.xmi#//@domainObjects.2/@associations.1"/>
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.0"/>
+    </attributes>
+    <attributes name="materialTypeCode" selectToken="d.code">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-material.xmi#//@domainObjects.2/@associations.2"/>
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.0"/>
     </attributes>
   </net.sourceforge.jbizmo.model.dto:DTOBean>
 </xmi:XMI>

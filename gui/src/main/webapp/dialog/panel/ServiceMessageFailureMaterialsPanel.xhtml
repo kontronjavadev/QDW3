@@ -1,0 +1,149 @@
+<ui:composition xmlns="https://jakarta.ee/xml/ns/jakartaee"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:h="jakarta.faces.html"
+	xmlns:f="jakarta.faces.core"
+	xmlns:p="http://primefaces.org/ui">
+
+	<p:menubar>
+		<p:submenu icon="pi pi-refresh" label="#{i18n.mnu_view}">
+			<p:menuitem value="#{i18n.action_refresh}" ajax="false" icon="pi pi-refresh" actionListener="#{serviceMessageFailureMaterialsPanel.fetchFailureMaterials}"/>
+		</p:submenu>
+		<p:submenu icon="pi pi-print" label="#{i18n.mnu_export}">
+			<p:menuitem value="#{i18n.action_export_xls}" ajax="false" icon="pi pi-file-excel">
+				<p:dataExporter type="xlsxstream" target="gridServiceMessageFailureMaterialsPanel" fileName="MaterialList"/>
+			</p:menuitem>
+		</p:submenu>
+	</p:menubar>
+
+
+	<p:dataTable id="gridServiceMessageFailureMaterialsPanel" var="serviceMessageFailureMaterialsPanelItem" rows="50"
+		selectionTextDisabled="false" allowUnsorting="true" resizeMode="expand" multiViewState="true" 
+		selectionMode="single"
+		selection="#{serviceMessageFailureMaterialsPanel.selItemOfFailureMaterials}"
+		loadingMessage="#{i18n.action_fetch_data}"
+		value="#{serviceMessageFailureMaterialsPanel.failureMaterialsList}" scrollable="false"
+		paginatorPosition="top" paginatorAlwaysVisible="false" paginator="true" resizableColumns="true"
+		rowKey="#{serviceMessageFailureMaterialsPanelItem.id}"
+		paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+		rowsPerPageTemplate="50,150,400,1000,{ShowAll|'All'}">
+		<p:ajax event="rowDblselect" listener="#{serviceMessageFailureMaterialsPanel.onFailureMaterialsGridDoubleClick}"/>
+
+		<p:column sortBy="#{serviceMessageFailureMaterialsPanelItem.materialNumber}" width="150" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_servicemessagefailurematerialspanel_materialnumber}"/>
+			</f:facet>
+			<h:outputText value="#{serviceMessageFailureMaterialsPanelItem.materialNumber}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serviceMessageFailureMaterialsPanelItem.sapNumber}" width="150" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_servicemessagefailurematerialspanel_sapnumber}"/>
+			</f:facet>
+			<h:outputText value="#{serviceMessageFailureMaterialsPanelItem.sapNumber}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serviceMessageFailureMaterialsPanelItem.materialTypeCode}" width="80" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_servicemessagefailurematerialspanel_materialtypecode}"/>
+			</f:facet>
+			<h:outputText value="#{serviceMessageFailureMaterialsPanelItem.materialTypeCode}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serviceMessageFailureMaterialsPanelItem.materialClassCode}" width="120" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_servicemessagefailurematerialspanel_materialclasscode}"/>
+			</f:facet>
+			<h:outputText value="#{serviceMessageFailureMaterialsPanelItem.materialClassCode}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serviceMessageFailureMaterialsPanelItem.materialHierarchy}" width="150" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_material_materialhierarchy}"/>
+			</f:facet>
+			<h:outputText value="#{serviceMessageFailureMaterialsPanelItem.materialHierarchy}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serviceMessageFailureMaterialsPanelItem.ownerLocationCode}" width="100" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_servicemessagefailurematerialspanel_ownerlocationcode}"/>
+			</f:facet>
+			<h:outputText value="#{serviceMessageFailureMaterialsPanelItem.ownerLocationCode}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serviceMessageFailureMaterialsPanelItem.shortText}" width="250" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_material_shorttext}"/>
+			</f:facet>
+			<h:outputText value="#{serviceMessageFailureMaterialsPanelItem.shortText}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serviceMessageFailureMaterialsPanelItem.fitValue}" width="80" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_material_fitvalue}"/>
+			</f:facet>
+			<h:outputText value="#{serviceMessageFailureMaterialsPanelItem.fitValue}">
+				<f:convertNumber pattern="#{userSession.numberFormat}"/>
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serviceMessageFailureMaterialsPanelItem.comment}" width="150" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_material_comment}"/>
+			</f:facet>
+			<h:outputText value="#{serviceMessageFailureMaterialsPanelItem.comment}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serviceMessageFailureMaterialsPanelItem.creationDate}" width="120" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_abstractentitywithid_creationdate}"/>
+			</f:facet>
+			<h:outputText value="#{serviceMessageFailureMaterialsPanelItem.creationDate}">
+				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateTimeConverter"/>
+				<f:attribute name="pattern" value="#{userSession.dateTimeFormat}"/>
+				<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serviceMessageFailureMaterialsPanelItem.lastUpdate}" width="120" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_abstractentitywithid_lastupdate}"/>
+			</f:facet>
+			<h:outputText value="#{serviceMessageFailureMaterialsPanelItem.lastUpdate}">
+				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateTimeConverter"/>
+				<f:attribute name="pattern" value="#{userSession.dateTimeFormat}"/>
+				<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
+			</h:outputText>
+		</p:column>
+	</p:dataTable>
+	<p/>
+
+	<h:outputText styleClass="label-field-mandatory" value="#{i18n.result_total_number_records} #{serviceMessageFailureMaterialsPanel.failureMaterialsList.size()}"/>
+
+
+
+<!--Kontextmenü mit Möglichkeit, eine Zelle oder eine Zeile zu kopieren -->
+
+	<h:inputHidden id="cellText" value="#{serviceMessageFailureMaterialsPanel.cellText}" />
+	<h:inputHidden id="rowCsv" value="#{serviceMessageFailureMaterialsPanel.rowCsv}" />
+
+	<p:contextMenu for="gridServiceMessageFailureMaterialsPanel" beforeShow="updateContextData(event)" >
+		<p:menuitem value="#{i18n.action_view}" ajax="true" icon="pi pi-file" id="gridServiceMessageFailureMaterialsPanel_mniView" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;SUPERUSER')}" action="#{serviceMessageFailureMaterialsPanel.openViewMaterialDialog}">
+			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{serviceMessageFailureMaterialsPanel.currentPageURL}"/>
+		</p:menuitem>
+		<p:menuitem value="#{i18n.action_refresh}" ajax="false" type="push" icon="pi pi-refresh" id="gridServiceMessageFailureMaterialsPanel_mniRefresh" actionListener="#{serviceMessageFailureMaterialsPanel.fetchFailureMaterials}"/>
+
+		<p:separator/>
+
+		<p:menuitem value="#{i18n.ctxmenu_copy_cell}" actionListener="#{serviceMessageFailureMaterialsPanel.copyCellToClipboard}" icon="pi pi-copy" update="@none"/>
+		<p:menuitem value="#{i18n.ctxmenu_copy_row}" actionListener="#{serviceMessageFailureMaterialsPanel.copyRowToClipboard}" icon="pi pi-copy" update="@none"/>
+	</p:contextMenu>
+
+</ui:composition>
