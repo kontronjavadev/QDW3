@@ -44,12 +44,12 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.serialObjectSerialNumber}" width="100" >
+		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.serialObjectSerialNumber}" width="100" 
+			exportValue="#{serviceOrderServiceMessagesPanelItem.serialObjectSerialNumber}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_serviceorderservicemessagespanel_serialobjectserialnumber}"/>
 			</f:facet>
-			<h:outputText value="#{serviceOrderServiceMessagesPanelItem.serialObjectSerialNumber}">
-			</h:outputText>
+			<h:outputText value="#{serviceOrderServiceMessagesPanelItem.serialObjectSerialNumber}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{serviceOrderServiceMessagesPanelItem.matrevMatMaterialNumber}" width="150" 
