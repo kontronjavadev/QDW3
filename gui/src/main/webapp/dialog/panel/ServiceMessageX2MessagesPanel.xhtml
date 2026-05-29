@@ -1,0 +1,207 @@
+<ui:composition xmlns="https://jakarta.ee/xml/ns/jakartaee"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:h="jakarta.faces.html"
+	xmlns:f="jakarta.faces.core"
+	xmlns:p="http://primefaces.org/ui">
+
+	<p:menubar>
+		<p:submenu icon="pi pi-refresh" label="#{i18n.mnu_view}">
+			<p:menuitem value="#{i18n.action_refresh}" ajax="false" icon="pi pi-refresh" actionListener="#{serviceMessageX2MessagesPanel.fetchX2Messages}"/>
+		</p:submenu>
+		<p:submenu icon="pi pi-print" label="#{i18n.mnu_export}">
+			<p:menuitem value="#{i18n.action_export_xls}" ajax="false" icon="pi pi-file-excel">
+				<p:dataExporter type="xlsxstream" target="gridServiceMessageX2MessagesPanel" fileName="X2MessageList"/>
+			</p:menuitem>
+		</p:submenu>
+	</p:menubar>
+
+	<br/>
+
+	<p:dataTable id="gridServiceMessageX2MessagesPanel" var="serviceMessageX2MessagesPanelItem" rows="50"
+		selectionTextDisabled="false" allowUnsorting="true" resizeMode="expand" multiViewState="true" 
+		selectionMode="single"
+		selection="#{serviceMessageX2MessagesPanel.selItemOfX2Messages}"
+		loadingMessage="#{i18n.action_fetch_data}"
+		value="#{serviceMessageX2MessagesPanel.x2MessagesList}" scrollable="false"
+		paginatorPosition="top" paginatorAlwaysVisible="false" paginator="true" resizableColumns="true"
+		rowKey="#{serviceMessageX2MessagesPanelItem.id}"
+		paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+		rowsPerPageTemplate="50,150,400,1000,{ShowAll|'All'}">
+		<p:ajax event="rowDblselect" listener="#{serviceMessageX2MessagesPanel.onX2MessagesGridDoubleClick}"/>
+
+		<p:column sortBy="#{serviceMessageX2MessagesPanelItem.serialObjectSerialNumber}" width="120" 
+			exportValue="#{serviceMessageX2MessagesPanelItem.serialObjectSerialNumber}" class="tdnowrap" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_servicemessagex2messagespanel_serialobjectserialnumber}"/>
+			</f:facet>
+			<h:outputText value="#{serviceMessageX2MessagesPanelItem.serialObjectSerialNumber}" styleClass="pf-tooltip-target" />
+		</p:column>
+
+		<p:column sortBy="#{serviceMessageX2MessagesPanelItem.matrevMatMaterialNumber}" width="150" 
+			exportValue="#{serviceMessageX2MessagesPanelItem.matrevMatMaterialNumber}" class="tdnowrap" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_servicemessagex2messagespanel_matrevmatmaterialnumber}"/>
+			</f:facet>
+			<h:outputText value="#{serviceMessageX2MessagesPanelItem.matrevMatMaterialNumber}" styleClass="pf-tooltip-target" />
+		</p:column>
+
+		<p:column sortBy="#{serviceMessageX2MessagesPanelItem.matrevMatSapNumber}" width="150" 
+			exportValue="#{serviceMessageX2MessagesPanelItem.matrevMatSapNumber}" class="tdnowrap" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_servicemessagex2messagespanel_matrevmatsapnumber}"/>
+			</f:facet>
+			<h:outputText value="#{serviceMessageX2MessagesPanelItem.matrevMatSapNumber}" styleClass="pf-tooltip-target" />
+		</p:column>
+
+		<p:column sortBy="#{serviceMessageX2MessagesPanelItem.matrevRevisionNumber}" width="150" 
+			exportValue="#{serviceMessageX2MessagesPanelItem.matrevRevisionNumber}" class="tdnowrap" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_servicemessagex2messagespanel_matrevrevisionnumber}"/>
+			</f:facet>
+			<h:outputText value="#{serviceMessageX2MessagesPanelItem.matrevRevisionNumber}" styleClass="pf-tooltip-target" />
+		</p:column>
+
+		<p:column sortBy="#{serviceMessageX2MessagesPanelItem.designator}" width="100" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_x2message_designator}"/>
+			</f:facet>
+			<h:outputText value="#{serviceMessageX2MessagesPanelItem.designator}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serviceMessageX2MessagesPanelItem.defectComponent}" width="120"  
+			exportHeaderValue="#{i18n.lbl_attr_defectcomponent_tooltip}" class="thnowrap" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_servicemessagex2messagespanel_defectcomponent}" title="#{i18n.lbl_attr_defectcomponent_tooltip}" styleClass="pf-tooltip-target" />
+			</f:facet>
+			<h:outputText value="#{serviceMessageX2MessagesPanelItem.defectComponent}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serviceMessageX2MessagesPanelItem.defectMaterialMaterialNumber}" width="150" 
+			exportValue="#{serviceMessageX2MessagesPanelItem.defectMaterialMaterialNumber}" class="tdnowrap" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_servicemessagex2messagespanel_defectmaterialmaterialnumber}"/>
+			</f:facet>
+			<h:outputText value="#{serviceMessageX2MessagesPanelItem.defectMaterialMaterialNumber}" styleClass="pf-tooltip-target" />
+		</p:column>
+
+		<p:column sortBy="#{serviceMessageX2MessagesPanelItem.workCenter}" width="200" 
+			exportValue="#{serviceMessageX2MessagesPanelItem.workCenter}" class="tdnowrap" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_x2message_workcenter}"/>
+			</f:facet>
+			<h:outputText value="#{serviceMessageX2MessagesPanelItem.workCenter}" styleClass="pf-tooltip-target" />
+		</p:column>
+
+		<p:column sortBy="#{serviceMessageX2MessagesPanelItem.analysisText}" width="250" 
+			exportValue="#{serviceMessageX2MessagesPanelItem.analysisText}" class="tdnowrap" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_x2message_analysistext}"/>
+			</f:facet>
+			<h:outputText value="#{serviceMessageX2MessagesPanelItem.analysisText}" styleClass="pf-tooltip-target" />
+		</p:column>
+
+		<p:column sortBy="#{serviceMessageX2MessagesPanelItem.repairTaskCode}" width="120" 
+			exportValue="#{serviceMessageX2MessagesPanelItem.repairTaskCode}" class="tdnowrap" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_servicemessagex2messagespanel_repairtaskcode}"/>
+			</f:facet>
+			<h:outputText value="#{serviceMessageX2MessagesPanelItem.repairTaskCode}" styleClass="pf-tooltip-target" />
+		</p:column>
+
+		<p:column sortBy="#{serviceMessageX2MessagesPanelItem.faultAnalysisCode}" width="120" 
+			exportValue="#{serviceMessageX2MessagesPanelItem.faultAnalysisCode}" class="tdnowrap" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_servicemessagex2messagespanel_faultanalysiscode}"/>
+			</f:facet>
+			<h:outputText value="#{serviceMessageX2MessagesPanelItem.faultAnalysisCode}" styleClass="pf-tooltip-target" />
+		</p:column>
+
+		<p:column sortBy="#{serviceMessageX2MessagesPanelItem.repairStateCode}" width="120" 
+			exportValue="#{serviceMessageX2MessagesPanelItem.repairStateCode}" class="tdnowrap" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_servicemessagex2messagespanel_repairstatecode}"/>
+			</f:facet>
+			<h:outputText value="#{serviceMessageX2MessagesPanelItem.repairStateCode}" styleClass="pf-tooltip-target" />
+		</p:column>
+
+		<p:column sortBy="#{serviceMessageX2MessagesPanelItem.repairErrorCodeCode}" width="150" 
+			exportValue="#{serviceMessageX2MessagesPanelItem.repairErrorCodeCode}" class="tdnowrap" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_servicemessagex2messagespanel_repairerrorcodecode}"/>
+			</f:facet>
+			<h:outputText value="#{serviceMessageX2MessagesPanelItem.repairErrorCodeCode}" styleClass="pf-tooltip-target" />
+		</p:column>
+
+		<p:column sortBy="#{serviceMessageX2MessagesPanelItem.causeText}" width="250" 
+			exportValue="#{serviceMessageX2MessagesPanelItem.causeText}" class="tdnowrap" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_x2message_causetext}"/>
+			</f:facet>
+			<h:outputText value="#{serviceMessageX2MessagesPanelItem.causeText}" styleClass="pf-tooltip-target" />
+		</p:column>
+
+		<p:column sortBy="#{serviceMessageX2MessagesPanelItem.customerReport}" width="250" 
+			exportValue="#{serviceMessageX2MessagesPanelItem.customerReport}" class="tdnowrap" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_x2message_customerreport}"/>
+			</f:facet>
+			<h:outputText value="#{serviceMessageX2MessagesPanelItem.customerReport}" styleClass="pf-tooltip-target" />
+		</p:column>
+
+		<p:column sortBy="#{serviceMessageX2MessagesPanelItem.creationDate}" width="120" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_abstractentitywithid_creationdate}"/>
+			</f:facet>
+			<h:outputText value="#{serviceMessageX2MessagesPanelItem.creationDate}">
+				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateTimeConverter"/>
+				<f:attribute name="pattern" value="#{userSession.dateTimeFormat}"/>
+				<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serviceMessageX2MessagesPanelItem.lastUpdate}" width="120" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_abstractentitywithid_lastupdate}"/>
+			</f:facet>
+			<h:outputText value="#{serviceMessageX2MessagesPanelItem.lastUpdate}">
+				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateTimeConverter"/>
+				<f:attribute name="pattern" value="#{userSession.dateTimeFormat}"/>
+				<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
+			</h:outputText>
+		</p:column>
+	</p:dataTable>
+	<p/>
+
+	<h:outputText styleClass="label-field-mandatory" value="#{i18n.result_total_number_records} #{serviceMessageX2MessagesPanel.x2MessagesList.size()}"/>
+
+
+
+<!--Kontextmenü mit Möglichkeit, eine Zelle oder eine Zeile zu kopieren -->
+
+	<h:inputHidden id="cellText" value="#{serviceMessageX2MessagesPanel.cellText}" />
+	<h:inputHidden id="rowCsv" value="#{serviceMessageX2MessagesPanel.rowCsv}" />
+
+	<p:contextMenu for="gridServiceMessageX2MessagesPanel" beforeShow="updateContextData(event)" >
+		<p:menuitem value="#{i18n.action_delete}" ajax="true" icon="pi pi-trash" id="gridServiceMessageX2MessagesPanel_mniDelete" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR') and not serviceMessageX2MessagesPanel.readOnly}" onclick="PF('deleteConfirmX2Messages').show()"/>
+		<p:menuitem value="#{i18n.action_copy}" ajax="true" icon="pi pi-copy" id="gridServiceMessageX2MessagesPanel_mniCopy" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR') and not serviceMessageX2MessagesPanel.readOnly}" onclick="PF('copyConfirmX2Messages').show()"/>
+		<p:menuitem value="#{i18n.action_refresh}" ajax="false" type="push" icon="pi pi-refresh" id="gridServiceMessageX2MessagesPanel_mniRefresh" actionListener="#{serviceMessageX2MessagesPanel.fetchX2Messages}"/>
+
+		<p:separator/>
+
+		<p:menuitem value="#{i18n.ctxmenu_copy_cell}" actionListener="#{serviceMessageX2MessagesPanel.copyCellToClipboard}" icon="pi pi-copy" update="@none"/>
+		<p:menuitem value="#{i18n.ctxmenu_copy_row}" actionListener="#{serviceMessageX2MessagesPanel.copyRowToClipboard}" icon="pi pi-copy" update="@none"/>
+	</p:contextMenu>
+
+	<p:confirmDialog modal="true" message="#{i18n.dialog_delete_question}" header="#{i18n.dialog_delete_title}" severity="alert" widgetVar="deleteConfirmX2Messages">
+		<p:commandButton value="#{i18n.command_yes}" oncomplete="PF('deleteConfirmX2Messages').hide()" actionListener="#{serviceMessageX2MessagesPanel.deleteX2Message}" id="gridServiceMessageX2MessagesPanel_cmdYesDelete" ajax="false"/>
+		<p:commandButton value="#{i18n.command_no}" onclick="PF('deleteConfirmX2Messages').hide()" type="button"/>
+	</p:confirmDialog>
+
+	<p:confirmDialog modal="true" message="#{i18n.dialog_copy_question}" header="#{i18n.dialog_copy_title}" severity="info" widgetVar="copyConfirmX2Messages">
+		<p:commandButton value="#{i18n.command_yes}" oncomplete="PF('copyConfirmX2Messages').hide()" action="#{serviceMessageX2MessagesPanel.copy}" id="gridServiceMessageX2MessagesPanel_cmdYesCopy" ajax="false"/>
+		<p:commandButton value="#{i18n.command_no}" onclick="PF('copyConfirmX2Messages').hide()" type="button"/>
+	</p:confirmDialog>
+
+</ui:composition>

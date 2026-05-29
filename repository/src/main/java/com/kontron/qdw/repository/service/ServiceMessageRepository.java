@@ -1,22 +1,43 @@
 package com.kontron.qdw.repository.service;
 
 import com.kontron.qdw.domain.serial.*;
-import java.util.*;
 import com.kontron.qdw.domain.material.*;
 import com.kontron.qdw.domain.service.*;
+import com.kontron.qdw.domain.base.*;
+import java.util.*;
 import jakarta.persistence.*;
 import net.sourceforge.jbizmo.commons.jpa.*;
 import jakarta.ejb.*;
 import jakarta.validation.*;
+import jakarta.inject.*;
 import net.sourceforge.jbizmo.commons.annotation.Customized;
 import net.sourceforge.jbizmo.commons.repository.*;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
-import com.kontron.qdw.domain.base.*;
 
 @Stateless
 public class ServiceMessageRepository extends AbstractRepository<ServiceMessage, Long> {
     @Generated
     private static final String PARAM_ID = "id";
+    @Generated
+    private final X2MessageRepository x2MessageManager;
+
+    /**
+     * Default constructor
+     */
+    @Generated
+    public ServiceMessageRepository() {
+        this.x2MessageManager = null;
+    }
+
+    /**
+     * Constructor for injecting all required beans
+     * @param x2MessageManager
+     */
+    @Inject
+    @Generated
+    public ServiceMessageRepository(X2MessageRepository x2MessageManager) {
+        this.x2MessageManager = x2MessageManager;
+    }
 
     /**
      * Create a deep copy of the given service message

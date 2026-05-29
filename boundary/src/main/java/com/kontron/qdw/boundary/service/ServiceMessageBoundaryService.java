@@ -386,4 +386,54 @@ public class ServiceMessageBoundaryService {
         return repository.search(searchObj, ServiceMessageFailureMaterialsDTO.class, selectTokens);
     }
 
+    /**
+     * Get all X2 messages of a given service message
+     * @param id
+     * @return a list of X2 message objects
+     * @throws GeneralSearchException if the search operation has failed
+     */
+    @Generated
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public List<ServiceMessageX2MessagesDTO> getX2MessagesOfServiceMessage(long id) {
+        // Collect the select tokens of all fields that should be fetched
+        final var selectTokens = new ArrayList<String>();
+        selectTokens.add(ServiceMessageX2MessagesDTO.SELECT_ANALYSISTEXT);
+        selectTokens.add(ServiceMessageX2MessagesDTO.SELECT_CAUSETEXT);
+        selectTokens.add(ServiceMessageX2MessagesDTO.SELECT_CUSTOMERREPORT);
+        selectTokens.add(ServiceMessageX2MessagesDTO.SELECT_DEFECTCOMPONENT);
+        selectTokens.add(ServiceMessageX2MessagesDTO.SELECT_DESIGNATOR);
+        selectTokens.add(ServiceMessageX2MessagesDTO.SELECT_WORKCENTER);
+        selectTokens.add(ServiceMessageX2MessagesDTO.SELECT_ID);
+        selectTokens.add(ServiceMessageX2MessagesDTO.SELECT_CREATIONDATE);
+        selectTokens.add(ServiceMessageX2MessagesDTO.SELECT_LASTUPDATE);
+        selectTokens.add(ServiceMessageX2MessagesDTO.SELECT_REPAIRSTATECODE);
+        selectTokens.add(ServiceMessageX2MessagesDTO.SELECT_MATERIALREVISIONID);
+        selectTokens.add(ServiceMessageX2MessagesDTO.SELECT_SERIALOBJECTID);
+        selectTokens.add(ServiceMessageX2MessagesDTO.SELECT_SERVICEMESSAGEID);
+        selectTokens.add(ServiceMessageX2MessagesDTO.SELECT_SERIALOBJECTSERIALNUMBER);
+        selectTokens.add(ServiceMessageX2MessagesDTO.SELECT_MATREVMATID);
+        selectTokens.add(ServiceMessageX2MessagesDTO.SELECT_MATREVMATMATERIALNUMBER);
+        selectTokens.add(ServiceMessageX2MessagesDTO.SELECT_MATREVMATSAPNUMBER);
+        selectTokens.add(ServiceMessageX2MessagesDTO.SELECT_MATREVREVISIONNUMBER);
+        selectTokens.add(ServiceMessageX2MessagesDTO.SELECT_DEFECTMATERIALID);
+        selectTokens.add(ServiceMessageX2MessagesDTO.SELECT_DEFECTMATERIALMATERIALNUMBER);
+        selectTokens.add(ServiceMessageX2MessagesDTO.SELECT_FAULTANALYSISCODE);
+        selectTokens.add(ServiceMessageX2MessagesDTO.SELECT_REPAIRERRORCODECODE);
+        selectTokens.add(ServiceMessageX2MessagesDTO.SELECT_REPAIRTASKCODE);
+
+        // Initialize the search object
+        final var searchObj = new SearchDTO();
+        searchObj.setExactFilterMatch(true);
+        searchObj.setCaseSensitive(true);
+        searchObj.setMaxResult(MAX_LIST_SIZE);
+        searchObj.setFromClause(
+                "from ServiceMessage x join x.x2Messages a left join a.defectMaterial b left join a.faultAnalysis c left join a.materialRevision d left join a.repairErrorCode e left join a.repairState f left join a.repairTask g left join a.serialObject h left join a.serviceMessage i left join d.material p");
+
+        final var parentFilterField = searchObj.addSearchField("x.id", SearchFieldDataTypeEnum.LONG);
+        parentFilterField.setFilterCriteria(Long.toString(id));
+
+        return repository.search(searchObj, ServiceMessageX2MessagesDTO.class, selectTokens);
+    }
+
 }
