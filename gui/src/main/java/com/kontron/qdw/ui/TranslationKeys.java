@@ -87,6 +87,8 @@ public interface TranslationKeys {
     String COL_ARRIVALVIEW_SERIALOBJECTSERIALNUMBER = "col_arrivalview_serialobjectserialnumber";
     String COL_ARRIVALVIEW_SUPPLIERNAME = "col_arrivalview_suppliername";
     String COL_CUSTOMERVIEW_COUNTRYNAME = "col_customerview_countryname";
+    String COL_EWSENTRYVIEW_BOARDORSYSTEM = "col_ewsentryview_boardorsystem";
+    String COL_EWSENTRYVIEW_MATERIALMATERIALNUMBER = "col_ewsentryview_materialmaterialnumber";
     String COL_MATERIALIZEDARRIVALSHIPMENTVIEW_ARRIVALDATE = "col_materializedarrivalshipmentview_arrivaldate";
     String COL_MATERIALIZEDARRIVALSHIPMENTVIEW_ARRIVALMOVEMENTTYPE = "col_materializedarrivalshipmentview_arrivalmovementtype";
     String COL_MATERIALIZEDARRIVALSHIPMENTVIEW_ASSEMBLYDATE = "col_materializedarrivalshipmentview_assemblydate";
@@ -451,6 +453,10 @@ public interface TranslationKeys {
     String DIALOG_RESETPW_TITLE = "dialog_resetpw_title";
     String DIALOG_UPLOAD_TITLE = "dialog_upload_title";
     String ERRORPAGE_TITLE = "errorpage_title";
+    String EWSTYPE_CUSTOMER = "ewstype_customer";
+    String EWSTYPE_DEFAULT = "ewstype_default";
+    String EWSTYPE_MATERIAL = "ewstype_material";
+    String EWSTYPE_PROJECT = "ewstype_project";
     String FEEDBACK_DIALOG_HEADER = "feedback_dialog_header";
     String FG_SERVICE_MASTER_DATA = "fg_service_master_data";
     String FG_TOP_ADMINISTRATION = "fg_top_administration";
@@ -458,6 +464,7 @@ public interface TranslationKeys {
     String FG_TOP_MATERIAL = "fg_top_material";
     String FG_TOP_SERIAL_OBJECT = "fg_top_serial_object";
     String FG_TOP_SERVICE = "fg_top_service";
+    String FG_TOP_SYSTEM = "fg_top_system";
     String FIELD_CHANGEPASSWORDDIALOG_TXTNEWPASSWORD = "field_changepassworddialog_txtnewpassword";
     String FIELD_CHANGEPASSWORDDIALOG_TXTNEWPASSWORDCONFIRM = "field_changepassworddialog_txtnewpasswordconfirm";
     String FIELD_CHANGEPASSWORDDIALOG_TXTOLDPASSWORD = "field_changepassworddialog_txtoldpassword";
@@ -531,6 +538,7 @@ public interface TranslationKeys {
     String FORM_CREATENEWBUSINESSUNITDIALOG_TITLE = "form_createnewbusinessunitdialog_title";
     String FORM_CREATENEWCOUNTRYDIALOG_TITLE = "form_createnewcountrydialog_title";
     String FORM_CREATENEWCUSTOMERDIALOG_TITLE = "form_createnewcustomerdialog_title";
+    String FORM_CREATENEWEWSENTRYDIALOG_TITLE = "form_createnewewsentrydialog_title";
     String FORM_CREATENEWFAULTANALYSISDIALOG_TITLE = "form_createnewfaultanalysisdialog_title";
     String FORM_CREATENEWLOCATIONDIALOG_TITLE = "form_createnewlocationdialog_title";
     String FORM_CREATENEWMATERIALCLASSDIALOG_TITLE = "form_createnewmaterialclassdialog_title";
@@ -554,6 +562,7 @@ public interface TranslationKeys {
     String FORM_EDITBUSINESSUNITDIALOG_TITLE = "form_editbusinessunitdialog_title";
     String FORM_EDITCOUNTRYDIALOG_TITLE = "form_editcountrydialog_title";
     String FORM_EDITCUSTOMERDIALOG_TITLE = "form_editcustomerdialog_title";
+    String FORM_EDITEWSENTRYDIALOG_TITLE = "form_editewsentrydialog_title";
     String FORM_EDITFAULTANALYSISDIALOG_TITLE = "form_editfaultanalysisdialog_title";
     String FORM_EDITLOCATIONDIALOG_TITLE = "form_editlocationdialog_title";
     String FORM_EDITMATERIALCLASSDIALOG_TITLE = "form_editmaterialclassdialog_title";
@@ -573,6 +582,7 @@ public interface TranslationKeys {
     String FORM_EDITUSERDIALOG_TITLE = "form_edituserdialog_title";
     String FORM_EDITUSERSETTINGSDIALOG_TITLE = "form_editusersettingsdialog_title";
     String FORM_EDITVERTICALSECTORDIALOG_TITLE = "form_editverticalsectordialog_title";
+    String FORM_EWSENTRYVIEW_TITLE = "form_ewsentryview_title";
     String FORM_FAULTANALYSISVIEW_TITLE = "form_faultanalysisview_title";
     String FORM_LOCATIONVIEW_TITLE = "form_locationview_title";
     String FORM_MATERIALCLASSVIEW_TITLE = "form_materialclassview_title";
@@ -610,6 +620,7 @@ public interface TranslationKeys {
     String FORM_VIEWARRIVALDIALOG_TITLE = "form_viewarrivaldialog_title";
     String FORM_VIEWBOMITEMDIALOG_TITLE = "form_viewbomitemdialog_title";
     String FORM_VIEWCUSTOMERDIALOG_TITLE = "form_viewcustomerdialog_title";
+    String FORM_VIEWEWSENTRYDIALOG_TITLE = "form_viewewsentrydialog_title";
     String FORM_VIEWFAULTANALYSISDIALOG_TITLE = "form_viewfaultanalysisdialog_title";
     String FORM_VIEWILLEGALTRACEBOMITEMDIALOG_TITLE = "form_viewillegaltracebomitemdialog_title";
     String FORM_VIEWMATERIALDIALOG_TITLE = "form_viewmaterialdialog_title";
@@ -642,6 +653,7 @@ public interface TranslationKeys {
     String LBL_ASSOC_BOMITEM_MATERIALREVISION = "lbl_assoc_bomitem_materialrevision";
     String LBL_ASSOC_CUSTOMER_COUNTRY = "lbl_assoc_customer_country";
     String LBL_ASSOC_CUSTOMER_VERTICALSECTOR = "lbl_assoc_customer_verticalsector";
+    String LBL_ASSOC_EWSENTRY_MATERIAL = "lbl_assoc_ewsentry_material";
     String LBL_ASSOC_FAULTANALYSIS_MAPPEDTO = "lbl_assoc_faultanalysis_mappedto";
     String LBL_ASSOC_ILLEGALTRACEBOMITEM_TRACEBOM = "lbl_assoc_illegaltracebomitem_tracebom";
     String LBL_ASSOC_MATERIAL_MATERIALCLASS = "lbl_assoc_material_materialclass";
@@ -737,6 +749,10 @@ public interface TranslationKeys {
     String LBL_ATTR_DELIVERYNOTENUMBER_TOOLTIP = "lbl_attr_deliverynotenumber_tooltip";
     String LBL_ATTR_DOCUMENTDATE_TOOLTIP = "lbl_attr_documentdate_tooltip";
     String LBL_ATTR_EPIDEMICFAILURE_TOOLTIP = "lbl_attr_epidemicfailure_tooltip";
+    String LBL_ATTR_EWSENTRY_BOARDORSYSTEM = "lbl_attr_ewsentry_boardorsystem";
+    String LBL_ATTR_EWSENTRY_FILTERCRITERION = "lbl_attr_ewsentry_filtercriterion";
+    String LBL_ATTR_EWSENTRY_THRESHOLD = "lbl_attr_ewsentry_threshold";
+    String LBL_ATTR_EWSENTRY_TYPE = "lbl_attr_ewsentry_type";
     String LBL_ATTR_ILLEGALTRACEBOMITEM_DATECODE = "lbl_attr_illegaltracebomitem_datecode";
     String LBL_ATTR_ILLEGALTRACEBOMITEM_MANUFACTURER = "lbl_attr_illegaltracebomitem_manufacturer";
     String LBL_ATTR_ILLEGALTRACEBOMITEM_MANUFACTURERREVISION = "lbl_attr_illegaltracebomitem_manufacturerrevision";
@@ -971,10 +987,13 @@ public interface TranslationKeys {
     String OPERATION_UPLOAD_OK = "operation_upload_ok";
     String PANEL_ADMIN_TITLE = "panel_admin_title";
     String PANEL_BASIC_TITLE = "panel_basic_title";
+    String PANEL_CREATENEWEWSENTRYDIALOG_PANRECEIVERS_TITLE = "panel_createnewewsentrydialog_panreceivers_title";
     String PANEL_CREATENEWUSERDIALOG_PANROLES_TITLE = "panel_createnewuserdialog_panroles_title";
+    String PANEL_EDITEWSENTRYDIALOG_PANRECEIVERS_TITLE = "panel_editewsentrydialog_panreceivers_title";
     String PANEL_EDITMATERIALDIALOG_PANREVISIONS_TITLE = "panel_editmaterialdialog_panrevisions_title";
     String PANEL_EDITMATERIALREVISIONDIALOG_PANBOMITEMS_TITLE = "panel_editmaterialrevisiondialog_panbomitems_title";
     String PANEL_EDITUSERDIALOG_PANROLES_TITLE = "panel_edituserdialog_panroles_title";
+    String PANEL_VIEWEWSENTRYDIALOG_PANRECEIVERS_TITLE = "panel_viewewsentrydialog_panreceivers_title";
     String PANEL_VIEWMATERIALDIALOG_PANREVISIONS_TITLE = "panel_viewmaterialdialog_panrevisions_title";
     String PANEL_VIEWMATERIALREVISIONDIALOG_PANBOMITEMS_TITLE = "panel_viewmaterialrevisiondialog_panbomitems_title";
     String PANEL_VIEWROLEDIALOG_USERS_TITLE = "panel_viewroledialog_users_title";

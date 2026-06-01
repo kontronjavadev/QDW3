@@ -97,6 +97,7 @@ public class NavigatorView implements Serializable {
                         req.getContextPath() + "/view/NotificationView.jsf"), itemGroup0001);
         }
 
+
         if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR)) {
             // Form group: Master data
             final var itemGroup0002 = new DefaultTreeNode<>(FOLDER_TYPE, new TreeNavigatorItem(bundle.getString(FG_TOP_MASTER_DATA)), root);
@@ -143,6 +144,7 @@ public class NavigatorView implements Serializable {
                         req.getContextPath() + "/view/VerticalSectorView.jsf"), itemGroup0002);
         }
 
+
         if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY, ROLE_SUPERUSER)) {
             // Form group: Material
             final var itemGroup0003 = new DefaultTreeNode<>(FOLDER_TYPE, new TreeNavigatorItem(bundle.getString(FG_TOP_MATERIAL)), root);
@@ -156,6 +158,7 @@ public class NavigatorView implements Serializable {
                 new DefaultTreeNode<>(VIEW_TYPE, new TreeNavigatorItem(bundle.getString(FORM_MATERIALVIEW_TITLE),
                         req.getContextPath() + "/view/MaterialView.jsf"), itemGroup0003);
         }
+
 
         if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY)) {
             // Form group: Serial object
@@ -240,7 +243,7 @@ public class NavigatorView implements Serializable {
         if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY)) {
             // Form group: Service
             final var itemGroup0005 = new DefaultTreeNode<>(FOLDER_TYPE, new TreeNavigatorItem(bundle.getString(FG_TOP_SERVICE)), root);
-            itemGroup0005.setExpanded(true);
+            itemGroup0005.setExpanded(false);
 
             if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR)) {
                 // Form group: Master data
@@ -303,6 +306,17 @@ public class NavigatorView implements Serializable {
             if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY))
                 new DefaultTreeNode<>(VIEW_TYPE, new TreeNavigatorItem(bundle.getString(FORM_SERVICEORDERVIEW_TITLE),
                         req.getContextPath() + "/view/ServiceOrderView.jsf"), itemGroup0005);
+        }
+
+
+        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_SUPERUSER)) {
+            // Form group: System
+            final var itemGroup0007 = new DefaultTreeNode<>(FOLDER_TYPE, new TreeNavigatorItem(bundle.getString(FG_TOP_SYSTEM)), root);
+            itemGroup0007.setExpanded(true);
+
+            if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_SUPERUSER))
+                new DefaultTreeNode<>(VIEW_TYPE,new TreeNavigatorItem(bundle.getString(FORM_EWSENTRYVIEW_TITLE), 
+                        req.getContextPath() + "/view/EWSEntryView.jsf"), itemGroup0007);
         }
     }
 

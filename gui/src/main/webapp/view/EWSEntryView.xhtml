@@ -1,0 +1,375 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:h="jakarta.faces.html"
+	xmlns:f="jakarta.faces.core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/templates/ui.xhtml">
+
+<f:metadata>
+	<f:viewAction action="#{eWSEntryView.initView()}"/>
+</f:metadata>
+
+<ui:define name="title">#{eWSEntryView.formTitle}</ui:define>
+
+<ui:define name="content">
+	<h:panelGrid columns="3">
+		<div class="pi pi-list" style="font-size: 2em"/>
+		<h:outputText id="lblFormTitle" value="&#160;#{eWSEntryView.formTitle}" styleClass="label-form-title"/>
+		<p:ajaxStatus style="width:16px;height:16px;">
+			<f:facet name="start">
+				<h:graphicImage value="/images/ajaxloading.gif"/>
+			</f:facet>
+
+			<f:facet name="complete">
+				<h:outputText value=""/>
+			</f:facet>
+		</p:ajaxStatus>
+	</h:panelGrid>
+
+	<p:growl id="growl" showDetail="true" skipDetailIfEqualsSummary="true" keepAlive="true" life="10000" />
+
+	<p:dialog height="auto" width="1000" id="dlgSearchInput" closeOnEscape="true" header="#{i18n.search_input_dlg}" widgetVar="dlgSearchInput" modal="true" >
+		<p:tabView id="tabViewSearchInput" dynamic="false">
+			<p:tab title="#{i18n.search_input_filter}">
+			<p:scrollPanel style="width:100%; #{sizeServiceBean.searchFilterHeight()};" mode="native">
+			<h:panelGrid columns="5" cellpadding="3">
+				<h:outputText styleClass="label-field-mandatory" value="#{i18n.search_input_column}"/>
+				<h:outputText styleClass="label-field-mandatory" value="#{i18n.search_input_operator}"/>
+				<h:outputText styleClass="label-field-mandatory" value="#{i18n.search_input_sort}"/>
+				<h:outputText styleClass="label-field-mandatory" value="#{i18n.search_input_filter_input}"/>
+				<h:outputText styleClass="label-field-mandatory" value="#{i18n.search_input_and}"/>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_0" value="#{eWSEntryView.searchObject.searchFields[0].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{eWSEntryView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_0" value="#{eWSEntryView.searchObject.searchFields[0].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_0" value="#{eWSEntryView.textOperators}" var="advInputItem0" itemValue="#{advInputItem0}" itemLabel="#{advInputItem0.description}"/>
+					<f:ajax render="p_0"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_0" id="s_0" value="#{eWSEntryView.searchObject.searchFields[0].sortOrder}">
+					<f:selectItems value="#{eWSEntryView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:autoComplete minQueryLength="2" maxResults="10" completeMethod="#{eWSEntryView.onCompleteMaterialMaterialNumber}" id="fi_0" value="#{eWSEntryView.searchObject.searchFields[0].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_0">
+				<p:autoComplete minQueryLength="2" rendered="#{eWSEntryView.searchObject.searchFields[0].between}" maxResults="10" completeMethod="#{eWSEntryView.onCompleteMaterialMaterialNumber}" id="b_0" value="#{eWSEntryView.searchObject.searchFields[0].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fc_1" value="#{eWSEntryView.searchObject.searchFields[1].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{eWSEntryView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_1" value="#{eWSEntryView.searchObject.searchFields[1].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_1" value="#{eWSEntryView.enumOperators}" var="advInputItem1" itemValue="#{advInputItem1}" itemLabel="#{advInputItem1.description}"/>
+					<f:ajax render="p_1"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_1" id="s_1" value="#{eWSEntryView.searchObject.searchFields[1].sortOrder}">
+					<f:selectItems value="#{eWSEntryView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu id="fc_1" value="#{eWSEntryView.searchObject.searchFields[1].stringCriterion}">
+					<f:selectItem itemLabel="" itemValue=""/>
+					<f:selectItem itemLabel="#{i18n.ewstype_default}" itemValue="DEFAULT"/>
+					<f:selectItem itemLabel="#{i18n.ewstype_customer}" itemValue="CUSTOMER"/>
+					<f:selectItem itemLabel="#{i18n.ewstype_material}" itemValue="MATERIAL"/>
+					<f:selectItem itemLabel="#{i18n.ewstype_project}" itemValue="PROJECT"/>
+				</p:selectOneMenu>
+				<h:panelGroup id="p_1"/>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_2" value="#{eWSEntryView.searchObject.searchFields[2].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{eWSEntryView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_2" value="#{eWSEntryView.searchObject.searchFields[2].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_2" value="#{eWSEntryView.numberOperators}" var="advInputItem2" itemValue="#{advInputItem2}" itemLabel="#{advInputItem2.description}"/>
+					<f:ajax render="p_2"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_2" id="s_2" value="#{eWSEntryView.searchObject.searchFields[2].sortOrder}">
+					<f:selectItems value="#{eWSEntryView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_2" value="#{eWSEntryView.searchObject.searchFields[2].doubleCriterion}" size="30">
+					<f:convertNumber pattern="#{userSession.numberFormat}"/>
+				</p:inputText>
+				<h:panelGroup id="p_2">
+					<p:inputText id="b_2" rendered="#{eWSEntryView.searchObject.searchFields[2].between}" value="#{eWSEntryView.searchObject.searchFields[2].doubleBetweenCriterion}" size="30">
+					<f:convertNumber pattern="#{userSession.numberFormat}"/>
+				</p:inputText>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fc_3" value="#{eWSEntryView.searchObject.searchFields[3].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{eWSEntryView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_3" value="#{eWSEntryView.searchObject.searchFields[3].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_3" value="#{eWSEntryView.boolOperators}" var="advInputItem3" itemValue="#{advInputItem3}" itemLabel="#{advInputItem3.description}"/>
+					<f:ajax render="p_3"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_3" id="s_3" value="#{eWSEntryView.searchObject.searchFields[3].sortOrder}">
+					<f:selectItems value="#{eWSEntryView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu id="fc_3" value="#{eWSEntryView.searchObject.searchFields[3].stringCriterion}">
+					<f:selectItem itemLabel="" itemValue=""/>
+					<f:selectItem itemLabel="true" itemValue="true"/>
+					<f:selectItem itemLabel="false" itemValue="false"/>
+				</p:selectOneMenu>
+				<h:panelGroup id="p_3"/>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_4" value="#{eWSEntryView.searchObject.searchFields[4].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{eWSEntryView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_4" value="#{eWSEntryView.searchObject.searchFields[4].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_4" value="#{eWSEntryView.textOperators}" var="advInputItem4" itemValue="#{advInputItem4}" itemLabel="#{advInputItem4.description}"/>
+					<f:ajax render="p_4"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_4" id="s_4" value="#{eWSEntryView.searchObject.searchFields[4].sortOrder}">
+					<f:selectItems value="#{eWSEntryView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:inputText id="fi_4" value="#{eWSEntryView.searchObject.searchFields[4].stringCriterion}" size="30"/>
+				<h:panelGroup id="p_4">
+					<p:inputText id="b_4" rendered="#{eWSEntryView.searchObject.searchFields[4].between}" value="#{eWSEntryView.searchObject.searchFields[4].stringBetweenCriterion}" size="30"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_5" value="#{eWSEntryView.searchObject.searchFields[5].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{eWSEntryView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_5" value="#{eWSEntryView.searchObject.searchFields[5].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_5" value="#{eWSEntryView.dateOperators}" var="advInputItem5" itemValue="#{advInputItem5}" itemLabel="#{advInputItem5.description}"/>
+					<f:ajax render="p_5"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_5" id="s_5" value="#{eWSEntryView.searchObject.searchFields[5].sortOrder}">
+					<f:selectItems value="#{eWSEntryView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:datePicker id="fi_5" value="#{eWSEntryView.searchObject.searchFields[5].dateCriterion}" pattern="#{userSession.dateTimeFormat}" size="20" showButtonBar="true" showIcon="true" showTime="true"/>
+				<h:panelGroup id="p_5">
+					<p:datePicker id="fb_5" value="#{eWSEntryView.searchObject.searchFields[5].dateBetweenCriterion}" pattern="#{userSession.dateTimeFormat}" size="20" showButtonBar="true" showIcon="true" rendered="#{eWSEntryView.searchObject.searchFields[5].between}" showTime="true"/>
+				</h:panelGroup>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_6" value="#{eWSEntryView.searchObject.searchFields[6].colLabel}"/>
+				<p:selectOneMenu valueChangeListener="#{eWSEntryView.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_6" value="#{eWSEntryView.searchObject.searchFields[6].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
+					<f:selectItems update="b_6" value="#{eWSEntryView.dateOperators}" var="advInputItem6" itemValue="#{advInputItem6}" itemLabel="#{advInputItem6.description}"/>
+					<f:ajax render="p_6"/>
+				</p:selectOneMenu>
+				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_6" id="s_6" value="#{eWSEntryView.searchObject.searchFields[6].sortOrder}">
+					<f:selectItems value="#{eWSEntryView.sortOrderList}"/>
+				</p:selectOneMenu>
+				<p:datePicker id="fi_6" value="#{eWSEntryView.searchObject.searchFields[6].dateCriterion}" pattern="#{userSession.dateTimeFormat}" size="20" showButtonBar="true" showIcon="true" showTime="true"/>
+				<h:panelGroup id="p_6">
+					<p:datePicker id="fb_6" value="#{eWSEntryView.searchObject.searchFields[6].dateBetweenCriterion}" pattern="#{userSession.dateTimeFormat}" size="20" showButtonBar="true" showIcon="true" rendered="#{eWSEntryView.searchObject.searchFields[6].between}" showTime="true"/>
+				</h:panelGroup>
+
+			</h:panelGrid>
+			</p:scrollPanel>
+			</p:tab>
+
+			<p:tab title="#{i18n.search_input_adv}">
+			<h:panelGrid columns="2">
+				<h:outputLabel value="#{i18n.search_input_case}:" styleClass="label-field-mandatory"/>
+				<p:selectBooleanCheckbox value="#{eWSEntryView.searchObject.caseSensitive}"/>
+				<h:outputLabel value="#{i18n.search_input_count}:" styleClass="label-field-mandatory"/>
+				<p:selectBooleanCheckbox value="#{eWSEntryView.searchObject.count}"/>
+				<h:outputLabel value="#{i18n.search_input_filter_match}:" styleClass="label-field-mandatory"/>
+				<p:selectBooleanCheckbox value="#{eWSEntryView.searchObject.exactFilterMatch}"/>
+				<h:outputLabel value="#{i18n.search_input_filter_fetch_size}:" styleClass="label-field-mandatory"/>
+				<p:inputText value="#{eWSEntryView.searchObject.maxResult}" size="5">
+					<f:validateLongRange minimum="1" maximum="1000000"/>
+				</p:inputText>
+				<h:outputLabel value="#{i18n.search_input_visible_fields_label}:" styleClass="label-field-mandatory"/>
+				<p:pickList styleClass="searchdialog-picklist" value="#{eWSEntryView.visibleFields}" var="savedQueryListItem" itemLabel="#{savedQueryListItem.colLabel}" itemValue="#{savedQueryListItem}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchFieldDTOConverter" addLabel="#{i18n.pick_list_add}" addAllLabel="#{i18n.pick_list_add_all}" removeLabel="#{i18n.pick_list_remove}" removeAllLabel="#{i18n.pick_list_remove_all}">
+					<f:facet name="sourceCaption">#{i18n.search_input_all_fields}</f:facet>
+					<f:facet name="targetCaption">#{i18n.search_input_visible_fields}</f:facet>
+				</p:pickList>
+			</h:panelGrid>
+			</p:tab>
+
+			<p:tab title="#{i18n.search_input_saved_query_title}">
+				<h:panelGrid columns="1">
+					<h:outputLabel styleClass="label-field-mandatory" value="#{i18n.search_input_lbl_saved_query}"/>
+					<p:selectOneListbox id="savedQueryList" value="#{eWSEntryView.selectedSavedQuery}" style="#{sizeServiceBean.searchQueriesHeight()}; width:946px" styleClass="flex-listbox" >
+						<f:selectItems value="#{eWSEntryView.savedQueries}"/>
+					</p:selectOneListbox>
+					<h:panelGrid columns="3">
+						<p:commandButton icon="pi pi-caret-right" value="#{i18n.search_input_run_saved_query}" action="#{eWSEntryView.runSavedQuery}" ajax="false"/>
+						<p:commandButton icon="pi pi-pencil" value="#{i18n.search_input_rename_saved_query}" actionListener="#{eWSEntryView.openRenameDialog}" ajax="true"/>
+						<p:commandButton icon="pi pi-eraser" value="#{i18n.search_input_delete_saved_query}" actionListener="#{eWSEntryView.deleteSavedQuery}" update="savedQueryList" ajax="true"/>
+					</h:panelGrid>
+				</h:panelGrid>
+			</p:tab>
+		</p:tabView>
+		<br/>
+		<h:panelGrid columns="4">
+			<p:commandButton id="cmdSearch" value="#{i18n.search_input_perform_search}" action="#{eWSEntryView.fetchEWSEntries}" ajax="false"/>
+			<p:commandButton id="cmdReset" value="#{i18n.command_reset}" action="#{eWSEntryView.resetSearchObject}" onclick="PF('dlgSearchInput').hide()" ajax="false"/>
+			<p:commandButton id="cmdClear" value="#{i18n.command_clear}" action="#{eWSEntryView.clearSearchObject}" update="tabViewSearchInput" ajax="true"/>
+			<p:commandButton id="cmdCount" value="#{i18n.search_input_perform_count}" actionListener="#{eWSEntryView.countRecords}" update="growl" ajax="true"/>
+		</h:panelGrid>
+	</p:dialog>
+
+<!-- Query rename dialog -->
+	<p:dialog widgetVar="dlgQeryRename" id="dlgQeryRename" modal="true" showEffect="fade" hideEffect="fade" focus="txtNewQueryName" closeOnEscape="true">
+		<f:facet name="header">
+			<i class="pi pi-pencil"/>
+			<h:outputText value="&#160;#{i18n.query_rename_title}"/>
+		</f:facet>
+
+		<h:panelGrid columns="3">
+			<h:outputLabel value="#{i18n.query_rename_newname} *:" for="txtNewQueryName" styleClass="label-field-mandatory"/>
+			<p:inputText id="txtNewQueryName" value="#{eWSEntryView.newQueryName}"/>
+			<p:tooltip for="txtNewQueryName" value=""/>
+		</h:panelGrid>
+		<p/>
+
+		<f:facet name="footer">
+			<p:commandButton id="cmdRename" icon="pi pi-save" value="#{i18n.command_rename}" ajax="true" 
+				actionListener="#{eWSEntryView.renameQuery()}"
+				update="tabViewSearchInput,growl" oncomplete="PF('dlgQeryRename').hide()"/>
+
+			<p:commandButton id="cmdCancel" icon="pi pi-times" value="#{i18n.command_cancel}" onclick="PF('dlgQeryRename').hide()" />
+
+			<p:defaultCommand target="cmdRename" scope="dlgQeryRename"/>
+		</f:facet>
+	</p:dialog>
+
+
+
+	<p:menubar>
+		<p:submenu icon="pi pi-file" label="#{i18n.mnu_file}" id="panData_mniFile">
+			<p:menuitem value="#{i18n.action_create}" ajax="true" id="panData_mniCreate" icon="pi pi-plus" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR')}" action="#{eWSEntryView.openCreateNewEWSEntryDialog}">
+				<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{eWSEntryView.currentPageURL}"/>
+			</p:menuitem>
+			<p:menuitem value="#{i18n.search_input_dlg_save_query}" icon="pi pi-save" onclick="PF('dlgSaveQuery').show()"/>
+		</p:submenu>
+		<p:submenu icon="pi pi-refresh" label="#{i18n.mnu_view}">
+			<p:menuitem value="#{i18n.action_refresh}" ajax="false" icon="pi pi-refresh" actionListener="#{eWSEntryView.fetchEWSEntries}"/>
+		</p:submenu>
+		<p:submenu icon="pi pi-print" label="#{i18n.mnu_export}">
+			<p:menuitem value="#{i18n.action_export_xls}" ajax="false" icon="pi pi-file-excel">
+				<p:dataExporter type="xlsxstream" target="panData" fileName="EWSEntryList"/>
+			</p:menuitem>
+			<p:menuitem value="#{i18n.action_export_pdf}" ajax="false" icon="pi pi-file-pdf">
+				<p:dataExporter type="pdf" target="panData" fileName="EWSEntryList"/>
+			</p:menuitem>
+		</p:submenu>
+		<p:menuitem value="#{i18n.action_search_input}" ajax="true" icon="pi pi-search" id="panData_mniSearch" onclick="PF('dlgSearchInput').show()"/>
+	</p:menubar>
+
+
+	<p:dataTable id="panData" var="eWSEntryViewItem" rows="#{eWSEntryView.numberRows}"
+		selectionTextDisabled="false" allowUnsorting="true" resizeMode="expand" multiViewState="true" 
+		selectionMode="single"
+		selection="#{eWSEntryView.selectedObject}"
+		loadingMessage="#{i18n.action_fetch_data}"
+		value="#{eWSEntryView.eWSEntriesList}" scrollable="false"
+		paginatorPosition="top" paginatorAlwaysVisible="#{eWSEntryView.paginatorAlwaysVisible}" paginator="true" resizableColumns="true"
+		rowKey="#{eWSEntryViewItem.id}"
+		paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+		rowsPerPageTemplate="50,150,400,1000">
+		<p:ajax event="rowDblselect" listener="#{eWSEntryView.onDoubleClick}"/>
+
+		<p:column sortBy="#{eWSEntryViewItem.materialMaterialNumber}" width="150" 
+			rendered="#{eWSEntryView.searchObject.searchFields[0].visible}" displayPriority="#{eWSEntryView.searchObject.searchFields[0].colOrder}" 
+			exportValue="#{eWSEntryViewItem.materialMaterialNumber}" class="tdnowrap" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_ewsentryview_materialmaterialnumber}"/>
+			</f:facet>
+			<h:outputText value="#{eWSEntryViewItem.materialMaterialNumber}" styleClass="pf-tooltip-target" />
+		</p:column>
+
+		<p:column sortBy="#{eWSEntryViewItem.type}" width="100" 
+			rendered="#{eWSEntryView.searchObject.searchFields[1].visible}" displayPriority="#{eWSEntryView.searchObject.searchFields[1].colOrder}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_ewsentry_type}"/>
+			</f:facet>
+			<h:outputText value="#{eWSEntryView.translateType(eWSEntryViewItem.type)}"/>
+		</p:column>
+
+		<p:column sortBy="#{eWSEntryViewItem.threshold}" width="80" 
+			rendered="#{eWSEntryView.searchObject.searchFields[2].visible}" displayPriority="#{eWSEntryView.searchObject.searchFields[2].colOrder}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_ewsentry_threshold}"/>
+			</f:facet>
+			<h:outputText value="#{eWSEntryViewItem.threshold}">
+				<f:convertNumber pattern="#{userSession.numberFormat}"/>
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{eWSEntryViewItem.boardOrSystem}" width="100" 
+			rendered="#{eWSEntryView.searchObject.searchFields[3].visible}" displayPriority="#{eWSEntryView.searchObject.searchFields[3].colOrder}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_ewsentryview_boardorsystem}"/>
+			</f:facet>
+			<p:selectBooleanCheckbox value="#{eWSEntryViewItem.boardOrSystem}" disabled="true"/>
+		</p:column>
+
+		<p:column sortBy="#{eWSEntryViewItem.filterCriterion}" width="250" 
+			rendered="#{eWSEntryView.searchObject.searchFields[4].visible}" displayPriority="#{eWSEntryView.searchObject.searchFields[4].colOrder}" 
+			exportValue="#{eWSEntryViewItem.filterCriterion}" class="tdnowrap" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_ewsentry_filtercriterion}"/>
+			</f:facet>
+			<h:outputText value="#{eWSEntryViewItem.filterCriterion}" styleClass="pf-tooltip-target" />
+		</p:column>
+
+		<p:column sortBy="#{eWSEntryViewItem.creationDate}" width="120" 
+			rendered="#{eWSEntryView.searchObject.searchFields[5].visible}" displayPriority="#{eWSEntryView.searchObject.searchFields[5].colOrder}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_abstractentitywithid_creationdate}"/>
+			</f:facet>
+			<h:outputText value="#{eWSEntryViewItem.creationDate}">
+				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateTimeConverter"/>
+				<f:attribute name="pattern" value="#{userSession.dateTimeFormat}"/>
+				<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{eWSEntryViewItem.lastUpdate}" width="120" 
+			rendered="#{eWSEntryView.searchObject.searchFields[6].visible}" displayPriority="#{eWSEntryView.searchObject.searchFields[6].colOrder}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_abstractentitywithid_lastupdate}"/>
+			</f:facet>
+			<h:outputText value="#{eWSEntryViewItem.lastUpdate}">
+				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateTimeConverter"/>
+				<f:attribute name="pattern" value="#{userSession.dateTimeFormat}"/>
+				<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
+			</h:outputText>
+		</p:column>
+	</p:dataTable>
+	<p/>
+
+	<h:outputText styleClass="label-field-mandatory" value="#{i18n.result_total_number_records} #{eWSEntryView.eWSEntriesList.size()}"/>
+	<h:outputText styleClass="label-field-mandatory" rendered="#{eWSEntryView.searchObject.count}" value="&#160;#{i18n.search_input_count_of}&#160;"/>
+	<h:outputText styleClass="label-field-mandatory" rendered="#{eWSEntryView.searchObject.count}" value="#{eWSEntryView.countResult}"/>
+	<p/>
+
+
+
+<!--Kontextmenü mit Möglichkeit, eine Zelle oder eine Zeile zu kopieren -->
+
+	<h:inputHidden id="cellText" value="#{eWSEntryView.cellText}" />
+	<h:inputHidden id="rowCsv" value="#{eWSEntryView.rowCsv}" />
+
+	<p:contextMenu for="panData" beforeShow="updateContextData(event)" >
+		<p:menuitem value="#{i18n.action_delete}" ajax="true" icon="pi pi-trash" id="panData_mniDelete" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR')}" onclick="PF('deleteConfirm').show()"/>
+		<p:menuitem value="#{i18n.action_create}" ajax="true" icon="pi pi-plus" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR')}" action="#{eWSEntryView.openCreateNewEWSEntryDialog}">
+			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{eWSEntryView.currentPageURL}"/>
+		</p:menuitem>
+		<p:menuitem value="#{i18n.action_edit}" ajax="true" icon="pi pi-pencil" id="panData_mniUpdate" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR')}" action="#{eWSEntryView.openEditEWSEntryDialog}">
+			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{eWSEntryView.currentPageURL}"/>
+		</p:menuitem>
+		<p:menuitem value="#{i18n.action_view}" ajax="true" icon="pi pi-file" id="panData_mniView" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;SUPERUSER')}" action="#{eWSEntryView.openViewEWSEntryDialog}">
+			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{eWSEntryView.currentPageURL}"/>
+		</p:menuitem>
+		<p:menuitem value="#{i18n.action_copy}" ajax="true" icon="pi pi-copy" id="panData_mniCopy" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR')}" onclick="PF('copyConfirm').show()"/>
+		<p:menuitem value="#{i18n.action_refresh}" ajax="false" type="push" icon="pi pi-refresh" id="panData_mniRefresh" actionListener="#{eWSEntryView.fetchEWSEntries}"/>
+
+		<p:separator/>
+
+		<p:menuitem value="#{i18n.ctxmenu_copy_cell}" actionListener="#{eWSEntryView.copyCellToClipboard}" icon="pi pi-copy" update="@none"/>
+		<p:menuitem value="#{i18n.ctxmenu_copy_row}" actionListener="#{eWSEntryView.copyRowToClipboard}" icon="pi pi-copy" update="@none"/>
+	</p:contextMenu>
+
+	<p:confirmDialog modal="true" closeOnEscape="true" message="#{i18n.dialog_delete_question}" header="#{i18n.dialog_delete_title}" severity="warn" widgetVar="deleteConfirm">
+		<p:commandButton value="#{i18n.command_yes}" oncomplete="PF('deleteConfirm').hide()" actionListener="#{eWSEntryView.deleteEWSEntry}" id="panData_cmdYesDelete" ajax="false"/>
+		<p:commandButton value="#{i18n.command_no}" onclick="PF('deleteConfirm').hide()" type="button"/>
+	</p:confirmDialog>
+
+	<p:confirmDialog modal="true" closeOnEscape="true" message="#{i18n.dialog_copy_question}" header="#{i18n.dialog_copy_title}" severity="info" widgetVar="copyConfirm">
+		<p:commandButton value="#{i18n.command_yes}" oncomplete="PF('copyConfirm').hide()" action="#{eWSEntryView.copy}" id="panData_cmdYesCopy" ajax="false"/>
+		<p:commandButton value="#{i18n.command_no}" onclick="PF('copyConfirm').hide()" type="button"/>
+	</p:confirmDialog>
+
+	<p:dialog header="#{i18n.search_input_dlg_save_query}" closeOnEscape="true" id="dlgSaveQuery" widgetVar="dlgSaveQuery" modal="true" height="100">
+		<h:panelGrid columns="3">
+			<h:outputLabel value="#{i18n.search_input_lbl_save_query}" styleClass="label-field-mandatory"/>
+			<p:inputText id="txtQueryName" value="#{eWSEntryView.savedQueryName}" />
+			<p:commandButton id="saveQuery" value="#{i18n.command_save}" action="#{eWSEntryView.saveNewQuery}" ajax="false" onclick="PF('dlgSaveQuery').hide()"/>
+			<p:defaultCommand target="saveQuery" scope="dlgSaveQuery"/>
+		</h:panelGrid>
+	</p:dialog>
+
+	<p:defaultCommand target=":form:cmdSearch" scope="dlgSearchInput" />
+
+</ui:define>
+</ui:composition>

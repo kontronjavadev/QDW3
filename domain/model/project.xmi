@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:net.sourceforge.jbizmo.model.boundary="http:///net/sourceforge/jbizmo/model/boundary.ecore" xmlns:net.sourceforge.jbizmo.model.client="http:///net/sourceforge/jbizmo/model/client.ecore" xmlns:net.sourceforge.jbizmo.model.dto="http:///net/sourceforge/jbizmo/model/dto.ecore" xmlns:net.sourceforge.jbizmo.model.java="http:///net/sourceforge/jbizmo/model/java.ecore" xmlns:net.sourceforge.jbizmo.model.project="http:///net/sourceforge/jbizmo/model/project.ecore" xmlns:net.sourceforge.jbizmo.model.repository="http:///net/sourceforge/jbizmo/model/repository.ecore" xmlns:net.sourceforge.jbizmo.model.testing="http:///net/sourceforge/jbizmo/model/testing.ecore" xmlns:net.sourceforge.net.model.domain="http:///net/sourceforge/jbizmo/model/domain.ecore">
-  <net.sourceforge.jbizmo.model.project:Project name="QDW" code="qdw" clientPlatform="JSF_PRIMEFACES" repositoryNamespace="/2" dTONamespace="/3" boundaryNamespace="/1" formGroups="/17 /6 /186 /247 /396" persistenceProvider="ECLIPSELINK" validationType="STANDARD" boundaryMode="true" exchangeNamespace="/4" xmlNamespace="http://www.kontron.com/qdw/xml" mappingStrategy="ON_DEMAND" xmlNamespacePrefix="pre" protectManualChanges="true">
+  <net.sourceforge.jbizmo.model.project:Project name="QDW" code="qdw" clientPlatform="JSF_PRIMEFACES" repositoryNamespace="/2" dTONamespace="/3" boundaryNamespace="/1" formGroups="/17 /6 /186 /247 /396 /578" persistenceProvider="ECLIPSELINK" validationType="STANDARD" boundaryMode="true" exchangeNamespace="/4" xmlNamespace="http://www.kontron.com/qdw/xml" mappingStrategy="ON_DEMAND" xmlNamespacePrefix="pre" protectManualChanges="true">
     <roles name="ADMINISTRATOR" adminRole="true"/>
     <roles name="READONLY" readonlyRole="true"/>
     <roles name="SUPERUSER"/>
@@ -155,7 +155,7 @@
   <net.sourceforge.jbizmo.model.java:Namespace name="ui.test" parent="/0/@rootNamespace" project="/0"/>
   <net.sourceforge.jbizmo.model.client:FormGroup name="Master data" groupOrder="1" forms="/47 /77 /51 /69 /81 /96 /114 /126 /138 /150 /174 /158 /92 /41 /73 /88 /100 /118 /130 /142 /154 /178 /162 /104 /122 /134 /146 /166 /182 /170 /556 /311" roles="/0/@roles.0" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="base" parent="/1" javaTypes="/45 /72 /86 /99 /141 /277 /67 /153 /14 /177 /13 /64 /87" project="/0"/>
-  <net.sourceforge.jbizmo.model.java:Namespace name="base" parent="/3" javaTypes="/16 /53 /161 /50 /44 /71 /85 /80 /76 /83 /95 /91 /98 /234 /107 /103 /140 /298 /149 /145 /281 /285 /275 /65 /152 /214 /169 /157 /37 /40 /15 /34 /176 /314 /297 /185 /181 /25 /276 /68 /63 /21 /30 /160 /84 /173 /165 /345" project="/0"/>
+  <net.sourceforge.jbizmo.model.java:Namespace name="base" parent="/3" javaTypes="/16 /53 /161 /50 /44 /71 /85 /80 /76 /83 /95 /91 /98 /234 /107 /103 /140 /298 /149 /145 /281 /285 /275 /65 /152 /214 /169 /157 /37 /40 /15 /34 /176 /314 /297 /185 /181 /25 /276 /68 /63 /21 /30 /160 /84 /173 /165 /345 /591" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="base" parent="/4" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="base" parent="/2" javaTypes="/46 /59 /60 /55 /57 /278 /66 /56 /12 /54 /61 /62 /11 /58" project="/0"/>
   <net.sourceforge.jbizmo.model.repository:Repository name="UserRepository" comment="Create, read, update and delete services for user objects." namespace="/10">
@@ -2146,9 +2146,9 @@
       <domainAttribute href="package-base.xmi#//@domainObjects.5/@attributes.5"/>
     </attributes>
   </net.sourceforge.jbizmo.model.dto:DTOBean>
-  <net.sourceforge.jbizmo.model.java:Namespace name="material" parent="/2" javaTypes="/194 /113 /198 /196 /112" project="/0"/>
-  <net.sourceforge.jbizmo.model.java:Namespace name="material" parent="/1" javaTypes="/193 /197 /117 /195 /129" project="/0"/>
-  <net.sourceforge.jbizmo.model.java:Namespace name="material" parent="/3" javaTypes="/208 /202 /190 /116 /233 /125 /121 /242 /239 /191 /205 /219 /192 /226 /223 /213 /246 /128 /232 /137 /133 /231 /321 /565" project="/0"/>
+  <net.sourceforge.jbizmo.model.java:Namespace name="material" parent="/2" javaTypes="/194 /113 /198 /196 /112 /584" project="/0"/>
+  <net.sourceforge.jbizmo.model.java:Namespace name="material" parent="/1" javaTypes="/193 /197 /117 /195 /129 /583" project="/0"/>
+  <net.sourceforge.jbizmo.model.java:Namespace name="material" parent="/3" javaTypes="/208 /202 /190 /116 /233 /125 /121 /242 /239 /191 /205 /219 /192 /226 /223 /213 /246 /128 /232 /137 /133 /231 /321 /565 /582 /588 /597 /601" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="material" parent="/4" project="/0"/>
   <net.sourceforge.jbizmo.model.repository:Repository name="MaterialTypeRepository" comment="Create, read, update and delete services for material type objects." namespace="/108">
     <domainObject href="package-material.xmi#//@domainObjects.0"/>
@@ -12455,6 +12455,342 @@
   <net.sourceforge.jbizmo.model.dto:DTOBean name="ServiceMessageListDTO" comment="Data transfer object for service message objects" namespace="/258">
     <domainObject href="package-service.xmi#//@domainObjects.1"/>
     <attributes name="id" selectToken="a.id">
+      <domainAttribute href="package-base.xmi#//@domainObjects.0/@attributes.0"/>
+    </attributes>
+  </net.sourceforge.jbizmo.model.dto:DTOBean>
+  <net.sourceforge.jbizmo.model.client:FormGroup name="System" groupOrder="6" forms="/579 /593 /585 /598" panels="/589" roles="/0/@roles.0 /0/@roles.2" project="/0"/>
+  <net.sourceforge.jbizmo.model.client:Form name="CreateNewEWSEntryDialog" formType="CREATE" formGroup="/578" title="Create new EWS entry" formPanels="/580 /581" dTO="/582" roles="/0/@roles.0">
+    <actions name="actionCreate" boundaryMethod="/583/@boundaryMethods.0"/>
+    <domainObject href="package-material.xmi#//@domainObjects.9"/>
+  </net.sourceforge.jbizmo.model.client:Form>
+  <net.sourceforge.jbizmo.model.client:FormPanel name="panEWSEntry" label="Basic data" form="/579">
+    <fields name="txtThreshold" label="Threshold" width="140" dTOAttribute="/582/@attributes.0"/>
+    <fields name="cboMaterial" colIndex="2" label="Material" fieldType="PROPOSAL_TEXT" width="140" dTOAttribute="/582/@attributes.7"/>
+    <fields name="cboType" rowIndex="2" label="Type" fieldType="ENUM_COMBOBOX" width="140" dTOAttribute="/582/@attributes.3"/>
+    <fields name="chkBoardOrSystem" colIndex="2" rowIndex="2" label="Board or system" fieldType="CHECKBOX" defaultValue="USE_DEFAULT" dTOAttribute="/582/@attributes.1"/>
+    <fields name="txtFilterCriterion" rowIndex="3" label="Filter criterion" spanCols="true" mandatory="false" fieldType="MULTI_LINE_TEXT" dTOAttribute="/582/@attributes.2"/>
+    <fields name="txtId" rowIndex="4" visible="false" label="Id" width="120" dTOAttribute="/582/@attributes.4"/>
+    <fields name="txtVersion" rowIndex="5" visible="false" label="Version" readonly="true" width="120" dTOAttribute="/582/@attributes.5"/>
+    <fields name="txtCreationDate" rowIndex="6" visible="false" label="Creation date" readonly="true" fieldType="DATE_TIME" width="120" dTOAttribute="/582/@attributes.6"/>
+  </net.sourceforge.jbizmo.model.client:FormPanel>
+  <net.sourceforge.jbizmo.model.client:FormPanel name="panReceivers" rowIndex="2" label="Receivers" form="/579">
+    <fields name="listReceivers" label="Receivers" fieldType="SEARCHABLE_LIST" width="140" dTOAttribute="/582/@attributes.8"/>
+  </net.sourceforge.jbizmo.model.client:FormPanel>
+  <net.sourceforge.jbizmo.model.dto:DTOBean name="EWSEntryCreateDTO" comment="Data transfer object for EWS entry objects" namespace="/110" standardConversion="true">
+    <domainObject href="package-material.xmi#//@domainObjects.9"/>
+    <attributes name="threshold">
+      <domainAttribute href="package-material.xmi#//@domainObjects.9/@attributes.0"/>
+    </attributes>
+    <attributes name="boardOrSystem">
+      <domainAttribute href="package-material.xmi#//@domainObjects.9/@attributes.1"/>
+    </attributes>
+    <attributes name="filterCriterion">
+      <domainAttribute href="package-material.xmi#//@domainObjects.9/@attributes.2"/>
+    </attributes>
+    <attributes name="type">
+      <domainAttribute href="package-material.xmi#//@domainObjects.9/@attributes.3"/>
+    </attributes>
+    <attributes name="id">
+      <domainAttribute href="package-base.xmi#//@domainObjects.0/@attributes.0"/>
+    </attributes>
+    <attributes name="version">
+      <domainAttribute href="package-base.xmi#//@domainObjects.0/@attributes.1"/>
+    </attributes>
+    <attributes name="creationDate">
+      <domainAttribute href="package-base.xmi#//@domainObjects.0/@attributes.2"/>
+    </attributes>
+    <attributes name="material" referencedDTOBean="/191">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-material.xmi#//@domainObjects.9/@associations.0"/>
+    </attributes>
+    <attributes name="receivers" referencedDTOBean="/276">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToManyAssociation" href="package-material.xmi#//@domainObjects.9/@associations.1"/>
+    </attributes>
+  </net.sourceforge.jbizmo.model.dto:DTOBean>
+  <net.sourceforge.jbizmo.model.boundary:BoundaryBean name="EWSEntryBoundaryServiceBean" comment="Boundary service for EWS entry objects" namespace="/109" interfaceName="EWSEntryBoundaryService" repository="/584">
+    <domainObject href="package-material.xmi#//@domainObjects.9"/>
+    <boundaryMethods name="createEWSEntry" comment="Create new EWS entry" returnType="/582" methodType="CREATE" serviceMethod="/584/@repositoryMethods.5">
+      <methodParameters name="object" type="/582"/>
+    </boundaryMethods>
+    <boundaryMethods name="findEWSEntryById" comment="Find EWS entry by its ID" returnType="/588" methodType="FIND_BY_ID" serviceMethod="/584/@repositoryMethods.0">
+      <methodParameters name="id" type="/0/@allSupportedTypes.2"/>
+    </boundaryMethods>
+    <boundaryMethods name="getReceiversOfEWSEntry" comment="Get all users of a given EWS entry" returnType="/591" returnTypeModifier="List" queryStatement="from EWSEntry x join x.receivers a" customStatement="" methodType="FIND_BY_PARENT" serviceMethod="/584/@repositoryMethods.11">
+      <methodParameters name="id" type="/0/@allSupportedTypes.2"/>
+    </boundaryMethods>
+    <boundaryMethods name="updateEWSEntry" comment="Update existing EWS entry object" returnType="/0/@allSupportedTypes.0" methodType="UPDATE" serviceMethod="/584/@repositoryMethods.4">
+      <methodParameters name="object" type="/597"/>
+    </boundaryMethods>
+    <boundaryMethods name="getEWSEntryForUpdate" comment="Find EWS entry by its ID" returnType="/597" methodType="FIND_BY_ID" serviceMethod="/584/@repositoryMethods.0">
+      <methodParameters name="id" type="/0/@allSupportedTypes.2"/>
+    </boundaryMethods>
+    <boundaryMethods name="searchAllEWSEntries" comment="Search for EWS entry objects" returnType="/601" returnTypeModifier="List" queryStatement="from EWSEntry a join a.material b" customStatement="" methodType="SEARCH" serviceMethod="/584/@repositoryMethods.11"/>
+    <boundaryMethods name="countAllEWSEntries" comment="Count EWS entry objects" returnType="/0/@allSupportedTypes.2" queryStatement="from EWSEntry a join a.material b" customStatement="" methodType="COUNT" serviceMethod="/584/@repositoryMethods.12"/>
+    <boundaryMethods name="deleteEWSEntry" comment="Delete existing EWS entry" returnType="/0/@allSupportedTypes.0" serviceMethod="/584/@repositoryMethods.7">
+      <methodParameters name="id" type="/0/@allSupportedTypes.2"/>
+    </boundaryMethods>
+    <boundaryMethods name="copy" comment="Create copy of selected EWS entry" returnType="/0/@allSupportedTypes.2" methodType="COPY" serviceMethod="/584/@repositoryMethods.6">
+      <methodParameters name="sourceObjectId" type="/0/@allSupportedTypes.2"/>
+    </boundaryMethods>
+  </net.sourceforge.jbizmo.model.boundary:BoundaryBean>
+  <net.sourceforge.jbizmo.model.repository:Repository name="EWSEntryRepository" comment="Create, read, update and delete services for EWS entry objects." namespace="/108">
+    <domainObject href="package-material.xmi#//@domainObjects.9"/>
+    <repositoryMethods name="findById" javaType="/584" transactionType="REQUIRED" methodType="FIND_BY_ID">
+      <returnType href="package-material.xmi#//@domainObjects.9"/>
+      <methodParameters name="id" type="/0/@allSupportedTypes.2"/>
+    </repositoryMethods>
+    <repositoryMethods name="findById" javaType="/584" transactionType="REQUIRED" methodType="FIND_EXISTING">
+      <returnType href="package-material.xmi#//@domainObjects.9"/>
+      <methodParameters name="id" type="/0/@allSupportedTypes.2"/>
+      <methodParameters name="mustExist" type="/0/@allSupportedTypes.4"/>
+    </repositoryMethods>
+    <repositoryMethods name="findById" javaType="/584" transactionType="REQUIRED" methodType="FIND_BY_OBJECT">
+      <returnType href="package-material.xmi#//@domainObjects.9"/>
+      <methodParameters name="eWSEntry">
+        <type href="package-material.xmi#//@domainObjects.9"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="deleteAll" javaType="/584" returnType="/0/@allSupportedTypes.0" transactionType="REQUIRED" methodType="DELETE_ALL"/>
+    <repositoryMethods name="merge" javaType="/584" transactionType="REQUIRED" methodType="MERGE">
+      <returnType href="package-material.xmi#//@domainObjects.9"/>
+      <methodParameters name="eWSEntry">
+        <type href="package-material.xmi#//@domainObjects.9"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="persist" javaType="/584" transactionType="REQUIRED" methodType="PERSIST">
+      <returnType href="package-material.xmi#//@domainObjects.9"/>
+      <methodParameters name="eWSEntry">
+        <type href="package-material.xmi#//@domainObjects.9"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="copy" javaType="/584" transactionType="REQUIRED" methodType="COPY">
+      <returnType href="package-material.xmi#//@domainObjects.9"/>
+      <methodParameters name="sourceObject">
+        <type href="package-material.xmi#//@domainObjects.9"/>
+      </methodParameters>
+      <methodParameters name="targetObject">
+        <type href="package-material.xmi#//@domainObjects.9"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="delete" javaType="/584" returnType="/0/@allSupportedTypes.0" transactionType="REQUIRED" methodType="DELETE">
+      <methodParameters name="id" type="/0/@allSupportedTypes.2"/>
+    </repositoryMethods>
+    <repositoryMethods name="findAll" javaType="/584" returnTypeModifier="List" transactionType="REQUIRED">
+      <returnType href="package-material.xmi#//@domainObjects.9"/>
+    </repositoryMethods>
+    <repositoryMethods name="existsById" javaType="/584" returnType="/0/@allSupportedTypes.4" transactionType="REQUIRED" methodType="EXISTS_BY_ID">
+      <methodParameters name="id" type="/0/@allSupportedTypes.2"/>
+    </repositoryMethods>
+    <repositoryMethods name="count" javaType="/584" returnType="/0/@allSupportedTypes.7" transactionType="REQUIRED" methodType="COUNT_ALL"/>
+    <repositoryMethods name="search" javaType="/584" returnTypeModifier="List" transactionType="REQUIRED" methodType="SEARCH">
+      <returnType href="package-material.xmi#//@domainObjects.9"/>
+    </repositoryMethods>
+    <repositoryMethods name="count" javaType="/584" returnType="/0/@allSupportedTypes.7" transactionType="REQUIRED" methodType="COUNT"/>
+    <repositoryMethods name="getMaterial" javaType="/584" transactionType="REQUIRED" methodType="GET_ASSOCIATION" hint="NQ_GET_MATERIAL">
+      <returnType href="package-material.xmi#//@domainObjects.2"/>
+      <methodParameters xsi:type="net.sourceforge.jbizmo.model.repository:RepositoryMethodParameter" name="id" type="/0/@allSupportedTypes.2">
+        <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-material.xmi#//@domainObjects.9/@associations.0"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="getReceivers" javaType="/584" returnTypeModifier="List" transactionType="REQUIRED" methodType="GET_ASSOCIATION" hint="NQ_GET_RECEIVERS">
+      <returnType href="package-base.xmi#//@domainObjects.1"/>
+      <methodParameters xsi:type="net.sourceforge.jbizmo.model.repository:RepositoryMethodParameter" name="id" type="/0/@allSupportedTypes.2">
+        <association xsi:type="net.sourceforge.net.model.domain:ManyToManyAssociation" href="package-material.xmi#//@domainObjects.9/@associations.1"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="setMaterial" javaType="/584" returnType="/0/@allSupportedTypes.0" transactionType="REQUIRED" methodType="CHANGE_PARENT">
+      <methodParameters name="id" type="/0/@allSupportedTypes.2"/>
+      <methodParameters xsi:type="net.sourceforge.jbizmo.model.repository:RepositoryMethodParameter" name="material">
+        <type href="package-material.xmi#//@domainObjects.2"/>
+        <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-material.xmi#//@domainObjects.9/@associations.0"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="removeUserFromReceivers" javaType="/584" returnType="/0/@allSupportedTypes.0" transactionType="REQUIRED" methodType="REMOVE_FROM_ASSOCIATION">
+      <methodParameters name="id" type="/0/@allSupportedTypes.2"/>
+      <methodParameters name="user" hint="receivers">
+        <type href="package-base.xmi#//@domainObjects.1"/>
+      </methodParameters>
+    </repositoryMethods>
+    <repositoryMethods name="addUserToReceivers" javaType="/584" returnType="/0/@allSupportedTypes.0" transactionType="REQUIRED" methodType="ADD_TO_ASSOCIATION">
+      <methodParameters name="id" type="/0/@allSupportedTypes.2"/>
+      <methodParameters name="user" hint="receivers">
+        <type href="package-base.xmi#//@domainObjects.1"/>
+      </methodParameters>
+    </repositoryMethods>
+  </net.sourceforge.jbizmo.model.repository:Repository>
+  <net.sourceforge.jbizmo.model.client:Form name="ViewEWSEntryDialog" formType="READONLY" formGroup="/578" title="View EWS entry" formPanels="/586 /587 /592" dTO="/588" roles="/0/@roles.0 /0/@roles.2">
+    <actions name="actionGet" boundaryMethod="/583/@boundaryMethods.1" type="READ"/>
+    <domainObject href="package-material.xmi#//@domainObjects.9"/>
+  </net.sourceforge.jbizmo.model.client:Form>
+  <net.sourceforge.jbizmo.model.client:FormPanel name="panEWSEntry" label="Basic data" form="/585">
+    <fields name="txtThreshold" label="Threshold" readonly="true" width="140" dTOAttribute="/588/@attributes.0"/>
+    <fields name="cboMaterial" colIndex="2" label="Material" readonly="true" fieldType="FORM_LINK" width="140" dTOAttribute="/588/@attributes.8"/>
+    <fields name="cboType" rowIndex="2" label="Type" readonly="true" fieldType="ENUM_COMBOBOX" width="140" dTOAttribute="/588/@attributes.3"/>
+    <fields name="chkBoardOrSystem" colIndex="2" rowIndex="2" label="Board or system" readonly="true" fieldType="CHECKBOX" dTOAttribute="/588/@attributes.1"/>
+    <fields name="txtFilterCriterion" rowIndex="3" label="Filter criterion" spanCols="true" readonly="true" mandatory="false" fieldType="MULTI_LINE_TEXT" dTOAttribute="/588/@attributes.2"/>
+  </net.sourceforge.jbizmo.model.client:FormPanel>
+  <net.sourceforge.jbizmo.model.client:FormPanel name="panAdministration" colIndex="2" label="Administration data" form="/585">
+    <fields name="txtId" label="Id" readonly="true" width="120" dTOAttribute="/588/@attributes.4"/>
+    <fields name="txtVersion" rowIndex="2" label="Version" readonly="true" width="120" dTOAttribute="/588/@attributes.5"/>
+    <fields name="txtCreationDate" rowIndex="3" label="Creation date" readonly="true" fieldType="DATE_TIME" width="120" dTOAttribute="/588/@attributes.6"/>
+    <fields name="txtLastUpdate" rowIndex="4" label="Last update" readonly="true" mandatory="false" fieldType="DATE_TIME" width="120" dTOAttribute="/588/@attributes.7"/>
+  </net.sourceforge.jbizmo.model.client:FormPanel>
+  <net.sourceforge.jbizmo.model.dto:DTOBean name="EWSEntryDTO" comment="Data transfer object for EWS entry objects" namespace="/110" standardConversion="true">
+    <domainObject href="package-material.xmi#//@domainObjects.9"/>
+    <attributes name="threshold">
+      <domainAttribute href="package-material.xmi#//@domainObjects.9/@attributes.0"/>
+    </attributes>
+    <attributes name="boardOrSystem">
+      <domainAttribute href="package-material.xmi#//@domainObjects.9/@attributes.1"/>
+    </attributes>
+    <attributes name="filterCriterion">
+      <domainAttribute href="package-material.xmi#//@domainObjects.9/@attributes.2"/>
+    </attributes>
+    <attributes name="type">
+      <domainAttribute href="package-material.xmi#//@domainObjects.9/@attributes.3"/>
+    </attributes>
+    <attributes name="id">
+      <domainAttribute href="package-base.xmi#//@domainObjects.0/@attributes.0"/>
+    </attributes>
+    <attributes name="version">
+      <domainAttribute href="package-base.xmi#//@domainObjects.0/@attributes.1"/>
+    </attributes>
+    <attributes name="creationDate">
+      <domainAttribute href="package-base.xmi#//@domainObjects.0/@attributes.2"/>
+    </attributes>
+    <attributes name="lastUpdate">
+      <domainAttribute href="package-base.xmi#//@domainObjects.0/@attributes.3"/>
+    </attributes>
+    <attributes name="material" referencedDTOBean="/191">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-material.xmi#//@domainObjects.9/@associations.0"/>
+    </attributes>
+  </net.sourceforge.jbizmo.model.dto:DTOBean>
+  <net.sourceforge.jbizmo.model.client:FormPanel name="EWSEntryReceiversPanel" formGroup="/578" label="Users of a EWS entry" formTable="/590" dTO="/591" boundaryMethod="/583/@boundaryMethods.2">
+    <association xsi:type="net.sourceforge.net.model.domain:ManyToManyAssociation" href="package-material.xmi#//@domainObjects.9/@associations.1"/>
+  </net.sourceforge.jbizmo.model.client:FormPanel>
+  <net.sourceforge.jbizmo.model.client:FormTable name="UserTable" formPanel="/589">
+    <fields width="200" title="Name" dTOAttribute="/591/@attributes.0"/>
+    <fields colIndex="2" width="200" title="Email" dTOAttribute="/591/@attributes.1"/>
+    <fields colIndex="3" width="70" title="Active" fieldType="BOOLEAN" dTOAttribute="/591/@attributes.2"/>
+    <fields colIndex="4" visible="false" identifier="true" width="80" title="Id" fieldType="LONG" dTOAttribute="/591/@attributes.3"/>
+  </net.sourceforge.jbizmo.model.client:FormTable>
+  <net.sourceforge.jbizmo.model.dto:DTOBean name="EWSEntryReceiversDTO" comment="DTO for user objects" namespace="/8">
+    <domainObject href="package-base.xmi#//@domainObjects.1"/>
+    <attributes name="name" selectToken="a.name">
+      <domainAttribute href="package-base.xmi#//@domainObjects.1/@attributes.0"/>
+    </attributes>
+    <attributes name="email" selectToken="a.email">
+      <domainAttribute href="package-base.xmi#//@domainObjects.1/@attributes.2"/>
+    </attributes>
+    <attributes name="active" selectToken="a.active">
+      <domainAttribute href="package-base.xmi#//@domainObjects.1/@attributes.3"/>
+    </attributes>
+    <attributes name="id" selectToken="a.id">
+      <domainAttribute href="package-base.xmi#//@domainObjects.0/@attributes.0"/>
+    </attributes>
+  </net.sourceforge.jbizmo.model.dto:DTOBean>
+  <net.sourceforge.jbizmo.model.client:FormPanel name="panReceivers" rowIndex="2" label="Receivers" form="/585" basePanel="/589"/>
+  <net.sourceforge.jbizmo.model.client:Form name="EditEWSEntryDialog" formGroup="/578" title="Edit EWS entry" formPanels="/594 /595 /596" dTO="/597" roles="/0/@roles.0">
+    <actions name="actionUpdate" boundaryMethod="/583/@boundaryMethods.3" type="UPDATE"/>
+    <domainObject href="package-material.xmi#//@domainObjects.9"/>
+  </net.sourceforge.jbizmo.model.client:Form>
+  <net.sourceforge.jbizmo.model.client:FormPanel name="panEWSEntry" label="Basic data" form="/593">
+    <fields name="txtThreshold" label="Threshold" width="140" dTOAttribute="/597/@attributes.0"/>
+    <fields name="cboMaterial" colIndex="2" label="Material" fieldType="PROPOSAL_TEXT" width="140" dTOAttribute="/597/@attributes.8"/>
+    <fields name="cboType" rowIndex="2" label="Type" fieldType="ENUM_COMBOBOX" width="140" dTOAttribute="/597/@attributes.3"/>
+    <fields name="chkBoardOrSystem" colIndex="2" rowIndex="2" label="Board or system" fieldType="CHECKBOX" dTOAttribute="/597/@attributes.1"/>
+    <fields name="txtFilterCriterion" rowIndex="3" label="Filter criterion" spanCols="true" mandatory="false" fieldType="MULTI_LINE_TEXT" dTOAttribute="/597/@attributes.2"/>
+  </net.sourceforge.jbizmo.model.client:FormPanel>
+  <net.sourceforge.jbizmo.model.client:FormPanel name="panAdministration" colIndex="2" label="Administration data" form="/593">
+    <fields name="txtId" label="Id" readonly="true" width="120" dTOAttribute="/597/@attributes.4"/>
+    <fields name="txtVersion" rowIndex="2" label="Version" readonly="true" width="120" dTOAttribute="/597/@attributes.5"/>
+    <fields name="txtCreationDate" rowIndex="3" label="Creation date" readonly="true" fieldType="DATE_TIME" width="120" dTOAttribute="/597/@attributes.6"/>
+    <fields name="txtLastUpdate" rowIndex="4" label="Last update" readonly="true" mandatory="false" fieldType="DATE_TIME" width="120" dTOAttribute="/597/@attributes.7"/>
+  </net.sourceforge.jbizmo.model.client:FormPanel>
+  <net.sourceforge.jbizmo.model.client:FormPanel name="panReceivers" rowIndex="2" label="Receivers" form="/593">
+    <fields name="listReceivers" label="Receivers" fieldType="SEARCHABLE_LIST" width="120" dTOAttribute="/597/@attributes.9"/>
+  </net.sourceforge.jbizmo.model.client:FormPanel>
+  <net.sourceforge.jbizmo.model.dto:DTOBean name="EWSEntryUpdateDTO" comment="Data transfer object for EWS entry objects" namespace="/110" standardConversion="true">
+    <domainObject href="package-material.xmi#//@domainObjects.9"/>
+    <attributes name="threshold">
+      <domainAttribute href="package-material.xmi#//@domainObjects.9/@attributes.0"/>
+    </attributes>
+    <attributes name="boardOrSystem">
+      <domainAttribute href="package-material.xmi#//@domainObjects.9/@attributes.1"/>
+    </attributes>
+    <attributes name="filterCriterion">
+      <domainAttribute href="package-material.xmi#//@domainObjects.9/@attributes.2"/>
+    </attributes>
+    <attributes name="type">
+      <domainAttribute href="package-material.xmi#//@domainObjects.9/@attributes.3"/>
+    </attributes>
+    <attributes name="id">
+      <domainAttribute href="package-base.xmi#//@domainObjects.0/@attributes.0"/>
+    </attributes>
+    <attributes name="version">
+      <domainAttribute href="package-base.xmi#//@domainObjects.0/@attributes.1"/>
+    </attributes>
+    <attributes name="creationDate">
+      <domainAttribute href="package-base.xmi#//@domainObjects.0/@attributes.2"/>
+    </attributes>
+    <attributes name="lastUpdate">
+      <domainAttribute href="package-base.xmi#//@domainObjects.0/@attributes.3"/>
+    </attributes>
+    <attributes name="material" referencedDTOBean="/191">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-material.xmi#//@domainObjects.9/@associations.0"/>
+    </attributes>
+    <attributes name="receivers" referencedDTOBean="/276">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToManyAssociation" href="package-material.xmi#//@domainObjects.9/@associations.1"/>
+    </attributes>
+  </net.sourceforge.jbizmo.model.dto:DTOBean>
+  <net.sourceforge.jbizmo.model.client:Form name="EWSEntryView" formType="SEARCHABLE_VIEW" formGroup="/578" title="EWS entries view" formPanels="/599" dTO="/601" roles="/0/@roles.0 /0/@roles.2" boundaryMethod="/583/@boundaryMethods.5">
+    <actions name="actionDelete" description="Delete selected EWS entry" boundaryMethod="/583/@boundaryMethods.7" roles="/0/@roles.0" type="DELETE"/>
+    <actions name="actionCreate" description="Create new EWS entry" targetForm="/579" roles="/0/@roles.0"/>
+    <actions name="actionUpdate" description="Edit EWS entry" targetForm="/593" roles="/0/@roles.0" type="UPDATE"/>
+    <actions name="actionGet" description="View EWS entry" targetForm="/585" roles="/0/@roles.0 /0/@roles.2" type="READ"/>
+    <actions name="actionCopy" description="Create copy of selected EWS entry" boundaryMethod="/583/@boundaryMethods.8" roles="/0/@roles.0" type="COPY"/>
+    <domainObject href="package-material.xmi#//@domainObjects.9"/>
+  </net.sourceforge.jbizmo.model.client:Form>
+  <net.sourceforge.jbizmo.model.client:FormPanel name="EWSEntryPanel" form="/598" formTable="/600" dTO="/601" boundaryMethod="/583/@boundaryMethods.6"/>
+  <net.sourceforge.jbizmo.model.client:FormTable name="EWSEntryTable" formPanel="/599">
+    <fields width="150" title="Material no." dTOAttribute="/601/@attributes.7"/>
+    <fields colIndex="2" title="Type" fieldType="ENUM" dTOAttribute="/601/@attributes.3"/>
+    <fields colIndex="3" width="80" title="Threshold" fieldType="DOUBLE" dTOAttribute="/601/@attributes.0"/>
+    <fields colIndex="4" title="Board/system" fieldType="BOOLEAN" dTOAttribute="/601/@attributes.1"/>
+    <fields colIndex="5" width="250" title="Filter criterion" dTOAttribute="/601/@attributes.2"/>
+    <fields colIndex="6" width="120" title="Creation date" fieldType="LOCAL_DATE_TIME" dTOAttribute="/601/@attributes.5"/>
+    <fields colIndex="7" width="120" title="Last update" fieldType="LOCAL_DATE_TIME" dTOAttribute="/601/@attributes.6"/>
+    <fields colIndex="8" visible="false" identifier="true" width="80" title="Id" fieldType="LONG" dTOAttribute="/601/@attributes.4"/>
+    <fields colIndex="9" visible="false" width="80" title="Material id" fieldType="LONG" dTOAttribute="/601/@attributes.8"/>
+  </net.sourceforge.jbizmo.model.client:FormTable>
+  <net.sourceforge.jbizmo.model.dto:DTOBean name="EWSEntrySearchDTO" comment="DTO for ews entry objects" namespace="/110">
+    <domainObject href="package-material.xmi#//@domainObjects.9"/>
+    <attributes name="threshold" selectToken="a.threshold">
+      <domainAttribute href="package-material.xmi#//@domainObjects.9/@attributes.0"/>
+    </attributes>
+    <attributes name="boardOrSystem" selectToken="a.boardOrSystem">
+      <domainAttribute href="package-material.xmi#//@domainObjects.9/@attributes.1"/>
+    </attributes>
+    <attributes name="filterCriterion" selectToken="a.filterCriterion">
+      <domainAttribute href="package-material.xmi#//@domainObjects.9/@attributes.2"/>
+    </attributes>
+    <attributes name="type" selectToken="a.type">
+      <domainAttribute href="package-material.xmi#//@domainObjects.9/@attributes.3"/>
+    </attributes>
+    <attributes name="id" selectToken="a.id">
+      <domainAttribute href="package-base.xmi#//@domainObjects.0/@attributes.0"/>
+    </attributes>
+    <attributes name="creationDate" selectToken="a.creationDate">
+      <domainAttribute href="package-base.xmi#//@domainObjects.0/@attributes.2"/>
+    </attributes>
+    <attributes name="lastUpdate" selectToken="a.lastUpdate">
+      <domainAttribute href="package-base.xmi#//@domainObjects.0/@attributes.3"/>
+    </attributes>
+    <attributes name="materialMaterialNumber" selectToken="b.materialNumber">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-material.xmi#//@domainObjects.9/@associations.0"/>
+      <domainAttribute href="package-material.xmi#//@domainObjects.2/@attributes.0"/>
+    </attributes>
+    <attributes name="materialId" selectToken="b.id">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-material.xmi#//@domainObjects.9/@associations.0"/>
       <domainAttribute href="package-base.xmi#//@domainObjects.0/@attributes.0"/>
     </attributes>
   </net.sourceforge.jbizmo.model.dto:DTOBean>

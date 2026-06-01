@@ -1,0 +1,78 @@
+<ui:composition xmlns="https://jakarta.ee/xml/ns/jakartaee"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:h="jakarta.faces.html"
+	xmlns:f="jakarta.faces.core"
+	xmlns:p="http://primefaces.org/ui">
+
+	<p:menubar>
+		<p:submenu icon="pi pi-refresh" label="#{i18n.mnu_view}">
+			<p:menuitem value="#{i18n.action_refresh}" ajax="false" icon="pi pi-refresh" actionListener="#{eWSEntryReceiversPanel.fetchReceivers}"/>
+		</p:submenu>
+		<p:submenu icon="pi pi-print" label="#{i18n.mnu_export}">
+			<p:menuitem value="#{i18n.action_export_xls}" ajax="false" icon="pi pi-file-excel">
+				<p:dataExporter type="xlsxstream" target="gridEWSEntryReceiversPanel" fileName="UserList"/>
+			</p:menuitem>
+			<p:menuitem value="#{i18n.action_export_pdf}" ajax="false" icon="pi pi-file-pdf">
+				<p:dataExporter type="pdf" target="gridEWSEntryReceiversPanel" fileName="UserList"/>
+			</p:menuitem>
+		</p:submenu>
+	</p:menubar>
+
+
+	<p:dataTable id="gridEWSEntryReceiversPanel" var="eWSEntryReceiversPanelItem" rows="50"
+		selectionTextDisabled="false" allowUnsorting="true" resizeMode="expand" multiViewState="true" 
+		selectionMode="single"
+		selection="#{eWSEntryReceiversPanel.selItemOfReceivers}"
+		loadingMessage="#{i18n.action_fetch_data}"
+		value="#{eWSEntryReceiversPanel.receiversList}" scrollable="false"
+		paginatorPosition="top" paginatorAlwaysVisible="false" paginator="true" resizableColumns="true"
+		rowKey="#{eWSEntryReceiversPanelItem.id}"
+		paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+		rowsPerPageTemplate="50,150,400,1000,{ShowAll|'All'}">
+		<p:ajax event="rowDblselect" listener="#{eWSEntryReceiversPanel.onReceiversGridDoubleClick}"/>
+
+		<p:column sortBy="#{eWSEntryReceiversPanelItem.name}" width="200" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_user_name}"/>
+			</f:facet>
+			<h:outputText value="#{eWSEntryReceiversPanelItem.name}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{eWSEntryReceiversPanelItem.email}" width="200" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_user_email}"/>
+			</f:facet>
+			<h:outputText value="#{eWSEntryReceiversPanelItem.email}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{eWSEntryReceiversPanelItem.active}" width="70" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_user_active}"/>
+			</f:facet>
+			<p:selectBooleanCheckbox value="#{eWSEntryReceiversPanelItem.active}" disabled="true"/>
+		</p:column>
+	</p:dataTable>
+	<p/>
+
+	<h:outputText styleClass="label-field-mandatory" value="#{i18n.result_total_number_records} #{eWSEntryReceiversPanel.receiversList.size()}"/>
+
+
+
+<!--Kontextmenü mit Möglichkeit, eine Zelle oder eine Zeile zu kopieren -->
+
+	<h:inputHidden id="cellText" value="#{eWSEntryReceiversPanel.cellText}" />
+	<h:inputHidden id="rowCsv" value="#{eWSEntryReceiversPanel.rowCsv}" />
+
+
+	<p:contextMenu for="gridEWSEntryReceiversPanel" beforeShow="updateContextData(event)" >
+		<p:menuitem value="#{i18n.action_refresh}" ajax="false" type="push" icon="pi pi-refresh" id="gridEWSEntryReceiversPanel_mniRefresh" actionListener="#{eWSEntryReceiversPanel.fetchReceivers}"/>
+
+		<p:separator/>
+
+		<p:menuitem value="#{i18n.ctxmenu_copy_cell}" actionListener="#{eWSEntryReceiversPanel.copyCellToClipboard}" icon="pi pi-copy" update="@none"/>
+		<p:menuitem value="#{i18n.ctxmenu_copy_row}" actionListener="#{eWSEntryReceiversPanel.copyRowToClipboard}" icon="pi pi-copy" update="@none"/>
+	</p:contextMenu>
+
+</ui:composition>
