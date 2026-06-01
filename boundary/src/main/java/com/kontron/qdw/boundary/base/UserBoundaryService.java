@@ -4,6 +4,7 @@ import com.kontron.qdw.boundary.util.MailServiceFacade;
 import com.kontron.qdw.repository.base.*;
 import com.kontron.qdw.boundary.util.Constants;
 import net.sourceforge.jbizmo.commons.search.exception.*;
+import static net.sourceforge.jbizmo.commons.jpa.AbstractRepository.WILDCARD;
 import com.kontron.qdw.dto.base.*;
 import com.kontron.qdw.domain.base.*;
 import com.kontron.util.cipher.PasswordGenerator;
@@ -43,6 +44,38 @@ public class UserBoundaryService {
     @Generated
     public UserBoundaryService(UserRepository repository) {
         this.repository = repository;
+    }
+
+    /**
+     * Search for user objects
+     * @param filter
+     * @return a list of user objects
+     * @throws GeneralSearchException if the search operation has failed
+     */
+    @Customized
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public List<UserListDTO> findUsers(String filter) {
+        // Collect the select tokens of all fields that should be fetched
+        final var selectTokens = new ArrayList<String>();
+        selectTokens.add("a.id");
+        selectTokens.add("a.name");
+
+        // Initialize the search object
+        final var searchObj = new SearchDTO();
+        searchObj.setExactFilterMatch(true);
+        searchObj.setCaseSensitive(true);
+        searchObj.setMaxResult(SMALL_LIST_SIZE);
+        searchObj.setFromClause("from User a where a.active = true");
+
+        if (filter != null && !filter.isEmpty() && !filter.equals(WILDCARD)) {
+            final var filterField = searchObj.addSearchField("a.name", SearchFieldDataTypeEnum.STRING);
+            filterField.setFilterCriteria(filter + WILDCARD);
+            filterField.setSortIndex(1);
+            filterField.setSortOrder(SortDirectionEnum.ASC);
+        }
+
+        return repository.search(searchObj, UserListDTO.class, selectTokens);
     }
 
     /**
@@ -155,11 +188,13 @@ public class UserBoundaryService {
     public ApplicationLogOnDTO logOn(String userName, String password) {
         final User user = repository.findByName(userName);
 
-        if (user == null)
+        if (user == null) {
             throw new SecurityException("User account does not exist!");
+        }
 
-        if (!user.isActive())
+        if (!user.isActive()) {
             throw new SecurityException("Account is locked!");
+        }
 
         final var dto = new ApplicationLogOnDTO();
 
@@ -196,15 +231,17 @@ public class UserBoundaryService {
     @PermitAll
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void changePassword(long id, String oldPassword, String newPassword, String confirmedPassword) {
-        if (!newPassword.equals(confirmedPassword))
+        if (!newPassword.equals(confirmedPassword)) {
             throw new IllegalArgumentException("New password and confirmed password are not equal!");
+        }
 
         // Find persistent object
         final User user = repository.findById(id, true);
 
         try {
-            if (!user.getPassword().equals(HashGenerator.encryptSHA256(oldPassword)))
+            if (!user.getPassword().equals(HashGenerator.encryptSHA256(oldPassword))) {
                 throw new IllegalArgumentException("Password is incorrect!");
+            }
 
             user.setPassword(HashGenerator.encryptSHA256(newPassword));
         }
@@ -363,29 +400,6 @@ public class UserBoundaryService {
         }
 
         return resultList;
-    }
-
-    /**
-     * Search for user objects
-     * @param filter
-     * @return a list of user objects
-     * @throws GeneralSearchException if the search operation has failed
-     */
-    @Generated
-    @PermitAll
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public List<UserListDTO> findUsers(String filter) {
-        // Collect the select tokens of all fields that should be fetched
-        final var selectTokens = new ArrayList<String>();
-
-        // Initialize the search object
-        final var searchObj = new SearchDTO();
-        searchObj.setExactFilterMatch(true);
-        searchObj.setCaseSensitive(true);
-        searchObj.setMaxResult(SMALL_LIST_SIZE);
-        searchObj.setFromClause("from User a");
-
-        return repository.search(searchObj, UserListDTO.class, selectTokens);
     }
 
     /**

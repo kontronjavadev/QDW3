@@ -19,6 +19,7 @@ import com.kontron.qdw.ui.*;
 import com.kontron.qdw.dto.material.*;
 import jakarta.faces.model.*;
 import jakarta.inject.*;
+import net.sourceforge.jbizmo.commons.annotation.Customized;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
 import java.io.*;
 
@@ -79,6 +80,24 @@ public class CreateNewEWSEntryDialog implements Serializable {
     }
 
     /**
+     * Perform filter operation
+     */
+    @Customized
+    public void filterReceivers() {
+        receiversList = new DualListModel<>(Collections.emptyList(), receiversList.getTarget());
+
+        try {
+            final List<UserListDTO> receiversSourceList = userService.findUsers(receiversFilterCriterion);
+            receiversSourceList.removeAll(receiversList.getTarget());
+
+            receiversList = new DualListModel<>(receiversSourceList, receiversList.getTarget());
+        }
+        catch (final Exception e) {
+            logger.error("Error while fetching data for list field 'listReceivers'!", e);
+        }
+    }
+
+    /**
      * @return the model object
      */
     @Generated
@@ -135,8 +154,9 @@ public class CreateNewEWSEntryDialog implements Serializable {
         final var items = new SelectItem[EWSType.values().length];
         int i = 0;
 
-        for (final EWSType item : EWSType.values())
+        for (final EWSType item : EWSType.values()) {
             items[i++] = new SelectItem(item, bundle.getString("ewstype_" + item.name().toLowerCase()));
+        }
 
         return items;
     }
@@ -174,27 +194,6 @@ public class CreateNewEWSEntryDialog implements Serializable {
     }
 
     /**
-     * Perform filter operation
-     */
-    @Generated
-    public void filterReceivers() {
-        receiversList = new DualListModel<>(Collections.emptyList(), receiversList.getTarget());
-
-        if (receiversFilterCriterion == null || receiversFilterCriterion.isEmpty())
-            return;
-
-        try {
-            final List<UserListDTO> receiversSourceList = userService.findUsers(receiversFilterCriterion);
-            receiversSourceList.removeAll(receiversList.getTarget());
-
-            receiversList = new DualListModel<>(receiversSourceList, receiversList.getTarget());
-        }
-        catch (final Exception e) {
-            logger.error("Error while fetching data for list field 'listReceivers'!", e);
-        }
-    }
-
-    /**
      * Initialize dialog
      */
     @Generated
@@ -204,8 +203,9 @@ public class CreateNewEWSEntryDialog implements Serializable {
         bundle = ResourceBundle.getBundle(DEFAULT_BUNDLE_NAME, userSession.getLocale());
 
         // Check if user is allowed to open this page!
-        if (!userSession.checkAuthorization(true, ROLE_ADMINISTRATOR))
+        if (!userSession.checkAuthorization(true, ROLE_ADMINISTRATOR)) {
             return;
+        }
 
 
         try {
