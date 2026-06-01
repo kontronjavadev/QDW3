@@ -1,11 +1,11 @@
 package com.kontron.qdw.dto.material;
 
 import java.util.*;
-import java.time.*;
-import com.kontron.qdw.domain.material.*;
 import java.io.Serializable;
+import java.time.*;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
 import com.kontron.qdw.dto.base.*;
+import com.kontron.qdw.domain.material.*;
 
 public class EWSEntryCreateDTO implements Serializable {
     @Generated

@@ -12458,13 +12458,13 @@
       <domainAttribute href="package-base.xmi#//@domainObjects.0/@attributes.0"/>
     </attributes>
   </net.sourceforge.jbizmo.model.dto:DTOBean>
-  <net.sourceforge.jbizmo.model.client:FormGroup name="System" groupOrder="6" forms="/579 /593 /585 /598" panels="/589" roles="/0/@roles.0 /0/@roles.2" project="/0"/>
+  <net.sourceforge.jbizmo.model.client:FormGroup name="System" groupOrder="6" forms="/579 /593 /598 /585" panels="/589" roles="/0/@roles.0 /0/@roles.2" project="/0"/>
   <net.sourceforge.jbizmo.model.client:Form name="CreateNewEWSEntryDialog" formType="CREATE" formGroup="/578" title="Create new EWS entry" formPanels="/580 /581" dTO="/582" roles="/0/@roles.0">
     <actions name="actionCreate" boundaryMethod="/583/@boundaryMethods.0"/>
     <domainObject href="package-material.xmi#//@domainObjects.9"/>
   </net.sourceforge.jbizmo.model.client:Form>
   <net.sourceforge.jbizmo.model.client:FormPanel name="panEWSEntry" label="Basic data" form="/579">
-    <fields name="txtThreshold" label="Threshold" width="140" dTOAttribute="/582/@attributes.0"/>
+    <fields name="txtThreshold" label="Threshold" width="140" defaultValue="1.0" dTOAttribute="/582/@attributes.0"/>
     <fields name="cboMaterial" colIndex="2" label="Material" fieldType="PROPOSAL_TEXT" width="140" dTOAttribute="/582/@attributes.7"/>
     <fields name="cboType" rowIndex="2" label="Type" fieldType="ENUM_COMBOBOX" width="140" dTOAttribute="/582/@attributes.3"/>
     <fields name="chkBoardOrSystem" colIndex="2" rowIndex="2" label="Board or system" fieldType="CHECKBOX" defaultValue="USE_DEFAULT" dTOAttribute="/582/@attributes.1"/>

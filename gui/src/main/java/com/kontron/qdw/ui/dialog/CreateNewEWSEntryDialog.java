@@ -210,6 +210,7 @@ public class CreateNewEWSEntryDialog implements Serializable {
 
         try {
             eWSEntry = new EWSEntryCreateDTO();
+            eWSEntry.setThreshold(1.0);
             eWSEntry.setType(EWSType.values()[0]);
             eWSEntry.setBoardOrSystem(true);
 
