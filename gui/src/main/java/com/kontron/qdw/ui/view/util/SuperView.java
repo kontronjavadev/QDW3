@@ -4,6 +4,7 @@ import static com.kontron.qdw.ui.TranslationKeys.OPERATION_QUERYRENAME_NOT_UNIQU
 import static com.kontron.qdw.ui.TranslationKeys.OPERATION_RENAME_FAIL;
 import static com.kontron.qdw.ui.TranslationKeys.OPERATION_RENAME_SUCCESS;
 import static com.kontron.qdw.ui.UserSession.DEFAULT_BUNDLE_NAME;
+import static org.apache.commons.text.StringEscapeUtils.unescapeHtml4;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -140,7 +141,7 @@ public abstract class SuperView extends CopyClipboard {
         // Reihenfolge für die sichtbaren Spalten gemäß Eintragungsreihenfolge in getTarget() setzen.
         int visibleColOrder = 0;
         for (SearchFieldDTO visibleCol : visibleFields.getTarget()) {
-            cols.get(visibleCol.getColLabel()).setColOrder(visibleColOrder++);
+            cols.get(unescapeHtml4(visibleCol.getColLabel())).setColOrder(visibleColOrder++);
         }
 
         // Reihenfolge für die nicht sichtbaren Spalten mit Start > letztem Index;
