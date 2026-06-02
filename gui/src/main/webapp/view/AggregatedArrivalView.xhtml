@@ -316,12 +316,13 @@
 		selectionMode="single"
 		selection="#{aggregatedArrivalView.selectedObject}"
 		loadingMessage="#{i18n.action_fetch_data}"
-		value="#{aggregatedArrivalView.aggregatedArrivalsList}" scrollable="false"
+		value="#{aggregatedArrivalView.aggregatedArrivalsList}" scrollable="true" styleClass="viewScrollable"
 		paginatorPosition="top" paginatorAlwaysVisible="#{aggregatedArrivalView.paginatorAlwaysVisible}" paginator="true" resizableColumns="true"
 		rowKey="#{aggregatedArrivalViewItem.id}"
 		paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 		rowsPerPageTemplate="50,150,400,1000">
 		<p:ajax event="rowDblselect" listener="#{aggregatedArrivalView.onDoubleClick}"/>
+		<p:ajax event="rowSelect" listener="#{aggregatedArrivalView.onClick}"/>
 
 		<p:column sortBy="#{aggregatedArrivalViewItem.plantCode}" width="100" 
 			rendered="#{aggregatedArrivalView.searchObject.searchFields[0].visible}" displayPriority="#{aggregatedArrivalView.searchObject.searchFields[0].colOrder}" >

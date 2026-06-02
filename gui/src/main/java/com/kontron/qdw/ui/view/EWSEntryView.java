@@ -220,6 +220,13 @@ public class EWSEntryView extends SuperView implements Serializable {
         fetchEWSEntries();
     }
 
+    /**
+     * Handle single click event: set selection to reselect after switching to another view and back to this view.
+     */
+    public void onClick() {
+        onClickId(eWSEntriesList, EWSEntrySearchDTO::getId, this::setSelectedObject);
+    }
+
 
 
     @Customized

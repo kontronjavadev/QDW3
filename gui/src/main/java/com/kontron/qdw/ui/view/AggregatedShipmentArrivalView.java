@@ -265,6 +265,14 @@ public class AggregatedShipmentArrivalView extends SuperView implements Serializ
     }
 
     /**
+     * Handle single click event: set selection to reselect after switching to another view and back to this view.
+     */
+    public void onClick() {
+        onClickId(aggregatedShipmentArrivalsList, AggregatedShipmentArrivalSearchDTO::getId, this::setSelectedObject);
+    }
+
+
+    /**
      * @return the list of elements
      */
     @Generated

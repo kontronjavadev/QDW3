@@ -270,12 +270,13 @@
 		selectionMode="single"
 		selection="#{supplierView.selectedObject}"
 		loadingMessage="#{i18n.action_fetch_data}"
-		value="#{supplierView.suppliersList}" scrollable="false"
+		value="#{supplierView.suppliersList}" scrollable="true" styleClass="viewScrollable"
 		paginatorPosition="top" paginatorAlwaysVisible="#{supplierView.paginatorAlwaysVisible}" paginator="true" resizableColumns="true"
 		rowKey="#{supplierViewItem.code}"
 		paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 		rowsPerPageTemplate="50,150,400,1000">
 		<p:ajax event="rowDblselect" listener="#{supplierView.onDoubleClick}"/>
+		<p:ajax event="rowSelect" listener="#{supplierView.onClick}"/>
 
 		<p:column sortBy="#{supplierViewItem.code}" width="100" 
 			rendered="#{supplierView.searchObject.searchFields[0].visible}" displayPriority="#{supplierView.searchObject.searchFields[0].colOrder}" >

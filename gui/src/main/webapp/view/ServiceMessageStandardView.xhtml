@@ -782,12 +782,13 @@
 		selectionMode="single"
 		selection="#{serviceMessageStandardView.selectedObject}"
 		loadingMessage="#{i18n.action_fetch_data}"
-		value="#{serviceMessageStandardView.serviceMessagesList}" scrollable="false"
+		value="#{serviceMessageStandardView.serviceMessagesList}" scrollable="true" styleClass="viewScrollable"
 		paginatorPosition="top" paginatorAlwaysVisible="#{serviceMessageStandardView.paginatorAlwaysVisible}" paginator="true" resizableColumns="true"
 		rowKey="#{serviceMessageStandardViewItem.id}"
 		paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 		rowsPerPageTemplate="50,150,400,1000">
 		<p:ajax event="rowDblselect" listener="#{serviceMessageStandardView.onDoubleClick}"/>
+		<p:ajax event="rowSelect" listener="#{serviceMessageStandardView.onClick}"/>
 
 		<p:column sortBy="#{serviceMessageStandardViewItem.id}" width="120" 
 			rendered="#{serviceMessageStandardView.searchObject.searchFields[0].visible}" displayPriority="#{serviceMessageStandardView.searchObject.searchFields[0].colOrder}" >

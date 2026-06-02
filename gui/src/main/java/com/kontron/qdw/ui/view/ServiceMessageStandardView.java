@@ -381,6 +381,15 @@ public class ServiceMessageStandardView extends SuperView implements Serializabl
         fetchServiceMessages();
     }
 
+    /**
+     * Handle single click event: set selection to reselect after switching to another view and back to this view.
+     */
+    public void onClick() {
+        onClickId(serviceMessagesList, ServiceMessageStandardSearchDTO::getId, this::setSelectedObject);
+    }
+
+
+
     @Customized
     public List<String> onCompleteCustomerName(String searchText) {
         return OnCompleteHelper.onCompleteCustomerName(customerService, searchText);

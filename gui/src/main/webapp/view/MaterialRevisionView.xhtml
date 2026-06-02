@@ -319,12 +319,13 @@
 		selectionMode="single"
 		selection="#{materialRevisionView.selectedObject}"
 		loadingMessage="#{i18n.action_fetch_data}"
-		value="#{materialRevisionView.materialRevisionsList}" scrollable="false"
+		value="#{materialRevisionView.materialRevisionsList}" scrollable="true" styleClass="viewScrollable"
 		paginatorPosition="top" paginatorAlwaysVisible="#{materialRevisionView.paginatorAlwaysVisible}" paginator="true" resizableColumns="true"
 		rowKey="#{materialRevisionViewItem.id}"
 		paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 		rowsPerPageTemplate="50,150,400,1000">
 		<p:ajax event="rowDblselect" listener="#{materialRevisionView.onDoubleClick}"/>
+		<p:ajax event="rowSelect" listener="#{materialRevisionView.onClick}"/>
 
 		<p:column sortBy="#{materialRevisionViewItem.materialMaterialNumber}" width="150" 
 			rendered="#{materialRevisionView.searchObject.searchFields[0].visible}" displayPriority="#{materialRevisionView.searchObject.searchFields[0].colOrder}" 

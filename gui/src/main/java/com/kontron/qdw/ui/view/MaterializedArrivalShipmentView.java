@@ -326,6 +326,13 @@ public class MaterializedArrivalShipmentView extends SuperView implements Serial
         fetchMaterializedArrivalShipments();
     }
 
+    /**
+     * Handle single click event: set selection to reselect after switching to another view and back to this view.
+     */
+    public void onClick() {
+        onClickId(materializedArrivalShipmentsList, MaterializedArrivalShipmentSearchDTO::getId, this::setSelectedObject);
+    }
+
 
 
     public List<String> onCompleteMaterialNumber(String query) {

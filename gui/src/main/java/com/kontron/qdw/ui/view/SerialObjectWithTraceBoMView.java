@@ -289,6 +289,13 @@ public class SerialObjectWithTraceBoMView extends SuperView implements Serializa
         fetchMaterializedArrivalShipments();
     }
 
+    /**
+     * Handle single click event: set selection to reselect after switching to another view and back to this view.
+     */
+    public void onClick() {
+        onClickId(materializedArrivalShipmentsList, MaterializedArrivalShipmentSerObjTBoMSearchDTO::getId, this::setSelectedObject);
+    }
+
 
 
     /**

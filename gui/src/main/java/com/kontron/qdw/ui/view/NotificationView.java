@@ -214,6 +214,15 @@ public class NotificationView extends SuperView implements Serializable {
     }
 
     /**
+     * Handle single click event: set selection to reselect after switching to another view and back to this view.
+     */
+    public void onClick() {
+        onClickId(notificationsList, NotificationSearchDTO::getId, this::setSelectedObject);
+    }
+
+
+
+    /**
      * @return the list of elements
      */
     @Generated
@@ -287,8 +296,9 @@ public class NotificationView extends SuperView implements Serializable {
             return "";
         }
 
-        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_MAINTAINER))
+        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_MAINTAINER)) {
             url = EditNotificationDialog.PAGE_INIT_URL + newId;
+        }
 
         userSession.setLastPage(getCurrentPageURL());
         return url;
@@ -302,8 +312,9 @@ public class NotificationView extends SuperView implements Serializable {
     public String openCreateNewNotificationDialog() {
         var url = "";
 
-        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_MAINTAINER))
+        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_MAINTAINER)) {
             url = CreateNewNotificationDialog.PAGE_INIT_URL;
+        }
 
         return url;
     }
@@ -316,8 +327,9 @@ public class NotificationView extends SuperView implements Serializable {
     public String openEditNotificationDialog() {
         var url = "";
 
-        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_MAINTAINER))
+        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_MAINTAINER)) {
             url = EditNotificationDialog.PAGE_INIT_URL + selectedObject.getId();
+        }
 
         return url;
     }
@@ -365,6 +377,7 @@ public class NotificationView extends SuperView implements Serializable {
     /**
      * @return the name of the selected saved query
      */
+    @Override
     @Generated
     public String getSelectedSavedQuery() {
         return selectedSavedQuery;
@@ -442,8 +455,9 @@ public class NotificationView extends SuperView implements Serializable {
         try {
             final Collection<UserListDTO> items = userService.findUsers(query + "%");
 
-            for (final UserListDTO item : items)
+            for (final UserListDTO item : items) {
                 results.add(item.getName());
+            }
         }
         catch (final Exception e) {
             logger.error("Error while searching for auto-complete items by using the entered text '{}'!", query, e);
@@ -484,8 +498,9 @@ public class NotificationView extends SuperView implements Serializable {
         final var items = new SelectItem[savedQueries.size()];
         int i = 0;
 
-        for (final String item : savedQueries)
+        for (final String item : savedQueries) {
             items[i++] = new SelectItem(item, item);
+        }
 
         return items;
     }
@@ -495,8 +510,9 @@ public class NotificationView extends SuperView implements Serializable {
      */
     @Generated
     public void deleteSavedQuery() {
-        if (selectedSavedQuery == null)
+        if (selectedSavedQuery == null) {
             return;
+        }
 
         logger.debug("Delete saved query");
 
@@ -511,8 +527,9 @@ public class NotificationView extends SuperView implements Serializable {
      */
     @Generated
     public void runSavedQuery() {
-        if (selectedSavedQuery == null)
+        if (selectedSavedQuery == null) {
             return;
+        }
 
         logger.debug("Run saved query");
 

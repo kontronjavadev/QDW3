@@ -540,12 +540,13 @@
 		selectionMode="single"
 		selection="#{materializedArrivalShipmentView.selectedObject}"
 		loadingMessage="#{i18n.action_fetch_data}"
-		value="#{materializedArrivalShipmentView.materializedArrivalShipmentsList}" scrollable="false"
+		value="#{materializedArrivalShipmentView.materializedArrivalShipmentsList}" scrollable="true" styleClass="viewScrollable"
 		paginatorPosition="top" paginatorAlwaysVisible="#{materializedArrivalShipmentView.paginatorAlwaysVisible}" paginator="true" resizableColumns="true"
 		rowKey="#{materializedArrivalShipmentViewItem.id}"
 		paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 		rowsPerPageTemplate="50,150,400,1000">
 		<p:ajax event="rowDblselect" listener="#{materializedArrivalShipmentView.onDoubleClick}"/>
+		<p:ajax event="rowSelect" listener="#{materializedArrivalShipmentView.onClick}"/>
 
 		<p:column sortBy="#{materializedArrivalShipmentViewItem.shipmentId}" width="80" 
 			rendered="#{materializedArrivalShipmentView.searchObject.searchFields[0].visible}" displayPriority="#{materializedArrivalShipmentView.searchObject.searchFields[0].colOrder}" 

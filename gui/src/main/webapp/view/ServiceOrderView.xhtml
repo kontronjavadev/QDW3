@@ -272,12 +272,13 @@
 		selectionMode="single"
 		selection="#{serviceOrderView.selectedObject}"
 		loadingMessage="#{i18n.action_fetch_data}"
-		value="#{serviceOrderView.serviceOrdersList}" scrollable="false"
+		value="#{serviceOrderView.serviceOrdersList}" scrollable="true" styleClass="viewScrollable"
 		paginatorPosition="top" paginatorAlwaysVisible="#{serviceOrderView.paginatorAlwaysVisible}" paginator="true" resizableColumns="true"
 		rowKey="#{serviceOrderViewItem.code}"
 		paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 		rowsPerPageTemplate="50,150,400,1000">
 		<p:ajax event="rowDblselect" listener="#{serviceOrderView.onDoubleClick}"/>
+		<p:ajax event="rowSelect" listener="#{serviceOrderView.onClick}"/>
 
 		<p:column sortBy="#{serviceOrderViewItem.code}" width="100" 
 			rendered="#{serviceOrderView.searchObject.searchFields[0].visible}" displayPriority="#{serviceOrderView.searchObject.searchFields[0].colOrder}" >

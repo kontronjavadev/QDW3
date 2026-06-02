@@ -498,12 +498,13 @@
 		selectionMode="single"
 		selection="#{serialObjectTraceBoMView.selectedObject}"
 		loadingMessage="#{i18n.action_fetch_data}"
-		value="#{serialObjectTraceBoMView.serialObjectsList}" scrollable="false"
+		value="#{serialObjectTraceBoMView.serialObjectsList}" scrollable="true" styleClass="viewScrollable"
 		paginatorPosition="top" paginatorAlwaysVisible="#{serialObjectTraceBoMView.paginatorAlwaysVisible}" paginator="true" resizableColumns="true"
 		rowKey="#{serialObjectTraceBoMViewItem.id}_#{serialObjectTraceBoMViewItem.tbomTbomitemId}"
 		paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 		rowsPerPageTemplate="50,150,400,1000">
 		<p:ajax event="rowDblselect" listener="#{serialObjectTraceBoMView.onDoubleClick}"/>
+		<p:ajax event="rowSelect" listener="#{serialObjectTraceBoMView.onClick}"/>
 
 		<p:column sortBy="#{serialObjectTraceBoMViewItem.tbomSupplierName}" width="200" 
 			rendered="#{serialObjectTraceBoMView.searchObject.searchFields[0].visible}" displayPriority="#{serialObjectTraceBoMView.searchObject.searchFields[0].colOrder}" 

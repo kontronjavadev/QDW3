@@ -312,7 +312,7 @@ public class NavigatorView implements Serializable {
         if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_SUPERUSER)) {
             // Form group: System
             final var itemGroup0007 = new DefaultTreeNode<>(FOLDER_TYPE, new TreeNavigatorItem(bundle.getString(FG_TOP_SYSTEM)), root);
-            itemGroup0007.setExpanded(true);
+            itemGroup0007.setExpanded(false);
 
             if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_SUPERUSER))
                 new DefaultTreeNode<>(VIEW_TYPE,new TreeNavigatorItem(bundle.getString(FORM_EWSENTRYVIEW_TITLE), 

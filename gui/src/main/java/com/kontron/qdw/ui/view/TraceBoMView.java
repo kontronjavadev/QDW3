@@ -248,6 +248,26 @@ public class TraceBoMView extends SuperView implements Serializable {
         }
     }
 
+    @Override
+    protected String getViewName() {
+        return VIEW_ID;
+    }
+
+    @Override
+    public void resetSearchObject() {
+        initSearchObject();
+        fetchTraceBoMs();
+    }
+
+    /**
+     * Handle single click event: set selection to reselect after switching to another view and back to this view.
+     */
+    public void onClick() {
+        onClickId(traceBoMsList, TraceBoMSearchDTO::getId, this::setSelectedObject);
+    }
+
+
+
     /**
      * Callback method for auto-complete field
      * @param query the filter criterion inserted by the user
@@ -271,19 +291,6 @@ public class TraceBoMView extends SuperView implements Serializable {
     public List<String> onCompleteSupplierName(String query) {
         return OnCompleteHelper.onCompleteSupplierName(supplierService, query);
     }
-
-    @Override
-    protected String getViewName() {
-        return VIEW_ID;
-    }
-
-    @Override
-    public void resetSearchObject() {
-        initSearchObject();
-        fetchTraceBoMs();
-    }
-
-
 
     /**
      * @return the list of elements
@@ -368,8 +375,9 @@ public class TraceBoMView extends SuperView implements Serializable {
     public String openViewTraceBoMDialog() {
         var url = "";
 
-        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY))
+        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY)) {
             url = ViewTraceBoMDialog.PAGE_INIT_URL + selectedObject.getId();
+        }
 
         return url;
     }
@@ -515,8 +523,9 @@ public class TraceBoMView extends SuperView implements Serializable {
         final var items = new SelectItem[savedQueries.size()];
         int i = 0;
 
-        for (final String item : savedQueries)
+        for (final String item : savedQueries) {
             items[i++] = new SelectItem(item, item);
+        }
 
         return items;
     }
@@ -526,8 +535,9 @@ public class TraceBoMView extends SuperView implements Serializable {
      */
     @Generated
     public void deleteSavedQuery() {
-        if (selectedSavedQuery == null)
+        if (selectedSavedQuery == null) {
             return;
+        }
 
         logger.debug("Delete saved query");
 
@@ -542,8 +552,9 @@ public class TraceBoMView extends SuperView implements Serializable {
      */
     @Generated
     public void runSavedQuery() {
-        if (selectedSavedQuery == null)
+        if (selectedSavedQuery == null) {
             return;
+        }
 
         logger.debug("Run saved query");
 

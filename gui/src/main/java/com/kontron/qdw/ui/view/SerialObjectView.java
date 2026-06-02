@@ -258,6 +258,13 @@ public class SerialObjectView extends SuperView implements Serializable {
         fetchSerialObjects();
     }
 
+    /**
+     * Handle single click event: set selection to reselect after switching to another view and back to this view.
+     */
+    public void onClick() {
+        onClickId(serialObjectsList, SerialObjectSearchDTO::getId, this::setSelectedObject);
+    }
+
 
 
     /**

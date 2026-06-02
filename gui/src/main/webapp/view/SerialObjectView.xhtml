@@ -317,12 +317,13 @@
 		selectionMode="single"
 		selection="#{serialObjectView.selectedObject}"
 		loadingMessage="#{i18n.action_fetch_data}"
-		value="#{serialObjectView.serialObjectsList}" scrollable="false"
+		value="#{serialObjectView.serialObjectsList}" scrollable="true" styleClass="viewScrollable"
 		paginatorPosition="top" paginatorAlwaysVisible="#{serialObjectView.paginatorAlwaysVisible}" paginator="true" resizableColumns="true"
 		rowKey="#{serialObjectViewItem.id}"
 		paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 		rowsPerPageTemplate="10,50,100,500,1000">
 		<p:ajax event="rowDblselect" listener="#{serialObjectView.onDoubleClick}"/>
+		<p:ajax event="rowSelect" listener="#{serialObjectView.onClick}"/>
 
 		<p:column sortBy="#{serialObjectViewItem.serialNumber}" width="100" 
 			rendered="#{serialObjectView.searchObject.searchFields[0].visible}" displayPriority="#{serialObjectView.searchObject.searchFields[0].colOrder}" >

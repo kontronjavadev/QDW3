@@ -285,12 +285,13 @@
 		selectionMode="single"
 		selection="#{customerView.selectedObject}"
 		loadingMessage="#{i18n.action_fetch_data}"
-		value="#{customerView.customersList}" scrollable="false"
+		value="#{customerView.customersList}" scrollable="true" styleClass="viewScrollable"
 		paginatorPosition="top" paginatorAlwaysVisible="#{customerView.paginatorAlwaysVisible}" paginator="true" resizableColumns="true"
 		rowKey="#{customerViewItem.code}"
 		paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 		rowsPerPageTemplate="50,150,400,1000">
 		<p:ajax event="rowDblselect" listener="#{customerView.onDoubleClick}"/>
+		<p:ajax event="rowSelect" listener="#{customerView.onClick}"/>
 
 		<p:column sortBy="#{customerViewItem.code}" width="100" 
 			rendered="#{customerView.searchObject.searchFields[0].visible}" displayPriority="#{customerView.searchObject.searchFields[0].colOrder}" >

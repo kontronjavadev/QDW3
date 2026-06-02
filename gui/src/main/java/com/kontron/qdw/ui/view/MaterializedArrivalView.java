@@ -307,6 +307,25 @@ public class MaterializedArrivalView extends SuperView implements Serializable {
         }
     }
 
+    @Override
+    protected String getViewName() {
+        return VIEW_ID;
+    }
+
+    @Override
+    public void resetSearchObject() {
+        initSearchObject();
+        fetchMaterializedArrivals();
+    }
+
+    /**
+     * Handle single click event: set selection to reselect after switching to another view and back to this view.
+     */
+    public void onClick() {
+        onClickId(materializedArrivalsList, MaterializedArrivalSearchDTO::getId, this::setSelectedObject);
+    }
+
+
     /**
      * Perform count operation
      */
@@ -457,12 +476,6 @@ public class MaterializedArrivalView extends SuperView implements Serializable {
 
 
 
-    @Override
-    public void resetSearchObject() {
-        initSearchObject();
-        fetchMaterializedArrivals();
-    }
-
     /**
      * Refresh format settings from user session
      */
@@ -524,11 +537,6 @@ public class MaterializedArrivalView extends SuperView implements Serializable {
     }
 
 
-
-    @Override
-    protected String getViewName() {
-        return VIEW_ID;
-    }
 
     /**
      * @return the URL of the current page

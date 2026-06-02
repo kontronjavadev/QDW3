@@ -268,6 +268,15 @@ public class ArrivalLastView extends SuperView implements Serializable {
     }
 
     /**
+     * Handle single click event: set selection to reselect after switching to another view and back to this view.
+     */
+    public void onClick() {
+        onClickId(arrivalsList, ArrivalLastSearchDTO::getId, this::setSelectedObject);
+    }
+
+
+
+    /**
      * @return the list of elements
      */
     @Generated
@@ -350,8 +359,9 @@ public class ArrivalLastView extends SuperView implements Serializable {
     public String openViewArrivalDialog() {
         var url = "";
 
-        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY))
+        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY)) {
             url = ViewArrivalDialog.PAGE_INIT_URL + selectedObject.getId();
+        }
 
         return url;
     }
@@ -477,8 +487,9 @@ public class ArrivalLastView extends SuperView implements Serializable {
         try {
             final Collection<SupplierListDTO> items = supplierService.findSuppliers(query + "%");
 
-            for (final SupplierListDTO item : items)
+            for (final SupplierListDTO item : items) {
                 results.add(item.getName());
+            }
         }
         catch (final Exception e) {
             logger.error("Error while searching for auto-complete items by using the entered text '{}'!", query, e);
@@ -499,8 +510,9 @@ public class ArrivalLastView extends SuperView implements Serializable {
         try {
             final Collection<MaterialListDTO> items = materialService.findMaterials(query + "%");
 
-            for (final MaterialListDTO item : items)
+            for (final MaterialListDTO item : items) {
                 results.add(item.getMaterialNumber());
+            }
         }
         catch (final Exception e) {
             logger.error("Error while searching for auto-complete items by using the entered text '{}'!", query, e);
@@ -541,8 +553,9 @@ public class ArrivalLastView extends SuperView implements Serializable {
         final var items = new SelectItem[savedQueries.size()];
         int i = 0;
 
-        for (final String item : savedQueries)
+        for (final String item : savedQueries) {
             items[i++] = new SelectItem(item, item);
+        }
 
         return items;
     }
@@ -552,8 +565,9 @@ public class ArrivalLastView extends SuperView implements Serializable {
      */
     @Generated
     public void deleteSavedQuery() {
-        if (selectedSavedQuery == null)
+        if (selectedSavedQuery == null) {
             return;
+        }
 
         logger.debug("Delete saved query");
 
@@ -568,8 +582,9 @@ public class ArrivalLastView extends SuperView implements Serializable {
      */
     @Generated
     public void runSavedQuery() {
-        if (selectedSavedQuery == null)
+        if (selectedSavedQuery == null) {
             return;
+        }
 
         logger.debug("Run saved query");
 

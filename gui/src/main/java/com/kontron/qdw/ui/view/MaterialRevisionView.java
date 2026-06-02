@@ -249,6 +249,15 @@ public class MaterialRevisionView extends SuperView implements Serializable {
     }
 
     /**
+     * Handle single click event: set selection to reselect after switching to another view and back to this view.
+     */
+    public void onClick() {
+        onClickId(materialRevisionsList, MaterialRevisionSearchDTO::getId, this::setSelectedObject);
+    }
+
+
+
+    /**
      * @return the list of elements
      */
     @Generated
@@ -279,8 +288,9 @@ public class MaterialRevisionView extends SuperView implements Serializable {
     public void onDoubleClick() {
         logger.debug("Handle double-click event");
 
-        if (userSession.redirectTo(getCurrentPageURL(), openEditMaterialRevisionDialog()))
+        if (userSession.redirectTo(getCurrentPageURL(), openEditMaterialRevisionDialog())) {
             return;
+        }
 
         userSession.redirectTo(getCurrentPageURL(), openViewMaterialRevisionDialog());
     }
@@ -325,8 +335,9 @@ public class MaterialRevisionView extends SuperView implements Serializable {
             return "";
         }
 
-        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR))
+        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR)) {
             url = EditMaterialRevisionDialog.PAGE_INIT_URL + newId;
+        }
 
         userSession.setLastPage(getCurrentPageURL());
         return url;
@@ -340,8 +351,9 @@ public class MaterialRevisionView extends SuperView implements Serializable {
     public String openEditMaterialRevisionDialog() {
         var url = "";
 
-        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR))
+        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR)) {
             url = EditMaterialRevisionDialog.PAGE_INIT_URL + selectedObject.getId();
+        }
 
         return url;
     }
@@ -354,8 +366,9 @@ public class MaterialRevisionView extends SuperView implements Serializable {
     public String openViewMaterialRevisionDialog() {
         var url = "";
 
-        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY, ROLE_SUPERUSER))
+        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY, ROLE_SUPERUSER)) {
             url = ViewMaterialRevisionDialog.PAGE_INIT_URL + selectedObject.getId();
+        }
 
         return url;
     }
@@ -403,6 +416,7 @@ public class MaterialRevisionView extends SuperView implements Serializable {
     /**
      * @return the name of the selected saved query
      */
+    @Override
     @Generated
     public String getSelectedSavedQuery() {
         return selectedSavedQuery;
@@ -480,8 +494,9 @@ public class MaterialRevisionView extends SuperView implements Serializable {
         try {
             final Collection<MaterialListDTO> items = materialService.findMaterials(query + "%");
 
-            for (final MaterialListDTO item : items)
+            for (final MaterialListDTO item : items) {
                 results.add(item.getMaterialNumber());
+            }
         }
         catch (final Exception e) {
             logger.error("Error while searching for auto-complete items by using the entered text '{}'!", query, e);
@@ -522,8 +537,9 @@ public class MaterialRevisionView extends SuperView implements Serializable {
         final var items = new SelectItem[savedQueries.size()];
         int i = 0;
 
-        for (final String item : savedQueries)
+        for (final String item : savedQueries) {
             items[i++] = new SelectItem(item, item);
+        }
 
         return items;
     }
@@ -533,8 +549,9 @@ public class MaterialRevisionView extends SuperView implements Serializable {
      */
     @Generated
     public void deleteSavedQuery() {
-        if (selectedSavedQuery == null)
+        if (selectedSavedQuery == null) {
             return;
+        }
 
         logger.debug("Delete saved query");
 
@@ -549,8 +566,9 @@ public class MaterialRevisionView extends SuperView implements Serializable {
      */
     @Generated
     public void runSavedQuery() {
-        if (selectedSavedQuery == null)
+        if (selectedSavedQuery == null) {
             return;
+        }
 
         logger.debug("Run saved query");
 

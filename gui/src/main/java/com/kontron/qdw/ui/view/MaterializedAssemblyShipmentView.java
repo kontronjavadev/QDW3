@@ -326,6 +326,13 @@ public class MaterializedAssemblyShipmentView extends SuperView implements Seria
         fetchMaterializedAssemblyShipments();
     }
 
+    /**
+     * Handle single click event: set selection to reselect after switching to another view and back to this view.
+     */
+    public void onClick() {
+        onClickId(materializedAssemblyShipmentsList, MaterializedAssemblyShipmentSearchDTO::getId, this::setSelectedObject);
+    }
+
 
 
     public List<String> onCompleteMaterialNumber(String query) {

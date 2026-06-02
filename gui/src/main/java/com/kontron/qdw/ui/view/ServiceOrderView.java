@@ -236,6 +236,13 @@ public class ServiceOrderView extends SuperView implements Serializable {
         fetchServiceOrders();
     }
 
+    /**
+     * Handle single click event: set selection to reselect after switching to another view and back to this view.
+     */
+    public void onClick() {
+        onClickCode(serviceOrdersList, ServiceOrderSearchDTO::getCode, this::setSelectedObject);
+    }
+
 
 
     /**

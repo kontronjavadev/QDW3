@@ -296,6 +296,13 @@ public class ShipmentView extends SuperView implements Serializable {
         fetchShipments();
     }
 
+    /**
+     * Handle single click event: set selection to reselect after switching to another view and back to this view.
+     */
+    public void onClick() {
+        onClickId(shipmentsList, ShipmentSearchDTO::getId, this::setSelectedObject);
+    }
+
 
 
     /**

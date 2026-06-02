@@ -218,12 +218,13 @@
 		selectionMode="single"
 		selection="#{notificationView.selectedObject}"
 		loadingMessage="#{i18n.action_fetch_data}"
-		value="#{notificationView.notificationsList}" scrollable="false"
+		value="#{notificationView.notificationsList}" scrollable="true" styleClass="viewScrollable"
 		paginatorPosition="top" paginatorAlwaysVisible="#{notificationView.paginatorAlwaysVisible}" paginator="true" resizableColumns="true"
 		rowKey="#{notificationViewItem.id}"
 		paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 		rowsPerPageTemplate="50,150,400,1000">
 		<p:ajax event="rowDblselect" listener="#{notificationView.onDoubleClick}"/>
+		<p:ajax event="rowSelect" listener="#{notificationView.onClick}"/>
 
 		<p:column sortBy="#{notificationViewItem.header}" width="100" 
 			rendered="#{notificationView.searchObject.searchFields[0].visible}" displayPriority="#{notificationView.searchObject.searchFields[0].colOrder}" >

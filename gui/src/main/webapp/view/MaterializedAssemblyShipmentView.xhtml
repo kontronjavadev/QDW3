@@ -554,12 +554,13 @@
 		selectionMode="single"
 		selection="#{materializedAssemblyShipmentView.selectedObject}"
 		loadingMessage="#{i18n.action_fetch_data}"
-		value="#{materializedAssemblyShipmentView.materializedAssemblyShipmentsList}" scrollable="false"
+		value="#{materializedAssemblyShipmentView.materializedAssemblyShipmentsList}" scrollable="true" styleClass="viewScrollable"
 		paginatorPosition="top" paginatorAlwaysVisible="#{materializedAssemblyShipmentView.paginatorAlwaysVisible}" paginator="true" resizableColumns="true"
 		rowKey="#{materializedAssemblyShipmentViewItem.id}"
 		paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 		rowsPerPageTemplate="50,150,400,1000">
 		<p:ajax event="rowDblselect" listener="#{materializedAssemblyShipmentView.onDoubleClick}"/>
+		<p:ajax event="rowSelect" listener="#{materializedAssemblyShipmentView.onClick}"/>
 
 		<p:column sortBy="#{materializedAssemblyShipmentViewItem.id}" width="80" 
 			rendered="#{materializedAssemblyShipmentView.searchObject.searchFields[0].visible}" displayPriority="#{materializedAssemblyShipmentView.searchObject.searchFields[0].colOrder}" >

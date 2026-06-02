@@ -471,12 +471,13 @@
 		selectionMode="single"
 		selection="#{materializedArrivalView.selectedObject}"
 		loadingMessage="#{i18n.action_fetch_data}"
-		value="#{materializedArrivalView.materializedArrivalsList}" scrollable="false"
+		value="#{materializedArrivalView.materializedArrivalsList}" scrollable="true" styleClass="viewScrollable"
 		paginatorPosition="top" paginatorAlwaysVisible="#{materializedArrivalView.paginatorAlwaysVisible}" paginator="true" resizableColumns="true"
 		rowKey="#{arrivalViewItem.id}"
 		paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 		rowsPerPageTemplate="50,150,400,1000">
 		<p:ajax event="rowDblselect" listener="#{materializedArrivalView.onDoubleClick}"/>
+		<p:ajax event="rowSelect" listener="#{materializedArrivalView.onClick}"/>
 
 		<p:column sortBy="#{arrivalViewItem.id}" width="120" 
 			rendered="#{materializedArrivalView.searchObject.searchFields[0].visible}" displayPriority="#{materializedArrivalView.searchObject.searchFields[0].colOrder}" >

@@ -226,6 +226,13 @@ public class SupplierView extends SuperView implements Serializable {
         fetchSuppliers();
     }
 
+    /**
+     * Handle single click event: set selection to reselect after switching to another view and back to this view.
+     */
+    public void onClick() {
+        onClickCode(suppliersList, SupplierSearchDTO::getCode, this::setSelectedObject);
+    }
+
 
 
     @Customized

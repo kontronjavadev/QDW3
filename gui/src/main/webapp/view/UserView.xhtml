@@ -179,12 +179,13 @@
 		selectionMode="single" 
 		selection="#{userView.selectedObject}"
 		loadingMessage="#{i18n.action_fetch_data}"
-		value="#{userView.usersList}" scrollable="false"
+		value="#{userView.usersList}" scrollable="true" styleClass="viewScrollable"
 		paginatorPosition="top" paginatorAlwaysVisible="#{userView.paginatorAlwaysVisible}" paginator="true" resizableColumns="true"
 		rowKey="#{userViewItem.id}"
 		paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 		rowsPerPageTemplate="50,150,400,1000">
 		<p:ajax event="rowDblselect" listener="#{userView.onDoubleClick}"/>
+		<p:ajax event="rowSelect" listener="#{userView.onClick}"/>
 
 		<p:column sortBy="#{userViewItem.name}" width="150" rendered="#{userView.searchObject.searchFields[0].visible}" displayPriority="#{userView.searchObject.searchFields[0].colOrder}" >
 			<f:facet name="header">

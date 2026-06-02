@@ -418,6 +418,13 @@ public class MaterializedServiceMessageView extends SuperView implements Seriali
         fetchMaterializedServiceMessages();
     }
 
+    /**
+     * Handle single click event: set selection to reselect after switching to another view and back to this view.
+     */
+    public void onClick() {
+        onClickId(materializedServiceMessagesList, MaterializedServiceMessageSearchDTO::getId, this::setSelectedObject);
+    }
+
 
 
     public List<String> onCompleteCountryName(String searchText) {

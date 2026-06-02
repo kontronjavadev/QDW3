@@ -192,6 +192,26 @@ public class UserView extends SuperView implements Serializable {
         }
     }
 
+    @Override
+    protected String getViewName() {
+        return VIEW_ID;
+    }
+
+    @Override
+    public void resetSearchObject() {
+        initSearchObject();
+        fetchUsers();
+    }
+
+    /**
+     * Handle single click event: set selection to reselect after switching to another view and back to this view.
+     */
+    public void onClick() {
+        onClickId(usersList, UserSearchDTO::getId, this::setSelectedObject);
+    }
+
+
+
     /**
      * Callback method for auto-complete field
      * @param query the filter criterion inserted by the user
@@ -212,17 +232,6 @@ public class UserView extends SuperView implements Serializable {
         }
 
         return results;
-    }
-
-    @Override
-    protected String getViewName() {
-        return VIEW_ID;
-    }
-
-    @Override
-    public void resetSearchObject() {
-        initSearchObject();
-        fetchUsers();
     }
 
     /**
@@ -299,8 +308,9 @@ public class UserView extends SuperView implements Serializable {
             return "";
         }
 
-        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_USER_ADMINISTRATOR))
+        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_USER_ADMINISTRATOR)) {
             url = EditUserDialog.PAGE_INIT_URL + newId;
+        }
 
         userSession.setLastPage(getCurrentPageURL());
         return url;
@@ -314,8 +324,9 @@ public class UserView extends SuperView implements Serializable {
     public String openCreateNewUserDialog() {
         var url = "";
 
-        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_USER_ADMINISTRATOR))
+        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_USER_ADMINISTRATOR)) {
             url = CreateNewUserDialog.PAGE_INIT_URL;
+        }
 
         return url;
     }
@@ -328,8 +339,9 @@ public class UserView extends SuperView implements Serializable {
     public String openEditUserDialog() {
         var url = "";
 
-        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_USER_ADMINISTRATOR))
+        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_USER_ADMINISTRATOR)) {
             url = EditUserDialog.PAGE_INIT_URL + selectedObject.getId();
+        }
 
         return url;
     }
@@ -377,6 +389,7 @@ public class UserView extends SuperView implements Serializable {
     /**
      * @return the name of the selected saved query
      */
+    @Override
     @Generated
     public String getSelectedSavedQuery() {
         return selectedSavedQuery;
@@ -474,8 +487,9 @@ public class UserView extends SuperView implements Serializable {
         final var items = new SelectItem[savedQueries.size()];
         int i = 0;
 
-        for (final String item : savedQueries)
+        for (final String item : savedQueries) {
             items[i++] = new SelectItem(item, item);
+        }
 
         return items;
     }
@@ -485,8 +499,9 @@ public class UserView extends SuperView implements Serializable {
      */
     @Generated
     public void deleteSavedQuery() {
-        if (selectedSavedQuery == null)
+        if (selectedSavedQuery == null) {
             return;
+        }
 
         logger.debug("Delete saved query");
 
@@ -501,8 +516,9 @@ public class UserView extends SuperView implements Serializable {
      */
     @Generated
     public void runSavedQuery() {
-        if (selectedSavedQuery == null)
+        if (selectedSavedQuery == null) {
             return;
+        }
 
         logger.debug("Run saved query");
 

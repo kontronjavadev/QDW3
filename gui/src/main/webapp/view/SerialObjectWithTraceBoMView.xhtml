@@ -428,12 +428,13 @@
 		selectionMode="single"
 		selection="#{serialObjectWithTraceBoMView.selectedObject}"
 		loadingMessage="#{i18n.action_fetch_data}"
-		value="#{serialObjectWithTraceBoMView.materializedArrivalShipmentsList}" scrollable="false"
+		value="#{serialObjectWithTraceBoMView.materializedArrivalShipmentsList}" scrollable="true" styleClass="viewScrollable"
 		paginatorPosition="top" paginatorAlwaysVisible="#{serialObjectWithTraceBoMView.paginatorAlwaysVisible}" paginator="true" resizableColumns="true"
 		rowKey="#{serialObjectWithTraceBoMViewItem.id}"
 		paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 		rowsPerPageTemplate="50,150,400,1000">
 		<p:ajax event="rowDblselect" listener="#{serialObjectWithTraceBoMView.onDoubleClick}"/>
+		<p:ajax event="rowSelect" listener="#{serialObjectWithTraceBoMView.onClick}"/>
 
 		<p:column sortBy="#{serialObjectWithTraceBoMViewItem.plant}" width="80" 
 			rendered="#{serialObjectWithTraceBoMView.searchObject.searchFields[0].visible}" displayPriority="#{serialObjectWithTraceBoMView.searchObject.searchFields[0].colOrder}" >

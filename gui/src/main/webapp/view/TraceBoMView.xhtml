@@ -330,12 +330,13 @@
 		selectionMode="single"
 		selection="#{traceBoMView.selectedObject}"
 		loadingMessage="#{i18n.action_fetch_data}"
-		value="#{traceBoMView.traceBoMsList}" scrollable="false"
+		value="#{traceBoMView.traceBoMsList}" scrollable="true" styleClass="viewScrollable"
 		paginatorPosition="top" paginatorAlwaysVisible="#{traceBoMView.paginatorAlwaysVisible}" paginator="true" resizableColumns="true"
 		rowKey="#{traceBoMViewItem.id}"
 		paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 		rowsPerPageTemplate="50,150,400,1000">
 		<p:ajax event="rowDblselect" listener="#{traceBoMView.onDoubleClick}"/>
+		<p:ajax event="rowSelect" listener="#{traceBoMView.onClick}"/>
 
 		<p:column sortBy="#{traceBoMViewItem.matrevMatMaterialNumber}" width="150" 
 			rendered="#{traceBoMView.searchObject.searchFields[0].visible}" displayPriority="#{traceBoMView.searchObject.searchFields[0].colOrder}" 

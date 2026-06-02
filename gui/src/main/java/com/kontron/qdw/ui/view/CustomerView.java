@@ -3,6 +3,7 @@ package com.kontron.qdw.ui.view;
 import com.kontron.qdw.boundary.base.*;
 import org.slf4j.*;
 import java.lang.invoke.*;
+
 import org.primefaces.model.DualListModel;
 import net.sourceforge.jbizmo.commons.webclient.primefaces.search.*;
 import com.kontron.qdw.ui.dialog.*;
@@ -13,7 +14,9 @@ import static com.kontron.qdw.ui.TranslationKeys.*;
 import net.sourceforge.jbizmo.commons.webclient.primefaces.util.*;
 import com.kontron.qdw.dto.base.*;
 import jakarta.faces.application.FacesMessage;
+
 import java.util.*;
+
 import jakarta.faces.view.*;
 import java.text.*;
 import static com.kontron.qdw.ui.UserSession.*;
@@ -236,6 +239,13 @@ public class CustomerView extends SuperView implements Serializable {
     public void resetSearchObject() {
         initSearchObject();
         fetchCustomers();
+    }
+
+    /**
+     * Handle single click event: set selection to reselect after switching to another view and back to this view.
+     */
+    public void onClick() {
+        onClickCode(customersList, CustomerSearchDTO::getCode, this::setSelectedObject);
     }
 
 

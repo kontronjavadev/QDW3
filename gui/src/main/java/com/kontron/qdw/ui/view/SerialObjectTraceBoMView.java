@@ -301,6 +301,13 @@ public class SerialObjectTraceBoMView extends SuperView implements Serializable 
         fetchSerialObjects();
     }
 
+    /**
+     * Handle single click event: set selection to reselect after switching to another view and back to this view.
+     */
+    public void onClick() {
+        onClickId(serialObjectsList, SerialObjectTraceBoMSearchDTO::getId, this::setSelectedObject);
+    }
+
 
 
     /**

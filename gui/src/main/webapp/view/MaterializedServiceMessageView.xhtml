@@ -899,12 +899,13 @@
 		selectionMode="single"
 		selection="#{materializedServiceMessageView.selectedObject}"
 		loadingMessage="#{i18n.action_fetch_data}"
-		value="#{materializedServiceMessageView.materializedServiceMessagesList}" scrollable="false"
+		value="#{materializedServiceMessageView.materializedServiceMessagesList}" scrollable="true" styleClass="viewScrollable"
 		paginatorPosition="top" paginatorAlwaysVisible="#{materializedServiceMessageView.paginatorAlwaysVisible}" paginator="true" resizableColumns="true"
 		rowKey="#{materializedServiceMessageViewItem.id}"
 		paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 		rowsPerPageTemplate="50,150,400,1000">
 		<p:ajax event="rowDblselect" listener="#{materializedServiceMessageView.onDoubleClick}"/>
+		<p:ajax event="rowSelect" listener="#{materializedServiceMessageView.onClick}"/>
 
 		<p:column sortBy="#{materializedServiceMessageViewItem.id}" width="120" 
 			rendered="#{materializedServiceMessageView.searchObject.searchFields[0].visible}" displayPriority="#{materializedServiceMessageView.searchObject.searchFields[0].colOrder}" >

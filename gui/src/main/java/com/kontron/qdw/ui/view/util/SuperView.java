@@ -12,7 +12,10 @@ import java.time.LocalTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.ToIntFunction;
 import java.util.stream.Collectors;
@@ -20,6 +23,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Strings;
 import org.primefaces.PrimeFaces;
+import org.primefaces.component.datatable.DataTable;
 
 import com.kontron.qdw.boundary.base.UserPropertyBoundaryService;
 import com.kontron.qdw.dto.base.UserPropertyDTO;
@@ -27,6 +31,7 @@ import com.kontron.qdw.service.SavedQueryService;
 import com.kontron.qdw.ui.UserSession;
 
 import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 import jakarta.inject.Inject;
 import net.sourceforge.jbizmo.commons.search.dto.SearchFieldDTO;
 import net.sourceforge.jbizmo.commons.search.dto.SortDirectionEnum;
@@ -252,6 +257,51 @@ public abstract class SuperView extends CopyClipboard {
 
         queryManager.renameQuery(userSession.getPrincipal().getId(), getViewName(), getSelectedSavedQuery(), newQueryName);
         MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_INFO, OPERATION_RENAME_SUCCESS);
+    }
+
+
+
+    /**
+     * Handle single click event: set selection to reselect after switching to another view and back to this view.
+     * @param <DTO> Dto-Klasse
+     */
+    protected <DTO> void onClickCode(List<DTO> entityList, Function<DTO, String> dtoKeyMapper, Consumer<DTO> dtoSetter) {
+        DataTable d = (DataTable) FacesContext.getCurrentInstance().getViewRoot().findComponent("form:panData");
+        if (d == null) {
+            return;
+        }
+        try {
+            String selectedObjectId = d.getSelectedRowKeysAsString();
+            for (DTO dto : entityList) {
+                if (Objects.equals(dtoKeyMapper.apply(dto), selectedObjectId)) {
+                    dtoSetter.accept(dto);
+                    break;
+                }
+            }
+        }
+        catch (NumberFormatException nfe) {
+        }
+    }
+
+    /**
+     * Handle single click event: set selection to reselect after switching to another view and back to this view.
+     */
+    protected <DTO> void onClickId(List<DTO> entityList, Function<DTO, Long> dtoKeyMapper, Consumer<DTO> dtoSetter) {
+        DataTable d = (DataTable) FacesContext.getCurrentInstance().getViewRoot().findComponent("form:panData");
+        if (d == null) {
+            return;
+        }
+        try {
+            long selectedObjectId = Long.parseLong(d.getSelectedRowKeysAsString());
+            for (DTO dto : entityList) {
+                if (Objects.equals(dtoKeyMapper.apply(dto), selectedObjectId)) {
+                    dtoSetter.accept(dto);
+                    break;
+                }
+            }
+        }
+        catch (NumberFormatException nfe) {
+        }
     }
 
 }

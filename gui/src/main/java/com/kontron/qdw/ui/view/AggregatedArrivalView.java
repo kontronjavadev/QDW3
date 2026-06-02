@@ -5,6 +5,7 @@ import org.slf4j.*;
 import com.kontron.qdw.boundary.material.*;
 import java.lang.invoke.*;
 import com.kontron.qdw.dto.mv.*;
+import com.kontron.qdw.dto.serial.ArrivalSearchDTO;
 import com.kontron.qdw.boundary.mv.*;
 import org.primefaces.model.DualListModel;
 import net.sourceforge.jbizmo.commons.webclient.primefaces.search.*;
@@ -253,6 +254,15 @@ public class AggregatedArrivalView extends SuperView implements Serializable {
         initSearchObject();
         fetchAggregatedArrivals();
     }
+
+    /**
+     * Handle single click event: set selection to reselect after switching to another view and back to this view.
+     */
+    public void onClick() {
+        onClickId(aggregatedArrivalsList, AggregatedArrivalSearchDTO::getId, this::setSelectedObject);
+    }
+
+
 
     /**
      * @return the list of elements
