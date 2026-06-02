@@ -53,7 +53,7 @@
 		selectionMode="single"
 		selection="#{verticalSectorView.selectedObject}"
 		loadingMessage="#{i18n.action_fetch_data}"
-		value="#{verticalSectorView.verticalSectorsList}" scrollable="false"
+		value="#{verticalSectorView.verticalSectorsList}" scrollable="true" styleClass="viewScrollable" 
 		resizableColumns="true"
 		rowKey="#{verticalSectorViewItem.code}" >
 		<p:ajax event="rowDblselect" listener="#{verticalSectorView.onDoubleClick}"/>

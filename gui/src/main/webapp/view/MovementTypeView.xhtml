@@ -53,7 +53,7 @@
 		selectionMode="single"
 		selection="#{movementTypeView.selectedObject}"
 		loadingMessage="#{i18n.action_fetch_data}"
-		value="#{movementTypeView.movementTypesList}" scrollable="false"
+		value="#{movementTypeView.movementTypesList}" scrollable="true" styleClass="viewScrollable" 
 		resizableColumns="true"
 		rowKey="#{movementTypeViewItem.code}" >
 		<p:ajax event="rowDblselect" listener="#{movementTypeView.onDoubleClick}"/>

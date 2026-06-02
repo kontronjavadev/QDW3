@@ -53,7 +53,7 @@
 		selectionMode="single"
 		selection="#{materialClassView.selectedObject}"
 		loadingMessage="#{i18n.action_fetch_data}"
-		value="#{materialClassView.materialClassesList}" scrollable="false"
+		value="#{materialClassView.materialClassesList}" scrollable="true" styleClass="viewScrollable" 
 		resizableColumns="true"
 		rowKey="#{materialClassViewItem.code}" >
 		<p:ajax event="rowDblselect" listener="#{materialClassView.onDoubleClick}"/>

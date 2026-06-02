@@ -54,7 +54,7 @@
 		selectionMode="single"
 		selection="#{rMATypeView.selectedObject}"
 		loadingMessage="#{i18n.action_fetch_data}"
-		value="#{rMATypeView.rMATypesList}" scrollable="false"
+		value="#{rMATypeView.rMATypesList}" scrollable="true" styleClass="viewScrollable" 
 		resizableColumns="true"
 		rowKey="#{rMATypeViewItem.code}" >
 		<p:ajax event="rowDblselect" listener="#{rMATypeView.onDoubleClick}"/>

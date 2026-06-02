@@ -53,7 +53,8 @@
 		selectionMode="single"
 		selection="#{roleView.selectedObject}"
 		loadingMessage="#{i18n.action_fetch_data}"
-		value="#{roleView.rolesList}" scrollable="false" resizableColumns="true"
+		value="#{roleView.rolesList}" scrollable="true" styleClass="viewScrollable" 
+		resizableColumns="true"
 		rowKey="#{roleViewItem.id}" >
 		<p:ajax event="rowDblselect" listener="#{roleView.onDoubleClick}"/>
 

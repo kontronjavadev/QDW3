@@ -53,7 +53,7 @@
 		selectionMode="single"
 		selection="#{businessUnitView.selectedObject}"
 		loadingMessage="#{i18n.action_fetch_data}"
-		value="#{businessUnitView.businessUnitsList}" scrollable="false"
+		value="#{businessUnitView.businessUnitsList}" scrollable="true" styleClass="viewScrollable" 
 		resizableColumns="true"
 		rowKey="#{businessUnitViewItem.code}" >
 		<p:ajax event="rowDblselect" listener="#{businessUnitView.onDoubleClick}"/>

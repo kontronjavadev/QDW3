@@ -53,7 +53,7 @@
 		selectionMode="single"
 		selection="#{faultAnalysisView.selectedObject}"
 		loadingMessage="#{i18n.action_fetch_data}"
-		value="#{faultAnalysisView.faultAnalysesList}" scrollable="false"
+		value="#{faultAnalysisView.faultAnalysesList}" scrollable="true" styleClass="viewScrollable" 
 		resizableColumns="true"
 		rowKey="#{faultAnalysisViewItem.code}" >
 		<p:ajax event="rowDblselect" listener="#{faultAnalysisView.onDoubleClick}"/>

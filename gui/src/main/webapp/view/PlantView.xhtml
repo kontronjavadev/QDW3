@@ -53,7 +53,7 @@
 		selectionMode="single"
 		selection="#{plantView.selectedObject}"
 		loadingMessage="#{i18n.action_fetch_data}"
-		value="#{plantView.plantsList}" scrollable="false"
+		value="#{plantView.plantsList}" scrollable="true" styleClass="viewScrollable" 
 		resizableColumns="true"
 		rowKey="#{plantViewItem.code}" >
 		<p:ajax event="rowDblselect" listener="#{plantView.onDoubleClick}"/>

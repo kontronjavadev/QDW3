@@ -53,7 +53,7 @@
 		selectionMode="single"
 		selection="#{locationView.selectedObject}"
 		loadingMessage="#{i18n.action_fetch_data}"
-		value="#{locationView.locationsList}" scrollable="false"
+		value="#{locationView.locationsList}" scrollable="true" styleClass="viewScrollable" 
 		resizableColumns="true"
 		rowKey="#{locationViewItem.code}" >
 		<p:ajax event="rowDblselect" listener="#{locationView.onDoubleClick}"/>
