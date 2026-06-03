@@ -259,7 +259,7 @@
 				</h:panelGrid>
 			</p:tab>
 		</p:tabView>
-		<br/>
+
 		<h:panelGrid columns="4">
 			<p:commandButton id="cmdSearch" value="#{i18n.search_input_perform_search}" action="#{aggregatedArrivalView.fetchAggregatedArrivals}" ajax="false"/>
 			<p:commandButton id="cmdReset" value="#{i18n.command_reset}" action="#{aggregatedArrivalView.resetSearchObject}" onclick="PF('dlgSearchInput').hide()" ajax="false"/>
@@ -455,7 +455,6 @@
 	<h:outputText styleClass="label-field-mandatory" value="#{i18n.result_total_number_records} #{aggregatedArrivalView.aggregatedArrivalsList.size()}"/>
 	<h:outputText styleClass="label-field-mandatory" rendered="#{aggregatedArrivalView.searchObject.count}" value="&#160;#{i18n.search_input_count_of}&#160;"/>
 	<h:outputText styleClass="label-field-mandatory" rendered="#{aggregatedArrivalView.searchObject.count}" value="#{aggregatedArrivalView.countResult}"/>
-	<p/>
 
 
 

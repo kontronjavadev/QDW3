@@ -47,7 +47,6 @@
 		</p:submenu>
 	</p:menubar>
 
-	<br/>
 
 	<p:dataTable id="panData" var="repairServiceViewItem" rows="50"
 		selectionMode="single"
@@ -117,7 +116,6 @@
 	<p/>
 
 	<h:outputText styleClass="label-field-mandatory" value="#{i18n.result_total_number_records} #{repairServiceView.repairServicesList.size()}"/>
-	<p/>
 
 	<p:contextMenu for="panData">
 		<p:menuitem value="#{i18n.action_delete}" ajax="true" icon="pi pi-trash" id="panData_mniDelete" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR')}" onclick="PF('deleteConfirm').show()"/>

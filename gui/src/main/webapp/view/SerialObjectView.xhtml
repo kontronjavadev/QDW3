@@ -259,7 +259,7 @@
 				</h:panelGrid>
 			</p:tab>
 		</p:tabView>
-		<br/>
+
 		<h:panelGrid columns="4">
 			<p:commandButton id="cmdSearch" value="#{i18n.search_input_perform_search}" action="#{serialObjectView.fetchSerialObjects}" ajax="false"/>
 			<p:commandButton id="cmdReset" value="#{i18n.command_reset}" action="#{serialObjectView.resetSearchObject}" onclick="PF('dlgSearchInput').hide()" ajax="false"/>
@@ -454,7 +454,6 @@
 	<h:outputText styleClass="label-field-mandatory" value="#{i18n.result_total_number_records} #{serialObjectView.serialObjectsList.size()}"/>
 	<h:outputText styleClass="label-field-mandatory" rendered="#{serialObjectView.searchObject.count}" value="&#160;#{i18n.search_input_count_of}&#160;"/>
 	<h:outputText styleClass="label-field-mandatory" rendered="#{serialObjectView.searchObject.count}" value="#{serialObjectView.countResult}"/>
-	<p/>
 
 
 
