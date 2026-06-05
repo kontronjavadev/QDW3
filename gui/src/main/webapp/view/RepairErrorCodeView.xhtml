@@ -50,7 +50,7 @@
 		selectionMode="single"
 		selection="#{repairErrorCodeView.selectedObject}"
 		loadingMessage="#{i18n.action_fetch_data}"
-		value="#{repairErrorCodeView.repairErrorCodesList}" scrollable="false"
+		value="#{repairErrorCodeView.repairErrorCodesList}" scrollable="true" styleClass="viewScrollable"
 		resizableColumns="true"
 		rowKey="#{repairErrorCodeViewItem.code}" >
 		<p:ajax event="rowDblselect" listener="#{repairErrorCodeView.onDoubleClick}"/>
