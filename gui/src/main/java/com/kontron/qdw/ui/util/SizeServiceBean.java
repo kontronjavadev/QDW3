@@ -23,4 +23,20 @@ public class SizeServiceBean {
         return "height:calc(100vh - 265px)";
     }
 
+
+
+    public String dialogHeight() {
+        // -> #{sizeServiceBean.dialogHeight()}
+        return "height: calc(100vh - 188px)";
+    }
+
+
+
+    public String panelWidth() {
+        // -> #{sizeServiceBean.panelWidth()}
+        // war errechnet als: "width: calc(100vw - 280px - 30px - 15px)"
+        return "width: calc(100vw - 325px)";
+    }
+
+
 }

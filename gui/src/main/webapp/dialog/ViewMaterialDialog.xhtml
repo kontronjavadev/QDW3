@@ -31,7 +31,8 @@
 		</p:ajaxStatus>
 	</h:panelGrid>
 
-	<p:tabView id="tabview1" dynamic="true" effect="fade" effectDuration="fast">
+<h:panelGroup layout="block" style="display: flex; flex-direction: column; #{sizeServiceBean.dialogHeight()}; #{sizeServiceBean.panelWidth()};">
+	<p:tabView id="tabview1" dynamic="true" effect="fade" effectDuration="fast" style="flex: 0 0 auto;">
 	<p:tab id="tabPanMaterial" title="#{i18n.panel_basic_title}">
 	<h:panelGrid columns="6">
 
@@ -124,17 +125,16 @@
 	</p:tabView>
 
 
-	<p:panel>
-	<h:panelGrid columns="1">
-		<h:outputText styleClass="header-label" value="#{i18n.panel_viewmaterialdialog_panrevisions_title}"/>
-	</h:panelGrid>
+	<p:scrollPanel mode="native" style="flex: 1 1 auto; width: 100%; min-height: 80px; padding: unset; border: unset;" >
+		<h:panelGrid columns="1">
+			<h:outputText styleClass="header-label" value="#{i18n.panel_viewmaterialdialog_panrevisions_title}"/>
+		</h:panelGrid>
 
-	<h:panelGrid columns="1">
-
-		<ui:include src="panel/MaterialRevisionsPanel.xhtml"/>
-
-	</h:panelGrid>
-	</p:panel>
+		<h:panelGrid columns="1">
+			<ui:include src="panel/MaterialRevisionsPanel.xhtml"/>
+		</h:panelGrid>
+	</p:scrollPanel>
+</h:panelGroup>
 
 	<p/>
 
