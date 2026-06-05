@@ -31,7 +31,8 @@
 		</p:ajaxStatus>
 	</h:panelGrid>
 
-	<p:panel>
+<h:panelGroup layout="block" style="display: flex; flex-direction: column; #{sizeServiceBean.dialogHeight()}; #{sizeServiceBean.panelWidth()};">
+	<p:panel style="flex: 0 0 auto;" >
 		<h:panelGrid columns="1">
 			<h:outputText styleClass="header-label" value="#{i18n.panel_admin_title}"/>
 		</h:panelGrid>
@@ -47,14 +48,17 @@
 			</p:inputText>
 			<p:tooltip for="txtName" value=""/>
 		</h:panelGrid>
+	</p:panel>
 
 
+	<p:scrollPanel mode="native" style="flex: 1 1 auto; width: 100%; min-height: 80px; padding: unset; border: unset;" >
 		<h:panelGrid columns="1">
 			<h:outputText styleClass="header-label" value="#{i18n.panel_viewroledialog_users_title}"/>
 		</h:panelGrid>
 
 		<ui:include src="panel/RoleUserPanel.xhtml"/>
-	</p:panel>
+	</p:scrollPanel>
+</h:panelGroup>
 
 
 	<p/>
@@ -62,6 +66,7 @@
 	<h:panelGrid columns="1">
 		<p:commandButton id="cmdBack" icon="pi pi-caret-left" value="#{i18n.command_back}" action="#{userSession.getLastPage}" immediate="true" ajax="false"/>
 	</h:panelGrid>
+
 
 	<p:defaultCommand target=":form:cmdBack"/>
 
