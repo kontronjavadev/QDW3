@@ -426,6 +426,18 @@ public interface TranslationKeys {
     String COL_TRACEBOMVIEW_PRODUCTIONDATE = "col_tracebomview_productiondate";
     String COL_TRACEBOMVIEW_SUPPLIERNAME = "col_tracebomview_suppliername";
     String COL_VERTICALSECTORVIEW_BUSINESSUNITCODE = "col_verticalsectorview_businessunitcode";
+    String COL_X2MESSAGEVIEW_DEFECTCOMPONENT = "col_x2messageview_defectcomponent";
+    String COL_X2MESSAGEVIEW_FAULTANALYSISCODE = "col_x2messageview_faultanalysiscode";
+    String COL_X2MESSAGEVIEW_ID = "col_x2messageview_id";
+    String COL_X2MESSAGEVIEW_MATREVMATMATERIALNUMBER = "col_x2messageview_matrevmatmaterialnumber";
+    String COL_X2MESSAGEVIEW_MATREVMATSAPNUMBER = "col_x2messageview_matrevmatsapnumber";
+    String COL_X2MESSAGEVIEW_MATREVREVISIONNUMBER = "col_x2messageview_matrevrevisionnumber";
+    String COL_X2MESSAGEVIEW_REPAIRERRORCODECODE = "col_x2messageview_repairerrorcodecode";
+    String COL_X2MESSAGEVIEW_REPAIRSTATECODE = "col_x2messageview_repairstatecode";
+    String COL_X2MESSAGEVIEW_REPAIRTASKCODE = "col_x2messageview_repairtaskcode";
+    String COL_X2MESSAGEVIEW_SERVICEMESSAGEID = "col_x2messageview_servicemessageid";
+    String COL_X2MESSAGEVIEW_SERVMESSSEROBJSERIALNUMBER = "col_x2messageview_servmessserobjserialnumber";
+    String COL_X2MESSAGEVIEW_SERVMESSSERVORDCODE = "col_x2messageview_servmessservordcode";
     String COMMAND_BACK = "command_back";
     String COMMAND_BROWSE = "command_browse";
     String COMMAND_CANCEL = "command_cancel";
@@ -640,6 +652,7 @@ public interface TranslationKeys {
     String FORM_VIEWTRACEBOMDIALOG_TITLE = "form_viewtracebomdialog_title";
     String FORM_VIEWTRACEBOMITEMDIALOG_TITLE = "form_viewtracebomitemdialog_title";
     String FORM_VIEWX2MESSAGEDIALOG_TITLE = "form_viewx2messagedialog_title";
+    String FORM_X2MESSAGEVIEW_TITLE = "form_x2messageview_title";
     String ILLEGAL_ITEM_SELECTED = "illegal_item_selected";
     String INVALID_MAIL_ADDRESS = "invalid_mail_address";
     String LABEL_LIST_ENTER_FILTER = "label_list_enter_filter";

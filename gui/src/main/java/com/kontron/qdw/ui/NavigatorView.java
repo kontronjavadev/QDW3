@@ -302,12 +302,16 @@ public class NavigatorView implements Serializable {
                 new DefaultTreeNode<>(VIEW_TYPE, new TreeNavigatorItem(bundle.getString(FORM_SERVICEMESSAGESTANDARDVIEW_TITLE),
                         req.getContextPath() + "/view/ServiceMessageStandardView.jsf"), itemGroup0005);
 
-            // RMA
+            // RMAs
             if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY))
                 new DefaultTreeNode<>(VIEW_TYPE, new TreeNavigatorItem(bundle.getString(FORM_SERVICEORDERVIEW_TITLE),
                         req.getContextPath() + "/view/ServiceOrderView.jsf"), itemGroup0005);
-        }
 
+            // X2 Notifications
+            if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY))
+                new DefaultTreeNode<>(VIEW_TYPE, new TreeNavigatorItem(bundle.getString(FORM_X2MESSAGEVIEW_TITLE),
+                        req.getContextPath() + "/view/X2MessageView.jsf"), itemGroup0005);
+        }
 
         if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_SUPERUSER)) {
             // Form group: System

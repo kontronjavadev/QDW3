@@ -1,15 +1,18 @@
 package com.kontron.qdw.boundary.service;
 
+import com.kontron.qdw.domain.service.*;
+import net.sourceforge.jbizmo.commons.search.exception.*;
+import com.kontron.qdw.dto.service.*;
 import jakarta.validation.ConstraintViolationException;
+import java.util.*;
 import com.kontron.qdw.dto.serial.*;
 import com.kontron.qdw.repository.service.*;
-import com.kontron.qdw.domain.service.*;
 import com.kontron.qdw.dto.material.*;
 import jakarta.inject.*;
 import jakarta.ejb.*;
 import jakarta.annotation.security.*;
+import net.sourceforge.jbizmo.commons.search.dto.*;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
-import com.kontron.qdw.dto.service.*;
 
 @Stateless
 public class X2MessageBoundaryService {
@@ -101,9 +104,6 @@ public class X2MessageBoundaryService {
         dto.setMaterialRevision(new MaterialRevisionListDTO());
         dto.getMaterialRevision().setId(x2Message.getMaterialRevision().getId());
         dto.getMaterialRevision().setRevisionNumber(x2Message.getMaterialRevision().getRevisionNumber());
-        if (x2Message.getMaterialRevision().getPlant() != null) {
-            dto.getMaterialRevision().setPlantCode(x2Message.getMaterialRevision().getPlant().getCode());
-        }
 
         if (x2Message.getRepairErrorCode() != null) {
             dto.setRepairErrorCode(new RepairErrorCodeListDTO());
@@ -131,6 +131,63 @@ public class X2MessageBoundaryService {
         dto.setMaterialSapNumber(x2Message.getMaterialRevision().getMaterial().getSapNumber());
 
         return dto;
+    }
+
+    /**
+     * Search for X2 message objects
+     * @param searchObj a generic container that holds filter criteria
+     * @return a list of X2 message objects
+     * @throws GeneralSearchException if the search operation has failed
+     */
+    @Generated
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public List<X2MessageSearchDTO> searchAllX2Messages(SearchDTO searchObj) {
+        // Collect the select tokens of all fields that should be fetched
+        final var selectTokens = new ArrayList<String>();
+        selectTokens.add(X2MessageSearchDTO.SELECT_ANALYSISTEXT);
+        selectTokens.add(X2MessageSearchDTO.SELECT_CAUSETEXT);
+        selectTokens.add(X2MessageSearchDTO.SELECT_CUSTOMERREPORT);
+        selectTokens.add(X2MessageSearchDTO.SELECT_DEFECTCOMPONENT);
+        selectTokens.add(X2MessageSearchDTO.SELECT_DESIGNATOR);
+        selectTokens.add(X2MessageSearchDTO.SELECT_WORKCENTER);
+        selectTokens.add(X2MessageSearchDTO.SELECT_ID);
+        selectTokens.add(X2MessageSearchDTO.SELECT_CREATIONDATE);
+        selectTokens.add(X2MessageSearchDTO.SELECT_LASTUPDATE);
+        selectTokens.add(X2MessageSearchDTO.SELECT_REPAIRSTATECODE);
+        selectTokens.add(X2MessageSearchDTO.SELECT_MATREVID);
+        selectTokens.add(X2MessageSearchDTO.SELECT_SERIALOBJECTID);
+        selectTokens.add(X2MessageSearchDTO.SELECT_SERVICEMESSAGEID);
+        selectTokens.add(X2MessageSearchDTO.SELECT_SERVMESSSERVORDCODE);
+        selectTokens.add(X2MessageSearchDTO.SELECT_SERVMESSSEROBJSERIALNUMBER);
+        selectTokens.add(X2MessageSearchDTO.SELECT_MATREVMATID);
+        selectTokens.add(X2MessageSearchDTO.SELECT_MATREVMATMATERIALNUMBER);
+        selectTokens.add(X2MessageSearchDTO.SELECT_MATREVMATSAPNUMBER);
+        selectTokens.add(X2MessageSearchDTO.SELECT_MATREVREVISIONNUMBER);
+        selectTokens.add(X2MessageSearchDTO.SELECT_REPAIRTASKCODE);
+        selectTokens.add(X2MessageSearchDTO.SELECT_FAULTANALYSISCODE);
+        selectTokens.add(X2MessageSearchDTO.SELECT_REPAIRERRORCODECODE);
+
+        searchObj.setFromClause(
+                "from X2Message a left join a.materialRevision d left join d.material ae left join a.faultAnalysis c left join a.repairErrorCode e left join a.repairState f left join a.repairTask g left join a.serialObject h left join a.serviceMessage i left join i.serialObject m left join i.serviceOrder n");
+
+        return repository.search(searchObj, X2MessageSearchDTO.class, selectTokens);
+    }
+
+    /**
+     * Count X2 message objects
+     * @param searchObj the query criteria
+     * @return the number of objects a query would return
+     * @throws GeneralSearchException if the count operation has failed
+     */
+    @Generated
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public long countAllX2Messages(SearchDTO searchObj) {
+        searchObj.setFromClause(
+                "from X2Message a left join a.materialRevision d left join d.material ae left join a.faultAnalysis c left join a.repairErrorCode e left join a.repairState f left join a.repairTask g left join a.serialObject h left join a.serviceMessage i left join i.serialObject m left join i.serviceOrder n");
+
+        return repository.count(searchObj);
     }
 
 }
