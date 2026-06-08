@@ -6,6 +6,8 @@ import java.lang.invoke.*;
 import org.primefaces.model.DualListModel;
 import net.sourceforge.jbizmo.commons.webclient.primefaces.search.*;
 import com.kontron.qdw.ui.dialog.*;
+import com.kontron.qdw.ui.view.util.SuperView;
+
 import static com.kontron.qdw.ui.TranslationKeys.*;
 import net.sourceforge.jbizmo.commons.webclient.primefaces.util.*;
 import com.kontron.qdw.boundary.service.*;
@@ -21,12 +23,13 @@ import com.kontron.qdw.dto.material.*;
 import jakarta.faces.model.*;
 import jakarta.inject.*;
 import net.sourceforge.jbizmo.commons.search.dto.*;
+import net.sourceforge.jbizmo.commons.annotation.Customized;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
 import java.io.*;
 
 @Named("x2MessageView")
 @ViewScoped
-public class X2MessageView extends AbstractSearchableView implements Serializable {
+public class X2MessageView extends SuperView implements Serializable {
     @Generated
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     @Generated
@@ -85,6 +88,192 @@ public class X2MessageView extends AbstractSearchableView implements Serializabl
         this.materialService = materialService;
         this.queryManager = queryManager;
     }
+
+
+
+    /**
+     * Initialize view
+     */
+    @Customized
+    public void initView() {
+        logger.debug("Initialize view");
+
+        bundle = ResourceBundle.getBundle(DEFAULT_BUNDLE_NAME, userSession.getLocale());
+
+        // Check if user is allowed to open this page!
+        if (!userSession.checkAuthorization(true, ROLE_ADMINISTRATOR, ROLE_READONLY)) {
+            return;
+        }
+
+
+        formTitle = bundle.getString(FORM_X2MESSAGEVIEW_TITLE);
+
+        if (searchObj == null) {
+            // Check if previous search exists!
+            final SearchDTO lastSearch = queryManager.getLastQuery(userSession.getPrincipal().getId(), VIEW_ID);
+            if (lastSearch != null) {
+                searchObj = lastSearch;
+                prepareAfterLoad();
+            }
+            else {
+                initSearchObject();
+            }
+        }
+
+        initProperties();
+        fetchX2Messages();
+
+        logger.debug("View initialization finished");
+    }
+
+    /**
+     * Initialize search object
+     */
+    @Customized
+    public void initSearchObject() {
+        searchObj = new SearchDTO();
+        int colOrderId = -1;
+
+        // Initialize search object
+        searchObj.setMaxResult(1000);
+        searchObj.setExactFilterMatch(true);
+        searchObj.setCaseSensitive(true);
+        searchObj.setCount(true);
+
+        refreshFormatSettings();
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, X2MessageSearchDTO.SELECT_ID,
+                bundle.getString(COL_X2MESSAGEVIEW_ID), SearchFieldDataTypeEnum.LONG, 120);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, X2MessageSearchDTO.SELECT_SERVMESSSERVORDCODE,
+                bundle.getString(COL_X2MESSAGEVIEW_SERVMESSSERVORDCODE), SearchFieldDataTypeEnum.STRING, 120);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, X2MessageSearchDTO.SELECT_SERVICEMESSAGEID,
+                bundle.getString(COL_X2MESSAGEVIEW_SERVICEMESSAGEID), SearchFieldDataTypeEnum.LONG, 120);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, X2MessageSearchDTO.SELECT_SERVMESSSEROBJSERIALNUMBER,
+                bundle.getString(COL_X2MESSAGEVIEW_SERVMESSSEROBJSERIALNUMBER), SearchFieldDataTypeEnum.STRING, 120);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, X2MessageSearchDTO.SELECT_MATREVMATMATERIALNUMBER,
+                bundle.getString(COL_X2MESSAGEVIEW_MATREVMATMATERIALNUMBER), SearchFieldDataTypeEnum.STRING, 150);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, X2MessageSearchDTO.SELECT_MATREVMATSAPNUMBER,
+                bundle.getString(COL_X2MESSAGEVIEW_MATREVMATSAPNUMBER), SearchFieldDataTypeEnum.STRING, 150);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, X2MessageSearchDTO.SELECT_MATREVREVISIONNUMBER,
+                bundle.getString(COL_X2MESSAGEVIEW_MATREVREVISIONNUMBER), SearchFieldDataTypeEnum.STRING, 150);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, X2MessageSearchDTO.SELECT_WORKCENTER,
+                bundle.getString(LBL_ATTR_X2MESSAGE_WORKCENTER), SearchFieldDataTypeEnum.STRING, 200);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, X2MessageSearchDTO.SELECT_REPAIRSTATECODE,
+                bundle.getString(COL_X2MESSAGEVIEW_REPAIRSTATECODE), SearchFieldDataTypeEnum.STRING, 120);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, X2MessageSearchDTO.SELECT_REPAIRTASKCODE,
+                bundle.getString(COL_X2MESSAGEVIEW_REPAIRTASKCODE), SearchFieldDataTypeEnum.STRING, 120);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, X2MessageSearchDTO.SELECT_FAULTANALYSISCODE,
+                bundle.getString(COL_X2MESSAGEVIEW_FAULTANALYSISCODE), SearchFieldDataTypeEnum.STRING, 120);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, X2MessageSearchDTO.SELECT_REPAIRERRORCODECODE,
+                bundle.getString(COL_X2MESSAGEVIEW_REPAIRERRORCODECODE), SearchFieldDataTypeEnum.STRING, 150);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, X2MessageSearchDTO.SELECT_CUSTOMERREPORT,
+                bundle.getString(LBL_ATTR_X2MESSAGE_CUSTOMERREPORT), SearchFieldDataTypeEnum.STRING, 250);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, X2MessageSearchDTO.SELECT_DEFECTCOMPONENT,
+                bundle.getString(COL_X2MESSAGEVIEW_DEFECTCOMPONENT), SearchFieldDataTypeEnum.STRING, 120);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, X2MessageSearchDTO.SELECT_ANALYSISTEXT,
+                bundle.getString(LBL_ATTR_X2MESSAGE_ANALYSISTEXT), SearchFieldDataTypeEnum.STRING, 250);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, X2MessageSearchDTO.SELECT_DESIGNATOR,
+                bundle.getString(LBL_ATTR_X2MESSAGE_DESIGNATOR), SearchFieldDataTypeEnum.STRING, 100);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, X2MessageSearchDTO.SELECT_CAUSETEXT,
+                bundle.getString(LBL_ATTR_X2MESSAGE_CAUSETEXT), SearchFieldDataTypeEnum.STRING, 250);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, X2MessageSearchDTO.SELECT_CREATIONDATE,
+                bundle.getString(LBL_ATTR_ABSTRACTENTITYWITHID_CREATIONDATE), SearchFieldDataTypeEnum.LOCAL_DATE_TIME, 120);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, X2MessageSearchDTO.SELECT_LASTUPDATE,
+                bundle.getString(LBL_ATTR_ABSTRACTENTITYWITHID_LASTUPDATE), SearchFieldDataTypeEnum.LOCAL_DATE_TIME, 120);
+
+
+        visibleFields = new DualListModel<>();
+        visibleFields.setSource(new ArrayList<>());
+        visibleFields.setTarget(new ArrayList<>());
+
+        for (final SearchFieldDTO d : searchObj.getSearchFields()) {
+            if (!d.isVisible()) {
+                visibleFields.getSource().add(d);
+            }
+            else {
+                visibleFields.getTarget().add(d);
+            }
+        }
+    }
+
+    /**
+     * Perform data fetch operation
+     */
+    @Customized
+    public void fetchX2Messages() {
+        logger.debug("Perform data fetch operation");
+
+        try {
+            preSearch();
+        }
+        catch (final SearchInputFieldValidationException e) {
+            MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_INFO, SEARCH_INPUT_VALIDATION, "", e.getSearchFieldName());
+            return;
+        }
+
+        refreshFormatSettings();
+
+        try {
+            x2MessagesList = x2MessageService.searchAllX2Messages(searchObj);
+
+            if (searchObj.isCount()) {
+                if (x2MessagesList.size() == searchObj.getMaxResult()) {
+                    countResult = x2MessageService.countAllX2Messages(searchObj);
+                }
+                else {
+                    countResult = x2MessagesList.size();
+                }
+            }
+
+            queryManager.saveQuery(userSession.getPrincipal().getId(), VIEW_ID, null, searchObj);
+        }
+        catch (final Exception e) {
+            logger.error("Error while fetching data!", e);
+
+            MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_ERROR, OPERATION_FETCH_FAIL, e);
+        }
+        finally {
+            postSearch();
+        }
+    }
+
+    @Override
+    protected String getViewName() {
+        return VIEW_ID;
+    }
+
+    @Override
+    public void resetSearchObject() {
+        initSearchObject();
+        fetchX2Messages();
+    }
+
+    /**
+     * Handle single click event: set selection to reselect after switching to another view and back to this view.
+     */
+    public void onClick() {
+        onClickId(x2MessagesList, X2MessageSearchDTO::getId, this::setSelectedObject);
+    }
+
+
 
     /**
      * @return the list of elements
@@ -169,8 +358,9 @@ public class X2MessageView extends AbstractSearchableView implements Serializabl
     public String openViewX2MessageDialog() {
         var url = "";
 
-        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY))
+        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY)) {
             url = ViewX2MessageDialog.PAGE_INIT_URL + selectedObject.getId();
+        }
 
         return url;
     }
@@ -218,6 +408,7 @@ public class X2MessageView extends AbstractSearchableView implements Serializabl
     /**
      * @return the name of the selected saved query
      */
+    @Override
     @Generated
     public String getSelectedSavedQuery() {
         return selectedSavedQuery;
@@ -249,166 +440,6 @@ public class X2MessageView extends AbstractSearchableView implements Serializabl
         searchObj.setNumberFormat(userSession.getNumberFormat());
         searchObj.setDecimalSeparator(DecimalFormatSymbols.getInstance(userSession.getLocale()).getDecimalSeparator());
         searchObj.setGroupingSeparator(DecimalFormatSymbols.getInstance(userSession.getLocale()).getGroupingSeparator());
-    }
-
-    /**
-     * Initialize search object
-     */
-    @Generated
-    public void initSearchObject() {
-        searchObj = new SearchDTO();
-        int colOrderId = -1;
-
-        // Initialize search object
-        searchObj.setMaxResult(1000);
-        searchObj.setExactFilterMatch(true);
-        searchObj.setCaseSensitive(false);
-        searchObj.setCount(false);
-
-        refreshFormatSettings();
-
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, X2MessageSearchDTO.SELECT_ID, bundle.getString(COL_X2MESSAGEVIEW_ID),
-                SearchFieldDataTypeEnum.LONG, 120);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, X2MessageSearchDTO.SELECT_SERVMESSSERVORDCODE,
-                bundle.getString(COL_X2MESSAGEVIEW_SERVMESSSERVORDCODE), SearchFieldDataTypeEnum.STRING, 120);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, X2MessageSearchDTO.SELECT_SERVICEMESSAGEID,
-                bundle.getString(COL_X2MESSAGEVIEW_SERVICEMESSAGEID), SearchFieldDataTypeEnum.LONG, 120);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, X2MessageSearchDTO.SELECT_SERVMESSSEROBJSERIALNUMBER,
-                bundle.getString(COL_X2MESSAGEVIEW_SERVMESSSEROBJSERIALNUMBER), SearchFieldDataTypeEnum.STRING, 120);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, X2MessageSearchDTO.SELECT_MATREVMATMATERIALNUMBER,
-                bundle.getString(COL_X2MESSAGEVIEW_MATREVMATMATERIALNUMBER), SearchFieldDataTypeEnum.STRING, 150);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, X2MessageSearchDTO.SELECT_MATREVMATSAPNUMBER,
-                bundle.getString(COL_X2MESSAGEVIEW_MATREVMATSAPNUMBER), SearchFieldDataTypeEnum.STRING, 150);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, X2MessageSearchDTO.SELECT_MATREVREVISIONNUMBER,
-                bundle.getString(COL_X2MESSAGEVIEW_MATREVREVISIONNUMBER), SearchFieldDataTypeEnum.STRING, 150);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, X2MessageSearchDTO.SELECT_WORKCENTER, bundle.getString(LBL_ATTR_X2MESSAGE_WORKCENTER),
-                SearchFieldDataTypeEnum.STRING, 200);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, X2MessageSearchDTO.SELECT_REPAIRSTATECODE, bundle.getString(COL_X2MESSAGEVIEW_REPAIRSTATECODE),
-                SearchFieldDataTypeEnum.STRING, 120);
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, X2MessageSearchDTO.SELECT_REPAIRTASKCODE, bundle.getString(COL_X2MESSAGEVIEW_REPAIRTASKCODE),
-                SearchFieldDataTypeEnum.STRING, 120);
-
-        final var f11 = new JSFSearchFieldDTO(searchObj, ++colOrderId, X2MessageSearchDTO.SELECT_FAULTANALYSISCODE,
-                bundle.getString(COL_X2MESSAGEVIEW_FAULTANALYSISCODE), SearchFieldDataTypeEnum.STRING, 120);
-        f11.setVisible(false);
-
-
-        final var f12 = new JSFSearchFieldDTO(searchObj, ++colOrderId, X2MessageSearchDTO.SELECT_REPAIRERRORCODECODE,
-                bundle.getString(COL_X2MESSAGEVIEW_REPAIRERRORCODECODE), SearchFieldDataTypeEnum.STRING, 150);
-        f12.setVisible(false);
-
-
-        final var f13 = new JSFSearchFieldDTO(searchObj, ++colOrderId, X2MessageSearchDTO.SELECT_CUSTOMERREPORT,
-                bundle.getString(LBL_ATTR_X2MESSAGE_CUSTOMERREPORT), SearchFieldDataTypeEnum.STRING, 250);
-        f13.setVisible(false);
-
-
-        final var f14 = new JSFSearchFieldDTO(searchObj, ++colOrderId, X2MessageSearchDTO.SELECT_DEFECTCOMPONENT,
-                bundle.getString(COL_X2MESSAGEVIEW_DEFECTCOMPONENT), SearchFieldDataTypeEnum.STRING, 120);
-        f14.setVisible(false);
-
-
-        final var f15 = new JSFSearchFieldDTO(searchObj, ++colOrderId, X2MessageSearchDTO.SELECT_ANALYSISTEXT,
-                bundle.getString(LBL_ATTR_X2MESSAGE_ANALYSISTEXT), SearchFieldDataTypeEnum.STRING, 250);
-        f15.setVisible(false);
-
-
-        final var f16 = new JSFSearchFieldDTO(searchObj, ++colOrderId, X2MessageSearchDTO.SELECT_DESIGNATOR,
-                bundle.getString(LBL_ATTR_X2MESSAGE_DESIGNATOR), SearchFieldDataTypeEnum.STRING, 100);
-        f16.setVisible(false);
-
-
-        final var f17 = new JSFSearchFieldDTO(searchObj, ++colOrderId, X2MessageSearchDTO.SELECT_CAUSETEXT,
-                bundle.getString(LBL_ATTR_X2MESSAGE_CAUSETEXT), SearchFieldDataTypeEnum.STRING, 250);
-        f17.setVisible(false);
-
-
-        final var f18 = new JSFSearchFieldDTO(searchObj, ++colOrderId, X2MessageSearchDTO.SELECT_CREATIONDATE,
-                bundle.getString(LBL_ATTR_ABSTRACTENTITYWITHID_CREATIONDATE), SearchFieldDataTypeEnum.LOCAL_DATE_TIME, 120);
-        f18.setVisible(false);
-
-
-        final var f19 = new JSFSearchFieldDTO(searchObj, ++colOrderId, X2MessageSearchDTO.SELECT_LASTUPDATE,
-                bundle.getString(LBL_ATTR_ABSTRACTENTITYWITHID_LASTUPDATE), SearchFieldDataTypeEnum.LOCAL_DATE_TIME, 120);
-        f19.setVisible(false);
-
-
-        visibleFields = new DualListModel<>();
-        visibleFields.setSource(new ArrayList<>());
-        visibleFields.setTarget(new ArrayList<>());
-
-        for (final SearchFieldDTO d : searchObj.getSearchFields())
-            if (!d.isVisible())
-                visibleFields.getSource().add(d);
-            else
-                visibleFields.getTarget().add(d);
-    }
-
-    /**
-     * Initialize view
-     */
-    @Generated
-    public void initView() {
-        logger.debug("Initialize view");
-
-        bundle = ResourceBundle.getBundle(DEFAULT_BUNDLE_NAME, userSession.getLocale());
-
-        // Check if user is allowed to open this page!
-        if (!userSession.checkAuthorization(true, ROLE_ADMINISTRATOR, ROLE_READONLY))
-            return;
-
-
-        formTitle = bundle.getString(FORM_X2MESSAGEVIEW_TITLE);
-
-        // Check if previous search exists!
-        final SearchDTO lastSearch = queryManager.getLastQuery(userSession.getPrincipal().getId(), VIEW_ID);
-
-        if (lastSearch != null) {
-            searchObj = lastSearch;
-
-            prepareAfterLoad();
-        }
-        else
-            initSearchObject();
-
-        fetchX2Messages();
-
-        logger.debug("View initialization finished");
-    }
-
-    /**
-     * Perform data fetch operation
-     */
-    @Generated
-    public void fetchX2Messages() {
-        logger.debug("Perform data fetch operation");
-
-        try {
-            preSearch();
-        }
-        catch (final SearchInputFieldValidationException e) {
-            MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_INFO, SEARCH_INPUT_VALIDATION, "", e.getSearchFieldName());
-            return;
-        }
-
-        refreshFormatSettings();
-
-        try {
-            x2MessagesList = x2MessageService.searchAllX2Messages(searchObj);
-
-            if (searchObj.isCount())
-                countResult = x2MessageService.countAllX2Messages(searchObj);
-
-            queryManager.saveQuery(userSession.getPrincipal().getId(), VIEW_ID, null, searchObj);
-        }
-        catch (final Exception e) {
-            logger.error("Error while fetching data!", e);
-
-            MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_ERROR, OPERATION_FETCH_FAIL, e);
-        }
-        finally {
-            postSearch();
-        }
     }
 
     /**
@@ -455,8 +486,9 @@ public class X2MessageView extends AbstractSearchableView implements Serializabl
         try {
             final Collection<MaterialListDTO> items = materialService.findMaterials(query + "%");
 
-            for (final MaterialListDTO item : items)
+            for (final MaterialListDTO item : items) {
                 results.add(item.getMaterialNumber());
+            }
         }
         catch (final Exception e) {
             logger.error("Error while searching for auto-complete items by using the entered text '{}'!", query, e);
@@ -497,8 +529,9 @@ public class X2MessageView extends AbstractSearchableView implements Serializabl
         final var items = new SelectItem[savedQueries.size()];
         int i = 0;
 
-        for (final String item : savedQueries)
+        for (final String item : savedQueries) {
             items[i++] = new SelectItem(item, item);
+        }
 
         return items;
     }
@@ -508,8 +541,9 @@ public class X2MessageView extends AbstractSearchableView implements Serializabl
      */
     @Generated
     public void deleteSavedQuery() {
-        if (selectedSavedQuery == null)
+        if (selectedSavedQuery == null) {
             return;
+        }
 
         logger.debug("Delete saved query");
 
@@ -524,8 +558,9 @@ public class X2MessageView extends AbstractSearchableView implements Serializabl
      */
     @Generated
     public void runSavedQuery() {
-        if (selectedSavedQuery == null)
+        if (selectedSavedQuery == null) {
             return;
+        }
 
         logger.debug("Run saved query");
 
