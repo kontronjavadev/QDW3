@@ -381,7 +381,7 @@
 		selectionMode="single"
 		selection="#{x2MessageView.selectedObject}"
 		loadingMessage="#{i18n.action_fetch_data}"
-		value="#{x2MessageView.x2MessagesList}" scrollable="true" styleClass="viewScrollable"
+		value="#{x2MessageView.x2MessagesList}" scrollable="true" styleClass="viewScrollable" 
 		paginatorPosition="top" paginatorAlwaysVisible="#{x2MessageView.paginatorAlwaysVisible}" paginator="true" resizableColumns="true"
 		rowKey="#{x2MessageViewItem.id}"
 		paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
@@ -390,9 +390,10 @@
 		<p:ajax event="rowSelect" listener="#{x2MessageView.onClick}"/>
 
 		<p:column sortBy="#{x2MessageViewItem.id}" width="120" 
-			rendered="#{x2MessageView.searchObject.searchFields[0].visible}" displayPriority="#{x2MessageView.searchObject.searchFields[0].colOrder}" >
+			rendered="#{x2MessageView.searchObject.searchFields[0].visible}" displayPriority="#{x2MessageView.searchObject.searchFields[0].colOrder}" 
+			exportHeaderValue="#{i18n.lbl_attr_x2messageid_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_x2messageview_id}"/>
+				<h:outputText value="#{i18n.col_x2messageview_id}" title="#{i18n.lbl_attr_x2messageid_tooltip}" styleClass="pf-tooltip-target" />
 			</f:facet>
 			<h:outputText value="#{x2MessageViewItem.id}">
 			</h:outputText>
@@ -417,48 +418,48 @@
 		</p:column>
 
 		<p:column sortBy="#{x2MessageViewItem.servMessSerObjSerialNumber}" width="120" 
-			rendered="#{x2MessageView.searchObject.searchFields[3].visible}" displayPriority="#{x2MessageView.searchObject.searchFields[3].colOrder}" >
+			rendered="#{x2MessageView.searchObject.searchFields[3].visible}" displayPriority="#{x2MessageView.searchObject.searchFields[3].colOrder}" 
+			exportValue="#{x2MessageViewItem.servMessSerObjSerialNumber}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_x2messageview_servmessserobjserialnumber}"/>
 			</f:facet>
-			<h:outputText value="#{x2MessageViewItem.servMessSerObjSerialNumber}">
-			</h:outputText>
+			<h:outputText value="#{x2MessageViewItem.servMessSerObjSerialNumber}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{x2MessageViewItem.matrevMatMaterialNumber}" width="150" 
-			rendered="#{x2MessageView.searchObject.searchFields[4].visible}" displayPriority="#{x2MessageView.searchObject.searchFields[4].colOrder}" >
+			rendered="#{x2MessageView.searchObject.searchFields[4].visible}" displayPriority="#{x2MessageView.searchObject.searchFields[4].colOrder}" 
+			exportValue="#{x2MessageViewItem.matrevMatMaterialNumber}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_x2messageview_matrevmatmaterialnumber}"/>
 			</f:facet>
-			<h:outputText value="#{x2MessageViewItem.matrevMatMaterialNumber}">
-			</h:outputText>
+			<h:outputText value="#{x2MessageViewItem.matrevMatMaterialNumber}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{x2MessageViewItem.matrevMatSapNumber}" width="150" 
-			rendered="#{x2MessageView.searchObject.searchFields[5].visible}" displayPriority="#{x2MessageView.searchObject.searchFields[5].colOrder}" >
+			rendered="#{x2MessageView.searchObject.searchFields[5].visible}" displayPriority="#{x2MessageView.searchObject.searchFields[5].colOrder}" 
+			exportValue="#{x2MessageViewItem.matrevMatSapNumber}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_x2messageview_matrevmatsapnumber}"/>
 			</f:facet>
-			<h:outputText value="#{x2MessageViewItem.matrevMatSapNumber}">
-			</h:outputText>
+			<h:outputText value="#{x2MessageViewItem.matrevMatSapNumber}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{x2MessageViewItem.matrevRevisionNumber}" width="150" 
-			rendered="#{x2MessageView.searchObject.searchFields[6].visible}" displayPriority="#{x2MessageView.searchObject.searchFields[6].colOrder}" >
+			rendered="#{x2MessageView.searchObject.searchFields[6].visible}" displayPriority="#{x2MessageView.searchObject.searchFields[6].colOrder}" 
+			exportValue="#{x2MessageViewItem.matrevRevisionNumber}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_x2messageview_matrevrevisionnumber}"/>
 			</f:facet>
-			<h:outputText value="#{x2MessageViewItem.matrevRevisionNumber}">
-			</h:outputText>
+			<h:outputText value="#{x2MessageViewItem.matrevRevisionNumber}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{x2MessageViewItem.workCenter}" width="200" 
-			rendered="#{x2MessageView.searchObject.searchFields[7].visible}" displayPriority="#{x2MessageView.searchObject.searchFields[7].colOrder}" >
+			rendered="#{x2MessageView.searchObject.searchFields[7].visible}" displayPriority="#{x2MessageView.searchObject.searchFields[7].colOrder}" 
+			exportValue="#{x2MessageViewItem.workCenter}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_x2message_workcenter}"/>
 			</f:facet>
-			<h:outputText value="#{x2MessageViewItem.workCenter}">
-			</h:outputText>
+			<h:outputText value="#{x2MessageViewItem.workCenter}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{x2MessageViewItem.repairStateCode}" width="120" 
@@ -498,30 +499,31 @@
 		</p:column>
 
 		<p:column sortBy="#{x2MessageViewItem.customerReport}" width="250" 
-			rendered="#{x2MessageView.searchObject.searchFields[12].visible}" displayPriority="#{x2MessageView.searchObject.searchFields[12].colOrder}" >
+			rendered="#{x2MessageView.searchObject.searchFields[12].visible}" displayPriority="#{x2MessageView.searchObject.searchFields[12].colOrder}" 
+			exportValue="#{x2MessageViewItem.customerReport}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_x2message_customerreport}"/>
 			</f:facet>
-			<h:outputText value="#{x2MessageViewItem.customerReport}">
-			</h:outputText>
+			<h:outputText value="#{x2MessageViewItem.customerReport}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{x2MessageViewItem.defectComponent}" width="120" 
-			rendered="#{x2MessageView.searchObject.searchFields[13].visible}" displayPriority="#{x2MessageView.searchObject.searchFields[13].colOrder}" >
+			rendered="#{x2MessageView.searchObject.searchFields[13].visible}" displayPriority="#{x2MessageView.searchObject.searchFields[13].colOrder}" 
+			exportHeaderValue="#{i18n.lbl_attr_defectcomponent_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_x2messageview_defectcomponent}"/>
+				<h:outputText value="#{i18n.col_x2messageview_defectcomponent}" title="#{i18n.lbl_attr_defectcomponent_tooltip}" styleClass="pf-tooltip-target" />
 			</f:facet>
 			<h:outputText value="#{x2MessageViewItem.defectComponent}">
 			</h:outputText>
 		</p:column>
 
 		<p:column sortBy="#{x2MessageViewItem.analysisText}" width="250" 
-			rendered="#{x2MessageView.searchObject.searchFields[14].visible}" displayPriority="#{x2MessageView.searchObject.searchFields[14].colOrder}" >
+			rendered="#{x2MessageView.searchObject.searchFields[14].visible}" displayPriority="#{x2MessageView.searchObject.searchFields[14].colOrder}" 
+			exportValue="#{x2MessageViewItem.analysisText}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_x2message_analysistext}"/>
 			</f:facet>
-			<h:outputText value="#{x2MessageViewItem.analysisText}">
-			</h:outputText>
+			<h:outputText value="#{x2MessageViewItem.analysisText}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{x2MessageViewItem.designator}" width="100" 
@@ -534,12 +536,12 @@
 		</p:column>
 
 		<p:column sortBy="#{x2MessageViewItem.causeText}" width="250" 
-			rendered="#{x2MessageView.searchObject.searchFields[16].visible}" displayPriority="#{x2MessageView.searchObject.searchFields[16].colOrder}" >
+			rendered="#{x2MessageView.searchObject.searchFields[16].visible}" displayPriority="#{x2MessageView.searchObject.searchFields[16].colOrder}" 
+			exportValue="#{x2MessageViewItem.causeText}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_x2message_causetext}"/>
 			</f:facet>
-			<h:outputText value="#{x2MessageViewItem.causeText}">
-			</h:outputText>
+			<h:outputText value="#{x2MessageViewItem.causeText}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{x2MessageViewItem.creationDate}" width="120" 
