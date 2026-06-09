@@ -99,7 +99,7 @@ public class ServiceMessageStandardView extends SuperView implements Serializabl
         rMATypeService = null;
         repairTaskService = null;
 
-        this.queryManager = null;
+        queryManager = null;
     }
 
     @Inject

@@ -70,6 +70,31 @@ public class RepairStateBoundaryService {
         return repository.search(searchObj, RepairStateListDTO.class, selectTokens);
     }
 
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public List<RepairStateListDTO> findRepairStatesByCode(String filter) {
+        // Collect the select tokens of all fields that should be fetched
+        final var selectTokens = new ArrayList<String>();
+        selectTokens.add(RepairStateListDTO.SELECT_CODE);
+        selectTokens.add(RepairStateListDTO.SELECT_NAME);
+
+        // Initialize the search object
+        final var searchObj = new SearchDTO();
+        searchObj.setExactFilterMatch(true);
+        searchObj.setCaseSensitive(true);
+        searchObj.setMaxResult(SMALL_LIST_SIZE);
+        searchObj.setFromClause("from RepairState a");
+
+        if (filter != null && !filter.isEmpty() && !filter.equals(WILDCARD)) {
+            final var filterField = searchObj.addSearchField(RepairStateListDTO.SELECT_CODE, SearchFieldDataTypeEnum.STRING);
+            filterField.setFilterCriteria(filter + WILDCARD);
+            filterField.setSortIndex(1);
+            filterField.setSortOrder(SortDirectionEnum.ASC);
+        }
+
+        return repository.search(searchObj, RepairStateListDTO.class, selectTokens);
+    }
+
     /**
      * Find repair state by its ID
      * @param id

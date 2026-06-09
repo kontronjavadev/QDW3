@@ -95,6 +95,31 @@ public class RepairErrorCodeBoundaryService {
         return repository.search(searchObj, RepairErrorCodeListDTO.class, selectTokens);
     }
 
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public List<RepairErrorCodeListDTO> findRepairErrorCodesByCode(String filter) {
+        // Collect the select tokens of all fields that should be fetched
+        final var selectTokens = new ArrayList<String>();
+        selectTokens.add(RepairErrorCodeListDTO.SELECT_CODE);
+        selectTokens.add(RepairErrorCodeListDTO.SELECT_NAME);
+
+        // Initialize the search object
+        final var searchObj = new SearchDTO();
+        searchObj.setExactFilterMatch(true);
+        searchObj.setCaseSensitive(true);
+        searchObj.setMaxResult(SMALL_LIST_SIZE);
+        searchObj.setFromClause("from RepairErrorCode a");
+
+        if (filter != null && !filter.isEmpty() && !filter.equals(WILDCARD)) {
+            final var filterField = searchObj.addSearchField(RepairErrorCodeListDTO.SELECT_CODE, SearchFieldDataTypeEnum.STRING);
+            filterField.setFilterCriteria(filter + WILDCARD);
+            filterField.setSortIndex(1);
+            filterField.setSortOrder(SortDirectionEnum.ASC);
+        }
+
+        return repository.search(searchObj, RepairErrorCodeListDTO.class, selectTokens);
+    }
+
     /**
      * Find repair error code by its ID
      * @param id

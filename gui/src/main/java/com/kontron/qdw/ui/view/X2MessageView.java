@@ -1,11 +1,13 @@
 package com.kontron.qdw.ui.view;
 
 import org.slf4j.*;
+
 import com.kontron.qdw.boundary.material.*;
 import java.lang.invoke.*;
 import org.primefaces.model.DualListModel;
 import net.sourceforge.jbizmo.commons.webclient.primefaces.search.*;
 import com.kontron.qdw.ui.dialog.*;
+import com.kontron.qdw.ui.view.util.OnCompleteHelper;
 import com.kontron.qdw.ui.view.util.SuperView;
 
 import static com.kontron.qdw.ui.TranslationKeys.*;
@@ -19,7 +21,6 @@ import java.text.*;
 import static com.kontron.qdw.ui.UserSession.*;
 import com.kontron.qdw.ui.*;
 import com.kontron.qdw.service.*;
-import com.kontron.qdw.dto.material.*;
 import jakarta.faces.model.*;
 import jakarta.inject.*;
 import net.sourceforge.jbizmo.commons.search.dto.*;
@@ -61,15 +62,26 @@ public class X2MessageView extends SuperView implements Serializable {
     @Generated
     private String selectedSavedQuery;
 
+    private final transient RepairStateBoundaryService repairStateService;
+    private final transient RepairTaskBoundaryService repairTaskService;
+    private final transient FaultAnalysisBoundaryService faultAnalysisService;
+    private final transient RepairErrorCodeBoundaryService repairErrorCodeService;
+
+
     /**
      * Default constructor
      */
     @Generated
     public X2MessageView() {
-        this.userSession = null;
-        this.x2MessageService = null;
-        this.materialService = null;
-        this.queryManager = null;
+        userSession = null;
+        x2MessageService = null;
+        materialService = null;
+        queryManager = null;
+
+        repairStateService = null;
+        repairTaskService = null;
+        faultAnalysisService = null;
+        repairErrorCodeService = null;
     }
 
     /**
@@ -82,11 +94,18 @@ public class X2MessageView extends SuperView implements Serializable {
     @Inject
     @Generated
     public X2MessageView(UserSession userSession, X2MessageBoundaryService x2MessageService, MaterialBoundaryService materialService,
+            RepairStateBoundaryService repairStateService, RepairTaskBoundaryService repairTaskService,
+            FaultAnalysisBoundaryService faultAnalysisService, RepairErrorCodeBoundaryService repairErrorCodeService,
             SavedQueryService queryManager) {
         this.userSession = userSession;
         this.x2MessageService = x2MessageService;
         this.materialService = materialService;
         this.queryManager = queryManager;
+
+        this.repairStateService = repairStateService;
+        this.repairTaskService = repairTaskService;
+        this.faultAnalysisService = faultAnalysisService;
+        this.repairErrorCodeService = repairErrorCodeService;
     }
 
 
@@ -271,6 +290,33 @@ public class X2MessageView extends SuperView implements Serializable {
      */
     public void onClick() {
         onClickId(x2MessagesList, X2MessageSearchDTO::getId, this::setSelectedObject);
+    }
+
+
+
+    @Customized
+    public List<String> onCompleteMaterialMaterialNumber(String query) {
+        return OnCompleteHelper.onCompleteMaterialNumber(materialService, query);
+    }
+
+    public List<String> onCompleteSapNumber(String searchText) {
+        return OnCompleteHelper.onCompleteSapNumber(materialService, searchText);
+    }
+
+    public List<String> onCompleteRepairStateCode(String searchText) {
+        return OnCompleteHelper.onCompleteRepairStateCode(repairStateService, searchText);
+    }
+
+    public List<String> onCompleteRepairTaskCode(String searchText) {
+        return OnCompleteHelper.onCompleteRepairTaskCode(repairTaskService, searchText);
+    }
+
+    public List<String> onCompleteSymptomCode(String query) {
+        return OnCompleteHelper.onCompleteSymptomCode(faultAnalysisService, query);
+    }
+
+    public List<String> onCompleteRepairErrorCodeCode(String searchText) {
+        return OnCompleteHelper.onCompleteRepairErrorCodeCode(repairErrorCodeService, searchText);
     }
 
 
@@ -472,29 +518,6 @@ public class X2MessageView extends SuperView implements Serializable {
         finally {
             postSearch();
         }
-    }
-
-    /**
-     * Callback method for auto-complete field
-     * @param query the filter criterion inserted by the user
-     * @return a list containing all proposals
-     */
-    @Generated
-    public List<String> onCompleteMaterialMaterialNumber(String query) {
-        final var results = new ArrayList<String>();
-
-        try {
-            final Collection<MaterialListDTO> items = materialService.findMaterials(query + "%");
-
-            for (final MaterialListDTO item : items) {
-                results.add(item.getMaterialNumber());
-            }
-        }
-        catch (final Exception e) {
-            logger.error("Error while searching for auto-complete items by using the entered text '{}'!", query, e);
-        }
-
-        return results;
     }
 
     /**

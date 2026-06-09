@@ -81,13 +81,24 @@ public final class OnCompleteHelper {
         return onCompleteContains(repairErrorCodeService::findRepairErrorCodes, searchText, RepairErrorCodeListDTO::getName);
     }
 
+    /** auch "cause code" */
+    public static List<String> onCompleteRepairErrorCodeCode(RepairErrorCodeBoundaryService repairErrorCodeService, String searchText) {
+        return onCompleteContains(repairErrorCodeService::findRepairErrorCodesByCode, searchText, RepairErrorCodeListDTO::getCode);
+    }
+
     public static List<String> onCompleteRepairServiceName(RepairServiceBoundaryService repairServiceService, String searchText) {
         return onCompleteStartsWith(repairServiceService::findRepairServices, searchText, RepairServiceListDTO::getName);
+    }
+
+
+    public static List<String> onCompleteRepairStateCode(RepairStateBoundaryService repairStateService, String searchText) {
+        return onCompleteContains(repairStateService::findRepairStatesByCode, searchText, RepairStateListDTO::getCode);
     }
 
     public static List<String> onCompleteRepairStateName(RepairStateBoundaryService repairStateService, String searchText) {
         return onCompleteContains(repairStateService::findRepairStates, searchText, RepairStateListDTO::getName);
     }
+
 
     public static List<String> onCompleteRepairTaskCode(RepairTaskBoundaryService repairTaskService, String searchText) {
         return onCompleteContains(repairTaskService::findRepairTasks, searchText, RepairTaskListDTO::getCode);
