@@ -55,36 +55,36 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{serialObjectShipmentsPanelItem.matRevMatMaterialNumber}" width="150" >
+		<p:column sortBy="#{serialObjectShipmentsPanelItem.matRevMatMaterialNumber}" width="150" 
+			exportValue="#{serialObjectShipmentsPanelItem.matRevMatMaterialNumber}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_serialobjectshipmentspanel_matrevmatmaterialnumber}"/>
 			</f:facet>
-			<h:outputText value="#{serialObjectShipmentsPanelItem.matRevMatMaterialNumber}">
-			</h:outputText>
+			<h:outputText value="#{serialObjectShipmentsPanelItem.matRevMatMaterialNumber}" styleClass="pf-tooltip-target" />
 		</p:column>
 
-		<p:column sortBy="#{serialObjectShipmentsPanelItem.matRevMatSapNumber}" width="150" >
+		<p:column sortBy="#{serialObjectShipmentsPanelItem.matRevMatSapNumber}" width="150" 
+			exportValue="#{serialObjectShipmentsPanelItem.matRevMatSapNumber}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_serialobjectshipmentspanel_matrevmatsapnumber}"/>
 			</f:facet>
-			<h:outputText value="#{serialObjectShipmentsPanelItem.matRevMatSapNumber}">
-			</h:outputText>
+			<h:outputText value="#{serialObjectShipmentsPanelItem.matRevMatSapNumber}" styleClass="pf-tooltip-target" />
 		</p:column>
 
-		<p:column sortBy="#{serialObjectShipmentsPanelItem.matRevRevisionNumber}" width="150" >
+		<p:column sortBy="#{serialObjectShipmentsPanelItem.matRevRevisionNumber}" width="150" 
+			exportValue="#{serialObjectShipmentsPanelItem.matRevRevisionNumber}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_serialobjectshipmentspanel_matrevrevisionnumber}"/>
 			</f:facet>
-			<h:outputText value="#{serialObjectShipmentsPanelItem.matRevRevisionNumber}">
-			</h:outputText>
+			<h:outputText value="#{serialObjectShipmentsPanelItem.matRevRevisionNumber}" styleClass="pf-tooltip-target" />
 		</p:column>
 
-		<p:column sortBy="#{serialObjectShipmentsPanelItem.customerName}" width="200" >
+		<p:column sortBy="#{serialObjectShipmentsPanelItem.customerName}" width="200" 
+			exportValue="#{serialObjectShipmentsPanelItem.customerName}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_serialobjectshipmentspanel_customername}"/>
 			</f:facet>
-			<h:outputText value="#{serialObjectShipmentsPanelItem.customerName}">
-			</h:outputText>
+			<h:outputText value="#{serialObjectShipmentsPanelItem.customerName}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{serialObjectShipmentsPanelItem.shipmentDate}" width="80" >

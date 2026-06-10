@@ -55,28 +55,28 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{serialObjectArrivalsPanelItem.matRevMatMaterialNumber}" width="150" >
+		<p:column sortBy="#{serialObjectArrivalsPanelItem.matRevMatMaterialNumber}" width="150" 
+			exportValue="#{serialObjectArrivalsPanelItem.matRevMatMaterialNumber}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_serialobjectarrivalspanel_matrevmatmaterialnumber}"/>
 			</f:facet>
-			<h:outputText value="#{serialObjectArrivalsPanelItem.matRevMatMaterialNumber}">
-			</h:outputText>
+			<h:outputText value="#{serialObjectArrivalsPanelItem.matRevMatMaterialNumber}" styleClass="pf-tooltip-target" />
 		</p:column>
 
-		<p:column sortBy="#{serialObjectArrivalsPanelItem.matRevMatSapNumber}" width="150" >
+		<p:column sortBy="#{serialObjectArrivalsPanelItem.matRevMatSapNumber}" width="150" 
+			exportValue="#{serialObjectArrivalsPanelItem.matRevMatSapNumber}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_serialobjectarrivalspanel_matrevmatsapnumber}"/>
 			</f:facet>
-			<h:outputText value="#{serialObjectArrivalsPanelItem.matRevMatSapNumber}">
-			</h:outputText>
+			<h:outputText value="#{serialObjectArrivalsPanelItem.matRevMatSapNumber}" styleClass="pf-tooltip-target" />
 		</p:column>
 
-		<p:column sortBy="#{serialObjectArrivalsPanelItem.matRevRevisionNumber}" width="150" >
+		<p:column sortBy="#{serialObjectArrivalsPanelItem.matRevRevisionNumber}" width="150" 
+			exportValue="#{serialObjectArrivalsPanelItem.matRevRevisionNumber}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_serialobjectarrivalspanel_matrevrevisionnumber}"/>
 			</f:facet>
-			<h:outputText value="#{serialObjectArrivalsPanelItem.matRevRevisionNumber}">
-			</h:outputText>
+			<h:outputText value="#{serialObjectArrivalsPanelItem.matRevRevisionNumber}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{serialObjectArrivalsPanelItem.arrivalDate}" width="80" >
@@ -90,12 +90,12 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{serialObjectArrivalsPanelItem.supplierName}" width="200" >
+		<p:column sortBy="#{serialObjectArrivalsPanelItem.supplierName}" width="200" 
+			exportValue="#{serialObjectArrivalsPanelItem.supplierName}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_serialobjectarrivalspanel_suppliername}"/>
 			</f:facet>
-			<h:outputText value="#{serialObjectArrivalsPanelItem.supplierName}">
-			</h:outputText>
+			<h:outputText value="#{serialObjectArrivalsPanelItem.supplierName}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{serialObjectArrivalsPanelItem.creationDate}" width="120" >

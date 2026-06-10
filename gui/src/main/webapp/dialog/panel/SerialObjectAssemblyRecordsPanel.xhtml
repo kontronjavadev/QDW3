@@ -39,28 +39,28 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{serialObjectAssemblyRecordsPanelItem.matrevMatMaterialNumber}" width="150" >
+		<p:column sortBy="#{serialObjectAssemblyRecordsPanelItem.matrevMatMaterialNumber}" width="150" 
+			exportValue="#{serialObjectAssemblyRecordsPanelItem.matrevMatMaterialNumber}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_serialobjectassemblyrecordspanel_matrevmatmaterialnumber}"/>
 			</f:facet>
-			<h:outputText value="#{serialObjectAssemblyRecordsPanelItem.matrevMatMaterialNumber}">
-			</h:outputText>
+			<h:outputText value="#{serialObjectAssemblyRecordsPanelItem.matrevMatMaterialNumber}" styleClass="pf-tooltip-target" />
 		</p:column>
 
-		<p:column sortBy="#{serialObjectAssemblyRecordsPanelItem.matrevMatSapNumber}" width="150" >
+		<p:column sortBy="#{serialObjectAssemblyRecordsPanelItem.matrevMatSapNumber}" width="150" 
+			exportValue="#{serialObjectAssemblyRecordsPanelItem.matrevMatSapNumber}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_serialobjectassemblyrecordspanel_matrevmatsapnumber}"/>
 			</f:facet>
-			<h:outputText value="#{serialObjectAssemblyRecordsPanelItem.matrevMatSapNumber}">
-			</h:outputText>
+			<h:outputText value="#{serialObjectAssemblyRecordsPanelItem.matrevMatSapNumber}" styleClass="pf-tooltip-target" />
 		</p:column>
 
-		<p:column sortBy="#{serialObjectAssemblyRecordsPanelItem.matrevRevisionNumber}" width="150" >
+		<p:column sortBy="#{serialObjectAssemblyRecordsPanelItem.matrevRevisionNumber}" width="150" 
+			exportValue="#{serialObjectAssemblyRecordsPanelItem.matrevRevisionNumber}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_serialobjectassemblyrecordspanel_matrevrevisionnumber}"/>
 			</f:facet>
-			<h:outputText value="#{serialObjectAssemblyRecordsPanelItem.matrevRevisionNumber}">
-			</h:outputText>
+			<h:outputText value="#{serialObjectAssemblyRecordsPanelItem.matrevRevisionNumber}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{serialObjectAssemblyRecordsPanelItem.productionOrderNumber}" width="100" >
