@@ -1061,7 +1061,11 @@ public interface TranslationKeys {
     String PANEL_VIEWMATERIALDIALOG_PANREVISIONS_TITLE = "panel_viewmaterialdialog_panrevisions_title";
     String PANEL_VIEWMATERIALREVISIONDIALOG_PANBOMITEMS_TITLE = "panel_viewmaterialrevisiondialog_panbomitems_title";
     String PANEL_VIEWROLEDIALOG_USERS_TITLE = "panel_viewroledialog_users_title";
+    String PANEL_VIEWSERIALOBJECTDIALOG_PANARRIVALS_TITLE = "panel_viewserialobjectdialog_panarrivals_title";
+    String PANEL_VIEWSERIALOBJECTDIALOG_PANASSEMBLYRECORDS_TITLE = "panel_viewserialobjectdialog_panassemblyrecords_title";
     String PANEL_VIEWSERIALOBJECTDIALOG_PANSERIALOBJECTS_TITLE = "panel_viewserialobjectdialog_panserialobjects_title";
+    String PANEL_VIEWSERIALOBJECTDIALOG_PANSERVICEMESSAGES_TITLE = "panel_viewserialobjectdialog_panservicemessages_title";
+    String PANEL_VIEWSERIALOBJECTDIALOG_PANSHIPMENTS_TITLE = "panel_viewserialobjectdialog_panshipments_title";
     String PANEL_VIEWSERVICEMESSAGEDIALOG_PANCOMMENTS_TITLE = "panel_viewservicemessagedialog_pancomments_title";
     String PANEL_VIEWSERVICEMESSAGEDIALOG_PANFAILUREMATERIALS_TITLE = "panel_viewservicemessagedialog_panfailurematerials_title";
     String PANEL_VIEWSERVICEMESSAGEDIALOG_PANX2MESSAGES_TITLE = "panel_viewservicemessagedialog_panx2messages_title";

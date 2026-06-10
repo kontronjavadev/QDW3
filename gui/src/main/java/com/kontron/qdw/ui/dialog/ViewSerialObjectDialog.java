@@ -39,6 +39,14 @@ public class ViewSerialObjectDialog implements Serializable {
     private transient ResourceBundle bundle;
     @Generated
     private final SerialObjectSerialObjectsPanel panSerialObjects;
+    @Generated
+    private final SerialObjectArrivalsPanel panArrivals;
+    @Generated
+    private final SerialObjectShipmentsPanel panShipments;
+    @Generated
+    private final SerialObjectServiceMessagesPanel panServiceMessages;
+    @Generated
+    private final SerialObjectAssemblyRecordsPanel panAssemblyRecords;
 
     /**
      * Default constructor
@@ -48,6 +56,10 @@ public class ViewSerialObjectDialog implements Serializable {
         this.serialObjectService = null;
         this.userSession = null;
         this.panSerialObjects = null;
+        this.panArrivals = null;
+        this.panShipments = null;
+        this.panServiceMessages = null;
+        this.panAssemblyRecords = null;
     }
 
     /**
@@ -55,14 +67,23 @@ public class ViewSerialObjectDialog implements Serializable {
      * @param serialObjectService
      * @param userSession
      * @param panSerialObjects
+     * @param panArrivals
+     * @param panShipments
+     * @param panServiceMessages
+     * @param panAssemblyRecords
      */
     @Inject
     @Generated
     public ViewSerialObjectDialog(SerialObjectBoundaryService serialObjectService, UserSession userSession,
-            SerialObjectSerialObjectsPanel panSerialObjects) {
+            SerialObjectSerialObjectsPanel panSerialObjects, SerialObjectArrivalsPanel panArrivals, SerialObjectShipmentsPanel panShipments,
+            SerialObjectServiceMessagesPanel panServiceMessages, SerialObjectAssemblyRecordsPanel panAssemblyRecords) {
         this.serialObjectService = serialObjectService;
         this.userSession = userSession;
         this.panSerialObjects = panSerialObjects;
+        this.panArrivals = panArrivals;
+        this.panShipments = panShipments;
+        this.panServiceMessages = panServiceMessages;
+        this.panAssemblyRecords = panAssemblyRecords;
     }
 
     /**
@@ -136,6 +157,30 @@ public class ViewSerialObjectDialog implements Serializable {
             panSerialObjects.setCurrentPageURL(ViewSerialObjectDialog.PAGE_INIT_URL + selectedObjectId);
             panSerialObjects.setReadOnly(true);
             panSerialObjects.initView();
+
+
+            panArrivals.setSelectedObjectId(selectedObjectId);
+            panArrivals.setCurrentPageURL(ViewSerialObjectDialog.PAGE_INIT_URL + selectedObjectId);
+            panArrivals.setReadOnly(true);
+            panArrivals.initView();
+
+
+            panShipments.setSelectedObjectId(selectedObjectId);
+            panShipments.setCurrentPageURL(ViewSerialObjectDialog.PAGE_INIT_URL + selectedObjectId);
+            panShipments.setReadOnly(true);
+            panShipments.initView();
+
+
+            panServiceMessages.setSelectedObjectId(selectedObjectId);
+            panServiceMessages.setCurrentPageURL(ViewSerialObjectDialog.PAGE_INIT_URL + selectedObjectId);
+            panServiceMessages.setReadOnly(true);
+            panServiceMessages.initView();
+
+
+            panAssemblyRecords.setSelectedObjectId(selectedObjectId);
+            panAssemblyRecords.setCurrentPageURL(ViewSerialObjectDialog.PAGE_INIT_URL + selectedObjectId);
+            panAssemblyRecords.setReadOnly(true);
+            panAssemblyRecords.initView();
 
 
             formTitle = bundle.getString(FORM_VIEWSERIALOBJECTDIALOG_TITLE) + " '" + selectedObjectId + "'";
