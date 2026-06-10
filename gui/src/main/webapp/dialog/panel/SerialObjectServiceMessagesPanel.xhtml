@@ -5,14 +5,12 @@
 	xmlns:p="http://primefaces.org/ui">
 
 	<p:menubar>
-		<p:submenu icon="pi pi-file" label="#{i18n.mnu_file}" id="gridSerialObjectServiceMessagesPanel_mniFile">
-		</p:submenu>
 		<p:submenu icon="pi pi-refresh" label="#{i18n.mnu_view}">
 			<p:menuitem value="#{i18n.action_refresh}" ajax="false" icon="pi pi-refresh" actionListener="#{serialObjectServiceMessagesPanel.fetchServiceMessages}"/>
 		</p:submenu>
 		<p:submenu icon="pi pi-print" label="#{i18n.mnu_export}">
 			<p:menuitem value="#{i18n.action_export_xls}" ajax="false" icon="pi pi-file-excel">
-				<p:dataExporter type="xls" target="gridSerialObjectServiceMessagesPanel" fileName="ServiceMessageList"/>
+				<p:dataExporter type="xlsxstream" target="gridSerialObjectServiceMessagesPanel" fileName="ServiceMessageList"/>
 			</p:menuitem>
 			<p:menuitem value="#{i18n.action_export_pdf}" ajax="false" icon="pi pi-file-pdf">
 				<p:dataExporter type="pdf" target="gridSerialObjectServiceMessagesPanel" fileName="ServiceMessageList"/>
@@ -20,9 +18,9 @@
 		</p:submenu>
 	</p:menubar>
 
-	<br/>
 
 	<p:dataTable id="gridSerialObjectServiceMessagesPanel" var="serialObjectServiceMessagesPanelItem" rows="50"
+		selectionTextDisabled="false" allowUnsorting="true" resizeMode="expand" multiViewState="true" 
 		selectionMode="single"
 		selection="#{serialObjectServiceMessagesPanel.selItemOfServiceMessages}"
 		loadingMessage="#{i18n.action_fetch_data}"
@@ -30,7 +28,7 @@
 		paginatorPosition="top" paginatorAlwaysVisible="false" paginator="true" resizableColumns="true"
 		rowKey="#{serialObjectServiceMessagesPanelItem.id}"
 		paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-		rowsPerPageTemplate="10,50,100,500,1000">
+		rowsPerPageTemplate="50,150,400,1000,{ShowAll|'All'}">
 		<p:ajax event="rowDblselect" listener="#{serialObjectServiceMessagesPanel.onServiceMessagesGridDoubleClick}"/>
 
 		<p:column sortBy="#{serialObjectServiceMessagesPanelItem.id}" width="120" >
@@ -325,21 +323,34 @@
 
 	<h:outputText styleClass="label-field-mandatory" value="#{i18n.result_total_number_records} #{serialObjectServiceMessagesPanel.serviceMessagesList.size()}"/>
 
-	<p:contextMenu for="gridSerialObjectServiceMessagesPanel">
+
+
+<!--Kontextmenü mit Möglichkeit, eine Zelle oder eine Zeile zu kopieren -->
+
+	<h:inputHidden id="sosvcmsgcellText" value="#{serialObjectServiceMessagesPanel.cellText}" />
+	<h:inputHidden id="sosvcmsgrowCsv" value="#{serialObjectServiceMessagesPanel.rowCsv}" />
+
+
+	<p:contextMenu for="gridSerialObjectServiceMessagesPanel" beforeShow="updateContextData(event, 'form:tabview2', 'sosvcmsg')" >
 		<p:menuitem value="#{i18n.action_delete}" ajax="true" icon="pi pi-trash" id="gridSerialObjectServiceMessagesPanel_mniDelete" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR') and not serialObjectServiceMessagesPanel.readOnly}" onclick="PF('deleteConfirmServiceMessages').show()"/>
 		<p:menuitem value="#{i18n.action_view}" ajax="true" icon="pi pi-file" id="gridSerialObjectServiceMessagesPanel_mniView" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY')}" action="#{serialObjectServiceMessagesPanel.openViewServiceMessageDialog}">
 			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{serialObjectServiceMessagesPanel.currentPageURL}"/>
 		</p:menuitem>
 		<p:menuitem value="#{i18n.action_copy}" ajax="true" icon="pi pi-copy" id="gridSerialObjectServiceMessagesPanel_mniCopy" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR') and not serialObjectServiceMessagesPanel.readOnly}" onclick="PF('copyConfirmServiceMessages').show()"/>
 		<p:menuitem value="#{i18n.action_refresh}" ajax="false" type="push" icon="pi pi-refresh" id="gridSerialObjectServiceMessagesPanel_mniRefresh" actionListener="#{serialObjectServiceMessagesPanel.fetchServiceMessages}"/>
+
+		<p:separator/>
+
+		<p:menuitem value="#{i18n.ctxmenu_copy_cell}" actionListener="#{serialObjectServiceMessagesPanel.copyCellToClipboard}" icon="pi pi-copy" update="@none"/>
+		<p:menuitem value="#{i18n.ctxmenu_copy_row}" actionListener="#{serialObjectServiceMessagesPanel.copyRowToClipboard}" icon="pi pi-copy" update="@none"/>
 	</p:contextMenu>
 
-	<p:confirmDialog modal="true" message="#{i18n.dialog_delete_question}" header="#{i18n.dialog_delete_title}" severity="alert" widgetVar="deleteConfirmServiceMessages">
+	<p:confirmDialog modal="true" closeOnEscape="true" message="#{i18n.dialog_delete_question}" header="#{i18n.dialog_delete_title}" severity="warn" widgetVar="deleteConfirmServiceMessages">
 		<p:commandButton value="#{i18n.command_yes}" oncomplete="PF('deleteConfirmServiceMessages').hide()" actionListener="#{serialObjectServiceMessagesPanel.deleteServiceMessage}" id="gridSerialObjectServiceMessagesPanel_cmdYesDelete" ajax="false"/>
 		<p:commandButton value="#{i18n.command_no}" onclick="PF('deleteConfirmServiceMessages').hide()" type="button"/>
 	</p:confirmDialog>
 
-	<p:confirmDialog modal="true" message="#{i18n.dialog_copy_question}" header="#{i18n.dialog_copy_title}" severity="info" widgetVar="copyConfirmServiceMessages">
+	<p:confirmDialog modal="true" closeOnEscape="true" message="#{i18n.dialog_copy_question}" header="#{i18n.dialog_copy_title}" severity="info" widgetVar="copyConfirmServiceMessages">
 		<p:commandButton value="#{i18n.command_yes}" oncomplete="PF('copyConfirmServiceMessages').hide()" action="#{serialObjectServiceMessagesPanel.copy}" id="gridSerialObjectServiceMessagesPanel_cmdYesCopy" ajax="false"/>
 		<p:commandButton value="#{i18n.command_no}" onclick="PF('copyConfirmServiceMessages').hide()" type="button"/>
 	</p:confirmDialog>

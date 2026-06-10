@@ -112,10 +112,10 @@
 
 <!--Kontextmenü mit Möglichkeit, eine Zelle oder eine Zeile zu kopieren -->
 
-	<h:inputHidden id="cellText" value="#{serialObjectSerialObjectsPanel.cellText}" />
-	<h:inputHidden id="rowCsv" value="#{serialObjectSerialObjectsPanel.rowCsv}" />
+	<h:inputHidden id="sosocellText" value="#{serialObjectSerialObjectsPanel.cellText}" />
+	<h:inputHidden id="sosorowCsv" value="#{serialObjectSerialObjectsPanel.rowCsv}" />
 
-	<p:contextMenu for="gridSerialObjectSerialObjectsPanel" beforeShow="updateContextData(event)" >
+	<p:contextMenu for="gridSerialObjectSerialObjectsPanel" beforeShow="updateContextData(event, 'form:tabview2', 'soso')" >
 		<p:menuitem value="#{i18n.action_delete}" ajax="true" icon="pi pi-trash" id="gridSerialObjectSerialObjectsPanel_mniDelete" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR') and not serialObjectSerialObjectsPanel.readOnly}" onclick="PF('deleteConfirmSerialObjects').show()"/>
 		<p:menuitem value="#{i18n.action_copy}" ajax="true" icon="pi pi-copy" id="gridSerialObjectSerialObjectsPanel_mniCopy" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR') and not serialObjectSerialObjectsPanel.readOnly}" onclick="PF('copyConfirmSerialObjects').show()"/>
 		<p:menuitem value="#{i18n.action_view}" ajax="true" icon="pi pi-file" id="gridSerialObjectSerialObjectsPanel_mniView" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY')}" action="#{serialObjectSerialObjectsPanel.openViewSerialObjectDialog}">

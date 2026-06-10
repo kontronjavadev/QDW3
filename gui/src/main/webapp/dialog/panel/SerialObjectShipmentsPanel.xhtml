@@ -5,14 +5,12 @@
 	xmlns:p="http://primefaces.org/ui">
 
 	<p:menubar>
-		<p:submenu icon="pi pi-file" label="#{i18n.mnu_file}" id="gridSerialObjectShipmentsPanel_mniFile">
-		</p:submenu>
 		<p:submenu icon="pi pi-refresh" label="#{i18n.mnu_view}">
 			<p:menuitem value="#{i18n.action_refresh}" ajax="false" icon="pi pi-refresh" actionListener="#{serialObjectShipmentsPanel.fetchShipments}"/>
 		</p:submenu>
 		<p:submenu icon="pi pi-print" label="#{i18n.mnu_export}">
 			<p:menuitem value="#{i18n.action_export_xls}" ajax="false" icon="pi pi-file-excel">
-				<p:dataExporter type="xls" target="gridSerialObjectShipmentsPanel" fileName="ShipmentList"/>
+				<p:dataExporter type="xlsxstream" target="gridSerialObjectShipmentsPanel" fileName="ShipmentList"/>
 			</p:menuitem>
 			<p:menuitem value="#{i18n.action_export_pdf}" ajax="false" icon="pi pi-file-pdf">
 				<p:dataExporter type="pdf" target="gridSerialObjectShipmentsPanel" fileName="ShipmentList"/>
@@ -20,9 +18,9 @@
 		</p:submenu>
 	</p:menubar>
 
-	<br/>
 
 	<p:dataTable id="gridSerialObjectShipmentsPanel" var="serialObjectShipmentsPanelItem" rows="50"
+		selectionTextDisabled="false" allowUnsorting="true" resizeMode="expand" multiViewState="true" 
 		selectionMode="single"
 		selection="#{serialObjectShipmentsPanel.selItemOfShipments}"
 		loadingMessage="#{i18n.action_fetch_data}"
@@ -30,7 +28,7 @@
 		paginatorPosition="top" paginatorAlwaysVisible="false" paginator="true" resizableColumns="true"
 		rowKey="#{serialObjectShipmentsPanelItem.id}"
 		paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-		rowsPerPageTemplate="10,50,100,500,1000">
+		rowsPerPageTemplate="50,150,400,1000,{ShowAll|'All'}">
 		<p:ajax event="rowDblselect" listener="#{serialObjectShipmentsPanel.onShipmentsGridDoubleClick}"/>
 
 		<p:column sortBy="#{serialObjectShipmentsPanelItem.plantCode}" width="100" >
@@ -126,21 +124,34 @@
 
 	<h:outputText styleClass="label-field-mandatory" value="#{i18n.result_total_number_records} #{serialObjectShipmentsPanel.shipmentsList.size()}"/>
 
-	<p:contextMenu for="gridSerialObjectShipmentsPanel">
+
+
+<!--Kontextmenü mit Möglichkeit, eine Zelle oder eine Zeile zu kopieren -->
+
+	<h:inputHidden id="soshiptcellText" value="#{serialObjectShipmentsPanel.cellText}" />
+	<h:inputHidden id="soshiptrowCsv" value="#{serialObjectShipmentsPanel.rowCsv}" />
+
+
+	<p:contextMenu for="gridSerialObjectShipmentsPanel" beforeShow="updateContextData(event, 'form:tabview2', 'soshipt')" >
 		<p:menuitem value="#{i18n.action_delete}" ajax="true" icon="pi pi-trash" id="gridSerialObjectShipmentsPanel_mniDelete" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR') and not serialObjectShipmentsPanel.readOnly}" onclick="PF('deleteConfirmShipments').show()"/>
 		<p:menuitem value="#{i18n.action_view}" ajax="true" icon="pi pi-file" id="gridSerialObjectShipmentsPanel_mniView" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY')}" action="#{serialObjectShipmentsPanel.openViewShipmentDialog}">
 			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{serialObjectShipmentsPanel.currentPageURL}"/>
 		</p:menuitem>
 		<p:menuitem value="#{i18n.action_copy}" ajax="true" icon="pi pi-copy" id="gridSerialObjectShipmentsPanel_mniCopy" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR') and not serialObjectShipmentsPanel.readOnly}" onclick="PF('copyConfirmShipments').show()"/>
 		<p:menuitem value="#{i18n.action_refresh}" ajax="false" type="push" icon="pi pi-refresh" id="gridSerialObjectShipmentsPanel_mniRefresh" actionListener="#{serialObjectShipmentsPanel.fetchShipments}"/>
+
+		<p:separator/>
+
+		<p:menuitem value="#{i18n.ctxmenu_copy_cell}" actionListener="#{serialObjectShipmentsPanel.copyCellToClipboard}" icon="pi pi-copy" update="@none"/>
+		<p:menuitem value="#{i18n.ctxmenu_copy_row}" actionListener="#{serialObjectShipmentsPanel.copyRowToClipboard}" icon="pi pi-copy" update="@none"/>
 	</p:contextMenu>
 
-	<p:confirmDialog modal="true" message="#{i18n.dialog_delete_question}" header="#{i18n.dialog_delete_title}" severity="alert" widgetVar="deleteConfirmShipments">
+	<p:confirmDialog modal="true" closeOnEscape="true" message="#{i18n.dialog_delete_question}" header="#{i18n.dialog_delete_title}" severity="warn" widgetVar="deleteConfirmShipments">
 		<p:commandButton value="#{i18n.command_yes}" oncomplete="PF('deleteConfirmShipments').hide()" actionListener="#{serialObjectShipmentsPanel.deleteShipment}" id="gridSerialObjectShipmentsPanel_cmdYesDelete" ajax="false"/>
 		<p:commandButton value="#{i18n.command_no}" onclick="PF('deleteConfirmShipments').hide()" type="button"/>
 	</p:confirmDialog>
 
-	<p:confirmDialog modal="true" message="#{i18n.dialog_copy_question}" header="#{i18n.dialog_copy_title}" severity="info" widgetVar="copyConfirmShipments">
+	<p:confirmDialog modal="true" closeOnEscape="true" message="#{i18n.dialog_copy_question}" header="#{i18n.dialog_copy_title}" severity="info" widgetVar="copyConfirmShipments">
 		<p:commandButton value="#{i18n.command_yes}" oncomplete="PF('copyConfirmShipments').hide()" action="#{serialObjectShipmentsPanel.copy}" id="gridSerialObjectShipmentsPanel_cmdYesCopy" ajax="false"/>
 		<p:commandButton value="#{i18n.command_no}" onclick="PF('copyConfirmShipments').hide()" type="button"/>
 	</p:confirmDialog>

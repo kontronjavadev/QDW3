@@ -5,14 +5,12 @@
 	xmlns:p="http://primefaces.org/ui">
 
 	<p:menubar>
-		<p:submenu icon="pi pi-file" label="#{i18n.mnu_file}" id="gridSerialObjectArrivalsPanel_mniFile">
-		</p:submenu>
 		<p:submenu icon="pi pi-refresh" label="#{i18n.mnu_view}">
 			<p:menuitem value="#{i18n.action_refresh}" ajax="false" icon="pi pi-refresh" actionListener="#{serialObjectArrivalsPanel.fetchArrivals}"/>
 		</p:submenu>
 		<p:submenu icon="pi pi-print" label="#{i18n.mnu_export}">
 			<p:menuitem value="#{i18n.action_export_xls}" ajax="false" icon="pi pi-file-excel">
-				<p:dataExporter type="xls" target="gridSerialObjectArrivalsPanel" fileName="ArrivalList"/>
+				<p:dataExporter type="xlsxstream" target="gridSerialObjectArrivalsPanel" fileName="ArrivalList"/>
 			</p:menuitem>
 			<p:menuitem value="#{i18n.action_export_pdf}" ajax="false" icon="pi pi-file-pdf">
 				<p:dataExporter type="pdf" target="gridSerialObjectArrivalsPanel" fileName="ArrivalList"/>
@@ -20,9 +18,9 @@
 		</p:submenu>
 	</p:menubar>
 
-	<br/>
 
 	<p:dataTable id="gridSerialObjectArrivalsPanel" var="serialObjectArrivalsPanelItem" rows="50"
+		selectionTextDisabled="false" allowUnsorting="true" resizeMode="expand" multiViewState="true" 
 		selectionMode="single"
 		selection="#{serialObjectArrivalsPanel.selItemOfArrivals}"
 		loadingMessage="#{i18n.action_fetch_data}"
@@ -30,7 +28,7 @@
 		paginatorPosition="top" paginatorAlwaysVisible="false" paginator="true" resizableColumns="true"
 		rowKey="#{serialObjectArrivalsPanelItem.id}"
 		paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-		rowsPerPageTemplate="10,50,100,500,1000">
+		rowsPerPageTemplate="50,150,400,1000,{ShowAll|'All'}">
 		<p:ajax event="rowDblselect" listener="#{serialObjectArrivalsPanel.onArrivalsGridDoubleClick}"/>
 
 		<p:column sortBy="#{serialObjectArrivalsPanelItem.plantCode}" width="100" >
@@ -126,21 +124,34 @@
 
 	<h:outputText styleClass="label-field-mandatory" value="#{i18n.result_total_number_records} #{serialObjectArrivalsPanel.arrivalsList.size()}"/>
 
-	<p:contextMenu for="gridSerialObjectArrivalsPanel">
+
+
+<!--Kontextmenü mit Möglichkeit, eine Zelle oder eine Zeile zu kopieren -->
+
+	<h:inputHidden id="soarrvlcellText" value="#{serialObjectArrivalsPanel.cellText}" />
+	<h:inputHidden id="soarrvlrowCsv" value="#{serialObjectArrivalsPanel.rowCsv}" />
+
+
+	<p:contextMenu for="gridSerialObjectArrivalsPanel" beforeShow="updateContextData(event, 'form:tabview2', 'soarrvl')" >
 		<p:menuitem value="#{i18n.action_delete}" ajax="true" icon="pi pi-trash" id="gridSerialObjectArrivalsPanel_mniDelete" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR') and not serialObjectArrivalsPanel.readOnly}" onclick="PF('deleteConfirmArrivals').show()"/>
 		<p:menuitem value="#{i18n.action_view}" ajax="true" icon="pi pi-file" id="gridSerialObjectArrivalsPanel_mniView" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY')}" action="#{serialObjectArrivalsPanel.openViewArrivalDialog}">
 			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{serialObjectArrivalsPanel.currentPageURL}"/>
 		</p:menuitem>
 		<p:menuitem value="#{i18n.action_copy}" ajax="true" icon="pi pi-copy" id="gridSerialObjectArrivalsPanel_mniCopy" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR') and not serialObjectArrivalsPanel.readOnly}" onclick="PF('copyConfirmArrivals').show()"/>
 		<p:menuitem value="#{i18n.action_refresh}" ajax="false" type="push" icon="pi pi-refresh" id="gridSerialObjectArrivalsPanel_mniRefresh" actionListener="#{serialObjectArrivalsPanel.fetchArrivals}"/>
+
+		<p:separator/>
+
+		<p:menuitem value="#{i18n.ctxmenu_copy_cell}" actionListener="#{serialObjectArrivalsPanel.copyCellToClipboard}" icon="pi pi-copy" update="@none"/>
+		<p:menuitem value="#{i18n.ctxmenu_copy_row}" actionListener="#{serialObjectArrivalsPanel.copyRowToClipboard}" icon="pi pi-copy" update="@none"/>
 	</p:contextMenu>
 
-	<p:confirmDialog modal="true" message="#{i18n.dialog_delete_question}" header="#{i18n.dialog_delete_title}" severity="alert" widgetVar="deleteConfirmArrivals">
+	<p:confirmDialog modal="true" closeOnEscape="true" message="#{i18n.dialog_delete_question}" header="#{i18n.dialog_delete_title}" severity="warn" widgetVar="deleteConfirmArrivals">
 		<p:commandButton value="#{i18n.command_yes}" oncomplete="PF('deleteConfirmArrivals').hide()" actionListener="#{serialObjectArrivalsPanel.deleteArrival}" id="gridSerialObjectArrivalsPanel_cmdYesDelete" ajax="false"/>
 		<p:commandButton value="#{i18n.command_no}" onclick="PF('deleteConfirmArrivals').hide()" type="button"/>
 	</p:confirmDialog>
 
-	<p:confirmDialog modal="true" message="#{i18n.dialog_copy_question}" header="#{i18n.dialog_copy_title}" severity="info" widgetVar="copyConfirmArrivals">
+	<p:confirmDialog modal="true" closeOnEscape="true" message="#{i18n.dialog_copy_question}" header="#{i18n.dialog_copy_title}" severity="info" widgetVar="copyConfirmArrivals">
 		<p:commandButton value="#{i18n.command_yes}" oncomplete="PF('copyConfirmArrivals').hide()" action="#{serialObjectArrivalsPanel.copy}" id="gridSerialObjectArrivalsPanel_cmdYesCopy" ajax="false"/>
 		<p:commandButton value="#{i18n.command_no}" onclick="PF('copyConfirmArrivals').hide()" type="button"/>
 	</p:confirmDialog>

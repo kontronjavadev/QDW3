@@ -11,13 +11,15 @@ import com.kontron.qdw.boundary.serial.*;
 import jakarta.faces.view.*;
 import static com.kontron.qdw.ui.UserSession.*;
 import com.kontron.qdw.ui.*;
+import com.kontron.qdw.ui.view.util.CopyClipboard;
+
 import jakarta.inject.*;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
 import java.io.*;
 
 @Named("serialObjectAssemblyRecordsPanel")
 @ViewScoped
-public class SerialObjectAssemblyRecordsPanel implements Serializable {
+public class SerialObjectAssemblyRecordsPanel extends CopyClipboard implements Serializable {
     @Generated
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     @Generated

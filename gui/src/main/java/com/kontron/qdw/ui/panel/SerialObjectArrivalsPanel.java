@@ -3,6 +3,8 @@ package com.kontron.qdw.ui.panel;
 import org.slf4j.*;
 import java.lang.invoke.*;
 import com.kontron.qdw.ui.dialog.*;
+import com.kontron.qdw.ui.view.util.CopyClipboard;
+
 import static com.kontron.qdw.ui.TranslationKeys.*;
 import net.sourceforge.jbizmo.commons.webclient.primefaces.util.*;
 import jakarta.faces.application.FacesMessage;
@@ -18,7 +20,7 @@ import java.io.*;
 
 @Named("serialObjectArrivalsPanel")
 @ViewScoped
-public class SerialObjectArrivalsPanel implements Serializable {
+public class SerialObjectArrivalsPanel extends CopyClipboard implements Serializable {
     @Generated
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     @Generated
@@ -198,8 +200,9 @@ public class SerialObjectArrivalsPanel implements Serializable {
     public String openViewArrivalDialog() {
         var url = "";
 
-        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY))
+        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY)) {
             url = ViewArrivalDialog.PAGE_INIT_URL + selItemOfArrivals.getId();
+        }
 
         return url;
     }

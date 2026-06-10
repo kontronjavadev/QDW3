@@ -5,14 +5,12 @@
 	xmlns:p="http://primefaces.org/ui">
 
 	<p:menubar>
-		<p:submenu icon="pi pi-file" label="#{i18n.mnu_file}" id="gridSerialObjectAssemblyRecordsPanel_mniFile">
-		</p:submenu>
 		<p:submenu icon="pi pi-refresh" label="#{i18n.mnu_view}">
 			<p:menuitem value="#{i18n.action_refresh}" ajax="false" icon="pi pi-refresh" actionListener="#{serialObjectAssemblyRecordsPanel.fetchAssemblyRecords}"/>
 		</p:submenu>
 		<p:submenu icon="pi pi-print" label="#{i18n.mnu_export}">
 			<p:menuitem value="#{i18n.action_export_xls}" ajax="false" icon="pi pi-file-excel">
-				<p:dataExporter type="xls" target="gridSerialObjectAssemblyRecordsPanel" fileName="AssemblyRecordList"/>
+				<p:dataExporter type="xlsxstream" target="gridSerialObjectAssemblyRecordsPanel" fileName="AssemblyRecordList"/>
 			</p:menuitem>
 			<p:menuitem value="#{i18n.action_export_pdf}" ajax="false" icon="pi pi-file-pdf">
 				<p:dataExporter type="pdf" target="gridSerialObjectAssemblyRecordsPanel" fileName="AssemblyRecordList"/>
@@ -20,9 +18,9 @@
 		</p:submenu>
 	</p:menubar>
 
-	<br/>
 
 	<p:dataTable id="gridSerialObjectAssemblyRecordsPanel" var="serialObjectAssemblyRecordsPanelItem" rows="50"
+		selectionTextDisabled="false" allowUnsorting="true" resizeMode="expand" multiViewState="true" 
 		selectionMode="single"
 		selection="#{serialObjectAssemblyRecordsPanel.selItemOfAssemblyRecords}"
 		loadingMessage="#{i18n.action_fetch_data}"
@@ -30,7 +28,7 @@
 		paginatorPosition="top" paginatorAlwaysVisible="false" paginator="true" resizableColumns="true"
 		rowKey="#{serialObjectAssemblyRecordsPanelItem.id}"
 		paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-		rowsPerPageTemplate="10,50,100,500,1000">
+		rowsPerPageTemplate="50,150,400,1000,{ShowAll|'All'}">
 		<p:ajax event="rowDblselect" listener="#{serialObjectAssemblyRecordsPanel.onAssemblyRecordsGridDoubleClick}"/>
 
 		<p:column sortBy="#{serialObjectAssemblyRecordsPanelItem.serialObjectSerialNumber}" width="100" >
@@ -110,18 +108,31 @@
 
 	<h:outputText styleClass="label-field-mandatory" value="#{i18n.result_total_number_records} #{serialObjectAssemblyRecordsPanel.assemblyRecordsList.size()}"/>
 
-	<p:contextMenu for="gridSerialObjectAssemblyRecordsPanel">
+
+
+<!--Kontextmenü mit Möglichkeit, eine Zelle oder eine Zeile zu kopieren -->
+
+	<h:inputHidden id="soassyreccellText" value="#{serialObjectAssemblyRecordsPanel.cellText}" />
+	<h:inputHidden id="soassyrecrowCsv" value="#{serialObjectAssemblyRecordsPanel.rowCsv}" />
+
+
+	<p:contextMenu for="gridSerialObjectAssemblyRecordsPanel" beforeShow="updateContextData(event, 'form:tabview2', 'soassyrec')" >
 		<p:menuitem value="#{i18n.action_delete}" ajax="true" icon="pi pi-trash" id="gridSerialObjectAssemblyRecordsPanel_mniDelete" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR') and not serialObjectAssemblyRecordsPanel.readOnly}" onclick="PF('deleteConfirmAssemblyRecords').show()"/>
 		<p:menuitem value="#{i18n.action_copy}" ajax="true" icon="pi pi-copy" id="gridSerialObjectAssemblyRecordsPanel_mniCopy" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR') and not serialObjectAssemblyRecordsPanel.readOnly}" onclick="PF('copyConfirmAssemblyRecords').show()"/>
 		<p:menuitem value="#{i18n.action_refresh}" ajax="false" type="push" icon="pi pi-refresh" id="gridSerialObjectAssemblyRecordsPanel_mniRefresh" actionListener="#{serialObjectAssemblyRecordsPanel.fetchAssemblyRecords}"/>
+
+		<p:separator/>
+
+		<p:menuitem value="#{i18n.ctxmenu_copy_cell}" actionListener="#{serialObjectAssemblyRecordsPanel.copyCellToClipboard}" icon="pi pi-copy" update="@none"/>
+		<p:menuitem value="#{i18n.ctxmenu_copy_row}" actionListener="#{serialObjectAssemblyRecordsPanel.copyRowToClipboard}" icon="pi pi-copy" update="@none"/>
 	</p:contextMenu>
 
-	<p:confirmDialog modal="true" message="#{i18n.dialog_delete_question}" header="#{i18n.dialog_delete_title}" severity="alert" widgetVar="deleteConfirmAssemblyRecords">
+	<p:confirmDialog modal="true" closeOnEscape="true" message="#{i18n.dialog_delete_question}" header="#{i18n.dialog_delete_title}" severity="warn" widgetVar="deleteConfirmAssemblyRecords">
 		<p:commandButton value="#{i18n.command_yes}" oncomplete="PF('deleteConfirmAssemblyRecords').hide()" actionListener="#{serialObjectAssemblyRecordsPanel.deleteAssemblyRecord}" id="gridSerialObjectAssemblyRecordsPanel_cmdYesDelete" ajax="false"/>
 		<p:commandButton value="#{i18n.command_no}" onclick="PF('deleteConfirmAssemblyRecords').hide()" type="button"/>
 	</p:confirmDialog>
 
-	<p:confirmDialog modal="true" message="#{i18n.dialog_copy_question}" header="#{i18n.dialog_copy_title}" severity="info" widgetVar="copyConfirmAssemblyRecords">
+	<p:confirmDialog modal="true" closeOnEscape="true" message="#{i18n.dialog_copy_question}" header="#{i18n.dialog_copy_title}" severity="info" widgetVar="copyConfirmAssemblyRecords">
 		<p:commandButton value="#{i18n.command_yes}" oncomplete="PF('copyConfirmAssemblyRecords').hide()" action="#{serialObjectAssemblyRecordsPanel.copy}" id="gridSerialObjectAssemblyRecordsPanel_cmdYesCopy" ajax="false"/>
 		<p:commandButton value="#{i18n.command_no}" onclick="PF('copyConfirmAssemblyRecords').hide()" type="button"/>
 	</p:confirmDialog>
