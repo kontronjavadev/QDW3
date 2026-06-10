@@ -26,6 +26,8 @@ public class SerialObjectRepository extends AbstractRepository<SerialObject, Lon
     @Generated
     private final ServiceMessageRepository serviceMessageManager;
     @Generated
+    private final AssemblyRecordRepository assemblyRecordManager;
+    @Generated
     private final ShipmentRepository shipmentManager;
 
     /**
@@ -35,6 +37,7 @@ public class SerialObjectRepository extends AbstractRepository<SerialObject, Lon
     public SerialObjectRepository() {
         this.arrivalManager = null;
         this.serviceMessageManager = null;
+        this.assemblyRecordManager = null;
         this.shipmentManager = null;
     }
 
@@ -42,14 +45,16 @@ public class SerialObjectRepository extends AbstractRepository<SerialObject, Lon
      * Constructor for injecting all required beans
      * @param arrivalManager
      * @param serviceMessageManager
+     * @param assemblyRecordManager
      * @param shipmentManager
      */
     @Inject
     @Generated
     public SerialObjectRepository(ArrivalRepository arrivalManager, ServiceMessageRepository serviceMessageManager,
-            ShipmentRepository shipmentManager) {
+            AssemblyRecordRepository assemblyRecordManager, ShipmentRepository shipmentManager) {
         this.arrivalManager = arrivalManager;
         this.serviceMessageManager = serviceMessageManager;
+        this.assemblyRecordManager = assemblyRecordManager;
         this.shipmentManager = shipmentManager;
     }
 
@@ -137,6 +142,14 @@ public class SerialObjectRepository extends AbstractRepository<SerialObject, Lon
 
             newSerialObject = copy(serialObject, newSerialObject, loggedOnUserId);
             targetObject.getSerialObjects().add(newSerialObject);
+        }
+
+        for (final AssemblyRecord assemblyRecord : sourceObject.getAssemblyRecords()) {
+            var newAssemblyRecord = new AssemblyRecord();
+            newAssemblyRecord.setParentSerialObject(targetObject);
+
+            newAssemblyRecord = assemblyRecordManager.copy(assemblyRecord, newAssemblyRecord, loggedOnUserId);
+            targetObject.getAssemblyRecords().add(newAssemblyRecord);
         }
 
         for (final Arrival arrival : sourceObject.getArrivals()) {

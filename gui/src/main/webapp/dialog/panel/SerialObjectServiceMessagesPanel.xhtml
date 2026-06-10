@@ -1,0 +1,347 @@
+<ui:composition xmlns="https://jakarta.ee/xml/ns/jakartaee"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:h="jakarta.faces.html"
+	xmlns:f="jakarta.faces.core"
+	xmlns:p="http://primefaces.org/ui">
+
+	<p:menubar>
+		<p:submenu icon="pi pi-file" label="#{i18n.mnu_file}" id="gridSerialObjectServiceMessagesPanel_mniFile">
+		</p:submenu>
+		<p:submenu icon="pi pi-refresh" label="#{i18n.mnu_view}">
+			<p:menuitem value="#{i18n.action_refresh}" ajax="false" icon="pi pi-refresh" actionListener="#{serialObjectServiceMessagesPanel.fetchServiceMessages}"/>
+		</p:submenu>
+		<p:submenu icon="pi pi-print" label="#{i18n.mnu_export}">
+			<p:menuitem value="#{i18n.action_export_xls}" ajax="false" icon="pi pi-file-excel">
+				<p:dataExporter type="xls" target="gridSerialObjectServiceMessagesPanel" fileName="ServiceMessageList"/>
+			</p:menuitem>
+			<p:menuitem value="#{i18n.action_export_pdf}" ajax="false" icon="pi pi-file-pdf">
+				<p:dataExporter type="pdf" target="gridSerialObjectServiceMessagesPanel" fileName="ServiceMessageList"/>
+			</p:menuitem>
+		</p:submenu>
+	</p:menubar>
+
+	<br/>
+
+	<p:dataTable id="gridSerialObjectServiceMessagesPanel" var="serialObjectServiceMessagesPanelItem" rows="50"
+		selectionMode="single"
+		selection="#{serialObjectServiceMessagesPanel.selItemOfServiceMessages}"
+		loadingMessage="#{i18n.action_fetch_data}"
+		value="#{serialObjectServiceMessagesPanel.serviceMessagesList}" scrollable="false"
+		paginatorPosition="top" paginatorAlwaysVisible="false" paginator="true" resizableColumns="true"
+		rowKey="#{serialObjectServiceMessagesPanelItem.id}"
+		paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+		rowsPerPageTemplate="10,50,100,500,1000">
+		<p:ajax event="rowDblselect" listener="#{serialObjectServiceMessagesPanel.onServiceMessagesGridDoubleClick}"/>
+
+		<p:column sortBy="#{serialObjectServiceMessagesPanelItem.id}" width="120" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serialobjectservicemessagespanel_id}"/>
+			</f:facet>
+			<h:outputText value="#{serialObjectServiceMessagesPanelItem.id}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serialObjectServiceMessagesPanelItem.plantCode}" width="100" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serialobjectservicemessagespanel_plantcode}"/>
+			</f:facet>
+			<h:outputText value="#{serialObjectServiceMessagesPanelItem.plantCode}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serialObjectServiceMessagesPanelItem.matrevMatMaterialNumber}" width="150" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serialobjectservicemessagespanel_matrevmatmaterialnumber}"/>
+			</f:facet>
+			<h:outputText value="#{serialObjectServiceMessagesPanelItem.matrevMatMaterialNumber}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serialObjectServiceMessagesPanelItem.matrevMatSapNumber}" width="150" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serialobjectservicemessagespanel_matrevmatsapnumber}"/>
+			</f:facet>
+			<h:outputText value="#{serialObjectServiceMessagesPanelItem.matrevMatSapNumber}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serialObjectServiceMessagesPanelItem.matrevRevisionNumber}" width="150" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serialobjectservicemessagespanel_matrevrevisionnumber}"/>
+			</f:facet>
+			<h:outputText value="#{serialObjectServiceMessagesPanelItem.matrevRevisionNumber}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serialObjectServiceMessagesPanelItem.serviceOrderCode}" width="120" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serialobjectservicemessagespanel_serviceordercode}"/>
+			</f:facet>
+			<h:outputText value="#{serialObjectServiceMessagesPanelItem.serviceOrderCode}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serialObjectServiceMessagesPanelItem.repairStateCode}" width="120" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serialobjectservicemessagespanel_repairstatecode}"/>
+			</f:facet>
+			<h:outputText value="#{serialObjectServiceMessagesPanelItem.repairStateCode}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serialObjectServiceMessagesPanelItem.repairLocationCode}" width="120" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serialobjectservicemessagespanel_repairlocationcode}"/>
+			</f:facet>
+			<h:outputText value="#{serialObjectServiceMessagesPanelItem.repairLocationCode}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serialObjectServiceMessagesPanelItem.rMATypeCode}" width="120" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serialobjectservicemessagespanel_rmatypecode}"/>
+			</f:facet>
+			<h:outputText value="#{serialObjectServiceMessagesPanelItem.rMATypeCode}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serialObjectServiceMessagesPanelItem.repairServiceCode}" width="100" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serialobjectservicemessagespanel_repairservicecode}"/>
+			</f:facet>
+			<h:outputText value="#{serialObjectServiceMessagesPanelItem.repairServiceCode}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serialObjectServiceMessagesPanelItem.repairErrorCodeCode}" width="150" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serialobjectservicemessagespanel_repairerrorcodecode}"/>
+			</f:facet>
+			<h:outputText value="#{serialObjectServiceMessagesPanelItem.repairErrorCodeCode}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serialObjectServiceMessagesPanelItem.repairErrorCodeGroupName}" width="150" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serialobjectservicemessagespanel_repairerrorcodegroupname}"/>
+			</f:facet>
+			<h:outputText value="#{serialObjectServiceMessagesPanelItem.repairErrorCodeGroupName}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serialObjectServiceMessagesPanelItem.faultAnalysisCode}" width="120" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serialobjectservicemessagespanel_faultanalysiscode}"/>
+			</f:facet>
+			<h:outputText value="#{serialObjectServiceMessagesPanelItem.faultAnalysisCode}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serialObjectServiceMessagesPanelItem.faultAnalysisShortText}" width="250" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serialobjectservicemessagespanel_faultanalysisshorttext}"/>
+			</f:facet>
+			<h:outputText value="#{serialObjectServiceMessagesPanelItem.faultAnalysisShortText}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serialObjectServiceMessagesPanelItem.repairTaskCode}" width="120" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serialobjectservicemessagespanel_repairtaskcode}"/>
+			</f:facet>
+			<h:outputText value="#{serialObjectServiceMessagesPanelItem.repairTaskCode}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serialObjectServiceMessagesPanelItem.repairTaskShortText}" width="200" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serialobjectservicemessagespanel_repairtaskshorttext}"/>
+			</f:facet>
+			<h:outputText value="#{serialObjectServiceMessagesPanelItem.repairTaskShortText}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serialObjectServiceMessagesPanelItem.externalSupplierName}" width="200" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serialobjectservicemessagespanel_externalsuppliername}"/>
+			</f:facet>
+			<h:outputText value="#{serialObjectServiceMessagesPanelItem.externalSupplierName}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serialObjectServiceMessagesPanelItem.analysisText}" width="250" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_servicemessage_analysistext}"/>
+			</f:facet>
+			<h:outputText value="#{serialObjectServiceMessagesPanelItem.analysisText}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serialObjectServiceMessagesPanelItem.errorId}" width="100" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_servicemessage_errorid}"/>
+			</f:facet>
+			<h:outputText value="#{serialObjectServiceMessagesPanelItem.errorId}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serialObjectServiceMessagesPanelItem.origin}" width="150" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_servicemessage_origin}"/>
+			</f:facet>
+			<h:outputText value="#{serialObjectServiceMessagesPanelItem.origin}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serialObjectServiceMessagesPanelItem.internalArrivalDate}" width="110" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serialobjectservicemessagespanel_internalarrivaldate}"/>
+			</f:facet>
+			<h:outputText value="#{serialObjectServiceMessagesPanelItem.internalArrivalDate}">
+				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateConverter"/>
+				<f:attribute name="pattern" value="#{userSession.dateFormat}"/>
+				<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serialObjectServiceMessagesPanelItem.internalShipmentDate}" width="110" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serialobjectservicemessagespanel_internalshipmentdate}"/>
+			</f:facet>
+			<h:outputText value="#{serialObjectServiceMessagesPanelItem.internalShipmentDate}">
+				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateConverter"/>
+				<f:attribute name="pattern" value="#{userSession.dateFormat}"/>
+				<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serialObjectServiceMessagesPanelItem.basicStartDate}" width="100" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serialobjectservicemessagespanel_basicstartdate}"/>
+			</f:facet>
+			<h:outputText value="#{serialObjectServiceMessagesPanelItem.basicStartDate}">
+				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateConverter"/>
+				<f:attribute name="pattern" value="#{userSession.dateFormat}"/>
+				<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serialObjectServiceMessagesPanelItem.basicFinishDate}" width="100" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serialobjectservicemessagespanel_basicfinishdate}"/>
+			</f:facet>
+			<h:outputText value="#{serialObjectServiceMessagesPanelItem.basicFinishDate}">
+				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateConverter"/>
+				<f:attribute name="pattern" value="#{userSession.dateFormat}"/>
+				<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serialObjectServiceMessagesPanelItem.defectComponent}" width="100" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serialobjectservicemessagespanel_defectcomponent}"/>
+			</f:facet>
+			<h:outputText value="#{serialObjectServiceMessagesPanelItem.defectComponent}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serialObjectServiceMessagesPanelItem.designator}" width="100" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_servicemessage_designator}"/>
+			</f:facet>
+			<h:outputText value="#{serialObjectServiceMessagesPanelItem.designator}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serialObjectServiceMessagesPanelItem.epidemicFailure}" width="80" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serialobjectservicemessagespanel_epidemicfailure}"/>
+			</f:facet>
+			<p:selectBooleanCheckbox value="#{serialObjectServiceMessagesPanelItem.epidemicFailure}" disabled="true"/>
+		</p:column>
+
+		<p:column sortBy="#{serialObjectServiceMessagesPanelItem.customerFailure}" width="80" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serialobjectservicemessagespanel_customerfailure}"/>
+			</f:facet>
+			<p:selectBooleanCheckbox value="#{serialObjectServiceMessagesPanelItem.customerFailure}" disabled="true"/>
+		</p:column>
+
+		<p:column sortBy="#{serialObjectServiceMessagesPanelItem.deliveryNoteNumber}" width="100" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serialobjectservicemessagespanel_deliverynotenumber}"/>
+			</f:facet>
+			<h:outputText value="#{serialObjectServiceMessagesPanelItem.deliveryNoteNumber}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serialObjectServiceMessagesPanelItem.serviceMessageId}" width="100" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serialobjectservicemessagespanel_servicemessageid}"/>
+			</f:facet>
+			<h:outputText value="#{serialObjectServiceMessagesPanelItem.serviceMessageId}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serialObjectServiceMessagesPanelItem.causeText}" width="250" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_servicemessage_causetext}"/>
+			</f:facet>
+			<h:outputText value="#{serialObjectServiceMessagesPanelItem.causeText}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serialObjectServiceMessagesPanelItem.repairDescription}" width="250" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_servicemessage_repairdescription}"/>
+			</f:facet>
+			<h:outputText value="#{serialObjectServiceMessagesPanelItem.repairDescription}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serialObjectServiceMessagesPanelItem.creationDate}" width="120" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_abstractentitywithid_creationdate}"/>
+			</f:facet>
+			<h:outputText value="#{serialObjectServiceMessagesPanelItem.creationDate}">
+				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateTimeConverter"/>
+				<f:attribute name="pattern" value="#{userSession.dateTimeFormat}"/>
+				<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serialObjectServiceMessagesPanelItem.lastUpdate}" width="120" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_abstractentitywithid_lastupdate}"/>
+			</f:facet>
+			<h:outputText value="#{serialObjectServiceMessagesPanelItem.lastUpdate}">
+				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateTimeConverter"/>
+				<f:attribute name="pattern" value="#{userSession.dateTimeFormat}"/>
+				<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
+			</h:outputText>
+		</p:column>
+	</p:dataTable>
+	<p/>
+
+	<h:outputText styleClass="label-field-mandatory" value="#{i18n.result_total_number_records} #{serialObjectServiceMessagesPanel.serviceMessagesList.size()}"/>
+
+	<p:contextMenu for="gridSerialObjectServiceMessagesPanel">
+		<p:menuitem value="#{i18n.action_delete}" ajax="true" icon="pi pi-trash" id="gridSerialObjectServiceMessagesPanel_mniDelete" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR') and not serialObjectServiceMessagesPanel.readOnly}" onclick="PF('deleteConfirmServiceMessages').show()"/>
+		<p:menuitem value="#{i18n.action_view}" ajax="true" icon="pi pi-file" id="gridSerialObjectServiceMessagesPanel_mniView" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY')}" action="#{serialObjectServiceMessagesPanel.openViewServiceMessageDialog}">
+			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{serialObjectServiceMessagesPanel.currentPageURL}"/>
+		</p:menuitem>
+		<p:menuitem value="#{i18n.action_copy}" ajax="true" icon="pi pi-copy" id="gridSerialObjectServiceMessagesPanel_mniCopy" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR') and not serialObjectServiceMessagesPanel.readOnly}" onclick="PF('copyConfirmServiceMessages').show()"/>
+		<p:menuitem value="#{i18n.action_refresh}" ajax="false" type="push" icon="pi pi-refresh" id="gridSerialObjectServiceMessagesPanel_mniRefresh" actionListener="#{serialObjectServiceMessagesPanel.fetchServiceMessages}"/>
+	</p:contextMenu>
+
+	<p:confirmDialog modal="true" message="#{i18n.dialog_delete_question}" header="#{i18n.dialog_delete_title}" severity="alert" widgetVar="deleteConfirmServiceMessages">
+		<p:commandButton value="#{i18n.command_yes}" oncomplete="PF('deleteConfirmServiceMessages').hide()" actionListener="#{serialObjectServiceMessagesPanel.deleteServiceMessage}" id="gridSerialObjectServiceMessagesPanel_cmdYesDelete" ajax="false"/>
+		<p:commandButton value="#{i18n.command_no}" onclick="PF('deleteConfirmServiceMessages').hide()" type="button"/>
+	</p:confirmDialog>
+
+	<p:confirmDialog modal="true" message="#{i18n.dialog_copy_question}" header="#{i18n.dialog_copy_title}" severity="info" widgetVar="copyConfirmServiceMessages">
+		<p:commandButton value="#{i18n.command_yes}" oncomplete="PF('copyConfirmServiceMessages').hide()" action="#{serialObjectServiceMessagesPanel.copy}" id="gridSerialObjectServiceMessagesPanel_cmdYesCopy" ajax="false"/>
+		<p:commandButton value="#{i18n.command_no}" onclick="PF('copyConfirmServiceMessages').hide()" type="button"/>
+	</p:confirmDialog>
+
+</ui:composition>

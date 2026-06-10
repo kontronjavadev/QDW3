@@ -1,0 +1,148 @@
+<ui:composition xmlns="https://jakarta.ee/xml/ns/jakartaee"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:h="jakarta.faces.html"
+	xmlns:f="jakarta.faces.core"
+	xmlns:p="http://primefaces.org/ui">
+
+	<p:menubar>
+		<p:submenu icon="pi pi-file" label="#{i18n.mnu_file}" id="gridSerialObjectArrivalsPanel_mniFile">
+		</p:submenu>
+		<p:submenu icon="pi pi-refresh" label="#{i18n.mnu_view}">
+			<p:menuitem value="#{i18n.action_refresh}" ajax="false" icon="pi pi-refresh" actionListener="#{serialObjectArrivalsPanel.fetchArrivals}"/>
+		</p:submenu>
+		<p:submenu icon="pi pi-print" label="#{i18n.mnu_export}">
+			<p:menuitem value="#{i18n.action_export_xls}" ajax="false" icon="pi pi-file-excel">
+				<p:dataExporter type="xls" target="gridSerialObjectArrivalsPanel" fileName="ArrivalList"/>
+			</p:menuitem>
+			<p:menuitem value="#{i18n.action_export_pdf}" ajax="false" icon="pi pi-file-pdf">
+				<p:dataExporter type="pdf" target="gridSerialObjectArrivalsPanel" fileName="ArrivalList"/>
+			</p:menuitem>
+		</p:submenu>
+	</p:menubar>
+
+	<br/>
+
+	<p:dataTable id="gridSerialObjectArrivalsPanel" var="serialObjectArrivalsPanelItem" rows="50"
+		selectionMode="single"
+		selection="#{serialObjectArrivalsPanel.selItemOfArrivals}"
+		loadingMessage="#{i18n.action_fetch_data}"
+		value="#{serialObjectArrivalsPanel.arrivalsList}" scrollable="false"
+		paginatorPosition="top" paginatorAlwaysVisible="false" paginator="true" resizableColumns="true"
+		rowKey="#{serialObjectArrivalsPanelItem.id}"
+		paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+		rowsPerPageTemplate="10,50,100,500,1000">
+		<p:ajax event="rowDblselect" listener="#{serialObjectArrivalsPanel.onArrivalsGridDoubleClick}"/>
+
+		<p:column sortBy="#{serialObjectArrivalsPanelItem.plantCode}" width="100" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serialobjectarrivalspanel_plantcode}"/>
+			</f:facet>
+			<h:outputText value="#{serialObjectArrivalsPanelItem.plantCode}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serialObjectArrivalsPanelItem.movementTypeCode}" width="80" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serialobjectarrivalspanel_movementtypecode}"/>
+			</f:facet>
+			<h:outputText value="#{serialObjectArrivalsPanelItem.movementTypeCode}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serialObjectArrivalsPanelItem.orderNumber}" width="100" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serialobjectarrivalspanel_ordernumber}"/>
+			</f:facet>
+			<h:outputText value="#{serialObjectArrivalsPanelItem.orderNumber}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serialObjectArrivalsPanelItem.matRevMatMaterialNumber}" width="150" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serialobjectarrivalspanel_matrevmatmaterialnumber}"/>
+			</f:facet>
+			<h:outputText value="#{serialObjectArrivalsPanelItem.matRevMatMaterialNumber}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serialObjectArrivalsPanelItem.matRevMatSapNumber}" width="150" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serialobjectarrivalspanel_matrevmatsapnumber}"/>
+			</f:facet>
+			<h:outputText value="#{serialObjectArrivalsPanelItem.matRevMatSapNumber}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serialObjectArrivalsPanelItem.matRevRevisionNumber}" width="150" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serialobjectarrivalspanel_matrevrevisionnumber}"/>
+			</f:facet>
+			<h:outputText value="#{serialObjectArrivalsPanelItem.matRevRevisionNumber}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serialObjectArrivalsPanelItem.arrivalDate}" width="80" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serialobjectarrivalspanel_arrivaldate}"/>
+			</f:facet>
+			<h:outputText value="#{serialObjectArrivalsPanelItem.arrivalDate}">
+				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateConverter"/>
+				<f:attribute name="pattern" value="#{userSession.dateFormat}"/>
+				<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serialObjectArrivalsPanelItem.supplierName}" width="200" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serialobjectarrivalspanel_suppliername}"/>
+			</f:facet>
+			<h:outputText value="#{serialObjectArrivalsPanelItem.supplierName}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serialObjectArrivalsPanelItem.creationDate}" width="120" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_abstractentitywithid_creationdate}"/>
+			</f:facet>
+			<h:outputText value="#{serialObjectArrivalsPanelItem.creationDate}">
+				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateTimeConverter"/>
+				<f:attribute name="pattern" value="#{userSession.dateTimeFormat}"/>
+				<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serialObjectArrivalsPanelItem.lastUpdate}" width="120" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_abstractentitywithid_lastupdate}"/>
+			</f:facet>
+			<h:outputText value="#{serialObjectArrivalsPanelItem.lastUpdate}">
+				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateTimeConverter"/>
+				<f:attribute name="pattern" value="#{userSession.dateTimeFormat}"/>
+				<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
+			</h:outputText>
+		</p:column>
+	</p:dataTable>
+	<p/>
+
+	<h:outputText styleClass="label-field-mandatory" value="#{i18n.result_total_number_records} #{serialObjectArrivalsPanel.arrivalsList.size()}"/>
+
+	<p:contextMenu for="gridSerialObjectArrivalsPanel">
+		<p:menuitem value="#{i18n.action_delete}" ajax="true" icon="pi pi-trash" id="gridSerialObjectArrivalsPanel_mniDelete" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR') and not serialObjectArrivalsPanel.readOnly}" onclick="PF('deleteConfirmArrivals').show()"/>
+		<p:menuitem value="#{i18n.action_view}" ajax="true" icon="pi pi-file" id="gridSerialObjectArrivalsPanel_mniView" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY')}" action="#{serialObjectArrivalsPanel.openViewArrivalDialog}">
+			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{serialObjectArrivalsPanel.currentPageURL}"/>
+		</p:menuitem>
+		<p:menuitem value="#{i18n.action_copy}" ajax="true" icon="pi pi-copy" id="gridSerialObjectArrivalsPanel_mniCopy" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR') and not serialObjectArrivalsPanel.readOnly}" onclick="PF('copyConfirmArrivals').show()"/>
+		<p:menuitem value="#{i18n.action_refresh}" ajax="false" type="push" icon="pi pi-refresh" id="gridSerialObjectArrivalsPanel_mniRefresh" actionListener="#{serialObjectArrivalsPanel.fetchArrivals}"/>
+	</p:contextMenu>
+
+	<p:confirmDialog modal="true" message="#{i18n.dialog_delete_question}" header="#{i18n.dialog_delete_title}" severity="alert" widgetVar="deleteConfirmArrivals">
+		<p:commandButton value="#{i18n.command_yes}" oncomplete="PF('deleteConfirmArrivals').hide()" actionListener="#{serialObjectArrivalsPanel.deleteArrival}" id="gridSerialObjectArrivalsPanel_cmdYesDelete" ajax="false"/>
+		<p:commandButton value="#{i18n.command_no}" onclick="PF('deleteConfirmArrivals').hide()" type="button"/>
+	</p:confirmDialog>
+
+	<p:confirmDialog modal="true" message="#{i18n.dialog_copy_question}" header="#{i18n.dialog_copy_title}" severity="info" widgetVar="copyConfirmArrivals">
+		<p:commandButton value="#{i18n.command_yes}" oncomplete="PF('copyConfirmArrivals').hide()" action="#{serialObjectArrivalsPanel.copy}" id="gridSerialObjectArrivalsPanel_cmdYesCopy" ajax="false"/>
+		<p:commandButton value="#{i18n.command_no}" onclick="PF('copyConfirmArrivals').hide()" type="button"/>
+	</p:confirmDialog>
+
+</ui:composition>

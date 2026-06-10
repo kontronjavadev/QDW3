@@ -1,0 +1,129 @@
+<ui:composition xmlns="https://jakarta.ee/xml/ns/jakartaee"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:h="jakarta.faces.html"
+	xmlns:f="jakarta.faces.core"
+	xmlns:p="http://primefaces.org/ui">
+
+	<p:menubar>
+		<p:submenu icon="pi pi-file" label="#{i18n.mnu_file}" id="gridSerialObjectAssemblyRecordsPanel_mniFile">
+		</p:submenu>
+		<p:submenu icon="pi pi-refresh" label="#{i18n.mnu_view}">
+			<p:menuitem value="#{i18n.action_refresh}" ajax="false" icon="pi pi-refresh" actionListener="#{serialObjectAssemblyRecordsPanel.fetchAssemblyRecords}"/>
+		</p:submenu>
+		<p:submenu icon="pi pi-print" label="#{i18n.mnu_export}">
+			<p:menuitem value="#{i18n.action_export_xls}" ajax="false" icon="pi pi-file-excel">
+				<p:dataExporter type="xls" target="gridSerialObjectAssemblyRecordsPanel" fileName="AssemblyRecordList"/>
+			</p:menuitem>
+			<p:menuitem value="#{i18n.action_export_pdf}" ajax="false" icon="pi pi-file-pdf">
+				<p:dataExporter type="pdf" target="gridSerialObjectAssemblyRecordsPanel" fileName="AssemblyRecordList"/>
+			</p:menuitem>
+		</p:submenu>
+	</p:menubar>
+
+	<br/>
+
+	<p:dataTable id="gridSerialObjectAssemblyRecordsPanel" var="serialObjectAssemblyRecordsPanelItem" rows="50"
+		selectionMode="single"
+		selection="#{serialObjectAssemblyRecordsPanel.selItemOfAssemblyRecords}"
+		loadingMessage="#{i18n.action_fetch_data}"
+		value="#{serialObjectAssemblyRecordsPanel.assemblyRecordsList}" scrollable="false"
+		paginatorPosition="top" paginatorAlwaysVisible="false" paginator="true" resizableColumns="true"
+		rowKey="#{serialObjectAssemblyRecordsPanelItem.id}"
+		paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+		rowsPerPageTemplate="10,50,100,500,1000">
+		<p:ajax event="rowDblselect" listener="#{serialObjectAssemblyRecordsPanel.onAssemblyRecordsGridDoubleClick}"/>
+
+		<p:column sortBy="#{serialObjectAssemblyRecordsPanelItem.serialObjectSerialNumber}" width="100" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serialobjectassemblyrecordspanel_serialobjectserialnumber}"/>
+			</f:facet>
+			<h:outputText value="#{serialObjectAssemblyRecordsPanelItem.serialObjectSerialNumber}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serialObjectAssemblyRecordsPanelItem.matrevMatMaterialNumber}" width="150" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serialobjectassemblyrecordspanel_matrevmatmaterialnumber}"/>
+			</f:facet>
+			<h:outputText value="#{serialObjectAssemblyRecordsPanelItem.matrevMatMaterialNumber}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serialObjectAssemblyRecordsPanelItem.matrevMatSapNumber}" width="150" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serialobjectassemblyrecordspanel_matrevmatsapnumber}"/>
+			</f:facet>
+			<h:outputText value="#{serialObjectAssemblyRecordsPanelItem.matrevMatSapNumber}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serialObjectAssemblyRecordsPanelItem.matrevRevisionNumber}" width="150" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serialobjectassemblyrecordspanel_matrevrevisionnumber}"/>
+			</f:facet>
+			<h:outputText value="#{serialObjectAssemblyRecordsPanelItem.matrevRevisionNumber}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serialObjectAssemblyRecordsPanelItem.productionOrderNumber}" width="100" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serialobjectassemblyrecordspanel_productionordernumber}"/>
+			</f:facet>
+			<h:outputText value="#{serialObjectAssemblyRecordsPanelItem.productionOrderNumber}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serialObjectAssemblyRecordsPanelItem.assemblyDate}" width="80" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_serialobjectassemblyrecordspanel_assemblydate}"/>
+			</f:facet>
+			<h:outputText value="#{serialObjectAssemblyRecordsPanelItem.assemblyDate}">
+				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateConverter"/>
+				<f:attribute name="pattern" value="#{userSession.dateFormat}"/>
+				<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serialObjectAssemblyRecordsPanelItem.creationDate}" width="120" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_abstractentitywithid_creationdate}"/>
+			</f:facet>
+			<h:outputText value="#{serialObjectAssemblyRecordsPanelItem.creationDate}">
+				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateTimeConverter"/>
+				<f:attribute name="pattern" value="#{userSession.dateTimeFormat}"/>
+				<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{serialObjectAssemblyRecordsPanelItem.lastUpdate}" width="120" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_abstractentitywithid_lastupdate}"/>
+			</f:facet>
+			<h:outputText value="#{serialObjectAssemblyRecordsPanelItem.lastUpdate}">
+				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateTimeConverter"/>
+				<f:attribute name="pattern" value="#{userSession.dateTimeFormat}"/>
+				<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
+			</h:outputText>
+		</p:column>
+	</p:dataTable>
+	<p/>
+
+	<h:outputText styleClass="label-field-mandatory" value="#{i18n.result_total_number_records} #{serialObjectAssemblyRecordsPanel.assemblyRecordsList.size()}"/>
+
+	<p:contextMenu for="gridSerialObjectAssemblyRecordsPanel">
+		<p:menuitem value="#{i18n.action_delete}" ajax="true" icon="pi pi-trash" id="gridSerialObjectAssemblyRecordsPanel_mniDelete" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR') and not serialObjectAssemblyRecordsPanel.readOnly}" onclick="PF('deleteConfirmAssemblyRecords').show()"/>
+		<p:menuitem value="#{i18n.action_copy}" ajax="true" icon="pi pi-copy" id="gridSerialObjectAssemblyRecordsPanel_mniCopy" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR') and not serialObjectAssemblyRecordsPanel.readOnly}" onclick="PF('copyConfirmAssemblyRecords').show()"/>
+		<p:menuitem value="#{i18n.action_refresh}" ajax="false" type="push" icon="pi pi-refresh" id="gridSerialObjectAssemblyRecordsPanel_mniRefresh" actionListener="#{serialObjectAssemblyRecordsPanel.fetchAssemblyRecords}"/>
+	</p:contextMenu>
+
+	<p:confirmDialog modal="true" message="#{i18n.dialog_delete_question}" header="#{i18n.dialog_delete_title}" severity="alert" widgetVar="deleteConfirmAssemblyRecords">
+		<p:commandButton value="#{i18n.command_yes}" oncomplete="PF('deleteConfirmAssemblyRecords').hide()" actionListener="#{serialObjectAssemblyRecordsPanel.deleteAssemblyRecord}" id="gridSerialObjectAssemblyRecordsPanel_cmdYesDelete" ajax="false"/>
+		<p:commandButton value="#{i18n.command_no}" onclick="PF('deleteConfirmAssemblyRecords').hide()" type="button"/>
+	</p:confirmDialog>
+
+	<p:confirmDialog modal="true" message="#{i18n.dialog_copy_question}" header="#{i18n.dialog_copy_title}" severity="info" widgetVar="copyConfirmAssemblyRecords">
+		<p:commandButton value="#{i18n.command_yes}" oncomplete="PF('copyConfirmAssemblyRecords').hide()" action="#{serialObjectAssemblyRecordsPanel.copy}" id="gridSerialObjectAssemblyRecordsPanel_cmdYesCopy" ajax="false"/>
+		<p:commandButton value="#{i18n.command_no}" onclick="PF('copyConfirmAssemblyRecords').hide()" type="button"/>
+	</p:confirmDialog>
+
+</ui:composition>

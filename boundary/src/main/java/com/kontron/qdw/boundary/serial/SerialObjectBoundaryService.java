@@ -4,6 +4,7 @@ import com.kontron.qdw.domain.serial.*;
 import net.sourceforge.jbizmo.commons.search.exception.*;
 import static net.sourceforge.jbizmo.commons.jpa.AbstractRepository.DEFAULT_LIST_SIZE;
 import static net.sourceforge.jbizmo.commons.jpa.AbstractRepository.WILDCARD;
+import com.kontron.qdw.dto.service.*;
 import java.util.*;
 import jakarta.validation.ConstraintViolationException;
 import com.kontron.qdw.dto.serial.*;
@@ -320,6 +321,195 @@ public class SerialObjectBoundaryService {
         searchObj.setFromClause("from SerialObject a join a.material b join b.ownerLocation h join b.materialClass i join b.materialType j");
 
         return repository.count(searchObj);
+    }
+
+    /**
+     * Get all arrivals of a given serial object
+     * @param id
+     * @return a list of arrival objects
+     * @throws GeneralSearchException if the search operation has failed
+     */
+    @Generated
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public List<SerialObjectArrivalsDTO> getArrivalsOfSerialObject(long id) {
+        // Collect the select tokens of all fields that should be fetched
+        final var selectTokens = new ArrayList<String>();
+        selectTokens.add(SerialObjectArrivalsDTO.SELECT_ARRIVALDATE);
+        selectTokens.add(SerialObjectArrivalsDTO.SELECT_ORDERNUMBER);
+        selectTokens.add(SerialObjectArrivalsDTO.SELECT_ID);
+        selectTokens.add(SerialObjectArrivalsDTO.SELECT_CREATIONDATE);
+        selectTokens.add(SerialObjectArrivalsDTO.SELECT_LASTUPDATE);
+        selectTokens.add(SerialObjectArrivalsDTO.SELECT_MOVEMENTTYPECODE);
+        selectTokens.add(SerialObjectArrivalsDTO.SELECT_PLANTCODE);
+        selectTokens.add(SerialObjectArrivalsDTO.SELECT_SUPPLIERNAME);
+        selectTokens.add(SerialObjectArrivalsDTO.SELECT_SUPPLIERCODE);
+        selectTokens.add(SerialObjectArrivalsDTO.SELECT_MATREVID);
+        selectTokens.add(SerialObjectArrivalsDTO.SELECT_SERIALOBJECTID);
+        selectTokens.add(SerialObjectArrivalsDTO.SELECT_MATREVMATID);
+        selectTokens.add(SerialObjectArrivalsDTO.SELECT_MATREVMATMATERIALNUMBER);
+        selectTokens.add(SerialObjectArrivalsDTO.SELECT_MATREVMATSAPNUMBER);
+        selectTokens.add(SerialObjectArrivalsDTO.SELECT_MATREVREVISIONNUMBER);
+
+        // Initialize the search object
+        final var searchObj = new SearchDTO();
+        searchObj.setExactFilterMatch(true);
+        searchObj.setCaseSensitive(true);
+        searchObj.setMaxResult(DEFAULT_LIST_SIZE);
+        searchObj.setFromClause(
+                "from SerialObject x join x.arrivals a join a.materialRevision b join a.movementType c join a.plant d join a.serialObject e join a.supplier f join b.material g");
+
+        final var parentFilterField = searchObj.addSearchField("x.id", SearchFieldDataTypeEnum.LONG);
+        parentFilterField.setFilterCriteria(Long.toString(id));
+
+        return repository.search(searchObj, SerialObjectArrivalsDTO.class, selectTokens);
+    }
+
+    /**
+     * Get all shipments of a given serial object
+     * @param id
+     * @return a list of shipment objects
+     * @throws GeneralSearchException if the search operation has failed
+     */
+    @Generated
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public List<SerialObjectShipmentsDTO> getShipmentsOfSerialObject(long id) {
+        // Collect the select tokens of all fields that should be fetched
+        final var selectTokens = new ArrayList<String>();
+        selectTokens.add(SerialObjectShipmentsDTO.SELECT_ORDERNUMBER);
+        selectTokens.add(SerialObjectShipmentsDTO.SELECT_SHIPMENTDATE);
+        selectTokens.add(SerialObjectShipmentsDTO.SELECT_ID);
+        selectTokens.add(SerialObjectShipmentsDTO.SELECT_CREATIONDATE);
+        selectTokens.add(SerialObjectShipmentsDTO.SELECT_LASTUPDATE);
+        selectTokens.add(SerialObjectShipmentsDTO.SELECT_CUSTOMERNAME);
+        selectTokens.add(SerialObjectShipmentsDTO.SELECT_CUSTOMERCODE);
+        selectTokens.add(SerialObjectShipmentsDTO.SELECT_MOVEMENTTYPECODE);
+        selectTokens.add(SerialObjectShipmentsDTO.SELECT_PLANTCODE);
+        selectTokens.add(SerialObjectShipmentsDTO.SELECT_MATREVID);
+        selectTokens.add(SerialObjectShipmentsDTO.SELECT_SERIALOBJECTID);
+        selectTokens.add(SerialObjectShipmentsDTO.SELECT_MATREVMATID);
+        selectTokens.add(SerialObjectShipmentsDTO.SELECT_MATREVMATMATERIALNUMBER);
+        selectTokens.add(SerialObjectShipmentsDTO.SELECT_MATREVMATSAPNUMBER);
+        selectTokens.add(SerialObjectShipmentsDTO.SELECT_MATREVREVISIONNUMBER);
+
+        // Initialize the search object
+        final var searchObj = new SearchDTO();
+        searchObj.setExactFilterMatch(true);
+        searchObj.setCaseSensitive(true);
+        searchObj.setMaxResult(DEFAULT_LIST_SIZE);
+        searchObj.setFromClause(
+                "from SerialObject x join x.shipments a join a.customer b join a.materialRevision c join a.movementType d join a.plant e join a.serialObject f join c.material g");
+
+        final var parentFilterField = searchObj.addSearchField("x.id", SearchFieldDataTypeEnum.LONG);
+        parentFilterField.setFilterCriteria(Long.toString(id));
+
+        return repository.search(searchObj, SerialObjectShipmentsDTO.class, selectTokens);
+    }
+
+    /**
+     * Get all service messages of a given serial object
+     * @param id
+     * @return a list of service message objects
+     * @throws GeneralSearchException if the search operation has failed
+     */
+    @Generated
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public List<SerialObjectServiceMessagesDTO> getServiceMessagesOfSerialObject(long id) {
+        // Collect the select tokens of all fields that should be fetched
+        final var selectTokens = new ArrayList<String>();
+        selectTokens.add(SerialObjectServiceMessagesDTO.SELECT_ANALYSISTEXT);
+        selectTokens.add(SerialObjectServiceMessagesDTO.SELECT_BASICFINISHDATE);
+        selectTokens.add(SerialObjectServiceMessagesDTO.SELECT_BASICSTARTDATE);
+        selectTokens.add(SerialObjectServiceMessagesDTO.SELECT_CAUSETEXT);
+        selectTokens.add(SerialObjectServiceMessagesDTO.SELECT_CUSTOMERFAILURE);
+        selectTokens.add(SerialObjectServiceMessagesDTO.SELECT_DEFECTCOMPONENT);
+        selectTokens.add(SerialObjectServiceMessagesDTO.SELECT_DELIVERYNOTENUMBER);
+        selectTokens.add(SerialObjectServiceMessagesDTO.SELECT_DESIGNATOR);
+        selectTokens.add(SerialObjectServiceMessagesDTO.SELECT_EPIDEMICFAILURE);
+        selectTokens.add(SerialObjectServiceMessagesDTO.SELECT_ERRORID);
+        selectTokens.add(SerialObjectServiceMessagesDTO.SELECT_INTERNALARRIVALDATE);
+        selectTokens.add(SerialObjectServiceMessagesDTO.SELECT_INTERNALSHIPMENTDATE);
+        selectTokens.add(SerialObjectServiceMessagesDTO.SELECT_ORIGIN);
+        selectTokens.add(SerialObjectServiceMessagesDTO.SELECT_REPAIRDESCRIPTION);
+        selectTokens.add(SerialObjectServiceMessagesDTO.SELECT_SERVICEMESSAGEID);
+        selectTokens.add(SerialObjectServiceMessagesDTO.SELECT_ID);
+        selectTokens.add(SerialObjectServiceMessagesDTO.SELECT_CREATIONDATE);
+        selectTokens.add(SerialObjectServiceMessagesDTO.SELECT_LASTUPDATE);
+        selectTokens.add(SerialObjectServiceMessagesDTO.SELECT_PLANTCODE);
+        selectTokens.add(SerialObjectServiceMessagesDTO.SELECT_SERVICEORDERCODE);
+        selectTokens.add(SerialObjectServiceMessagesDTO.SELECT_REPAIRSTATECODE);
+        selectTokens.add(SerialObjectServiceMessagesDTO.SELECT_MATREVID);
+        selectTokens.add(SerialObjectServiceMessagesDTO.SELECT_SERIALOBJECTID);
+        selectTokens.add(SerialObjectServiceMessagesDTO.SELECT_MATREVMATID);
+        selectTokens.add(SerialObjectServiceMessagesDTO.SELECT_MATREVMATMATERIALNUMBER);
+        selectTokens.add(SerialObjectServiceMessagesDTO.SELECT_MATREVMATSAPNUMBER);
+        selectTokens.add(SerialObjectServiceMessagesDTO.SELECT_MATREVREVISIONNUMBER);
+        selectTokens.add(SerialObjectServiceMessagesDTO.SELECT_REPAIRLOCATIONCODE);
+        selectTokens.add(SerialObjectServiceMessagesDTO.SELECT_RMATYPECODE);
+        selectTokens.add(SerialObjectServiceMessagesDTO.SELECT_REPAIRSERVICECODE);
+        selectTokens.add(SerialObjectServiceMessagesDTO.SELECT_REPAIRERRORCODECODE);
+        selectTokens.add(SerialObjectServiceMessagesDTO.SELECT_REPAIRERRORCODEGROUPNAME);
+        selectTokens.add(SerialObjectServiceMessagesDTO.SELECT_FAULTANALYSISCODE);
+        selectTokens.add(SerialObjectServiceMessagesDTO.SELECT_FAULTANALYSISSHORTTEXT);
+        selectTokens.add(SerialObjectServiceMessagesDTO.SELECT_REPAIRTASKCODE);
+        selectTokens.add(SerialObjectServiceMessagesDTO.SELECT_REPAIRTASKSHORTTEXT);
+        selectTokens.add(SerialObjectServiceMessagesDTO.SELECT_EXTERNALSUPPLIERCODE);
+        selectTokens.add(SerialObjectServiceMessagesDTO.SELECT_EXTERNALSUPPLIERNAME);
+
+        // Initialize the search object
+        final var searchObj = new SearchDTO();
+        searchObj.setExactFilterMatch(true);
+        searchObj.setCaseSensitive(true);
+        searchObj.setMaxResult(DEFAULT_LIST_SIZE);
+        searchObj.setFromClause(
+                "from SerialObject x join x.serviceMessages a left join a.externalSupplier b join a.materialRevision c join a.plant d join a.serialObject e join a.serviceOrder f left join a.faultAnalysis h left join a.rMAType i left join a.repairErrorCode j left join a.repairLocation k left join a.repairService l join a.repairState m left join a.repairTask n join c.material p");
+
+        final var parentFilterField = searchObj.addSearchField("x.id", SearchFieldDataTypeEnum.LONG);
+        parentFilterField.setFilterCriteria(Long.toString(id));
+
+        return repository.search(searchObj, SerialObjectServiceMessagesDTO.class, selectTokens);
+    }
+
+    /**
+     * Get all assembly records of a given serial object
+     * @param id
+     * @return a list of assembly record objects
+     * @throws GeneralSearchException if the search operation has failed
+     */
+    @Generated
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public List<SerialObjectAssemblyRecordsDTO> getAssemblyRecordsOfSerialObject(long id) {
+        // Collect the select tokens of all fields that should be fetched
+        final var selectTokens = new ArrayList<String>();
+        selectTokens.add(SerialObjectAssemblyRecordsDTO.SELECT_ASSEMBLYDATE);
+        selectTokens.add(SerialObjectAssemblyRecordsDTO.SELECT_PRODUCTIONORDERNUMBER);
+        selectTokens.add(SerialObjectAssemblyRecordsDTO.SELECT_ID);
+        selectTokens.add(SerialObjectAssemblyRecordsDTO.SELECT_CREATIONDATE);
+        selectTokens.add(SerialObjectAssemblyRecordsDTO.SELECT_LASTUPDATE);
+        selectTokens.add(SerialObjectAssemblyRecordsDTO.SELECT_MATREVID);
+        selectTokens.add(SerialObjectAssemblyRecordsDTO.SELECT_PARENTSERIALOBJECTID);
+        selectTokens.add(SerialObjectAssemblyRecordsDTO.SELECT_SERIALOBJECTID);
+        selectTokens.add(SerialObjectAssemblyRecordsDTO.SELECT_SERIALOBJECTSERIALNUMBER);
+        selectTokens.add(SerialObjectAssemblyRecordsDTO.SELECT_MATREVMATID);
+        selectTokens.add(SerialObjectAssemblyRecordsDTO.SELECT_MATREVMATMATERIALNUMBER);
+        selectTokens.add(SerialObjectAssemblyRecordsDTO.SELECT_MATREVMATSAPNUMBER);
+        selectTokens.add(SerialObjectAssemblyRecordsDTO.SELECT_MATREVREVISIONNUMBER);
+
+        // Initialize the search object
+        final var searchObj = new SearchDTO();
+        searchObj.setExactFilterMatch(true);
+        searchObj.setCaseSensitive(true);
+        searchObj.setMaxResult(DEFAULT_LIST_SIZE);
+        searchObj.setFromClause(
+                "from SerialObject x join x.assemblyRecords a join a.materialRevision b join a.parentSerialObject c join a.serialObject d join b.material j");
+
+        final var parentFilterField = searchObj.addSearchField("x.id", SearchFieldDataTypeEnum.LONG);
+        parentFilterField.setFilterCriteria(Long.toString(id));
+
+        return repository.search(searchObj, SerialObjectAssemblyRecordsDTO.class, selectTokens);
     }
 
 }
