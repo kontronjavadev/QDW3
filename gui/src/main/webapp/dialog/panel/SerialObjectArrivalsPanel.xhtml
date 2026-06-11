@@ -39,9 +39,10 @@
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{serialObjectArrivalsPanelItem.movementTypeCode}" width="80" >
+		<p:column sortBy="#{serialObjectArrivalsPanelItem.movementTypeCode}" width="80" 
+			exportHeaderValue="#{i18n.lbl_attr_movementtype_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_serialobjectarrivalspanel_movementtypecode}"/>
+				<h:outputText value="#{i18n.col_serialobjectarrivalspanel_movementtypecode}" title="#{i18n.lbl_attr_movementtype_tooltip}" styleClass="pf-tooltip-target" />
 			</f:facet>
 			<h:outputText value="#{serialObjectArrivalsPanelItem.movementTypeCode}">
 			</h:outputText>
@@ -79,9 +80,10 @@
 			<h:outputText value="#{serialObjectArrivalsPanelItem.matRevRevisionNumber}" styleClass="pf-tooltip-target" />
 		</p:column>
 
-		<p:column sortBy="#{serialObjectArrivalsPanelItem.arrivalDate}" width="80" >
+		<p:column sortBy="#{serialObjectArrivalsPanelItem.arrivalDate}" width="80" 
+			exportHeaderValue="#{i18n.lbl_attr_arrivaldate_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_serialobjectarrivalspanel_arrivaldate}"/>
+				<h:outputText value="#{i18n.col_serialobjectarrivalspanel_arrivaldate}" title="#{i18n.lbl_attr_arrivaldate_tooltip}" styleClass="pf-tooltip-target" />
 			</f:facet>
 			<h:outputText value="#{serialObjectArrivalsPanelItem.arrivalDate}">
 				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateConverter"/>

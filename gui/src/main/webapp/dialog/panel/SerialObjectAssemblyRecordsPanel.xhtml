@@ -63,17 +63,19 @@
 			<h:outputText value="#{serialObjectAssemblyRecordsPanelItem.matrevRevisionNumber}" styleClass="pf-tooltip-target" />
 		</p:column>
 
-		<p:column sortBy="#{serialObjectAssemblyRecordsPanelItem.productionOrderNumber}" width="100" >
+		<p:column sortBy="#{serialObjectAssemblyRecordsPanelItem.productionOrderNumber}" width="100" 
+			exportHeaderValue="#{i18n.lbl_attr_productionordernumber_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_serialobjectassemblyrecordspanel_productionordernumber}"/>
+				<h:outputText value="#{i18n.col_serialobjectassemblyrecordspanel_productionordernumber}" title="#{i18n.lbl_attr_productionordernumber_tooltip}" styleClass="pf-tooltip-target" />
 			</f:facet>
 			<h:outputText value="#{serialObjectAssemblyRecordsPanelItem.productionOrderNumber}">
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{serialObjectAssemblyRecordsPanelItem.assemblyDate}" width="80" >
+		<p:column sortBy="#{serialObjectAssemblyRecordsPanelItem.assemblyDate}" width="80" 
+			exportHeaderValue="#{i18n.lbl_attr_assemblydate_tooltip}" class="thnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_serialobjectassemblyrecordspanel_assemblydate}"/>
+				<h:outputText value="#{i18n.col_serialobjectassemblyrecordspanel_assemblydate}" title="#{i18n.lbl_attr_assemblydate_tooltip}" styleClass="pf-tooltip-target" />
 			</f:facet>
 			<h:outputText value="#{serialObjectAssemblyRecordsPanelItem.assemblyDate}">
 				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateConverter"/>
