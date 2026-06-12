@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xs:schema xmlns:gpe="http://www.kontron.com/gpe" xmlns:tns="http://www.kontron.com/gpe" xmlns:xs="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://www.kontron.com/gpe" version="1.0">
+
+	<xs:element name="suppliers" type="tns:supplierRootType"/>
+
+	<xs:complexType name="supplierRootType">
+  	<xs:sequence>
+    	<xs:element maxOccurs="unbounded" minOccurs="0" name="supplier" type="gpe:supplierType"/>
+   	</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="supplierType">
+		<xs:sequence/>
+		
+ 		<xs:attribute name="name" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:minLength value="1"/>
+					<xs:maxLength value="50"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+    
+		<xs:attribute name="code" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:minLength value="1"/>
+					<xs:maxLength value="50"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>	
+		
+		<xs:attribute name="zip">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:minLength value="0"/>
+					<xs:maxLength value="20"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>		
+		
+		<xs:attribute name="city">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:minLength value="0"/>
+					<xs:maxLength value="50"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>		
+		
+		<xs:attribute name="street">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:minLength value="0"/>
+					<xs:maxLength value="100"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>		
+		
+		<xs:attribute name="countryCode" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:minLength value="1"/>
+					<xs:maxLength value="50"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>		
+		
+	</xs:complexType>
+  
+</xs:schema>
