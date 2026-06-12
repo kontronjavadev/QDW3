@@ -102,6 +102,58 @@ public class XMLDataImportServiceBean {
 
     @Asynchronous
     @PermitAll
+    public void runCustomerImport() {
+        if (!schedulerService.isExecuteImport()) {
+            return;
+        }
+
+        List<TaskCall> tasks = new ArrayList<>();
+        // tasks.add(forecastImportServiceBean::runImport);
+
+        runImport(tasks);
+    }
+
+    @Asynchronous
+    @PermitAll
+    public void runSupplierImport() {
+        if (!schedulerService.isExecuteImport()) {
+            return;
+        }
+
+        List<TaskCall> tasks = new ArrayList<>();
+        // tasks.add(forecastImportServiceBean::runImport);
+
+        runImport(tasks);
+    }
+
+    @Asynchronous
+    @PermitAll
+    public void runMaterialImport() {
+        if (!schedulerService.isExecuteImport()) {
+            return;
+        }
+
+        List<TaskCall> tasks = new ArrayList<>();
+        // tasks.add(forecastImportServiceBean::runImport);
+
+        runImport(tasks);
+    }
+
+    @Asynchronous
+    @PermitAll
+    public void runBoMImport() {
+        if (!schedulerService.isExecuteImport()) {
+            return;
+        }
+
+        List<TaskCall> tasks = new ArrayList<>();
+        // tasks.add(forecastImportServiceBean::runImport);
+
+        runImport(tasks);
+    }
+
+    @Asynchronous
+    @PermitAll
     public void runArrivalImport() {
         if (!schedulerService.isExecuteImport()) {
             return;
@@ -113,111 +165,6 @@ public class XMLDataImportServiceBean {
         runImport(tasks);
     }
 
-    /*
-    @Asynchronous
-    @PermitAll
-    public void runCustomerImport() {
-        if (!schedulerService.isExecuteImport()) {
-            return;
-        }
-    
-        List<TaskCall> tasks = new ArrayList<>();
-        tasks.add(customerImportServiceBean::runImport);
-    
-        runImport(tasks);
-    }
-    
-    @Asynchronous
-    @PermitAll
-    public void runCurrencyImport() {
-        if (!schedulerService.isExecuteImport()) {
-            return;
-        }
-    
-        List<TaskCall> tasks = new ArrayList<>();
-        tasks.add(currencyImportServiceBean::runImport);
-    
-        runImport(tasks);
-    }
-    
-    @Asynchronous
-    @PermitAll
-    public void runSupplierImport() {
-        if (!schedulerService.isExecuteImport()) {
-            return;
-        }
-    
-        List<TaskCall> tasks = new ArrayList<>();
-        tasks.add(supplierImportServiceBean::runImport);
-    
-        runImport(tasks);
-    }
-    
-    @Asynchronous
-    @PermitAll
-    public void runMaterialImport() {
-        if (!schedulerService.isExecuteImport()) {
-            return;
-        }
-    
-        List<TaskCall> tasks = new ArrayList<>();
-        tasks.add(materialImportServiceBean::runImport);
-    
-        runImport(tasks);
-    }
-    
-    @Asynchronous
-    @PermitAll
-    public void runBoMImport() {
-        if (!schedulerService.isExecuteImport()) {
-            return;
-        }
-    
-        List<TaskCall> tasks = new ArrayList<>();
-        tasks.add(bomImportServiceBean::runImport);
-    
-        runImport(tasks);
-    }
-    
-    @Asynchronous
-    @PermitAll
-    public void runAvlImport() {
-        if (!schedulerService.isExecuteImport()) {
-            return;
-        }
-    
-        List<TaskCall> tasks = new ArrayList<>();
-        tasks.add(avlImportServiceBean::runImport);
-    
-        runImport(tasks);
-    }
-    
-    @Asynchronous
-    @PermitAll
-    public void runOccBillingGroupImport() {
-        if (!schedulerService.isExecuteImport()) {
-            return;
-        }
-    
-        List<TaskCall> tasks = new ArrayList<>();
-        tasks.add(occBillingGroupImportServiceBean::runImport);
-    
-        runImport(tasks);
-    }
-    
-    @Asynchronous
-    @PermitAll
-    public void runOccOrderItemImport() {
-        if (!schedulerService.isExecuteImport()) {
-            return;
-        }
-    
-        List<TaskCall> tasks = new ArrayList<>();
-        tasks.add(occOrderItemImportServiceBean::runImport);
-    
-        runImport(tasks);
-    }
-    */
 
 
     private void runImport(List<TaskCall> tasks) {
