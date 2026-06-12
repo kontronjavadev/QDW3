@@ -8,11 +8,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.kontron.qdw.boundary.service.xmlimport.XMLCustomerImportServiceBean;
+import com.kontron.qdw.boundary.service.xmlimport.XMLMaterialImportServiceBean;
 //import com.kontron.qdw.boundary.service.xmlimport.XMLAvlImportServiceBean;
 //import com.kontron.qdw.boundary.service.xmlimport.XMLBoMImportServiceBean;
 //import com.kontron.qdw.boundary.service.xmlimport.XMLCurrencyImportServiceBean;
 //import com.kontron.qdw.boundary.service.xmlimport.XMLForecastImportServiceBean;
-//import com.kontron.qdw.boundary.service.xmlimport.XMLMaterialImportServiceBean;
 //import com.kontron.qdw.boundary.service.xmlimport.XMLOCCBillingGroupImportServiceBean;
 //import com.kontron.qdw.boundary.service.xmlimport.XMLOCCOrderItemImportServiceBean;
 import com.kontron.qdw.boundary.service.xmlimport.XMLSupplierImportServiceBean;
@@ -56,11 +56,11 @@ public class XMLDataImportServiceBean {
     private XMLCustomerImportServiceBean customerImportServiceBean;
     @EJB
     private XMLSupplierImportServiceBean supplierImportServiceBean;
+    @EJB
+    private XMLMaterialImportServiceBean materialImportServiceBean;
 
     // @EJB
     // private XMLCurrencyImportServiceBean currencyImportServiceBean;
-    // @EJB
-    // private XMLMaterialImportServiceBean materialImportServiceBean;
     // @EJB
     // private XMLBoMImportServiceBean bomImportServiceBean;
     // @EJB
@@ -88,10 +88,10 @@ public class XMLDataImportServiceBean {
         List<TaskCall> tasks = new ArrayList<>();
         tasks.add(customerImportServiceBean::runImport);
         tasks.add(supplierImportServiceBean::runImport);
+        tasks.add(materialImportServiceBean::runImport);
 
         // tasks.add(forecastImportServiceBean::runImport);
         // tasks.add(currencyImportServiceBean::runImport);
-        // tasks.add(materialImportServiceBean::runImport);
         // tasks.add(bomImportServiceBean::runImport);
         // tasks.add(avlImportServiceBean::runImport);
         // tasks.add(occBillingGroupImportServiceBean::runImport);
@@ -136,7 +136,7 @@ public class XMLDataImportServiceBean {
         }
 
         List<TaskCall> tasks = new ArrayList<>();
-        // tasks.add(forecastImportServiceBean::runImport);
+        tasks.add(materialImportServiceBean::runImport);
 
         runImport(tasks);
     }

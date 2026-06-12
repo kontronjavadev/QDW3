@@ -1,6 +1,8 @@
 package com.kontron.qdw.repository.material;
 
 import java.util.*;
+import java.util.stream.Collectors;
+
 import com.kontron.qdw.domain.material.*;
 import jakarta.persistence.*;
 import net.sourceforge.jbizmo.commons.jpa.*;
@@ -49,6 +51,64 @@ public class MaterialRepository extends AbstractRepository<Material, Long> {
     public Material findById(Material material) {
         return findById(material.getId());
     }
+
+    /**
+     * Finde Materialien nach SAP-Nummern.
+     * <p/>
+     * Diese Methode ist speziell für den SAP-Import (Material, BoM und OrderItems). Es wird im Bulk gesucht. Die zurückgegebene Map
+     * beinhaltet <em>immer</em> alle keys, auch wenn kein Material gefunden wird, um dem Import zu signalsieren, dass eben
+     * kein passendes Material vorhanden ist.
+     * 
+     * @return Map mit den gesuchten keys und den gefundenen Einträgen
+     */
+    public Map<String, Material> findBySAPNumbers(Collection<String> sapNummern, boolean fetchRevisions) {
+        String stmt = "select a "
+                + "from Material a "
+                + (fetchRevisions ? "left join fetch a.revisions " : "")
+                + "where a.sapNumber in :paramSapNrn "
+                + "order by a.sapNumber, a.creationDate desc";
+        List<Material> resultList = em
+                .createQuery(stmt, Material.class)
+                .setParameter("paramSapNrn", sapNummern)
+                .getResultList();
+
+        // touch: Map mit allen keys und value null erzeugen, damit
+        Map<String, Material> resultMap = new HashMap<>();
+        sapNummern.stream().forEach(key -> resultMap.put(key, null));
+
+        resultMap.putAll(resultList.stream()
+                .collect(Collectors.groupingBy(Material::getSapNumber,
+                        Collectors.reducing(null, (first, second) -> first == null ? second : first))));
+
+        return resultMap;
+    }
+
+    /**
+     * Finde Materialien nach Material-Nummern. Rückgabe-Map nach Material-Nummern (im Gegensatz zu {@link #alternativelyFindByMaterialNumbers(Collection, boolean, boolean)})!
+     * <p/>
+     * Diese Methode ist speziell für den SAP-Import (Material, BoM und OrderItems). Es wird im Bulk gesucht. Die zurückgegebene
+     * Map beinhaltet Material-Nummern als keys. Da ein Material zur Materialnummer eine andere SAP-Nummer haben könnte, würde dies mit der Schwester-Method nicht festgestellt,
+     * da ein neuer Eintrag erzeugt würde.
+     * 
+     * @return Map mit den gesuchten keys und den gefundenen ManMat
+     */
+    public Map<String, Material> findByMaterialNumbers(Collection<String> materialNummern, boolean fetchRevisions) {
+        String stmt = "select a "
+                + "from Material a "
+                + (fetchRevisions ? "left join fetch a.revisions " : "")
+                + "where a.materialNumber in :paramMatNrn "
+                + "order by a.materialNumber, a.creationDate desc";
+        List<Material> resultList = em
+                .createQuery(stmt, Material.class)
+                .setParameter("paramMatNrn", materialNummern)
+                .getResultList();
+
+        return resultList.stream()
+                .collect(Collectors.groupingBy(Material::getMaterialNumber,
+                        Collectors.reducing(null, (first, second) -> first == null ? second : first)));
+    }
+
+
 
     /**
      * Merge the material object
