@@ -148,8 +148,8 @@ public class XMLSupplierImportServiceBean {
                 }
                 else {
                     Supplier newSupplier = new Supplier(currentSupplierCode);
-                    newSupplier.setCity(supplier.getCity());
                     newSupplier.setName(supplier.getName() + " (" + currentSupplierCode + ")");
+                    newSupplier.setCity(supplier.getCity());
                     newSupplier.setStreet(supplier.getStreet());
                     newSupplier.setZipCode(supplier.getZip());
                     newSupplier.setCountry(countryManager.findById(supplier.getCountryCode()));
