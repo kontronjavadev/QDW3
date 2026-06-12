@@ -65,18 +65,18 @@ public final class Constants {
 
 
     // Global constants for LDAP
-    private static final String LDAP_AD_DC_ADDRESS = "kontron.local";
-    private static final String LDAP_AD_AUTH_USERNAME = "ad-reader";
-    private static final String LDAP_AD_AUTH_PASSWORD = "Wertz789";
-    private static final String LDAP_AD_CONTEXT = "kontron.local";
+    // private static final String LDAP_AD_DC_ADDRESS = "kontron.local";
+    // private static final String LDAP_AD_AUTH_USERNAME = "ad-reader";
+    // private static final String LDAP_AD_AUTH_PASSWORD = "Wertz789";
+    // private static final String LDAP_AD_CONTEXT = "kontron.local";
 
 
 
     // Properties für externe URLs, wie sie in den Benachrichtigungsmails verschickt werden
-    private static final String GPE_URL_EXTERNAL = "https://gpe.kontron.com:8443/gpesupplier";
-    private static final String GPE_URL_RELATIVE_PROD = "/dialog/ViewProductionInfoSetDialog.jsf?selectedObjectId=";
-    private static final String GPE_URL_RELATIVE_QUOTE = "/dialog/ViewQuoteSessionDialog.jsf?selectedObjectId=";
-    private static final String GPE_URL_RELATIVE_GP = "/tree/GPSessionTreeView.jsf?sessionNo=";
+    // private static final String GPE_URL_EXTERNAL = "https://gpe.kontron.com:8443/gpesupplier";
+    // private static final String GPE_URL_RELATIVE_PROD = "/dialog/ViewProductionInfoSetDialog.jsf?selectedObjectId=";
+    // private static final String GPE_URL_RELATIVE_QUOTE = "/dialog/ViewQuoteSessionDialog.jsf?selectedObjectId=";
+    // private static final String GPE_URL_RELATIVE_GP = "/tree/GPSessionTreeView.jsf?sessionNo=";
 
 
 
@@ -149,59 +149,59 @@ public final class Constants {
 
 
 
-    public static String getLdapAdDcAddress() {
-        return StringUtil.getNonEmptyStringFromObjectOrDefault(getExternalCoreConfiguration(),
-                ExternalCoreConfiguration::getLdapAdDcAddress, Constants.LDAP_AD_DC_ADDRESS);
-    }
+    // public static String getLdapAdDcAddress() {
+    // return StringUtil.getNonEmptyStringFromObjectOrDefault(getExternalCoreConfiguration(),
+    // ExternalCoreConfiguration::getLdapAdDcAddress, Constants.LDAP_AD_DC_ADDRESS);
+    // }
+    //
+    // public static String getLdapAdAuthUsername() {
+    // return StringUtil.getNonEmptyStringFromObjectOrDefault(getExternalCoreConfiguration(),
+    // ExternalCoreConfiguration::getLdapAdAuthUsername, Constants.LDAP_AD_AUTH_USERNAME);
+    // }
+    //
+    // public static String getLdapAdAuthPassword() {
+    // return StringUtil.getNonEmptyStringFromObjectOrDefault(getExternalCoreConfiguration(),
+    // ExternalCoreConfiguration::getLdapAdAuthPassword, Constants.LDAP_AD_AUTH_PASSWORD);
+    // }
+    //
+    // public static String getLdapAdContext() {
+    // return StringUtil.getNonEmptyStringFromObjectOrDefault(getExternalCoreConfiguration(),
+    // ExternalCoreConfiguration::getLdapAdContext, Constants.LDAP_AD_CONTEXT);
+    // }
 
-    public static String getLdapAdAuthUsername() {
-        return StringUtil.getNonEmptyStringFromObjectOrDefault(getExternalCoreConfiguration(),
-                ExternalCoreConfiguration::getLdapAdAuthUsername, Constants.LDAP_AD_AUTH_USERNAME);
-    }
-
-    public static String getLdapAdAuthPassword() {
-        return StringUtil.getNonEmptyStringFromObjectOrDefault(getExternalCoreConfiguration(),
-                ExternalCoreConfiguration::getLdapAdAuthPassword, Constants.LDAP_AD_AUTH_PASSWORD);
-    }
-
-    public static String getLdapAdContext() {
-        return StringUtil.getNonEmptyStringFromObjectOrDefault(getExternalCoreConfiguration(),
-                ExternalCoreConfiguration::getLdapAdContext, Constants.LDAP_AD_CONTEXT);
-    }
 
 
-
-    public static String getUrlExternal() {
-        return StringUtil.getNonEmptyStringFromObjectOrDefault(getApplicationConfiguration(),
-                ApplicationConfiguration::getUrlExternal, Constants.GPE_URL_EXTERNAL);
-    }
-
-    public static String getUrlRelativeProduction() {
-        return StringUtil.getNonEmptyStringFromObjectOrDefault(getApplicationConfiguration(),
-                ApplicationConfiguration::getUrlRelativeProduction, Constants.GPE_URL_RELATIVE_PROD);
-    }
-
-    public static String getUrlRelativeQuote() {
-        return StringUtil.getNonEmptyStringFromObjectOrDefault(getApplicationConfiguration(),
-                ApplicationConfiguration::getUrlRelativeQuote, Constants.GPE_URL_RELATIVE_QUOTE);
-    }
-
-    public static String getUrlRelativeGp() {
-        return StringUtil.getNonEmptyStringFromObjectOrDefault(getApplicationConfiguration(),
-                ApplicationConfiguration::getUrlRelativeGp, Constants.GPE_URL_RELATIVE_GP);
-    }
-
-    public static String getUrlProduction() {
-        return getUrlExternal() + getUrlRelativeProduction();
-    }
-
-    public static String getUrlQuote() {
-        return getUrlExternal() + getUrlRelativeQuote();
-    }
-
-    public static String getUrlGp() {
-        return getUrlExternal() + getUrlRelativeGp();
-    }
+    // public static String getUrlExternal() {
+    // return StringUtil.getNonEmptyStringFromObjectOrDefault(getApplicationConfiguration(),
+    // ApplicationConfiguration::getUrlExternal, Constants.GPE_URL_EXTERNAL);
+    // }
+    //
+    // public static String getUrlRelativeProduction() {
+    // return StringUtil.getNonEmptyStringFromObjectOrDefault(getApplicationConfiguration(),
+    // ApplicationConfiguration::getUrlRelativeProduction, Constants.GPE_URL_RELATIVE_PROD);
+    // }
+    //
+    // public static String getUrlRelativeQuote() {
+    // return StringUtil.getNonEmptyStringFromObjectOrDefault(getApplicationConfiguration(),
+    // ApplicationConfiguration::getUrlRelativeQuote, Constants.GPE_URL_RELATIVE_QUOTE);
+    // }
+    //
+    // public static String getUrlRelativeGp() {
+    // return StringUtil.getNonEmptyStringFromObjectOrDefault(getApplicationConfiguration(),
+    // ApplicationConfiguration::getUrlRelativeGp, Constants.GPE_URL_RELATIVE_GP);
+    // }
+    //
+    // public static String getUrlProduction() {
+    // return getUrlExternal() + getUrlRelativeProduction();
+    // }
+    //
+    // public static String getUrlQuote() {
+    // return getUrlExternal() + getUrlRelativeQuote();
+    // }
+    //
+    // public static String getUrlGp() {
+    // return getUrlExternal() + getUrlRelativeGp();
+    // }
 
 
 

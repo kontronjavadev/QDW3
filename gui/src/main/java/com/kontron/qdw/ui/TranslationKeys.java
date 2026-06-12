@@ -700,6 +700,7 @@ public interface TranslationKeys {
     String FORM_VIEWTRACEBOMDIALOG_TITLE = "form_viewtracebomdialog_title";
     String FORM_VIEWTRACEBOMITEMDIALOG_TITLE = "form_viewtracebomitemdialog_title";
     String FORM_VIEWX2MESSAGEDIALOG_TITLE = "form_viewx2messagedialog_title";
+    String FORM_XMLDATAIMPORT_TITLE = "form_xmldataimport_title";
     String FORM_X2MESSAGEVIEW_TITLE = "form_x2messageview_title";
     String ILLEGAL_ITEM_SELECTED = "illegal_item_selected";
     String INVALID_MAIL_ADDRESS = "invalid_mail_address";

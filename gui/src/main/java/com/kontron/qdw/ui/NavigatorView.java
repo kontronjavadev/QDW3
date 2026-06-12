@@ -84,14 +84,22 @@ public class NavigatorView implements Serializable {
             final var itemGroup0001 = new DefaultTreeNode<>(FOLDER_TYPE, new TreeNavigatorItem(bundle.getString(FG_TOP_ADMINISTRATION)), root);
             itemGroup0001.setExpanded(false);
 
+            // User
             if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_USER_ADMINISTRATOR))
                 new DefaultTreeNode<>(VIEW_TYPE, new TreeNavigatorItem(bundle.getString(FORM_USERVIEW_TITLE),
                         req.getContextPath() + "/view/UserView.jsf"), itemGroup0001);
 
+            // Role
             if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_USER_ADMINISTRATOR))
                 new DefaultTreeNode<>(VIEW_TYPE, new TreeNavigatorItem(bundle.getString(FORM_ROLEVIEW_TITLE),
                         req.getContextPath() + "/view/RoleView.jsf"), itemGroup0001);
 
+            // SAP Import
+            if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_MAINTAINER))
+                new DefaultTreeNode<>(VIEW_TYPE, new TreeNavigatorItem(bundle.getString(FORM_XMLDATAIMPORT_TITLE),
+                        req.getContextPath() + "/view/XMLDataImportView.jsf"), itemGroup0001);
+
+            // Notification
             if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_MAINTAINER))
                 new DefaultTreeNode<>(VIEW_TYPE, new TreeNavigatorItem(bundle.getString(FORM_NOTIFICATIONVIEW_TITLE),
                         req.getContextPath() + "/view/NotificationView.jsf"), itemGroup0001);
@@ -150,10 +158,12 @@ public class NavigatorView implements Serializable {
             final var itemGroup0003 = new DefaultTreeNode<>(FOLDER_TYPE, new TreeNavigatorItem(bundle.getString(FG_TOP_MATERIAL)), root);
             itemGroup0003.setExpanded(false);
 
+            // Material revision
             if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY, ROLE_SUPERUSER))
                 new DefaultTreeNode<>(VIEW_TYPE, new TreeNavigatorItem(bundle.getString(FORM_MATERIALREVISIONVIEW_TITLE),
                         req.getContextPath() + "/view/MaterialRevisionView.jsf"), itemGroup0003);
 
+            // Material
             if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY, ROLE_SUPERUSER))
                 new DefaultTreeNode<>(VIEW_TYPE, new TreeNavigatorItem(bundle.getString(FORM_MATERIALVIEW_TITLE),
                         req.getContextPath() + "/view/MaterialView.jsf"), itemGroup0003);
