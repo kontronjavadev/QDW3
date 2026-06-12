@@ -7,10 +7,10 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.kontron.qdw.boundary.service.xmlimport.XMLCustomerImportServiceBean;
 //import com.kontron.qdw.boundary.service.xmlimport.XMLAvlImportServiceBean;
 //import com.kontron.qdw.boundary.service.xmlimport.XMLBoMImportServiceBean;
 //import com.kontron.qdw.boundary.service.xmlimport.XMLCurrencyImportServiceBean;
-//import com.kontron.qdw.boundary.service.xmlimport.XMLCustomerImportServiceBean;
 //import com.kontron.qdw.boundary.service.xmlimport.XMLForecastImportServiceBean;
 //import com.kontron.qdw.boundary.service.xmlimport.XMLMaterialImportServiceBean;
 //import com.kontron.qdw.boundary.service.xmlimport.XMLOCCBillingGroupImportServiceBean;
@@ -52,10 +52,10 @@ public class XMLDataImportServiceBean {
     @EJB
     private SchedulerServiceBean schedulerService;
 
+    @EJB
+    private XMLCustomerImportServiceBean customerImportServiceBean;
     // @EJB
     // private XMLCurrencyImportServiceBean currencyImportServiceBean;
-    // @EJB
-    // private XMLCustomerImportServiceBean customerImportServiceBean;
     // @EJB
     // private XMLSupplierImportServiceBean supplierImportServiceBean;
     // @EJB
@@ -85,8 +85,8 @@ public class XMLDataImportServiceBean {
         }
 
         List<TaskCall> tasks = new ArrayList<>();
+        tasks.add(customerImportServiceBean::runImport);
         // tasks.add(forecastImportServiceBean::runImport);
-        // tasks.add(customerImportServiceBean::runImport);
         // tasks.add(currencyImportServiceBean::runImport);
         // tasks.add(supplierImportServiceBean::runImport);
         // tasks.add(materialImportServiceBean::runImport);
@@ -108,7 +108,7 @@ public class XMLDataImportServiceBean {
         }
 
         List<TaskCall> tasks = new ArrayList<>();
-        // tasks.add(forecastImportServiceBean::runImport);
+        tasks.add(customerImportServiceBean::runImport);
 
         runImport(tasks);
     }

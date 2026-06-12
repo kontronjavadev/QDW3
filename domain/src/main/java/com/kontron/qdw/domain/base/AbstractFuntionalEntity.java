@@ -4,7 +4,11 @@ import jakarta.validation.constraints.*;
 import jakarta.persistence.*;
 import com.kontron.qdw.domain.base.listen.AbstractFuntionalEntityCallbackListener;
 import java.time.*;
+import java.util.List;
+import java.util.Map;
+
 import net.sourceforge.jbizmo.commons.annotation.Generated;
+import com.kontron.util.collection.CollectionUtil;
 
 @MappedSuperclass
 @EntityListeners(AbstractFuntionalEntityCallbackListener.class)
@@ -44,6 +48,15 @@ public class AbstractFuntionalEntity {
      */
     @Generated
     public AbstractFuntionalEntity() {
+    }
+
+    /**
+     * @param <T> Entityklasse
+     * @param entities Liste an Entities
+     * @return Map an Entities nach {@link #getCode()}
+     */
+    public static <T extends AbstractFuntionalEntity> Map<String, T> asMap(List<T> entities) {
+        return CollectionUtil.convertCollectionToMap(entities, T::getCode);
     }
 
     /**

@@ -3,7 +3,12 @@ package com.kontron.qdw.domain.base;
 import jakarta.validation.constraints.*;
 import jakarta.persistence.*;
 import java.time.*;
+import java.util.List;
+import java.util.Map;
+
 import com.kontron.qdw.domain.base.listen.AbstractEntityWithIdCallbackListener;
+import com.kontron.util.collection.CollectionUtil;
+
 import net.sourceforge.jbizmo.commons.annotation.Generated;
 
 @MappedSuperclass
@@ -33,6 +38,15 @@ public class AbstractEntityWithId {
      */
     @Generated
     public AbstractEntityWithId() {
+    }
+
+    /**
+     * @param <T> Entityklasse
+     * @param entities Liste an Entities
+     * @return Map an Entities nach {@link #getId()}
+     */
+    public static <T extends AbstractEntityWithId> Map<Long, T> asMap(List<T> entities) {
+        return CollectionUtil.convertCollectionToMap(entities, T::getId);
     }
 
     /**
