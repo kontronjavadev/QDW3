@@ -35,6 +35,71 @@ public class MaterialRevisionRepository extends AbstractRepository<MaterialRevis
         this.boMItemManager = boMItemManager;
     }
 
+
+
+    /**
+     * Find last material revision
+     * 
+     * @param materialNumber
+     * @return the latest material revision if one has bean found
+     */
+    public MaterialRevision getLastMaterialRevision(String materialNumber, String plantCode) {
+        StringBuilder statement = new StringBuilder();
+        statement.append("select a from MaterialRevision a ");
+        statement.append("where a.material.materialNumber = :paramMat ");
+        statement.append("and a.plant.code = :paramPlant ");
+        statement.append("order by a.creationDate desc");
+
+        @SuppressWarnings("resource")
+        TypedQuery<MaterialRevision> query = getEntityManager().createQuery(statement.toString(), MaterialRevision.class);
+        query.setParameter("paramMat", materialNumber);
+        query.setParameter("paramPlant", plantCode);
+
+        List<MaterialRevision> revisionList = query.getResultList();
+
+        if (revisionList.size() == 0) {
+            return null;
+        }
+
+        return revisionList.get(0);
+    }
+
+    /**
+     * Holt die zuletzt angelegte Revision anhand Materialnummer, Werk und Revisionsnummer
+     * 
+     * @param materialNumber
+     * @param revisionNumber
+     * @return a material revision if one has been found
+     */
+    public MaterialRevision getLastMaterialRevisionByMatNr(String materialNumber, String plantCode, String revisionNumber) {
+        // alle Revisionen anhand Materialnummer, Werk und Revisionsnummer, inkl. Revisionen mit Zeitstempel (umgekehrt chronologisch)
+        StringBuilder statement = new StringBuilder();
+        statement.append("select a from MaterialRevision a ");
+        statement.append("left join a.bomItems ");
+        statement.append("left join a.bomItems.material ");
+        statement.append("where a.material.materialNumber = :paramMat ");
+        statement.append("and a.plant.code = :paramPlant ");
+        statement.append("and (a.revisionNumber = :paramRev or a.revisionNumber like '" + revisionNumber + "-______\\_______') ");
+        // <revnr> or <revnr>-ttmmjj_ssmmss => like <revnr>-<6Zeichen>_<6Zeichen>
+        statement.append("order by a.creationDate desc ");
+
+        @SuppressWarnings("resource")
+        TypedQuery<MaterialRevision> query = getEntityManager().createQuery(statement.toString(), MaterialRevision.class);
+        query.setParameter("paramMat", materialNumber);
+        query.setParameter("paramPlant", plantCode);
+        query.setParameter("paramRev", revisionNumber);
+
+        List<MaterialRevision> revisionList = query.getResultList();
+
+        if (revisionList.size() == 0) {
+            return null;
+        }
+
+        return revisionList.getFirst();
+    }
+
+
+
     /**
      * Find a persistent material revision by using the primary key of the provided object
      * @param materialRevision
