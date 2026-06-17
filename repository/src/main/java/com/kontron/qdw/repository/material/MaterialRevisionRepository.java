@@ -75,8 +75,8 @@ public class MaterialRevisionRepository extends AbstractRepository<MaterialRevis
         // alle Revisionen anhand Materialnummer, Werk und Revisionsnummer, inkl. Revisionen mit Zeitstempel (umgekehrt chronologisch)
         StringBuilder statement = new StringBuilder();
         statement.append("select a from MaterialRevision a ");
-        statement.append("left join a.bomItems ");
-        statement.append("left join a.bomItems.material ");
+        statement.append("left join a.boMItems ");
+        statement.append("left join a.boMItems.material ");
         statement.append("where a.material.materialNumber = :paramMat ");
         statement.append("and a.plant.code = :paramPlant ");
         statement.append("and (a.revisionNumber = :paramRev or a.revisionNumber like '" + revisionNumber + "-______\\_______') ");
