@@ -52,7 +52,7 @@ public class XMLCustomerImportServiceBean {
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    private static final String CUSTOMER_SUB_PATH = "customer";
+    private static final String FOLDER_SUB_PATH = "customer";
 
     private static final String PROP_XML_EXCHANGE_FOLDER = "sap_exchange_folder";
 
@@ -76,11 +76,11 @@ public class XMLCustomerImportServiceBean {
     /** Perform customer import */
     @PermitAll
     public ITaskNodeLog runImport() {
-        String customerDir = exchangePath + CUSTOMER_SUB_PATH;
+        String importDir = exchangePath + FOLDER_SUB_PATH;
 
-        TaskNodeLog tsk = new TaskNodeLog("import customer", "import customer in folder " + customerDir);
+        TaskNodeLog tsk = new TaskNodeLog("import customer", "import customer in folder " + importDir);
 
-        String[] importFileNames = new File(customerDir).list(SIMPLE_XML_FILTER);
+        String[] importFileNames = new File(importDir).list(SIMPLE_XML_FILTER);
         if (importFileNames.length == 0) {
             tsk.finishTask();
             return tsk;
@@ -91,7 +91,7 @@ public class XMLCustomerImportServiceBean {
         List<String> orderedImportFileNames = com.kontron.util.file.FileUtil.getOrderedSAPImportFileNames(importFileNames, ImportType.FC_CUS);
 
         for (String importFileName : orderedImportFileNames) {
-            importFile(importFileName, tsk, customerDir);
+            importFile(importFileName, tsk, importDir);
         }
 
         tsk.finishTask();

@@ -67,8 +67,8 @@ public class XMLMaterialImportServiceBean {
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    private static final String MATERIAL_SCHEMA_PATH = "/schema/Material.xsd";
-    private static final String MATERIAL_SUB_PATH = "material";
+    private static final String SCHEMA_PATH = "/schema/Material.xsd";
+    private static final String FOLDER_SUB_PATH = "material";
 
     private static final String PROP_XML_EXCHANGE_FOLDER = "sap_exchange_folder";
 
@@ -99,11 +99,11 @@ public class XMLMaterialImportServiceBean {
     /** Perform material import */
     @PermitAll
     public ITaskNodeLog runImport() {
-        String materialDir = exchangePath + MATERIAL_SUB_PATH;
+        String importDir = exchangePath + FOLDER_SUB_PATH;
 
-        TaskNodeLog tsk = new TaskNodeLog("import material", "import material in folder " + materialDir);
+        TaskNodeLog tsk = new TaskNodeLog("import material", "import material in folder " + importDir);
 
-        String[] importFileNames = new File(materialDir).list(SIMPLE_XML_FILTER);
+        String[] importFileNames = new File(importDir).list(SIMPLE_XML_FILTER);
         if (importFileNames.length == 0) {
             tsk.finishTask();
             return tsk;
@@ -112,7 +112,7 @@ public class XMLMaterialImportServiceBean {
 
         Unmarshaller unmarshaller;
         try {
-            URL fileURL = getClass().getResource(MATERIAL_SCHEMA_PATH);
+            URL fileURL = getClass().getResource(SCHEMA_PATH);
             unmarshaller = JAXBContext.newInstance(MaterialXMLRoot.class).createUnmarshaller();
 
             SchemaFactory sf = SchemaFactory.newInstance(javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI);
@@ -130,13 +130,13 @@ public class XMLMaterialImportServiceBean {
         // We must sort files in order to set field "active" of domain object ManufacturerMaterial properly!
         // Und diesmal sortieren wir richtig, denn "yyyyMMdd_HHmmss_lfdNummer" wird sich nicht als int parsen lassen,
         // was aber auch nicht so wichtig ist, wenn die sortierten Dateien ohnehin nicht verwendet wurden...
-        List<String> orderedImportFileNames = com.kontron.util.file.FileUtil.getOrderedSAPImportFileNames(importFileNames, ImportType.GPE_MATERIAL);
+        List<String> orderedImportFileNames = com.kontron.util.file.FileUtil.getOrderedSAPImportFileNames(importFileNames, ImportType.QDW_MATERIAL);
 
 
         // Read all xml files from given path
         logger.info("{} Dateien für Material-Import gefunden.", orderedImportFileNames);
         for (String importFileName : orderedImportFileNames) {
-            importFile(importFileName, tsk, materialDir, unmarshaller);
+            importFile(importFileName, tsk, importDir, unmarshaller);
         }
 
         tsk.finishTask();
@@ -154,8 +154,8 @@ public class XMLMaterialImportServiceBean {
                 InputStreamReader isr = new InputStreamReader(fis, ENCODING)) {
             InputSource isrc = new InputSource(isr);
             isrc.setEncoding(ENCODING);
-            MaterialXMLRoot materials = (MaterialXMLRoot) unmarshaller.unmarshal(isrc);
-            importedMaterials = materials.getMaterialList();
+            MaterialXMLRoot xmlRoot = (MaterialXMLRoot) unmarshaller.unmarshal(isrc);
+            importedMaterials = xmlRoot.getMaterialList();
         }
         catch (Exception e) {
             // add error to response and continue with next file
@@ -190,7 +190,7 @@ public class XMLMaterialImportServiceBean {
 
                 // aktuell verarbeiteter Batch
                 List<MaterialXMLElement> curBatch = importedMaterials.subList(bulkFromIdx, bulkToIdx);
-                importMaterial(curBatch, importFileName, errorList, locationMap, plantMap, materialTypeMap, materialClassMap);
+                importEntryBatch(curBatch, importFileName, errorList, locationMap, plantMap, materialTypeMap, materialClassMap);
 
                 bulkFromIdx = bulkToIdx;
                 bulkToIdx = Math.min(listSize, bulkFromIdx + bulkSize);
@@ -213,7 +213,7 @@ public class XMLMaterialImportServiceBean {
         }
 
         try {
-            XMLDataImportUtils.moveFileToArchive(MATERIAL_SUB_PATH, importFileName);
+            XMLDataImportUtils.moveFileToArchive(FOLDER_SUB_PATH, importFileName);
         }
         catch (Exception e) {
             tsk.addSubTask(new FileImportAbortedWithErrorsLog(importFileName, "Failed moving file to import archive", importFileName, e));
@@ -222,7 +222,7 @@ public class XMLMaterialImportServiceBean {
         }
     }
 
-    private void importMaterial(List<MaterialXMLElement> materials, String importFileName, List<String> errorList,
+    private void importEntryBatch(List<MaterialXMLElement> materials, String importFileName, List<String> errorList,
             Map<String, Location> locationMap, Map<String, Plant> plantMap,
             Map<String, MaterialType> materialTypeMap, Map<String, MaterialClass> materialClassMap) {
 

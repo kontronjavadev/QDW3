@@ -7,6 +7,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.kontron.qdw.boundary.service.xmlimport.XMLArrivalImportServiceBean;
 import com.kontron.qdw.boundary.service.xmlimport.XMLBoMImportServiceBean;
 import com.kontron.qdw.boundary.service.xmlimport.XMLCustomerImportServiceBean;
 import com.kontron.qdw.boundary.service.xmlimport.XMLMaterialImportServiceBean;
@@ -55,6 +56,8 @@ public class XMLDataImportServiceBean {
     private XMLMaterialImportServiceBean materialImportServiceBean;
     @EJB
     private XMLBoMImportServiceBean bomImportServiceBean;
+    @EJB
+    private XMLArrivalImportServiceBean arrivalImportServiceBean;
 
 
     private String exchangePath = new PropertyService().getStringProperty(PROP_XML_EXCHANGE_FOLDER);
@@ -74,6 +77,7 @@ public class XMLDataImportServiceBean {
         tasks.add(supplierImportServiceBean::runImport);
         tasks.add(materialImportServiceBean::runImport);
         tasks.add(bomImportServiceBean::runImport);
+        tasks.add(arrivalImportServiceBean::runImport);
 
         runImport(tasks);
     }
@@ -140,7 +144,7 @@ public class XMLDataImportServiceBean {
         }
 
         List<TaskCall> tasks = new ArrayList<>();
-        // tasks.add(forecastImportServiceBean::runImport);
+        tasks.add(arrivalImportServiceBean::runImport);
 
         runImport(tasks);
     }

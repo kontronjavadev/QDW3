@@ -39,7 +39,6 @@ public class BoMItemXMLElement implements Serializable {
 
     @XmlAttribute
     private Integer usageProb;
-    // private String usageProb;
 
     @XmlAttribute
     private boolean assembly;

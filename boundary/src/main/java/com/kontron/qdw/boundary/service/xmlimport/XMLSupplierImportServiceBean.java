@@ -51,9 +51,9 @@ public class XMLSupplierImportServiceBean {
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    private static final String SUPPLIER_SCHEMA_PATH = "/schema/Supplier.xsd";
+    private static final String SCHEMA_PATH = "/schema/Supplier.xsd";
 
-    private static final String SUPPLIER_SUB_PATH = "supplier";
+    private static final String FOLDER_SUB_PATH = "supplier";
 
     private static final String PROP_XML_EXCHANGE_FOLDER = "sap_exchange_folder";
 
@@ -74,11 +74,11 @@ public class XMLSupplierImportServiceBean {
     /** Perform supplier import */
     @PermitAll
     public ITaskNodeLog runImport() {
-        String supplierDir = exchangePath + SUPPLIER_SUB_PATH;
+        String importDir = exchangePath + FOLDER_SUB_PATH;
 
-        TaskNodeLog tsk = new TaskNodeLog("import supplier", "import supplier in folder " + supplierDir);
+        TaskNodeLog tsk = new TaskNodeLog("import supplier", "import supplier in folder " + importDir);
 
-        String[] importFileNames = new File(supplierDir).list(SIMPLE_XML_FILTER);
+        String[] importFileNames = new File(importDir).list(SIMPLE_XML_FILTER);
         if (importFileNames.length == 0) {
             tsk.finishTask();
             return tsk;
@@ -87,7 +87,7 @@ public class XMLSupplierImportServiceBean {
 
         Unmarshaller unmarshaller;
         try {
-            URL fileURL = getClass().getResource(SUPPLIER_SCHEMA_PATH);
+            URL fileURL = getClass().getResource(SCHEMA_PATH);
             unmarshaller = JAXBContext.newInstance(SupplierXMLRoot.class).createUnmarshaller();
 
             SchemaFactory sf = SchemaFactory.newInstance(javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI);
@@ -102,10 +102,10 @@ public class XMLSupplierImportServiceBean {
         }
 
 
-        List<String> orderedImportFileNames = com.kontron.util.file.FileUtil.getOrderedSAPImportFileNames(importFileNames, ImportType.GPE_SUPPLIERS);
+        List<String> orderedImportFileNames = com.kontron.util.file.FileUtil.getOrderedSAPImportFileNames(importFileNames, ImportType.QDW_SUPPLIERS);
 
         for (String importFileName : orderedImportFileNames) {
-            importFile(importFileName, tsk, supplierDir, unmarshaller);
+            importFile(importFileName, tsk, importDir, unmarshaller);
         }
 
         tsk.finishTask();
@@ -123,8 +123,8 @@ public class XMLSupplierImportServiceBean {
                 InputStreamReader isr = new InputStreamReader(fis, ENCODING)) {
             InputSource isrc = new InputSource(isr);
             isrc.setEncoding(ENCODING);
-            SupplierXMLRoot suppliers = (SupplierXMLRoot) unmarshaller.unmarshal(isrc);
-            importedSuppliers = suppliers.getSupplierList();
+            SupplierXMLRoot xmlRoot = (SupplierXMLRoot) unmarshaller.unmarshal(isrc);
+            importedSuppliers = xmlRoot.getSupplierList();
         }
         catch (Exception e) {
             // add error to response and continue with next file
@@ -160,7 +160,7 @@ public class XMLSupplierImportServiceBean {
 
             // add success to response
             tsk.addSubTask(new FileImportSuccessfulLog(importFileName, importedSuppliers.size()));
-            XMLDataImportUtils.moveFileToArchive(SUPPLIER_SUB_PATH, importFileName);
+            XMLDataImportUtils.moveFileToArchive(FOLDER_SUB_PATH, importFileName);
         }
         catch (Exception e) {
             tsk.addSubTask(new FileImportAbortedWithErrorsLog(importFileName, e));

@@ -72,8 +72,8 @@ public class XMLBoMImportServiceBean {
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    private static final String BOM_SCHEMA_PATH = "/schema/BoM.xsd";
-    private static final String BOM_SUB_PATH = "bom";
+    private static final String SCHEMA_PATH = "/schema/BoM.xsd";
+    private static final String FOLDER_SUB_PATH = "bom";
 
     private static final String PROP_XML_EXCHANGE_FOLDER = "sap_exchange_folder";
 
@@ -86,16 +86,12 @@ public class XMLBoMImportServiceBean {
 
     @EJB
     private BoMItemRepository bomManager;
-    // @EJB
-    // private DesignatorBoMItemCRUD designatorManager;
     @EJB
     private MaterialRevisionRepository materialRevisionManager;
     @EJB
     private MaterialRevisionBoundaryService materialRevisionService;
     @EJB
     private MaterialRepository materialManager;
-    // @EJB
-    // private RevisionDocumentCRUD documentManager;
     @EJB
     private PlantRepository plantManager;
 
@@ -106,11 +102,11 @@ public class XMLBoMImportServiceBean {
     /** Perform BoM import */
     @PermitAll
     public ITaskNodeLog runImport() {
-        String bomDir = exchangePath + BOM_SUB_PATH;
+        String importDir = exchangePath + FOLDER_SUB_PATH;
 
-        TaskNodeLog tsk = new TaskNodeLog("import BoM", "import BoM in folder " + bomDir);
+        TaskNodeLog tsk = new TaskNodeLog("import BoM", "import BoM in folder " + importDir);
 
-        String[] importFileNames = new File(bomDir).list(SIMPLE_XML_FILTER);
+        String[] importFileNames = new File(importDir).list(SIMPLE_XML_FILTER);
         if (importFileNames.length == 0) {
             tsk.finishTask();
             return tsk;
@@ -119,7 +115,7 @@ public class XMLBoMImportServiceBean {
 
         Unmarshaller unmarshaller;
         try {
-            URL fileURL = getClass().getResource(BOM_SCHEMA_PATH);
+            URL fileURL = getClass().getResource(SCHEMA_PATH);
             unmarshaller = JAXBContext.newInstance(BoMXMLRoot.class).createUnmarshaller();
             SchemaFactory sf = SchemaFactory.newInstance(javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI);
             Schema schema = sf.newSchema(fileURL);
@@ -133,12 +129,12 @@ public class XMLBoMImportServiceBean {
         }
 
 
-        List<String> orderedImportFileNames = com.kontron.util.file.FileUtil.getOrderedSAPImportFileNames(importFileNames, ImportType.GPE_BOM);
+        List<String> orderedImportFileNames = com.kontron.util.file.FileUtil.getOrderedSAPImportFileNames(importFileNames, ImportType.QDW_BOM);
         StringBuilder revisionChangeJournal = new StringBuilder();
 
         // Read all xml files from given path
         for (String importFileName : orderedImportFileNames) {
-            importFile(importFileName, tsk, revisionChangeJournal, bomDir, unmarshaller);
+            importFile(importFileName, tsk, revisionChangeJournal, importDir, unmarshaller);
         }
 
 
@@ -158,8 +154,8 @@ public class XMLBoMImportServiceBean {
                 InputStreamReader isr = new InputStreamReader(is, ENCODING)) {
             InputSource isrc = new InputSource(isr);
             isrc.setEncoding(ENCODING);
-            BoMXMLRoot boms = (BoMXMLRoot) unmarshaller.unmarshal(isrc);
-            importedBoMs = boms.getBoMs();
+            BoMXMLRoot xmlRoot = (BoMXMLRoot) unmarshaller.unmarshal(isrc);
+            importedBoMs = xmlRoot.getBoMs();
         }
         catch (Exception e) {
             // add error to response and continue with next file
@@ -196,7 +192,7 @@ public class XMLBoMImportServiceBean {
                 }
 
                 try {
-                    importBoM(bom, importFileName, revisionChangeJournal, errorList, existingMaterialMap, plantSet);
+                    importEntry(bom, importFileName, revisionChangeJournal, errorList, existingMaterialMap, plantSet);
                 }
                 catch (Exception e) {
                     logger.error("failed", e);
@@ -221,12 +217,12 @@ public class XMLBoMImportServiceBean {
             tsk.addSubTask(new FileImportProcessedWithErrors(importFileName, errorList, importedBoMs.size()));
         }
 
-        XMLDataImportUtils.moveFileToArchive(BOM_SUB_PATH, importFileName);
+        XMLDataImportUtils.moveFileToArchive(FOLDER_SUB_PATH, importFileName);
     }
 
 
 
-    private void importBoM(BoMXMLElement importedBom, String importFileName, StringBuilder revisionChangeJournal, List<String> errorList,
+    private void importEntry(BoMXMLElement importedBom, String importFileName, StringBuilder revisionChangeJournal, List<String> errorList,
             Map<String, Material> existingMaterialMap, Set<String> plantSet) {
 
         String sapNumber = StringUtil.removeLeadingZero(importedBom.getMaterialNumber());
