@@ -3,6 +3,8 @@ package com.kontron.qdw.repository.material;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import org.apache.commons.collections4.CollectionUtils;
+
 import com.kontron.qdw.domain.material.*;
 import jakarta.persistence.*;
 import net.sourceforge.jbizmo.commons.jpa.*;
@@ -42,14 +44,25 @@ public class MaterialRepository extends AbstractRepository<Material, Long> {
         this.materialRevisionManager = materialRevisionManager;
     }
 
+
     /**
-     * Find a persistent material by using the primary key of the provided object
-     * @param material
-     * @return the material or null if the object could not be found
+     * Find material by sapNumber
+     * 
+     * @return Material oder das zuletzt erstellte, wenn nicht eindeutig oder <code>null</code> wenn keines gefunden
      */
-    @Generated
-    public Material findById(Material material) {
-        return findById(material.getId());
+    public Material findBySAPNumber(String sapNumber) {
+        List<Material> resultList = em
+                .createQuery("select a "
+                        + "from Material a "
+                        + "where a.sapNumber = :paramSapNr "
+                        + "order by a.creationDate desc", Material.class)
+                .setParameter("paramSapNr", sapNumber)
+                .setMaxResults(1)
+                .getResultList();
+        if (CollectionUtils.isEmpty(resultList)) {
+            return null;
+        }
+        return resultList.getFirst();
     }
 
     /**
@@ -133,6 +146,16 @@ public class MaterialRepository extends AbstractRepository<Material, Long> {
     }
 
 
+
+    /**
+     * Find a persistent material by using the primary key of the provided object
+     * @param material
+     * @return the material or null if the object could not be found
+     */
+    @Generated
+    public Material findById(Material material) {
+        return findById(material.getId());
+    }
 
     /**
      * Merge the material object

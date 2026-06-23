@@ -92,6 +92,8 @@ public final class Constants {
     public static final String MPN_DEF_DESC_TEXT = "Automatically created by quote session!";
     public static final String MPN_DEF_MANUFACTURER = "500097";
 
+    public static final String DUMMY_NAME_BY_IMPORT = "Created by xml import";
+
     public static final String NPI_MATERIAL_NO_PREFIX = "NPI-";
 
     public static final String DEFAULT_UNIT_OF_TRADING = "PC";

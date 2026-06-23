@@ -264,7 +264,7 @@ public class XMLBoMImportServiceBean {
             // Revision zu dem Material, zu der die BoM angelegt wird, erzeugen.
             // Gibt es sie bereits, wird geprüft, ob die BoM übereinstimmt. Falls ja, wird mit null zurückgekehrt.
             // Andernfalls wird die Revision zusätzlich mit Zeitstempel versehen.
-            MaterialRevision newMaterialRevision = getMaterialRevision(existingBoMMaterial, importedBom);
+            MaterialRevision newMaterialRevision = createMatRevIfNeeded(existingBoMMaterial, importedBom);
 
             if (newMaterialRevision != null) {
                 // Revision existiert nicht oder weicht ab, wurde also neu angelegt
@@ -382,7 +382,7 @@ public class XMLBoMImportServiceBean {
      * @return the material revision
      * @throws Exception
      */
-    private MaterialRevision getMaterialRevision(Material material, BoMXMLElement importedBom) throws Exception {
+    private MaterialRevision createMatRevIfNeeded(Material material, BoMXMLElement importedBom) throws Exception {
         String revAlt = StringUtils.trimToEmpty(importedBom.getAlt());
         String rev2 = StringUtils.trimToEmpty(importedBom.getRev2());
         String rev6 = StringUtils.trimToEmpty(importedBom.getRev6());
