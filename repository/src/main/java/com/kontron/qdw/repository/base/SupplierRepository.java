@@ -39,7 +39,7 @@ public class SupplierRepository extends AbstractRepository<Supplier, String> {
                 .setParameter("paramCodes", codes)
                 .getResultList();
 
-        // touch: Map mit allen keys und value null erzeugen, damit
+        // touch: Map mit allen keys und value null erzeugen
         Map<String, Supplier> resultMap = new HashMap<>();
         codes.stream().forEach(key -> resultMap.put(key, null));
 

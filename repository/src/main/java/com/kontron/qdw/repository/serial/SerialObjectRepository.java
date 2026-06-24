@@ -2,6 +2,8 @@ package com.kontron.qdw.repository.serial;
 
 import com.kontron.qdw.domain.serial.*;
 import java.util.*;
+import java.util.stream.Collectors;
+
 import com.kontron.qdw.repository.service.*;
 import com.kontron.qdw.domain.service.*;
 import com.kontron.qdw.domain.material.*;
@@ -29,6 +31,10 @@ public class SerialObjectRepository extends AbstractRepository<SerialObject, Lon
     private final AssemblyRecordRepository assemblyRecordManager;
     @Generated
     private final ShipmentRepository shipmentManager;
+
+    public record SerNoMatIdFilter(String serialNumber, Long materialId) {
+    }
+
 
     /**
      * Default constructor
@@ -58,6 +64,33 @@ public class SerialObjectRepository extends AbstractRepository<SerialObject, Lon
         this.shipmentManager = shipmentManager;
     }
 
+
+
+    /**
+     * Find a list of persistent serial object object by list of record with serial number and material id
+     */
+    public Map<SerNoMatIdFilter, SerialObject> findBySerialNumberAndMaterialIds(Collection<SerNoMatIdFilter> serNoMatIdFilterList) {
+        String stmt = "select a "
+                + "from SerialObject a "
+                + "where (a.serialNumber, a.material.id) in :serNoMatIdFilterList";
+        List<SerialObject> resultList = em
+                .createQuery(stmt, SerialObject.class)
+                .setParameter("serNoMatIdFilterList", serNoMatIdFilterList)
+                .getResultList();
+
+        // touch: Map mit allen keys und value null erzeugen
+        Map<SerNoMatIdFilter, SerialObject> resultMap = new HashMap<>();
+        serNoMatIdFilterList.stream().forEach(key -> resultMap.put(key, null));
+
+        resultMap.putAll(resultList.stream()
+                .collect(Collectors.groupingBy(ser -> new SerNoMatIdFilter(ser.getSerialNumber(), ser.getMaterial().getId()),
+                        Collectors.reducing(null, (first, second) -> first == null ? second : first))));
+
+        return resultMap;
+    }
+
+
+
     /**
      * Find a persistent serial object by using the primary key of the provided object
      * @param serialObject
@@ -80,9 +113,11 @@ public class SerialObjectRepository extends AbstractRepository<SerialObject, Lon
     @Generated
     public SerialObject merge(SerialObject serialObject, boolean performChecks, boolean performFlush) {
         // Perform unique key checks
-        if (performChecks && existsByIdAndSerialNumberAndMaterialId(serialObject.getId(), serialObject.getSerialNumber(), serialObject.getMaterial()))
+        if (performChecks
+                && existsByIdAndSerialNumberAndMaterialId(serialObject.getId(), serialObject.getSerialNumber(), serialObject.getMaterial())) {
             throw new UniqueConstraintViolationException("Serial object with serial number '" + serialObject.getSerialNumber() + "' and material '"
                     + serialObject.getMaterial().getId() + "' already exists!");
+        }
 
         return merge(serialObject, performFlush);
     }
@@ -100,9 +135,10 @@ public class SerialObjectRepository extends AbstractRepository<SerialObject, Lon
     @Generated
     public SerialObject persist(SerialObject serialObject, boolean performChecks, boolean performFlush, boolean performRefresh) {
         // Perform unique key checks
-        if (performChecks && existsBySerialNumberAndMaterialId(serialObject.getSerialNumber(), serialObject.getMaterial()))
+        if (performChecks && existsBySerialNumberAndMaterialId(serialObject.getSerialNumber(), serialObject.getMaterial())) {
             throw new UniqueConstraintViolationException("Serial object with serial number '" + serialObject.getSerialNumber() + "' and material '"
                     + serialObject.getMaterial().getId() + "' already exists!");
+        }
 
         return persist(serialObject, performFlush, performRefresh);
     }
@@ -195,11 +231,13 @@ public class SerialObjectRepository extends AbstractRepository<SerialObject, Lon
      */
     @Generated
     public boolean existsBySerialNumberAndMaterialId(String serialNumber, Material material) {
-        if (serialNumber == null)
+        if (serialNumber == null) {
             throw new IllegalArgumentException("Parameter \"serialNumber\" must not be null!");
+        }
 
-        if (material == null)
+        if (material == null) {
             throw new IllegalArgumentException("Parameter \"material\" must not be null!");
+        }
 
         final TypedQuery<Long> query = em.createNamedQuery(SerialObject.NQ_UK_EXISTS_BY_SERIALNUMBER_AND_MATERIAL, Long.class);
         query.setParameter(PARAM_SERIALNUMBER, serialNumber);
@@ -217,11 +255,13 @@ public class SerialObjectRepository extends AbstractRepository<SerialObject, Lon
      */
     @Generated
     public boolean existsByIdAndSerialNumberAndMaterialId(long id, String serialNumber, Material material) {
-        if (serialNumber == null)
+        if (serialNumber == null) {
             throw new IllegalArgumentException("Parameter \"serialNumber\" must not be null!");
+        }
 
-        if (material == null)
+        if (material == null) {
             throw new IllegalArgumentException("Parameter \"material\" must not be null!");
+        }
 
         final TypedQuery<Long> query = em.createNamedQuery(SerialObject.NQ_UK_EXISTS_BY_SERIALNUMBER_AND_MATERIAL_AND_ID, Long.class);
         query.setFlushMode(FlushModeType.COMMIT);
@@ -262,8 +302,9 @@ public class SerialObjectRepository extends AbstractRepository<SerialObject, Lon
 
         final List<SerialObject> resultList = query.getResultList();
 
-        if (resultList.size() <= 1)
+        if (resultList.size() <= 1) {
             return resultList.stream().findFirst().orElse(null);
+        }
 
         throw new IllegalStateException("Non unique result!");
     }
@@ -384,8 +425,9 @@ public class SerialObjectRepository extends AbstractRepository<SerialObject, Lon
         final SerialObject bean = findById(id, true);
 
         // Perform unique key check
-        if (existsByIdAndSerialNumberAndMaterialId(bean.getId(), bean.getSerialNumber(), material))
+        if (existsByIdAndSerialNumberAndMaterialId(bean.getId(), bean.getSerialNumber(), material)) {
             throw new UniqueConstraintViolationException("A unique key constraint check for serial object with ID '" + id + "' has failed!");
+        }
 
         bean.setMaterial(material);
     }
