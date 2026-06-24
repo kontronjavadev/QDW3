@@ -7,14 +7,11 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.invoke.MethodHandles;
 import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -22,6 +19,7 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.RegExUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +27,6 @@ import org.xml.sax.InputSource;
 
 import com.kontron.constants.file.FileType;
 import com.kontron.qdw.boundary.material.MaterialRevisionBoundaryService;
-import com.kontron.qdw.boundary.service.XMLDataImportUtils;
 import com.kontron.qdw.boundary.service.mapping.arrival.ArrivalMappingType;
 import com.kontron.qdw.boundary.service.mapping.arrival.ArrivalRootMappingType;
 import com.kontron.qdw.boundary.util.Constants;
@@ -37,7 +34,6 @@ import com.kontron.qdw.domain.base.Country;
 import com.kontron.qdw.domain.base.MovementType;
 import com.kontron.qdw.domain.base.Plant;
 import com.kontron.qdw.domain.base.Supplier;
-import com.kontron.qdw.domain.material.BoMItem;
 import com.kontron.qdw.domain.material.Material;
 import com.kontron.qdw.domain.material.MaterialRevision;
 import com.kontron.qdw.domain.serial.Arrival;
@@ -50,7 +46,6 @@ import com.kontron.qdw.repository.material.MaterialRepository;
 import com.kontron.qdw.repository.material.MaterialRevisionRepository;
 import com.kontron.qdw.repository.serial.ArrivalRepository;
 import com.kontron.qdw.repository.serial.SerialObjectRepository;
-import com.kontron.util.datetime.DateUtil;
 import com.kontron.util.file.FileUtil.ImportType;
 import com.kontron.util.log.FileImportAbortedWithErrorsLog;
 import com.kontron.util.log.FileImportProcessedWithErrors;
@@ -58,7 +53,6 @@ import com.kontron.util.log.FileImportSuccessfulLog;
 import com.kontron.util.log.ITaskNodeLog;
 import com.kontron.util.log.TaskLeafLog;
 import com.kontron.util.log.TaskNodeLog;
-import com.kontron.util.text.ExceptionUtil;
 import com.kontron.util.text.StringUtil;
 import com.kontron.util.version.RevisionUtil;
 
@@ -184,8 +178,8 @@ public class XMLArrivalImportServiceBean {
         }
 
 
-        Map<String, Plant> plants = Plant.asMap(plantManager.findAll());
-        Map<String, MovementType> movementTypes = MovementType.asMap(movementTypeManager.findAll());
+        Map<String, Plant> plantMap = Plant.asMap(plantManager.findAll());
+        Map<String, MovementType> mvtTypeMap = MovementType.asMap(movementTypeManager.findAll());
 
         List<String> errorList = new ArrayList<>();
         float cnt = 0;
@@ -201,8 +195,19 @@ public class XMLArrivalImportServiceBean {
         while (bulkToIdx - bulkFromIdx > 0) {
             // aktuell verarbeiteter Batch
             List<ArrivalMappingType> curBatch = importedArrivals.subList(bulkFromIdx, bulkToIdx);
+            batchNormalisieren(curBatch);
+            curBatch = batchFiltern(curBatch);
 
-            // Map<String, Material> existingMaterialMap = cacheMaterial(curBatch, ArrivalMappingType::getMaterialNumber, true);
+            // Es wird eine Map zurück gegeben, in der sämtliche angeforderten SAP-Nummern als key vorhanden sind!
+            Map<String, Material> existingMaterialMap = materialManager.findBySAPNumbers(
+                    curBatch.stream()
+                            .map(ArrivalMappingType::getMaterialSapNumber)
+                            .collect(Collectors.toSet()),
+                    true);
+
+            Map<String, Supplier> existingSupplierMap = getOrCreateSupplier(curBatch);
+
+            createMissingMvtTypes(mvtTypeMap, curBatch);
 
 
             for (ArrivalMappingType arrival : curBatch) {
@@ -213,12 +218,12 @@ public class XMLArrivalImportServiceBean {
                 }
 
                 try {
-                    importEntry(arrival, importFileName, revisionChangeJournal, errorList, existingMaterialMap, plants, movementTypes);
+                    importEntry(arrival, importFileName, revisionChangeJournal, errorList,
+                            existingMaterialMap, existingSupplierMap, plantMap, mvtTypeMap);
                 }
                 catch (Exception e) {
                     logger.error("failed", e);
-                    String sapNumber = StringUtil.removeLeadingZero(arrival.getMaterialNumber());
-                    tsk.addSubTask(new FileImportAbortedWithErrorsLog(importFileName, sapNumber, e));
+                    tsk.addSubTask(new FileImportAbortedWithErrorsLog(importFileName, arrival.getMaterialSapNumber(), e));
                     tsk.abortTask();
                     return;
                 }
@@ -238,115 +243,56 @@ public class XMLArrivalImportServiceBean {
             tsk.addSubTask(new FileImportProcessedWithErrors(importFileName, errorList, importedArrivals.size()));
         }
 
-        XMLDataImportUtils.moveFileToArchive(FOLDER_SUB_PATH, importFileName);
+        // XMLDataImportUtils.moveFileToArchive(FOLDER_SUB_PATH, importFileName);
     }
 
 
 
-    private void importEntry(ArrivalMappingType mappingObject, String importFileName, StringBuilder revisionChangeJournal, List<String> errorList,
-            Map<String, Material> existingMaterialMap, Map<String, Plant> plants, Map<String, MovementType> movementTypes) {
+    private void importEntry(ArrivalMappingType importedArrival, String importFileName, StringBuilder revisionChangeJournal, List<String> errorList,
+            Map<String, Material> existingMaterialMap, Map<String, Supplier> existingSupplierMap,
+            Map<String, Plant> plantMap, Map<String, MovementType> mvtTypeMap) {
 
-        // vor Weiterverarbeitung um führende Nullen kürzen
-        // TODO: vorab für alle des batch anwenden und ungültige überspringen, bzw. aus Liste entfernen
-        mappingObject.setMaterialSapNumber(StringUtil.removeLeadingZero(mappingObject.getMaterialSapNumber()));
-        mappingObject.setOrderNumber(StringUtil.removeLeadingZero(mappingObject.getOrderNumber()));
-        mappingObject.setSerialNumber(StringUtil.removeLeadingZeroIfNumber(mappingObject.getSerialNumber()));
-        mappingObject.setSerialObjectMaterialNumber(mappingObject.getMaterialSapNumber());
-        mappingObject.setSupplierCode(StringUtil.removeLeadingZero(mappingObject.getSupplierCode()));
-        if (mappingObject.getSupplierCode().isEmpty()) {
-            mappingObject.setSupplierCode(UNKNOWN_SUPPLIER);
-        }
-
-        if (StringUtils.isEmpty(mappingObject.getMaterialSapNumber())
-                || StringUtils.isEmpty(mappingObject.getSerialNumber())
-                || StringUtils.isEmpty(mappingObject.getId())) {
-            // continue;
-            return;
-        }
-
-        String transactionIdStr = mappingObject.getId().replaceAll("[A-Z]", "");
-        if (StringUtils.isEmpty(transactionIdStr)) {
-            return;
-        }
-
-        Long transactionId = Long.parseLong(transactionIdStr);
+        Long transactionId = Long.parseLong(importedArrival.getId());
         if (arrivalManager.findById(transactionId) != null) {
             // Arrival wurde bereits angelegt
             return;
         }
 
-
-        // TODO: vorab Material des batch holen
-        Material material = materialManager.findBySapNumber(mappingObject.getMaterialSapNumber());
+        Material material = existingMaterialMap.get(importedArrival.getMaterialSapNumber());
         if (material == null) {
-            String sapNumber = mappingObject.getMaterialSapNumber();
-            // String materialNumber = sapNumber.substring(0, 4) + "-" + sapNumber.substring(4);
-            String errorMsg = String.format(
-                    "Fehler Import Datei '%s': kein Material zu SAP-Nummer '%s'"
-                            // + " oder Materialnummer '%s'"
-                            + " vorhanden.",
-                    importFileName, sapNumber
-            // , materialNumber
-            );
+            String sapNumber = importedArrival.getMaterialSapNumber();
+            String errorMsg = String.format("Fehler Import Datei '%s': kein Material zu SAP-Nummer '%s' vorhanden.", importFileName, sapNumber);
             logger.warn(errorMsg);
             errorList.add(errorMsg);
             return;
         }
 
-
-        // TODO: vorab Supplier des batch holen
-        // nicht existierende Supplier werden angelegt und TODO: in die geholte Map gepackt!
-        HashMap<String, Supplier> newSupplierMap = new HashMap<>();
-        Supplier supplier;
-        if (newSupplierMap.containsKey(mappingObject.getSupplierCode())) {
-            supplier = newSupplierMap.get(mappingObject.getSupplierCode());
-        }
-        else {
-            supplier = supplierManager.findById(mappingObject.getSupplierCode());
-        }
-
-        if (supplier == null) {
-            supplier = new Supplier(mappingObject.getSupplierCode());
-            supplier.setName(Constants.DUMMY_NAME_BY_IMPORT + " (" + supplier.getCode() + ")");
-            supplier.setComment("Automatically created at arrival import");
-            supplier.setCountry(new Country("DE"));
-
-            supplier = supplierManager.persist(supplier, true, true);
-            newSupplierMap.put(supplier.getCode(), supplier);
-        }
-
-
-        Plant plant = plants.get(mappingObject.getPlantCode());
+        Plant plant = plantMap.get(importedArrival.getPlantCode());
         if (plant == null) {
-            String errorMsg = String.format("Fehler Import Datei '%s': unbekannte plant '%s'.", importFileName, mappingObject.getPlantCode());
+            String errorMsg = String.format("Fehler Import Datei '%s': unbekannte plant '%s'.", importFileName, importedArrival.getPlantCode());
             logger.warn(errorMsg);
             errorList.add(errorMsg);
             return;
         }
 
+        Supplier supplier = existingSupplierMap.get(importedArrival.getSupplierCode());
+        MovementType movementType = mvtTypeMap.get(importedArrival.getMovementTypeCode());
 
-        MovementType movementType = movementTypes.get(mappingObject.getMovementTypeCode());
-        if (movementType == null) {
-            movementType = new MovementType(mappingObject.getMovementTypeCode());
-            movementType.setActive(true);
-            movementType = movementTypeManager.persist(movementType, true, true);
-            movementTypes.put(movementType.getCode(), movementType);
-        }
 
         // TODO: Konzept überlegen. Wie wurde das bislang gemacht? Einzeln? Bulk? Revisionen mit Material holen?
         HashMap<String, MaterialRevision> revMap = new HashMap<>();
-        String revNo = RevisionUtil.calculateRevNumberBySapRevNumber(mappingObject.getRevisionNumber());
+        String revNo = RevisionUtil.calculateRevNumberBySapRevNumber(importedArrival.getRevisionNumber());
         MaterialRevision revision = revMap.get(material.getId() + revNo);
         if (revision == null) {
             // nicht in Map, also aus DB holen oder neu erzeugen, wenn nicht vorhanden
-            revision = getOrCreateMatRev(material, plant, mappingObject.getRevisionNumber());
+            revision = getOrCreateMatRev(material, plant, importedArrival.getRevisionNumber());
             revMap.put(material.getId() + revNo, revision);
         }
 
-        SerialObject serialObject = serialObjectManager.findBySerialNumberAndMaterialId(mappingObject.getSerialNumber(), material);
+        SerialObject serialObject = serialObjectManager.findBySerialNumberAndMaterialId(importedArrival.getSerialNumber(), material);
         if (serialObject == null) {
             serialObject = new SerialObject();
-            serialObject.setSerialNumber(mappingObject.getSerialNumber());
+            serialObject.setSerialNumber(importedArrival.getSerialNumber());
             serialObject.setMaterial(material);
             serialObject = serialObjectManager.persist(serialObject, false, false, false);
         }
@@ -355,12 +301,12 @@ public class XMLArrivalImportServiceBean {
         Arrival arrival = new Arrival();
         arrival.setId(transactionId);
         arrival.setPlant(plant);
-        arrival.setArrivalDate(LocalDate.parse(mappingObject.getArrivalDate())); // Datum im ISO-8601-Format
+        arrival.setArrivalDate(LocalDate.parse(importedArrival.getArrivalDate())); // Datum im ISO-8601-Format
         arrival.setSerialObject(serialObject);
         arrival.setMaterialRevision(revision);
         arrival.setMovementType(movementType);
         arrival.setSupplier(supplier);
-        arrival.setOrderNumber(mappingObject.getOrderNumber());
+        arrival.setOrderNumber(importedArrival.getOrderNumber());
         arrival.setRebuildFlag(true);
 
         arrival = arrivalManager.persist(arrival, false, false);
@@ -386,6 +332,31 @@ public class XMLArrivalImportServiceBean {
 
 
 
+    protected void batchNormalisieren(List<ArrivalMappingType> curBatch) {
+        curBatch.forEach(importedArrival -> {
+            importedArrival.setMaterialSapNumber(StringUtil.removeLeadingZero(importedArrival.getMaterialSapNumber()));
+            importedArrival.setOrderNumber(StringUtil.removeLeadingZero(importedArrival.getOrderNumber()));
+            importedArrival.setSerialNumber(StringUtil.removeLeadingZeroIfNumber(importedArrival.getSerialNumber()));
+            importedArrival.setSerialObjectMaterialNumber(importedArrival.getMaterialSapNumber());
+            importedArrival.setId(RegExUtils.replaceAll(importedArrival.getId(), "[A-Z]", ""));
+            importedArrival.setSupplierCode(StringUtil.removeLeadingZero(importedArrival.getSupplierCode()));
+            if (importedArrival.getSupplierCode().isEmpty()) {
+                importedArrival.setSupplierCode(UNKNOWN_SUPPLIER);
+            }
+        });
+    }
+
+    protected List<ArrivalMappingType> batchFiltern(List<ArrivalMappingType> curBatch) {
+        curBatch = curBatch.stream()
+                .filter(importedArrival -> StringUtils.isNotEmpty(importedArrival.getMaterialSapNumber()))
+                .filter(importedArrival -> StringUtils.isNotEmpty(importedArrival.getSerialNumber()))
+                .filter(importedArrival -> StringUtils.isNotEmpty(importedArrival.getId()))
+                .collect(Collectors.toList());
+        return curBatch;
+    }
+
+
+
     protected MaterialRevision getOrCreateMatRev(Material material, Plant plant, String sapRevNumber) {
         String revNo = RevisionUtil.calculateRevNumberBySapRevNumber(sapRevNumber);
 
@@ -404,6 +375,45 @@ public class XMLArrivalImportServiceBean {
             revision = materialRevisionManager.persist(revision, true, false);
         }
         return revision;
+    }
+
+    protected Map<String, Supplier> getOrCreateSupplier(List<ArrivalMappingType> curBatch) {
+        Map<String, Supplier> existingSupplierMap = supplierManager.findByIds(curBatch.stream()
+                .map(ArrivalMappingType::getSupplierCode)
+                .collect(Collectors.toSet()));
+
+        Map<String, Supplier> missingSupplierMap = existingSupplierMap.entrySet().stream()
+                .filter(suppMapEntry -> suppMapEntry.getValue() == null)
+                .map(Map.Entry::getKey)
+                .map(missingCode -> {
+                    Supplier supplier = new Supplier(missingCode);
+                    supplier.setName(Constants.DUMMY_NAME_BY_IMPORT + " (" + missingCode + ")");
+                    supplier.setComment("Automatically created at arrival import");
+                    supplier.setCountry(new Country("DE"));
+                    supplier = supplierManager.persist(supplier, true, true);
+                    return supplier;
+                })
+                .collect(Collectors.toMap(Supplier::getCode, Function.identity()));
+
+        existingSupplierMap.putAll(missingSupplierMap);
+        return existingSupplierMap;
+    }
+
+    protected void createMissingMvtTypes(Map<String, MovementType> mvtTypeMap, List<ArrivalMappingType> curBatch) {
+        Map<String, MovementType> missingMvtTypeMap = CollectionUtils.subtract(curBatch.stream()
+                .map(ArrivalMappingType::getMovementTypeCode)
+                .collect(Collectors.toSet()),
+                mvtTypeMap.keySet())
+                // -> missing movementTypes
+                .stream()
+                .map(missingMovementType -> {
+                    MovementType mvtType = new MovementType(missingMovementType);
+                    mvtType.setActive(true);
+                    mvtType = movementTypeManager.persist(mvtType, true, true);
+                    return mvtType;
+                })
+                .collect(Collectors.toMap(MovementType::getCode, Function.identity()));
+        mvtTypeMap.putAll(missingMvtTypeMap);
     }
 
 }

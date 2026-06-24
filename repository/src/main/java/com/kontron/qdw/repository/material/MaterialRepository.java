@@ -69,8 +69,8 @@ public class MaterialRepository extends AbstractRepository<Material, Long> {
      * Finde Materialien nach SAP-Nummern.
      * <p/>
      * Diese Methode ist speziell für den SAP-Import (Material, BoM und OrderItems). Es wird im Bulk gesucht. Die zurückgegebene Map
-     * beinhaltet <em>immer</em> alle keys, auch wenn kein Material gefunden wird, um dem Import zu signalsieren, dass eben
-     * kein passendes Material vorhanden ist.
+     * beinhaltet <em>immer</em> alle keys, auch wenn kein Eintrag gefunden wird, um dem Import zu signalsieren, dass eben
+     * kein passender Eintrag vorhanden ist.
      * 
      * @return Map mit den gesuchten keys und den gefundenen Einträgen
      */

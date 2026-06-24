@@ -1,6 +1,8 @@
 package com.kontron.qdw.repository.base;
 
 import java.util.*;
+import java.util.stream.Collectors;
+
 import net.sourceforge.jbizmo.commons.random.*;
 import jakarta.persistence.*;
 import net.sourceforge.jbizmo.commons.jpa.*;
@@ -16,6 +18,39 @@ public class SupplierRepository extends AbstractRepository<Supplier, String> {
     private static final String PARAM_NAME = "name";
     @Generated
     private static final String PARAM_CODE = "code";
+
+
+
+    /**
+     * Finde Supplier nach Codes.
+     * <p/>
+     * Diese Methode ist speziell für den SAP-Import. Es wird im Bulk gesucht. Die zurückgegebene Map
+     * beinhaltet <em>immer</em> alle keys, auch wenn kein Eintrag gefunden wird, um dem Import zu signalsieren, dass eben
+     * kein passender Eintrag vorhanden ist.
+     * 
+     * @return Map mit den gesuchten keys und den gefundenen Einträgen
+     */
+    public Map<String, Supplier> findByIds(Collection<String> codes) {
+        String stmt = "select a "
+                + "from Supplier a "
+                + "where a.code in :paramCodes ";
+        List<Supplier> resultList = em
+                .createQuery(stmt, Supplier.class)
+                .setParameter("paramCodes", codes)
+                .getResultList();
+
+        // touch: Map mit allen keys und value null erzeugen, damit
+        Map<String, Supplier> resultMap = new HashMap<>();
+        codes.stream().forEach(key -> resultMap.put(key, null));
+
+        resultMap.putAll(resultList.stream()
+                .collect(Collectors.groupingBy(Supplier::getCode,
+                        Collectors.reducing(null, (first, second) -> first == null ? second : first))));
+
+        return resultMap;
+    }
+
+
 
     /**
      * Find a persistent supplier by using the primary key of the provided object
@@ -39,8 +74,9 @@ public class SupplierRepository extends AbstractRepository<Supplier, String> {
     @Generated
     public Supplier merge(Supplier supplier, boolean performChecks, boolean performFlush) {
         // Perform unique key checks
-        if (performChecks && existsByCodeAndName(supplier.getCode(), supplier.getName()))
+        if (performChecks && existsByCodeAndName(supplier.getCode(), supplier.getName())) {
             throw new UniqueConstraintViolationException("Supplier with name '" + supplier.getName() + "' already exists!");
+        }
 
         return merge(supplier, performFlush);
     }
@@ -58,8 +94,9 @@ public class SupplierRepository extends AbstractRepository<Supplier, String> {
     @Generated
     public Supplier persist(Supplier supplier, boolean performChecks, boolean performFlush, boolean performRefresh) {
         // Perform unique key checks
-        if (performChecks && existsByName(supplier.getName()))
+        if (performChecks && existsByName(supplier.getName())) {
             throw new UniqueConstraintViolationException("Supplier with name '" + supplier.getName() + "' already exists!");
+        }
 
         return persist(supplier, performFlush, performRefresh);
     }
@@ -100,8 +137,9 @@ public class SupplierRepository extends AbstractRepository<Supplier, String> {
      */
     @Generated
     public boolean existsByName(String name) {
-        if (name == null)
+        if (name == null) {
             throw new IllegalArgumentException("Parameter \"name\" must not be null!");
+        }
 
         final TypedQuery<Long> query = em.createNamedQuery(Supplier.NQ_UK_EXISTS_BY_NAME, Long.class);
         query.setParameter(PARAM_NAME, name);
@@ -117,11 +155,13 @@ public class SupplierRepository extends AbstractRepository<Supplier, String> {
      */
     @Generated
     public boolean existsByCodeAndName(String code, String name) {
-        if (code == null)
+        if (code == null) {
             throw new IllegalArgumentException("Parameter \"code\" must not be null!");
+        }
 
-        if (name == null)
+        if (name == null) {
             throw new IllegalArgumentException("Parameter \"name\" must not be null!");
+        }
 
         final TypedQuery<Long> query = em.createNamedQuery(Supplier.NQ_UK_EXISTS_BY_NAME_AND_CODE, Long.class);
         query.setFlushMode(FlushModeType.COMMIT);
@@ -157,8 +197,9 @@ public class SupplierRepository extends AbstractRepository<Supplier, String> {
 
         final List<Supplier> resultList = query.getResultList();
 
-        if (resultList.size() <= 1)
+        if (resultList.size() <= 1) {
             return resultList.stream().findFirst().orElse(null);
+        }
 
         throw new IllegalStateException("Non unique result!");
     }
