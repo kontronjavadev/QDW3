@@ -1,19 +1,30 @@
 package com.kontron.qdw.repository.serial;
 
-import com.kontron.qdw.domain.serial.*;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import com.kontron.qdw.repository.service.*;
-import com.kontron.qdw.domain.service.*;
-import com.kontron.qdw.domain.material.*;
-import jakarta.persistence.*;
-import net.sourceforge.jbizmo.commons.jpa.*;
-import jakarta.inject.*;
-import jakarta.ejb.*;
-import jakarta.validation.*;
-import net.sourceforge.jbizmo.commons.repository.*;
+import com.kontron.qdw.domain.material.Material;
+import com.kontron.qdw.domain.serial.Arrival;
+import com.kontron.qdw.domain.serial.AssemblyRecord;
+import com.kontron.qdw.domain.serial.SerialObject;
+import com.kontron.qdw.domain.serial.Shipment;
+import com.kontron.qdw.domain.serial.TraceBoM;
+import com.kontron.qdw.domain.service.ServiceMessage;
+import com.kontron.qdw.repository.service.ServiceMessageRepository;
+import com.kontron.util.batch.MultiThreadHelper;
+
+import jakarta.ejb.Stateless;
+import jakarta.inject.Inject;
+import jakarta.persistence.FlushModeType;
+import jakarta.persistence.TypedQuery;
+import jakarta.validation.ConstraintViolationException;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
+import net.sourceforge.jbizmo.commons.jpa.AbstractRepository;
+import net.sourceforge.jbizmo.commons.repository.UniqueConstraintViolationException;
 
 @Stateless
 public class SerialObjectRepository extends AbstractRepository<SerialObject, Long> {
@@ -32,7 +43,10 @@ public class SerialObjectRepository extends AbstractRepository<SerialObject, Lon
     @Generated
     private final ShipmentRepository shipmentManager;
 
-    public record SerNoMatIdFilter(String serialNumber, Long materialId) {
+    public record SerNoMatIdResult(Long materialId, String serialNumber) {
+    }
+
+    public record SerNoJeMatIdFilter(Long materialId, Set<String> serialNumbers) {
     }
 
 
@@ -69,22 +83,37 @@ public class SerialObjectRepository extends AbstractRepository<SerialObject, Lon
     /**
      * Find a list of persistent serial object object by list of record with serial number and material id
      */
-    public Map<SerNoMatIdFilter, SerialObject> findBySerialNumberAndMaterialIds(Collection<SerNoMatIdFilter> serNoMatIdFilterList) {
-        String stmt = "select a "
-                + "from SerialObject a "
-                + "where (a.serialNumber, a.material.id) in :serNoMatIdFilterList";
-        List<SerialObject> resultList = em
-                .createQuery(stmt, SerialObject.class)
-                .setParameter("serNoMatIdFilterList", serNoMatIdFilterList)
-                .getResultList();
+    public Map<SerNoMatIdResult, SerialObject> findBySerialNumberAndMaterialIds(List<SerNoJeMatIdFilter> serNoJeMatIdFilter) {
+        // Diese Funktion wird für jeden Eintrag aus serNoJeMatIdFilter ausgeführt, jedoch parallelisiert
+        Function<SerNoJeMatIdFilter, List<SerialObject>> singleQuery = filter -> {
+            String stmt = "select a "
+                    + "from SerialObject a "
+                    + "where a.material.id = :matId "
+                    + "and a.serialNumber in :serNoList";
+
+            TypedQuery<SerialObject> query = em.createQuery(stmt, SerialObject.class)
+                    .setParameter("matId", filter.materialId())
+                    .setParameter("serNoList", filter.serialNumbers());
+
+            return query.getResultList();
+        };
+
+        List<SerialObject> result = MultiThreadHelper.execute(singleQuery, serNoJeMatIdFilter).stream()
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
 
         // touch: Map mit allen keys und value null erzeugen
-        Map<SerNoMatIdFilter, SerialObject> resultMap = new HashMap<>();
-        serNoMatIdFilterList.stream().forEach(key -> resultMap.put(key, null));
+        // Mit Collectors.toMap kann man nur umständlich null eintragen, weil das Ergebnis des ValueMapper nicht null sein darf
+        // Lösung wäre: .collect(HashMap::new, (map, key) -> map.put(key, null), HashMap::putAll)
+        Map<SerNoMatIdResult, SerialObject> resultMap = new HashMap<>();
+        serNoJeMatIdFilter.stream()
+                .flatMap(filter -> filter.serialNumbers().stream()
+                        .map(serNo -> new SerNoMatIdResult(filter.materialId(), serNo)))
+                .forEach(key -> resultMap.put(key, null));
 
-        resultMap.putAll(resultList.stream()
-                .collect(Collectors.groupingBy(ser -> new SerNoMatIdFilter(ser.getSerialNumber(), ser.getMaterial().getId()),
-                        Collectors.reducing(null, (first, second) -> first == null ? second : first))));
+        // Mit gefundenen Werten überschreiben. Angefragte, aber nicht gefundene key bleiben null.
+        result.stream()
+                .forEach(serObj -> resultMap.put(new SerNoMatIdResult(serObj.getMaterial().getId(), serObj.getSerialNumber()), serObj));
 
         return resultMap;
     }
