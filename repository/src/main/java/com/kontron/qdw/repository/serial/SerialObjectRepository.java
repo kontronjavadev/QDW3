@@ -1,6 +1,5 @@
 package com.kontron.qdw.repository.serial;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -102,20 +101,9 @@ public class SerialObjectRepository extends AbstractRepository<SerialObject, Lon
                 .flatMap(List::stream)
                 .collect(Collectors.toList());
 
-        // touch: Map mit allen keys und value null erzeugen
-        // Mit Collectors.toMap kann man nur umständlich null eintragen, weil das Ergebnis des ValueMapper nicht null sein darf
-        // Lösung wäre: .collect(HashMap::new, (map, key) -> map.put(key, null), HashMap::putAll)
-        Map<SerNoMatIdResult, SerialObject> resultMap = new HashMap<>();
-        serNoJeMatIdFilter.stream()
-                .flatMap(filter -> filter.serialNumbers().stream()
-                        .map(serNo -> new SerNoMatIdResult(filter.materialId(), serNo)))
-                .forEach(key -> resultMap.put(key, null));
-
-        // Mit gefundenen Werten überschreiben. Angefragte, aber nicht gefundene key bleiben null.
-        result.stream()
-                .forEach(serObj -> resultMap.put(new SerNoMatIdResult(serObj.getMaterial().getId(), serObj.getSerialNumber()), serObj));
-
-        return resultMap;
+        return result.stream()
+                .collect(Collectors.toMap(serObj -> new SerNoMatIdResult(serObj.getMaterial().getId(), serObj.getSerialNumber()),
+                        Function.identity()));
     }
 
 
