@@ -401,7 +401,10 @@ public class XMLArrivalImportServiceBean {
         }
 
         // nicht gefunden, aber vielleicht bereits während des Imports erzeugt
-        Collection<MaterialRevision> revMapRevisions = CollectionUtils.emptyIfNull(newCreatedRevisionMap.get(material.getId()));
+        Collection<MaterialRevision> revMapRevisions = newCreatedRevisionMap.get(material.getId());
+        if (revMapRevisions == null) {
+            revMapRevisions = new ArrayList<>();
+        }
         revisionOpt = revMapRevisions.stream()
                 .filter(rev -> rev.getPlant().getCode().equals(plant.getCode()))
                 .filter(rev -> rev.getRevisionNumber().equals(revNo))
