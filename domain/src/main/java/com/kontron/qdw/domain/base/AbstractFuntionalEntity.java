@@ -43,20 +43,13 @@ public class AbstractFuntionalEntity {
     @Generated
     private int version;
 
+
+
     /**
      * Default constructor
      */
     @Generated
     public AbstractFuntionalEntity() {
-    }
-
-    /**
-     * @param <T> Entityklasse
-     * @param entities Liste an Entities
-     * @return Map an Entities nach {@link #getCode()}
-     */
-    public static <T extends AbstractFuntionalEntity> Map<String, T> asMap(List<T> entities) {
-        return CollectionUtil.convertCollectionToMap(entities, T::getCode);
     }
 
     /**
@@ -67,6 +60,64 @@ public class AbstractFuntionalEntity {
     public AbstractFuntionalEntity(String code) {
         this.code = code;
     }
+
+
+
+    /**
+     * @param <T> Entityklasse
+     * @param entities Liste an Entities
+     * @return Map an Entities nach {@link #getCode()}
+     */
+    public static <T extends AbstractFuntionalEntity> Map<String, T> asMap(List<T> entities) {
+        return CollectionUtil.convertCollectionToMap(entities, T::getCode);
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "[code = " + code + "]";
+    }
+
+    @Generated
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (obj == null) {
+            return false;
+        }
+
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+
+        final var bean = (AbstractFuntionalEntity) obj;
+
+        if (getCode() == null) {
+            if (bean.getCode() != null) {
+                return false;
+            }
+        }
+        else if (!getCode().equals(bean.getCode())) {
+            return false;
+        }
+
+        return true;
+    }
+
+    @Generated
+    @Override
+    public int hashCode() {
+        // Return hash code of current date if primary key field is not yet set!
+        if (getCode() == null) {
+            return new java.util.Date().hashCode();
+        }
+
+        return getCode().hashCode();
+    }
+
+
 
     /**
      * @return the code
@@ -162,52 +213,6 @@ public class AbstractFuntionalEntity {
     @Generated
     public void setVersion(int version) {
         this.version = version;
-    }
-
-    /* (non-Javadoc)
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
-    @Generated
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-
-        if (obj == null) {
-            return false;
-        }
-
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-
-        final var bean = (AbstractFuntionalEntity) obj;
-
-        if (getCode() == null) {
-            if (bean.getCode() != null) {
-                return false;
-            }
-        }
-        else if (!getCode().equals(bean.getCode())) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /* (non-Javadoc)
-     * @see java.lang.Object#hashCode()
-     */
-    @Generated
-    @Override
-    public int hashCode() {
-        // Return hash code of current date if primary key field is not yet set!
-        if (getCode() == null) {
-            return new java.util.Date().hashCode();
-        }
-
-        return getCode().hashCode();
     }
 
 }

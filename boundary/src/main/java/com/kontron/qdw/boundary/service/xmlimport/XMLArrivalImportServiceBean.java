@@ -11,7 +11,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -29,6 +28,7 @@ import org.xml.sax.InputSource;
 
 import com.kontron.constants.file.FileType;
 import com.kontron.qdw.boundary.material.MaterialRevisionBoundaryService;
+import com.kontron.qdw.boundary.service.XMLDataImportUtils;
 import com.kontron.qdw.boundary.service.mapping.arrival.ArrivalMappingType;
 import com.kontron.qdw.boundary.service.mapping.arrival.ArrivalRootMappingType;
 import com.kontron.qdw.boundary.util.Constants;
@@ -202,6 +202,10 @@ public class XMLArrivalImportServiceBean {
             batchNormalisieren(curBatch);
             curBatch = batchFiltern(curBatch);
 
+            Map<String, Supplier> existingSupplierMap = getOrCreateSupplier(curBatch);
+
+            createMissingMvtTypes(mvtTypeMap, curBatch);
+
             // Es wird eine Map zurück gegeben, in der sämtliche angeforderten SAP-Nummern als key vorhanden sind!
             Map<String, Material> existingMaterialMap = materialManager.findBySAPNumbers(
                     curBatch.stream()
@@ -209,11 +213,7 @@ public class XMLArrivalImportServiceBean {
                             .collect(Collectors.toSet()),
                     true);
 
-            Map<String, Supplier> existingSupplierMap = getOrCreateSupplier(curBatch);
-
-            createMissingMvtTypes(mvtTypeMap, curBatch);
-
-            Map<SerNoMatIdResult, SerialObject> existingSerObj = getOrCreateSerObj(curBatch, existingMaterialMap);
+            Map<SerNoMatIdResult, SerialObject> existingSerObj = getSerialObjectsOfBatch(curBatch, existingMaterialMap);
 
 
             for (ArrivalMappingType arrival : curBatch) {
@@ -249,13 +249,14 @@ public class XMLArrivalImportServiceBean {
             tsk.addSubTask(new FileImportProcessedWithErrors(importFileName, errorList, importedArrivals.size()));
         }
 
-        // XMLDataImportUtils.moveFileToArchive(FOLDER_SUB_PATH, importFileName);
+        XMLDataImportUtils.moveFileToArchive(FOLDER_SUB_PATH, importFileName);
     }
 
 
 
     private void importEntry(ArrivalMappingType importedArrival, String importFileName, StringBuilder revisionChangeJournal, List<String> errorList,
-            Map<String, Material> existingMaterialMap, Map<String, Supplier> existingSupplierMap, Map<SerNoMatIdResult, SerialObject> existingSerObj,
+            Map<String, Material> existingMaterialMap, Map<String, Supplier> existingSupplierMap,
+            Map<SerNoMatIdResult, SerialObject> existingSerObjMap,
             Map<String, Plant> plantMap, Map<String, MovementType> mvtTypeMap) {
 
         Long transactionId = Long.parseLong(importedArrival.getId());
@@ -275,7 +276,7 @@ public class XMLArrivalImportServiceBean {
 
         Plant plant = plantMap.get(importedArrival.getPlantCode());
         if (plant == null) {
-            String errorMsg = String.format("Fehler Import Datei '%s': unbekannte plant '%s'.", importFileName, importedArrival.getPlantCode());
+            String errorMsg = String.format("Fehler Import Datei '%s': unbekanntes Werk '%s'.", importFileName, importedArrival.getPlantCode());
             logger.warn(errorMsg);
             errorList.add(errorMsg);
             return;
@@ -295,7 +296,22 @@ public class XMLArrivalImportServiceBean {
         // revMap.put(material.getId() + revNo, revision);
         // }
 
-        SerialObject serialObject = existingSerObj.get(new SerNoMatIdResult(material.getId(), importedArrival.getSerialNumber()));
+        SerialObject serialObject = existingSerObjMap.computeIfAbsent(new SerNoMatIdResult(material.getId(), importedArrival.getSerialNumber()),
+                key -> {
+                    SerialObject newSerObj = new SerialObject();
+                    newSerObj.setSerialNumber(importedArrival.getSerialNumber());
+                    newSerObj.setMaterial(material);
+                    newSerObj = serialObjectManager.persist(newSerObj, true, true);
+                    logger.info("Neues SerObj erstellt: " + importedArrival.getSerialNumber() + " für " + material.getMaterialNumber());
+                    return newSerObj;
+                });
+        // if (serialObject == null) {
+        // serialObject = new SerialObject();
+        // serialObject.setSerialNumber(importedArrival.getSerialNumber());
+        // serialObject.setMaterial(material);
+        // serialObject = serialObjectManager.persist(serialObject, true, true);
+        // existingSerObjMap.put(new SerNoMatIdResult(material.getId(), importedArrival.getSerialNumber()), serialObject);
+        // }
 
 
         Arrival arrival = new Arrival();
@@ -309,7 +325,7 @@ public class XMLArrivalImportServiceBean {
         arrival.setOrderNumber(importedArrival.getOrderNumber());
         arrival.setRebuildFlag(true);
 
-        arrival = arrivalManager.persist(arrival, false, false);
+        arrival = arrivalManager.persist(arrival, true, true);
 
 
         //
@@ -395,7 +411,8 @@ public class XMLArrivalImportServiceBean {
         revision.setRev2(revAltRev2Rev6[1]);
         revision.setRev6(revAltRev2Rev6[2]);
 
-        revision = materialRevisionManager.persist(revision, true, false);
+        revision = materialRevisionManager.persist(revision, true, true);
+        logger.info("neue Revision erstellt: " + revision);
         material.getRevisions().add(revision);
 
         return revision;
@@ -415,6 +432,7 @@ public class XMLArrivalImportServiceBean {
                     supplier.setComment("Automatically created at arrival import");
                     supplier.setCountry(new Country("DE"));
                     supplier = supplierManager.persist(supplier, true, true);
+                    logger.info("neuer Supplier erstellt: " + supplier);
                     return supplier;
                 })
                 .collect(Collectors.toMap(Supplier::getCode, Function.identity()));
@@ -434,13 +452,15 @@ public class XMLArrivalImportServiceBean {
                     MovementType mvtType = new MovementType(missingMovementType);
                     mvtType.setActive(true);
                     mvtType = movementTypeManager.persist(mvtType, true, true);
+                    logger.info("neuer MovementType erstellt: " + mvtType);
                     return mvtType;
                 })
                 .collect(Collectors.toMap(MovementType::getCode, Function.identity()));
         mvtTypeMap.putAll(missingMvtTypeMap);
     }
 
-    protected Map<SerNoMatIdResult, SerialObject> getOrCreateSerObj(List<ArrivalMappingType> curBatch, Map<String, Material> existingMaterialMap) {
+    protected Map<SerNoMatIdResult, SerialObject> getSerialObjectsOfBatch(List<ArrivalMappingType> curBatch,
+            Map<String, Material> existingMaterialMap) {
         List<SerNoJeMatIdFilter> serNoJeMatIdFilter = curBatch.stream()
                 // Arrival mit Material aus Map zu einem Tupel verknüpfen
                 .map(arrival -> ImmutablePair.of(arrival, existingMaterialMap.get(arrival.getMaterialSapNumber())))
@@ -459,24 +479,24 @@ public class XMLArrivalImportServiceBean {
         // Der erhaltene Record des Map-keys ist jedoch flachgeklopft, hat also nur die Material-Id und eine Seriennummer.
         Map<SerNoMatIdResult, SerialObject> existingSerObjMap = serialObjectManager.findBySerialNumberAndMaterialIds(serNoJeMatIdFilter);
 
-        // TODO Raymund: da 95% der SerialObject nicht existieren, sollte die Anlage geimeinsam mit der Anlage des Arrival in der Hauptschleife durchgeführt werden
-        // TODO Dan wiederum ist es nicht nötig, die Map mit angefragten keys und leeren values zurückzugeben
+        // Da 95% der SerialObject nicht existieren, sollte die Anlage geimeinsam mit der Anlage des Arrival in der Hauptschleife durchgeführt werden
+        // Dann wiederum ist es nicht nötig, die Map mit angefragten keys und leeren values zurückzugeben
         // Die Map umfasst alle angefragten keys. Werte, die nicht in der Datenbank waren, sind null.
         // Zu diesen Werten ein neues Objekt erstellen und das Ergebnis in die vorhandene Map eintragen.
-        Map<SerNoMatIdResult, SerialObject> missingSerObjMap = existingSerObjMap.entrySet().stream()
-                .filter(entry -> entry.getValue() == null)
-                .map(Entry::getKey)
-                .map(missingSerObj -> {
-                    SerialObject serialObject = new SerialObject();
-                    serialObject.setSerialNumber(missingSerObj.serialNumber());
-                    serialObject.setMaterial(new Material(missingSerObj.materialId()));
-                    serialObject = serialObjectManager.persist(serialObject, true, true);
-                    return serialObject;
-                })
-                .collect(Collectors.toMap(serObj -> new SerNoMatIdResult(serObj.getMaterial().getId(), serObj.getSerialNumber()),
-                        Function.identity()));
+        // Map<SerNoMatIdResult, SerialObject> missingSerObjMap = existingSerObjMap.entrySet().stream()
+        // .filter(entry -> entry.getValue() == null)
+        // .map(Entry::getKey)
+        // .map(missingSerObj -> {
+        // SerialObject serialObject = new SerialObject();
+        // serialObject.setSerialNumber(missingSerObj.serialNumber());
+        // serialObject.setMaterial(new Material(missingSerObj.materialId()));
+        // serialObject = serialObjectManager.persist(serialObject, true, true);
+        // return serialObject;
+        // })
+        // .collect(Collectors.toMap(serObj -> new SerNoMatIdResult(serObj.getMaterial().getId(), serObj.getSerialNumber()),
+        // Function.identity()));
+        // existingSerObjMap.putAll(missingSerObjMap);
 
-        existingSerObjMap.putAll(missingSerObjMap);
         return existingSerObjMap;
     }
 

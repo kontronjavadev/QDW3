@@ -33,20 +33,13 @@ public class AbstractEntityWithId {
     @Generated
     private LocalDateTime lastUpdate;
 
+
+
     /**
      * Default constructor
      */
     @Generated
     public AbstractEntityWithId() {
-    }
-
-    /**
-     * @param <T> Entityklasse
-     * @param entities Liste an Entities
-     * @return Map an Entities nach {@link #getId()}
-     */
-    public static <T extends AbstractEntityWithId> Map<Long, T> asMap(List<T> entities) {
-        return CollectionUtil.convertCollectionToMap(entities, T::getId);
     }
 
     /**
@@ -57,6 +50,50 @@ public class AbstractEntityWithId {
     public AbstractEntityWithId(long id) {
         this.id = id;
     }
+
+
+
+    /**
+     * @param <T> Entityklasse
+     * @param entities Liste an Entities
+     * @return Map an Entities nach {@link #getId()}
+     */
+    public static <T extends AbstractEntityWithId> Map<Long, T> asMap(List<T> entities) {
+        return CollectionUtil.convertCollectionToMap(entities, T::getId);
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "[id = " + id + "]";
+    }
+
+    @Generated
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (obj == null) {
+            return false;
+        }
+
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+
+        final var bean = (AbstractEntityWithId) obj;
+
+        return getId() == bean.getId();
+    }
+
+    @Generated
+    @Override
+    public int hashCode() {
+        return (int) (getId() ^ (getId() >>> 32));
+    }
+
+
 
     /**
      * @return the id
@@ -120,35 +157,6 @@ public class AbstractEntityWithId {
     @Generated
     public void setLastUpdate(LocalDateTime lastUpdate) {
         this.lastUpdate = lastUpdate;
-    }
-
-    /* (non-Javadoc)
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
-    @Generated
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-
-        if (obj == null)
-            return false;
-
-        if (getClass() != obj.getClass())
-            return false;
-
-        final var bean = (AbstractEntityWithId) obj;
-
-        return getId() == bean.getId();
-    }
-
-    /* (non-Javadoc)
-     * @see java.lang.Object#hashCode()
-     */
-    @Generated
-    @Override
-    public int hashCode() {
-        return (int) (getId() ^ (getId() >>> 32));
     }
 
 }

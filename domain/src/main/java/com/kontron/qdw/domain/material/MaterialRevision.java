@@ -88,6 +88,16 @@ public class MaterialRevision extends AbstractEntityWithId {
         super(id);
     }
 
+    @Override
+    public String toString() {
+        return "MaterialRevision ["
+                + revisionNumber
+                + ", " + material
+                + ", " + plant
+                + "]";
+    }
+
+
     /**
      * @return the revision number
      */
@@ -222,14 +232,17 @@ public class MaterialRevision extends AbstractEntityWithId {
     @Generated
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
+        }
 
-        if (obj == null)
+        if (obj == null) {
             return false;
+        }
 
-        if (getClass() != obj.getClass())
+        if (getClass() != obj.getClass()) {
             return false;
+        }
 
         final var bean = (MaterialRevision) obj;
 
