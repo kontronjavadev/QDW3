@@ -8,7 +8,7 @@ import com.kontron.qdw.domain.material.*;
 import com.kontron.qdw.domain.base.*;
 
 @StaticMetamodel(ServiceMessage.class)
-public class ServiceMessage_ extends AbstractEntityWithId_ {
+public class ServiceMessage_ extends AbstractTransactionalEntity_ {
     @Generated
     public static volatile SingularAttribute<ServiceMessage, String> analysisText;
     @Generated

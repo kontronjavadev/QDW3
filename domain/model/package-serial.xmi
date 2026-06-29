@@ -139,10 +139,10 @@
     </databaseTable>
   </domainObjects>
   <domainObjects name="Arrival" comment="Domain object for arrival objects" mappable="true" namespace="/" label="arrival" namePlural="Arrivals" labelPlural="arrivals" discriminatorValue="">
-    <parent href="package-base.xmi#//@domainObjects.0"/>
-    <iDGenerator name="ARRIVAL_SEQ" generatorType="IDENTITY"/>
+    <parent href="package-base.xmi#//@domainObjects.17"/>
+    <iDGenerator name="ARRIVAL_SEQ"/>
     <inheritance>
-      <target href="package-base.xmi#//@domainObjects.0"/>
+      <target href="package-base.xmi#//@domainObjects.17"/>
     </inheritance>
     <attributes name="arrivalDate" label="arrival date" labelPlural="arrival dates" fetchTypeEager="true" column="//@domainObjects.2/@databaseTable/@columns.4">
       <domainAttributeValidator maxValue="" minValue="" regularExpression=""/>
@@ -225,10 +225,10 @@
     </databaseTable>
   </domainObjects>
   <domainObjects name="Shipment" comment="Domain object for shipment objects" mappable="true" namespace="/" label="shipment" namePlural="Shipments" labelPlural="shipments" discriminatorValue="">
-    <parent href="package-base.xmi#//@domainObjects.0"/>
-    <iDGenerator name="SHIPMENT_SEQ" generatorType="IDENTITY"/>
+    <parent href="package-base.xmi#//@domainObjects.17"/>
+    <iDGenerator name="SHIPMENT_SEQ"/>
     <inheritance>
-      <target href="package-base.xmi#//@domainObjects.0"/>
+      <target href="package-base.xmi#//@domainObjects.17"/>
     </inheritance>
     <attributes name="orderNumber" label="order number" labelPlural="order numbers" fetchTypeEager="true" column="//@domainObjects.3/@databaseTable/@columns.4">
       <domainAttributeValidator maxLength="50" minLength="1" maxValue="" minValue="" regularExpression=""/>

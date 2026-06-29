@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<net.sourceforge.net.model.domain:DomainNamespace xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:net.sourceforge.net.model.domain="http:///net/sourceforge/jbizmo/model/domain.ecore" name="base" javaTypes="//@domainObjects.0 //@domainObjects.1 //@domainObjects.2 //@domainObjects.3 //@domainObjects.4 //@domainObjects.5 //@domainObjects.6 //@domainObjects.7 //@domainObjects.8 //@domainObjects.9 //@domainObjects.10 //@domainObjects.11 //@domainObjects.12 //@domainObjects.13 //@domainObjects.14 //@domainObjects.15 //@domainObjects.16">
+<net.sourceforge.net.model.domain:DomainNamespace xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:net.sourceforge.net.model.domain="http:///net/sourceforge/jbizmo/model/domain.ecore" name="base" javaTypes="//@domainObjects.0 //@domainObjects.1 //@domainObjects.2 //@domainObjects.3 //@domainObjects.4 //@domainObjects.5 //@domainObjects.6 //@domainObjects.7 //@domainObjects.8 //@domainObjects.9 //@domainObjects.10 //@domainObjects.11 //@domainObjects.12 //@domainObjects.13 //@domainObjects.14 //@domainObjects.15 //@domainObjects.16 //@domainObjects.17">
   <parent href="project.xmi#/0/@domainNamespace"/>
   <project href="project.xmi#/0"/>
   <domainObjects name="AbstractEntityWithId" comment="Domain object for abstract entity with id objects" mappable="true" namespace="/" label="abstract entity with id" namePlural="AbstractEntityWithIds" labelPlural="abstract entity with ids" discriminatorValue="" mappedSuperClass="true">
@@ -770,6 +770,41 @@
       </columns>
       <primaryKey name="pk_notification" column="//@domainObjects.16/@databaseTable/@columns.0"/>
       <foreignKeys name="fk_notification_initiator" column="//@domainObjects.16/@databaseTable/@columns.8" referencedColumn="//@domainObjects.1/@databaseTable/@columns.4"/>
+    </databaseTable>
+  </domainObjects>
+  <domainObjects name="AbstractTransactionalEntity" comment="Domain object for abstract transactional entity objects" mappable="true" namespace="/" label="abstract transactional entity" namePlural="AbstractTransactionalEntities" labelPlural="abstract transactional entities" discriminatorValue="" mappedSuperClass="true">
+    <iDGenerator name="ABSTRACTTRANSACTIONALENTITY_SEQ"/>
+    <attributes name="id" pk="true" label="id" labelPlural="ids" fetchTypeEager="true" column="//@domainObjects.17/@databaseTable/@columns.0">
+      <domainAttributeValidator maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.2"/>
+    </attributes>
+    <attributes name="version" label="version" labelPlural="versions" fetchTypeEager="true" trackVersion="true" column="//@domainObjects.17/@databaseTable/@columns.1">
+      <domainAttributeValidator maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.1"/>
+    </attributes>
+    <attributes name="creationDate" label="creation date" labelPlural="creation dates" fetchTypeEager="true" updatable="false" setDateOnPersist="true" column="//@domainObjects.17/@databaseTable/@columns.2">
+      <domainAttributeValidator maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.17"/>
+    </attributes>
+    <attributes name="lastUpdate" label="last update" labelPlural="last updates" fetchTypeEager="true" setDateOnUpdate="true" column="//@domainObjects.17/@databaseTable/@columns.3">
+      <domainAttributeValidator nullable="true" maxValue="" minValue="" regularExpression=""/>
+      <javaType href="project.xmi#/0/@allSupportedTypes.17"/>
+    </attributes>
+    <databaseTable name="abstract_transactional_entity_tab" schemaName="" catalogName="">
+      <database href="project.xmi#/0/@database"/>
+      <columns name="id">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.1"/>
+      </columns>
+      <columns name="version">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.0"/>
+      </columns>
+      <columns name="creation_date">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.14"/>
+      </columns>
+      <columns name="last_update" nullable="true">
+        <columnType href="project.xmi#/0/@database/@allSupportedColumnTypes.14"/>
+      </columns>
+      <primaryKey name="pk_abstract_transactional_entity_tab" column="//@domainObjects.17/@databaseTable/@columns.0"/>
     </databaseTable>
   </domainObjects>
 </net.sourceforge.net.model.domain:DomainNamespace>

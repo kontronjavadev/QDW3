@@ -20,7 +20,7 @@ import com.kontron.qdw.domain.base.*;
 @NamedQuery(name = Arrival.NQ_FIND, query = "select a from Arrival a where a.id = :id")
 @NamedQuery(name = Arrival.NQ_CHECK, query = "select count(a) from Arrival a where a.id = :id")
 @NamedQuery(name = Arrival.NQ_COUNT, query = "select count(a) from Arrival a")
-public class Arrival extends AbstractEntityWithId {
+public class Arrival extends AbstractTransactionalEntity {
     @Generated
     public static final String NQ_GET_SERIALOBJECT = "Arrival.getSerialObject";
     @Generated

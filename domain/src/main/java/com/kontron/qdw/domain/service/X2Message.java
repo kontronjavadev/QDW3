@@ -4,8 +4,8 @@ import jakarta.validation.constraints.*;
 import com.kontron.qdw.domain.serial.*;
 import jakarta.persistence.*;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
-import com.kontron.qdw.domain.base.*;
 import com.kontron.qdw.domain.material.*;
+import com.kontron.qdw.domain.base.*;
 
 @Entity
 @Table(name = "x_2_message_tab")
@@ -23,7 +23,7 @@ import com.kontron.qdw.domain.material.*;
 @NamedQuery(name = X2Message.NQ_FIND, query = "select a from X2Message a where a.id = :id")
 @NamedQuery(name = X2Message.NQ_CHECK, query = "select count(a) from X2Message a where a.id = :id")
 @NamedQuery(name = X2Message.NQ_COUNT, query = "select count(a) from X2Message a")
-public class X2Message extends AbstractEntityWithId {
+public class X2Message extends AbstractTransactionalEntity {
     @Generated
     public static final String NQ_GET_SERIALOBJECT = "X2Message.getSerialObject";
     @Generated

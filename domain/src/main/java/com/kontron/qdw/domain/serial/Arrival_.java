@@ -7,7 +7,7 @@ import com.kontron.qdw.domain.material.*;
 import com.kontron.qdw.domain.base.*;
 
 @StaticMetamodel(Arrival.class)
-public class Arrival_ extends AbstractEntityWithId_ {
+public class Arrival_ extends AbstractTransactionalEntity_ {
     @Generated
     public static volatile SingularAttribute<Arrival, LocalDate> arrivalDate;
     @Generated

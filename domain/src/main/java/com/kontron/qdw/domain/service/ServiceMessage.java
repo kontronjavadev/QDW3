@@ -31,7 +31,7 @@ import com.kontron.qdw.domain.base.*;
 @NamedQuery(name = ServiceMessage.NQ_FIND, query = "select a from ServiceMessage a where a.id = :id")
 @NamedQuery(name = ServiceMessage.NQ_CHECK, query = "select count(a) from ServiceMessage a where a.id = :id")
 @NamedQuery(name = ServiceMessage.NQ_COUNT, query = "select count(a) from ServiceMessage a")
-public class ServiceMessage extends AbstractEntityWithId {
+public class ServiceMessage extends AbstractTransactionalEntity {
     @Generated
     public static final String NQ_GET_SERIALOBJECT = "ServiceMessage.getSerialObject";
     @Generated

@@ -3,11 +3,11 @@ package com.kontron.qdw.domain.service;
 import com.kontron.qdw.domain.serial.*;
 import jakarta.persistence.metamodel.*;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
-import com.kontron.qdw.domain.base.*;
 import com.kontron.qdw.domain.material.*;
+import com.kontron.qdw.domain.base.*;
 
 @StaticMetamodel(X2Message.class)
-public class X2Message_ extends AbstractEntityWithId_ {
+public class X2Message_ extends AbstractTransactionalEntity_ {
     @Generated
     public static volatile SingularAttribute<X2Message, String> analysisText;
     @Generated

@@ -301,7 +301,8 @@ public class XMLArrivalImportServiceBean {
                     SerialObject newSerObj = new SerialObject();
                     newSerObj.setSerialNumber(importedArrival.getSerialNumber());
                     newSerObj.setMaterial(material);
-                    newSerObj = serialObjectManager.persist(newSerObj, true, true);
+                    newSerObj = serialObjectManager.persist(newSerObj, false, false);
+                    newSerObj = serialObjectManager.findById(newSerObj.getId());
                     logger.info("Neues SerObj erstellt: " + importedArrival.getSerialNumber() + " für " + material.getMaterialNumber());
                     return newSerObj;
                 });
@@ -325,7 +326,7 @@ public class XMLArrivalImportServiceBean {
         arrival.setOrderNumber(importedArrival.getOrderNumber());
         arrival.setRebuildFlag(true);
 
-        arrival = arrivalManager.persist(arrival, true, true);
+        arrival = arrivalManager.persist(arrival, false, false);
 
 
         //
@@ -411,7 +412,7 @@ public class XMLArrivalImportServiceBean {
         revision.setRev2(revAltRev2Rev6[1]);
         revision.setRev6(revAltRev2Rev6[2]);
 
-        revision = materialRevisionManager.persist(revision, true, true);
+        revision = materialRevisionManager.persist(revision, false, false);
         logger.info("neue Revision erstellt: " + revision);
         material.getRevisions().add(revision);
 
@@ -431,7 +432,7 @@ public class XMLArrivalImportServiceBean {
                     supplier.setName(Constants.DUMMY_NAME_BY_IMPORT + " (" + missingCode + ")");
                     supplier.setComment("Automatically created at arrival import");
                     supplier.setCountry(new Country("DE"));
-                    supplier = supplierManager.persist(supplier, true, true);
+                    supplier = supplierManager.persist(supplier, false, false);
                     logger.info("neuer Supplier erstellt: " + supplier);
                     return supplier;
                 })
@@ -451,7 +452,7 @@ public class XMLArrivalImportServiceBean {
                 .map(missingMovementType -> {
                     MovementType mvtType = new MovementType(missingMovementType);
                     mvtType.setActive(true);
-                    mvtType = movementTypeManager.persist(mvtType, true, true);
+                    mvtType = movementTypeManager.persist(mvtType, false, false);
                     logger.info("neuer MovementType erstellt: " + mvtType);
                     return mvtType;
                 })

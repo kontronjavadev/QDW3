@@ -71,10 +71,10 @@
     </databaseTable>
   </domainObjects>
   <domainObjects name="ServiceMessage" comment="Domain object for service message objects" mappable="true" namespace="/" label="service message" namePlural="ServiceMessages" labelPlural="service messages" discriminatorValue="">
-    <parent href="package-base.xmi#//@domainObjects.0"/>
-    <iDGenerator name="SERVICEMESSAGE_SEQ" generatorType="IDENTITY"/>
+    <parent href="package-base.xmi#//@domainObjects.17"/>
+    <iDGenerator name="SERVICEMESSAGE_SEQ"/>
     <inheritance>
-      <target href="package-base.xmi#//@domainObjects.0"/>
+      <target href="package-base.xmi#//@domainObjects.17"/>
     </inheritance>
     <attributes name="analysisText" label="analysis text" labelPlural="analysis texts" fetchTypeEager="true" column="//@domainObjects.1/@databaseTable/@columns.4">
       <domainAttributeValidator maxLength="100" nullable="true" maxValue="" minValue="" regularExpression=""/>
@@ -580,10 +580,10 @@
     </databaseTable>
   </domainObjects>
   <domainObjects name="X2Message" comment="Domain object for X2 message objects" mappable="true" namespace="/" label="X2 message" namePlural="X2Messages" labelPlural="X2 messages" discriminatorValue="">
-    <parent href="package-base.xmi#//@domainObjects.0"/>
-    <iDGenerator name="X2MESSAGE_SEQ" generatorType="IDENTITY"/>
+    <parent href="package-base.xmi#//@domainObjects.17"/>
+    <iDGenerator name="X2MESSAGE_SEQ"/>
     <inheritance>
-      <target href="package-base.xmi#//@domainObjects.0"/>
+      <target href="package-base.xmi#//@domainObjects.17"/>
     </inheritance>
     <attributes name="analysisText" label="analysis text" labelPlural="analysis texts" fetchTypeEager="true" column="//@domainObjects.9/@databaseTable/@columns.4">
       <domainAttributeValidator maxLength="100" nullable="true" maxValue="" minValue="" regularExpression=""/>
