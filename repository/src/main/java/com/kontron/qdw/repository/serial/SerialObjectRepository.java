@@ -1,10 +1,9 @@
 package com.kontron.qdw.repository.serial;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import com.kontron.qdw.domain.material.Material;
 import com.kontron.qdw.domain.serial.Arrival;
@@ -14,7 +13,6 @@ import com.kontron.qdw.domain.serial.Shipment;
 import com.kontron.qdw.domain.serial.TraceBoM;
 import com.kontron.qdw.domain.service.ServiceMessage;
 import com.kontron.qdw.repository.service.ServiceMessageRepository;
-import com.kontron.util.batch.MultiThreadHelper;
 
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
@@ -83,8 +81,9 @@ public class SerialObjectRepository extends AbstractRepository<SerialObject, Lon
      * Find a list of persistent serial object object by list of record with serial number and material id
      */
     public Map<SerNoMatIdResult, SerialObject> findBySerialNumberAndMaterialIds(List<SerNoJeMatIdFilter> serNoJeMatIdFilter) {
-        // Diese Funktion wird für jeden Eintrag aus serNoJeMatIdFilter ausgeführt, jedoch parallelisiert
-        Function<SerNoJeMatIdFilter, List<SerialObject>> singleQuery = filter -> {
+        Map<SerNoMatIdResult, SerialObject> existingSerObjMap = new HashMap<>();
+
+        for (SerNoJeMatIdFilter filter : serNoJeMatIdFilter) {
             String stmt = "select a "
                     + "from SerialObject a "
                     + "where a.material.id = :matId "
@@ -94,16 +93,14 @@ public class SerialObjectRepository extends AbstractRepository<SerialObject, Lon
                     .setParameter("matId", filter.materialId())
                     .setParameter("serNoList", filter.serialNumbers());
 
-            return query.getResultList();
-        };
+            for (SerialObject serObj : query.getResultList()) {
+                existingSerObjMap.put(
+                        new SerNoMatIdResult(serObj.getMaterial().getId(), serObj.getSerialNumber()),
+                        serObj);
+            }
+        }
 
-        List<SerialObject> result = MultiThreadHelper.execute(singleQuery, serNoJeMatIdFilter).stream()
-                .flatMap(List::stream)
-                .collect(Collectors.toList());
-
-        return result.stream()
-                .collect(Collectors.toMap(serObj -> new SerNoMatIdResult(serObj.getMaterial().getId(), serObj.getSerialNumber()),
-                        Function.identity()));
+        return existingSerObjMap;
     }
 
 

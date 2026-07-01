@@ -9,8 +9,6 @@ import java.lang.invoke.MethodHandles;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -67,6 +65,8 @@ import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.Unmarshaller;
 import net.sourceforge.jbizmo.commons.property.PropertyService;
@@ -114,6 +114,9 @@ public class XMLArrivalImportServiceBean {
     private MaterialRepository materialManager;
     @EJB
     private PlantRepository plantManager;
+
+    @PersistenceContext
+    private EntityManager em;
 
     private String exchangePath = new PropertyService().getStringProperty(PROP_XML_EXCHANGE_FOLDER);
 
@@ -184,15 +187,6 @@ public class XMLArrivalImportServiceBean {
         }
 
 
-        Map<String, Plant> plantMap = Plant.asMap(plantManager.findAll());
-        Map<String, MovementType> mvtTypeMap = MovementType.asMap(movementTypeManager.findAll());
-
-        Map<String, Supplier> newCreatedSupplierMap = new HashMap<>();
-        Map<String, MovementType> newCreatedMvtTypeMap = new HashMap<>();
-        Map<SerNoMatIdResult, SerialObject> newCreatedSerObjMap = new HashMap<>();
-        Map<Long, Collection<MaterialRevision>> newCreatedRevisionMap = new HashMap<>();
-
-
         List<String> errorList = new ArrayList<>();
         float cnt = 0;
         int progressStep = 5;
@@ -211,20 +205,20 @@ public class XMLArrivalImportServiceBean {
             curBatch = batchFiltern(curBatch);
 
 
+            Map<String, Plant> plantMap = Plant.asMap(plantManager.findAll());
+
+
             // alle Supplier dieses Batches
             Map<String, Supplier> existingSupplierMap = getSupplier(curBatch);
-            // ggf. zuvor erzeugte Supplier hinzufügen
-            existingSupplierMap.putAll(newCreatedSupplierMap);
             // Supplier erzeugen, die es noch nicht gibt
-            newCreatedSupplierMap = createMissingSupplier(curBatch, existingSupplierMap);
+            Map<String, Supplier> newCreatedSupplierMap = createMissingSupplier(curBatch, existingSupplierMap);
             // die neu erzeugten Supplier hinzufügen
             existingSupplierMap.putAll(newCreatedSupplierMap);
 
 
-            // ggf. zuvor erzeugte Movementtypes hinzufügen
-            mvtTypeMap.putAll(newCreatedMvtTypeMap);
+            Map<String, MovementType> mvtTypeMap = MovementType.asMap(movementTypeManager.findAll());
             // Movementtypes erzeugen, die es noch nicht gibt
-            newCreatedMvtTypeMap = createMissingMvtTypes(mvtTypeMap, curBatch);
+            Map<String, MovementType> newCreatedMvtTypeMap = createMissingMvtTypes(mvtTypeMap, curBatch);
             // die neu erzeugten Movementtypes hinzufügen
             mvtTypeMap.putAll(newCreatedMvtTypeMap);
 
@@ -237,8 +231,6 @@ public class XMLArrivalImportServiceBean {
                     true);
 
             Map<SerNoMatIdResult, SerialObject> existingSerObjMap = getSerialObjectsOfBatch(curBatch, existingMaterialMap);
-            // ggf. zuvor erzeugte Movementtypes hinzufügen
-            existingSerObjMap.putAll(newCreatedSerObjMap);
 
 
             for (ArrivalMappingType arrival : curBatch) {
@@ -250,8 +242,8 @@ public class XMLArrivalImportServiceBean {
 
                 try {
                     importEntry(arrival, importFileName, revisionChangeJournal, errorList,
-                            existingMaterialMap, newCreatedRevisionMap, existingSupplierMap,
-                            existingSerObjMap, newCreatedSerObjMap, plantMap, mvtTypeMap);
+                            existingMaterialMap, existingSupplierMap,
+                            existingSerObjMap, plantMap, mvtTypeMap);
                 }
                 catch (Exception e) {
                     logger.error("failed", e);
@@ -265,6 +257,8 @@ public class XMLArrivalImportServiceBean {
 
             bulkFromIdx = bulkToIdx;
             bulkToIdx = Math.min(listSize, bulkFromIdx + bulkSize);
+            em.flush();
+            em.clear();
         } // end for BoMs in Datei
         logger.info("100% done");
 
@@ -281,10 +275,8 @@ public class XMLArrivalImportServiceBean {
 
 
     private void importEntry(ArrivalMappingType importedArrival, String importFileName, StringBuilder revisionChangeJournal, List<String> errorList,
-            Map<String, Material> existingMaterialMap, Map<Long, Collection<MaterialRevision>> newCreatedRevisionMap,
-            Map<String, Supplier> existingSupplierMap,
-            Map<SerNoMatIdResult, SerialObject> existingSerObjMap, Map<SerNoMatIdResult, SerialObject> newCreatedSerObjMap,
-            Map<String, Plant> plantMap, Map<String, MovementType> mvtTypeMap) {
+            Map<String, Material> existingMaterialMap, Map<String, Supplier> existingSupplierMap,
+            Map<SerNoMatIdResult, SerialObject> existingSerObjMap, Map<String, Plant> plantMap, Map<String, MovementType> mvtTypeMap) {
 
         Long transactionId = Long.parseLong(importedArrival.getId());
         if (arrivalManager.findById(transactionId) != null) {
@@ -313,7 +305,7 @@ public class XMLArrivalImportServiceBean {
         MovementType movementType = mvtTypeMap.get(importedArrival.getMovementTypeCode());
 
 
-        MaterialRevision revision = getOrCreateMatRev(material, plant, importedArrival.getRevisionNumber(), newCreatedRevisionMap);
+        MaterialRevision revision = getOrCreateMatRev(material, plant, importedArrival.getRevisionNumber());
 
         SerialObject serialObject = existingSerObjMap.get(new SerNoMatIdResult(material.getId(), importedArrival.getSerialNumber()));
         if (serialObject == null) {
@@ -322,7 +314,6 @@ public class XMLArrivalImportServiceBean {
             serialObject.setMaterial(material);
             serialObject = serialObjectManager.persist(serialObject, false, false);
             existingSerObjMap.put(new SerNoMatIdResult(material.getId(), importedArrival.getSerialNumber()), serialObject);
-            newCreatedSerObjMap.put(new SerNoMatIdResult(material.getId(), importedArrival.getSerialNumber()), serialObject);
             // logger.trace("Neues SerObj erstellt: " + importedArrival.getSerialNumber() + " für " + material.getMaterialNumber());
         }
 
@@ -386,26 +377,10 @@ public class XMLArrivalImportServiceBean {
 
 
 
-    protected MaterialRevision getOrCreateMatRev(Material material, Plant plant, String sapRevNumber,
-            Map<Long, Collection<MaterialRevision>> newCreatedRevisionMap) {
+    protected MaterialRevision getOrCreateMatRev(Material material, Plant plant, String sapRevNumber) {
         String revNo = RevisionUtil.calculateRevNumberBySapRevNumber(sapRevNumber);
 
         Optional<MaterialRevision> revisionOpt = material.getRevisions().stream()
-                .filter(rev -> rev.getPlant().getCode().equals(plant.getCode()))
-                .filter(rev -> rev.getRevisionNumber().equals(revNo))
-                .findFirst();
-
-        // Revision gefunden
-        if (revisionOpt.isPresent()) {
-            return revisionOpt.get();
-        }
-
-        // nicht gefunden, aber vielleicht bereits während des Imports erzeugt
-        Collection<MaterialRevision> revMapRevisions = newCreatedRevisionMap.get(material.getId());
-        if (revMapRevisions == null) {
-            revMapRevisions = new ArrayList<>();
-        }
-        revisionOpt = revMapRevisions.stream()
                 .filter(rev -> rev.getPlant().getCode().equals(plant.getCode()))
                 .filter(rev -> rev.getRevisionNumber().equals(revNo))
                 .findFirst();
@@ -426,11 +401,8 @@ public class XMLArrivalImportServiceBean {
         revision.setRev6(revAltRev2Rev6[2]);
 
         revision = materialRevisionManager.persist(revision, false, false);
+        material.getRevisions().add(revision);
         logger.info("neue Revision erstellt: " + revision);
-        // der Liste aus der Map hinzufügen und diese Liste der Map hinzufügen,
-        // denn sie könnte dort nicht gesetzt gewesen sein und nur wg. CollectionUtils erzeugt worden sein
-        revMapRevisions.add(revision);
-        newCreatedRevisionMap.put(material.getId(), revMapRevisions);
 
         return revision;
     }
@@ -442,7 +414,7 @@ public class XMLArrivalImportServiceBean {
     }
 
     protected Map<String, Supplier> createMissingSupplier(List<ArrivalMappingType> curBatch, Map<String, Supplier> existingSupplierMap) {
-        Map<String, Supplier> missingSupplierMap = existingSupplierMap.entrySet().stream()
+        return existingSupplierMap.entrySet().stream()
                 .filter(suppMapEntry -> suppMapEntry.getValue() == null)
                 .map(Map.Entry::getKey)
                 .map(missingCode -> {
@@ -455,12 +427,10 @@ public class XMLArrivalImportServiceBean {
                     return supplier;
                 })
                 .collect(Collectors.toMap(Supplier::getCode, Function.identity()));
-
-        return missingSupplierMap;
     }
 
     protected Map<String, MovementType> createMissingMvtTypes(Map<String, MovementType> mvtTypeMap, List<ArrivalMappingType> curBatch) {
-        Map<String, MovementType> missingMvtTypeMap = CollectionUtils.subtract(curBatch.stream()
+        return CollectionUtils.subtract(curBatch.stream()
                 .map(ArrivalMappingType::getMovementTypeCode)
                 .collect(Collectors.toSet()),
                 mvtTypeMap.keySet())
@@ -474,7 +444,6 @@ public class XMLArrivalImportServiceBean {
                     return mvtType;
                 })
                 .collect(Collectors.toMap(MovementType::getCode, Function.identity()));
-        return missingMvtTypeMap;
     }
 
     protected Map<SerNoMatIdResult, SerialObject> getSerialObjectsOfBatch(List<ArrivalMappingType> curBatch,
