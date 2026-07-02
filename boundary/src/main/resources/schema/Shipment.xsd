@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="qualified">
+
+	<xs:element name="shipments" type="ShipmentRootType"/>
+
+	<xs:complexType name="ShipmentRootType">
+		<xs:sequence>
+			<xs:element maxOccurs="unbounded" minOccurs="0" name="shipment" type="ShipmentType"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="ShipmentType">
+		<xs:sequence>
+		</xs:sequence>
+		<xs:attribute name="contract" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:minLength value="1"/>
+					<xs:maxLength value="50"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="customer_id" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:minLength value="0"/>
+					<xs:maxLength value="50"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="dated" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="location_no">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="old_part_no">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="order_no" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:minLength value="0"/>
+					<xs:maxLength value="50"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="revision_id" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:minLength value="0"/>
+					<xs:maxLength value="50"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="part_no" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:minLength value="0"/>
+					<xs:maxLength value="20"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="serial_no" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:minLength value="0"/>
+					<xs:maxLength value="50"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="transaction_id" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="movement_type">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:minLength value="1"/>
+					<xs:maxLength value="50"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+</xs:schema>

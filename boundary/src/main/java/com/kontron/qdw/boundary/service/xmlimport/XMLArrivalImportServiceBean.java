@@ -201,7 +201,7 @@ public class XMLArrivalImportServiceBean extends AbstractXMLImportServiceBean {
             bulkToIdx = Math.min(listSize, bulkFromIdx + bulkSize);
             em.flush();
             em.clear();
-        } // end for BoMs in Datei
+        } // end bulk
         logger.info("100% done");
 
         if (errorList.isEmpty()) {
