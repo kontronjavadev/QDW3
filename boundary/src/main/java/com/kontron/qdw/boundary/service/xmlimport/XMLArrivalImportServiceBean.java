@@ -1,12 +1,7 @@
 package com.kontron.qdw.boundary.service.xmlimport;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -19,9 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.xml.sax.InputSource;
 
-import com.kontron.qdw.boundary.service.XMLDataImportUtils;
 import com.kontron.qdw.boundary.service.mapping.arrival.ArrivalMappingType;
 import com.kontron.qdw.boundary.service.mapping.arrival.ArrivalRootMappingType;
 import com.kontron.qdw.boundary.util.Constants;
@@ -44,8 +37,6 @@ import com.kontron.qdw.repository.serial.SerialObjectRepository.SerNoJeMatIdFilt
 import com.kontron.qdw.repository.serial.SerialObjectRepository.SerNoMatIdResult;
 import com.kontron.util.file.FileUtil.ImportType;
 import com.kontron.util.log.FileImportAbortedWithErrorsLog;
-import com.kontron.util.log.FileImportProcessedWithErrors;
-import com.kontron.util.log.FileImportSuccessfulLog;
 import com.kontron.util.log.ITaskNodeLog;
 import com.kontron.util.log.TaskNodeLog;
 import com.kontron.util.text.StringUtil;
@@ -54,11 +45,8 @@ import com.kontron.util.version.RevisionUtil;
 import jakarta.annotation.security.PermitAll;
 import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
-import jakarta.ejb.TransactionAttribute;
-import jakarta.ejb.TransactionAttributeType;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.xml.bind.Unmarshaller;
 
 /**
  * Import der Arrival-XML-Dateien, die der Downloader bereitstellt.
@@ -67,15 +55,13 @@ import jakarta.xml.bind.Unmarshaller;
  * @author Raymund Achner, achner.com
  */
 @Stateless
-public class XMLArrivalImportServiceBean extends AbstractXMLImportServiceBean {
+public class XMLArrivalImportServiceBean extends AbstractXMLImportServiceBean<ArrivalRootMappingType, ArrivalMappingType> {
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private static final String ENTITY_NAME = "arrival";
     private static final String FOLDER_SUB_PATH = "arrival";
     private static final String SCHEMA_NAME = "Arrival.xsd";
-
-    private static final String ENCODING = Constants.UTF_8;
 
     private static final String UNKNOWN_SUPPLIER = "XXXX";
 
@@ -103,115 +89,64 @@ public class XMLArrivalImportServiceBean extends AbstractXMLImportServiceBean {
     /** Perform import */
     @PermitAll
     public ITaskNodeLog runImport() {
-        return super.runImport(ENTITY_NAME, FOLDER_SUB_PATH, SCHEMA_NAME, ImportType.QDW_ARRIVAL);
+        return super.runImport(ENTITY_NAME, FOLDER_SUB_PATH, SCHEMA_NAME, ImportType.QDW_ARRIVAL, ArrivalRootMappingType::getArrivals);
     }
 
 
 
     @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public void importFile(String importFileName, TaskNodeLog tsk, String importDir, Unmarshaller unmarshaller) {
-        logger.info("Lese " + ENTITY_NAME + "-Import Datei '{}'", importFileName);
+    protected void importBulk(String importFileName, TaskNodeLog tsk, List<ArrivalMappingType> importedArrivals, List<String> errorList,
+            BulkProcess bulkProcess) throws Exception {
+        // aktuell verarbeiteter Batch
+        List<ArrivalMappingType> curBatch = importedArrivals.subList(bulkProcess.getBulkFromIdx(), bulkProcess.getBulkToIdx());
+        batchNormalisieren(curBatch);
+        curBatch = batchFiltern(curBatch);
 
-        List<ArrivalMappingType> importedArrivals;
-        // parse xml file into list of entities
-        try (InputStream is = new FileInputStream(new File(importDir, importFileName));
-                InputStreamReader isr = new InputStreamReader(is, ENCODING)) {
-            InputSource isrc = new InputSource(isr);
-            isrc.setEncoding(ENCODING);
-            ArrivalRootMappingType xmlRoot = (ArrivalRootMappingType) unmarshaller.unmarshal(isrc);
-            importedArrivals = xmlRoot.getArrivals();
-        }
-        catch (Exception e) {
-            // add error to response and continue with next file
-            tsk.addSubTask(new FileImportAbortedWithErrorsLog(importFileName, e));
-            return;
-        }
+        Map<String, Plant> plantMap = Plant.asMap(plantManager.findAll());
 
 
-        List<String> errorList = new ArrayList<>();
-        float cnt = 0;
-        int progressStep = 5;
-        int progress = progressStep;
-
-        int listSize = importedArrivals.size();
-        int bulkSize = 2000;
-        int bulkFromIdx = 0;
-        int bulkToIdx = Math.min(listSize, bulkSize);
+        // alle Supplier dieses Batches
+        Map<String, Supplier> existingSupplierMap = getSupplier(curBatch);
+        // Supplier erzeugen, die es noch nicht gibt
+        Map<String, Supplier> newCreatedSupplierMap = createMissingSupplier(curBatch, existingSupplierMap);
+        // die neu erzeugten Supplier hinzufügen
+        existingSupplierMap.putAll(newCreatedSupplierMap);
 
 
-        while (bulkToIdx - bulkFromIdx > 0) {
-            // aktuell verarbeiteter Batch
-            List<ArrivalMappingType> curBatch = importedArrivals.subList(bulkFromIdx, bulkToIdx);
-            batchNormalisieren(curBatch);
-            curBatch = batchFiltern(curBatch);
+        Map<String, MovementType> mvtTypeMap = MovementType.asMap(movementTypeManager.findAll());
+        // Movementtypes erzeugen, die es noch nicht gibt
+        Map<String, MovementType> newCreatedMvtTypeMap = createMissingMvtTypes(mvtTypeMap, curBatch);
+        // die neu erzeugten Movementtypes hinzufügen
+        mvtTypeMap.putAll(newCreatedMvtTypeMap);
 
 
-            Map<String, Plant> plantMap = Plant.asMap(plantManager.findAll());
+        // Es wird eine Map zurück gegeben, in der sämtliche angeforderten SAP-Nummern als key vorhanden sind!
+        Map<String, Material> existingMaterialMap = materialManager.findBySAPNumbers(
+                curBatch.stream()
+                        .map(ArrivalMappingType::getMaterialSapNumber)
+                        .collect(Collectors.toSet()),
+                true);
+
+        Map<SerNoMatIdResult, SerialObject> existingSerObjMap = getSerialObjectsOfBatch(curBatch, existingMaterialMap);
 
 
-            // alle Supplier dieses Batches
-            Map<String, Supplier> existingSupplierMap = getSupplier(curBatch);
-            // Supplier erzeugen, die es noch nicht gibt
-            Map<String, Supplier> newCreatedSupplierMap = createMissingSupplier(curBatch, existingSupplierMap);
-            // die neu erzeugten Supplier hinzufügen
-            existingSupplierMap.putAll(newCreatedSupplierMap);
+        for (ArrivalMappingType arrival : curBatch) {
+            bulkProcess.logProcess(logger);
 
-
-            Map<String, MovementType> mvtTypeMap = MovementType.asMap(movementTypeManager.findAll());
-            // Movementtypes erzeugen, die es noch nicht gibt
-            Map<String, MovementType> newCreatedMvtTypeMap = createMissingMvtTypes(mvtTypeMap, curBatch);
-            // die neu erzeugten Movementtypes hinzufügen
-            mvtTypeMap.putAll(newCreatedMvtTypeMap);
-
-
-            // Es wird eine Map zurück gegeben, in der sämtliche angeforderten SAP-Nummern als key vorhanden sind!
-            Map<String, Material> existingMaterialMap = materialManager.findBySAPNumbers(
-                    curBatch.stream()
-                            .map(ArrivalMappingType::getMaterialSapNumber)
-                            .collect(Collectors.toSet()),
-                    true);
-
-            Map<SerNoMatIdResult, SerialObject> existingSerObjMap = getSerialObjectsOfBatch(curBatch, existingMaterialMap);
-
-
-            for (ArrivalMappingType arrival : curBatch) {
-                if (cnt / listSize * 100 > progress) {
-                    progress = ((int) (cnt / listSize * 100) / progressStep) * progressStep;
-                    logger.info(progress + "% done");
-                    progress += progressStep;
-                }
-
-                try {
-                    importEntry(arrival, importFileName, errorList,
-                            existingMaterialMap, existingSupplierMap,
-                            existingSerObjMap, plantMap, mvtTypeMap);
-                }
-                catch (Exception e) {
-                    logger.error("failed", e);
-                    tsk.addSubTask(new FileImportAbortedWithErrorsLog(importFileName, arrival.getMaterialSapNumber(), e));
-                    tsk.abortTask();
-                    return;
-                }
-
-                cnt++;
+            try {
+                importEntry(arrival, importFileName, errorList,
+                        existingMaterialMap, existingSupplierMap,
+                        existingSerObjMap, plantMap, mvtTypeMap);
+            }
+            catch (Exception e) {
+                logger.error("failed", e);
+                tsk.addSubTask(new FileImportAbortedWithErrorsLog(importFileName, arrival.getMaterialSapNumber(), e));
+                tsk.abortTask();
+                throw e;
             }
 
-            bulkFromIdx = bulkToIdx;
-            bulkToIdx = Math.min(listSize, bulkFromIdx + bulkSize);
-            em.flush();
-            em.clear();
-        } // end bulk
-        logger.info("100% done");
-
-        if (errorList.isEmpty()) {
-            tsk.addSubTask(new FileImportSuccessfulLog(importFileName, importedArrivals.size()));
+            bulkProcess.nextCnt();
         }
-        else {
-            tsk.addSubTask(new FileImportProcessedWithErrors(importFileName, errorList, importedArrivals.size()));
-        }
-
-        XMLDataImportUtils.moveFileToArchive(FOLDER_SUB_PATH, importFileName);
     }
 
 

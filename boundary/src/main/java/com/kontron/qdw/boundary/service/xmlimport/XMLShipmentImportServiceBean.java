@@ -1,11 +1,6 @@
 package com.kontron.qdw.boundary.service.xmlimport;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.lang.invoke.MethodHandles;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -14,13 +9,10 @@ import org.apache.commons.lang3.RegExUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.xml.sax.InputSource;
 
 import com.kontron.qdw.boundary.material.MaterialRevisionBoundaryService;
-import com.kontron.qdw.boundary.service.XMLDataImportUtils;
 import com.kontron.qdw.boundary.service.mapping.shipment.ShipmentMappingType;
 import com.kontron.qdw.boundary.service.mapping.shipment.ShipmentRootMappingType;
-import com.kontron.qdw.boundary.util.Constants;
 import com.kontron.qdw.repository.base.MovementTypeRepository;
 import com.kontron.qdw.repository.base.PlantRepository;
 import com.kontron.qdw.repository.base.SupplierRepository;
@@ -31,8 +23,6 @@ import com.kontron.qdw.repository.serial.ArrivalRepository;
 import com.kontron.qdw.repository.serial.SerialObjectRepository;
 import com.kontron.util.file.FileUtil.ImportType;
 import com.kontron.util.log.FileImportAbortedWithErrorsLog;
-import com.kontron.util.log.FileImportProcessedWithErrors;
-import com.kontron.util.log.FileImportSuccessfulLog;
 import com.kontron.util.log.ITaskNodeLog;
 import com.kontron.util.log.TaskNodeLog;
 import com.kontron.util.text.StringUtil;
@@ -40,11 +30,8 @@ import com.kontron.util.text.StringUtil;
 import jakarta.annotation.security.PermitAll;
 import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
-import jakarta.ejb.TransactionAttribute;
-import jakarta.ejb.TransactionAttributeType;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.xml.bind.Unmarshaller;
 
 /**
  * Import der Shipment-XML-Dateien, die der Downloader bereitstellt.
@@ -53,16 +40,13 @@ import jakarta.xml.bind.Unmarshaller;
  * @author Raymund Achner, achner.com
  */
 @Stateless
-public class XMLShipmentImportServiceBean extends AbstractXMLImportServiceBean {
+public class XMLShipmentImportServiceBean extends AbstractXMLImportServiceBean<ShipmentRootMappingType, ShipmentMappingType> {
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private static final String ENTITY_NAME = "shipment";
     private static final String FOLDER_SUB_PATH = "shipment";
     private static final String SCHEMA_NAME = "Shipment.xsd";
-
-
-    private static final String ENCODING = Constants.UTF_8;
 
     private static final String CANCELED_SHIPMENT_MOVEMENT_TYPE_1 = "602";
 
@@ -95,85 +79,35 @@ public class XMLShipmentImportServiceBean extends AbstractXMLImportServiceBean {
     /** Perform import */
     @PermitAll
     public ITaskNodeLog runImport() {
-        return super.runImport(ENTITY_NAME, FOLDER_SUB_PATH, SCHEMA_NAME, ImportType.QDW_SHIPMENT);
+        return super.runImport(ENTITY_NAME, FOLDER_SUB_PATH, SCHEMA_NAME, ImportType.QDW_SHIPMENT, ShipmentRootMappingType::getShipments);
     }
 
 
 
     @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public void importFile(String importFileName, TaskNodeLog tsk, String importDir, Unmarshaller unmarshaller) {
-        logger.info("Lese BoM-Import Datei '{}'", importFileName);
-
-        List<ShipmentMappingType> importedShipments;
-        // parse xml file into list of entities
-        try (InputStream is = new FileInputStream(new File(importDir, importFileName));
-                InputStreamReader isr = new InputStreamReader(is, ENCODING)) {
-            InputSource isrc = new InputSource(isr);
-            isrc.setEncoding(ENCODING);
-            ShipmentRootMappingType xmlRoot = (ShipmentRootMappingType) unmarshaller.unmarshal(isrc);
-            importedShipments = xmlRoot.getShipments();
-        }
-        catch (Exception e) {
-            // add error to response and continue with next file
-            tsk.addSubTask(new FileImportAbortedWithErrorsLog(importFileName, e));
-            return;
-        }
+    protected void importBulk(String importFileName, TaskNodeLog tsk, List<ShipmentMappingType> importedShipments, List<String> errorList,
+            BulkProcess bulkProcess) throws Exception {
+        // aktuell verarbeiteter Batch
+        List<ShipmentMappingType> curBatch = importedShipments.subList(bulkProcess.getBulkFromIdx(), bulkProcess.getBulkToIdx());
+        batchNormalisieren(curBatch);
+        curBatch = batchFiltern(curBatch);
 
 
-        List<String> errorList = new ArrayList<>();
-        float cnt = 0;
-        int progressStep = 5;
-        int progress = progressStep;
+        for (ShipmentMappingType shipment : curBatch) {
+            bulkProcess.logProcess(logger);
 
-        int listSize = importedShipments.size();
-        int bulkSize = 2000;
-        int bulkFromIdx = 0;
-        int bulkToIdx = Math.min(listSize, bulkSize);
-
-
-        while (bulkToIdx - bulkFromIdx > 0) {
-            // aktuell verarbeiteter Batch
-            List<ShipmentMappingType> curBatch = importedShipments.subList(bulkFromIdx, bulkToIdx);
-            batchNormalisieren(curBatch);
-            curBatch = batchFiltern(curBatch);
-
-
-            for (ShipmentMappingType shipment : curBatch) {
-                if (cnt / listSize * 100 > progress) {
-                    progress = ((int) (cnt / listSize * 100) / progressStep) * progressStep;
-                    logger.info(progress + "% done");
-                    progress += progressStep;
-                }
-
-                try {
-                    importEntry(shipment, importFileName, errorList);
-                }
-                catch (Exception e) {
-                    logger.error("failed", e);
-                    tsk.addSubTask(new FileImportAbortedWithErrorsLog(importFileName, shipment.getMaterialSapNumber(), e));
-                    tsk.abortTask();
-                    return;
-                }
-
-                cnt++;
+            try {
+                importEntry(shipment, importFileName, errorList);
+            }
+            catch (Exception e) {
+                logger.error("failed", e);
+                tsk.addSubTask(new FileImportAbortedWithErrorsLog(importFileName, shipment.getMaterialSapNumber(), e));
+                tsk.abortTask();
+                throw e;
             }
 
-            bulkFromIdx = bulkToIdx;
-            bulkToIdx = Math.min(listSize, bulkFromIdx + bulkSize);
-            em.flush();
-            em.clear();
-        } // end bulk
-        logger.info("100% done");
-
-        if (errorList.isEmpty()) {
-            tsk.addSubTask(new FileImportSuccessfulLog(importFileName, importedShipments.size()));
+            bulkProcess.nextCnt();
         }
-        else {
-            tsk.addSubTask(new FileImportProcessedWithErrors(importFileName, errorList, importedShipments.size()));
-        }
-
-        XMLDataImportUtils.moveFileToArchive(FOLDER_SUB_PATH, importFileName);
     }
 
 

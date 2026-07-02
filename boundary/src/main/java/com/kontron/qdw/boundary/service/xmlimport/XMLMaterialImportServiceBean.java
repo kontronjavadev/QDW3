@@ -1,10 +1,6 @@
 package com.kontron.qdw.boundary.service.xmlimport;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
 import java.lang.invoke.MethodHandles;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -14,12 +10,9 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.xml.sax.InputSource;
 
-import com.kontron.qdw.boundary.service.XMLDataImportUtils;
 import com.kontron.qdw.boundary.service.mapping.material.MaterialXMLElement;
 import com.kontron.qdw.boundary.service.mapping.material.MaterialXMLRoot;
-import com.kontron.qdw.boundary.util.Constants;
 import com.kontron.qdw.domain.base.Location;
 import com.kontron.qdw.domain.base.Plant;
 import com.kontron.qdw.domain.material.Material;
@@ -33,9 +26,6 @@ import com.kontron.qdw.repository.material.MaterialClassRepository;
 import com.kontron.qdw.repository.material.MaterialRepository;
 import com.kontron.qdw.repository.material.MaterialTypeRepository;
 import com.kontron.util.file.FileUtil.ImportType;
-import com.kontron.util.log.FileImportAbortedWithErrorsLog;
-import com.kontron.util.log.FileImportProcessedWithErrors;
-import com.kontron.util.log.FileImportSuccessfulLog;
 import com.kontron.util.log.ITaskNodeLog;
 import com.kontron.util.log.TaskNodeLog;
 import com.kontron.util.text.StringUtil;
@@ -43,9 +33,6 @@ import com.kontron.util.text.StringUtil;
 import jakarta.annotation.security.PermitAll;
 import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
-import jakarta.ejb.TransactionAttribute;
-import jakarta.ejb.TransactionAttributeType;
-import jakarta.xml.bind.Unmarshaller;
 
 /**
  * Import der Material-XML-Dateien, die der Downloader bereitstellt.
@@ -54,15 +41,13 @@ import jakarta.xml.bind.Unmarshaller;
  * @author Raymund Achner, achner.com
  */
 @Stateless
-public class XMLMaterialImportServiceBean extends AbstractXMLImportServiceBean {
+public class XMLMaterialImportServiceBean extends AbstractXMLImportServiceBean<MaterialXMLRoot, MaterialXMLElement> {
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private static final String ENTITY_NAME = "material";
     private static final String FOLDER_SUB_PATH = "material";
     private static final String SCHEMA_NAME = "Material.xsd";
-
-    private static final String ENCODING = Constants.UTF_8;
 
     @EJB
     private MaterialRepository materialManager;
@@ -84,31 +69,18 @@ public class XMLMaterialImportServiceBean extends AbstractXMLImportServiceBean {
     /** Perform import */
     @PermitAll
     public ITaskNodeLog runImport() {
-        return super.runImport(ENTITY_NAME, FOLDER_SUB_PATH, SCHEMA_NAME, ImportType.QDW_MATERIAL);
+        return super.runImport(ENTITY_NAME, FOLDER_SUB_PATH, SCHEMA_NAME, ImportType.QDW_MATERIAL, MaterialXMLRoot::getMaterialList);
     }
 
 
 
     @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public void importFile(String importFileName, TaskNodeLog tsk, String importDir, Unmarshaller unmarshaller) {
-        logger.info("Lese " + ENTITY_NAME + "-Import Datei '{}'", importFileName);
+    protected void importBulk(String importFileName, TaskNodeLog tsk, List<MaterialXMLElement> importedMaterials, List<String> errorList,
+            BulkProcess bulkProcess) {
+        bulkProcess.logProcessBulkLevel(logger);
 
-        List<MaterialXMLElement> importedMaterials;
-        // parse xml file into list of entities
-        try (FileInputStream fis = new FileInputStream(new File(importDir, importFileName));
-                InputStreamReader isr = new InputStreamReader(fis, ENCODING)) {
-            InputSource isrc = new InputSource(isr);
-            isrc.setEncoding(ENCODING);
-            MaterialXMLRoot xmlRoot = (MaterialXMLRoot) unmarshaller.unmarshal(isrc);
-            importedMaterials = xmlRoot.getMaterialList();
-        }
-        catch (Exception e) {
-            // add error to response and continue with next file
-            tsk.addSubTask(new FileImportAbortedWithErrorsLog(importFileName, e));
-            tsk.abortTask();
-            return;
-        }
+        // aktuell verarbeiteter Batch
+        List<MaterialXMLElement> curBatch = importedMaterials.subList(bulkProcess.getBulkFromIdx(), bulkProcess.getBulkToIdx());
 
 
         Map<String, Location> locationMap = Location.asMap(locationManager.findAll());
@@ -116,56 +88,7 @@ public class XMLMaterialImportServiceBean extends AbstractXMLImportServiceBean {
         Map<String, MaterialType> materialTypeMap = MaterialType.asMap(materialTypeManager.findAll());
         Map<String, MaterialClass> materialClassMap = MaterialClass.asMap(materialClassManager.findAll());
 
-
-        List<String> errorList = new ArrayList<>();
-        int progressStep = 5;
-        int progress = progressStep;
-
-        int listSize = importedMaterials.size();
-        int bulkSize = 2000;
-        int bulkFromIdx = 0;
-        int bulkToIdx = Math.min(listSize, bulkSize);
-
-        while (bulkToIdx - bulkFromIdx > 0) {
-            try {
-                if ((float) bulkFromIdx / listSize * 100 > progress) {
-                    progress = ((int) ((float) bulkFromIdx / listSize * 100) / progressStep) * progressStep;
-                    logger.info(progress + "% done");
-                    progress += progressStep;
-                }
-
-                // aktuell verarbeiteter Batch
-                List<MaterialXMLElement> curBatch = importedMaterials.subList(bulkFromIdx, bulkToIdx);
-                importEntryBatch(curBatch, importFileName, errorList, locationMap, plantMap, materialTypeMap, materialClassMap);
-
-                bulkFromIdx = bulkToIdx;
-                bulkToIdx = Math.min(listSize, bulkFromIdx + bulkSize);
-            }
-            catch (Exception e) {
-                logger.error("failed", e);
-                tsk.addSubTask(new FileImportAbortedWithErrorsLog(importFileName, e));
-                tsk.abortTask();
-                return;
-            }
-        }
-        logger.info("100% done");
-
-        // add success to response
-        if (errorList.isEmpty()) {
-            tsk.addSubTask(new FileImportSuccessfulLog(importFileName, listSize));
-        }
-        else {
-            tsk.addSubTask(new FileImportProcessedWithErrors(importFileName, errorList, listSize));
-        }
-
-        try {
-            XMLDataImportUtils.moveFileToArchive(FOLDER_SUB_PATH, importFileName);
-        }
-        catch (Exception e) {
-            tsk.addSubTask(new FileImportAbortedWithErrorsLog(importFileName, "Failed moving file to import archive", importFileName, e));
-            tsk.abortTask();
-            return;
-        }
+        importEntryBatch(curBatch, importFileName, errorList, locationMap, plantMap, materialTypeMap, materialClassMap);
     }
 
     private void importEntryBatch(List<MaterialXMLElement> materials, String importFileName, List<String> errorList,

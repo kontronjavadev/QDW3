@@ -1,9 +1,5 @@
 package com.kontron.qdw.boundary.service.xmlimport;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,15 +13,12 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.xml.sax.InputSource;
 
 import com.kontron.qdw.boundary.material.MaterialRevisionBoundaryService;
-import com.kontron.qdw.boundary.service.XMLDataImportUtils;
 import com.kontron.qdw.boundary.service.mapping.bom.BoMItemXMLElement;
 import com.kontron.qdw.boundary.service.mapping.bom.BoMXMLElement;
 import com.kontron.qdw.boundary.service.mapping.bom.BoMXMLRoot;
 import com.kontron.qdw.boundary.service.mapping.bom.dto.BoMItemComparingDto;
-import com.kontron.qdw.boundary.util.Constants;
 import com.kontron.qdw.domain.base.Plant;
 import com.kontron.qdw.domain.material.BoMItem;
 import com.kontron.qdw.domain.material.Material;
@@ -37,8 +30,6 @@ import com.kontron.qdw.repository.material.MaterialRevisionRepository;
 import com.kontron.util.datetime.DateUtil;
 import com.kontron.util.file.FileUtil.ImportType;
 import com.kontron.util.log.FileImportAbortedWithErrorsLog;
-import com.kontron.util.log.FileImportProcessedWithErrors;
-import com.kontron.util.log.FileImportSuccessfulLog;
 import com.kontron.util.log.ITaskNodeLog;
 import com.kontron.util.log.TaskNodeLog;
 import com.kontron.util.text.ExceptionUtil;
@@ -48,9 +39,8 @@ import com.kontron.util.version.RevisionUtil;
 import jakarta.annotation.security.PermitAll;
 import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
-import jakarta.ejb.TransactionAttribute;
-import jakarta.ejb.TransactionAttributeType;
-import jakarta.xml.bind.Unmarshaller;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 
 /**
  * Import der BoM-XML-Dateien, die der Downloader bereitstellt.
@@ -59,15 +49,13 @@ import jakarta.xml.bind.Unmarshaller;
  * @author Raymund Achner, achner.com
  */
 @Stateless
-public class XMLBoMImportServiceBean extends AbstractXMLImportServiceBean {
+public class XMLBoMImportServiceBean extends AbstractXMLImportServiceBean<BoMXMLRoot, BoMXMLElement> {
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private static final String ENTITY_NAME = "BoM";
     private static final String FOLDER_SUB_PATH = "bom";
     private static final String SCHEMA_NAME = "BoM.xsd";
-
-    private static final String ENCODING = Constants.UTF_8;
 
     @EJB
     private BoMItemRepository bomManager;
@@ -80,91 +68,46 @@ public class XMLBoMImportServiceBean extends AbstractXMLImportServiceBean {
     @EJB
     private PlantRepository plantManager;
 
+    @PersistenceContext
+    private EntityManager em;
+
 
 
     /** Perform import */
     @PermitAll
     public ITaskNodeLog runImport() {
-        return super.runImport(ENTITY_NAME, FOLDER_SUB_PATH, SCHEMA_NAME, ImportType.QDW_BOM);
+        return super.runImport(ENTITY_NAME, FOLDER_SUB_PATH, SCHEMA_NAME, ImportType.QDW_BOM, BoMXMLRoot::getBoMs);
     }
 
 
 
     @Override
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public void importFile(String importFileName, TaskNodeLog tsk, String importDir, Unmarshaller unmarshaller) {
-        logger.info("Lese " + ENTITY_NAME + "-Import Datei '{}'", importFileName);
-
-        List<BoMXMLElement> importedBoMs;
-        // parse xml file into list of entities
-        try (InputStream is = new FileInputStream(new File(importDir, importFileName));
-                InputStreamReader isr = new InputStreamReader(is, ENCODING)) {
-            InputSource isrc = new InputSource(isr);
-            isrc.setEncoding(ENCODING);
-            BoMXMLRoot xmlRoot = (BoMXMLRoot) unmarshaller.unmarshal(isrc);
-            importedBoMs = xmlRoot.getBoMs();
-        }
-        catch (Exception e) {
-            // add error to response and continue with next file
-            tsk.addSubTask(new FileImportAbortedWithErrorsLog(importFileName, e));
-            return;
-        }
-
+    protected void importBulk(String importFileName, TaskNodeLog tsk, List<BoMXMLElement> importedBoMs, List<String> errorList,
+            BulkProcess bulkProcess) throws Exception {
+        // aktuell verarbeiteter Batch
+        List<BoMXMLElement> curBatch = importedBoMs.subList(bulkProcess.getBulkFromIdx(), bulkProcess.getBulkToIdx());
 
         Set<String> plantSet = plantManager.findAll().stream().map(Plant::getCode).collect(Collectors.toSet());
 
-        List<String> errorList = new ArrayList<>();
-        float cnt = 0;
-        int progressStep = 5;
-        int progress = progressStep;
-
-        int listSize = importedBoMs.size();
-        int bulkSize = 2000;
-        int bulkFromIdx = 0;
-        int bulkToIdx = Math.min(listSize, bulkSize);
+        Map<String, Material> existingMaterialMap = cacheMaterial(curBatch, BoMXMLElement::getMaterialNumber, true);
 
 
-        while (bulkToIdx - bulkFromIdx > 0) {
-            // aktuell verarbeiteter Batch
-            List<BoMXMLElement> curBatch = importedBoMs.subList(bulkFromIdx, bulkToIdx);
+        for (BoMXMLElement bom : curBatch) {
+            bulkProcess.logProcess(logger);
 
-            Map<String, Material> existingMaterialMap = cacheMaterial(curBatch, BoMXMLElement::getMaterialNumber, true);
-
-
-            for (BoMXMLElement bom : curBatch) {
-                if (cnt / listSize * 100 > progress) {
-                    progress = ((int) (cnt / listSize * 100) / progressStep) * progressStep;
-                    logger.info(progress + "% done");
-                    progress += progressStep;
-                }
-
-                try {
-                    importEntry(bom, importFileName, errorList, existingMaterialMap, plantSet);
-                }
-                catch (Exception e) {
-                    logger.error("failed", e);
-                    String sapNumber = StringUtil.removeLeadingZero(bom.getMaterialNumber());
-                    tsk.addSubTask(new FileImportAbortedWithErrorsLog(importFileName, sapNumber, e));
-                    tsk.abortTask();
-                    return;
-                }
-
-                cnt++;
+            try {
+                importEntry(bom, importFileName, errorList, existingMaterialMap, plantSet);
+            }
+            catch (Exception e) {
+                logger.error("failed", e);
+                String sapNumber = StringUtil.removeLeadingZero(bom.getMaterialNumber());
+                tsk.addSubTask(new FileImportAbortedWithErrorsLog(importFileName, sapNumber, e));
+                tsk.abortTask();
+                throw e;
             }
 
-            bulkFromIdx = bulkToIdx;
-            bulkToIdx = Math.min(listSize, bulkFromIdx + bulkSize);
-        } // end for BoMs in Datei
-        logger.info("100% done");
-
-        if (errorList.isEmpty()) {
-            tsk.addSubTask(new FileImportSuccessfulLog(importFileName, importedBoMs.size()));
+            bulkProcess.nextCnt();
         }
-        else {
-            tsk.addSubTask(new FileImportProcessedWithErrors(importFileName, errorList, importedBoMs.size()));
-        }
-
-        XMLDataImportUtils.moveFileToArchive(FOLDER_SUB_PATH, importFileName);
     }
 
 
