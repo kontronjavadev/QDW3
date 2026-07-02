@@ -2,10 +2,8 @@ package com.kontron.qdw.boundary.service.xmlimport;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FilenameFilter;
 import java.io.InputStreamReader;
 import java.lang.invoke.MethodHandles;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -13,15 +11,11 @@ import java.util.Map.Entry;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
-
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
 
-import com.kontron.constants.file.FileType;
 import com.kontron.qdw.boundary.service.XMLDataImportUtils;
 import com.kontron.qdw.boundary.service.mapping.material.MaterialXMLElement;
 import com.kontron.qdw.boundary.service.mapping.material.MaterialXMLRoot;
@@ -43,7 +37,6 @@ import com.kontron.util.log.FileImportAbortedWithErrorsLog;
 import com.kontron.util.log.FileImportProcessedWithErrors;
 import com.kontron.util.log.FileImportSuccessfulLog;
 import com.kontron.util.log.ITaskNodeLog;
-import com.kontron.util.log.TaskLeafLog;
 import com.kontron.util.log.TaskNodeLog;
 import com.kontron.util.text.StringUtil;
 
@@ -52,9 +45,7 @@ import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
-import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.Unmarshaller;
-import net.sourceforge.jbizmo.commons.property.PropertyService;
 
 /**
  * Import der Material-XML-Dateien, die der Downloader bereitstellt.
@@ -63,19 +54,15 @@ import net.sourceforge.jbizmo.commons.property.PropertyService;
  * @author Raymund Achner, achner.com
  */
 @Stateless
-public class XMLMaterialImportServiceBean {
+public class XMLMaterialImportServiceBean extends AbstractXMLImportServiceBean {
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    private static final String SCHEMA_PATH = "/schema/Material.xsd";
+    private static final String ENTITY_NAME = "material";
     private static final String FOLDER_SUB_PATH = "material";
-
-    private static final String PROP_XML_EXCHANGE_FOLDER = "sap_exchange_folder";
+    private static final String SCHEMA_NAME = "Material.xsd";
 
     private static final String ENCODING = Constants.UTF_8;
-
-    // Definition of simple filter to get only *.xml files
-    private static final FilenameFilter SIMPLE_XML_FILTER = FileType.XML.getFilenameFilterAllWithExtension();
 
     @EJB
     private MaterialRepository materialManager;
@@ -92,65 +79,24 @@ public class XMLMaterialImportServiceBean {
     @EJB
     private LocationRepository locationManager;
 
-    private String exchangePath = new PropertyService().getStringProperty(PROP_XML_EXCHANGE_FOLDER);
 
 
-
-    /** Perform material import */
+    /** Perform import */
     @PermitAll
     public ITaskNodeLog runImport() {
-        String importDir = exchangePath + FOLDER_SUB_PATH;
-
-        TaskNodeLog tsk = new TaskNodeLog("import material", "import material in folder " + importDir);
-
-        String[] importFileNames = new File(importDir).list(SIMPLE_XML_FILTER);
-        if (importFileNames.length == 0) {
-            tsk.finishTask();
-            return tsk;
-        }
-
-
-        Unmarshaller unmarshaller;
-        try {
-            URL fileURL = getClass().getResource(SCHEMA_PATH);
-            unmarshaller = JAXBContext.newInstance(MaterialXMLRoot.class).createUnmarshaller();
-
-            SchemaFactory sf = SchemaFactory.newInstance(javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI);
-            Schema schema = sf.newSchema(fileURL);
-            unmarshaller.setSchema(schema);
-        }
-        catch (Exception e) {
-            TaskLeafLog tskUnmarshall = tsk.createNewSubTaskLeaf("initializing unmarshaller");
-            tskUnmarshall.finishTaskWithError(e);
-            tsk.abortTask();
-            return tsk;
-        }
-
-
-        // We must sort files in order to set field "active" of domain object ManufacturerMaterial properly!
-        // Und diesmal sortieren wir richtig, denn "yyyyMMdd_HHmmss_lfdNummer" wird sich nicht als int parsen lassen,
-        // was aber auch nicht so wichtig ist, wenn die sortierten Dateien ohnehin nicht verwendet wurden...
-        List<String> orderedImportFileNames = com.kontron.util.file.FileUtil.getOrderedSAPImportFileNames(importFileNames, ImportType.QDW_MATERIAL);
-
-
-        // Read all xml files from given path
-        logger.info("{} Dateien für Material-Import gefunden.", orderedImportFileNames);
-        for (String importFileName : orderedImportFileNames) {
-            importFile(importFileName, tsk, importDir, unmarshaller);
-        }
-
-        tsk.finishTask();
-        return tsk;
+        return super.runImport(ENTITY_NAME, FOLDER_SUB_PATH, SCHEMA_NAME, ImportType.QDW_MATERIAL);
     }
 
 
 
+    @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    private void importFile(String importFileName, TaskNodeLog tsk, String materialDir, Unmarshaller unmarshaller) {
-        logger.info("Lese Material-Import Datei '{}'", importFileName);
+    public void importFile(String importFileName, TaskNodeLog tsk, String importDir, Unmarshaller unmarshaller) {
+        logger.info("Lese " + ENTITY_NAME + "-Import Datei '{}'", importFileName);
+
         List<MaterialXMLElement> importedMaterials;
         // parse xml file into list of entities
-        try (FileInputStream fis = new FileInputStream(new File(materialDir, importFileName));
+        try (FileInputStream fis = new FileInputStream(new File(importDir, importFileName));
                 InputStreamReader isr = new InputStreamReader(fis, ENCODING)) {
             InputSource isrc = new InputSource(isr);
             isrc.setEncoding(ENCODING);

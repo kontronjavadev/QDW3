@@ -73,7 +73,7 @@ public class XMLCustomerImportServiceBean {
 
 
 
-    /** Perform customer import */
+    /** Perform import */
     @PermitAll
     public ITaskNodeLog runImport() {
         String importDir = exchangePath + FOLDER_SUB_PATH;
@@ -101,9 +101,9 @@ public class XMLCustomerImportServiceBean {
 
 
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    private void importFile(String importFileName, TaskNodeLog tsk, String customerDir) {
+    private void importFile(String importFileName, TaskNodeLog tsk, String importDir) {
         logger.info("Lese Customer-Import Datei '{}'", importFileName);
-        File importFile = new File(customerDir, importFileName);
+        File importFile = new File(importDir, importFileName);
 
         Collection<Customer> importedCustomers;
         // parse xml file into list of entities

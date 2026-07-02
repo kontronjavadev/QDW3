@@ -2,20 +2,14 @@ package com.kontron.qdw.boundary.service.xmlimport;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FilenameFilter;
 import java.io.InputStreamReader;
 import java.lang.invoke.MethodHandles;
-import java.net.URL;
 import java.util.List;
-
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
 
-import com.kontron.constants.file.FileType;
 import com.kontron.qdw.boundary.service.XMLDataImportUtils;
 import com.kontron.qdw.boundary.service.mapping.supplier.SupplierXMLElement;
 import com.kontron.qdw.boundary.service.mapping.supplier.SupplierXMLRoot;
@@ -27,7 +21,6 @@ import com.kontron.util.file.FileUtil.ImportType;
 import com.kontron.util.log.FileImportAbortedWithErrorsLog;
 import com.kontron.util.log.FileImportSuccessfulLog;
 import com.kontron.util.log.ITaskNodeLog;
-import com.kontron.util.log.TaskLeafLog;
 import com.kontron.util.log.TaskNodeLog;
 import com.kontron.util.text.StringUtil;
 
@@ -36,9 +29,7 @@ import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
-import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.Unmarshaller;
-import net.sourceforge.jbizmo.commons.property.PropertyService;
 
 /**
  * Import der Supplier-XML-Dateien, die der Downloader bereitstellt.
@@ -47,79 +38,39 @@ import net.sourceforge.jbizmo.commons.property.PropertyService;
  * @author Raymund Achner, achner.com
  */
 @Stateless
-public class XMLSupplierImportServiceBean {
+public class XMLSupplierImportServiceBean extends AbstractXMLImportServiceBean {
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    private static final String SCHEMA_PATH = "/schema/Supplier.xsd";
-
+    private static final String ENTITY_NAME = "supplier";
     private static final String FOLDER_SUB_PATH = "supplier";
-
-    private static final String PROP_XML_EXCHANGE_FOLDER = "sap_exchange_folder";
+    private static final String SCHEMA_NAME = "Supplier.xsd";
 
     private static final String ENCODING = Constants.UTF_8;
-
-    // Definition of simple filter to get only *.xml files
-    private static final FilenameFilter SIMPLE_XML_FILTER = FileType.XML.getFilenameFilterAllWithExtension();
 
     @EJB
     private SupplierRepository supplierManager;
     @EJB
     private CountryRepository countryManager;
 
-    private String exchangePath = new PropertyService().getStringProperty(PROP_XML_EXCHANGE_FOLDER);
 
 
-
-    /** Perform supplier import */
+    /** Perform import */
     @PermitAll
     public ITaskNodeLog runImport() {
-        String importDir = exchangePath + FOLDER_SUB_PATH;
-
-        TaskNodeLog tsk = new TaskNodeLog("import supplier", "import supplier in folder " + importDir);
-
-        String[] importFileNames = new File(importDir).list(SIMPLE_XML_FILTER);
-        if (importFileNames.length == 0) {
-            tsk.finishTask();
-            return tsk;
-        }
-
-
-        Unmarshaller unmarshaller;
-        try {
-            URL fileURL = getClass().getResource(SCHEMA_PATH);
-            unmarshaller = JAXBContext.newInstance(SupplierXMLRoot.class).createUnmarshaller();
-
-            SchemaFactory sf = SchemaFactory.newInstance(javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI);
-            Schema schema = sf.newSchema(fileURL);
-            unmarshaller.setSchema(schema);
-        }
-        catch (Exception e) {
-            TaskLeafLog tskUnmarshall = tsk.createNewSubTaskLeaf("initializing unmarshaller");
-            tskUnmarshall.finishTaskWithError(e);
-            tsk.abortTask();
-            return tsk;
-        }
-
-
-        List<String> orderedImportFileNames = com.kontron.util.file.FileUtil.getOrderedSAPImportFileNames(importFileNames, ImportType.QDW_SUPPLIERS);
-
-        for (String importFileName : orderedImportFileNames) {
-            importFile(importFileName, tsk, importDir, unmarshaller);
-        }
-
-        tsk.finishTask();
-        return tsk;
+        return super.runImport(ENTITY_NAME, FOLDER_SUB_PATH, SCHEMA_NAME, ImportType.QDW_SUPPLIERS);
     }
 
 
 
+    @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    private void importFile(String importFileName, TaskNodeLog tsk, String supplierDir, Unmarshaller unmarshaller) {
-        logger.info(String.format("Lese Supplier-Import Datei '%s'", importFileName));
+    public void importFile(String importFileName, TaskNodeLog tsk, String importDir, Unmarshaller unmarshaller) {
+        logger.info("Lese " + ENTITY_NAME + "-Import Datei '{}'", importFileName);
+
         List<SupplierXMLElement> importedSuppliers;
         // parse xml file into list of entities
-        try (FileInputStream fis = new FileInputStream(new File(supplierDir, importFileName));
+        try (FileInputStream fis = new FileInputStream(new File(importDir, importFileName));
                 InputStreamReader isr = new InputStreamReader(fis, ENCODING)) {
             InputSource isrc = new InputSource(isr);
             isrc.setEncoding(ENCODING);

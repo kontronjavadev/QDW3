@@ -2,11 +2,9 @@ package com.kontron.qdw.boundary.service.xmlimport;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FilenameFilter;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.invoke.MethodHandles;
-import java.net.URL;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,9 +12,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.RegExUtils;
@@ -26,8 +21,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
 
-import com.kontron.constants.file.FileType;
-import com.kontron.qdw.boundary.material.MaterialRevisionBoundaryService;
 import com.kontron.qdw.boundary.service.XMLDataImportUtils;
 import com.kontron.qdw.boundary.service.mapping.arrival.ArrivalMappingType;
 import com.kontron.qdw.boundary.service.mapping.arrival.ArrivalRootMappingType;
@@ -43,7 +36,6 @@ import com.kontron.qdw.domain.serial.SerialObject;
 import com.kontron.qdw.repository.base.MovementTypeRepository;
 import com.kontron.qdw.repository.base.PlantRepository;
 import com.kontron.qdw.repository.base.SupplierRepository;
-import com.kontron.qdw.repository.material.BoMItemRepository;
 import com.kontron.qdw.repository.material.MaterialRepository;
 import com.kontron.qdw.repository.material.MaterialRevisionRepository;
 import com.kontron.qdw.repository.serial.ArrivalRepository;
@@ -55,7 +47,6 @@ import com.kontron.util.log.FileImportAbortedWithErrorsLog;
 import com.kontron.util.log.FileImportProcessedWithErrors;
 import com.kontron.util.log.FileImportSuccessfulLog;
 import com.kontron.util.log.ITaskNodeLog;
-import com.kontron.util.log.TaskLeafLog;
 import com.kontron.util.log.TaskNodeLog;
 import com.kontron.util.text.StringUtil;
 import com.kontron.util.version.RevisionUtil;
@@ -67,9 +58,7 @@ import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.Unmarshaller;
-import net.sourceforge.jbizmo.commons.property.PropertyService;
 
 /**
  * Import der Arrival-XML-Dateien, die der Downloader bereitstellt.
@@ -78,22 +67,17 @@ import net.sourceforge.jbizmo.commons.property.PropertyService;
  * @author Raymund Achner, achner.com
  */
 @Stateless
-public class XMLArrivalImportServiceBean {
+public class XMLArrivalImportServiceBean extends AbstractXMLImportServiceBean {
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    private static final String SCHEMA_PATH = "/schema/Arrival.xsd";
+    private static final String ENTITY_NAME = "arrival";
     private static final String FOLDER_SUB_PATH = "arrival";
-
-    private static final String PROP_XML_EXCHANGE_FOLDER = "sap_exchange_folder";
+    private static final String SCHEMA_NAME = "Arrival.xsd";
 
     private static final String ENCODING = Constants.UTF_8;
 
-    // Definition of simple filter to get only *.xml files
-    private static final FilenameFilter SIMPLE_XML_FILTER = FileType.XML.getFilenameFilterAllWithExtension();
-
     private static final String UNKNOWN_SUPPLIER = "XXXX";
-
 
     @EJB
     private ArrivalRepository arrivalManager;
@@ -105,11 +89,7 @@ public class XMLArrivalImportServiceBean {
     private SerialObjectRepository serialObjectManager;
 
     @EJB
-    private BoMItemRepository bomManager;
-    @EJB
     private MaterialRevisionRepository materialRevisionManager;
-    @EJB
-    private MaterialRevisionBoundaryService materialRevisionService;
     @EJB
     private MaterialRepository materialManager;
     @EJB
@@ -118,62 +98,24 @@ public class XMLArrivalImportServiceBean {
     @PersistenceContext
     private EntityManager em;
 
-    private String exchangePath = new PropertyService().getStringProperty(PROP_XML_EXCHANGE_FOLDER);
 
 
-
-    /** Perform BoM import */
+    /** Perform import */
     @PermitAll
     public ITaskNodeLog runImport() {
-        String importDir = exchangePath + FOLDER_SUB_PATH;
-
-        TaskNodeLog tsk = new TaskNodeLog("import Arrival", "import Arrival in folder " + importDir);
-
-        String[] importFileNames = new File(importDir).list(SIMPLE_XML_FILTER);
-        if (importFileNames.length == 0) {
-            tsk.finishTask();
-            return tsk;
-        }
-
-
-        Unmarshaller unmarshaller;
-        try {
-            URL fileURL = getClass().getResource(SCHEMA_PATH);
-            unmarshaller = JAXBContext.newInstance(ArrivalRootMappingType.class).createUnmarshaller();
-            SchemaFactory sf = SchemaFactory.newInstance(javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI);
-            Schema schema = sf.newSchema(fileURL);
-            unmarshaller.setSchema(schema);
-        }
-        catch (Exception e) {
-            TaskLeafLog tskUnmarshall = tsk.createNewSubTaskLeaf("initializing unmarshaller");
-            tskUnmarshall.finishTaskWithError(e);
-            tsk.abortTask();
-            return tsk;
-        }
-
-
-        List<String> orderedImportFileNames = com.kontron.util.file.FileUtil.getOrderedSAPImportFileNames(importFileNames, ImportType.QDW_ARRIVAL);
-        StringBuilder revisionChangeJournal = new StringBuilder();
-
-        // Read all xml files from given path
-        for (String importFileName : orderedImportFileNames) {
-            importFile(importFileName, tsk, revisionChangeJournal, importDir, unmarshaller);
-        }
-
-
-        tsk.finishTask();
-        return tsk;
+        return super.runImport(ENTITY_NAME, FOLDER_SUB_PATH, SCHEMA_NAME, ImportType.QDW_ARRIVAL);
     }
 
 
 
+    @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public void importFile(String importFileName, TaskNodeLog tsk, StringBuilder revisionChangeJournal, String bomDir, Unmarshaller unmarshaller) {
-        logger.info("Lese BoM-Import Datei '{}'", importFileName);
+    public void importFile(String importFileName, TaskNodeLog tsk, String importDir, Unmarshaller unmarshaller) {
+        logger.info("Lese " + ENTITY_NAME + "-Import Datei '{}'", importFileName);
 
         List<ArrivalMappingType> importedArrivals;
         // parse xml file into list of entities
-        try (InputStream is = new FileInputStream(new File(bomDir, importFileName));
+        try (InputStream is = new FileInputStream(new File(importDir, importFileName));
                 InputStreamReader isr = new InputStreamReader(is, ENCODING)) {
             InputSource isrc = new InputSource(isr);
             isrc.setEncoding(ENCODING);
@@ -241,7 +183,7 @@ public class XMLArrivalImportServiceBean {
                 }
 
                 try {
-                    importEntry(arrival, importFileName, revisionChangeJournal, errorList,
+                    importEntry(arrival, importFileName, errorList,
                             existingMaterialMap, existingSupplierMap,
                             existingSerObjMap, plantMap, mvtTypeMap);
                 }
@@ -274,7 +216,7 @@ public class XMLArrivalImportServiceBean {
 
 
 
-    private void importEntry(ArrivalMappingType importedArrival, String importFileName, StringBuilder revisionChangeJournal, List<String> errorList,
+    private void importEntry(ArrivalMappingType importedArrival, String importFileName, List<String> errorList,
             Map<String, Material> existingMaterialMap, Map<String, Supplier> existingSupplierMap,
             Map<SerNoMatIdResult, SerialObject> existingSerObjMap, Map<String, Plant> plantMap, Map<String, MovementType> mvtTypeMap) {
 
@@ -352,7 +294,7 @@ public class XMLArrivalImportServiceBean {
 
 
 
-    protected void batchNormalisieren(List<ArrivalMappingType> curBatch) {
+    private void batchNormalisieren(List<ArrivalMappingType> curBatch) {
         curBatch.forEach(importedArrival -> {
             importedArrival.setMaterialSapNumber(StringUtil.removeLeadingZero(importedArrival.getMaterialSapNumber()));
             importedArrival.setOrderNumber(StringUtil.removeLeadingZero(importedArrival.getOrderNumber()));
@@ -366,7 +308,7 @@ public class XMLArrivalImportServiceBean {
         });
     }
 
-    protected List<ArrivalMappingType> batchFiltern(List<ArrivalMappingType> curBatch) {
+    private List<ArrivalMappingType> batchFiltern(List<ArrivalMappingType> curBatch) {
         curBatch = curBatch.stream()
                 .filter(importedArrival -> StringUtils.isNotEmpty(importedArrival.getMaterialSapNumber()))
                 .filter(importedArrival -> StringUtils.isNotEmpty(importedArrival.getSerialNumber()))
@@ -377,7 +319,7 @@ public class XMLArrivalImportServiceBean {
 
 
 
-    protected MaterialRevision getOrCreateMatRev(Material material, Plant plant, String sapRevNumber) {
+    private MaterialRevision getOrCreateMatRev(Material material, Plant plant, String sapRevNumber) {
         String revNo = RevisionUtil.calculateRevNumberBySapRevNumber(sapRevNumber);
 
         Optional<MaterialRevision> revisionOpt = material.getRevisions().stream()
@@ -407,13 +349,13 @@ public class XMLArrivalImportServiceBean {
         return revision;
     }
 
-    protected Map<String, Supplier> getSupplier(List<ArrivalMappingType> curBatch) {
+    private Map<String, Supplier> getSupplier(List<ArrivalMappingType> curBatch) {
         return supplierManager.findByIds(curBatch.stream()
                 .map(ArrivalMappingType::getSupplierCode)
                 .collect(Collectors.toSet()));
     }
 
-    protected Map<String, Supplier> createMissingSupplier(List<ArrivalMappingType> curBatch, Map<String, Supplier> existingSupplierMap) {
+    private Map<String, Supplier> createMissingSupplier(List<ArrivalMappingType> curBatch, Map<String, Supplier> existingSupplierMap) {
         return existingSupplierMap.entrySet().stream()
                 .filter(suppMapEntry -> suppMapEntry.getValue() == null)
                 .map(Map.Entry::getKey)
@@ -429,7 +371,7 @@ public class XMLArrivalImportServiceBean {
                 .collect(Collectors.toMap(Supplier::getCode, Function.identity()));
     }
 
-    protected Map<String, MovementType> createMissingMvtTypes(Map<String, MovementType> mvtTypeMap, List<ArrivalMappingType> curBatch) {
+    private Map<String, MovementType> createMissingMvtTypes(Map<String, MovementType> mvtTypeMap, List<ArrivalMappingType> curBatch) {
         return CollectionUtils.subtract(curBatch.stream()
                 .map(ArrivalMappingType::getMovementTypeCode)
                 .collect(Collectors.toSet()),
@@ -446,7 +388,7 @@ public class XMLArrivalImportServiceBean {
                 .collect(Collectors.toMap(MovementType::getCode, Function.identity()));
     }
 
-    protected Map<SerNoMatIdResult, SerialObject> getSerialObjectsOfBatch(List<ArrivalMappingType> curBatch,
+    private Map<SerNoMatIdResult, SerialObject> getSerialObjectsOfBatch(List<ArrivalMappingType> curBatch,
             Map<String, Material> existingMaterialMap) {
         List<SerNoJeMatIdFilter> serNoJeMatIdFilter = curBatch.stream()
                 // Arrival mit Material aus Map zu einem Tupel verknüpfen

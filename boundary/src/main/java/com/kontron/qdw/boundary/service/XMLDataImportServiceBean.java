@@ -11,6 +11,7 @@ import com.kontron.qdw.boundary.service.xmlimport.XMLArrivalImportServiceBean;
 import com.kontron.qdw.boundary.service.xmlimport.XMLBoMImportServiceBean;
 import com.kontron.qdw.boundary.service.xmlimport.XMLCustomerImportServiceBean;
 import com.kontron.qdw.boundary.service.xmlimport.XMLMaterialImportServiceBean;
+import com.kontron.qdw.boundary.service.xmlimport.XMLShipmentImportServiceBean;
 import com.kontron.qdw.boundary.service.xmlimport.XMLSupplierImportServiceBean;
 import com.kontron.qdw.boundary.util.Constants;
 import com.kontron.qdw.boundary.util.MailServiceFacade;
@@ -58,6 +59,8 @@ public class XMLDataImportServiceBean {
     private XMLBoMImportServiceBean bomImportServiceBean;
     @EJB
     private XMLArrivalImportServiceBean arrivalImportServiceBean;
+    @EJB
+    private XMLShipmentImportServiceBean shipmentImportServiceBean;
 
 
     private String exchangePath = new PropertyService().getStringProperty(PROP_XML_EXCHANGE_FOLDER);
@@ -78,6 +81,7 @@ public class XMLDataImportServiceBean {
         tasks.add(materialImportServiceBean::runImport);
         tasks.add(bomImportServiceBean::runImport);
         tasks.add(arrivalImportServiceBean::runImport);
+        tasks.add(shipmentImportServiceBean::runImport);
 
         runImport(tasks);
     }
@@ -145,6 +149,19 @@ public class XMLDataImportServiceBean {
 
         List<TaskCall> tasks = new ArrayList<>();
         tasks.add(arrivalImportServiceBean::runImport);
+
+        runImport(tasks);
+    }
+
+    @Asynchronous
+    @PermitAll
+    public void runShipmentImport() {
+        if (!schedulerService.isExecuteImport()) {
+            return;
+        }
+
+        List<TaskCall> tasks = new ArrayList<>();
+        tasks.add(shipmentImportServiceBean::runImport);
 
         runImport(tasks);
     }

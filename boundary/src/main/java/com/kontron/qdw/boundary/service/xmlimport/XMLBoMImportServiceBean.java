@@ -2,11 +2,9 @@ package com.kontron.qdw.boundary.service.xmlimport;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FilenameFilter;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.invoke.MethodHandles;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -15,16 +13,12 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
-
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
 
-import com.kontron.constants.file.FileType;
 import com.kontron.qdw.boundary.material.MaterialRevisionBoundaryService;
 import com.kontron.qdw.boundary.service.XMLDataImportUtils;
 import com.kontron.qdw.boundary.service.mapping.bom.BoMItemXMLElement;
@@ -46,7 +40,6 @@ import com.kontron.util.log.FileImportAbortedWithErrorsLog;
 import com.kontron.util.log.FileImportProcessedWithErrors;
 import com.kontron.util.log.FileImportSuccessfulLog;
 import com.kontron.util.log.ITaskNodeLog;
-import com.kontron.util.log.TaskLeafLog;
 import com.kontron.util.log.TaskNodeLog;
 import com.kontron.util.text.ExceptionUtil;
 import com.kontron.util.text.StringUtil;
@@ -57,9 +50,7 @@ import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
-import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.Unmarshaller;
-import net.sourceforge.jbizmo.commons.property.PropertyService;
 
 /**
  * Import der BoM-XML-Dateien, die der Downloader bereitstellt.
@@ -68,21 +59,15 @@ import net.sourceforge.jbizmo.commons.property.PropertyService;
  * @author Raymund Achner, achner.com
  */
 @Stateless
-public class XMLBoMImportServiceBean {
+public class XMLBoMImportServiceBean extends AbstractXMLImportServiceBean {
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    private static final String SCHEMA_PATH = "/schema/BoM.xsd";
+    private static final String ENTITY_NAME = "BoM";
     private static final String FOLDER_SUB_PATH = "bom";
-
-    private static final String PROP_XML_EXCHANGE_FOLDER = "sap_exchange_folder";
+    private static final String SCHEMA_NAME = "BoM.xsd";
 
     private static final String ENCODING = Constants.UTF_8;
-
-    // Definition of simple filter to get only *.xml files
-    private static final FilenameFilter SIMPLE_XML_FILTER = FileType.XML.getFilenameFilterAllWithExtension();
-
-
 
     @EJB
     private BoMItemRepository bomManager;
@@ -95,62 +80,24 @@ public class XMLBoMImportServiceBean {
     @EJB
     private PlantRepository plantManager;
 
-    private String exchangePath = new PropertyService().getStringProperty(PROP_XML_EXCHANGE_FOLDER);
 
 
-
-    /** Perform BoM import */
+    /** Perform import */
     @PermitAll
     public ITaskNodeLog runImport() {
-        String importDir = exchangePath + FOLDER_SUB_PATH;
-
-        TaskNodeLog tsk = new TaskNodeLog("import BoM", "import BoM in folder " + importDir);
-
-        String[] importFileNames = new File(importDir).list(SIMPLE_XML_FILTER);
-        if (importFileNames.length == 0) {
-            tsk.finishTask();
-            return tsk;
-        }
-
-
-        Unmarshaller unmarshaller;
-        try {
-            URL fileURL = getClass().getResource(SCHEMA_PATH);
-            unmarshaller = JAXBContext.newInstance(BoMXMLRoot.class).createUnmarshaller();
-            SchemaFactory sf = SchemaFactory.newInstance(javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI);
-            Schema schema = sf.newSchema(fileURL);
-            unmarshaller.setSchema(schema);
-        }
-        catch (Exception e) {
-            TaskLeafLog tskUnmarshall = tsk.createNewSubTaskLeaf("initializing unmarshaller");
-            tskUnmarshall.finishTaskWithError(e);
-            tsk.abortTask();
-            return tsk;
-        }
-
-
-        List<String> orderedImportFileNames = com.kontron.util.file.FileUtil.getOrderedSAPImportFileNames(importFileNames, ImportType.QDW_BOM);
-        StringBuilder revisionChangeJournal = new StringBuilder();
-
-        // Read all xml files from given path
-        for (String importFileName : orderedImportFileNames) {
-            importFile(importFileName, tsk, revisionChangeJournal, importDir, unmarshaller);
-        }
-
-
-        tsk.finishTask();
-        return tsk;
+        return super.runImport(ENTITY_NAME, FOLDER_SUB_PATH, SCHEMA_NAME, ImportType.QDW_BOM);
     }
 
 
 
+    @Override
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    private void importFile(String importFileName, TaskNodeLog tsk, StringBuilder revisionChangeJournal, String bomDir, Unmarshaller unmarshaller) {
-        logger.info("Lese BoM-Import Datei '{}'", importFileName);
+    public void importFile(String importFileName, TaskNodeLog tsk, String importDir, Unmarshaller unmarshaller) {
+        logger.info("Lese " + ENTITY_NAME + "-Import Datei '{}'", importFileName);
 
         List<BoMXMLElement> importedBoMs;
         // parse xml file into list of entities
-        try (InputStream is = new FileInputStream(new File(bomDir, importFileName));
+        try (InputStream is = new FileInputStream(new File(importDir, importFileName));
                 InputStreamReader isr = new InputStreamReader(is, ENCODING)) {
             InputSource isrc = new InputSource(isr);
             isrc.setEncoding(ENCODING);
@@ -192,7 +139,7 @@ public class XMLBoMImportServiceBean {
                 }
 
                 try {
-                    importEntry(bom, importFileName, revisionChangeJournal, errorList, existingMaterialMap, plantSet);
+                    importEntry(bom, importFileName, errorList, existingMaterialMap, plantSet);
                 }
                 catch (Exception e) {
                     logger.error("failed", e);
@@ -222,7 +169,7 @@ public class XMLBoMImportServiceBean {
 
 
 
-    private void importEntry(BoMXMLElement importedBom, String importFileName, StringBuilder revisionChangeJournal, List<String> errorList,
+    private void importEntry(BoMXMLElement importedBom, String importFileName, List<String> errorList,
             Map<String, Material> existingMaterialMap, Set<String> plantSet) {
 
         String sapNumber = StringUtil.removeLeadingZero(importedBom.getMaterialNumber());
