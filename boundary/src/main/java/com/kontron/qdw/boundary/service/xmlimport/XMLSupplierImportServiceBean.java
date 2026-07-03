@@ -1,6 +1,12 @@
 package com.kontron.qdw.boundary.service.xmlimport;
 
+import java.lang.invoke.MethodHandles;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.kontron.qdw.boundary.service.mapping.supplier.SupplierXMLElement;
 import com.kontron.qdw.boundary.service.mapping.supplier.SupplierXMLRoot;
@@ -25,6 +31,8 @@ import jakarta.ejb.Stateless;
 @Stateless
 public class XMLSupplierImportServiceBean extends AbstractXMLImportServiceBean<SupplierXMLRoot, SupplierXMLElement> {
 
+    private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
     private static final String ENTITY_NAME = "supplier";
     private static final String FOLDER_SUB_PATH = "supplier";
     private static final String SCHEMA_NAME = "Supplier.xsd";
@@ -39,7 +47,7 @@ public class XMLSupplierImportServiceBean extends AbstractXMLImportServiceBean<S
     /** Perform import */
     @PermitAll
     public ITaskNodeLog runImport() {
-        return super.runImportNoBulk(ENTITY_NAME, FOLDER_SUB_PATH, SCHEMA_NAME, ImportType.QDW_SUPPLIERS,
+        return super.runImport(ENTITY_NAME, FOLDER_SUB_PATH, SCHEMA_NAME, ImportType.QDW_SUPPLIERS,
                 SupplierXMLRoot.class, SupplierXMLRoot::getSupplierList);
     }
 
@@ -47,13 +55,21 @@ public class XMLSupplierImportServiceBean extends AbstractXMLImportServiceBean<S
     @Override
     protected void importBulk(String importFileName, TaskNodeLog tsk, List<SupplierXMLElement> importedSuppliers, List<String> errorList,
             BulkProcess bulkProcess) throws Exception {
-        // keine Bulk-Verarbeitung,es wird alles komplett übernommen!
-        for (SupplierXMLElement supplier : importedSuppliers) {
-            // We must remove leading zeros!
-            String currentSupplierCode = StringUtil.removeLeadingZero(supplier.getCode());
+        bulkProcess.logProcessBulkLevel(logger);
 
-            Supplier existingSupplier = supplierManager.findById(currentSupplierCode);
+        // aktuell verarbeiteter Batch
+        List<SupplierXMLElement> curBatch = importedSuppliers.subList(bulkProcess.getBulkFromIdx(), bulkProcess.getBulkToIdx());
+        batchNormalisieren(curBatch);
 
+        Map<String, Supplier> existingSupplierMap = supplierManager.findByIds(curBatch.stream()
+                .map(SupplierXMLElement::getCode)
+                .collect(Collectors.toSet()));
+
+        for (SupplierXMLElement supplier : curBatch) {
+            // Bearbeitung istunspektakulär und muss nicht in eine eigene Methode ausgelagert werden.
+            // So sparen wir den Overhead, mit jedem Aufruf die Suplier-Liste auf den Stack zu legen.
+            String currentSupplierCode = supplier.getCode();
+            Supplier existingSupplier = existingSupplierMap.get(currentSupplierCode);
             if (existingSupplier != null) {
                 existingSupplier.setName(supplier.getName() + " (" + currentSupplierCode + ")");
                 existingSupplier.setCity(supplier.getCity());
@@ -71,6 +87,10 @@ public class XMLSupplierImportServiceBean extends AbstractXMLImportServiceBean<S
                 supplierManager.persist(newSupplier, true, false, false);
             }
         } // end for supplier
+    }
+
+    private void batchNormalisieren(List<SupplierXMLElement> curBatch) {
+        curBatch.forEach(importedSupplier -> importedSupplier.setCode(StringUtil.removeLeadingZero(importedSupplier.getCode())));
     }
 
 }
