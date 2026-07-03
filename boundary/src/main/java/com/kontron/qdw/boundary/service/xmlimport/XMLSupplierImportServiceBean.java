@@ -39,7 +39,8 @@ public class XMLSupplierImportServiceBean extends AbstractXMLImportServiceBean<S
     /** Perform import */
     @PermitAll
     public ITaskNodeLog runImport() {
-        return super.runImportNoBulk(ENTITY_NAME, FOLDER_SUB_PATH, SCHEMA_NAME, ImportType.QDW_SUPPLIERS, SupplierXMLRoot::getSupplierList);
+        return super.runImportNoBulk(ENTITY_NAME, FOLDER_SUB_PATH, SCHEMA_NAME, ImportType.QDW_SUPPLIERS,
+                SupplierXMLRoot.class, SupplierXMLRoot::getSupplierList);
     }
 
 

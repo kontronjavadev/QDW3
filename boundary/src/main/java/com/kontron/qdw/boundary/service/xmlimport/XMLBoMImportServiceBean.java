@@ -76,7 +76,8 @@ public class XMLBoMImportServiceBean extends AbstractXMLImportServiceBean<BoMXML
     /** Perform import */
     @PermitAll
     public ITaskNodeLog runImport() {
-        return super.runImport(ENTITY_NAME, FOLDER_SUB_PATH, SCHEMA_NAME, ImportType.QDW_BOM, BoMXMLRoot::getBoMs);
+        return super.runImport(ENTITY_NAME, FOLDER_SUB_PATH, SCHEMA_NAME, ImportType.QDW_BOM,
+                BoMXMLRoot.class, BoMXMLRoot::getBoMs);
     }
 
 

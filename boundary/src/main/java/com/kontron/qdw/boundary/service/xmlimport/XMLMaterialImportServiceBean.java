@@ -69,7 +69,8 @@ public class XMLMaterialImportServiceBean extends AbstractXMLImportServiceBean<M
     /** Perform import */
     @PermitAll
     public ITaskNodeLog runImport() {
-        return super.runImport(ENTITY_NAME, FOLDER_SUB_PATH, SCHEMA_NAME, ImportType.QDW_MATERIAL, MaterialXMLRoot::getMaterialList);
+        return super.runImport(ENTITY_NAME, FOLDER_SUB_PATH, SCHEMA_NAME, ImportType.QDW_MATERIAL,
+                MaterialXMLRoot.class, MaterialXMLRoot::getMaterialList);
     }
 
 

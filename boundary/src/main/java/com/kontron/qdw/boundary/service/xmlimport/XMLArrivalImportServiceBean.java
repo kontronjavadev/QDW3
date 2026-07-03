@@ -89,7 +89,8 @@ public class XMLArrivalImportServiceBean extends AbstractXMLImportServiceBean<Ar
     /** Perform import */
     @PermitAll
     public ITaskNodeLog runImport() {
-        return super.runImport(ENTITY_NAME, FOLDER_SUB_PATH, SCHEMA_NAME, ImportType.QDW_ARRIVAL, ArrivalRootMappingType::getArrivals);
+        return super.runImport(ENTITY_NAME, FOLDER_SUB_PATH, SCHEMA_NAME, ImportType.QDW_ARRIVAL,
+                ArrivalRootMappingType.class, ArrivalRootMappingType::getArrivals);
     }
 
 

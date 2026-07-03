@@ -20,7 +20,6 @@ import org.xml.sax.InputSource;
 
 import com.kontron.constants.file.FileType;
 import com.kontron.qdw.boundary.service.XMLDataImportUtils;
-import com.kontron.qdw.boundary.service.mapping.bom.BoMXMLRoot;
 import com.kontron.qdw.boundary.util.Constants;
 import com.kontron.util.file.FileUtil.ImportType;
 import com.kontron.util.log.FileImportAbortedWithErrorsLog;
@@ -66,19 +65,19 @@ public abstract class AbstractXMLImportServiceBean<ROOT, ELEM> {
 
     /** Perform import */
     protected ITaskNodeLog runImport(String entityName, String folderSubPath, String schemaName, ImportType importType,
-            Function<ROOT, List<ELEM>> getElementsFunction) {
-        return runImport(entityName, folderSubPath, schemaName, importType, getElementsFunction, true);
+            Class<ROOT> xmlRootClazz, Function<ROOT, List<ELEM>> getElementsFunction) {
+        return runImport(entityName, folderSubPath, schemaName, importType, xmlRootClazz, getElementsFunction, true);
     }
 
     /** Perform import */
     protected ITaskNodeLog runImportNoBulk(String entityName, String folderSubPath, String schemaName, ImportType importType,
-            Function<ROOT, List<ELEM>> getElementsFunction) {
-        return runImport(entityName, folderSubPath, schemaName, importType, getElementsFunction, false);
+            Class<ROOT> xmlRootClazz, Function<ROOT, List<ELEM>> getElementsFunction) {
+        return runImport(entityName, folderSubPath, schemaName, importType, xmlRootClazz, getElementsFunction, false);
     }
 
     /** Perform import */
     private ITaskNodeLog runImport(String entityName, String folderSubPath, String schemaName, ImportType importType,
-            Function<ROOT, List<ELEM>> getElementsFunction, boolean withBulk) {
+            Class<ROOT> xmlRootClazz, Function<ROOT, List<ELEM>> getElementsFunction, boolean withBulk) {
         String importDir = exchangePath + folderSubPath;
 
         TaskNodeLog tsk = new TaskNodeLog("import " + entityName, "import " + entityName + " in folder " + importDir);
@@ -93,7 +92,7 @@ public abstract class AbstractXMLImportServiceBean<ROOT, ELEM> {
         Unmarshaller unmarshaller;
         try {
             URL fileURL = getClass().getResource(SCHEMA_PATH + schemaName);
-            unmarshaller = JAXBContext.newInstance(BoMXMLRoot.class).createUnmarshaller();
+            unmarshaller = JAXBContext.newInstance(xmlRootClazz).createUnmarshaller();
             SchemaFactory sf = SchemaFactory.newInstance(javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI);
             Schema schema = sf.newSchema(fileURL);
             unmarshaller.setSchema(schema);
