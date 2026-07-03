@@ -80,7 +80,7 @@ public abstract class AbstractXMLImportServiceBean<ROOT, ELEM> {
             Class<ROOT> xmlRootClazz, Function<ROOT, List<ELEM>> getElementsFunction, boolean withBulk) {
         String importDir = exchangePath + folderSubPath;
 
-        TaskNodeLog tsk = new TaskNodeLog("import " + entityName, "import " + entityName + " in folder " + importDir);
+        TaskNodeLog tsk = new TaskNodeLog("import " + entityName, "import " + entityName /* + " in folder " + importDir*/);
 
         String[] importFileNames = new File(importDir).list(SIMPLE_XML_FILTER);
         if (importFileNames.length == 0) {
