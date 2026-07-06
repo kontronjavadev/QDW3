@@ -5,7 +5,6 @@ import org.slf4j.*;
 import com.kontron.qdw.boundary.material.*;
 import java.lang.invoke.*;
 import com.kontron.qdw.dto.mv.*;
-import com.kontron.qdw.dto.serial.ArrivalSearchDTO;
 import com.kontron.qdw.boundary.mv.*;
 import org.primefaces.model.DualListModel;
 import net.sourceforge.jbizmo.commons.webclient.primefaces.search.*;

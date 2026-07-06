@@ -155,6 +155,32 @@ public class XMLDataImportServiceBean {
 
     @Asynchronous
     @PermitAll
+    public void runRebuildMatArrivalImport() {
+        if (!schedulerService.isExecuteImport()) {
+            return;
+        }
+
+        List<TaskCall> tasks = new ArrayList<>();
+        // tasks.add(arrivalImportServiceBean::runImport);
+
+        runImport(tasks);
+    }
+
+    @Asynchronous
+    @PermitAll
+    public void runRebuildAggArrivalImport() {
+        if (!schedulerService.isExecuteImport()) {
+            return;
+        }
+
+        List<TaskCall> tasks = new ArrayList<>();
+        // tasks.add(arrivalImportServiceBean::runImport);
+
+        runImport(tasks);
+    }
+
+    @Asynchronous
+    @PermitAll
     public void runShipmentImport() {
         if (!schedulerService.isExecuteImport()) {
             return;

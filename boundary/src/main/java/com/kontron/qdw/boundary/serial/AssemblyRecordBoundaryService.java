@@ -2,7 +2,6 @@ package com.kontron.qdw.boundary.serial;
 
 import com.kontron.qdw.domain.serial.*;
 import jakarta.validation.ConstraintViolationException;
-import com.kontron.qdw.dto.serial.*;
 import jakarta.inject.*;
 import jakarta.ejb.*;
 import jakarta.annotation.security.*;

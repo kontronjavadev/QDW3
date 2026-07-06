@@ -120,6 +120,14 @@ public class XMLDataImportView extends CopyClipboard implements Serializable {
         importServiceBean.runArrivalImport();
     }
 
+    public void runRebuildMatArrivalImport() {
+        importServiceBean.runRebuildMatArrivalImport();
+    }
+
+    public void runRebuildAggArrivalImport() {
+        importServiceBean.runRebuildAggArrivalImport();
+    }
+
     public void runShipmentImport() {
         importServiceBean.runShipmentImport();
     }
