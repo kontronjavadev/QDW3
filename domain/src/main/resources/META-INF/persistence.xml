@@ -8,8 +8,16 @@
 		<class>net.sourceforge.jbizmo.commons.jpa.converter.UUIDByteArrayConverter</class>
 		<class>net.sourceforge.jbizmo.commons.jpa.converter.UUIDStringConverter</class>
 		<properties>
+<!-- nein, wir verwenden Hibernate, nicht eclipselink - wie auch immer das zustande kam. -->
 			<property name="eclipselink.id-validation" value="NULL"/>
 			<property name="eclipselink.cache.shared.default" value="false"/>
+
+			<property name="eclipselink.jdbc.fetch-size" value="1000"/>
+			<property name="org.hibernate.fetchSize" value="1000"/>
+
+			<property name="hibernate.jdbc.batch_size" value="1000"/>
+			<property name="hibernate.order_inserts" value="true"/>
+			<property name="hibernate.order_updates" value="true"/>
 		</properties>
 	</persistence-unit>
 </persistence>

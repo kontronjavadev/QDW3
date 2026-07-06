@@ -240,13 +240,16 @@ public class XMLShipmentImportServiceBean extends AbstractXMLImportServiceBean<S
 
 
     private Map<String, Material> cacheMaterial(List<ShipmentMappingType> xmlItems, boolean fetchRevisions) {
-        // Das angegebene Material in der Datenbank suchen. Die Function gibt an, wie man an die Materialnummer kommt.
+        // Das angegebene Material in der Datenbank suchen.
         // -> Map zu allen gesuchten Materialien erstellen;
         // key ist SAP-Nummer; Suche nach SAP-Nummer oder ersatzweise nach Materialnummer
         // Die Map wird mit den so gefundenen Materialien befüllt.
 
         Map<String, String> matNrZuSapNr = xmlItems.stream()
-                .collect(Collectors.toMap(ShipmentMappingType::getMaterialSapNumber, ShipmentMappingType::getMaterialNumber));
+                .collect(Collectors.toMap(
+                        ShipmentMappingType::getMaterialSapNumber,
+                        ShipmentMappingType::getMaterialNumber,
+                        (existingValue, newValue) -> existingValue));
 
         Set<String> sapNummern = matNrZuSapNr.keySet();
 
