@@ -19,17 +19,17 @@ import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
 
 import com.kontron.constants.file.FileType;
+import com.kontron.qdw.boundary.service.TaskCall;
 import com.kontron.qdw.boundary.service.XMLDataImportUtils;
 import com.kontron.qdw.boundary.util.Constants;
 import com.kontron.util.file.FileUtil.ImportType;
 import com.kontron.util.log.FileImportAbortedWithErrorsLog;
 import com.kontron.util.log.FileImportProcessedWithErrors;
 import com.kontron.util.log.FileImportSuccessfulLog;
-import com.kontron.util.log.ITaskNodeLog;
 import com.kontron.util.log.TaskLeafLog;
 import com.kontron.util.log.TaskNodeLog;
 
-import jakarta.ejb.Stateless;
+import jakarta.annotation.security.PermitAll;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.xml.bind.JAXBContext;
@@ -42,8 +42,7 @@ import net.sourceforge.jbizmo.commons.property.PropertyService;
  * 2025 — © Kontron AG
  * @author Raymund Achner, achner.com
  */
-@Stateless
-public abstract class AbstractXMLImportServiceBean<ROOT, ELEM> {
+public abstract class AbstractXMLImportServiceBean<ROOT, ELEM> implements TaskCall {
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
@@ -63,36 +62,28 @@ public abstract class AbstractXMLImportServiceBean<ROOT, ELEM> {
 
 
 
-    /** Perform import */
-    protected ITaskNodeLog runImport(String entityName, String folderSubPath, String schemaName, ImportType importType,
-            Class<ROOT> xmlRootClazz, Function<ROOT, List<ELEM>> getElementsFunction) {
-        return runImport(entityName, folderSubPath, schemaName, importType, xmlRootClazz, getElementsFunction, true);
+    /** Init Task */
+    @Override
+    @PermitAll
+    public TaskNodeLog initTask() {
+        return new TaskNodeLog("import " + getEntityName());
     }
 
     /** Perform import */
-    protected ITaskNodeLog runImportNoBulk(String entityName, String folderSubPath, String schemaName, ImportType importType,
-            Class<ROOT> xmlRootClazz, Function<ROOT, List<ELEM>> getElementsFunction) {
-        return runImport(entityName, folderSubPath, schemaName, importType, xmlRootClazz, getElementsFunction, false);
-    }
-
-    /** Perform import */
-    private ITaskNodeLog runImport(String entityName, String folderSubPath, String schemaName, ImportType importType,
-            Class<ROOT> xmlRootClazz, Function<ROOT, List<ELEM>> getElementsFunction, boolean withBulk) {
-        String importDir = exchangePath + folderSubPath;
-
-        TaskNodeLog tsk = new TaskNodeLog("import " + entityName, "import " + entityName /* + " in folder " + importDir*/);
-
-        String[] importFileNames = new File(importDir).list(SIMPLE_XML_FILTER);
+    @Override
+    @PermitAll
+    public void execTask(TaskNodeLog tsk) {
+        String[] importFileNames = new File(getImportDir()).list(SIMPLE_XML_FILTER);
         if (importFileNames.length == 0) {
             tsk.finishTask();
-            return tsk;
+            return;
         }
 
 
         Unmarshaller unmarshaller;
         try {
-            URL fileURL = getClass().getResource(SCHEMA_PATH + schemaName);
-            unmarshaller = JAXBContext.newInstance(xmlRootClazz).createUnmarshaller();
+            URL fileURL = getClass().getResource(SCHEMA_PATH + getSchemaName());
+            unmarshaller = JAXBContext.newInstance(getXmlRootClazz()).createUnmarshaller();
             SchemaFactory sf = SchemaFactory.newInstance(javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI);
             Schema schema = sf.newSchema(fileURL);
             unmarshaller.setSchema(schema);
@@ -101,22 +92,22 @@ public abstract class AbstractXMLImportServiceBean<ROOT, ELEM> {
             TaskLeafLog tskUnmarshall = tsk.createNewSubTaskLeaf("initializing unmarshaller");
             tskUnmarshall.finishTaskWithError(e);
             tsk.abortTask();
-            return tsk;
+            return;
         }
 
 
-        List<String> orderedImportFileNames = com.kontron.util.file.FileUtil.getOrderedSAPImportFileNames(importFileNames, importType);
+        List<String> orderedImportFileNames = com.kontron.util.file.FileUtil.getOrderedSAPImportFileNames(importFileNames, getImportType());
 
         // Read all xml files from given path
-        logger.info("{} files found for " + entityName + " import.", orderedImportFileNames);
+        logger.info("{} files found for " + getEntityName() + " import.", orderedImportFileNames);
         for (String importFileName : orderedImportFileNames) {
-            // importFile(importFileName, tsk, importDir, unmarshaller);
-            importFile(entityName, folderSubPath, importFileName, tsk, importDir, unmarshaller, getElementsFunction, withBulk);
+            importFile(getEntityName(), getFolderSubPath(), importFileName, tsk, getImportDir(),
+                    unmarshaller, getGetElementsFunction(), isWithBulk());
         }
 
 
         tsk.finishTask();
-        return tsk;
+        return;
     }
 
 
@@ -188,6 +179,28 @@ public abstract class AbstractXMLImportServiceBean<ROOT, ELEM> {
 
     abstract void importBulk(String importFileName, TaskNodeLog tsk, List<ELEM> importedElements, List<String> errorList,
             BulkProcess bulkProcess) throws Exception;
+
+
+
+    private String getImportDir() {
+        return exchangePath + getFolderSubPath();
+    }
+
+    protected boolean isWithBulk() {
+        return true;
+    }
+
+    protected abstract String getEntityName();
+
+    protected abstract String getFolderSubPath();
+
+    protected abstract String getSchemaName();
+
+    protected abstract ImportType getImportType();
+
+    protected abstract Class<ROOT> getXmlRootClazz();
+
+    protected abstract Function<ROOT, List<ELEM>> getGetElementsFunction();
 
 
 

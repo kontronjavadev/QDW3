@@ -3,6 +3,7 @@ package com.kontron.qdw.boundary.service.xmlimport;
 import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -14,12 +15,11 @@ import com.kontron.qdw.domain.base.Supplier;
 import com.kontron.qdw.repository.base.CountryRepository;
 import com.kontron.qdw.repository.base.SupplierRepository;
 import com.kontron.util.file.FileUtil.ImportType;
-import com.kontron.util.log.ITaskNodeLog;
 import com.kontron.util.log.TaskNodeLog;
 import com.kontron.util.text.StringUtil;
 
-import jakarta.annotation.security.PermitAll;
 import jakarta.ejb.EJB;
+import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
 
 /**
@@ -29,6 +29,7 @@ import jakarta.ejb.Stateless;
  * @author Raymund Achner, achner.com
  */
 @Stateless
+@LocalBean // nötig, weil Superklasse Interface implementiert und sonst keine No-Interface-View bereit gestellt wird
 public class XMLSupplierImportServiceBean extends AbstractXMLImportServiceBean<SupplierXMLRoot, SupplierXMLElement> {
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
@@ -43,13 +44,36 @@ public class XMLSupplierImportServiceBean extends AbstractXMLImportServiceBean<S
     private CountryRepository countryManager;
 
 
-
-    /** Perform import */
-    @PermitAll
-    public ITaskNodeLog runImport() {
-        return super.runImport(ENTITY_NAME, FOLDER_SUB_PATH, SCHEMA_NAME, ImportType.QDW_SUPPLIERS,
-                SupplierXMLRoot.class, SupplierXMLRoot::getSupplierList);
+    @Override
+    protected String getEntityName() {
+        return ENTITY_NAME;
     }
+
+    @Override
+    protected String getFolderSubPath() {
+        return FOLDER_SUB_PATH;
+    }
+
+    @Override
+    protected String getSchemaName() {
+        return SCHEMA_NAME;
+    }
+
+    @Override
+    protected ImportType getImportType() {
+        return ImportType.QDW_SUPPLIERS;
+    }
+
+    @Override
+    protected Class<SupplierXMLRoot> getXmlRootClazz() {
+        return SupplierXMLRoot.class;
+    }
+
+    @Override
+    protected Function<SupplierXMLRoot, List<SupplierXMLElement>> getGetElementsFunction() {
+        return SupplierXMLRoot::getSupplierList;
+    }
+
 
 
     @Override

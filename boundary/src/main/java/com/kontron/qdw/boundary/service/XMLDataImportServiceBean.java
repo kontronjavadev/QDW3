@@ -7,6 +7,8 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.kontron.qdw.boundary.service.xmlimport.ArrivalRebuildMaterializedServiceBean;
+import com.kontron.qdw.boundary.service.xmlimport.ShipmentRebuildMaterializedServiceBean;
 import com.kontron.qdw.boundary.service.xmlimport.XMLArrivalImportServiceBean;
 import com.kontron.qdw.boundary.service.xmlimport.XMLBoMImportServiceBean;
 import com.kontron.qdw.boundary.service.xmlimport.XMLCustomerImportServiceBean;
@@ -62,6 +64,11 @@ public class XMLDataImportServiceBean {
     @EJB
     private XMLShipmentImportServiceBean shipmentImportServiceBean;
 
+    @EJB
+    private ArrivalRebuildMaterializedServiceBean arrivalRebuildMatServiceBean;
+    @EJB
+    private ShipmentRebuildMaterializedServiceBean shipmentRebuildMatServiceBean;
+
 
     private String exchangePath = new PropertyService().getStringProperty(PROP_XML_EXCHANGE_FOLDER);
     private String archivePath = new PropertyService().getStringProperty(PROP_XML_ARCHIVE_FOLDER);
@@ -76,14 +83,24 @@ public class XMLDataImportServiceBean {
         }
 
         List<TaskCall> tasks = new ArrayList<>();
-        tasks.add(customerImportServiceBean::runImport);
-        tasks.add(supplierImportServiceBean::runImport);
-        tasks.add(materialImportServiceBean::runImport);
-        tasks.add(bomImportServiceBean::runImport);
-        tasks.add(arrivalImportServiceBean::runImport);
-        tasks.add(shipmentImportServiceBean::runImport);
+        tasks.add(customerImportServiceBean);
+        tasks.add(supplierImportServiceBean);
+        tasks.add(materialImportServiceBean);
+        tasks.add(bomImportServiceBean);
 
-        runImport(tasks);
+        TaskNodeLog taskSapImport = executeImportTasks(tasks);
+
+        ITaskNodeLog arrivalImportTask = executeAdditionalTask(taskSapImport, arrivalImportServiceBean);
+        ITaskNodeLog shipmentImportTask = executeAdditionalTask(taskSapImport, shipmentImportServiceBean);
+
+        if (arrivalImportTask.wasAtLeastOneConcreteTaskPerformed() && arrivalImportTask.isSuccess()) {
+            executeAdditionalTask(taskSapImport, arrivalRebuildMatServiceBean);
+        }
+        if (shipmentImportTask.wasAtLeastOneConcreteTaskPerformed() && shipmentImportTask.isSuccess()) {
+            executeAdditionalTask(taskSapImport, shipmentRebuildMatServiceBean);
+        }
+
+        finishImport(taskSapImport);
     }
 
 
@@ -95,10 +112,10 @@ public class XMLDataImportServiceBean {
             return;
         }
 
-        List<TaskCall> tasks = new ArrayList<>();
-        tasks.add(customerImportServiceBean::runImport);
+        TaskNodeLog taskSapImport = initImport();
+        executeAdditionalTask(taskSapImport, customerImportServiceBean);
 
-        runImport(tasks);
+        finishImport(taskSapImport);
     }
 
     @Asynchronous
@@ -108,10 +125,10 @@ public class XMLDataImportServiceBean {
             return;
         }
 
-        List<TaskCall> tasks = new ArrayList<>();
-        tasks.add(supplierImportServiceBean::runImport);
+        TaskNodeLog taskSapImport = initImport();
+        executeAdditionalTask(taskSapImport, supplierImportServiceBean);
 
-        runImport(tasks);
+        finishImport(taskSapImport);
     }
 
     @Asynchronous
@@ -121,10 +138,10 @@ public class XMLDataImportServiceBean {
             return;
         }
 
-        List<TaskCall> tasks = new ArrayList<>();
-        tasks.add(materialImportServiceBean::runImport);
+        TaskNodeLog taskSapImport = initImport();
+        executeAdditionalTask(taskSapImport, materialImportServiceBean);
 
-        runImport(tasks);
+        finishImport(taskSapImport);
     }
 
     @Asynchronous
@@ -134,11 +151,12 @@ public class XMLDataImportServiceBean {
             return;
         }
 
-        List<TaskCall> tasks = new ArrayList<>();
-        tasks.add(bomImportServiceBean::runImport);
+        TaskNodeLog taskSapImport = initImport();
+        executeAdditionalTask(taskSapImport, bomImportServiceBean);
 
-        runImport(tasks);
+        finishImport(taskSapImport);
     }
+
 
     @Asynchronous
     @PermitAll
@@ -147,10 +165,14 @@ public class XMLDataImportServiceBean {
             return;
         }
 
-        List<TaskCall> tasks = new ArrayList<>();
-        tasks.add(arrivalImportServiceBean::runImport);
+        TaskNodeLog taskSapImport = initImport();
+        ITaskNodeLog arrivalImportTask = executeAdditionalTask(taskSapImport, arrivalImportServiceBean);
 
-        runImport(tasks);
+        if (arrivalImportTask.wasAtLeastOneConcreteTaskPerformed() && arrivalImportTask.isSuccess()) {
+            executeAdditionalTask(taskSapImport, arrivalRebuildMatServiceBean);
+        }
+
+        finishImport(taskSapImport);
     }
 
     @Asynchronous
@@ -160,10 +182,10 @@ public class XMLDataImportServiceBean {
             return;
         }
 
-        List<TaskCall> tasks = new ArrayList<>();
-        // tasks.add(arrivalImportServiceBean::runImport);
+        TaskNodeLog taskSapImport = initImport();
+        executeAdditionalTask(taskSapImport, arrivalRebuildMatServiceBean);
 
-        runImport(tasks);
+        finishImport(taskSapImport);
     }
 
     @Asynchronous
@@ -173,11 +195,12 @@ public class XMLDataImportServiceBean {
             return;
         }
 
-        List<TaskCall> tasks = new ArrayList<>();
-        // tasks.add(arrivalImportServiceBean::runImport);
+        TaskNodeLog taskSapImport = initImport();
+        // executeAdditionalTask(taskSapImport, arrivalRebuildMatServiceBean);
 
-        runImport(tasks);
+        finishImport(taskSapImport);
     }
+
 
     @Asynchronous
     @PermitAll
@@ -186,29 +209,44 @@ public class XMLDataImportServiceBean {
             return;
         }
 
-        List<TaskCall> tasks = new ArrayList<>();
-        tasks.add(shipmentImportServiceBean::runImport);
+        TaskNodeLog taskSapImport = initImport();
+        ITaskNodeLog shipmentImportTask = executeAdditionalTask(taskSapImport, shipmentImportServiceBean);
+        if (shipmentImportTask.wasAtLeastOneConcreteTaskPerformed() && shipmentImportTask.isSuccess()) {
+            executeAdditionalTask(taskSapImport, shipmentRebuildMatServiceBean);
+        }
 
-        runImport(tasks);
+        finishImport(taskSapImport);
     }
 
 
 
-    private void runImport(List<TaskCall> tasks) {
+    private TaskNodeLog initImport() {
         logger.info("Importing SAP files");
         logger.debug(String.format("exchangePath = %s, archivePath = %s", exchangePath, archivePath));
-        String adminMailRecipient = Constants.getMailRecipient();
 
-        // importieren
-        long start = System.currentTimeMillis();
+        return new TaskNodeLog("SAP import");
+    }
 
-        TaskNodeLog taskSapImport = new TaskNodeLog("SAP import");
-        tasks.forEach(task -> taskSapImport.addSubTask(task.execTask()));
+    private TaskNodeLog executeImportTasks(List<TaskCall> tasks) {
+        TaskNodeLog taskSapImport = initImport();
+        tasks.stream()
+                .forEach(task -> executeAdditionalTask(taskSapImport, task));
+
+        return taskSapImport;
+    }
+
+    private ITaskNodeLog executeAdditionalTask(TaskNodeLog taskSapImport, TaskCall task) {
+        TaskNodeLog taskNodeLog = task.initTask();
+        taskSapImport.addSubTask(taskNodeLog);
+        task.execTask(taskSapImport);
+        return taskNodeLog;
+    }
+
+    private void finishImport(TaskNodeLog taskSapImport) {
         taskSapImport.finishTask();
 
         // ist beendet
-        long end = System.currentTimeMillis();
-        long duration = end - start;
+        long duration = taskSapImport.getEndTime() - taskSapImport.getStartTime();
         logger.info("Finished importing SAP files");
 
         String subjectText = Constants.APP_ENV + ": SAP import finished " + (taskSapImport.isSuccess() ? "successfully" : "with errors");
@@ -222,18 +260,11 @@ public class XMLDataImportServiceBean {
 
         // schicke Informationsmail
         try {
-            MailServiceFacade.sendMail(adminMailRecipient, subjectText, importLog.toString());
+            MailServiceFacade.sendMail(Constants.getMailRecipient(), subjectText, importLog.toString());
         }
         catch (Exception mailException) {
             logger.error("Sending mail after importing SAP giles failed!", mailException);
         }
-    }
-
-
-
-    @FunctionalInterface
-    interface TaskCall {
-        ITaskNodeLog execTask();
     }
 
 }

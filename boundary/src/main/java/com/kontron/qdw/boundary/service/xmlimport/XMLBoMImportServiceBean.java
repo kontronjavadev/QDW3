@@ -30,14 +30,13 @@ import com.kontron.qdw.repository.material.MaterialRevisionRepository;
 import com.kontron.util.datetime.DateUtil;
 import com.kontron.util.file.FileUtil.ImportType;
 import com.kontron.util.log.FileImportAbortedWithErrorsLog;
-import com.kontron.util.log.ITaskNodeLog;
 import com.kontron.util.log.TaskNodeLog;
 import com.kontron.util.text.ExceptionUtil;
 import com.kontron.util.text.StringUtil;
 import com.kontron.util.version.RevisionUtil;
 
-import jakarta.annotation.security.PermitAll;
 import jakarta.ejb.EJB;
+import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -49,6 +48,7 @@ import jakarta.persistence.PersistenceContext;
  * @author Raymund Achner, achner.com
  */
 @Stateless
+@LocalBean // nötig, weil Superklasse Interface implementiert und sonst keine No-Interface-View bereit gestellt wird
 public class XMLBoMImportServiceBean extends AbstractXMLImportServiceBean<BoMXMLRoot, BoMXMLElement> {
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
@@ -72,12 +72,34 @@ public class XMLBoMImportServiceBean extends AbstractXMLImportServiceBean<BoMXML
     private EntityManager em;
 
 
+    @Override
+    protected String getEntityName() {
+        return ENTITY_NAME;
+    }
 
-    /** Perform import */
-    @PermitAll
-    public ITaskNodeLog runImport() {
-        return super.runImport(ENTITY_NAME, FOLDER_SUB_PATH, SCHEMA_NAME, ImportType.QDW_BOM,
-                BoMXMLRoot.class, BoMXMLRoot::getBoMs);
+    @Override
+    protected String getFolderSubPath() {
+        return FOLDER_SUB_PATH;
+    }
+
+    @Override
+    protected String getSchemaName() {
+        return SCHEMA_NAME;
+    }
+
+    @Override
+    protected ImportType getImportType() {
+        return ImportType.QDW_BOM;
+    }
+
+    @Override
+    protected Class<BoMXMLRoot> getXmlRootClazz() {
+        return BoMXMLRoot.class;
+    }
+
+    @Override
+    protected Function<BoMXMLRoot, List<BoMXMLElement>> getGetElementsFunction() {
+        return BoMXMLRoot::getBoMs;
     }
 
 

@@ -4,6 +4,7 @@ import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -26,12 +27,11 @@ import com.kontron.qdw.repository.material.MaterialClassRepository;
 import com.kontron.qdw.repository.material.MaterialRepository;
 import com.kontron.qdw.repository.material.MaterialTypeRepository;
 import com.kontron.util.file.FileUtil.ImportType;
-import com.kontron.util.log.ITaskNodeLog;
 import com.kontron.util.log.TaskNodeLog;
 import com.kontron.util.text.StringUtil;
 
-import jakarta.annotation.security.PermitAll;
 import jakarta.ejb.EJB;
+import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
 
 /**
@@ -41,6 +41,7 @@ import jakarta.ejb.Stateless;
  * @author Raymund Achner, achner.com
  */
 @Stateless
+@LocalBean // nötig, weil Superklasse Interface implementiert und sonst keine No-Interface-View bereit gestellt wird
 public class XMLMaterialImportServiceBean extends AbstractXMLImportServiceBean<MaterialXMLRoot, MaterialXMLElement> {
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
@@ -65,12 +66,34 @@ public class XMLMaterialImportServiceBean extends AbstractXMLImportServiceBean<M
     private LocationRepository locationManager;
 
 
+    @Override
+    protected String getEntityName() {
+        return ENTITY_NAME;
+    }
 
-    /** Perform import */
-    @PermitAll
-    public ITaskNodeLog runImport() {
-        return super.runImport(ENTITY_NAME, FOLDER_SUB_PATH, SCHEMA_NAME, ImportType.QDW_MATERIAL,
-                MaterialXMLRoot.class, MaterialXMLRoot::getMaterialList);
+    @Override
+    protected String getFolderSubPath() {
+        return FOLDER_SUB_PATH;
+    }
+
+    @Override
+    protected String getSchemaName() {
+        return SCHEMA_NAME;
+    }
+
+    @Override
+    protected ImportType getImportType() {
+        return ImportType.QDW_MATERIAL;
+    }
+
+    @Override
+    protected Class<MaterialXMLRoot> getXmlRootClazz() {
+        return MaterialXMLRoot.class;
+    }
+
+    @Override
+    protected Function<MaterialXMLRoot, List<MaterialXMLElement>> getGetElementsFunction() {
+        return MaterialXMLRoot::getMaterialList;
     }
 
 

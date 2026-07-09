@@ -18,6 +18,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 
 import com.kontron.constants.file.FileType;
+import com.kontron.qdw.boundary.service.TaskCall;
 import com.kontron.qdw.boundary.util.Constants;
 import com.kontron.qdw.domain.base.Country;
 import com.kontron.qdw.domain.base.Customer;
@@ -30,12 +31,12 @@ import com.kontron.util.file.FileUtil.ImportType;
 import com.kontron.util.log.FileImportAbortedWithErrorsLog;
 import com.kontron.util.log.FileImportProcessedWithErrors;
 import com.kontron.util.log.FileImportSuccessfulLog;
-import com.kontron.util.log.ITaskNodeLog;
 import com.kontron.util.log.TaskNodeLog;
 import com.kontron.util.text.ExceptionUtil;
 
 import jakarta.annotation.security.PermitAll;
 import jakarta.ejb.EJB;
+import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
@@ -48,7 +49,8 @@ import net.sourceforge.jbizmo.commons.property.PropertyService;
  * @author Raymund Achner, achner.com
  */
 @Stateless
-public class XMLCustomerImportServiceBean {
+@LocalBean // nötig, weil Superklasse Interface implementiert und sonst keine No-Interface-View bereit gestellt wird
+public class XMLCustomerImportServiceBean implements TaskCall {
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
@@ -72,20 +74,24 @@ public class XMLCustomerImportServiceBean {
     private String exchangePath = new PropertyService().getStringProperty(PROP_XML_EXCHANGE_FOLDER);
 
 
+    /** Init Task */
+    @Override
+    @PermitAll
+    public TaskNodeLog initTask() {
+        return new TaskNodeLog("import customer", "import customer");
+    }
 
     /** Perform import */
+    @Override
     @PermitAll
-    public ITaskNodeLog runImport() {
+    public void execTask(TaskNodeLog tsk) {
         String importDir = exchangePath + FOLDER_SUB_PATH;
-
-        TaskNodeLog tsk = new TaskNodeLog("import customer", "import customer in folder " + importDir);
 
         String[] importFileNames = new File(importDir).list(SIMPLE_XML_FILTER);
         if (importFileNames.length == 0) {
             tsk.finishTask();
-            return tsk;
+            return;
         }
-
 
 
         List<String> orderedImportFileNames = com.kontron.util.file.FileUtil.getOrderedSAPImportFileNames(importFileNames, ImportType.FC_CUS);
@@ -95,7 +101,7 @@ public class XMLCustomerImportServiceBean {
         }
 
         tsk.finishTask();
-        return tsk;
+        return;
     }
 
 

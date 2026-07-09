@@ -18,7 +18,6 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.kontron.qdw.boundary.material.MaterialRevisionBoundaryService;
 import com.kontron.qdw.boundary.service.mapping.shipment.ShipmentMappingType;
 import com.kontron.qdw.boundary.service.mapping.shipment.ShipmentRootMappingType;
 import com.kontron.qdw.domain.base.Customer;
@@ -31,24 +30,20 @@ import com.kontron.qdw.domain.serial.Shipment;
 import com.kontron.qdw.repository.base.CustomerRepository;
 import com.kontron.qdw.repository.base.MovementTypeRepository;
 import com.kontron.qdw.repository.base.PlantRepository;
-import com.kontron.qdw.repository.base.SupplierRepository;
-import com.kontron.qdw.repository.material.BoMItemRepository;
 import com.kontron.qdw.repository.material.MaterialRepository;
 import com.kontron.qdw.repository.material.MaterialRevisionRepository;
-import com.kontron.qdw.repository.serial.ArrivalRepository;
 import com.kontron.qdw.repository.serial.SerialObjectRepository;
 import com.kontron.qdw.repository.serial.SerialObjectRepository.SerNoJeMatIdFilter;
 import com.kontron.qdw.repository.serial.SerialObjectRepository.SerNoMatIdResult;
 import com.kontron.qdw.repository.serial.ShipmentRepository;
 import com.kontron.util.file.FileUtil.ImportType;
 import com.kontron.util.log.FileImportAbortedWithErrorsLog;
-import com.kontron.util.log.ITaskNodeLog;
 import com.kontron.util.log.TaskNodeLog;
 import com.kontron.util.text.StringUtil;
 import com.kontron.util.version.RevisionUtil;
 
-import jakarta.annotation.security.PermitAll;
 import jakarta.ejb.EJB;
+import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -60,6 +55,7 @@ import jakarta.persistence.PersistenceContext;
  * @author Raymund Achner, achner.com
  */
 @Stateless
+@LocalBean // nötig, weil Superklasse Interface implementiert und sonst keine No-Interface-View bereit gestellt wird
 public class XMLShipmentImportServiceBean extends AbstractXMLImportServiceBean<ShipmentRootMappingType, ShipmentMappingType> {
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
@@ -76,22 +72,12 @@ public class XMLShipmentImportServiceBean extends AbstractXMLImportServiceBean<S
     private CustomerRepository customerManager;
     @EJB
     private ShipmentRepository shipmentManager;
-
-    @EJB
-    private ArrivalRepository arrivalManager;
-    @EJB
-    private SupplierRepository supplierManager;
     @EJB
     private MovementTypeRepository movementTypeManager;
     @EJB
     private SerialObjectRepository serialObjectManager;
-
-    @EJB
-    private BoMItemRepository bomManager;
     @EJB
     private MaterialRevisionRepository materialRevisionManager;
-    @EJB
-    private MaterialRevisionBoundaryService materialRevisionService;
     @EJB
     private MaterialRepository materialManager;
     @EJB
@@ -101,12 +87,34 @@ public class XMLShipmentImportServiceBean extends AbstractXMLImportServiceBean<S
     private EntityManager em;
 
 
+    @Override
+    protected String getEntityName() {
+        return ENTITY_NAME;
+    }
 
-    /** Perform import */
-    @PermitAll
-    public ITaskNodeLog runImport() {
-        return super.runImport(ENTITY_NAME, FOLDER_SUB_PATH, SCHEMA_NAME, ImportType.QDW_SHIPMENT,
-                ShipmentRootMappingType.class, ShipmentRootMappingType::getShipments);
+    @Override
+    protected String getFolderSubPath() {
+        return FOLDER_SUB_PATH;
+    }
+
+    @Override
+    protected String getSchemaName() {
+        return SCHEMA_NAME;
+    }
+
+    @Override
+    protected ImportType getImportType() {
+        return ImportType.QDW_SHIPMENT;
+    }
+
+    @Override
+    protected Class<ShipmentRootMappingType> getXmlRootClazz() {
+        return ShipmentRootMappingType.class;
+    }
+
+    @Override
+    protected Function<ShipmentRootMappingType, List<ShipmentMappingType>> getGetElementsFunction() {
+        return ShipmentRootMappingType::getShipments;
     }
 
 
