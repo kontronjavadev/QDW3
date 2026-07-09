@@ -38,8 +38,6 @@ import com.kontron.util.version.RevisionUtil;
 import jakarta.ejb.EJB;
 import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 
 /**
  * Import der BoM-XML-Dateien, die der Downloader bereitstellt.
@@ -67,9 +65,6 @@ public class XMLBoMImportServiceBean extends AbstractXMLImportServiceBean<BoMXML
     private MaterialRepository materialManager;
     @EJB
     private PlantRepository plantManager;
-
-    @PersistenceContext
-    private EntityManager em;
 
 
     @Override
