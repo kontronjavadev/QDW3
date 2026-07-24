@@ -6,11 +6,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.kontron.qdw.boundary.service.TaskCall;
+import com.kontron.util.log.TaskLeafLog;
 import com.kontron.util.log.TaskNodeLog;
 
 import jakarta.annotation.security.PermitAll;
 import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 
 /**
  * Rebuild der Arrival-"Materialized table".
@@ -24,21 +27,8 @@ public class ShipmentRebuildMaterializedServiceBean implements TaskCall {
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    // @EJB
-    // private ArrivalRepository arrivalManager;
-    // @EJB
-    // private SupplierRepository supplierManager;
-    // @EJB
-    // private MovementTypeRepository movementTypeManager;
-    // @EJB
-    // private SerialObjectRepository serialObjectManager;
-    //
-    // @EJB
-    // private MaterialRevisionRepository materialRevisionManager;
-    // @EJB
-    // private MaterialRepository materialManager;
-    // @EJB
-    // private PlantRepository plantManager;
+    @PersistenceContext
+    private EntityManager em;
 
 
 
@@ -54,6 +44,18 @@ public class ShipmentRebuildMaterializedServiceBean implements TaskCall {
     @PermitAll
     public void execTask(TaskNodeLog ownTask) {
         TaskNodeLog parentTask = ownTask.getParentTask();
+        // execXxx(ownTask);
+    }
+
+    private void execXxx(TaskNodeLog ownTask) {
+        String executionSection = "rAA: ";
+        logger.info(executionSection);
+        TaskLeafLog subTsk = ownTask.createNewSubTaskLeaf(executionSection);
+
+        StringBuilder sql = new StringBuilder();
+
+        em.createNativeQuery(sql.toString()).executeUpdate();
+        subTsk.finishTaskWithSuccess();
     }
 
 }
