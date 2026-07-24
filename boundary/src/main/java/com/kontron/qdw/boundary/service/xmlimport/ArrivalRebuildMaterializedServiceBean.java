@@ -39,6 +39,12 @@ public class ArrivalRebuildMaterializedServiceBean implements TaskCall {
     @Override
     @PermitAll
     public TaskNodeLog initTask() {
+        // Es wird das Delta berechnet, also nur die Werte mit rebuildflag=1
+        // Die ServiceMessages werden aktualisiert
+        // Die Delta-Daten werden in die Materialized Table übernommen
+        // Das rebuild-flag wird wieder zurück gesetzt
+        // Gecancelte Daten werden gelöscht
+        // Dauer: wenige Minuten
         return new TaskNodeLog("rebuild materialized arrival");
     }
 

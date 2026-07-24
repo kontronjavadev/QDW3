@@ -36,6 +36,10 @@ public class ArrivalRebuildAggregatedServiceBean implements TaskCall {
     @Override
     @PermitAll
     public TaskNodeLog initTask() {
+        // Die Arrival-Daten werden aggregiert. Um den Betrieb nicht zu stören und im Fehlerfall dennoch
+        // stets eine gültige Tabelle zu haben, wird zunächst eine temporäre Tabelle erstellt, anschließend
+        // wird reguläre Tabelle gelöscht und die temporäre umbenannt.
+        // Dauer: wenige Minuten
         return new TaskNodeLog("rebuild materialized arrival");
     }
 
@@ -45,7 +49,7 @@ public class ArrivalRebuildAggregatedServiceBean implements TaskCall {
     public void execTask(TaskNodeLog ownTask) {
         execDrop(ownTask);
         execCreate(ownTask);
-        execCopyData(ownTask);
+        execInsertData(ownTask);
         execDropFormer(ownTask);
         execRenameTmp2New(ownTask);
         execAddIndices(ownTask);
@@ -84,7 +88,7 @@ public class ArrivalRebuildAggregatedServiceBean implements TaskCall {
         subTsk.finishTaskWithSuccess();
     }
 
-    private void execCopyData(TaskNodeLog ownTask) {
+    private void execInsertData(TaskNodeLog ownTask) {
         String executionSection = "rAA: insert into aggregated_arrival_tab_new";
         logger.info(executionSection);
         TaskLeafLog subTsk = ownTask.createNewSubTaskLeaf(executionSection);
