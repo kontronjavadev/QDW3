@@ -6,6 +6,6 @@ public interface TaskCall {
 
     TaskNodeLog initTask();
 
-    void execTask(TaskNodeLog tsk);
+    void execTask(TaskNodeLog ownTask);
 
 }

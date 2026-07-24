@@ -5,6 +5,7 @@ import java.lang.invoke.MethodHandles;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.kontron.qdw.boundary.service.xmlimport.ArrivalRebuildAggregatedServiceBean;
 import com.kontron.qdw.boundary.service.xmlimport.ArrivalRebuildMaterializedServiceBean;
 import com.kontron.qdw.boundary.service.xmlimport.ShipmentRebuildMaterializedServiceBean;
 import com.kontron.qdw.boundary.service.xmlimport.XMLArrivalImportServiceBean;
@@ -42,6 +43,9 @@ public class XMLDataImportServiceBean {
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
+    private static final String TASKNAME_IMPORT = "SAP import";
+    private static final String TASKNAME_REBUILD = "rebuild materialized tables";
+
     private static final String PROP_XML_EXCHANGE_FOLDER = "sap_exchange_folder";
     private static final String PROP_XML_ARCHIVE_FOLDER = "sap_archive_folder";
 
@@ -65,6 +69,9 @@ public class XMLDataImportServiceBean {
     @EJB
     private ArrivalRebuildMaterializedServiceBean arrivalRebuildMatServiceBean;
     @EJB
+    private ArrivalRebuildAggregatedServiceBean arrivalRebuildAggServiceBean;
+
+    @EJB
     private ShipmentRebuildMaterializedServiceBean shipmentRebuildMatServiceBean;
 
 
@@ -81,7 +88,7 @@ public class XMLDataImportServiceBean {
         }
 
         TaskNodeLog mainTask = initImportAndRebuild();
-        TaskNodeLog taskSapImport = mainTask.createNewSubTaskNode("SAP import");
+        TaskNodeLog taskSapImport = mainTask.createNewSubTaskNode(TASKNAME_IMPORT);
 
         executeTask(taskSapImport, customerImportServiceBean);
         executeTask(taskSapImport, supplierImportServiceBean);
@@ -91,11 +98,13 @@ public class XMLDataImportServiceBean {
         ITaskNodeLog arrivalImportTask = executeTask(taskSapImport, arrivalImportServiceBean);
         ITaskNodeLog shipmentImportTask = executeTask(taskSapImport, shipmentImportServiceBean);
 
+        // TODO: Zwischenbenachrichtigung senden
 
-        TaskNodeLog taskRebuild = mainTask.createNewSubTaskNode("rebuild materialized tables");
+        TaskNodeLog taskRebuild = mainTask.createNewSubTaskNode(TASKNAME_REBUILD);
 
         if (arrivalImportTask.wasAtLeastOneConcreteTaskPerformed() && arrivalImportTask.isSuccess()) {
             executeTask(taskRebuild, arrivalRebuildMatServiceBean);
+            executeTask(taskRebuild, arrivalRebuildAggServiceBean);
         }
         if (shipmentImportTask.wasAtLeastOneConcreteTaskPerformed() && shipmentImportTask.isSuccess()) {
             executeTask(taskRebuild, shipmentRebuildMatServiceBean);
@@ -167,13 +176,14 @@ public class XMLDataImportServiceBean {
         }
 
         TaskNodeLog mainTask = initImportAndRebuild();
-        TaskNodeLog taskSapImport = mainTask.createNewSubTaskNode("SAP import");
+        TaskNodeLog taskSapImport = mainTask.createNewSubTaskNode(TASKNAME_IMPORT);
 
         ITaskNodeLog arrivalImportTask = executeTask(taskSapImport, arrivalImportServiceBean);
 
         if (arrivalImportTask.wasAtLeastOneConcreteTaskPerformed() && arrivalImportTask.isSuccess()) {
-            TaskNodeLog taskRebuild = mainTask.createNewSubTaskNode("rebuild materialized tables");
+            TaskNodeLog taskRebuild = mainTask.createNewSubTaskNode(TASKNAME_REBUILD);
             executeTask(taskRebuild, arrivalRebuildMatServiceBean);
+            executeTask(taskRebuild, arrivalRebuildAggServiceBean);
         }
 
         finishImport(mainTask);
@@ -200,7 +210,7 @@ public class XMLDataImportServiceBean {
         }
 
         TaskNodeLog taskSapImport = initRebuild();
-        // executeAdditionalTask(taskSapImport, arrivalRebuildMatServiceBean);
+        executeTask(taskSapImport, arrivalRebuildAggServiceBean);
 
         finishImport(taskSapImport);
     }
@@ -214,12 +224,12 @@ public class XMLDataImportServiceBean {
         }
 
         TaskNodeLog mainTask = initImportAndRebuild();
-        TaskNodeLog taskSapImport = mainTask.createNewSubTaskNode("SAP import");
+        TaskNodeLog taskSapImport = mainTask.createNewSubTaskNode(TASKNAME_IMPORT);
 
         ITaskNodeLog shipmentImportTask = executeTask(taskSapImport, shipmentImportServiceBean);
 
         if (shipmentImportTask.wasAtLeastOneConcreteTaskPerformed() && shipmentImportTask.isSuccess()) {
-            TaskNodeLog taskRebuild = mainTask.createNewSubTaskNode("rebuild materialized tables");
+            TaskNodeLog taskRebuild = mainTask.createNewSubTaskNode(TASKNAME_REBUILD);
             executeTask(taskRebuild, shipmentRebuildMatServiceBean);
         }
 
@@ -239,20 +249,20 @@ public class XMLDataImportServiceBean {
         logger.info("Importing SAP files");
         logger.debug(String.format("exchangePath = %s, archivePath = %s", exchangePath, archivePath));
 
-        return new TaskNodeLog("SAP import");
+        return new TaskNodeLog(TASKNAME_IMPORT);
     }
 
     private TaskNodeLog initRebuild() {
         logger.info("Rebuilding materialized tables");
 
-        return new TaskNodeLog("rebuild materialized tables");
+        return new TaskNodeLog(TASKNAME_REBUILD);
     }
 
 
     private ITaskNodeLog executeTask(TaskNodeLog taskSapImport, TaskCall task) {
         TaskNodeLog taskNodeLog = task.initTask();
         taskSapImport.addSubTask(taskNodeLog);
-        task.execTask(taskSapImport);
+        task.execTask(taskNodeLog);
         return taskNodeLog;
     }
 

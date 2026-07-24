@@ -72,10 +72,11 @@ public abstract class AbstractXMLImportServiceBean<ROOT, ELEM> implements TaskCa
     /** Perform import */
     @Override
     @PermitAll
-    public void execTask(TaskNodeLog tsk) {
+    public void execTask(TaskNodeLog ownTask) {
+        TaskNodeLog parentTask = ownTask.getParentTask();
         String[] importFileNames = new File(getImportDir()).list(SIMPLE_XML_FILTER);
         if (importFileNames.length == 0) {
-            tsk.finishTask();
+            parentTask.finishTask();
             return;
         }
 
@@ -89,9 +90,9 @@ public abstract class AbstractXMLImportServiceBean<ROOT, ELEM> implements TaskCa
             unmarshaller.setSchema(schema);
         }
         catch (Exception e) {
-            TaskLeafLog tskUnmarshall = tsk.createNewSubTaskLeaf("initializing unmarshaller");
+            TaskLeafLog tskUnmarshall = parentTask.createNewSubTaskLeaf("initializing unmarshaller");
             tskUnmarshall.finishTaskWithError(e);
-            tsk.abortTask();
+            parentTask.abortTask();
             return;
         }
 
@@ -101,12 +102,12 @@ public abstract class AbstractXMLImportServiceBean<ROOT, ELEM> implements TaskCa
         // Read all xml files from given path
         logger.info("{} files found for " + getEntityName() + " import.", orderedImportFileNames);
         for (String importFileName : orderedImportFileNames) {
-            importFile(getEntityName(), getFolderSubPath(), importFileName, tsk, getImportDir(),
+            importFile(getEntityName(), getFolderSubPath(), importFileName, parentTask, getImportDir(),
                     unmarshaller, getGetElementsFunction(), isWithBulk());
         }
 
 
-        tsk.finishTask();
+        parentTask.finishTask();
         return;
     }
 
