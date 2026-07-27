@@ -42,7 +42,7 @@ public class ShipmentArrivalRebuildMaterializedServiceBean implements TaskCall {
     @Override
     @PermitAll
     public TaskNodeLog initTask() {
-        return new TaskNodeLog("rebuild materialized shipment");
+        return new TaskNodeLog("shipment arrival rebuild materialized");
     }
 
     /** Perform rebuild */

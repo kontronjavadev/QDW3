@@ -40,7 +40,7 @@ public class ArrivalRebuildAggregatedServiceBean implements TaskCall {
         // stets eine gültige Tabelle zu haben, wird zunächst eine temporäre Tabelle erstellt, anschließend
         // wird reguläre Tabelle gelöscht und die temporäre umbenannt.
         // Dauer: wenige Minuten
-        return new TaskNodeLog("rebuild materialized arrival");
+        return new TaskNodeLog("arrival rebuild aggregated");
     }
 
     /** Perform rebuild */

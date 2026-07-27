@@ -45,7 +45,7 @@ public class ArrivalRebuildMaterializedServiceBean implements TaskCall {
         // Das rebuild-flag wird wieder zurück gesetzt
         // Gecancelte Daten werden gelöscht
         // Dauer: wenige Minuten
-        return new TaskNodeLog("rebuild materialized arrival");
+        return new TaskNodeLog("arrival rebuild materialized");
     }
 
     /** Perform rebuild */
