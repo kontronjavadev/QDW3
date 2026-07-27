@@ -177,7 +177,7 @@ public class ShipmentArrivalRebuildMaterializedServiceBean implements TaskCall {
 
         String sql = "ALTER TABLE arrival_shipment_mv_tmp_delta ADD INDEX IN_AS_ARR_ID_TEMP(arrival_id)";
 
-        em.createNativeQuery(sql.toString()).executeUpdate();
+        em.createNativeQuery(sql).executeUpdate();
         subTsk.finishTaskWithSuccess();
     }
 
@@ -207,7 +207,7 @@ public class ShipmentArrivalRebuildMaterializedServiceBean implements TaskCall {
 
         String sql = "ALTER TABLE arrival_shipment_mv_tmp_delta DROP INDEX IN_AS_ARR_ID_TEMP";
 
-        em.createNativeQuery(sql.toString()).executeUpdate();
+        em.createNativeQuery(sql).executeUpdate();
         subTsk.finishTaskWithSuccess();
     }
 

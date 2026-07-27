@@ -60,7 +60,7 @@ public class ShipmentRebuildAggregatedServiceBean implements TaskCall {
 
         String sql = "DROP TABLE IF EXISTS aggregated_shipment_tab_new";
 
-        em.createNativeQuery(sql.toString()).executeUpdate();
+        em.createNativeQuery(sql).executeUpdate();
         subTsk.finishTaskWithSuccess();
     }
 
@@ -112,7 +112,7 @@ public class ShipmentRebuildAggregatedServiceBean implements TaskCall {
 
         String sql = "drop table if exists aggregated_shipment_tab";
 
-        em.createNativeQuery(sql.toString()).executeUpdate();
+        em.createNativeQuery(sql).executeUpdate();
         subTsk.finishTaskWithSuccess();
     }
 
@@ -123,7 +123,7 @@ public class ShipmentRebuildAggregatedServiceBean implements TaskCall {
 
         String sql = "ALTER TABLE aggregated_shipment_tab_new RENAME TO aggregated_shipment_tab";
 
-        em.createNativeQuery(sql.toString()).executeUpdate();
+        em.createNativeQuery(sql).executeUpdate();
         subTsk.finishTaskWithSuccess();
     }
 
