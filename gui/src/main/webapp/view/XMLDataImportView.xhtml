@@ -54,6 +54,7 @@
 			</tr>
 
 
+
 			<tr>
 				<td><p:commandButton style="margin-left: 1rem" id="cmdArrivalImport" icon="pi pi-play" action="#{xMLDataImportView.runArrivalImport}" /></td>
 				<td><h:outputLabel value="#{i18n.xmldataimportview_runarrivalimport}" for="cmdArrivalImport" styleClass="label-field-otional"/></td>
@@ -67,10 +68,33 @@
 				<td><h:outputLabel value="#{i18n.xmldataimportview_runarrival_rebuild_aggregated}" for="cmdArrivalRebuildAggregated" styleClass="label-field-otional"/></td>
 			</tr>
 
+
 			<tr>
 				<td><p:commandButton style="margin-left: 1rem" id="cmdShipmentImport" icon="pi pi-play" action="#{xMLDataImportView.runShipmentImport}" /></td>
 				<td><h:outputLabel value="#{i18n.xmldataimportview_runshipmentimport}" for="cmdShipmentImport" styleClass="label-field-otional"/></td>
 			</tr>
+			<tr>
+				<td><p:commandButton style="margin-left: 1.5rem" id="cmdShptArrvRebuildMaterialized" icon="pi pi-play" action="#{xMLDataImportView.runShptArrvRebuildMaterialized}" /></td>
+				<td><h:outputLabel value="#{i18n.xmldataimportview_runshptarrv_rebuild_materialized}" for="cmdShptArrvRebuildMaterialized" styleClass="label-field-otional"/></td>
+			</tr>
+			<tr>
+				<td><p:commandButton style="margin-left: 1.5rem" id="cmdShptRebuildAggregated" icon="pi pi-play" action="#{xMLDataImportView.runShptRebuildAggregated}" /></td>
+				<td><h:outputLabel value="#{i18n.xmldataimportview_runshpt_rebuild_aggregated}" for="cmdShptRebuildAggregated" styleClass="label-field-otional"/></td>
+			</tr>
+			<tr>
+				<td><p:commandButton style="margin-left: 1.5rem" id="cmdShptArrvRebuildAggregated" icon="pi pi-play" action="#{xMLDataImportView.runShptArrvRebuildAggregated}" /></td>
+				<td><h:outputLabel value="#{i18n.xmldataimportview_runshptarrv_rebuild_aggregated}" for="cmdShptArrvRebuildAggregated" styleClass="label-field-otional"/></td>
+			</tr>
+
+
+<!-- 
+			<tr>
+				<td><p:commandButton style="margin-left: 1.5rem" id="cmdXxx" icon="pi pi-play" action="#{xMLDataImportView.runXxx}" /></td>
+				<td><h:outputLabel value="#{i18n.xmldataimportview_xxx}" for="cmdXxx" styleClass="label-field-otional"/></td>
+			</tr>
+ -->
+
+
 		</table>
 	</p:scrollPanel>
 

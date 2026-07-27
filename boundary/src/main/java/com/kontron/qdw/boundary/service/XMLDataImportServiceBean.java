@@ -7,7 +7,9 @@ import org.slf4j.LoggerFactory;
 
 import com.kontron.qdw.boundary.service.xmlimport.ArrivalRebuildAggregatedServiceBean;
 import com.kontron.qdw.boundary.service.xmlimport.ArrivalRebuildMaterializedServiceBean;
-import com.kontron.qdw.boundary.service.xmlimport.ShipmentRebuildMaterializedServiceBean;
+import com.kontron.qdw.boundary.service.xmlimport.ShipmentArrivalRebuildAggregatedServiceBean;
+import com.kontron.qdw.boundary.service.xmlimport.ShipmentArrivalRebuildMaterializedServiceBean;
+import com.kontron.qdw.boundary.service.xmlimport.ShipmentRebuildAggregatedServiceBean;
 import com.kontron.qdw.boundary.service.xmlimport.XMLArrivalImportServiceBean;
 import com.kontron.qdw.boundary.service.xmlimport.XMLBoMImportServiceBean;
 import com.kontron.qdw.boundary.service.xmlimport.XMLCustomerImportServiceBean;
@@ -72,7 +74,11 @@ public class XMLDataImportServiceBean {
     private ArrivalRebuildAggregatedServiceBean arrivalRebuildAggServiceBean;
 
     @EJB
-    private ShipmentRebuildMaterializedServiceBean shipmentRebuildMatServiceBean;
+    private ShipmentArrivalRebuildMaterializedServiceBean shptArrvRebuildMatServiceBean;
+    @EJB
+    private ShipmentRebuildAggregatedServiceBean shptRebuildAggServiceBean;
+    @EJB
+    private ShipmentArrivalRebuildAggregatedServiceBean shptArrvRebuildAggServiceBean;
 
 
     private String exchangePath = new PropertyService().getStringProperty(PROP_XML_EXCHANGE_FOLDER);
@@ -107,7 +113,9 @@ public class XMLDataImportServiceBean {
             executeTask(taskRebuild, arrivalRebuildAggServiceBean);
         }
         if (shipmentImportTask.wasAtLeastOneConcreteTaskPerformed() && shipmentImportTask.isSuccess()) {
-            executeTask(taskRebuild, shipmentRebuildMatServiceBean);
+            executeTask(taskRebuild, shptArrvRebuildMatServiceBean);
+            executeTask(taskRebuild, shptRebuildAggServiceBean);
+            executeTask(taskRebuild, shptArrvRebuildAggServiceBean);
         }
 
         finishImport(mainTask);
@@ -168,6 +176,7 @@ public class XMLDataImportServiceBean {
     }
 
 
+
     @Asynchronous
     @PermitAll
     public void runArrivalImport() {
@@ -204,6 +213,7 @@ public class XMLDataImportServiceBean {
 
     @Asynchronous
     @PermitAll
+
     public void runArrivalRebuildAggregated() {
         if (!schedulerService.isExecuteImport()) {
             return;
@@ -214,6 +224,7 @@ public class XMLDataImportServiceBean {
 
         finishImport(taskSapImport);
     }
+
 
 
     @Asynchronous
@@ -230,10 +241,51 @@ public class XMLDataImportServiceBean {
 
         if (shipmentImportTask.wasAtLeastOneConcreteTaskPerformed() && shipmentImportTask.isSuccess()) {
             TaskNodeLog taskRebuild = mainTask.createNewSubTaskNode(TASKNAME_REBUILD);
-            executeTask(taskRebuild, shipmentRebuildMatServiceBean);
+            executeTask(taskRebuild, shptArrvRebuildMatServiceBean);
+            executeTask(taskRebuild, shptRebuildAggServiceBean);
+            executeTask(taskRebuild, shptArrvRebuildAggServiceBean);
         }
 
         finishImport(mainTask);
+    }
+
+    @Asynchronous
+    @PermitAll
+    public void runShptArrvRebuildMaterialized() {
+        if (!schedulerService.isExecuteImport()) {
+            return;
+        }
+
+        TaskNodeLog taskSapImport = initRebuild();
+        executeTask(taskSapImport, shptArrvRebuildMatServiceBean);
+
+        finishImport(taskSapImport);
+    }
+
+    @Asynchronous
+    @PermitAll
+    public void runShptRebuildAggregated() {
+        if (!schedulerService.isExecuteImport()) {
+            return;
+        }
+
+        TaskNodeLog taskSapImport = initRebuild();
+        executeTask(taskSapImport, shptRebuildAggServiceBean);
+
+        finishImport(taskSapImport);
+    }
+
+    @Asynchronous
+    @PermitAll
+    public void runShptArrvRebuildAggregated() {
+        if (!schedulerService.isExecuteImport()) {
+            return;
+        }
+
+        TaskNodeLog taskSapImport = initRebuild();
+        executeTask(taskSapImport, shptArrvRebuildAggServiceBean);
+
+        finishImport(taskSapImport);
     }
 
 

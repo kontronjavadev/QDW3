@@ -23,7 +23,7 @@ import jakarta.persistence.PersistenceContext;
  */
 @Stateless
 @LocalBean // nötig, weil Interface implementiert wird und sonst keine No-Interface-View bereit gestellt wird
-public class ShipmentRebuildMaterializedServiceBean implements TaskCall {
+public class ShipmentArrivalRebuildAggregatedServiceBean implements TaskCall {
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
