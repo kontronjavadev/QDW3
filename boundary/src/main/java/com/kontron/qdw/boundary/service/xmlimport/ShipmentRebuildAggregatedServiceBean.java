@@ -54,7 +54,7 @@ public class ShipmentRebuildAggregatedServiceBean implements TaskCall {
 
 
     private void execDrop(TaskNodeLog ownTask) {
-        String executionSection = "shipt reb. aggrgted: drop table aggregated_shipment_tab_new";
+        String executionSection = "drop table aggregated_shipment_tab_new";
         logger.info(executionSection);
         TaskLeafLog subTsk = ownTask.createNewSubTaskLeaf(executionSection);
 
@@ -65,7 +65,7 @@ public class ShipmentRebuildAggregatedServiceBean implements TaskCall {
     }
 
     private void execCreate(TaskNodeLog ownTask) {
-        String executionSection = "shipt reb. aggrgted: create table aggregated_shipment_tab_new";
+        String executionSection = "create table aggregated_shipment_tab_new";
         logger.info(executionSection);
         TaskLeafLog subTsk = ownTask.createNewSubTaskLeaf(executionSection);
 
@@ -87,7 +87,7 @@ public class ShipmentRebuildAggregatedServiceBean implements TaskCall {
     }
 
     private void execInsertData(TaskNodeLog ownTask) {
-        String executionSection = "shipt reb. aggrgted: insert into aggregated_shipment_tab_new";
+        String executionSection = "insert into aggregated_shipment_tab_new";
         logger.info(executionSection);
         TaskLeafLog subTsk = ownTask.createNewSubTaskLeaf(executionSection);
 
@@ -106,7 +106,7 @@ public class ShipmentRebuildAggregatedServiceBean implements TaskCall {
     }
 
     private void execDropFormer(TaskNodeLog ownTask) {
-        String executionSection = "shipt reb. aggrgted: drop table aggregated_shipment_tab";
+        String executionSection = "drop table aggregated_shipment_tab";
         logger.info(executionSection);
         TaskLeafLog subTsk = ownTask.createNewSubTaskLeaf(executionSection);
 
@@ -117,7 +117,7 @@ public class ShipmentRebuildAggregatedServiceBean implements TaskCall {
     }
 
     private void execRenameTmp2New(TaskNodeLog ownTask) {
-        String executionSection = "shipt reb. aggrgted: rename aggregated_shipment_tab_new to aggregated_shipment_tab";
+        String executionSection = "rename aggregated_shipment_tab_new to aggregated_shipment_tab";
         logger.info(executionSection);
         TaskLeafLog subTsk = ownTask.createNewSubTaskLeaf(executionSection);
 
@@ -131,27 +131,27 @@ public class ShipmentRebuildAggregatedServiceBean implements TaskCall {
         TaskLeafLog subTsk = ownTask.createNewSubTaskLeaf("create indices");
         String indexCommand = "ALTER TABLE aggregated_shipment_tab ADD INDEX ";
 
-        logger.info("shipt reb. aggrgted: create index 1");
+        logger.info("create index 1");
         StringBuilder sql = new StringBuilder();
         sql.append(indexCommand).append("IN_AGS_YEAR_MONTH(year, month)");
         em.createNativeQuery(sql.toString()).executeUpdate();
 
-        logger.info("shipt reb. aggrgted: create index 2");
+        logger.info("create index 2");
         sql = new StringBuilder();
         sql.append(indexCommand).append("IN_AGS_REVISION(material_revision)");
         em.createNativeQuery(sql.toString()).executeUpdate();
 
-        logger.info("shipt reb. aggrgted: create index 3");
+        logger.info("create index 3");
         sql = new StringBuilder();
         sql.append(indexCommand).append("IN_AGS_PLANT(plant)");
         em.createNativeQuery(sql.toString()).executeUpdate();
 
-        logger.info("shipt reb. aggrgted: create index 4");
+        logger.info("create index 4");
         sql = new StringBuilder();
         sql.append(indexCommand).append("IN_AGS_MOV(movement_type)");
         em.createNativeQuery(sql.toString()).executeUpdate();
 
-        logger.info("shipt reb. aggrgted: create index 5");
+        logger.info("create index 5");
         sql = new StringBuilder();
         sql.append(indexCommand).append("IN_AGS_CUSTOMER(customer)");
         em.createNativeQuery(sql.toString()).executeUpdate();

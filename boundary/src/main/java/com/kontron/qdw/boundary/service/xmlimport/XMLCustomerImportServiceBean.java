@@ -85,12 +85,11 @@ public class XMLCustomerImportServiceBean implements TaskCall {
     @Override
     @PermitAll
     public void execTask(TaskNodeLog ownTask) {
-        TaskNodeLog parentTask = ownTask.getParentTask();
         String importDir = exchangePath + FOLDER_SUB_PATH;
 
         String[] importFileNames = new File(importDir).list(SIMPLE_XML_FILTER);
         if (importFileNames.length == 0) {
-            parentTask.finishTask();
+            ownTask.finishTask();
             return;
         }
 
@@ -98,10 +97,10 @@ public class XMLCustomerImportServiceBean implements TaskCall {
         List<String> orderedImportFileNames = com.kontron.util.file.FileUtil.getOrderedSAPImportFileNames(importFileNames, ImportType.FC_CUS);
 
         for (String importFileName : orderedImportFileNames) {
-            importFile(importFileName, parentTask, importDir);
+            importFile(importFileName, ownTask, importDir);
         }
 
-        parentTask.finishTask();
+        ownTask.finishTask();
         return;
     }
 

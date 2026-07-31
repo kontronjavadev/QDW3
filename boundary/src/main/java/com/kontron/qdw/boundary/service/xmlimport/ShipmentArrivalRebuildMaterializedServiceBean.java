@@ -65,7 +65,7 @@ public class ShipmentArrivalRebuildMaterializedServiceBean implements TaskCall {
 
 
     private void execDrop(TaskNodeLog ownTask) {
-        String executionSection = "shipt arr reb. matrlzed delta: Drop table arrival_shipment_mv_tmp_delta";
+        String executionSection = "drop table arrival_shipment_mv_tmp_delta";
         logger.info(executionSection);
         TaskLeafLog subTsk = ownTask.createNewSubTaskLeaf(executionSection);
 
@@ -76,7 +76,7 @@ public class ShipmentArrivalRebuildMaterializedServiceBean implements TaskCall {
     }
 
     private void execCreate(TaskNodeLog ownTask) {
-        String executionSection = "shipt arr reb. matrlzed delta: create table arrival_shipment_mv_tmp_delta";
+        String executionSection = "create table arrival_shipment_mv_tmp_delta";
         logger.info(executionSection);
         TaskLeafLog subTsk = ownTask.createNewSubTaskLeaf(executionSection);
 
@@ -128,7 +128,7 @@ public class ShipmentArrivalRebuildMaterializedServiceBean implements TaskCall {
     }
 
     private void execAddColumns(TaskNodeLog ownTask) {
-        String executionSection = "shipt arr reb. matrlzed delta: Alter table arrival_shipment_mv_tmp_delta: add columns";
+        String executionSection = "alter table arrival_shipment_mv_tmp_delta: add columns";
         logger.info(executionSection);
         TaskLeafLog subTsk = ownTask.createNewSubTaskLeaf(executionSection);
 
@@ -148,7 +148,7 @@ public class ShipmentArrivalRebuildMaterializedServiceBean implements TaskCall {
     }
 
     private void execUpdateArrId(TaskNodeLog ownTask) {
-        String executionSection = "shipt arr reb. matrlzed delta: ";
+        String executionSection = "update to last arrival";
         logger.info(executionSection);
         TaskLeafLog subTsk = ownTask.createNewSubTaskLeaf(executionSection);
 
@@ -171,7 +171,7 @@ public class ShipmentArrivalRebuildMaterializedServiceBean implements TaskCall {
     }
 
     private void execAddIndex(TaskNodeLog ownTask) {
-        String executionSection = "shipt arr reb. matrlzed delta: create index for arrival_shipment_mv_tmp_delta.arrival_id";
+        String executionSection = "create index for arrival_id";
         logger.info(executionSection);
         TaskLeafLog subTsk = ownTask.createNewSubTaskLeaf(executionSection);
 
@@ -182,7 +182,7 @@ public class ShipmentArrivalRebuildMaterializedServiceBean implements TaskCall {
     }
 
     private void execUpdateArrDate(TaskNodeLog ownTask) {
-        String executionSection = "shipt arr reb. matrlzed delta: update arrival_shipment_mv_tmp_delta: set arrival_date, supplier_code, supplier_name, arrival_movement_type, purchase_order_number";
+        String executionSection = "update arrival_date, supplier_code, supplier_name, arrival_movement_type, purchase_order_number";
         logger.info(executionSection);
         TaskLeafLog subTsk = ownTask.createNewSubTaskLeaf(executionSection);
 
@@ -201,7 +201,7 @@ public class ShipmentArrivalRebuildMaterializedServiceBean implements TaskCall {
     }
 
     private void execDropIndex(TaskNodeLog ownTask) {
-        String executionSection = "shipt arr reb. matrlzed delta: drop index for arrival_shipment_mv_tmp_delta.arrival_id";
+        String executionSection = "drop index for arrival_id";
         logger.info(executionSection);
         TaskLeafLog subTsk = ownTask.createNewSubTaskLeaf(executionSection);
 
@@ -212,7 +212,7 @@ public class ShipmentArrivalRebuildMaterializedServiceBean implements TaskCall {
     }
 
     private void execUpdateSrvMsg(TaskNodeLog ownTask) {
-        String executionSection = "shipt arr reb. matrlzed delta: update cust_ship_date in service_message_mv";
+        String executionSection = "update cust_ship_date in service_message_mv";
         logger.info(executionSection);
         TaskLeafLog subTsk = ownTask.createNewSubTaskLeaf(executionSection);
 
@@ -246,7 +246,7 @@ public class ShipmentArrivalRebuildMaterializedServiceBean implements TaskCall {
     }
 
     private void execCopyData(TaskNodeLog ownTask) {
-        String executionSection = "shipt arr reb. matrlzed delta: copy data from arrival_shipment_mv_tmp_delta to arrival_shipment_mv";
+        String executionSection = "copy data from arrival_shipment_mv_tmp_delta to arrival_shipment_mv";
         logger.info(executionSection);
         TaskLeafLog subTsk = ownTask.createNewSubTaskLeaf(executionSection);
 
@@ -304,7 +304,7 @@ public class ShipmentArrivalRebuildMaterializedServiceBean implements TaskCall {
     }
 
     private void execResetRebuild(TaskNodeLog ownTask) {
-        String executionSection = "shipt arr reb. matrlzed delta: reset rebuild flag in shipments";
+        String executionSection = "reset rebuild flag in shipments";
         logger.info(executionSection);
         TaskLeafLog subTsk = ownTask.createNewSubTaskLeaf(executionSection);
 
@@ -327,7 +327,7 @@ public class ShipmentArrivalRebuildMaterializedServiceBean implements TaskCall {
 
 
     private void execRemoveCanceled1(TaskNodeLog ownTask) {
-        String executionSection = "shipt arr reb. matrlzed delta: delete canceled shipments from arrival_shipment_mv (1/4)";
+        String executionSection = "delete canceled shipments from arrival_shipment_mv (1/4)";
         logger.info(executionSection);
         TaskLeafLog subTsk = ownTask.createNewSubTaskLeaf(executionSection);
 
@@ -362,7 +362,7 @@ public class ShipmentArrivalRebuildMaterializedServiceBean implements TaskCall {
     }
 
     private void execRemoveCanceled2(TaskNodeLog ownTask) {
-        String executionSection = "shipt arr reb. matrlzed delta: delete canceled shipments from arrival_shipment_mv (2/4)";
+        String executionSection = "delete canceled shipments from arrival_shipment_mv (2/4)";
         logger.info(executionSection);
         TaskLeafLog subTsk = ownTask.createNewSubTaskLeaf(executionSection);
 
@@ -391,7 +391,7 @@ public class ShipmentArrivalRebuildMaterializedServiceBean implements TaskCall {
     }
 
     private void execRemoveCanceled3(TaskNodeLog ownTask) {
-        String executionSection = "shipt arr reb. matrlzed delta: delete canceled shipments from arrival_shipment_mv (3/4)";
+        String executionSection = "delete canceled shipments from arrival_shipment_mv (3/4)";
         logger.info(executionSection);
         TaskLeafLog subTsk = ownTask.createNewSubTaskLeaf(executionSection);
 
@@ -418,7 +418,7 @@ public class ShipmentArrivalRebuildMaterializedServiceBean implements TaskCall {
     }
 
     private void execRemoveCanceled4(TaskNodeLog ownTask) {
-        String executionSection = "shipt arr reb. matrlzed delta: delete canceled shipments from arrival_shipment_mv (4/4)";
+        String executionSection = "delete canceled shipments from arrival_shipment_mv (4/4)";
         logger.info(executionSection);
         TaskLeafLog subTsk = ownTask.createNewSubTaskLeaf(executionSection);
 

@@ -62,7 +62,7 @@ public class ArrivalRebuildMaterializedServiceBean implements TaskCall {
     }
 
     private void execDrop(TaskNodeLog ownTask) {
-        String executionSection = "arr reb. matrlzed delta: Drop table materialized_arrival_mv_tmp_delta";
+        String executionSection = "drop table materialized_arrival_mv_tmp_delta";
         logger.info(executionSection);
         TaskLeafLog subTsk = ownTask.createNewSubTaskLeaf(executionSection);
 
@@ -73,7 +73,7 @@ public class ArrivalRebuildMaterializedServiceBean implements TaskCall {
     }
 
     private void execCreate(TaskNodeLog ownTask) {
-        String executionSection = "arr reb. matrlzed delta: create table materialized_arrival_mv_tmp_delta";
+        String executionSection = "create table materialized_arrival_mv_tmp_delta";
         logger.info(executionSection);
         TaskLeafLog subTsk = ownTask.createNewSubTaskLeaf(executionSection);
 
@@ -123,7 +123,7 @@ public class ArrivalRebuildMaterializedServiceBean implements TaskCall {
     }
 
     private void execAddColumns(TaskNodeLog ownTask) {
-        String executionSection = "arr reb. matrlzed delta: Alter table materialized_arrival_mv_tmp_delta: add columns";
+        String executionSection = "alter table materialized_arrival_mv_tmp_delta: add columns";
         logger.info(executionSection);
         TaskLeafLog subTsk = ownTask.createNewSubTaskLeaf(executionSection);
 
@@ -137,7 +137,7 @@ public class ArrivalRebuildMaterializedServiceBean implements TaskCall {
     }
 
     private void execUpdate(TaskNodeLog ownTask) {
-        String executionSection = "arr reb. matrlzed delta: update sup_arrival_date, supplier_code, supplier_name in service_message_mv";
+        String executionSection = "update sup_arrival_date, supplier_code, supplier_name in service_message_mv";
         logger.info(executionSection);
         TaskLeafLog subTsk = ownTask.createNewSubTaskLeaf(executionSection);
 
@@ -178,7 +178,7 @@ public class ArrivalRebuildMaterializedServiceBean implements TaskCall {
     }
 
     private void execCopyData(TaskNodeLog ownTask) {
-        String executionSection = "arr reb. matrlzed delta: copy data from materialized_arrival_mv_tmp_delta to materialized_arrival_mv";
+        String executionSection = "copy data from materialized_arrival_mv_tmp_delta to materialized_arrival_mv";
         logger.info(executionSection);
         TaskLeafLog subTsk = ownTask.createNewSubTaskLeaf(executionSection);
 
@@ -228,7 +228,7 @@ public class ArrivalRebuildMaterializedServiceBean implements TaskCall {
     }
 
     private void execResetRebuild(TaskNodeLog ownTask) {
-        String executionSection = "arr reb. matrlzed delta: reset rebuild flag in arrivals";
+        String executionSection = "reset rebuild flag in arrivals";
         logger.info(executionSection);
         TaskLeafLog subTsk = ownTask.createNewSubTaskLeaf(executionSection);
 
@@ -242,7 +242,7 @@ public class ArrivalRebuildMaterializedServiceBean implements TaskCall {
     }
 
     private void execRemoveCanceled(TaskNodeLog ownTask) {
-        String executionSection = "rCAFMA: delete canceled arrivals from arrival_mv";
+        String executionSection = "delete canceled arrivals from arrival_mv";
         logger.info(executionSection + " (1/2)");
         TaskLeafLog subTsk = ownTask.createNewSubTaskLeaf(executionSection);
 

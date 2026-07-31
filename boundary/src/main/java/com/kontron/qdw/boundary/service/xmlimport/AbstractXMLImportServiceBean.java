@@ -73,10 +73,9 @@ public abstract class AbstractXMLImportServiceBean<ROOT, ELEM> implements TaskCa
     @Override
     @PermitAll
     public void execTask(TaskNodeLog ownTask) {
-        TaskNodeLog parentTask = ownTask.getParentTask();
         String[] importFileNames = new File(getImportDir()).list(SIMPLE_XML_FILTER);
         if (importFileNames.length == 0) {
-            parentTask.finishTask();
+            ownTask.finishTask();
             return;
         }
 
@@ -90,9 +89,9 @@ public abstract class AbstractXMLImportServiceBean<ROOT, ELEM> implements TaskCa
             unmarshaller.setSchema(schema);
         }
         catch (Exception e) {
-            TaskLeafLog tskUnmarshall = parentTask.createNewSubTaskLeaf("initializing unmarshaller");
+            TaskLeafLog tskUnmarshall = ownTask.createNewSubTaskLeaf("initializing unmarshaller");
             tskUnmarshall.finishTaskWithError(e);
-            parentTask.abortTask();
+            ownTask.abortTask();
             return;
         }
 
@@ -102,18 +101,18 @@ public abstract class AbstractXMLImportServiceBean<ROOT, ELEM> implements TaskCa
         // Read all xml files from given path
         logger.info("{} files found for " + getEntityName() + " import.", orderedImportFileNames);
         for (String importFileName : orderedImportFileNames) {
-            importFile(getEntityName(), getFolderSubPath(), importFileName, parentTask, getImportDir(),
+            importFile(getEntityName(), getFolderSubPath(), importFileName, ownTask, getImportDir(),
                     unmarshaller, getGetElementsFunction(), isWithBulk());
         }
 
 
-        parentTask.finishTask();
+        ownTask.finishTask();
         return;
     }
 
 
 
-    private void importFile(String entityName, String folderSubPath, String importFileName, TaskNodeLog tsk, String importDir,
+    protected void importFile(String entityName, String folderSubPath, String importFileName, TaskNodeLog tsk, String importDir,
             Unmarshaller unmarshaller,
             Function<ROOT, List<ELEM>> getElementsFunction, boolean withBulk) {
         logger.info("Lese " + entityName + "-Import Datei '{}'", importFileName);

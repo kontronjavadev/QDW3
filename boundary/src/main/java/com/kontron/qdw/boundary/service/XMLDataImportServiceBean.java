@@ -104,6 +104,7 @@ public class XMLDataImportServiceBean {
         ITaskNodeLog arrivalImportTask = executeTask(taskSapImport, arrivalImportServiceBean);
         ITaskNodeLog shipmentImportTask = executeTask(taskSapImport, shipmentImportServiceBean);
 
+        taskSapImport.finishTask();
         // TODO: Zwischenbenachrichtigung senden
 
         TaskNodeLog taskRebuild = mainTask.createNewSubTaskNode(TASKNAME_REBUILD);
@@ -117,6 +118,7 @@ public class XMLDataImportServiceBean {
             executeTask(taskRebuild, shptRebuildAggServiceBean);
             executeTask(taskRebuild, shptArrvRebuildAggServiceBean);
         }
+        taskRebuild.finishTask();
 
         finishImport(mainTask);
     }
@@ -186,6 +188,7 @@ public class XMLDataImportServiceBean {
 
         TaskNodeLog mainTask = initImportAndRebuild();
         TaskNodeLog taskSapImport = mainTask.createNewSubTaskNode(TASKNAME_IMPORT);
+        taskSapImport.finishTask();
 
         ITaskNodeLog arrivalImportTask = executeTask(taskSapImport, arrivalImportServiceBean);
 
@@ -193,6 +196,7 @@ public class XMLDataImportServiceBean {
             TaskNodeLog taskRebuild = mainTask.createNewSubTaskNode(TASKNAME_REBUILD);
             executeTask(taskRebuild, arrivalRebuildMatServiceBean);
             executeTask(taskRebuild, arrivalRebuildAggServiceBean);
+            taskRebuild.finishTask();
         }
 
         finishImport(mainTask);
@@ -213,7 +217,6 @@ public class XMLDataImportServiceBean {
 
     @Asynchronous
     @PermitAll
-
     public void runArrivalRebuildAggregated() {
         if (!schedulerService.isExecuteImport()) {
             return;
@@ -236,6 +239,7 @@ public class XMLDataImportServiceBean {
 
         TaskNodeLog mainTask = initImportAndRebuild();
         TaskNodeLog taskSapImport = mainTask.createNewSubTaskNode(TASKNAME_IMPORT);
+        taskSapImport.finishTask();
 
         ITaskNodeLog shipmentImportTask = executeTask(taskSapImport, shipmentImportServiceBean);
 
@@ -244,6 +248,7 @@ public class XMLDataImportServiceBean {
             executeTask(taskRebuild, shptArrvRebuildMatServiceBean);
             executeTask(taskRebuild, shptRebuildAggServiceBean);
             executeTask(taskRebuild, shptArrvRebuildAggServiceBean);
+            taskRebuild.finishTask();
         }
 
         finishImport(mainTask);
