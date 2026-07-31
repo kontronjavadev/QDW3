@@ -109,7 +109,7 @@ public class XMLDataImportServiceBean {
         ITaskNodeLog shipmentImportTask = executeTask(taskSapImport, shipmentImportServiceBean);
 
         taskSapImport.finishTask();
-        // TODO: Zwischenbenachrichtigung senden
+        sendeZwischenbericht(taskSapImport);
 
 
         TaskNodeLog taskAnalyze = mainTask.createNewSubTaskNode(TASKNAME_ANALYZE);
@@ -355,28 +355,47 @@ public class XMLDataImportServiceBean {
         return taskNodeLog;
     }
 
-    private void finishImport(TaskNodeLog taskSapImport) {
-        taskSapImport.finishTask();
-
-        // ist beendet
-        long duration = taskSapImport.getEndTime() - taskSapImport.getStartTime();
-        logger.info("Finished importing SAP files");
-
-        String subjectText = Constants.APP_ENV + ": SAP import finished " + (taskSapImport.isSuccess() ? "successfully" : "with errors");
+    private void sendeZwischenbericht(TaskNodeLog tsk) {
+        String subjectText = Constants.APP_ENV + ": SAP import finished " + (tsk.isSuccess() ? "successfully" : "with errors");
         StringBuilder importLog = new StringBuilder();
-        importLog.append(subjectText);
-        importLog.append(" in ").append(TimeUtil.toBestPracticeStringShort(duration)).append(".\n\n");
+        importLog.append(subjectText).append(".\n\n");
+        importLog.append("First step was importing SAP master data files, next is analyzing and rebuilding materialized tables\n\n");
         importLog.append("Overview (Details below):\n");
-        importLog.append(taskSapImport.getTaskOverviewInformation()).append("\n\n");
+        importLog.append(tsk.getTaskOverviewInformation()).append("\n\n");
         importLog.append("Details:\n");
-        importLog.append(taskSapImport.getTaskHierarchicalDetailInformation()).append("\n\n");
+        importLog.append(tsk.getTaskHierarchicalDetailInformation()).append("\n\n");
 
         // schicke Informationsmail
         try {
             MailServiceFacade.sendMail(Constants.getMailRecipient(), subjectText, importLog.toString());
         }
         catch (Exception mailException) {
-            logger.error("Sending mail after importing SAP giles failed!", mailException);
+            logger.error("Sending mail after importing SAP files failed!", mailException);
+        }
+    }
+
+    private void finishImport(TaskNodeLog tsk) {
+        tsk.finishTask();
+
+        // ist beendet
+        long duration = tsk.getEndTime() - tsk.getStartTime();
+        logger.info("Finished importing SAP files");
+
+        String subjectText = Constants.APP_ENV + ": SAP import part 1 finished " + (tsk.isSuccess() ? "successfully" : "with errors");
+        StringBuilder importLog = new StringBuilder();
+        importLog.append(subjectText);
+        importLog.append(" in ").append(TimeUtil.toBestPracticeStringShort(duration)).append(".\n\n");
+        importLog.append("Overview (Details below):\n");
+        importLog.append(tsk.getTaskOverviewInformation()).append("\n\n");
+        importLog.append("Details:\n");
+        importLog.append(tsk.getTaskHierarchicalDetailInformation()).append("\n\n");
+
+        // schicke Informationsmail
+        try {
+            MailServiceFacade.sendMail(Constants.getMailRecipient(), subjectText, importLog.toString());
+        }
+        catch (Exception mailException) {
+            logger.error("Sending mail after importing SAP files failed!", mailException);
         }
     }
 
