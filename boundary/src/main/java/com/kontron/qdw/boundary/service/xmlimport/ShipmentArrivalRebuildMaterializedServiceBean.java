@@ -16,7 +16,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 
 /**
- * Rebuild der Arrival-"Materialized table".
+ * Rebuild der Shipment-Arrival-"Materialized table".
  * 
  * 2026 — © Kontron AG
  * @author Raymund Achner, achner.com

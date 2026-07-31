@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import com.kontron.qdw.boundary.service.xmlimport.ArrivalRebuildAggregatedServiceBean;
 import com.kontron.qdw.boundary.service.xmlimport.ArrivalRebuildMaterializedServiceBean;
+import com.kontron.qdw.boundary.service.xmlimport.SerialObjectStructureAnalysisServiceBean;
 import com.kontron.qdw.boundary.service.xmlimport.ShipmentArrivalRebuildAggregatedServiceBean;
 import com.kontron.qdw.boundary.service.xmlimport.ShipmentArrivalRebuildMaterializedServiceBean;
 import com.kontron.qdw.boundary.service.xmlimport.ShipmentRebuildAggregatedServiceBean;
@@ -46,6 +47,7 @@ public class XMLDataImportServiceBean {
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private static final String TASKNAME_IMPORT = "SAP import";
+    private static final String TASKNAME_ANALYZE = "analyze";
     private static final String TASKNAME_REBUILD = "rebuild materialized tables";
 
     private static final String PROP_XML_EXCHANGE_FOLDER = "sap_exchange_folder";
@@ -68,6 +70,8 @@ public class XMLDataImportServiceBean {
     @EJB
     private XMLShipmentImportServiceBean shipmentImportServiceBean;
 
+    @EJB
+    private SerialObjectStructureAnalysisServiceBean serialObjectStructureAnalysisServiceBean;
     @EJB
     private ArrivalRebuildMaterializedServiceBean arrivalRebuildMatServiceBean;
     @EJB
@@ -107,8 +111,13 @@ public class XMLDataImportServiceBean {
         taskSapImport.finishTask();
         // TODO: Zwischenbenachrichtigung senden
 
-        TaskNodeLog taskRebuild = mainTask.createNewSubTaskNode(TASKNAME_REBUILD);
 
+        TaskNodeLog taskAnalyze = mainTask.createNewSubTaskNode(TASKNAME_ANALYZE);
+        executeTask(taskAnalyze, serialObjectStructureAnalysisServiceBean);
+        taskAnalyze.finishTask();
+
+
+        TaskNodeLog taskRebuild = mainTask.createNewSubTaskNode(TASKNAME_REBUILD);
         if (arrivalImportTask.wasAtLeastOneConcreteTaskPerformed() && arrivalImportTask.isSuccess()) {
             executeTask(taskRebuild, arrivalRebuildMatServiceBean);
             executeTask(taskRebuild, arrivalRebuildAggServiceBean);
@@ -192,12 +201,16 @@ public class XMLDataImportServiceBean {
 
         ITaskNodeLog arrivalImportTask = executeTask(taskSapImport, arrivalImportServiceBean);
 
+        TaskNodeLog taskAnalyze = mainTask.createNewSubTaskNode(TASKNAME_ANALYZE);
+        executeTask(taskAnalyze, serialObjectStructureAnalysisServiceBean);
+        taskAnalyze.finishTask();
+
+        TaskNodeLog taskRebuild = mainTask.createNewSubTaskNode(TASKNAME_REBUILD);
         if (arrivalImportTask.wasAtLeastOneConcreteTaskPerformed() && arrivalImportTask.isSuccess()) {
-            TaskNodeLog taskRebuild = mainTask.createNewSubTaskNode(TASKNAME_REBUILD);
             executeTask(taskRebuild, arrivalRebuildMatServiceBean);
             executeTask(taskRebuild, arrivalRebuildAggServiceBean);
-            taskRebuild.finishTask();
         }
+        taskRebuild.finishTask();
 
         finishImport(mainTask);
     }
@@ -243,13 +256,17 @@ public class XMLDataImportServiceBean {
 
         ITaskNodeLog shipmentImportTask = executeTask(taskSapImport, shipmentImportServiceBean);
 
+        TaskNodeLog taskAnalyze = mainTask.createNewSubTaskNode(TASKNAME_ANALYZE);
+        executeTask(taskAnalyze, serialObjectStructureAnalysisServiceBean);
+        taskAnalyze.finishTask();
+
+        TaskNodeLog taskRebuild = mainTask.createNewSubTaskNode(TASKNAME_REBUILD);
         if (shipmentImportTask.wasAtLeastOneConcreteTaskPerformed() && shipmentImportTask.isSuccess()) {
-            TaskNodeLog taskRebuild = mainTask.createNewSubTaskNode(TASKNAME_REBUILD);
             executeTask(taskRebuild, shptArrvRebuildMatServiceBean);
             executeTask(taskRebuild, shptRebuildAggServiceBean);
             executeTask(taskRebuild, shptArrvRebuildAggServiceBean);
-            taskRebuild.finishTask();
         }
+        taskRebuild.finishTask();
 
         finishImport(mainTask);
     }
@@ -289,6 +306,21 @@ public class XMLDataImportServiceBean {
 
         TaskNodeLog taskSapImport = initRebuild();
         executeTask(taskSapImport, shptArrvRebuildAggServiceBean);
+
+        finishImport(taskSapImport);
+    }
+
+
+
+    @Asynchronous
+    @PermitAll
+    public void runAnalyzeSerObjStructure() {
+        if (!schedulerService.isExecuteImport()) {
+            return;
+        }
+
+        TaskNodeLog taskSapImport = initRebuild();
+        executeTask(taskSapImport, serialObjectStructureAnalysisServiceBean);
 
         finishImport(taskSapImport);
     }
