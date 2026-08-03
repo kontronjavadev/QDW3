@@ -103,6 +103,20 @@ public class SerialObjectRepository extends AbstractRepository<SerialObject, Lon
         return existingSerObjMap;
     }
 
+    public SerialObject findBySerialNumberAndMaterialSapNr(String serialNumber, String materialSapNr) {
+        final TypedQuery<SerialObject> query = em.createNamedQuery(SerialObject.NQ_UK_FIND_BY_SERIALNUMBER_AND_MATERIAL_SAPNR, SerialObject.class);
+        query.setParameter(PARAM_SERIALNUMBER, serialNumber);
+        query.setParameter("materialSapNr", materialSapNr);
+
+        final List<SerialObject> resultList = query.getResultList();
+
+        if (resultList.size() <= 1) {
+            return resultList.stream().findFirst().orElse(null);
+        }
+
+        throw new IllegalStateException("Non unique result!");
+    }
+
 
 
     /**

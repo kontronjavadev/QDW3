@@ -12,6 +12,7 @@ import com.kontron.qdw.domain.base.*;
 @Entity
 @Table(name = "serial_object_tab")
 @NamedQuery(name = SerialObject.NQ_UK_FIND_BY_SERIALNUMBER_AND_MATERIAL, query = "select a from SerialObject a where a.serialNumber = :serialNumber and a.material.id = :material")
+@NamedQuery(name = SerialObject.NQ_UK_FIND_BY_SERIALNUMBER_AND_MATERIAL_SAPNR, query = "select a from SerialObject a where a.serialNumber = :serialNumber and a.material.sapNumber = :materialSapNr")
 @NamedQuery(name = SerialObject.NQ_UK_SEARCH_BY_SERIALNUMBER_AND_MATERIAL, query = "select a from SerialObject a where a.serialNumber like :serialNumber and a.material.id = :material")
 @NamedQuery(name = SerialObject.NQ_UK_EXISTS_BY_SERIALNUMBER_AND_MATERIAL, query = "select count(a) from SerialObject a where a.serialNumber = :serialNumber and a.material.id = :material")
 @NamedQuery(name = SerialObject.NQ_UK_EXISTS_BY_SERIALNUMBER_AND_MATERIAL_AND_ID, query = "select count(a) from SerialObject a where a.serialNumber = :serialNumber and a.material.id = :material and a.id <> :id")
@@ -36,6 +37,7 @@ public class SerialObject extends AbstractEntityWithId {
     public static final String NQ_DELETE_ALL = "SerialObject.deleteAll";
     @Generated
     public static final String NQ_UK_FIND_BY_SERIALNUMBER_AND_MATERIAL = "SerialObject.getBySerialNumber_And_Material";
+    public static final String NQ_UK_FIND_BY_SERIALNUMBER_AND_MATERIAL_SAPNR = "SerialObject.getBySerialNumber_And_Material_SapNr";
     @Generated
     public static final String NQ_DELETE = "SerialObject.delete";
     @Generated
@@ -326,14 +328,17 @@ public class SerialObject extends AbstractEntityWithId {
     @Generated
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
+        }
 
-        if (obj == null)
+        if (obj == null) {
             return false;
+        }
 
-        if (getClass() != obj.getClass())
+        if (getClass() != obj.getClass()) {
             return false;
+        }
 
         final var bean = (SerialObject) obj;
 

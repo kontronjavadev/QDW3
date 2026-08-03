@@ -135,11 +135,12 @@ public abstract class AbstractXMLImportServiceBean<ROOT, ELEM> implements TaskCa
 
 
         List<String> errorList = new ArrayList<>();
-        BulkProcess bulkProcess = new BulkProcess(importedElements.size());
+        int bulkSize = BulkProcess.DEFAULT_BULK_SIZE;
         if (!withBulk) {
             // alles auf einmal, also bulkSize auf Gesamtgröße setzen
-            bulkProcess.bulkSize = importedElements.size();
+            bulkSize = importedElements.size();
         }
+        BulkProcess bulkProcess = new BulkProcess(importedElements.size(), bulkSize);
 
 
         while (bulkProcess.getBulkToIdx() - bulkProcess.getBulkFromIdx() > 0) {
@@ -202,76 +203,5 @@ public abstract class AbstractXMLImportServiceBean<ROOT, ELEM> implements TaskCa
 
     protected abstract Function<ROOT, List<ELEM>> getGetElementsFunction();
 
-
-
-    class BulkProcess {
-        private final int listSize;
-
-        private float cnt = 0;
-        private int progressStep = 5;
-        private int progress = progressStep;
-
-        private int bulkSize = 2000;
-        private int bulkFromIdx = 0;
-        private int bulkToIdx;
-
-
-        BulkProcess(int listSize) {
-            this.listSize = listSize;
-            bulkToIdx = Math.min(listSize, bulkSize);
-        }
-
-
-        void nextCnt() {
-            cnt++;
-        }
-
-        void nextBulk() {
-            bulkFromIdx = bulkToIdx;
-            bulkToIdx = Math.min(listSize, bulkFromIdx + bulkSize);
-        }
-
-        void logProcess(Logger logger) {
-            if (cnt / listSize * 100 > progress) {
-                progress = ((int) (cnt / listSize * 100) / progressStep) * progressStep;
-                logger.info(progress + "% done");
-                progress += progressStep;
-            }
-        }
-
-        void logProcessBulkLevel(Logger logger) {
-            if ((float) bulkFromIdx / listSize * 100 > progress) {
-                progress = ((int) ((float) bulkFromIdx / listSize * 100) / progressStep) * progressStep;
-                logger.info(progress + "% done");
-                progress += progressStep;
-            }
-        }
-
-
-        public int getBulkFromIdx() {
-            return bulkFromIdx;
-        }
-
-        public int getBulkToIdx() {
-            return bulkToIdx;
-        }
-
-        public int getListSize() {
-            return listSize;
-        }
-
-        public int getProgress() {
-            return progress;
-        }
-
-        public void setProgress(int progress) {
-            this.progress = progress;
-        }
-
-        public int getProgressStep() {
-            return progressStep;
-        }
-
-    }
 
 }
