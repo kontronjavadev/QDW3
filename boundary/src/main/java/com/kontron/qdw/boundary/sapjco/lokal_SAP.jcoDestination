@@ -1,0 +1,10 @@
+#for tests only !
+#Mon Feb 24 15:35:57 CET 2014
+jco.client.user=QDW2_RFC
+jco.client.passwd=QdW2BaPi
+jco.client.ashost=10.113.26.163
+jco.client.client=01
+jco.client.sysnr=01
+jco.destination.pool_capacity=3
+jco.destination.peak_limit=10
+jco.client.lang=en

@@ -1,0 +1,38 @@
+sapjco.jar gibt es in keinem öffentlichen Maven-Repository. Es muss daher lokal selbst hinzu gefügt werden:
+	apache-maven-3.9.16\bin\mvn install:install-file -DgroupId=com.sap.conn.jco -DartifactId=sapjco3 -Dversion=3.0.10 -Dpackaging=jar -Dfile=sapjco3.jar
+
+und dann in die pom eingetragen werden:
+	<dependency>
+	    <groupId>com.sap.conn.jco</groupId>
+	    <artifactId>sapjco3</artifactId>
+	    <version>3.0.10</version>
+	</dependency>
+
+
+Zusätzlich im WildFly die Dateien
+	sapjco3.jar
+und
+	module.xml
+nach
+	<WildFly>\modules\system\layers\base\com\sap\conn\jco\main
+kopieren.
+
+
+Weiter die
+	sapjpo3.dll
+nach
+	C:\Windows\System32
+kopieren.
+
+
+Außerdem die
+	SAP.jcoDestination
+für produktive Abfragen aus der Produktiv- oder Testumgebung
+nach
+	<WildFly>\bin
+kopieren.
+
+Die
+	lokal_SAP.jcoDestination
+war wohl für reine Tests auf der lokalen Umgebung gedacht, jedoch funktioniert die aufgerufene Funktion ZWW_PRODUCT_STRUCTURE nicht, möglicherweise allgemein der Zugriff nicht.
+Wofür auch immer man diese Testschnittstelle bereitstellte, sollte sie benötigt werden, muss der Zugang geprüft werden.

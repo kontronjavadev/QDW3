@@ -1,0 +1,8 @@
+jco.client.user=RFC_QDW2
+jco.client.passwd=Kontron#2017
+jco.client.ashost=10.169.101.200
+jco.client.client=100
+jco.client.sysnr=00
+jco.destination.pool_capacity=3
+jco.destination.peak_limit=10
+jco.client.lang=en
