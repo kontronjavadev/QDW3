@@ -1,5 +1,6 @@
 package com.kontron.qdw.repository.serial;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -115,6 +116,16 @@ public class SerialObjectRepository extends AbstractRepository<SerialObject, Lon
         }
 
         throw new IllegalStateException("Non unique result!");
+    }
+
+    public List<SerialObject> findByIds(Collection<Long> ids) {
+        return em.createQuery("select s "
+                + "from SerialObject s "
+                + "where s.id in :serObjIds "
+                + "order by s.id ",
+                SerialObject.class)
+                .setParameter("serObjIds", ids)
+                .getResultList();
     }
 
 

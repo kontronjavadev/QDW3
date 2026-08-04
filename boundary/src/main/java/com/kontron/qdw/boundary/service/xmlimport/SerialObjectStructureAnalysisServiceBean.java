@@ -31,7 +31,6 @@ import com.kontron.qdw.repository.material.MaterialRepository;
 import com.kontron.qdw.repository.mv.MaterializedAssemblyShipmentRepository;
 import com.kontron.qdw.repository.serial.AssemblyRecordRepository;
 import com.kontron.qdw.repository.serial.SerialObjectRepository;
-import com.kontron.util.batch.MultiThreadHelper;
 import com.kontron.util.log.TaskLeafLog;
 import com.kontron.util.log.TaskNodeLog;
 import com.kontron.util.text.StringUtil;
@@ -197,21 +196,9 @@ public class SerialObjectStructureAnalysisServiceBean implements TaskCall {
 
 
 
-        // SerialObjects zu den IDs aus der DB holen; Materialien und Revisionen cachen
-        String stmt = "select s "
-                + "from SerialObject s "
-                + "where s.id in :serObjIds "
-                + "order by s.id ";
-
         List<SerialObject> serialObjects;
         try {
-            serialObjects = MultiThreadHelper.executeInBatches(
-                    // Function wird in einer Schleife jeweils mit einer Teilmenge der Ids ausgeführt
-                    m -> em.createQuery(stmt, SerialObject.class)
-                            .setHint("org.hibernate.fetchSize", 2000)
-                            .setParameter("serObjIds", m)
-                            .getResultList(),
-                    new ArrayList<>(serObjIds), 2000);
+            serialObjects = serialObjectManager.findByIds(serObjIds);
         }
         catch (Exception e) {
             tskRFC.finishTaskWithError(e);
