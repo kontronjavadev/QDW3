@@ -27,7 +27,7 @@ kopieren.
 
 Außerdem die
 	SAP.jcoDestination
-für produktive Abfragen aus der Produktiv- oder Testumgebung
+für Abfragen aus der Produktiv- oder Testumgebung
 nach
 	<WildFly>\bin
 kopieren.
