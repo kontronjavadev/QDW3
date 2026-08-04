@@ -1,18 +1,29 @@
 package com.kontron.qdw.boundary.service.mapping.serialobject;
 
-import java.io.*;
-import java.util.*;
+import java.io.Serializable;
+import java.util.Date;
 
-import net.sourceforge.jbizmo.commons.exchange.*;
+import com.kontron.util.text.StringUtil;
+import com.sap.conn.jco.JCoTable;
 
-import com.kontron.util.text.*;
-import com.sap.conn.jco.*;
+import net.sourceforge.jbizmo.commons.exchange.DataImportException;
 
 /**
  * @author smuehlbauer
  */
-public class SerialObjectRFCMappingType implements Serializable {
-    private static final long serialVersionUID = 1L;
+public final class SerialObjectRFCMappingType implements Serializable {
+
+    private static final long serialVersionUID = 2296796934637219374L;
+
+    // Name der aufgerufenen SAP-Funktion
+    public static final String FUNCTION_NAME = "ZWW_PRODUCT_STRUCTURE";
+
+    // Parameter für die SAP-Abfrage
+    public static final String INPUT_VAR_MATERIAL = "IV_MATERIAL";
+    public static final String INPUT_VAR_SERIAL = "IV_SERIAL";
+
+    // Ergebnistabelle und dessen Parameter, die durch die Abfrage gesetzt wird
+    public static final String RETURN_TABLE = "T_PRODUCT_STRUCTURE";
     public static final String PROP_TOP_MATERIAL = "TOP";
     public static final String PROP_TOP_SERIAL = "TOP_SERIAL";
     public static final String PROP_TOP_REV10 = "TOP_BATCH";
@@ -26,10 +37,6 @@ public class SerialObjectRFCMappingType implements Serializable {
     public static final String PROP_COMP_REV2 = "COMPONENT_REVLV";
     public static final String PROP_COMP_ALTERNATIVE = "COMPONENT_ALT_BOM";
     public static final String PROP_INDEX = "INDX";
-    public static final String RETURN_TABLE = "T_PRODUCT_STRUCTURE";
-    public static final String FUNCTION_NAME = "ZWW_PRODUCT_STRUCTURE";
-    public static String INPUT_VAR_MATERIAL = "IV_MATERIAL";
-    public static String INPUT_VAR_SERIAL = "IV_SERIAL";
 
     private String parentSAPMaterialNumber;
     private String parentSerialNumber;
@@ -49,7 +56,7 @@ public class SerialObjectRFCMappingType implements Serializable {
      * Prevent instantiation
      */
     private SerialObjectRFCMappingType() {
-
+        // privater ctor; wird nur über #getInstanceBySapTable(JCoTable) instanziiert
     }
 
     /**
@@ -58,10 +65,8 @@ public class SerialObjectRFCMappingType implements Serializable {
      * @return
      * @throws DataImportException
      */
-    public static SerialObjectRFCMappingType getObject(JCoTable table) throws DataImportException {
+    public static SerialObjectRFCMappingType getInstanceBySapTable(JCoTable table) throws DataImportException {
         SerialObjectRFCMappingType s = new SerialObjectRFCMappingType();
-
-        // System.out.println(table);
 
         s.setParentSAPMaterialNumber(StringUtil.removeLeadingZero(table.getString(PROP_TOP_MATERIAL)));
         s.setParentSerialNumber(table.getString(PROP_TOP_SERIAL));
@@ -81,14 +86,12 @@ public class SerialObjectRFCMappingType implements Serializable {
             s.setParentSerialNumber(Long.toString(Long.parseLong(s.getParentSerialNumber())));
         }
         catch (Exception e) {
-
         }
 
         try {
             s.setSerialNumber(Long.toString(Long.parseLong(s.getSerialNumber())));
         }
         catch (Exception e) {
-
         }
 
         if (s.getProductionOrderNumber().isEmpty()) {
@@ -98,185 +101,110 @@ public class SerialObjectRFCMappingType implements Serializable {
         return s;
     }
 
-    /**
-     * @return the parentSAPMaterialNumber
-     */
+
+
     public String getParentSAPMaterialNumber() {
         return parentSAPMaterialNumber;
     }
 
-    /**
-     * @param parentSAPMaterialNumber the parentSAPMaterialNumber to set
-     */
     public void setParentSAPMaterialNumber(String parentSAPMaterialNumber) {
         this.parentSAPMaterialNumber = parentSAPMaterialNumber;
     }
 
-    /**
-     * @return the parentSerialNumber
-     */
     public String getParentSerialNumber() {
         return parentSerialNumber;
     }
 
-    /**
-     * @param parentSerialNumber the parentSerialNumber to set
-     */
     public void setParentSerialNumber(String parentSerialNumber) {
         this.parentSerialNumber = parentSerialNumber;
     }
 
-    /**
-     * @return the parentRev10
-     */
     public String getParentRev10() {
         return parentRev10;
     }
 
-    /**
-     * @param parentRev10 the parentRev10 to set
-     */
     public void setParentRev10(String parentRev10) {
         this.parentRev10 = parentRev10;
     }
 
-    /**
-     * @return the parentRev2
-     */
     public String getParentRev2() {
         return parentRev2;
     }
 
-    /**
-     * @param parentRev2 the parentRev2 to set
-     */
     public void setParentRev2(String parentRev2) {
         this.parentRev2 = parentRev2;
     }
 
-    /**
-     * @return the parentAlternative
-     */
     public String getParentAlternative() {
         return parentAlternative;
     }
 
-    /**
-     * @param parentAlternative the parentAlternative to set
-     */
     public void setParentAlternative(String parentAlternative) {
         this.parentAlternative = parentAlternative;
     }
 
-    /**
-     * @return the productionOrderNumber
-     */
     public String getProductionOrderNumber() {
         return productionOrderNumber;
     }
 
-    /**
-     * @param productionOrderNumber the productionOrderNumber to set
-     */
     public void setProductionOrderNumber(String productionOrderNumber) {
         this.productionOrderNumber = productionOrderNumber;
     }
 
-    /**
-     * @return the sAPMaterialNumber
-     */
     public String getsAPMaterialNumber() {
         return sAPMaterialNumber;
     }
 
-    /**
-     * @param sAPMaterialNumber the sAPMaterialNumber to set
-     */
     public void setsAPMaterialNumber(String sAPMaterialNumber) {
         this.sAPMaterialNumber = sAPMaterialNumber;
     }
 
-    /**
-     * @return the serialNumber
-     */
     public String getSerialNumber() {
         return serialNumber;
     }
 
-    /**
-     * @param serialNumber the serialNumber to set
-     */
     public void setSerialNumber(String serialNumber) {
         this.serialNumber = serialNumber;
     }
 
-    /**
-     * @return the rev10
-     */
     public String getRev10() {
         return rev10;
     }
 
-    /**
-     * @param rev10 the rev10 to set
-     */
     public void setRev10(String rev10) {
         this.rev10 = rev10;
     }
 
-    /**
-     * @return the rev2
-     */
     public String getRev2() {
         return rev2;
     }
 
-    /**
-     * @param rev2 the rev2 to set
-     */
     public void setRev2(String rev2) {
         this.rev2 = rev2;
     }
 
-    /**
-     * @return the alternative
-     */
     public String getAlternative() {
         return alternative;
     }
 
-    /**
-     * @param alternative the alternative to set
-     */
     public void setAlternative(String alternative) {
         this.alternative = alternative;
     }
 
-    /**
-     * @return the assemblyDate
-     */
     public Date getAssemblyDate() {
         return assemblyDate;
     }
 
-    /**
-     * @param assemblyDate the assemblyDate to set
-     */
     public void setAssemblyDate(Date assemblyDate) {
         this.assemblyDate = assemblyDate;
     }
 
-    /**
-     * @return the idx
-     */
     public int getIdx() {
         return idx;
     }
 
-    /**
-     * @param idx the idx to set
-     */
     public void setIdx(int idx) {
         this.idx = idx;
     }
+
 }

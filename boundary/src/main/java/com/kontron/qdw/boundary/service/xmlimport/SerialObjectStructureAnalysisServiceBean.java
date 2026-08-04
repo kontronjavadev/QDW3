@@ -3,6 +3,7 @@ package com.kontron.qdw.boundary.service.xmlimport;
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,7 +17,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.kontron.qdw.boundary.service.TaskCall;
-import com.kontron.qdw.boundary.service.mapping.arrival.ArrivalMappingType;
 import com.kontron.qdw.boundary.service.mapping.serialobject.SerialObjectRFCMappingType;
 import com.kontron.qdw.domain.base.Country;
 import com.kontron.qdw.domain.base.Customer;
@@ -32,7 +32,6 @@ import com.kontron.qdw.repository.mv.MaterializedAssemblyShipmentRepository;
 import com.kontron.qdw.repository.serial.AssemblyRecordRepository;
 import com.kontron.qdw.repository.serial.SerialObjectRepository;
 import com.kontron.util.batch.MultiThreadHelper;
-import com.kontron.util.log.ITaskLog;
 import com.kontron.util.log.TaskLeafLog;
 import com.kontron.util.log.TaskNodeLog;
 import com.kontron.util.text.StringUtil;
@@ -66,8 +65,6 @@ public class SerialObjectStructureAnalysisServiceBean implements TaskCall {
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private static final int DAYS_DELTA_STRUCTURE_ANALYSIS = 90;
     // private static final int DAYS_DELTA_STRUCTURE_ANALYSIS = 3;
-
-    private static final String FUNCTION_NAME = "ZWW_PRODUCT_STRUCTURE";
 
     @EJB
     private SerialObjectRepository serialObjectManager;
@@ -157,7 +154,7 @@ public class SerialObjectStructureAnalysisServiceBean implements TaskCall {
 
 
 
-    protected ITaskLog execSapComparison(TaskNodeLog ownTask, Set<Long> serObjIds) {
+    protected void execSapComparison(TaskNodeLog ownTask, Set<Long> serObjIds) {
         String executionSection = "SAP comparison";
         logger.info(executionSection);
         TaskLeafLog tskRFC = ownTask.createNewSubTaskLeaf(executionSection);
@@ -166,7 +163,7 @@ public class SerialObjectStructureAnalysisServiceBean implements TaskCall {
             String errMsg = "No serial object IDs specified!";
             logger.warn(errMsg);
             tskRFC.finishTaskWithError(errMsg);
-            return tskRFC;
+            return;
         }
         logger.info(String.format("%s serial objects to compare with SAP", serObjIds.size()));
 
@@ -183,19 +180,19 @@ public class SerialObjectStructureAnalysisServiceBean implements TaskCall {
             // was aber grundsätzlich nicht sinnvoll ist, wenn man potentiell auf Test und Prod unterschiedliche Konfigurationen verwendet.
             if (destination == null) {
                 tskRFC.finishTaskWithError("not able to connect to SAP.");
-                return tskRFC;
+                return;
             }
 
-            function = destination.getRepository().getFunction(FUNCTION_NAME);
+            function = destination.getRepository().getFunction(SerialObjectRFCMappingType.FUNCTION_NAME);
             if (function == null) {
-                tskRFC.finishTaskWithError(FUNCTION_NAME + " not found in SAP.");
-                return tskRFC;
+                tskRFC.finishTaskWithError(SerialObjectRFCMappingType.FUNCTION_NAME + " not found in SAP.");
+                return;
             }
         }
         catch (Exception e) {
             tskRFC.finishTaskWithError(e);
             e.printStackTrace();
-            return tskRFC;
+            return;
         }
 
 
@@ -218,7 +215,7 @@ public class SerialObjectStructureAnalysisServiceBean implements TaskCall {
         }
         catch (Exception e) {
             tskRFC.finishTaskWithError(e);
-            return tskRFC;
+            return;
         }
 
         // serialObjects.sort(Comparator.comparingLong(SerialObject::getId));
@@ -247,9 +244,6 @@ public class SerialObjectStructureAnalysisServiceBean implements TaskCall {
         // ####################################################################################################
         // ####################################################################################################
 
-        // int increase = 100;
-        // int soFromIdx = 0;
-        // int soToIdx = Math.min(serialObjects.size(), soFromIdx + increase);
         BulkProcess bulkProcess = new BulkProcess(serialObjects.size(), 100);
 
 
@@ -282,12 +276,11 @@ public class SerialObjectStructureAnalysisServiceBean implements TaskCall {
             }
             catch (Exception e) {
                 logger.error("failed", e);
-                // TODO: auch hier Auswertung wie unten im Erfolgsfall schreiben??
                 tskRFC.finishTaskWithError(e);
-                return tskRFC;
+                return;
             }
 
-            // nächster Abschnitt
+            // nächster bulk
             bulkProcess.nextBulk();
             em.flush();
             em.clear();
@@ -312,7 +305,6 @@ public class SerialObjectStructureAnalysisServiceBean implements TaskCall {
                     .append(StringUtil.collectionToArrayPresentationString(errorMsgs, "\n", "\n", "", false, "none", StringUtil.NO_QUOTE));
         }
         tskRFC.finishTaskWithSuccess(sb.toString());
-        return tskRFC;
     }
 
 
@@ -323,7 +315,9 @@ public class SerialObjectStructureAnalysisServiceBean implements TaskCall {
         // aktuell verarbeiteter Batch
         List<SerialObject> curBatch = serialObjects.subList(bulkProcess.getBulkFromIdx(), bulkProcess.getBulkToIdx());
 
-        // zu jedem SerialObject eine SAP-Anfrage machen
+        // TODO: Map mit Materialien nach SAP-Nummern des bulks aufbauen
+        // Map mit Materialien und Parent-Materialien aus dem SerObj. nach SAP-Nummer erstellen.
+        // Zu SerialNo und SapNo wird SAP abgefragt. Die SAP-Nummer sollte überein stimmen
         for (SerialObject serObj : curBatch) {
             bulkProcess.logProcess(logger);
 
@@ -342,9 +336,11 @@ public class SerialObjectStructureAnalysisServiceBean implements TaskCall {
     private void compareEntry(JCoDestination destination, JCoFunction function, Map<String, SerialObject> serialObjectMap,
             Map<String, Material> materialCache, Map<String, MaterialRevision> materialRevisionMap, List<String> errorMsgs,
             ComparisonAnalysis analysis, SerialObject serObj) {
+        // Abgrageparameter für SAP setzen
         setRFCInputParameters(function, serObj.getMaterial().getSapNumber(), serObj.getSerialNumber());
 
         try {
+            // Funktion ausführen. Die Funktion selbst gib das Ergebnis nicht zurück, sondern stellt es nur zum Auslesen bereit.
             function.execute(destination);
         }
         catch (Throwable e) {
@@ -358,7 +354,7 @@ public class SerialObjectStructureAnalysisServiceBean implements TaskCall {
 
         for (int rowIdx = 0; rowIdx < table.getNumRows(); rowIdx++) {
             table.setRow(rowIdx);
-            SerialObjectRFCMappingType mappingObject = SerialObjectRFCMappingType.getObject(table);
+            SerialObjectRFCMappingType mappingObject = SerialObjectRFCMappingType.getInstanceBySapTable(table);
 
             // Ignore empty sets
             if (mappingObject.getSerialNumber().isEmpty() || mappingObject.getParentSerialNumber().isEmpty()) {
@@ -503,7 +499,8 @@ public class SerialObjectStructureAnalysisServiceBean implements TaskCall {
                 analysis.increaseNewCreatedSerialsInQdw();
             }
 
-            serialObject.setAssemblyDate(mappingObject.getAssemblyDate());
+            LocalDate sapAssemblyDateAsLocalDate = mappingObject.getAssemblyDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            serialObject.setAssemblyDate(sapAssemblyDateAsLocalDate);
             serialObject.setProductionOrderNumber(mappingObject.getProductionOrderNumber());
 
 
@@ -557,16 +554,15 @@ public class SerialObjectStructureAnalysisServiceBean implements TaskCall {
                 rec.setSerialObject(serialObject);
             }
 
-            rec.setAssemblyDate(mappingObject.getAssemblyDate());
+            rec.setAssemblyDate(sapAssemblyDateAsLocalDate);
             rec.setProductionOrderNumber(mappingObject.getProductionOrderNumber());
             rec.setMaterialRevision(materialRevision);
-
-
 
             if (!assemblyRecordFound) {
                 rec = assemblyRecordManager.persist(rec, true, true);
                 // parent = serialObjectManager.mergeSerialObject(parent, false, true);
             }
+
 
             createOrUpdateMaterializedAssemblyShipment(rec);
 
@@ -598,14 +594,14 @@ public class SerialObjectStructureAnalysisServiceBean implements TaskCall {
         Shipment s = null;
         for (Shipment sh : shippedObject.getShipments()) {
             if (s == null) {
-                if (sh.getShipmentDate().after(rec.getAssemblyDate()) || sh.getShipmentDate().equals(rec.getAssemblyDate())) {
+                if (!sh.getShipmentDate().isBefore(rec.getAssemblyDate())) { // after || equal
                     s = sh;
                     continue;
                 }
             }
             else {
-                if (sh.getShipmentDate().after(rec.getAssemblyDate()) || sh.getShipmentDate().equals(rec.getAssemblyDate())) {
-                    if (sh.getShipmentDate().before(s.getShipmentDate())) {
+                if (!sh.getShipmentDate().isBefore(rec.getAssemblyDate())) { // before || equal
+                    if (sh.getShipmentDate().isBefore(s.getShipmentDate())) {
                         s = sh;
                         continue;
                     }
@@ -617,6 +613,7 @@ public class SerialObjectStructureAnalysisServiceBean implements TaskCall {
         if (s == null) {
             return;
         }
+
 
         MaterializedAssemblyShipment mas = new MaterializedAssemblyShipment(rec.getId());
         mas.setAssemblyDate(rec.getAssemblyDate());
@@ -663,14 +660,14 @@ public class SerialObjectStructureAnalysisServiceBean implements TaskCall {
         Arrival a = null;
         for (Arrival arr : shippedObject.getArrivals()) {
             if (a == null) {
-                if (arr.getArrivalDate().before(rec.getAssemblyDate()) || arr.getArrivalDate().equals(rec.getAssemblyDate())) {
+                if (!arr.getArrivalDate().isAfter(rec.getAssemblyDate())) { // before || equal
                     a = arr;
                     continue;
                 }
             }
             else {
-                if (arr.getArrivalDate().before(rec.getAssemblyDate()) || arr.getArrivalDate().equals(rec.getAssemblyDate())) {
-                    if (arr.getArrivalDate().after(a.getArrivalDate())) {
+                if (!arr.getArrivalDate().isAfter(rec.getAssemblyDate())) { // before || equal
+                    if (arr.getArrivalDate().isAfter(a.getArrivalDate())) {
                         a = arr;
                         continue;
                     }
