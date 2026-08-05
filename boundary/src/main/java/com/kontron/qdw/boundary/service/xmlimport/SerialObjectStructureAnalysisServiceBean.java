@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -62,7 +63,7 @@ import net.sourceforge.jbizmo.commons.exchange.DataImportException;
 public class SerialObjectStructureAnalysisServiceBean implements TaskCall {
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private static final int DAYS_DELTA_STRUCTURE_ANALYSIS = 90;
+    private static final int DAYS_DELTA_STRUCTURE_ANALYSIS = 50;
     // private static final int DAYS_DELTA_STRUCTURE_ANALYSIS = 3;
 
     @EJB
@@ -92,13 +93,10 @@ public class SerialObjectStructureAnalysisServiceBean implements TaskCall {
     @PermitAll
     public void execTask(TaskNodeLog ownTask) {
         Set<Long> serObjIds = execCollectSerObj(ownTask);
+        // Set<Long> serObjIds = Set.of(270L, 271L, 272L, 273L, 274L, 275L, 276L, 277L, 278L, 279L, 280L);
 
         logger.info("{} serial object ids found", serObjIds.size());
         if (!serObjIds.isEmpty()) {
-            // per BAPI auf SAP zugreifen und abgleichen.
-            // siehe com.kontron.qdw.integration.serial.SerialObjectExchangeService#performDeltaSerialObjectStructureAnalysis
-            // und com.kontron.qdw.integration.rfc.bean.SerialObjectStructureRFCServiceBean
-            // Bsp.: 270, 271, 272, 273, 274, 275, 276, 277, 278, 279, 280
             execSapComparison(ownTask, serObjIds);
         }
     }
@@ -197,7 +195,7 @@ public class SerialObjectStructureAnalysisServiceBean implements TaskCall {
 
 
         List<SerialObject> serialObjects;
-        try {
+        try { // TODO: fetch join material und parentObject.material
             serialObjects = serialObjectManager.findByIds(serObjIds);
         }
         catch (Exception e) {
@@ -269,8 +267,9 @@ public class SerialObjectStructureAnalysisServiceBean implements TaskCall {
 
             // nächster bulk
             bulkProcess.nextBulk();
-            em.flush();
-            em.clear();
+            // darf nicht sein, da Liste mit SerObj vorher geholt wird
+            // em.flush();
+            // em.clear();
         } // end while bulk
 
 
@@ -430,17 +429,10 @@ public class SerialObjectStructureAnalysisServiceBean implements TaskCall {
                 String rev6 = RevisionUtil.extractGPERev6FromSAPRev10(rev10);
 
                 for (MaterialRevision r : material.getRevisions()) {
-                    if (r.getRev6() != null) {
-                        if (r.getRev6().equals(rev6) || r.getRev6().equals(rev10)) {
-                            materialRevision = r;
-                            break;
-                        }
-                    }
-                    if (r.getRev2() != null) {
-                        if (r.getRev2().equals(mappingObject.getRev2())) {
-                            materialRevision = r;
-                            break;
-                        }
+                    if ((r.getRev6() != null && (r.getRev6().equals(rev6) || r.getRev6().equals(rev10)))
+                            || (r.getRev2() != null && r.getRev2().equals(mappingObject.getRev2()))) {
+                        materialRevision = r;
+                        break;
                     }
                 }
 
@@ -481,8 +473,9 @@ public class SerialObjectStructureAnalysisServiceBean implements TaskCall {
                 serialObject.setSerialNumber(mappingObject.getSerialNumber());
                 serialObject.setMaterial(material);
 
-                serialObject = serialObjectManager.persist(serialObject, true, true);
-                serialObjectMap.put(key, serialObject);
+                // TODO: wieder einkommentieren
+                // serialObject = serialObjectManager.persist(serialObject, true, true);
+                // serialObjectMap.put(key, serialObject);
                 analysis.increaseNewCreatedSerialsInQdw();
             }
 
@@ -511,8 +504,9 @@ public class SerialObjectStructureAnalysisServiceBean implements TaskCall {
                 parentSerialObject.setSerialNumber(mappingObject.getParentSerialNumber());
                 parentSerialObject.setMaterial(parentMaterial);
 
-                parentSerialObject = serialObjectManager.persist(parentSerialObject, true, true);
-                serialObjectMap.put(parentKey, parentSerialObject);
+                // TODO: wieder einkommentieren
+                // parentSerialObject = serialObjectManager.persist(parentSerialObject, true, true);
+                // serialObjectMap.put(parentKey, parentSerialObject);
                 analysis.increaseNewCreatedSerialsInQdw();
             }
 
@@ -546,11 +540,16 @@ public class SerialObjectStructureAnalysisServiceBean implements TaskCall {
             rec.setMaterialRevision(materialRevision);
 
             if (!assemblyRecordFound) {
-                rec = assemblyRecordManager.persist(rec, true, true);
-                // parent = serialObjectManager.mergeSerialObject(parent, false, true);
+                // TODO: wieder einkommentieren
+                // rec = assemblyRecordManager.persist(rec, true, true);
+                // // parent = serialObjectManager.mergeSerialObject(parent, false, true);
             }
 
-
+            // TODO: wennderAssemblyRecord im ParentObject existiert, MUSS er in der Datenbank existieren!
+            // Wenn die aufgerufene Methode als auf Existenz prüft und danach zurück kehrt, muss sie bei Existenz gar nicht aufgerufen werden
+            // TODO: Methode um assemblyRecordFound erweitern und bedingten Breakpoint anlegen wenn true und nicht gefunden.
+            // Wichtig: eigentlich wird ja ein neuer AssemblyRecord erstellt, wenn er nicht existiert. Damit müsste dieser eigentlich auch gefunden
+            // werden, denn er wird davor persistiert und erhält eine Id.
             createOrUpdateMaterializedAssemblyShipment(rec);
 
             serialObjectMap.put(key, serialObject);
@@ -578,23 +577,10 @@ public class SerialObjectStructureAnalysisServiceBean implements TaskCall {
         }
 
         // get min shipment after production
-        Shipment s = null;
-        for (Shipment sh : shippedObject.getShipments()) {
-            if (s == null) {
-                if (!sh.getShipmentDate().isBefore(rec.getAssemblyDate())) { // after || equal
-                    s = sh;
-                    continue;
-                }
-            }
-            else {
-                if (!sh.getShipmentDate().isBefore(rec.getAssemblyDate())) { // before || equal
-                    if (sh.getShipmentDate().isBefore(s.getShipmentDate())) {
-                        s = sh;
-                        continue;
-                    }
-                }
-            }
-        }
+        Shipment s = shippedObject.getShipments().stream()
+                .filter(sh -> !sh.getShipmentDate().isBefore(rec.getAssemblyDate())) // after || equal
+                .min(Comparator.comparing(Shipment::getShipmentDate))
+                .orElse(null);
 
         // return, if there's no valid shipment
         if (s == null) {
@@ -644,23 +630,10 @@ public class SerialObjectStructureAnalysisServiceBean implements TaskCall {
 
 
         // get max arrival before production
-        Arrival a = null;
-        for (Arrival arr : shippedObject.getArrivals()) {
-            if (a == null) {
-                if (!arr.getArrivalDate().isAfter(rec.getAssemblyDate())) { // before || equal
-                    a = arr;
-                    continue;
-                }
-            }
-            else {
-                if (!arr.getArrivalDate().isAfter(rec.getAssemblyDate())) { // before || equal
-                    if (arr.getArrivalDate().isAfter(a.getArrivalDate())) {
-                        a = arr;
-                        continue;
-                    }
-                }
-            }
-        }
+        Arrival a = shippedObject.getArrivals().stream()
+                .filter(arr -> !arr.getArrivalDate().isAfter(rec.getAssemblyDate())) // before || equal
+                .max(Comparator.comparing(Arrival::getArrivalDate))
+                .orElse(null);
 
         if (a != null) {
             mas.setArrivalDate(a.getArrivalDate());
@@ -671,25 +644,26 @@ public class SerialObjectStructureAnalysisServiceBean implements TaskCall {
             mas.setSupplierName(a.getSupplier().getName());
         }
 
-        try {
-            matrlizedAssblyShiptManager.persist(mas, true, true);
-        }
-        catch (EJBTransactionRolledbackException e) {
-            Throwable t = e.getCause();
-            if (t != null && !(t instanceof ConstraintViolationException)) {
-                throw new DataImportException(prepareExceptionInformation(rec, myMaterial) + e);
-            }
-            if (t instanceof ConstraintViolationException) {
-                ConstraintViolationException c = (ConstraintViolationException) t;
-                for (ConstraintViolation<?> violation : c.getConstraintViolations()) {
-                    String message = violation.getMessage();
-                    throw new IllegalStateException(message);
-                }
-            }
-        }
-        catch (Exception e2) {
-            throw new DataImportException(prepareExceptionInformation(rec, myMaterial) + e2);
-        }
+        // TODO: wieder einkommentieren
+        // try {
+        // matrlizedAssblyShiptManager.persist(mas, true, true);
+        // }
+        // catch (EJBTransactionRolledbackException e) {
+        // Throwable t = e.getCause();
+        // if (t != null && !(t instanceof ConstraintViolationException)) {
+        // throw new DataImportException(prepareExceptionInformation(rec, myMaterial) + e);
+        // }
+        // if (t instanceof ConstraintViolationException) {
+        // ConstraintViolationException c = (ConstraintViolationException) t;
+        // for (ConstraintViolation<?> violation : c.getConstraintViolations()) {
+        // String message = violation.getMessage();
+        // throw new IllegalStateException(message);
+        // }
+        // }
+        // }
+        // catch (Exception e2) {
+        // throw new DataImportException(prepareExceptionInformation(rec, myMaterial) + e2);
+        // }
     }
 
     private String prepareExceptionInformation(AssemblyRecord rec, Material myMaterial) {

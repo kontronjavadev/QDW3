@@ -17,7 +17,9 @@ import com.kontron.qdw.repository.service.ServiceMessageRepository;
 
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
+import jakarta.persistence.EntityGraph;
 import jakarta.persistence.FlushModeType;
+import jakarta.persistence.Subgraph;
 import jakarta.persistence.TypedQuery;
 import jakarta.validation.ConstraintViolationException;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
@@ -119,12 +121,26 @@ public class SerialObjectRepository extends AbstractRepository<SerialObject, Lon
     }
 
     public List<SerialObject> findByIds(Collection<Long> ids) {
-        return em.createQuery("select s "
-                + "from SerialObject s "
-                + "where s.id in :serObjIds "
-                + "order by s.id ",
+        // 1. Root-Graph erstellen
+        EntityGraph<SerialObject> graph = em.createEntityGraph(SerialObject.class);
+        graph.addAttributeNodes("material");
+
+        // 2. Subgraph für parentObject
+        Subgraph<SerialObject> parentGraph = graph.addSubgraph("parentObject");
+        parentGraph.addAttributeNodes("material");
+
+        // 3. Subgraph für assemblyRecords (ausgehend vom parent)
+        Subgraph<AssemblyRecord> arGraph = parentGraph.addSubgraph("assemblyRecords");
+        arGraph.addAttributeNodes("serialObject");
+
+        // 4. Saubere Query OHNE Joins, das Laden übernimmt der Graph
+        return em.createQuery("select so "
+                + "from SerialObject so "
+                + "where so.id in :serObjIds "
+                + "order by so.id",
                 SerialObject.class)
                 .setParameter("serObjIds", ids)
+                .setHint("jakarta.persistence.fetchgraph", graph)
                 .getResultList();
     }
 
