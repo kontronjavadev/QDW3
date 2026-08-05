@@ -6,10 +6,11 @@ und dann in die pom eingetragen werden:
 	    <groupId>com.sap.conn.jco</groupId>
 	    <artifactId>sapjco3</artifactId>
 	    <version>3.0.10</version>
+		<scope>provided</scope>
 	</dependency>
+Der scope MUSS provided sein, denn in WildFly muss das als Modul eingetragen werden!
 
-
-Zusätzlich im WildFly die Dateien
+-> Zusätzlich im WildFly die Dateien
 	sapjco3.jar
 und
 	module.xml
