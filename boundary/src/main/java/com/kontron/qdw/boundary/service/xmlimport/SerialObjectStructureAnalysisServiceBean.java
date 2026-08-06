@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -41,10 +42,12 @@ import com.sap.conn.jco.JCoDestinationManager;
 import com.sap.conn.jco.JCoFunction;
 import com.sap.conn.jco.JCoTable;
 
+import jakarta.annotation.Resource;
 import jakarta.annotation.security.PermitAll;
 import jakarta.ejb.EJB;
 import jakarta.ejb.EJBTransactionRolledbackException;
 import jakarta.ejb.LocalBean;
+import jakarta.ejb.SessionContext;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -78,7 +81,8 @@ public class SerialObjectStructureAnalysisServiceBean implements TaskCall {
 
     @PersistenceContext
     private EntityManager em;
-
+    @Resource
+    private SessionContext sessionContext;
 
 
     /** Init Task */
@@ -99,6 +103,9 @@ public class SerialObjectStructureAnalysisServiceBean implements TaskCall {
         if (!serObjIds.isEmpty()) {
             execSapComparison(ownTask, serObjIds);
         }
+
+        // solange getestet wird, die Datenänderungen wieder zurückfahren
+        sessionContext.setRollbackOnly();
     }
 
 
@@ -152,6 +159,7 @@ public class SerialObjectStructureAnalysisServiceBean implements TaskCall {
 
 
     protected void execSapComparison(TaskNodeLog ownTask, Set<Long> serObjIds) {
+
         String executionSection = "SAP comparison";
         logger.info(executionSection);
         TaskLeafLog tskRFC = ownTask.createNewSubTaskLeaf(executionSection);
@@ -220,19 +228,14 @@ public class SerialObjectStructureAnalysisServiceBean implements TaskCall {
                 materialRevisionMap.put(serialObject.getMaterial().getId() + ";;" + revision.getRevisionNumber(), revision);
             }
         }
+        logger.info(serialObjectMap.keySet().stream().sorted().collect(Collectors.joining("\n")));
 
 
 
         List<String> errorMsgs = new ArrayList<>();
-
-        // ####################################################################################################
-        // ####################################################################################################
-        // ####################################################################################################
-
         BulkProcess bulkProcess = new BulkProcess(serialObjects.size(), 100);
-
-
         ComparisonAnalysis analysis = new ComparisonAnalysis();
+
         // long start = System.currentTimeMillis();
         while (bulkProcess.getBulkToIdx() - bulkProcess.getBulkFromIdx() > 0) {
             // in 100-er Schritten verarbeiten
@@ -267,15 +270,11 @@ public class SerialObjectStructureAnalysisServiceBean implements TaskCall {
 
             // nächster bulk
             bulkProcess.nextBulk();
-            // darf nicht sein, da Liste mit SerObj vorher geholt wird
+            // TODO: darf nicht sein, da Liste mit SerObj vorher geholt wird
             // em.flush();
             // em.clear();
         } // end while bulk
 
-
-        // ####################################################################################################
-        // ####################################################################################################
-        // ####################################################################################################
 
 
         StringBuilder sb = new StringBuilder();
@@ -454,6 +453,8 @@ public class SerialObjectStructureAnalysisServiceBean implements TaskCall {
 
 
 
+            // Alle Daten sind vorhanden, wir können loslegen
+
             // SerialObject
             String key = mappingObject.getSerialNumber() + ";" + mappingObject.getsAPMaterialNumber();
             SerialObject serialObject = serialObjectMap.get(key);
@@ -474,8 +475,8 @@ public class SerialObjectStructureAnalysisServiceBean implements TaskCall {
                 serialObject.setMaterial(material);
 
                 // TODO: wieder einkommentieren
-                // serialObject = serialObjectManager.persist(serialObject, true, true);
-                // serialObjectMap.put(key, serialObject);
+                serialObject = serialObjectManager.persist(serialObject, true, true);
+                serialObjectMap.put(key, serialObject);
                 analysis.increaseNewCreatedSerialsInQdw();
             }
 
@@ -505,8 +506,8 @@ public class SerialObjectStructureAnalysisServiceBean implements TaskCall {
                 parentSerialObject.setMaterial(parentMaterial);
 
                 // TODO: wieder einkommentieren
-                // parentSerialObject = serialObjectManager.persist(parentSerialObject, true, true);
-                // serialObjectMap.put(parentKey, parentSerialObject);
+                parentSerialObject = serialObjectManager.persist(parentSerialObject, true, true);
+                serialObjectMap.put(parentKey, parentSerialObject);
                 analysis.increaseNewCreatedSerialsInQdw();
             }
 
@@ -541,16 +542,11 @@ public class SerialObjectStructureAnalysisServiceBean implements TaskCall {
 
             if (!assemblyRecordFound) {
                 // TODO: wieder einkommentieren
-                // rec = assemblyRecordManager.persist(rec, true, true);
-                // // parent = serialObjectManager.mergeSerialObject(parent, false, true);
+                rec = assemblyRecordManager.persist(rec, true, true);
+                // parent = serialObjectManager.mergeSerialObject(parent, false, true);
             }
 
-            // TODO: wennderAssemblyRecord im ParentObject existiert, MUSS er in der Datenbank existieren!
-            // Wenn die aufgerufene Methode als auf Existenz prüft und danach zurück kehrt, muss sie bei Existenz gar nicht aufgerufen werden
-            // TODO: Methode um assemblyRecordFound erweitern und bedingten Breakpoint anlegen wenn true und nicht gefunden.
-            // Wichtig: eigentlich wird ja ein neuer AssemblyRecord erstellt, wenn er nicht existiert. Damit müsste dieser eigentlich auch gefunden
-            // werden, denn er wird davor persistiert und erhält eine Id.
-            createOrUpdateMaterializedAssemblyShipment(rec);
+            createOrUpdateMaterializedAssemblyShipment(rec, assemblyRecordFound);
 
             serialObjectMap.put(key, serialObject);
             serialObjectMap.put(parentKey, parentSerialObject);
@@ -560,9 +556,11 @@ public class SerialObjectStructureAnalysisServiceBean implements TaskCall {
 
 
 
-    private void createOrUpdateMaterializedAssemblyShipment(AssemblyRecord rec) throws ConstraintViolationException {
-        // check if object already exists
-        if (matrlizedAssblyShiptManager.existsById(rec.getId())) {
+    private void createOrUpdateMaterializedAssemblyShipment(AssemblyRecord rec, boolean assemblyRecordFound) throws ConstraintViolationException {
+        // check if MaterializedAssemblyShipment (by AssemblyRecord) already exists
+        // wurde AssemblyRecord gerade erst neu angelegt, so kann es kein dazu gehöriges MaterializedAssemblyShipment geben.
+        // -> Muss nicht geprüft werden, da die Antwort stets fals sein wird.
+        if (assemblyRecordFound && matrlizedAssblyShiptManager.existsById(rec.getId())) {
             return;
         }
 
@@ -645,25 +643,25 @@ public class SerialObjectStructureAnalysisServiceBean implements TaskCall {
         }
 
         // TODO: wieder einkommentieren
-        // try {
-        // matrlizedAssblyShiptManager.persist(mas, true, true);
-        // }
-        // catch (EJBTransactionRolledbackException e) {
-        // Throwable t = e.getCause();
-        // if (t != null && !(t instanceof ConstraintViolationException)) {
-        // throw new DataImportException(prepareExceptionInformation(rec, myMaterial) + e);
-        // }
-        // if (t instanceof ConstraintViolationException) {
-        // ConstraintViolationException c = (ConstraintViolationException) t;
-        // for (ConstraintViolation<?> violation : c.getConstraintViolations()) {
-        // String message = violation.getMessage();
-        // throw new IllegalStateException(message);
-        // }
-        // }
-        // }
-        // catch (Exception e2) {
-        // throw new DataImportException(prepareExceptionInformation(rec, myMaterial) + e2);
-        // }
+        try {
+            matrlizedAssblyShiptManager.persist(mas, true, true);
+        }
+        catch (EJBTransactionRolledbackException e) {
+            Throwable t = e.getCause();
+            if (t != null && !(t instanceof ConstraintViolationException)) {
+                throw new DataImportException(prepareExceptionInformation(rec, myMaterial) + e);
+            }
+            if (t instanceof ConstraintViolationException) {
+                ConstraintViolationException c = (ConstraintViolationException) t;
+                for (ConstraintViolation<?> violation : c.getConstraintViolations()) {
+                    String message = violation.getMessage();
+                    throw new IllegalStateException(message);
+                }
+            }
+        }
+        catch (Exception e2) {
+            throw new DataImportException(prepareExceptionInformation(rec, myMaterial) + e2);
+        }
     }
 
     private String prepareExceptionInformation(AssemblyRecord rec, Material myMaterial) {
