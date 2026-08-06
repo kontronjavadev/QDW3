@@ -8,8 +8,8 @@ import net.sourceforge.jbizmo.commons.annotation.Generated;
 @MappedSuperclass
 public class MaterializedEntitiy {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
+    @NotNull(message = "Field \"id\" must not be null!")
     @Generated
     private long id;
     @Basic(optional = false)
