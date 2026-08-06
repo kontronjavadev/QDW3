@@ -1,6 +1,12 @@
 package com.kontron.qdw.boundary.service.xmlimport;
 
+import java.util.Date;
+
 import org.slf4j.Logger;
+
+import com.kontron.util.datetime.DateUtil;
+import com.kontron.util.datetime.TimeConstants;
+import com.kontron.util.datetime.TimeUtil;
 
 /**
  * Managt eine Bulk-Verarbeitung
@@ -14,8 +20,9 @@ public class BulkProcess {
 
     private final int listSize;
     private final int bulkSize;
+    private final long start;
 
-    private float cnt = 0;
+    private int cnt = 0;
     private int progressStep = 5;
     private int progress = progressStep;
 
@@ -31,6 +38,7 @@ public class BulkProcess {
         this.listSize = listSize;
         this.bulkSize = bulkSize;
         bulkToIdx = Math.min(listSize, bulkSize);
+        start = System.currentTimeMillis();
     }
 
 
@@ -43,18 +51,54 @@ public class BulkProcess {
         bulkToIdx = Math.min(listSize, bulkFromIdx + bulkSize);
     }
 
+    /**
+     * Logging, wenn je Eintrag informiert wird.
+     * 
+     * @see #nextCnt()
+     */
     void logProcess(Logger logger) {
-        if (cnt / listSize * 100 > progress) {
-            progress = ((int) (cnt / listSize * 100) / progressStep) * progressStep;
-            logger.info(progress + "% done");
+        float realFloatProgress = (float) cnt / listSize * 100;
+        if (realFloatProgress > progress) {
+            progress = ((int) realFloatProgress / progressStep) * progressStep;
+
+            long duration = System.currentTimeMillis() - start; // verstrichene Zeit (ms)
+            long expectedDuration = duration * listSize / cnt; // erwartete Dauer (ms) für alle Einträge
+            Date expectedEnd = new Date(start + expectedDuration);
+            double performance = cnt * (float) TimeConstants.MILLISECONDS_PER_MINUTE / duration; // Einträge pro Minute
+            if (logger.isInfoEnabled()) {
+                logger.info(String.format(
+                        "{}% done, avg {} per minute; expected duration: {}; expected end: {}",
+                        progress, String.format("%.1f", performance),
+                        TimeUtil.toBestPracticeStringShort(expectedDuration),
+                        DateUtil.dateToString(expectedEnd, DateUtil.FORMAT_PATTERN_GERMAN_DATE_TIME)));
+            }
+            // logger.info(progress + "% done");
             progress += progressStep;
         }
     }
 
+    /**
+     * Logging, wenn je bulk informiert wird.
+     * 
+     * @see #nextBulk()
+     */
     void logProcessBulkLevel(Logger logger) {
         if ((float) bulkFromIdx / listSize * 100 > progress) {
             progress = ((int) ((float) bulkFromIdx / listSize * 100) / progressStep) * progressStep;
-            logger.info(progress + "% done");
+
+            long duration = System.currentTimeMillis() - start; // verstrichene Zeit (ms)
+            long expectedDuration = duration * listSize / bulkFromIdx; // erwartete Dauer (ms) für alle Einträge
+            Date expectedEnd = new Date(start + expectedDuration);
+            double performance = bulkFromIdx * (float) TimeConstants.MILLISECONDS_PER_MINUTE / duration; // Einträge pro Minute
+            if (logger.isInfoEnabled()) {
+                logger.info(String.format(
+                        "{}% done, avg {} per minute; expected duration: {}; expected end: {}",
+                        progress, String.format("%.1f", performance),
+                        TimeUtil.toBestPracticeStringShort(expectedDuration),
+                        DateUtil.dateToString(expectedEnd, DateUtil.FORMAT_PATTERN_GERMAN_DATE_TIME)));
+            }
+            // logger.info(progress + "% done");
+
             progress += progressStep;
         }
     }

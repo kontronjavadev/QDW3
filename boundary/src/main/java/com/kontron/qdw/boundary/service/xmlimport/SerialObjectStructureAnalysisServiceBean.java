@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -159,7 +158,6 @@ public class SerialObjectStructureAnalysisServiceBean implements TaskCall {
 
 
     protected void execSapComparison(TaskNodeLog ownTask, Set<Long> serObjIds) {
-
         String executionSection = "SAP comparison";
         logger.info(executionSection);
         TaskLeafLog tskRFC = ownTask.createNewSubTaskLeaf(executionSection);
@@ -201,15 +199,16 @@ public class SerialObjectStructureAnalysisServiceBean implements TaskCall {
         }
 
 
-
-        List<SerialObject> serialObjects;
-        try { // TODO: fetch join material und parentObject.material
-            serialObjects = serialObjectManager.findByIds(serObjIds);
-        }
-        catch (Exception e) {
-            tskRFC.finishTaskWithError(e);
-            return;
-        }
+        // Set wegen Sortierbarkeit in Liste wandeln
+        List<Long> serObjIdList = new ArrayList<>(serObjIds);
+        // List<SerialObject> serialObjects;
+        // try {
+        // serialObjects = serialObjectManager.findByIds(serObjIds);
+        // }
+        // catch (Exception e) {
+        // tskRFC.finishTaskWithError(e);
+        // return;
+        // }
 
         // serialObjects.sort(Comparator.comparingLong(SerialObject::getId));
 
@@ -218,48 +217,62 @@ public class SerialObjectStructureAnalysisServiceBean implements TaskCall {
         // TODO: wozu genau werden die gecached, wo SerObj.-Entität die doch schon mitbringt?
         // Werden nur die gecached, die zusätzlich erstellt werden müssen?
         // TODO: das kann vermutlich alles in compareBulk und dort werden nur die behandelt, die zum aktuellen bulk gehören
-        Map<String, SerialObject> serialObjectMap = new HashMap<>();
-        Map<String, Material> materialCache = new HashMap<>();
-        Map<String, MaterialRevision> materialRevisionMap = new HashMap<>();
-        for (SerialObject serialObject : serialObjects) {
-            serialObjectMap.put(serialObject.getSerialNumber() + ";" + serialObject.getMaterial().getSapNumber(), serialObject);
-            materialCache.put(serialObject.getMaterial().getSapNumber(), serialObject.getMaterial());
-            for (MaterialRevision revision : serialObject.getMaterial().getRevisions()) {
-                materialRevisionMap.put(serialObject.getMaterial().getId() + ";;" + revision.getRevisionNumber(), revision);
-            }
-        }
-        logger.info(serialObjectMap.keySet().stream().sorted().collect(Collectors.joining("\n")));
+        // Map<String, SerialObject> serialObjectMap = new HashMap<>();
+        // Map<String, Material> materialCache = new HashMap<>();
+        // Map<String, MaterialRevision> materialRevisionMap = new HashMap<>();
+        // for (SerialObject serialObject : serialObjects) {
+        // serialObjectMap.put(serialObject.getSerialNumber() + ";" + serialObject.getMaterial().getSapNumber(), serialObject);
+        // materialCache.put(serialObject.getMaterial().getSapNumber(), serialObject.getMaterial());
+        // for (MaterialRevision revision : serialObject.getMaterial().getRevisions()) {
+        // materialRevisionMap.put(serialObject.getMaterial().getId() + ";;" + revision.getRevisionNumber(), revision);
+        // }
+        // }
 
 
 
         List<String> errorMsgs = new ArrayList<>();
-        BulkProcess bulkProcess = new BulkProcess(serialObjects.size(), 100);
+        BulkProcess bulkProcess = new BulkProcess(serObjIds.size(), 100);
         ComparisonAnalysis analysis = new ComparisonAnalysis();
 
         // long start = System.currentTimeMillis();
         while (bulkProcess.getBulkToIdx() - bulkProcess.getBulkFromIdx() > 0) {
             // in 100-er Schritten verarbeiten
 
-            // TODO: vielleicht interessant!
-            // // den verarbeiteten Schritt protokollieren
-            // if (soFromIdx > 0) {
+            // ################################################################################################
+            //
+            //
+            // // TODO: vielleicht interessant!
+            // // // den verarbeiteten Schritt protokollieren
+            // int bulkFromIdx = 0;
+            // int bulkSize = 100;
+            // int listSize = serObjIds.size();
+            // int bulkToIdx = Math.min(listSize, bulkSize);
+            // int cnt = 0;
+            // long start = System.currentTimeMillis();
+            //
+            // if (bulkFromIdx > 0) {
             // long duration = System.currentTimeMillis() - start; // verstrichene Zeit (ms)
-            // long expectedDuration = duration * serialObjects.size() / soFromIdx; // erwartete Dauer (ms) für alle Einträge
+            // long expectedDuration = duration * listSize / cnt; // erwartete Dauer (ms) für alle Einträge
             // Date expectedEnd = new Date(start + expectedDuration);
-            // double performance = soFromIdx * 60000.0 / duration; // Einträge / min
+            // double performance = cnt * 60000.0 / duration; // Einträge pro Minute
             // logger.info(String.format(
-            // "runSerialObjectStructureRFC(): processing serial object %s - %s of %s (%.1f per minute; expected duration: %s; expected end: %s",
-            // (soFromIdx + 1), soToIdx, serialObjects.size(), performance, TimeUtil.toBestPracticeStringShort(expectedDuration),
+            // "bulk: avg %.1f per minute; expected duration: %s; expected end: %s",
+            // performance, TimeUtil.toBestPracticeStringShort(expectedDuration),
             // DateUtil.dateToString(expectedEnd, DateUtil.FORMAT_PATTERN_GERMAN_DATE_TIME)));
             // }
             // else {
             // logger.info(String.format("runSerialObjectStructureRFC(): processing serial object %s - %s of %s",
-            // (soFromIdx + 1), soToIdx, serialObjects.size()));
+            // (bulkFromIdx + 1), bulkToIdx, listSize));
             // }
+            //
+            //
+            // ################################################################################################
+
 
             try {
-                compareBulk(destination, function, serialObjects,
-                        serialObjectMap, materialCache, materialRevisionMap,
+                compareBulk(destination, function, serObjIdList,
+                        // serialObjects,
+                        // serialObjectMap, materialCache, materialRevisionMap,
                         bulkProcess, tskRFC, errorMsgs, analysis);
             }
             catch (Exception e) {
@@ -271,14 +284,14 @@ public class SerialObjectStructureAnalysisServiceBean implements TaskCall {
             // nächster bulk
             bulkProcess.nextBulk();
             // TODO: darf nicht sein, da Liste mit SerObj vorher geholt wird
-            // em.flush();
-            // em.clear();
+            em.flush();
+            em.clear();
         } // end while bulk
 
 
 
         StringBuilder sb = new StringBuilder();
-        sb.append(serialObjects.size()).append(" serial number compared, ");
+        sb.append(serObjIds.size()).append(" serial number compared, ");
         sb.append(analysis.getCntNewCreatedSerialsInQdw()).append(" serials new created in QDW (");
         sb.append("serial not found in SAP: ").append(analysis.getCntSerialNotFoundInSap());
         sb.append(", no material data in SAP: ").append(analysis.getCntNoMaterialDataInSap());
@@ -294,16 +307,37 @@ public class SerialObjectStructureAnalysisServiceBean implements TaskCall {
 
 
 
-    private void compareBulk(JCoDestination destination, JCoFunction function, List<SerialObject> serialObjects,
-            Map<String, SerialObject> serialObjectMap, Map<String, Material> materialCache, Map<String, MaterialRevision> materialRevisionMap,
+    private void compareBulk(JCoDestination destination, JCoFunction function, List<Long> serObjIdList,
+            // List<SerialObject> serialObjects,
+            // Map<String, SerialObject> serialObjectMap, Map<String, Material> materialCache, Map<String, MaterialRevision> materialRevisionMap,
             BulkProcess bulkProcess, TaskLeafLog tskRFC, List<String> errorMsgs, ComparisonAnalysis analysis) {
         // aktuell verarbeiteter Batch
-        List<SerialObject> curBatch = serialObjects.subList(bulkProcess.getBulkFromIdx(), bulkProcess.getBulkToIdx());
+        List<Long> serObjIdBatch = serObjIdList.subList(bulkProcess.getBulkFromIdx(), bulkProcess.getBulkToIdx());
+        List<SerialObject> serObjBatch;
+        try {
+            serObjBatch = serialObjectManager.findByIds(serObjIdBatch);
+        }
+        catch (Exception e) {
+            tskRFC.finishTaskWithError(e);
+            return;
+        }
 
-        // TODO: Map mit Materialien nach SAP-Nummern des bulks aufbauen
-        // Map mit Materialien und Parent-Materialien aus dem SerObj. nach SAP-Nummer erstellen.
+
+        // Map mit Materialien aus dem SerObj. nach SAP-Nummer erstellen.
         // Zu SerialNo und SapNo wird SAP abgefragt. Die SAP-Nummer sollte überein stimmen
-        for (SerialObject serObj : curBatch) {
+        Map<String, SerialObject> serialObjectMap = new HashMap<>();
+        Map<String, Material> materialCache = new HashMap<>();
+        Map<String, MaterialRevision> materialRevisionMap = new HashMap<>();
+        for (SerialObject serObj : serObjBatch) {
+            serialObjectMap.put(serObj.getSerialNumber() + ";" + serObj.getMaterial().getSapNumber(), serObj);
+            materialCache.put(serObj.getMaterial().getSapNumber(), serObj.getMaterial());
+            for (MaterialRevision revision : serObj.getMaterial().getRevisions()) {
+                materialRevisionMap.put(serObj.getMaterial().getId() + ";;" + revision.getRevisionNumber(), revision);
+            }
+        }
+
+
+        for (SerialObject serObj : serObjBatch) {
             bulkProcess.logProcess(logger);
 
             try {
