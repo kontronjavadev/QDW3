@@ -48,6 +48,8 @@ import jakarta.ejb.EJBTransactionRolledbackException;
 import jakarta.ejb.LocalBean;
 import jakarta.ejb.SessionContext;
 import jakarta.ejb.Stateless;
+import jakarta.ejb.TransactionAttribute;
+import jakarta.ejb.TransactionAttributeType;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.validation.ConstraintViolation;
@@ -65,7 +67,8 @@ import net.sourceforge.jbizmo.commons.exchange.DataImportException;
 public class SerialObjectStructureAnalysisServiceBean implements TaskCall {
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private static final int DAYS_DELTA_STRUCTURE_ANALYSIS = 50;
+    private static final int DAYS_DELTA_STRUCTURE_ANALYSIS = 55;
+    // private static final int DAYS_DELTA_STRUCTURE_ANALYSIS = 51;
     // private static final int DAYS_DELTA_STRUCTURE_ANALYSIS = 3;
 
     @EJB
@@ -94,6 +97,7 @@ public class SerialObjectStructureAnalysisServiceBean implements TaskCall {
     /** Perform rebuild */
     @Override
     @PermitAll
+    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
     public void execTask(TaskNodeLog ownTask) {
         Set<Long> serObjIds = execCollectSerObj(ownTask);
         // Set<Long> serObjIds = Set.of(270L, 271L, 272L, 273L, 274L, 275L, 276L, 277L, 278L, 279L, 280L);
@@ -102,14 +106,13 @@ public class SerialObjectStructureAnalysisServiceBean implements TaskCall {
         if (!serObjIds.isEmpty()) {
             execSapComparison(ownTask, serObjIds);
         }
-
-        // solange getestet wird, die Datenänderungen wieder zurückfahren
-        sessionContext.setRollbackOnly();
     }
 
 
 
-    protected Set<Long> execCollectSerObj(TaskNodeLog ownTask) {
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public Set<Long> execCollectSerObj(TaskNodeLog ownTask) {
         String executionSection = "collecting serial object ids";
         logger.info(executionSection);
         TaskNodeLog subTsk = ownTask.createNewSubTaskNode(executionSection);
@@ -157,7 +160,7 @@ public class SerialObjectStructureAnalysisServiceBean implements TaskCall {
 
 
 
-    protected void execSapComparison(TaskNodeLog ownTask, Set<Long> serObjIds) {
+    private void execSapComparison(TaskNodeLog ownTask, Set<Long> serObjIds) {
         String executionSection = "SAP comparison";
         logger.info(executionSection);
         TaskLeafLog tskRFC = ownTask.createNewSubTaskLeaf(executionSection);
@@ -201,79 +204,17 @@ public class SerialObjectStructureAnalysisServiceBean implements TaskCall {
 
         // Set wegen Sortierbarkeit in Liste wandeln
         List<Long> serObjIdList = new ArrayList<>(serObjIds);
-        // List<SerialObject> serialObjects;
-        // try {
-        // serialObjects = serialObjectManager.findByIds(serObjIds);
-        // }
-        // catch (Exception e) {
-        // tskRFC.finishTaskWithError(e);
-        // return;
-        // }
-
-        // serialObjects.sort(Comparator.comparingLong(SerialObject::getId));
-
-
-        // Materialien und Revisionen cachen
-        // TODO: wozu genau werden die gecached, wo SerObj.-Entität die doch schon mitbringt?
-        // Werden nur die gecached, die zusätzlich erstellt werden müssen?
-        // TODO: das kann vermutlich alles in compareBulk und dort werden nur die behandelt, die zum aktuellen bulk gehören
-        // Map<String, SerialObject> serialObjectMap = new HashMap<>();
-        // Map<String, Material> materialCache = new HashMap<>();
-        // Map<String, MaterialRevision> materialRevisionMap = new HashMap<>();
-        // for (SerialObject serialObject : serialObjects) {
-        // serialObjectMap.put(serialObject.getSerialNumber() + ";" + serialObject.getMaterial().getSapNumber(), serialObject);
-        // materialCache.put(serialObject.getMaterial().getSapNumber(), serialObject.getMaterial());
-        // for (MaterialRevision revision : serialObject.getMaterial().getRevisions()) {
-        // materialRevisionMap.put(serialObject.getMaterial().getId() + ";;" + revision.getRevisionNumber(), revision);
-        // }
-        // }
-
-
 
         List<String> errorMsgs = new ArrayList<>();
+        // in 100-er Schritten verarbeiten
         BulkProcess bulkProcess = new BulkProcess(serObjIds.size(), 100);
         ComparisonAnalysis analysis = new ComparisonAnalysis();
 
-        // long start = System.currentTimeMillis();
-        while (bulkProcess.getBulkToIdx() - bulkProcess.getBulkFromIdx() > 0) {
-            // in 100-er Schritten verarbeiten
-
-            // ################################################################################################
-            //
-            //
-            // // TODO: vielleicht interessant!
-            // // // den verarbeiteten Schritt protokollieren
-            // int bulkFromIdx = 0;
-            // int bulkSize = 100;
-            // int listSize = serObjIds.size();
-            // int bulkToIdx = Math.min(listSize, bulkSize);
-            // int cnt = 0;
-            // long start = System.currentTimeMillis();
-            //
-            // if (bulkFromIdx > 0) {
-            // long duration = System.currentTimeMillis() - start; // verstrichene Zeit (ms)
-            // long expectedDuration = duration * listSize / cnt; // erwartete Dauer (ms) für alle Einträge
-            // Date expectedEnd = new Date(start + expectedDuration);
-            // double performance = cnt * 60000.0 / duration; // Einträge pro Minute
-            // logger.info(String.format(
-            // "bulk: avg %.1f per minute; expected duration: %s; expected end: %s",
-            // performance, TimeUtil.toBestPracticeStringShort(expectedDuration),
-            // DateUtil.dateToString(expectedEnd, DateUtil.FORMAT_PATTERN_GERMAN_DATE_TIME)));
-            // }
-            // else {
-            // logger.info(String.format("runSerialObjectStructureRFC(): processing serial object %s - %s of %s",
-            // (bulkFromIdx + 1), bulkToIdx, listSize));
-            // }
-            //
-            //
-            // ################################################################################################
-
-
+        while (bulkProcess.hasNext()) {
             try {
-                compareBulk(destination, function, serObjIdList,
-                        // serialObjects,
-                        // serialObjectMap, materialCache, materialRevisionMap,
-                        bulkProcess, tskRFC, errorMsgs, analysis);
+                // Aufruf der Methode compareBulk() über den injizierten Self-Proxy, damit der EJB-Interceptor die Transaktion greift!
+                sessionContext.getBusinessObject(SerialObjectStructureAnalysisServiceBean.class)
+                        .compareBulkTransactional(destination, function, serObjIdList, bulkProcess, tskRFC, errorMsgs, analysis);
             }
             catch (Exception e) {
                 logger.error("failed", e);
@@ -283,11 +224,7 @@ public class SerialObjectStructureAnalysisServiceBean implements TaskCall {
 
             // nächster bulk
             bulkProcess.nextBulk();
-            // TODO: darf nicht sein, da Liste mit SerObj vorher geholt wird
-            em.flush();
-            em.clear();
-        } // end while bulk
-
+        }
 
 
         StringBuilder sb = new StringBuilder();
@@ -306,10 +243,19 @@ public class SerialObjectStructureAnalysisServiceBean implements TaskCall {
     }
 
 
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public void compareBulkTransactional(JCoDestination destination, JCoFunction function, List<Long> serObjIdList,
+            BulkProcess bulkProcess, TaskLeafLog tskRFC, List<String> errorMsgs, ComparisonAnalysis analysis) {
+        compareBulk(destination, function, serObjIdList, bulkProcess, tskRFC, errorMsgs, analysis);
+        em.flush();
+        em.clear();
+
+        // TODO; ACHTUNG!!! solange getestet wird, die Datenänderungen wieder zurückfahren, DANACH ENTFERNEN!
+        sessionContext.setRollbackOnly();
+    }
 
     private void compareBulk(JCoDestination destination, JCoFunction function, List<Long> serObjIdList,
-            // List<SerialObject> serialObjects,
-            // Map<String, SerialObject> serialObjectMap, Map<String, Material> materialCache, Map<String, MaterialRevision> materialRevisionMap,
             BulkProcess bulkProcess, TaskLeafLog tskRFC, List<String> errorMsgs, ComparisonAnalysis analysis) {
         // aktuell verarbeiteter Batch
         List<Long> serObjIdBatch = serObjIdList.subList(bulkProcess.getBulkFromIdx(), bulkProcess.getBulkToIdx());
@@ -373,115 +319,37 @@ public class SerialObjectStructureAnalysisServiceBean implements TaskCall {
 
         for (int rowIdx = 0; rowIdx < table.getNumRows(); rowIdx++) {
             table.setRow(rowIdx);
-            SerialObjectRFCMappingType mappingObject = SerialObjectRFCMappingType.getInstanceBySapTable(table);
+            SerialObjectRFCMappingType serObjSap = SerialObjectRFCMappingType.getInstanceBySapTable(table);
 
             // Ignore empty sets
-            if (mappingObject.getSerialNumber().isEmpty() || mappingObject.getParentSerialNumber().isEmpty()) {
+            if (serObjSap.getSerialNumber().isEmpty() || serObjSap.getParentSerialNumber().isEmpty()) {
                 continue;
             }
 
-            if (mappingObject.getAssemblyDate() == null) {
+            if (serObjSap.getAssemblyDate() == null) {
                 continue;
             }
 
-            if (mappingObject.getsAPMaterialNumber().isEmpty()) {
+            if (serObjSap.getsAPMaterialNumber().isEmpty()) {
                 analysis.increaseNoMaterialDataInSap();
                 continue;
             }
 
-
-
             // Material
-            Material material = materialCache.get(mappingObject.getsAPMaterialNumber());
+            Material material = getMaterial(serObjSap, materialCache, analysis, errorMsgs);
             if (material == null) {
-                // nicht in cache, also in DB suchen..
-                material = materialManager.findBySapNumber(mappingObject.getsAPMaterialNumber());
-                if (material != null) {
-                    materialCache.put(mappingObject.getsAPMaterialNumber(), material);
-                }
-            }
-            if (material == null) {
-                // existiert nicht -> Fehler und weiter mit dem nächsten Eintrag
-                analysis.increaseMatNotFoundInQdw();
-                String errMsg = String.format("Material %s not exists in QDW (serial %s)",
-                        mappingObject.getsAPMaterialNumber(), mappingObject.getSerialNumber());
-                errorMsgs.add(errMsg);
-                logger.error(errMsg);
                 continue;
             }
-
-
 
             // Parent-Material
-            Material parentMaterial = materialCache.get(mappingObject.getParentSAPMaterialNumber());
+            Material parentMaterial = getParentMaterial(serObjSap, materialCache, analysis, errorMsgs);
             if (parentMaterial == null) {
-                // nicht in cache, also in DB suchen..
-                parentMaterial = materialManager.findBySapNumber(mappingObject.getParentSAPMaterialNumber());
-                if (material != null) {
-                    materialCache.put(mappingObject.getParentSAPMaterialNumber(), parentMaterial);
-                }
-            }
-            if (parentMaterial == null) {
-                // existiert nicht -> Fehler und weiter mit dem nächsten Eintrag
-                analysis.increaseMatNotFoundInQdw();
-                String errMsg = String.format("Parent material %s not exists in QDW (serial %s)",
-                        mappingObject.getParentSAPMaterialNumber(), mappingObject.getParentSerialNumber());
-                errorMsgs.add(errMsg);
-                logger.error(errMsg);
                 continue;
             }
-
-
 
             // Revision
-            String gpeRevisionNumber = RevisionUtil.calculateRevNumberBySapRevNumber(
-                    mappingObject.getAlternative(), mappingObject.getRev2(), mappingObject.getRev10());
-            if (gpeRevisionNumber.equals(RevisionUtil.REV_NUMBER_UNDEF)) {
-                analysis.increaseNoRevDataInSap();
-                continue;
-            }
-            String revKey = material.getId() + ";;" + gpeRevisionNumber;
-
-            MaterialRevision materialRevision = materialRevisionMap.get(revKey);
+            MaterialRevision materialRevision = getRevision(serObjSap, materialRevisionMap, material, analysis, errorMsgs);
             if (materialRevision == null) {
-                // nicht in cache, also alle Revisionen des Materials durchsuchen..
-                for (MaterialRevision r : material.getRevisions()) {
-                    if (r.getRevisionNumber().equals(gpeRevisionNumber)) {
-                        materialRevision = r;
-                        break;
-                    }
-                }
-
-                if (materialRevision != null) {
-                    materialRevisionMap.put(revKey, materialRevision);
-                }
-            }
-            if (materialRevision == null) {
-                // immer noch nicht gefunden, dann nach Revisionen mit übereinstimmender rev6 oder rev2 suchen..
-                String rev10 = mappingObject.getRev10();
-                String rev6 = RevisionUtil.extractGPERev6FromSAPRev10(rev10);
-
-                for (MaterialRevision r : material.getRevisions()) {
-                    if ((r.getRev6() != null && (r.getRev6().equals(rev6) || r.getRev6().equals(rev10)))
-                            || (r.getRev2() != null && r.getRev2().equals(mappingObject.getRev2()))) {
-                        materialRevision = r;
-                        break;
-                    }
-                }
-
-                if (materialRevision != null) {
-                    materialRevisionMap.put(revKey, materialRevision);
-                }
-            }
-            if (materialRevision == null) {
-                // existiert nicht -> Fehler und weiter mit dem nächsten Eintrag
-                analysis.increaseRevNotFoundInQdw();
-                String errMsg = String.format(
-                        "Rev %s of material %s not exists in QDW (revAlt: %s, rev2: %s, rev10: %s) (serial %s)",
-                        gpeRevisionNumber, material.getSapNumber(), mappingObject.getAlternative(), mappingObject.getRev2(),
-                        mappingObject.getRev10(), mappingObject.getSerialNumber());
-                errorMsgs.add(errMsg);
-                logger.error(errMsg);
                 continue;
             }
 
@@ -490,61 +358,17 @@ public class SerialObjectStructureAnalysisServiceBean implements TaskCall {
             // Alle Daten sind vorhanden, wir können loslegen
 
             // SerialObject
-            String key = mappingObject.getSerialNumber() + ";" + mappingObject.getsAPMaterialNumber();
-            SerialObject serialObject = serialObjectMap.get(key);
-            if (serialObject == null) {
-                // nicht in cache, also in DB suchen..
-                serialObject = serialObjectManager.findBySerialNumberAndMaterialSapNr(
-                        mappingObject.getSerialNumber(),
-                        mappingObject.getsAPMaterialNumber());
-
-                if (serialObject != null) {
-                    serialObjectMap.put(key, serialObject);
-                }
-            }
-            if (serialObject == null) {
-                // existiert nicht -> erstellen
-                serialObject = new SerialObject();
-                serialObject.setSerialNumber(mappingObject.getSerialNumber());
-                serialObject.setMaterial(material);
-
-                // TODO: wieder einkommentieren
-                serialObject = serialObjectManager.persist(serialObject, true, true);
-                serialObjectMap.put(key, serialObject);
-                analysis.increaseNewCreatedSerialsInQdw();
-            }
-
-            LocalDate sapAssemblyDateAsLocalDate = mappingObject.getAssemblyDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-            serialObject.setAssemblyDate(sapAssemblyDateAsLocalDate);
-            serialObject.setProductionOrderNumber(mappingObject.getProductionOrderNumber());
-
-
+            String key = serObjSap.getSerialNumber() + ";" + serObjSap.getsAPMaterialNumber();
+            SerialObject serialObject = getOrCreateSerObj(serObjSap, serialObjectMap, material, analysis, key);
 
             // Parent-SerialObject
-            String parentKey = mappingObject.getParentSerialNumber() + ";" + mappingObject.getParentSAPMaterialNumber();
-            SerialObject parentSerialObject = serialObjectMap.get(parentKey);
-            if (parentSerialObject == null) {
-                // nicht in cache, also in DB suchen..
-                parentSerialObject = serialObjectManager.findBySerialNumberAndMaterialSapNr(
-                        mappingObject.getParentSerialNumber(),
-                        mappingObject.getParentSAPMaterialNumber());
+            String parentKey = serObjSap.getParentSerialNumber() + ";" + serObjSap.getParentSAPMaterialNumber();
+            SerialObject parentSerialObject = getOrCreateParentSerObj(serObjSap, serialObjectMap, parentMaterial, analysis, parentKey);
 
-                if (parentSerialObject != null) {
-                    serialObjectMap.put(parentKey, parentSerialObject);
-                }
-            }
-            if (parentSerialObject == null) {
-                // existiert nicht -> erstellen
-                parentSerialObject = new SerialObject();
-                parentSerialObject.setSerialNumber(mappingObject.getParentSerialNumber());
-                parentSerialObject.setMaterial(parentMaterial);
 
-                // TODO: wieder einkommentieren
-                parentSerialObject = serialObjectManager.persist(parentSerialObject, true, true);
-                serialObjectMap.put(parentKey, parentSerialObject);
-                analysis.increaseNewCreatedSerialsInQdw();
-            }
-
+            LocalDate sapAssemblyDateAsLocalDate = serObjSap.getAssemblyDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            serialObject.setAssemblyDate(sapAssemblyDateAsLocalDate);
+            serialObject.setProductionOrderNumber(serObjSap.getProductionOrderNumber());
             serialObject.setParentObject(parentSerialObject);
 
 
@@ -553,25 +377,21 @@ public class SerialObjectStructureAnalysisServiceBean implements TaskCall {
             // serialObject.getAssemblyRecords().clear();
             // serialObject = serialObjectManager.mergeSerialObject(serialObject, false, true);
 
-            boolean assemblyRecordFound = false;
-            AssemblyRecord rec = null;
+            AssemblyRecord rec = parentSerialObject.getAssemblyRecords().stream()
+                    .filter(ar -> ar.getSerialObject().getId() == serialObject.getId())
+                    .findFirst()
+                    .orElse(null);
 
-            for (AssemblyRecord r : parentSerialObject.getAssemblyRecords()) {
-                if (r.getSerialObject().getId() == serialObject.getId()) {
-                    rec = r;
-                    assemblyRecordFound = true;
-                    break;
-                }
-            }
+            boolean assemblyRecordFound = rec != null;
 
-            if (rec == null) {
+            if (!assemblyRecordFound) {
                 rec = new AssemblyRecord();
                 rec.setParentSerialObject(parentSerialObject);
                 rec.setSerialObject(serialObject);
             }
 
             rec.setAssemblyDate(sapAssemblyDateAsLocalDate);
-            rec.setProductionOrderNumber(mappingObject.getProductionOrderNumber());
+            rec.setProductionOrderNumber(serObjSap.getProductionOrderNumber());
             rec.setMaterialRevision(materialRevision);
 
             if (!assemblyRecordFound) {
@@ -581,10 +401,6 @@ public class SerialObjectStructureAnalysisServiceBean implements TaskCall {
             }
 
             createOrUpdateMaterializedAssemblyShipment(rec, assemblyRecordFound);
-
-            serialObjectMap.put(key, serialObject);
-            serialObjectMap.put(parentKey, parentSerialObject);
-
         } // end for SAP-Tabellenspalten
     }
 
@@ -721,6 +537,159 @@ public class SerialObjectStructureAnalysisServiceBean implements TaskCall {
     private void setRFCInputParameters(JCoFunction function, String sapMaterialNumber, String serialNumber) {
         function.getImportParameterList().setValue(SerialObjectRFCMappingType.INPUT_VAR_MATERIAL, StringUtils.leftPad(sapMaterialNumber, 18, "0"));
         function.getImportParameterList().setValue(SerialObjectRFCMappingType.INPUT_VAR_SERIAL, StringUtils.leftPad(serialNumber, 18, "0"));
+    }
+
+
+
+    private Material getMaterial(SerialObjectRFCMappingType serObjSap, Map<String, Material> materialCache,
+            ComparisonAnalysis analysis, List<String> errorMsgs) {
+        Material material = materialCache.get(serObjSap.getsAPMaterialNumber());
+        if (material == null) {
+            // nicht in cache, also in DB suchen..
+            material = materialManager.findBySapNumber(serObjSap.getsAPMaterialNumber());
+            if (material != null) {
+                materialCache.put(serObjSap.getsAPMaterialNumber(), material);
+            }
+        }
+        if (material == null) {
+            // existiert nicht -> Fehler und weiter mit dem nächsten Eintrag
+            analysis.increaseMatNotFoundInQdw();
+            String errMsg = String.format("Material %s not exists in QDW (serial %s)",
+                    serObjSap.getsAPMaterialNumber(), serObjSap.getSerialNumber());
+            errorMsgs.add(errMsg);
+            logger.error(errMsg);
+        }
+        return material;
+    }
+
+    private Material getParentMaterial(SerialObjectRFCMappingType serObjSap, Map<String, Material> materialCache,
+            ComparisonAnalysis analysis, List<String> errorMsgs) {
+        Material parentMaterial = materialCache.get(serObjSap.getParentSAPMaterialNumber());
+        if (parentMaterial == null) {
+            // nicht in cache, also in DB suchen..
+            parentMaterial = materialManager.findBySapNumber(serObjSap.getParentSAPMaterialNumber());
+            if (parentMaterial != null) {
+                materialCache.put(serObjSap.getParentSAPMaterialNumber(), parentMaterial);
+            }
+        }
+        if (parentMaterial == null) {
+            // existiert nicht -> Fehler und weiter mit dem nächsten Eintrag
+            analysis.increaseMatNotFoundInQdw();
+            String errMsg = String.format("Parent material %s not exists in QDW (serial %s)",
+                    serObjSap.getParentSAPMaterialNumber(), serObjSap.getParentSerialNumber());
+            errorMsgs.add(errMsg);
+            logger.error(errMsg);
+        }
+        return parentMaterial;
+    }
+
+    private MaterialRevision getRevision(SerialObjectRFCMappingType serObjSap, Map<String, MaterialRevision> materialRevisionMap, Material material,
+            ComparisonAnalysis analysis, List<String> errorMsgs) {
+        String gpeRevisionNumber = RevisionUtil.calculateRevNumberBySapRevNumber(
+                serObjSap.getAlternative(), serObjSap.getRev2(), serObjSap.getRev10());
+        if (gpeRevisionNumber.equals(RevisionUtil.REV_NUMBER_UNDEF)) {
+            analysis.increaseNoRevDataInSap();
+            return null;
+        }
+        String revKey = material.getId() + ";;" + gpeRevisionNumber;
+
+        MaterialRevision materialRevision = materialRevisionMap.get(revKey);
+        if (materialRevision == null) {
+            // nicht in cache, also alle Revisionen des Materials durchsuchen..
+            for (MaterialRevision r : material.getRevisions()) {
+                if (r.getRevisionNumber().equals(gpeRevisionNumber)) {
+                    materialRevision = r;
+                    break;
+                }
+            }
+
+            if (materialRevision != null) {
+                materialRevisionMap.put(revKey, materialRevision);
+            }
+        }
+        if (materialRevision == null) {
+            // immer noch nicht gefunden, dann nach Revisionen mit übereinstimmender rev6 oder rev2 suchen..
+            String rev10 = serObjSap.getRev10();
+            String rev6 = RevisionUtil.extractGPERev6FromSAPRev10(rev10);
+
+            for (MaterialRevision r : material.getRevisions()) {
+                if ((r.getRev6() != null && (r.getRev6().equals(rev6) || r.getRev6().equals(rev10)))
+                        || (r.getRev2() != null && r.getRev2().equals(serObjSap.getRev2()))) {
+                    materialRevision = r;
+                    break;
+                }
+            }
+
+            if (materialRevision != null) {
+                materialRevisionMap.put(revKey, materialRevision);
+            }
+            if (materialRevision == null) {
+                // existiert nicht -> Fehler und weiter mit dem nächsten Eintrag
+                analysis.increaseRevNotFoundInQdw();
+                String errMsg = String.format(
+                        "Rev %s of material %s not exists in QDW (revAlt: %s, rev2: %s, rev10: %s) (serial %s)",
+                        gpeRevisionNumber, material.getSapNumber(), serObjSap.getAlternative(), serObjSap.getRev2(),
+                        serObjSap.getRev10(), serObjSap.getSerialNumber());
+                errorMsgs.add(errMsg);
+                logger.error(errMsg);
+            }
+        }
+        return materialRevision;
+    }
+
+
+    private SerialObject getOrCreateSerObj(SerialObjectRFCMappingType serObjSap, Map<String, SerialObject> serialObjectMap, Material material,
+            ComparisonAnalysis analysis, String key) {
+        SerialObject serialObject = serialObjectMap.get(key);
+        if (serialObject == null) {
+            // nicht in cache, also in DB suchen..
+            serialObject = serialObjectManager.findBySerialNumberAndMaterialSapNr(
+                    serObjSap.getSerialNumber(),
+                    serObjSap.getsAPMaterialNumber());
+
+            if (serialObject != null) {
+                serialObjectMap.put(key, serialObject);
+            }
+        }
+        if (serialObject == null) {
+            // existiert nicht -> erstellen
+            serialObject = new SerialObject();
+            serialObject.setSerialNumber(serObjSap.getSerialNumber());
+            serialObject.setMaterial(material);
+
+            // TODO: wieder einkommentieren
+            serialObject = serialObjectManager.persist(serialObject, true, true);
+            serialObjectMap.put(key, serialObject);
+            analysis.increaseNewCreatedSerialsInQdw();
+        }
+        return serialObject;
+    }
+
+    private SerialObject getOrCreateParentSerObj(SerialObjectRFCMappingType serObjSap, Map<String, SerialObject> serialObjectMap,
+            Material parentMaterial, ComparisonAnalysis analysis, String parentKey) {
+        SerialObject parentSerialObject = serialObjectMap.get(parentKey);
+        if (parentSerialObject == null) {
+            // nicht in cache, also in DB suchen..
+            parentSerialObject = serialObjectManager.findBySerialNumberAndMaterialSapNr(
+                    serObjSap.getParentSerialNumber(),
+                    serObjSap.getParentSAPMaterialNumber());
+
+            if (parentSerialObject != null) {
+                serialObjectMap.put(parentKey, parentSerialObject);
+            }
+        }
+        if (parentSerialObject == null) {
+            // existiert nicht -> erstellen
+            parentSerialObject = new SerialObject();
+            parentSerialObject.setSerialNumber(serObjSap.getParentSerialNumber());
+            parentSerialObject.setMaterial(parentMaterial);
+
+            // TODO: wieder einkommentieren
+            parentSerialObject = serialObjectManager.persist(parentSerialObject, true, true);
+            serialObjectMap.put(parentKey, parentSerialObject);
+            analysis.increaseNewCreatedSerialsInQdw();
+        }
+        return parentSerialObject;
     }
 
 

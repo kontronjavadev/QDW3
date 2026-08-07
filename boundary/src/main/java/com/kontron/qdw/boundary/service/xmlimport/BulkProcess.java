@@ -46,6 +46,10 @@ public class BulkProcess {
         cnt++;
     }
 
+    boolean hasNext() {
+        return bulkToIdx - bulkFromIdx > 0;
+    }
+
     void nextBulk() {
         bulkFromIdx = bulkToIdx;
         bulkToIdx = Math.min(listSize, bulkFromIdx + bulkSize);
@@ -66,11 +70,10 @@ public class BulkProcess {
             Date expectedEnd = new Date(start + expectedDuration);
             double performance = cnt * (float) TimeConstants.MILLISECONDS_PER_MINUTE / duration; // Einträge pro Minute
             if (logger.isInfoEnabled()) {
-                logger.info(String.format(
-                        "{}% done, avg {} per minute; expected duration: {}; expected end: {}",
+                logger.info("{}% done, avg {} per minute; expected duration: {}; expected end: {}",
                         progress, String.format("%.1f", performance),
                         TimeUtil.toBestPracticeStringShort(expectedDuration),
-                        DateUtil.dateToString(expectedEnd, DateUtil.FORMAT_PATTERN_GERMAN_DATE_TIME)));
+                        DateUtil.dateToString(expectedEnd, DateUtil.FORMAT_PATTERN_GERMAN_DATE_TIME));
             }
             // logger.info(progress + "% done");
             progress += progressStep;

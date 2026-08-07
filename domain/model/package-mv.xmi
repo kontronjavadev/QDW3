@@ -33,7 +33,7 @@
           minValue=""
           regularExpression=""/>
       <javaType
-          href="project.xmi#/0/@allSupportedTypes.2"/>
+          href="project.xmi#/0/@allSupportedTypes.7"/>
     </attributes>
     <attributes
         name="meSerialObjectId"

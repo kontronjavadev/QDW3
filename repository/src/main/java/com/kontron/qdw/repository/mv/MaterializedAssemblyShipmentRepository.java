@@ -8,6 +8,7 @@ import net.sourceforge.jbizmo.commons.jpa.*;
 import jakarta.ejb.*;
 import jakarta.validation.*;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
+import java.util.concurrent.*;
 
 @Stateless
 public class MaterializedAssemblyShipmentRepository extends AbstractRepository<MaterializedAssemblyShipment, Long> {
@@ -35,11 +36,7 @@ public class MaterializedAssemblyShipmentRepository extends AbstractRepository<M
     @Generated
     public MaterializedAssemblyShipment copy(MaterializedAssemblyShipment sourceObject, MaterializedAssemblyShipment targetObject,
             long loggedOnUserId) {
-        boolean flushAndRefresh = false;
-
         if (targetObject == null) {
-            flushAndRefresh = true;
-
             targetObject = new MaterializedAssemblyShipment();
         }
 
@@ -58,6 +55,7 @@ public class MaterializedAssemblyShipmentRepository extends AbstractRepository<M
         targetObject.setShipmentMovementType(sourceObject.getShipmentMovementType());
         targetObject.setSupplierCode(sourceObject.getSupplierCode());
         targetObject.setSupplierName(sourceObject.getSupplierName());
+        targetObject.setId(Math.absExact(ThreadLocalRandom.current().nextLong()));
         targetObject.setMeSerialObjectId(sourceObject.getMeSerialObjectId());
         targetObject.setParentSerialObjectId(sourceObject.getParentSerialObjectId());
         targetObject.setSerialNumber(sourceObject.getSerialNumber());
@@ -83,14 +81,6 @@ public class MaterializedAssemblyShipmentRepository extends AbstractRepository<M
         targetObject.setSerialObject(sourceObject.getSerialObject());
 
         targetObject = persist(targetObject, false, false);
-
-        if (flushAndRefresh) {
-            // Call the flush() method in order to force the database insert immediately!
-            em.flush();
-
-            // Get a fully attached version of the entity
-            em.refresh(targetObject);
-        }
 
         return targetObject;
     }

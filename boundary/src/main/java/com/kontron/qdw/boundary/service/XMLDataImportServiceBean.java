@@ -27,6 +27,8 @@ import jakarta.annotation.security.PermitAll;
 import jakarta.ejb.Asynchronous;
 import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
+import jakarta.ejb.TransactionAttribute;
+import jakarta.ejb.TransactionAttributeType;
 import net.sourceforge.jbizmo.commons.property.PropertyService;
 
 /**
@@ -92,6 +94,7 @@ public class XMLDataImportServiceBean {
 
     @Asynchronous
     @PermitAll
+    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
     public void runImport() {
         if (!schedulerService.isExecuteImport()) {
             return;
@@ -136,6 +139,7 @@ public class XMLDataImportServiceBean {
 
     @Asynchronous
     @PermitAll
+    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
     public void runCustomerImport() {
         if (!schedulerService.isExecuteImport()) {
             return;
@@ -149,6 +153,7 @@ public class XMLDataImportServiceBean {
 
     @Asynchronous
     @PermitAll
+    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
     public void runSupplierImport() {
         if (!schedulerService.isExecuteImport()) {
             return;
@@ -162,6 +167,7 @@ public class XMLDataImportServiceBean {
 
     @Asynchronous
     @PermitAll
+    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
     public void runMaterialImport() {
         if (!schedulerService.isExecuteImport()) {
             return;
@@ -175,6 +181,7 @@ public class XMLDataImportServiceBean {
 
     @Asynchronous
     @PermitAll
+    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
     public void runBoMImport() {
         if (!schedulerService.isExecuteImport()) {
             return;
@@ -190,6 +197,7 @@ public class XMLDataImportServiceBean {
 
     @Asynchronous
     @PermitAll
+    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
     public void runArrivalImport() {
         if (!schedulerService.isExecuteImport()) {
             return;
@@ -217,6 +225,7 @@ public class XMLDataImportServiceBean {
 
     @Asynchronous
     @PermitAll
+    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
     public void runArrivalRebuildMaterialized() {
         if (!schedulerService.isExecuteImport()) {
             return;
@@ -230,6 +239,7 @@ public class XMLDataImportServiceBean {
 
     @Asynchronous
     @PermitAll
+    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
     public void runArrivalRebuildAggregated() {
         if (!schedulerService.isExecuteImport()) {
             return;
@@ -245,6 +255,7 @@ public class XMLDataImportServiceBean {
 
     @Asynchronous
     @PermitAll
+    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
     public void runShipmentImport() {
         if (!schedulerService.isExecuteImport()) {
             return;
@@ -273,6 +284,7 @@ public class XMLDataImportServiceBean {
 
     @Asynchronous
     @PermitAll
+    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
     public void runShptArrvRebuildMaterialized() {
         if (!schedulerService.isExecuteImport()) {
             return;
@@ -286,6 +298,7 @@ public class XMLDataImportServiceBean {
 
     @Asynchronous
     @PermitAll
+    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
     public void runShptRebuildAggregated() {
         if (!schedulerService.isExecuteImport()) {
             return;
@@ -299,6 +312,7 @@ public class XMLDataImportServiceBean {
 
     @Asynchronous
     @PermitAll
+    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
     public void runShptArrvRebuildAggregated() {
         if (!schedulerService.isExecuteImport()) {
             return;
@@ -314,6 +328,7 @@ public class XMLDataImportServiceBean {
 
     @Asynchronous
     @PermitAll
+    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
     public void runAnalyzeSerObjStructure() {
         if (!schedulerService.isExecuteImport()) {
             return;

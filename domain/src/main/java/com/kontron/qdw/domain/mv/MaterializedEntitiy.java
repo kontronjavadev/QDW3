@@ -11,7 +11,7 @@ public class MaterializedEntitiy {
     @Column(name = "id")
     @NotNull(message = "Field \"id\" must not be null!")
     @Generated
-    private long id;
+    private Long id;
     @Basic(optional = false)
     @Column(name = "serial_object_id", nullable = false, updatable = true, insertable = true)
     @Generated
@@ -120,7 +120,7 @@ public class MaterializedEntitiy {
      * @param id
      */
     @Generated
-    public MaterializedEntitiy(long id) {
+    public MaterializedEntitiy(Long id) {
         this.id = id;
     }
 
@@ -128,7 +128,7 @@ public class MaterializedEntitiy {
      * @return the id
      */
     @Generated
-    public long getId() {
+    public Long getId() {
         return this.id;
     }
 
@@ -136,7 +136,7 @@ public class MaterializedEntitiy {
      * @param id the id to set
      */
     @Generated
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -493,7 +493,14 @@ public class MaterializedEntitiy {
 
         final var bean = (MaterializedEntitiy) obj;
 
-        return getId() == bean.getId();
+        if (getId() == null) {
+            if (bean.getId() != null)
+                return false;
+        }
+        else if (!getId().equals(bean.getId()))
+            return false;
+
+        return true;
     }
 
     /* (non-Javadoc)
@@ -502,7 +509,11 @@ public class MaterializedEntitiy {
     @Generated
     @Override
     public int hashCode() {
-        return (int) (getId() ^ (getId() >>> 32));
+        // Return hash code of current date if primary key field is not yet set!
+        if (getId() == null)
+            return new java.util.Date().hashCode();
+
+        return getId().hashCode();
     }
 
 }

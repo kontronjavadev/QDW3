@@ -8,6 +8,7 @@ import net.sourceforge.jbizmo.commons.jpa.*;
 import jakarta.ejb.*;
 import jakarta.validation.*;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
+import java.util.concurrent.*;
 
 @Stateless
 public class MaterializedArrivalRepository extends AbstractRepository<MaterializedArrival, Long> {
@@ -34,11 +35,7 @@ public class MaterializedArrivalRepository extends AbstractRepository<Materializ
      */
     @Generated
     public MaterializedArrival copy(MaterializedArrival sourceObject, MaterializedArrival targetObject, long loggedOnUserId) {
-        boolean flushAndRefresh = false;
-
         if (targetObject == null) {
-            flushAndRefresh = true;
-
             targetObject = new MaterializedArrival();
         }
 
@@ -49,6 +46,7 @@ public class MaterializedArrivalRepository extends AbstractRepository<Materializ
         targetObject.setOrderNumber(sourceObject.getOrderNumber());
         targetObject.setCountryCode(sourceObject.getCountryCode());
         targetObject.setCountryName(sourceObject.getCountryName());
+        targetObject.setId(Math.absExact(ThreadLocalRandom.current().nextLong()));
         targetObject.setMeSerialObjectId(sourceObject.getMeSerialObjectId());
         targetObject.setParentSerialObjectId(sourceObject.getParentSerialObjectId());
         targetObject.setSerialNumber(sourceObject.getSerialNumber());
@@ -74,14 +72,6 @@ public class MaterializedArrivalRepository extends AbstractRepository<Materializ
         targetObject.setSerialObject(sourceObject.getSerialObject());
 
         targetObject = persist(targetObject, false, false);
-
-        if (flushAndRefresh) {
-            // Call the flush() method in order to force the database insert immediately!
-            em.flush();
-
-            // Get a fully attached version of the entity
-            em.refresh(targetObject);
-        }
 
         return targetObject;
     }
