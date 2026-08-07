@@ -1,4 +1,4 @@
-package com.kontron.qdw.boundary.service.xmlimport;
+package com.kontron.qdw.boundary.service.analysis;
 
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDate;
@@ -17,8 +17,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.kontron.qdw.boundary.service.TaskCall;
 import com.kontron.qdw.boundary.service.mapping.serialobject.SerialObjectRFCMappingType;
+import com.kontron.qdw.boundary.service.process.BulkProcess;
+import com.kontron.qdw.boundary.service.process.TaskCall;
 import com.kontron.qdw.domain.base.Country;
 import com.kontron.qdw.domain.base.Customer;
 import com.kontron.qdw.domain.material.Material;
@@ -67,8 +68,7 @@ import net.sourceforge.jbizmo.commons.exchange.DataImportException;
 public class SerialObjectStructureAnalysisServiceBean implements TaskCall {
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private static final int DAYS_DELTA_STRUCTURE_ANALYSIS = 55;
-    // private static final int DAYS_DELTA_STRUCTURE_ANALYSIS = 51;
+    private static final int DAYS_DELTA_STRUCTURE_ANALYSIS = 51;
     // private static final int DAYS_DELTA_STRUCTURE_ANALYSIS = 3;
 
     @EJB
@@ -100,7 +100,6 @@ public class SerialObjectStructureAnalysisServiceBean implements TaskCall {
     @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
     public void execTask(TaskNodeLog ownTask) {
         Set<Long> serObjIds = execCollectSerObj(ownTask);
-        // Set<Long> serObjIds = Set.of(270L, 271L, 272L, 273L, 274L, 275L, 276L, 277L, 278L, 279L, 280L);
 
         logger.info("{} serial object ids found", serObjIds.size());
         if (!serObjIds.isEmpty()) {
@@ -130,6 +129,7 @@ public class SerialObjectStructureAnalysisServiceBean implements TaskCall {
             idList.addAll(em.createQuery(sql, Long.class).setParameter("paramDate", thresholdDate).getResultList());
             leaf.finishTaskWithSuccess();
 
+            // TODO: Abfrage umbauen, etwa mit union, und dann Index einsetzen!
             // get all new and updated repairs of mentioned interval
             leaf = subTsk.createNewSubTaskLeaf("select serial object ids from service message");
             sql = "select distinct a.serialObject.id from ServiceMessage a where a.creationDate > :paramCreationDate or a.lastUpdate > :paramLastUpdate";
@@ -175,6 +175,7 @@ public class SerialObjectStructureAnalysisServiceBean implements TaskCall {
 
 
 
+        // SAP-Verbindung
         JCoDestination destination;
         JCoFunction function;
         try {
@@ -295,7 +296,7 @@ public class SerialObjectStructureAnalysisServiceBean implements TaskCall {
             }
 
             bulkProcess.nextCnt();
-        } // end for serialObjects
+        }
     }
 
     private void compareEntry(JCoDestination destination, JCoFunction function, Map<String, SerialObject> serialObjectMap,
@@ -338,19 +339,19 @@ public class SerialObjectStructureAnalysisServiceBean implements TaskCall {
             // Material
             Material material = getMaterial(serObjSap, materialCache, analysis, errorMsgs);
             if (material == null) {
-                continue;
+                continue; // existiert nicht -> Fehler und weiter mit dem nächsten Eintrag
             }
 
             // Parent-Material
             Material parentMaterial = getParentMaterial(serObjSap, materialCache, analysis, errorMsgs);
             if (parentMaterial == null) {
-                continue;
+                continue; // existiert nicht -> Fehler und weiter mit dem nächsten Eintrag
             }
 
             // Revision
             MaterialRevision materialRevision = getRevision(serObjSap, materialRevisionMap, material, analysis, errorMsgs);
             if (materialRevision == null) {
-                continue;
+                continue; // existiert nicht -> Fehler und weiter mit dem nächsten Eintrag
             }
 
 
@@ -373,10 +374,6 @@ public class SerialObjectStructureAnalysisServiceBean implements TaskCall {
 
 
 
-            // Clear old assembly records
-            // serialObject.getAssemblyRecords().clear();
-            // serialObject = serialObjectManager.mergeSerialObject(serialObject, false, true);
-
             AssemblyRecord rec = parentSerialObject.getAssemblyRecords().stream()
                     .filter(ar -> ar.getSerialObject().getId() == serialObject.getId())
                     .findFirst()
@@ -397,7 +394,6 @@ public class SerialObjectStructureAnalysisServiceBean implements TaskCall {
             if (!assemblyRecordFound) {
                 // TODO: wieder einkommentieren
                 rec = assemblyRecordManager.persist(rec, true, true);
-                // parent = serialObjectManager.mergeSerialObject(parent, false, true);
             }
 
             createOrUpdateMaterializedAssemblyShipment(rec, assemblyRecordFound);
@@ -414,6 +410,7 @@ public class SerialObjectStructureAnalysisServiceBean implements TaskCall {
             return;
         }
 
+        // DOTO: mit einer eigenen Funktion hierarchisch den Top-Parent suchen, da ansonsten für jeden Parent ein erneuter Zugriff erfolgen muss
         SerialObject shippedObject = rec.getParentSerialObject();
         while (true) {
             if (shippedObject.getParentObject() == null) {

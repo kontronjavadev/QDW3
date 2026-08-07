@@ -19,8 +19,9 @@ import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
 
 import com.kontron.constants.file.FileType;
-import com.kontron.qdw.boundary.service.TaskCall;
-import com.kontron.qdw.boundary.service.XMLDataImportUtils;
+import com.kontron.qdw.boundary.service.process.BulkProcess;
+import com.kontron.qdw.boundary.service.process.TaskCall;
+import com.kontron.qdw.boundary.service.process.XMLDataImportUtils;
 import com.kontron.qdw.boundary.util.Constants;
 import com.kontron.util.file.FileUtil.ImportType;
 import com.kontron.util.log.FileImportAbortedWithErrorsLog;
@@ -30,6 +31,8 @@ import com.kontron.util.log.TaskLeafLog;
 import com.kontron.util.log.TaskNodeLog;
 
 import jakarta.annotation.security.PermitAll;
+import jakarta.ejb.TransactionAttribute;
+import jakarta.ejb.TransactionAttributeType;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.xml.bind.JAXBContext;
@@ -72,6 +75,7 @@ public abstract class AbstractXMLImportServiceBean<ROOT, ELEM> implements TaskCa
     /** Perform import */
     @Override
     @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void execTask(TaskNodeLog ownTask) {
         String[] importFileNames = new File(getImportDir()).list(SIMPLE_XML_FILTER);
         if (importFileNames.length == 0) {

@@ -1,17 +1,19 @@
-package com.kontron.qdw.boundary.service.xmlimport;
+package com.kontron.qdw.boundary.service.rebuild;
 
 import java.lang.invoke.MethodHandles;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.kontron.qdw.boundary.service.TaskCall;
+import com.kontron.qdw.boundary.service.process.TaskCall;
 import com.kontron.util.log.TaskLeafLog;
 import com.kontron.util.log.TaskNodeLog;
 
 import jakarta.annotation.security.PermitAll;
 import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
+import jakarta.ejb.TransactionAttribute;
+import jakarta.ejb.TransactionAttributeType;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 
@@ -42,6 +44,7 @@ public class ShipmentRebuildAggregatedServiceBean implements TaskCall {
     /** Perform rebuild */
     @Override
     @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void execTask(TaskNodeLog ownTask) {
         execDrop(ownTask);
         execCreate(ownTask);

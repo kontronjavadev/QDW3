@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 
 import com.kontron.qdw.boundary.service.mapping.shipment.ShipmentMappingType;
 import com.kontron.qdw.boundary.service.mapping.shipment.ShipmentRootMappingType;
+import com.kontron.qdw.boundary.service.process.BulkProcess;
 import com.kontron.qdw.domain.base.Customer;
 import com.kontron.qdw.domain.base.MovementType;
 import com.kontron.qdw.domain.base.Plant;

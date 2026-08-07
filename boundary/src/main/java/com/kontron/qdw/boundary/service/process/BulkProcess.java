@@ -1,4 +1,4 @@
-package com.kontron.qdw.boundary.service.xmlimport;
+package com.kontron.qdw.boundary.service.process;
 
 import java.util.Date;
 
@@ -42,15 +42,15 @@ public class BulkProcess {
     }
 
 
-    void nextCnt() {
+    public void nextCnt() {
         cnt++;
     }
 
-    boolean hasNext() {
+    public boolean hasNext() {
         return bulkToIdx - bulkFromIdx > 0;
     }
 
-    void nextBulk() {
+    public void nextBulk() {
         bulkFromIdx = bulkToIdx;
         bulkToIdx = Math.min(listSize, bulkFromIdx + bulkSize);
     }
@@ -60,7 +60,7 @@ public class BulkProcess {
      * 
      * @see #nextCnt()
      */
-    void logProcess(Logger logger) {
+    public void logProcess(Logger logger) {
         float realFloatProgress = (float) cnt / listSize * 100;
         if (realFloatProgress > progress) {
             progress = ((int) realFloatProgress / progressStep) * progressStep;
@@ -75,7 +75,7 @@ public class BulkProcess {
                         TimeUtil.toBestPracticeStringShort(expectedDuration),
                         DateUtil.dateToString(expectedEnd, DateUtil.FORMAT_PATTERN_GERMAN_DATE_TIME));
             }
-            // logger.info(progress + "% done");
+
             progress += progressStep;
         }
     }
@@ -85,7 +85,7 @@ public class BulkProcess {
      * 
      * @see #nextBulk()
      */
-    void logProcessBulkLevel(Logger logger) {
+    public void logProcessBulkLevel(Logger logger) {
         if ((float) bulkFromIdx / listSize * 100 > progress) {
             progress = ((int) ((float) bulkFromIdx / listSize * 100) / progressStep) * progressStep;
 
@@ -94,13 +94,11 @@ public class BulkProcess {
             Date expectedEnd = new Date(start + expectedDuration);
             double performance = bulkFromIdx * (float) TimeConstants.MILLISECONDS_PER_MINUTE / duration; // Einträge pro Minute
             if (logger.isInfoEnabled()) {
-                logger.info(String.format(
-                        "{}% done, avg {} per minute; expected duration: {}; expected end: {}",
+                logger.info("{}% done, avg {} per minute; expected duration: {}; expected end: {}",
                         progress, String.format("%.1f", performance),
                         TimeUtil.toBestPracticeStringShort(expectedDuration),
-                        DateUtil.dateToString(expectedEnd, DateUtil.FORMAT_PATTERN_GERMAN_DATE_TIME)));
+                        DateUtil.dateToString(expectedEnd, DateUtil.FORMAT_PATTERN_GERMAN_DATE_TIME));
             }
-            // logger.info(progress + "% done");
 
             progress += progressStep;
         }

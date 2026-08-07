@@ -19,6 +19,7 @@ import com.kontron.qdw.boundary.service.mapping.bom.BoMItemXMLElement;
 import com.kontron.qdw.boundary.service.mapping.bom.BoMXMLElement;
 import com.kontron.qdw.boundary.service.mapping.bom.BoMXMLRoot;
 import com.kontron.qdw.boundary.service.mapping.bom.dto.BoMItemComparingDto;
+import com.kontron.qdw.boundary.service.process.BulkProcess;
 import com.kontron.qdw.domain.base.Plant;
 import com.kontron.qdw.domain.material.BoMItem;
 import com.kontron.qdw.domain.material.Material;

@@ -18,7 +18,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 
 import com.kontron.constants.file.FileType;
-import com.kontron.qdw.boundary.service.TaskCall;
+import com.kontron.qdw.boundary.service.process.TaskCall;
 import com.kontron.qdw.boundary.util.Constants;
 import com.kontron.qdw.domain.base.Country;
 import com.kontron.qdw.domain.base.Customer;
@@ -84,6 +84,7 @@ public class XMLCustomerImportServiceBean implements TaskCall {
     /** Perform import */
     @Override
     @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void execTask(TaskNodeLog ownTask) {
         String importDir = exchangePath + FOLDER_SUB_PATH;
 
