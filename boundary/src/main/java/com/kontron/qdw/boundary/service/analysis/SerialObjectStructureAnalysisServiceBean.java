@@ -129,10 +129,11 @@ public class SerialObjectStructureAnalysisServiceBean implements TaskCall {
             idList.addAll(em.createQuery(sql, Long.class).setParameter("paramDate", thresholdDate).getResultList());
             leaf.finishTaskWithSuccess();
 
-            // TODO: Abfrage umbauen, etwa mit union, und dann Index einsetzen!
             // get all new and updated repairs of mentioned interval
             leaf = subTsk.createNewSubTaskLeaf("select serial object ids from service message");
-            sql = "select distinct a.serialObject.id from ServiceMessage a where a.creationDate > :paramCreationDate or a.lastUpdate > :paramLastUpdate";
+            sql = "select distinct a.serialObject.id from ServiceMessage a where a.creationDate > :paramCreationDate "
+                    + "union "
+                    + "select distinct a.serialObject.id from ServiceMessage a where a.lastUpdate > :paramLastUpdate";
             idList.addAll(em.createQuery(sql, Long.class)
                     .setParameter("paramCreationDate", thresholdDate)
                     .setParameter("paramLastUpdate", thresholdDate)
@@ -141,7 +142,9 @@ public class SerialObjectStructureAnalysisServiceBean implements TaskCall {
 
             // get all new and updated repairs of mentioned interval
             leaf = subTsk.createNewSubTaskLeaf("select serial object ids from x2 message");
-            sql = "select distinct a.serialObject.id from X2Message a where a.creationDate > :paramCreationDate or a.lastUpdate > :paramLastUpdate";
+            sql = "select distinct a.serialObject.id from X2Message a where a.creationDate > :paramCreationDate "
+                    + "union "
+                    + "select distinct a.serialObject.id from X2Message a where a.lastUpdate > :paramLastUpdate";
             idList.addAll(em.createQuery(sql, Long.class)
                     .setParameter("paramCreationDate", thresholdDate)
                     .setParameter("paramLastUpdate", thresholdDate)
