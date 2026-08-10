@@ -68,8 +68,7 @@ import net.sourceforge.jbizmo.commons.exchange.DataImportException;
 public class SerialObjectStructureAnalysisServiceBean implements TaskCall {
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private static final int DAYS_DELTA_STRUCTURE_ANALYSIS = 54;
-    // private static final int DAYS_DELTA_STRUCTURE_ANALYSIS = 3;
+    private static final int DAYS_DELTA_STRUCTURE_ANALYSIS = 3;
 
     @EJB
     private SerialObjectRepository serialObjectManager;
@@ -254,9 +253,6 @@ public class SerialObjectStructureAnalysisServiceBean implements TaskCall {
         compareBulk(destination, function, serObjIdList, bulkProcess, tskRFC, errorMsgs, analysis);
         em.flush();
         em.clear();
-
-        // TODO; ACHTUNG!!! solange getestet wird, die Datenänderungen wieder zurückfahren, DANACH ENTFERNEN!
-        sessionContext.setRollbackOnly();
     }
 
     private void compareBulk(JCoDestination destination, JCoFunction function, List<Long> serObjIdList,
