@@ -68,7 +68,7 @@ import net.sourceforge.jbizmo.commons.exchange.DataImportException;
 public class SerialObjectStructureAnalysisServiceBean implements TaskCall {
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private static final int DAYS_DELTA_STRUCTURE_ANALYSIS = 51;
+    private static final int DAYS_DELTA_STRUCTURE_ANALYSIS = 54;
     // private static final int DAYS_DELTA_STRUCTURE_ANALYSIS = 3;
 
     @EJB
@@ -395,7 +395,6 @@ public class SerialObjectStructureAnalysisServiceBean implements TaskCall {
             rec.setMaterialRevision(materialRevision);
 
             if (!assemblyRecordFound) {
-                // TODO: wieder einkommentieren
                 rec = assemblyRecordManager.persist(rec, true, true);
             }
 
@@ -413,16 +412,19 @@ public class SerialObjectStructureAnalysisServiceBean implements TaskCall {
             return;
         }
 
-        // DOTO: mit einer eigenen Funktion hierarchisch den Top-Parent suchen, da ansonsten für jeden Parent ein erneuter Zugriff erfolgen muss
+        // In einer Schleife den Top-Parent ermitteln. Eine eigene Datenbankabfrage mit hierarchischer Suche ist unnötig, da zum einen nur 1% tiefer
+        // als zwei gehen und zum zweiten 90% nur eine Tiefe von eins haben und dieser Parent bereits mit fetch join mitgeholt wurde.
+        // Die maximale Tiefe ist sieben und kommt nur ein Mal vor.
         SerialObject shippedObject = rec.getParentSerialObject();
-        while (true) {
-            if (shippedObject.getParentObject() == null) {
-                break;
-            }
-            else {
-                shippedObject = shippedObject.getParentObject();
-            }
+        int maxDepthGuard = 0;
+        while (shippedObject.getParentObject() != null && maxDepthGuard < 50) {
+            shippedObject = shippedObject.getParentObject();
+            maxDepthGuard++;
         }
+        if (maxDepthGuard == 50) {
+            throw new IllegalStateException("Zirkelbezug in SerObj " + rec.getSerialObject().getSerialNumber());
+        }
+
 
         // get min shipment after production
         Shipment s = shippedObject.getShipments().stream()
@@ -492,7 +494,6 @@ public class SerialObjectStructureAnalysisServiceBean implements TaskCall {
             mas.setSupplierName(a.getSupplier().getName());
         }
 
-        // TODO: wieder einkommentieren
         try {
             matrlizedAssblyShiptManager.persist(mas, true, true);
         }
@@ -657,7 +658,6 @@ public class SerialObjectStructureAnalysisServiceBean implements TaskCall {
             serialObject.setSerialNumber(serObjSap.getSerialNumber());
             serialObject.setMaterial(material);
 
-            // TODO: wieder einkommentieren
             serialObject = serialObjectManager.persist(serialObject, true, true);
             serialObjectMap.put(key, serialObject);
             analysis.increaseNewCreatedSerialsInQdw();
@@ -684,7 +684,6 @@ public class SerialObjectStructureAnalysisServiceBean implements TaskCall {
             parentSerialObject.setSerialNumber(serObjSap.getParentSerialNumber());
             parentSerialObject.setMaterial(parentMaterial);
 
-            // TODO: wieder einkommentieren
             parentSerialObject = serialObjectManager.persist(parentSerialObject, true, true);
             serialObjectMap.put(parentKey, parentSerialObject);
             analysis.increaseNewCreatedSerialsInQdw();

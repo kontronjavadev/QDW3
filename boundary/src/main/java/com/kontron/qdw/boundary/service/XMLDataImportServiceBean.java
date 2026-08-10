@@ -113,7 +113,8 @@ public class XMLDataImportServiceBean {
         ITaskNodeLog shipmentImportTask = executeTask(taskSapImport, shipmentImportServiceBean);
 
         taskSapImport.finishTask();
-        sendeZwischenbericht(taskSapImport);
+        // vorerst keinen Zwischenbericht senden, da der bisherige Teil ziemlich zügig durch läuft
+        // sendeZwischenbericht(taskSapImport);
 
 
         TaskNodeLog taskAnalyze = mainTask.createNewSubTaskNode(TASKNAME_ANALYZE);
@@ -371,6 +372,7 @@ public class XMLDataImportServiceBean {
         return taskNodeLog;
     }
 
+    @SuppressWarnings("unused")
     private void sendeZwischenbericht(TaskNodeLog tsk) {
         String subjectText = Constants.APP_ENV + ": SAP import finished " + (tsk.isSuccess() ? "successfully" : "with errors");
         StringBuilder importLog = new StringBuilder();
