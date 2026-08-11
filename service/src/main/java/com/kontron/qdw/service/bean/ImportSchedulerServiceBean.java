@@ -19,7 +19,7 @@ import jakarta.ejb.Startup;
 // Abhängigkeit zu Boundary-Suprojekt in pom erforderlich
 @Singleton
 @Startup
-public class XMLDataImportSchedulerServiceBean {
+public class ImportSchedulerServiceBean {
 
     @EJB
     private SapDataImportServiceBean importService;

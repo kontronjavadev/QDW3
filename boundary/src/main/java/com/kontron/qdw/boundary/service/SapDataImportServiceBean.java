@@ -374,7 +374,7 @@ public class SapDataImportServiceBean {
 
     @SuppressWarnings("unused")
     private void sendeZwischenbericht(TaskNodeLog tsk) {
-        String subjectText = Constants.APP_ENV + ": SAP import finished " + (tsk.isSuccess() ? "successfully" : "with errors");
+        String subjectText = Constants.APP_ENV + ": SAP import part 1 finished " + (tsk.isSuccess() ? "successfully" : "with errors");
         StringBuilder importLog = new StringBuilder();
         importLog.append(subjectText).append(".\n\n");
         importLog.append("First step was importing SAP master data files, next is analyzing and rebuilding materialized tables\n\n");
@@ -399,7 +399,7 @@ public class SapDataImportServiceBean {
         long duration = tsk.getEndTime() - tsk.getStartTime();
         logger.info("Finished importing SAP files");
 
-        String subjectText = Constants.APP_ENV + ": SAP import part 1 finished " + (tsk.isSuccess() ? "successfully" : "with errors");
+        String subjectText = Constants.APP_ENV + ": SAP import finished " + (tsk.isSuccess() ? "successfully" : "with errors");
         StringBuilder importLog = new StringBuilder();
         importLog.append(subjectText);
         importLog.append(" in ").append(TimeUtil.toBestPracticeStringShort(duration)).append(".\n\n");
