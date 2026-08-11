@@ -1,4 +1,4 @@
-package com.kontron.qdw.boundary.service.xmlimport;
+package com.kontron.qdw.boundary.service.sapimport;
 
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
@@ -48,7 +48,7 @@ import jakarta.ejb.Stateless;
  */
 @Stateless
 @LocalBean // nötig, weil Superklasse Interface implementiert und sonst keine No-Interface-View bereit gestellt wird
-public class XMLBoMImportServiceBean extends AbstractXMLImportServiceBean<BoMXMLRoot, BoMXMLElement> {
+public class BoMImportServiceBean extends AbstractImportServiceBean<BoMXMLRoot, BoMXMLElement> {
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 

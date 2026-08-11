@@ -108,6 +108,7 @@ public class SerialObjectStructureAnalysisServiceBean implements TaskCall {
 
 
 
+    @SuppressWarnings("unchecked")
     @PermitAll
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public Set<Long> execCollectSerObj(TaskNodeLog ownTask) {
@@ -124,16 +125,18 @@ public class SerialObjectStructureAnalysisServiceBean implements TaskCall {
         try {
             // get all new shipments of mentioned interval
             leaf = subTsk.createNewSubTaskLeaf("select serial object ids from shipment");
-            String sql = "select distinct a.serialObject.id from Shipment a where a.creationDate > :paramDate";
-            idList.addAll(em.createQuery(sql, Long.class).setParameter("paramDate", thresholdDate).getResultList());
+            String sql = "select distinct serial_object from shipment_tab a where a.creation_date > :paramDate";
+            idList.addAll(em.createNativeQuery(sql, Long.class)
+                    .setParameter("paramDate", thresholdDate)
+                    .getResultList());
             leaf.finishTaskWithSuccess();
 
             // get all new and updated repairs of mentioned interval
             leaf = subTsk.createNewSubTaskLeaf("select serial object ids from service message");
-            sql = "select distinct a.serialObject.id from ServiceMessage a where a.creationDate > :paramCreationDate "
+            sql = "select distinct serial_object from service_message_tab a where a.creation_date > :paramCreationDate "
                     + "union "
-                    + "select distinct a.serialObject.id from ServiceMessage a where a.lastUpdate > :paramLastUpdate";
-            idList.addAll(em.createQuery(sql, Long.class)
+                    + "select distinct serial_object from service_message_tab a where a.last_update > :paramLastUpdate";
+            idList.addAll(em.createNativeQuery(sql, Long.class)
                     .setParameter("paramCreationDate", thresholdDate)
                     .setParameter("paramLastUpdate", thresholdDate)
                     .getResultList());
@@ -141,10 +144,10 @@ public class SerialObjectStructureAnalysisServiceBean implements TaskCall {
 
             // get all new and updated repairs of mentioned interval
             leaf = subTsk.createNewSubTaskLeaf("select serial object ids from x2 message");
-            sql = "select distinct a.serialObject.id from X2Message a where a.creationDate > :paramCreationDate "
+            sql = "select distinct serial_object from x_2_message_tab a where a.creation_date > :paramCreationDate "
                     + "union "
-                    + "select distinct a.serialObject.id from X2Message a where a.lastUpdate > :paramLastUpdate";
-            idList.addAll(em.createQuery(sql, Long.class)
+                    + "select distinct serial_object from x_2_message_tab a where a.last_update > :paramLastUpdate";
+            idList.addAll(em.createNativeQuery(sql, Long.class)
                     .setParameter("paramCreationDate", thresholdDate)
                     .setParameter("paramLastUpdate", thresholdDate)
                     .getResultList());

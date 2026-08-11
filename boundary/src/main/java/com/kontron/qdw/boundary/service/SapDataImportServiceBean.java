@@ -12,12 +12,12 @@ import com.kontron.qdw.boundary.service.rebuild.ArrivalRebuildMaterializedServic
 import com.kontron.qdw.boundary.service.rebuild.ShipmentArrivalRebuildAggregatedServiceBean;
 import com.kontron.qdw.boundary.service.rebuild.ShipmentArrivalRebuildMaterializedServiceBean;
 import com.kontron.qdw.boundary.service.rebuild.ShipmentRebuildAggregatedServiceBean;
-import com.kontron.qdw.boundary.service.xmlimport.XMLArrivalImportServiceBean;
-import com.kontron.qdw.boundary.service.xmlimport.XMLBoMImportServiceBean;
-import com.kontron.qdw.boundary.service.xmlimport.XMLCustomerImportServiceBean;
-import com.kontron.qdw.boundary.service.xmlimport.XMLMaterialImportServiceBean;
-import com.kontron.qdw.boundary.service.xmlimport.XMLShipmentImportServiceBean;
-import com.kontron.qdw.boundary.service.xmlimport.XMLSupplierImportServiceBean;
+import com.kontron.qdw.boundary.service.sapimport.ArrivalImportServiceBean;
+import com.kontron.qdw.boundary.service.sapimport.BoMImportServiceBean;
+import com.kontron.qdw.boundary.service.sapimport.CustomerImportServiceBean;
+import com.kontron.qdw.boundary.service.sapimport.MaterialImportServiceBean;
+import com.kontron.qdw.boundary.service.sapimport.ShipmentImportServiceBean;
+import com.kontron.qdw.boundary.service.sapimport.SupplierImportServiceBean;
 import com.kontron.qdw.boundary.util.Constants;
 import com.kontron.qdw.boundary.util.MailServiceFacade;
 import com.kontron.util.datetime.TimeUtil;
@@ -39,7 +39,7 @@ import net.sourceforge.jbizmo.commons.property.PropertyService;
  * @author Raymund Achner, achner.com
  */
 @Stateless
-public class XMLDataImportServiceBean {
+public class SapDataImportServiceBean {
     /*
      * Timeout konfigurieren:
      * standalone.xml, <subsystem xmlns="urn:jboss:domain:transactions:6.0">:
@@ -61,17 +61,17 @@ public class XMLDataImportServiceBean {
     private SchedulerServiceBean schedulerService;
 
     @EJB
-    private XMLCustomerImportServiceBean customerImportServiceBean;
+    private CustomerImportServiceBean customerImportServiceBean;
     @EJB
-    private XMLSupplierImportServiceBean supplierImportServiceBean;
+    private SupplierImportServiceBean supplierImportServiceBean;
     @EJB
-    private XMLMaterialImportServiceBean materialImportServiceBean;
+    private MaterialImportServiceBean materialImportServiceBean;
     @EJB
-    private XMLBoMImportServiceBean bomImportServiceBean;
+    private BoMImportServiceBean bomImportServiceBean;
     @EJB
-    private XMLArrivalImportServiceBean arrivalImportServiceBean;
+    private ArrivalImportServiceBean arrivalImportServiceBean;
     @EJB
-    private XMLShipmentImportServiceBean shipmentImportServiceBean;
+    private ShipmentImportServiceBean shipmentImportServiceBean;
 
     @EJB
     private SerialObjectStructureAnalysisServiceBean serialObjectStructureAnalysisServiceBean;

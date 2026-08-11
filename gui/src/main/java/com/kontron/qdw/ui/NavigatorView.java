@@ -96,8 +96,8 @@ public class NavigatorView implements Serializable {
 
             // SAP Import
             if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_MAINTAINER))
-                new DefaultTreeNode<>(VIEW_TYPE, new TreeNavigatorItem(bundle.getString(FORM_XMLDATAIMPORT_TITLE),
-                        req.getContextPath() + "/view/XMLDataImportView.jsf"), itemGroup0001);
+                new DefaultTreeNode<>(VIEW_TYPE, new TreeNavigatorItem(bundle.getString(FORM_SAPDATAIMPORT_TITLE),
+                        req.getContextPath() + "/view/SapDataImportView.jsf"), itemGroup0001);
 
             // Notification
             if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_MAINTAINER))

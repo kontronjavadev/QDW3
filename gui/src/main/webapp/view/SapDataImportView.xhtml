@@ -1,0 +1,111 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:h="jakarta.faces.html"
+	xmlns:f="jakarta.faces.core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/templates/ui.xhtml">
+
+<f:metadata>
+	<f:viewAction action="#{sapDataImportView.initView()}"/>
+</f:metadata>
+
+<ui:define name="content">
+	<p:growl id="growl" showDetail="true" skipDetailIfEqualsSummary="true" keepAlive="true" life="10000" />
+
+	<h:panelGrid columns="3">
+		<div class="pi pi-book" style="font-size: 2em"/>
+		<h:outputText id="lblFormTitle" value="&#160;#{sapDataImportView.formTitle}" styleClass="label-form-title"/>
+		<p:ajaxStatus style="width:16px;height:16px;">
+			<f:facet name="start">
+				<h:graphicImage value="/images/ajaxloading.gif"/>
+			</f:facet>
+
+			<f:facet name="complete">
+				<h:outputText value=""/>
+			</f:facet>
+		</p:ajaxStatus>
+	</h:panelGrid>
+
+
+
+<!-- SAPDataImport view dialog -->
+
+	<p:scrollPanel style="width:100%; height:calc(100vh - 141px);" mode="native">
+		<table>
+			<tr>
+				<td><p:commandButton id="cmdImport" icon="pi pi-play" action="#{sapDataImportView.runImport}" /></td>
+				<td><h:outputLabel value="#{i18n.sapdataimportview_runimport}" for="cmdImport" styleClass="label-field-otional"/></td>
+			</tr>
+			<tr>
+				<td><p:commandButton style="margin-left: 1rem" id="cmdCustomerImport" icon="pi pi-play" action="#{sapDataImportView.runCustomerImport}" /></td>
+				<td><h:outputLabel value="#{i18n.sapdataimportview_runcustomerimport}" for="cmdCustomerImport" styleClass="label-field-otional"/></td>
+			</tr>
+			<tr>
+				<td><p:commandButton style="margin-left: 1rem" id="cmdSupplierImport" icon="pi pi-play" action="#{sapDataImportView.runSupplierImport}" /></td>
+				<td><h:outputLabel value="#{i18n.sapdataimportview_runsupplierimport}" for="cmdSupplierImport" styleClass="label-field-otional"/></td>
+			</tr>
+			<tr>
+				<td><p:commandButton style="margin-left: 1rem" id="cmdMaterialImport" icon="pi pi-play" action="#{sapDataImportView.runMaterialImport}" /></td>
+				<td><h:outputLabel value="#{i18n.sapdataimportview_runmaterialimport}" for="cmdMaterialImport" styleClass="label-field-otional"/></td>
+			</tr>
+			<tr>
+				<td><p:commandButton style="margin-left: 1rem" id="cmdBoMImport" icon="pi pi-play" action="#{sapDataImportView.runBoMImport}" /></td>
+				<td><h:outputLabel value="#{i18n.sapdataimportview_runbomimport}" for="cmdBoMImport" styleClass="label-field-otional"/></td>
+			</tr>
+
+
+
+			<tr>
+				<td><p:commandButton style="margin-left: 1rem" id="cmdArrivalImport" icon="pi pi-play" action="#{sapDataImportView.runArrivalImport}" /></td>
+				<td><h:outputLabel value="#{i18n.sapdataimportview_runarrivalimport}" for="cmdArrivalImport" styleClass="label-field-otional"/></td>
+			</tr>
+			<tr>
+				<td><p:commandButton style="margin-left: 1.5rem" id="cmdAnalyzeSerObjStructure1" icon="pi pi-play" action="#{sapDataImportView.runAnalyzeSerObjStructure}" /></td>
+				<td><h:outputLabel value="#{i18n.sapdataimportview_runarrv_n_shipment_analyze_serobjstruct}" for="cmdAnalyzeSerObjStructure1" styleClass="label-field-otional"/></td>
+			</tr>
+			<tr>
+				<td><p:commandButton style="margin-left: 1.5rem" id="cmdArrivalRebuildMaterialized" icon="pi pi-play" action="#{sapDataImportView.runArrivalRebuildMaterialized}" /></td>
+				<td><h:outputLabel value="#{i18n.sapdataimportview_runarrival_rebuild_materialized}" for="cmdArrivalRebuildMaterialized" styleClass="label-field-otional"/></td>
+			</tr>
+			<tr>
+				<td><p:commandButton style="margin-left: 1.5rem" id="cmdArrivalRebuildAggregated" icon="pi pi-play" action="#{sapDataImportView.runArrivalRebuildAggregated}" /></td>
+				<td><h:outputLabel value="#{i18n.sapdataimportview_runarrival_rebuild_aggregated}" for="cmdArrivalRebuildAggregated" styleClass="label-field-otional"/></td>
+			</tr>
+
+
+			<tr>
+				<td><p:commandButton style="margin-left: 1rem" id="cmdShipmentImport" icon="pi pi-play" action="#{sapDataImportView.runShipmentImport}" /></td>
+				<td><h:outputLabel value="#{i18n.sapdataimportview_runshipmentimport}" for="cmdShipmentImport" styleClass="label-field-otional"/></td>
+			</tr>
+			<tr>
+				<td><p:commandButton style="margin-left: 1.5rem" id="cmdAnalyzeSerObjStructure2" icon="pi pi-play" action="#{sapDataImportView.runAnalyzeSerObjStructure}" /></td>
+				<td><h:outputLabel value="#{i18n.sapdataimportview_runarrv_n_shipment_analyze_serobjstruct}" for="cmdAnalyzeSerObjStructure2" styleClass="label-field-otional"/></td>
+			</tr>
+			<tr>
+				<td><p:commandButton style="margin-left: 1.5rem" id="cmdShptArrvRebuildMaterialized" icon="pi pi-play" action="#{sapDataImportView.runShptArrvRebuildMaterialized}" /></td>
+				<td><h:outputLabel value="#{i18n.sapdataimportview_runshptarrv_rebuild_materialized}" for="cmdShptArrvRebuildMaterialized" styleClass="label-field-otional"/></td>
+			</tr>
+			<tr>
+				<td><p:commandButton style="margin-left: 1.5rem" id="cmdShptRebuildAggregated" icon="pi pi-play" action="#{sapDataImportView.runShptRebuildAggregated}" /></td>
+				<td><h:outputLabel value="#{i18n.sapdataimportview_runshpt_rebuild_aggregated}" for="cmdShptRebuildAggregated" styleClass="label-field-otional"/></td>
+			</tr>
+			<tr>
+				<td><p:commandButton style="margin-left: 1.5rem" id="cmdShptArrvRebuildAggregated" icon="pi pi-play" action="#{sapDataImportView.runShptArrvRebuildAggregated}" /></td>
+				<td><h:outputLabel value="#{i18n.sapdataimportview_runshptarrv_rebuild_aggregated}" for="cmdShptArrvRebuildAggregated" styleClass="label-field-otional"/></td>
+			</tr>
+
+
+<!-- 
+			<tr>
+				<td><p:commandButton style="margin-left: 1.5rem" id="cmdXxx" icon="pi pi-play" action="#{sapDataImportView.runXxx}" /></td>
+				<td><h:outputLabel value="#{i18n.sapdataimportview_xxx}" for="cmdXxx" styleClass="label-field-otional"/></td>
+			</tr>
+ -->
+
+
+		</table>
+	</p:scrollPanel>
+
+
+</ui:define>
+</ui:composition>

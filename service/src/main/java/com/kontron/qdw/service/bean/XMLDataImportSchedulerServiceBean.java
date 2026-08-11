@@ -2,7 +2,7 @@ package com.kontron.qdw.service.bean;
 
 import java.util.concurrent.TimeUnit;
 
-import com.kontron.qdw.boundary.service.XMLDataImportServiceBean;
+import com.kontron.qdw.boundary.service.SapDataImportServiceBean;
 
 import jakarta.ejb.AccessTimeout;
 import jakarta.ejb.EJB;
@@ -11,7 +11,7 @@ import jakarta.ejb.Singleton;
 import jakarta.ejb.Startup;
 
 /**
- * Scheduler, der zeitgesteuert {@link XMLDataImportServiceBean} aufruft.
+ * Scheduler, der zeitgesteuert {@link SapDataImportServiceBean} aufruft.
  * 
  * 2025 — © Kontron AG
  * @author Raymund Achner, achner.com
@@ -22,7 +22,7 @@ import jakarta.ejb.Startup;
 public class XMLDataImportSchedulerServiceBean {
 
     @EJB
-    private XMLDataImportServiceBean importService;
+    private SapDataImportServiceBean importService;
 
     /**
      * Scheduler für automatischen Import.

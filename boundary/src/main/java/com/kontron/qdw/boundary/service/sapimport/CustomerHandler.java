@@ -1,4 +1,4 @@
-package com.kontron.qdw.boundary.service.xmlimport;
+package com.kontron.qdw.boundary.service.sapimport;
 
 import java.util.ArrayList;
 import java.util.Collection;

@@ -1,4 +1,4 @@
-package com.kontron.qdw.boundary.service.xmlimport;
+package com.kontron.qdw.boundary.service.sapimport;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -50,7 +50,7 @@ import net.sourceforge.jbizmo.commons.property.PropertyService;
  */
 @Stateless
 @LocalBean // nötig, weil Superklasse Interface implementiert und sonst keine No-Interface-View bereit gestellt wird
-public class XMLCustomerImportServiceBean implements TaskCall {
+public class CustomerImportServiceBean implements TaskCall {
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 

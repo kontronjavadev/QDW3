@@ -1,6 +1,6 @@
 package com.kontron.qdw.ui.view;
 
-import static com.kontron.qdw.ui.TranslationKeys.FORM_XMLDATAIMPORT_TITLE;
+import static com.kontron.qdw.ui.TranslationKeys.FORM_SAPDATAIMPORT_TITLE;
 import static com.kontron.qdw.ui.UserSession.*;
 
 import java.io.Serializable;
@@ -13,7 +13,7 @@ import java.util.TimeZone;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.kontron.qdw.boundary.service.XMLDataImportServiceBean;
+import com.kontron.qdw.boundary.service.SapDataImportServiceBean;
 import com.kontron.qdw.ui.UserSession;
 import com.kontron.qdw.ui.view.util.CopyClipboard;
 
@@ -22,15 +22,15 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
 
-@Named("xMLDataImportView")
+@Named("sapDataImportView")
 @SessionScoped
-public class XMLDataImportView extends CopyClipboard implements Serializable {
+public class SapDataImportView extends CopyClipboard implements Serializable {
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private static final long serialVersionUID = 1L;
 
     protected static final String ITEM_LABEL_SEPARATOR = ": ";
-    public static final String PAGE_URL = "/view/xMLDataImportView.jsf?faces-redirect=true";
+    public static final String PAGE_URL = "/view/sapDataImportView.jsf?faces-redirect=true";
     private String formTitle;
 
     private final UserSession userSession;
@@ -39,19 +39,19 @@ public class XMLDataImportView extends CopyClipboard implements Serializable {
     protected transient DateTimeFormatter dateTimeFormat;
     protected transient DateTimeFormatter dateFormat;
 
-    private final transient XMLDataImportServiceBean importServiceBean;
+    private final transient SapDataImportServiceBean importServiceBean;
 
 
 
     @Generated
-    public XMLDataImportView() {
+    public SapDataImportView() {
         userSession = null;
         importServiceBean = null;
     }
 
     @Inject
     @Generated
-    public XMLDataImportView(UserSession userSession, XMLDataImportServiceBean importServiceBean) {
+    public SapDataImportView(UserSession userSession, SapDataImportServiceBean importServiceBean) {
         this.userSession = userSession;
         this.importServiceBean = importServiceBean;
     }
@@ -67,7 +67,7 @@ public class XMLDataImportView extends CopyClipboard implements Serializable {
         }
 
 
-        formTitle = bundle.getString(FORM_XMLDATAIMPORT_TITLE);
+        formTitle = bundle.getString(FORM_SAPDATAIMPORT_TITLE);
 
         // Initialize formatters for items that represent number or date values
         dateFormat = DateTimeFormatter.ofPattern(userSession.getDateFormat()).withZone(TimeZone.getTimeZone(userSession.getTimeZone()).toZoneId());

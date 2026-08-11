@@ -1,4 +1,4 @@
-package com.kontron.qdw.boundary.service.xmlimport;
+package com.kontron.qdw.boundary.service.sapimport;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -45,7 +45,7 @@ import net.sourceforge.jbizmo.commons.property.PropertyService;
  * 2025 — © Kontron AG
  * @author Raymund Achner, achner.com
  */
-public abstract class AbstractXMLImportServiceBean<ROOT, ELEM> implements TaskCall {
+public abstract class AbstractImportServiceBean<ROOT, ELEM> implements TaskCall {
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 

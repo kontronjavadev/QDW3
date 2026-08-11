@@ -1,4 +1,4 @@
-package com.kontron.qdw.boundary.service.xmlimport;
+package com.kontron.qdw.boundary.service.sapimport;
 
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDate;
@@ -55,7 +55,7 @@ import jakarta.ejb.Stateless;
  */
 @Stateless
 @LocalBean // nötig, weil Superklasse Interface implementiert und sonst keine No-Interface-View bereit gestellt wird
-public class XMLShipmentImportServiceBean extends AbstractXMLImportServiceBean<ShipmentRootMappingType, ShipmentMappingType> {
+public class ShipmentImportServiceBean extends AbstractImportServiceBean<ShipmentRootMappingType, ShipmentMappingType> {
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
