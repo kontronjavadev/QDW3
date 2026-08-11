@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 
 import com.kontron.qdw.boundary.service.mapping.arrival.ArrivalMappingType;
 import com.kontron.qdw.boundary.service.mapping.arrival.ArrivalRootMappingType;
+import com.kontron.qdw.boundary.service.process.AbstractImportServiceBean;
 import com.kontron.qdw.boundary.service.process.BulkProcess;
 import com.kontron.qdw.boundary.util.Constants;
 import com.kontron.qdw.domain.base.Country;

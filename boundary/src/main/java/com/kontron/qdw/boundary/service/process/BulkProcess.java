@@ -55,29 +55,14 @@ public class BulkProcess {
         bulkToIdx = Math.min(listSize, bulkFromIdx + bulkSize);
     }
 
+
     /**
      * Logging, wenn je Eintrag informiert wird.
      * 
      * @see #nextCnt()
      */
     public void logProcess(Logger logger) {
-        float realFloatProgress = (float) cnt / listSize * 100;
-        if (realFloatProgress > progress) {
-            progress = ((int) realFloatProgress / progressStep) * progressStep;
-
-            long duration = System.currentTimeMillis() - start; // verstrichene Zeit (ms)
-            long expectedDuration = duration * listSize / cnt; // erwartete Dauer (ms) für alle Einträge
-            Date expectedEnd = new Date(start + expectedDuration);
-            double performance = cnt * (float) TimeConstants.MILLISECONDS_PER_MINUTE / duration; // Einträge pro Minute
-            if (logger.isInfoEnabled()) {
-                logger.info("{}% done, avg {} per minute; expected duration: {}; expected end: {}",
-                        progress, String.format("%.1f", performance),
-                        TimeUtil.toBestPracticeStringShort(expectedDuration),
-                        DateUtil.dateToString(expectedEnd, DateUtil.FORMAT_PATTERN_GERMAN_DATE_TIME));
-            }
-
-            progress += progressStep;
-        }
+        logProcess(logger, cnt);
     }
 
     /**
@@ -86,13 +71,22 @@ public class BulkProcess {
      * @see #nextBulk()
      */
     public void logProcessBulkLevel(Logger logger) {
-        if ((float) bulkFromIdx / listSize * 100 > progress) {
-            progress = ((int) ((float) bulkFromIdx / listSize * 100) / progressStep) * progressStep;
+        logProcess(logger, bulkFromIdx);
+    }
+
+    private void logProcess(Logger logger, int calcBase) {
+        if (calcBase == 0) {
+            return;
+        }
+
+        float realFloatProgress = (float) calcBase / listSize * 100;
+        if (realFloatProgress > progress) {
+            progress = ((int) realFloatProgress / progressStep) * progressStep;
 
             long duration = System.currentTimeMillis() - start; // verstrichene Zeit (ms)
-            long expectedDuration = duration * listSize / bulkFromIdx; // erwartete Dauer (ms) für alle Einträge
+            long expectedDuration = duration * listSize / calcBase; // erwartete Dauer (ms) für alle Einträge
             Date expectedEnd = new Date(start + expectedDuration);
-            double performance = bulkFromIdx * (float) TimeConstants.MILLISECONDS_PER_MINUTE / duration; // Einträge pro Minute
+            double performance = calcBase * (float) TimeConstants.MILLISECONDS_PER_MINUTE / duration; // Einträge pro Minute
             if (logger.isInfoEnabled()) {
                 logger.info("{}% done, avg {} per minute; expected duration: {}; expected end: {}",
                         progress, String.format("%.1f", performance),
@@ -103,6 +97,7 @@ public class BulkProcess {
             progress += progressStep;
         }
     }
+
 
 
     public int getBulkFromIdx() {

@@ -2,6 +2,7 @@ package com.kontron.qdw.repository.service;
 
 import net.sourceforge.jbizmo.commons.random.*;
 import java.util.*;
+
 import com.kontron.qdw.domain.service.*;
 import jakarta.persistence.*;
 import net.sourceforge.jbizmo.commons.jpa.*;
@@ -35,6 +36,17 @@ public class ServiceOrderRepository extends AbstractRepository<ServiceOrder, Str
     public ServiceOrderRepository(ServiceMessageRepository serviceMessageManager) {
         this.serviceMessageManager = serviceMessageManager;
     }
+
+    public List<ServiceOrder> findByIds(Collection<String> codes) {
+        String stmt = "select a "
+                + "from ServiceOrder a "
+                + "where a.code in :paramCodes ";
+        return em
+                .createQuery(stmt, ServiceOrder.class)
+                .setParameter("paramCodes", codes)
+                .getResultList();
+    }
+
 
     /**
      * Find a persistent service order by using the primary key of the provided object

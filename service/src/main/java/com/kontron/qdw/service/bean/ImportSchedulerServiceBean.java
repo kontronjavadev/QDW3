@@ -2,6 +2,7 @@ package com.kontron.qdw.service.bean;
 
 import java.util.concurrent.TimeUnit;
 
+import com.kontron.qdw.boundary.service.RepairImportServiceBean;
 import com.kontron.qdw.boundary.service.SapDataImportServiceBean;
 
 import jakarta.ejb.AccessTimeout;
@@ -22,7 +23,9 @@ import jakarta.ejb.Startup;
 public class ImportSchedulerServiceBean {
 
     @EJB
-    private SapDataImportServiceBean importService;
+    private SapDataImportServiceBean sapImportService;
+    @EJB
+    private RepairImportServiceBean repairImportService;
 
     /**
      * Scheduler für automatischen Import.
@@ -30,8 +33,18 @@ public class ImportSchedulerServiceBean {
      */
     @Schedule(dayOfWeek = "*", hour = "1", minute = "30", persistent = false)
     @AccessTimeout(value = 5, unit = TimeUnit.MINUTES)
-    public void runScheduledImport() {
-        importService.runImport();
+    public void runScheduledSapImport() {
+        sapImportService.runImport();
+    }
+
+    /**
+     * Scheduler für automatischen Import.
+     * Täglich um 10:30 Uhr
+     */
+    @Schedule(dayOfWeek = "*", hour = "10", minute = "30", persistent = false)
+    @AccessTimeout(value = 5, unit = TimeUnit.MINUTES)
+    public void runScheduledRepairImport() {
+        repairImportService.runImport();
     }
 
 }

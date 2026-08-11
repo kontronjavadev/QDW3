@@ -17,6 +17,16 @@ public class CustomerRepository extends AbstractRepository<Customer, String> {
     @Generated
     private static final String PARAM_CODE = "code";
 
+    public List<Customer> findByIds(Collection<String> codes) {
+        String stmt = "select a "
+                + "from Customer a "
+                + "where a.code in :paramCodes ";
+        return em
+                .createQuery(stmt, Customer.class)
+                .setParameter("paramCodes", codes)
+                .getResultList();
+    }
+
     /**
      * Find a persistent customer by using the primary key of the provided object
      * @param customer

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="qualified">
+
+	<xs:element name="rmas" type="RMARootType"/>
+
+	<xs:complexType name="RMARootType">
+		<xs:sequence>
+			<xs:element maxOccurs="unbounded" minOccurs="0" name="rma" type="RMAType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="RMAType">
+		<xs:sequence>
+		</xs:sequence>
+		<xs:attribute name="rma_no" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:minLength value="1"/>
+					<xs:maxLength value="50"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="status" use="optional">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="note">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:minLength value="0"/>
+					<xs:maxLength value="4000"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="delivery_note_no">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="customer_no" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:minLength value="1"/>
+					<xs:maxLength value="50"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="creation_date" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="quantity" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:int">
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="reported_by">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:minLength value="0"/>
+					<xs:maxLength value="100"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+</xs:schema>

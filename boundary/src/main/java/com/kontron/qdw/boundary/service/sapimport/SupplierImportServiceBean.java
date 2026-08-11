@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import com.kontron.qdw.boundary.service.mapping.supplier.SupplierXMLElement;
 import com.kontron.qdw.boundary.service.mapping.supplier.SupplierXMLRoot;
+import com.kontron.qdw.boundary.service.process.AbstractImportServiceBean;
 import com.kontron.qdw.boundary.service.process.BulkProcess;
 import com.kontron.qdw.domain.base.Supplier;
 import com.kontron.qdw.repository.base.CountryRepository;
@@ -91,7 +92,7 @@ public class SupplierImportServiceBean extends AbstractImportServiceBean<Supplie
                 .collect(Collectors.toSet()));
 
         for (SupplierXMLElement supplier : curBatch) {
-            // Bearbeitung istunspektakulär und muss nicht in eine eigene Methode ausgelagert werden.
+            // Bearbeitung ist unspektakulär und muss nicht in eine eigene Methode ausgelagert werden.
             // So sparen wir den Overhead, mit jedem Aufruf die Suplier-Liste auf den Stack zu legen.
             String currentSupplierCode = supplier.getCode();
             Supplier existingSupplier = existingSupplierMap.get(currentSupplierCode);

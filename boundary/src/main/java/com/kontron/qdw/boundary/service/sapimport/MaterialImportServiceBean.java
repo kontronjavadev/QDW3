@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import com.kontron.qdw.boundary.service.mapping.material.MaterialXMLElement;
 import com.kontron.qdw.boundary.service.mapping.material.MaterialXMLRoot;
+import com.kontron.qdw.boundary.service.process.AbstractImportServiceBean;
 import com.kontron.qdw.boundary.service.process.BulkProcess;
 import com.kontron.qdw.domain.base.Location;
 import com.kontron.qdw.domain.base.Plant;

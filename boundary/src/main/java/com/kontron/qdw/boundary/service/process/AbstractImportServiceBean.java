@@ -1,4 +1,4 @@
-package com.kontron.qdw.boundary.service.sapimport;
+package com.kontron.qdw.boundary.service.process;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -19,9 +19,6 @@ import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
 
 import com.kontron.constants.file.FileType;
-import com.kontron.qdw.boundary.service.process.BulkProcess;
-import com.kontron.qdw.boundary.service.process.TaskCall;
-import com.kontron.qdw.boundary.service.process.XMLDataImportUtils;
 import com.kontron.qdw.boundary.util.Constants;
 import com.kontron.util.file.FileUtil.ImportType;
 import com.kontron.util.log.FileImportAbortedWithErrorsLog;
@@ -182,7 +179,7 @@ public abstract class AbstractImportServiceBean<ROOT, ELEM> implements TaskCall 
     }
 
 
-    abstract void importBulk(String importFileName, TaskNodeLog tsk, List<ELEM> importedElements, List<String> errorList,
+    protected abstract void importBulk(String importFileName, TaskNodeLog tsk, List<ELEM> importedElements, List<String> errorList,
             BulkProcess bulkProcess) throws Exception;
 
 

@@ -1,0 +1,59 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:h="jakarta.faces.html"
+	xmlns:f="jakarta.faces.core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/templates/ui.xhtml">
+
+<f:metadata>
+	<f:viewAction action="#{repairImportView.initView()}"/>
+</f:metadata>
+
+<ui:define name="content">
+	<p:growl id="growl" showDetail="true" skipDetailIfEqualsSummary="true" keepAlive="true" life="10000" />
+
+	<h:panelGrid columns="3">
+		<div class="pi pi-book" style="font-size: 2em"/>
+		<h:outputText id="lblFormTitle" value="&#160;#{repairImportView.formTitle}" styleClass="label-form-title"/>
+		<p:ajaxStatus style="width:16px;height:16px;">
+			<f:facet name="start">
+				<h:graphicImage value="/images/ajaxloading.gif"/>
+			</f:facet>
+
+			<f:facet name="complete">
+				<h:outputText value=""/>
+			</f:facet>
+		</p:ajaxStatus>
+	</h:panelGrid>
+
+
+
+<!-- RepairDataImport view dialog -->
+
+	<p:scrollPanel style="width:100%; height:calc(100vh - 141px);" mode="native">
+		<table>
+			<tr>
+				<td><p:commandButton id="cmdImport" icon="pi pi-play" action="#{repairImportView.runImport}" /></td>
+				<td><h:outputLabel value="#{i18n.repairimportview_runimport}" for="cmdImport" styleClass="label-field-otional"/></td>
+			</tr>
+			<tr>
+				<td><p:commandButton style="margin-left: 1rem" id="cmdRmaImport" icon="pi pi-play" action="#{repairImportView.runRmaImport}" /></td>
+				<td><h:outputLabel value="#{i18n.repairimportview_runrmaimport}" for="cmdRmaImport" styleClass="label-field-otional"/></td>
+			</tr>
+
+
+
+<!-- 
+			<tr>
+				<td><p:commandButton style="margin-left: 1.5rem" id="cmdXxx" icon="pi pi-play" action="#{repairImportView.runXxx}" /></td>
+				<td><h:outputLabel value="#{i18n.repairimportview_xxx}" for="cmdXxx" styleClass="label-field-otional"/></td>
+			</tr>
+ -->
+
+
+		</table>
+	</p:scrollPanel>
+
+
+</ui:define>
+</ui:composition>
