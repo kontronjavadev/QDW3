@@ -4,6 +4,7 @@ import java.lang.invoke.MethodHandles;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
@@ -12,6 +13,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,11 +29,13 @@ import com.kontron.qdw.domain.base.Plant;
 import com.kontron.qdw.domain.base.Supplier;
 import com.kontron.qdw.domain.material.Material;
 import com.kontron.qdw.domain.material.MaterialRevision;
+import com.kontron.qdw.domain.service.ServiceMessage;
 import com.kontron.qdw.domain.service.ServiceOrder;
 import com.kontron.qdw.repository.base.CustomerRepository;
 import com.kontron.qdw.repository.base.PlantRepository;
 import com.kontron.qdw.repository.material.MaterialRepository;
 import com.kontron.qdw.repository.material.MaterialRevisionRepository;
+import com.kontron.qdw.repository.service.ServiceMessageRepository;
 import com.kontron.qdw.repository.service.ServiceOrderRepository;
 import com.kontron.util.file.FileUtil.ImportType;
 import com.kontron.util.log.TaskNodeLog;
@@ -62,6 +66,8 @@ public class SvcMsgImportServiceBean extends AbstractImportServiceBean<ServiceMe
     private MaterialRepository materialManager;
     @EJB
     private PlantRepository plantManager;
+    @EJB
+    private ServiceMessageRepository svcMsgManager;
     @EJB
     private MaterialRevisionRepository matRevManager;
 
@@ -107,6 +113,69 @@ public class SvcMsgImportServiceBean extends AbstractImportServiceBean<ServiceMe
         List<ServiceMessageMappingType> curBatch = importedSuppliers.subList(bulkProcess.getBulkFromIdx(), bulkProcess.getBulkToIdx());
         batchNormalisieren(curBatch);
 
+
+        // in batch vorkommende service message Ids
+        // Set<Long> idsOfBatch = curBatch.stream()
+        // .map(ServiceMessageMappingType::getId)
+        // .map(id -> {
+        // try {
+        // return Long.parseLong(id);
+        // }
+        // catch (NumberFormatException nfe) {
+        // return Long.MIN_VALUE;
+        // }
+        // })
+        // .filter(id -> id != Long.MIN_VALUE)
+        // .collect(Collectors.toSet());
+
+        // Map<String, Long> longIdsPerMsgStringId = curBatch.stream()
+        // .map(ServiceMessageMappingType::getId)
+        // .collect(Collectors.toMap(Function.identity(),
+        // id -> {
+        // try {
+        // return Long.parseLong(id);
+        // }
+        // catch (NumberFormatException nfe) {
+        // return Long.MIN_VALUE;
+        // }
+        // }));
+        // longIdsPerMsgStringId = longIdsPerMsgStringId.entrySet().stream()
+        // .filter(idEntry -> idEntry.getValue().longValue() != Long.MIN_VALUE)
+        // .collect(Collectors.toMap(Entry::getKey, Entry::getValue));
+
+        // Map<String, Long> longIdsPerMsgStringId = curBatch.stream().<Map.Entry<String, Long>> mapMulti((item, consumer) -> {
+        // String id = item.getId();
+        // try {
+        // consumer.accept(Map.entry(id, Long.parseLong(id)));
+        // }
+        // catch (NumberFormatException ignored) {
+        // // Element wird ignoriert und landet nicht im Stream
+        // }
+        // })
+        // .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+        // Ids des Batch in Long umwandeln und in Map speichern mit Long als key und original String als value.
+        // Werte, die nicht geparst werden können, werden rausgefiltert.
+        Map<Long, String> msgStringIdPerLongIds = curBatch.stream().<Map.Entry<Long, String>> mapMulti((item, consumer) -> {
+            String id = item.getId();
+            try {
+                consumer.accept(Map.entry(Long.parseLong(id), id));
+            }
+            catch (NumberFormatException ignored) {
+                // Element wird ignoriert und landet nicht im Stream
+            }
+        })
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+        // Service messages zu geparsten Long-Ids holen
+        // List<ServiceMessage> svcMsg = svcMsgManager.findByIds(longIdsPerMsgStringId.values());
+        List<ServiceMessage> svcMsgs = svcMsgManager.findByIds(msgStringIdPerLongIds.keySet());
+
+        // Map an Service messages zu den originalen Ids als String (über oben aufgebaute Map)
+        Map<String, ServiceMessage> svcMsgPerMsgStringId = svcMsgs.stream()
+                .collect(Collectors.toMap(m -> msgStringIdPerLongIds.get(m.getId()), m -> m));
+
+
         // in batch vorkommende Materialien holen
         Set<String> matNrOfBatch = curBatch.stream()
                 .map(ServiceMessageMappingType::getMaterialSapNumber)
@@ -114,11 +183,19 @@ public class SvcMsgImportServiceBean extends AbstractImportServiceBean<ServiceMe
 
         Map<String, Material> existingMats = materialManager.findBySAPNumbers(matNrOfBatch, true);
 
+
         // in batch vorkommende Werke holen und falls nötig anlegen
         Map<String, Plant> existingPlants = findOrCreatePlant(curBatch);
 
 
         for (ServiceMessageMappingType svcMsg : curBatch) {
+            if (StringUtils.isEmpty(svcMsg.getId())) {
+                String errorMsg = String.format("Eintrag %s ohne Transaction-Id (service_order) in RMA Datei '%s'.",
+                        bulkProcess.getCnt(), importFileName);
+                logger.warn(errorMsg);
+                errorList.add(errorMsg);
+                continue;
+            }
             if (StringUtils.isEmpty(svcMsg.getPlantCode())) {
                 String errorMsg = String.format("Eintrag %s ohne Plant in RMA Datei '%s'.",
                         bulkProcess.getCnt(), importFileName);
@@ -133,7 +210,6 @@ public class SvcMsgImportServiceBean extends AbstractImportServiceBean<ServiceMe
                 errorList.add(errorMsg);
                 continue;
             }
-
             if (StringUtils.isEmpty(svcMsg.getMaterialSapNumber())) {
                 String errorMsg = String.format("Eintrag %s ohne SAP-Nummer (part_no) in RMA Datei '%s'.",
                         bulkProcess.getCnt(), importFileName);
@@ -142,9 +218,27 @@ public class SvcMsgImportServiceBean extends AbstractImportServiceBean<ServiceMe
                 continue;
             }
 
+
+            // long transactionId;
+            // try {
+            // transactionId = Long.parseLong(svcMsg.getId());
+            // }
+            // catch (NumberFormatException nfe) {
+            // String errorMsg = String.format("Eintrag %s mit korrupter Transaction-Id (service_order) in RMA Datei '%s'. "
+            // + "Es wird eine Zahl erwartet. Lediglich etwaige Großbuchstaben wurden dabei entfernt.",
+            // bulkProcess.getCnt(), importFileName);
+            // logger.warn(errorMsg);
+            // errorList.add(errorMsg);
+            // continue;
+            // }
+
+
             Material material = existingMats.get(svcMsg.getMaterialSapNumber());
             Plant plant = existingPlants.get(svcMsg.getPlantCode());
             MaterialRevision revision = findOrCreateRevision(svcMsg.getMaterialRevisionNo(), material, plant);
+
+            ServiceMessage existingSvcMsg = svcMsgPerMsgStringId.get(svcMsg.getId());
+
 
             String currentCode = svcMsg.getCode();
             ServiceOrder existingSvcOrder = existingMats.get(currentCode);
@@ -181,6 +275,8 @@ public class SvcMsgImportServiceBean extends AbstractImportServiceBean<ServiceMe
 
     private void batchNormalisieren(List<ServiceMessageMappingType> curBatch) {
         curBatch.forEach(importedSvcMsg -> {
+            String transactionId = StringUtils.defaultString(importedSvcMsg.getId()).replaceAll("[A-Z]", "");
+            importedSvcMsg.setId(StringUtil.removeLeadingZero(transactionId));
             importedSvcMsg.setServiceMessageId(StringUtil.removeLeadingZero(importedSvcMsg.getServiceMessageId()));
             importedSvcMsg.setMaterialSapNumber(StringUtil.removeLeadingZero(importedSvcMsg.getMaterialSapNumber()));
             importedSvcMsg.setServiceOrderCode(StringUtil.removeLeadingZero(importedSvcMsg.getServiceOrderCode()));

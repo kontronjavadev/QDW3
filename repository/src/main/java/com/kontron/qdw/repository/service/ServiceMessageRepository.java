@@ -106,6 +106,16 @@ public class ServiceMessageRepository extends AbstractRepository<ServiceMessage,
         return targetObject;
     }
 
+    public List<ServiceMessage> findByIds(Collection<Long> ids) {
+        String stmt = "select a "
+                + "from ServiceMessage a "
+                + "where a.id in :paramIds ";
+        return em
+                .createQuery(stmt, ServiceMessage.class)
+                .setParameter("paramIds", ids)
+                .getResultList();
+    }
+ 
     /**
      * Find a persistent service message by using the primary key of the provided object
      * @param serviceMessage
