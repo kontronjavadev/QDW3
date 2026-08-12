@@ -12,8 +12,8 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.kontron.qdw.boundary.service.mapping.rma.RMAMappingType;
-import com.kontron.qdw.boundary.service.mapping.rma.RMARootMappingType;
+import com.kontron.qdw.boundary.service.mapping.svcmsg.ServiceMessageMappingType;
+import com.kontron.qdw.boundary.service.mapping.svcmsg.ServiceMessageRootMappingType;
 import com.kontron.qdw.boundary.service.process.AbstractImportServiceBean;
 import com.kontron.qdw.boundary.service.process.BulkProcess;
 import com.kontron.qdw.domain.base.Customer;
@@ -29,19 +29,19 @@ import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
 
 /**
- * Import der RMA-Repair-Dateien, die der Downloader bereitstellt.
+ * Import der Service-Message-Repair-Dateien, die der Downloader bereitstellt.
  * 
  * 2026 — © Kontron AG
  * @author Raymund Achner, achner.com
  */
 @Stateless
 @LocalBean // nötig, weil Superklasse Interface implementiert und sonst keine No-Interface-View bereit gestellt wird
-public class RmaImportServiceBean extends AbstractImportServiceBean<RMARootMappingType, RMAMappingType> {
+public class SvcMsgImportServiceBean extends AbstractImportServiceBean<ServiceMessageRootMappingType, ServiceMessageMappingType> {
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    private static final String ENTITY_NAME = "RMA";
-    private static final String FOLDER_SUB_PATH = "rma";
+    private static final String ENTITY_NAME = "Repair service message";
+    private static final String FOLDER_SUB_PATH = "repair";
     private static final String SCHEMA_NAME = "RMA.xsd";
 
     @EJB
@@ -67,7 +67,7 @@ public class RmaImportServiceBean extends AbstractImportServiceBean<RMARootMappi
 
     @Override
     protected ImportType getImportType() {
-        return ImportType.QDW_SERVICE_ORDER;
+        return ImportType.QDW_SERVICE_MESSAGE;
     }
 
     @Override
@@ -76,42 +76,42 @@ public class RmaImportServiceBean extends AbstractImportServiceBean<RMARootMappi
     }
 
     @Override
-    protected Class<RMARootMappingType> getXmlRootClazz() {
-        return RMARootMappingType.class;
+    protected Class<ServiceMessageRootMappingType> getXmlRootClazz() {
+        return ServiceMessageRootMappingType.class;
     }
 
     @Override
-    protected Function<RMARootMappingType, List<RMAMappingType>> getGetElementsFunction() {
-        return RMARootMappingType::getItems;
+    protected Function<ServiceMessageRootMappingType, List<ServiceMessageMappingType>> getGetElementsFunction() {
+        return ServiceMessageRootMappingType::getServiceMessages;
     }
 
 
 
     @Override
-    protected void importBulk(String importFileName, TaskNodeLog tsk, List<RMAMappingType> importedSuppliers, List<String> errorList,
+    protected void importBulk(String importFileName, TaskNodeLog tsk, List<ServiceMessageMappingType> importedSuppliers, List<String> errorList,
             BulkProcess bulkProcess) throws Exception {
         bulkProcess.logProcessBulkLevel(logger);
 
         // aktuell verarbeiteter Batch
-        List<RMAMappingType> curBatch = importedSuppliers.subList(bulkProcess.getBulkFromIdx(), bulkProcess.getBulkToIdx());
+        List<ServiceMessageMappingType> curBatch = importedSuppliers.subList(bulkProcess.getBulkFromIdx(), bulkProcess.getBulkToIdx());
         batchNormalisieren(curBatch);
 
         Set<String> unknownCustomer = new TreeSet<>();
 
         Map<String, ServiceOrder> existingSvoMap = serviceOrderManager.findByIds(curBatch.stream()
-                .map(RMAMappingType::getCode)
+                .map(ServiceMessageMappingType::getCode)
                 .collect(Collectors.toSet())).stream()
                 .collect(Collectors.toMap(ServiceOrder::getCode, Function.identity()));
 
         Map<String, Customer> existingCustMap = customerManager.findByIds(curBatch.stream()
-                .map(RMAMappingType::getCustomerCode)
+                .map(ServiceMessageMappingType::getCustomerCode)
                 .collect(Collectors.toSet())).stream()
                 .collect(Collectors.toMap(Customer::getCode, Function.identity()));
 
 
-        for (RMAMappingType svcOrder : curBatch) {
+        for (ServiceMessageMappingType svcOrder : curBatch) {
             // Bearbeitung ist unspektakulär und muss nicht in eine eigene Methode ausgelagert werden.
-            // So sparen wir den Overhead, mit jedem Aufruf die Liste/Map an ServiceOrder und Customer auf den Stack zu legen.
+            // So sparen wir den Overhead, mit jedem Aufruf die Suplier-Liste auf den Stack zu legen.
 
             Customer existingCustomer = existingCustMap.get(svcOrder.getCustomerCode());
             if (existingCustomer == null) {
@@ -152,14 +152,14 @@ public class RmaImportServiceBean extends AbstractImportServiceBean<RMARootMappi
         }
     }
 
-    private void batchNormalisieren(List<RMAMappingType> curBatch) {
+    private void batchNormalisieren(List<ServiceMessageMappingType> curBatch) {
         curBatch.forEach(importedRma -> {
             importedRma.setCode(StringUtil.removeLeadingZero(importedRma.getCode()));
             importedRma.setCustomerCode(StringUtil.removeLeadingZero(importedRma.getCustomerCode()));
         });
     }
 
-    private boolean evaluateActiveState(RMAMappingType svcOrder) {
+    private boolean evaluateActiveState(ServiceMessageMappingType svcOrder) {
         return svcOrder != null
                 && svcOrder.getStatus() != null
                 && (svcOrder.getStatus().equalsIgnoreCase("Being processed")

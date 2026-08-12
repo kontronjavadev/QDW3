@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import com.kontron.qdw.boundary.service.process.TaskCall;
 import com.kontron.qdw.boundary.service.repairimport.RmaImportServiceBean;
+import com.kontron.qdw.boundary.service.repairimport.SvcMsgImportServiceBean;
 import com.kontron.qdw.boundary.util.Constants;
 import com.kontron.qdw.boundary.util.MailServiceFacade;
 import com.kontron.util.datetime.TimeUtil;
@@ -49,6 +50,8 @@ public class RepairImportServiceBean {
 
     @EJB
     private RmaImportServiceBean rmaImportServiceBean;
+    @EJB
+    private SvcMsgImportServiceBean svcMsgImportServiceBean;
 
 
     private String exchangePath = new PropertyService().getStringProperty(PROP_XML_EXCHANGE_FOLDER);
@@ -67,6 +70,7 @@ public class RepairImportServiceBean {
         TaskNodeLog mainTask = initImport();
 
         executeTask(mainTask, rmaImportServiceBean);
+        executeTask(mainTask, svcMsgImportServiceBean);
 
         finishImport(mainTask);
     }
@@ -83,6 +87,20 @@ public class RepairImportServiceBean {
 
         TaskNodeLog taskImport = initImport();
         executeTask(taskImport, rmaImportServiceBean);
+
+        finishImport(taskImport);
+    }
+
+    @Asynchronous
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+    public void runSvcMsgImportImport() {
+        if (!schedulerService.isExecuteImport()) {
+            return;
+        }
+
+        TaskNodeLog taskImport = initImport();
+        executeTask(taskImport, svcMsgImportServiceBean);
 
         finishImport(taskImport);
     }
