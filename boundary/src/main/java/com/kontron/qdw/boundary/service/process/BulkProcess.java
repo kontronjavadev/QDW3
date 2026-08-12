@@ -108,6 +108,10 @@ public class BulkProcess {
         return bulkToIdx;
     }
 
+    public int getCnt() {
+        return cnt;
+    }
+
     public int getListSize() {
         return listSize;
     }

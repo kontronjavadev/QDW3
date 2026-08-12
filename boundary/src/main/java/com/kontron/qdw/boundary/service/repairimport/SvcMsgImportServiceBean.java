@@ -4,25 +4,39 @@ import java.lang.invoke.MethodHandles;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.kontron.qdw.boundary.service.mapping.arrival.ArrivalMappingType;
 import com.kontron.qdw.boundary.service.mapping.svcmsg.ServiceMessageMappingType;
 import com.kontron.qdw.boundary.service.mapping.svcmsg.ServiceMessageRootMappingType;
 import com.kontron.qdw.boundary.service.process.AbstractImportServiceBean;
 import com.kontron.qdw.boundary.service.process.BulkProcess;
+import com.kontron.qdw.boundary.util.Constants;
+import com.kontron.qdw.domain.base.Country;
 import com.kontron.qdw.domain.base.Customer;
+import com.kontron.qdw.domain.base.Plant;
+import com.kontron.qdw.domain.base.Supplier;
+import com.kontron.qdw.domain.material.Material;
+import com.kontron.qdw.domain.material.MaterialRevision;
 import com.kontron.qdw.domain.service.ServiceOrder;
 import com.kontron.qdw.repository.base.CustomerRepository;
+import com.kontron.qdw.repository.base.PlantRepository;
+import com.kontron.qdw.repository.material.MaterialRepository;
+import com.kontron.qdw.repository.material.MaterialRevisionRepository;
 import com.kontron.qdw.repository.service.ServiceOrderRepository;
 import com.kontron.util.file.FileUtil.ImportType;
 import com.kontron.util.log.TaskNodeLog;
 import com.kontron.util.text.StringUtil;
+import com.kontron.util.version.RevisionUtil;
 
 import jakarta.ejb.EJB;
 import jakarta.ejb.LocalBean;
@@ -42,12 +56,14 @@ public class SvcMsgImportServiceBean extends AbstractImportServiceBean<ServiceMe
 
     private static final String ENTITY_NAME = "Repair service message";
     private static final String FOLDER_SUB_PATH = "repair";
-    private static final String SCHEMA_NAME = "RMA.xsd";
+    private static final String SCHEMA_NAME = "Repair.xsd";
 
     @EJB
-    private ServiceOrderRepository serviceOrderManager;
+    private MaterialRepository materialManager;
     @EJB
-    private CustomerRepository customerManager;
+    private PlantRepository plantManager;
+    @EJB
+    private MaterialRevisionRepository matRevManager;
 
 
     @Override
@@ -71,11 +87,6 @@ public class SvcMsgImportServiceBean extends AbstractImportServiceBean<ServiceMe
     }
 
     @Override
-    protected boolean isWithBulk() {
-        return false;
-    }
-
-    @Override
     protected Class<ServiceMessageRootMappingType> getXmlRootClazz() {
         return ServiceMessageRootMappingType.class;
     }
@@ -96,49 +107,63 @@ public class SvcMsgImportServiceBean extends AbstractImportServiceBean<ServiceMe
         List<ServiceMessageMappingType> curBatch = importedSuppliers.subList(bulkProcess.getBulkFromIdx(), bulkProcess.getBulkToIdx());
         batchNormalisieren(curBatch);
 
-        Set<String> unknownCustomer = new TreeSet<>();
+        // in batch vorkommende Materialien holen
+        Set<String> matNrOfBatch = curBatch.stream()
+                .map(ServiceMessageMappingType::getMaterialSapNumber)
+                .collect(Collectors.toSet());
 
-        Map<String, ServiceOrder> existingSvoMap = serviceOrderManager.findByIds(curBatch.stream()
-                .map(ServiceMessageMappingType::getCode)
-                .collect(Collectors.toSet())).stream()
-                .collect(Collectors.toMap(ServiceOrder::getCode, Function.identity()));
+        Map<String, Material> existingMats = materialManager.findBySAPNumbers(matNrOfBatch, true);
 
-        Map<String, Customer> existingCustMap = customerManager.findByIds(curBatch.stream()
-                .map(ServiceMessageMappingType::getCustomerCode)
-                .collect(Collectors.toSet())).stream()
-                .collect(Collectors.toMap(Customer::getCode, Function.identity()));
+        // in batch vorkommende Werke holen und falls nötig anlegen
+        Map<String, Plant> existingPlants = findOrCreatePlant(curBatch);
 
 
-        for (ServiceMessageMappingType svcOrder : curBatch) {
-            // Bearbeitung ist unspektakulär und muss nicht in eine eigene Methode ausgelagert werden.
-            // So sparen wir den Overhead, mit jedem Aufruf die Suplier-Liste auf den Stack zu legen.
-
-            Customer existingCustomer = existingCustMap.get(svcOrder.getCustomerCode());
-            if (existingCustomer == null) {
-                logger.info(String.format("Fehler in RMA Datei '%s': unbekannter Customer '%s'.", importFileName, svcOrder.getCustomerCode()));
-                unknownCustomer.add(svcOrder.getCustomerCode());
+        for (ServiceMessageMappingType svcMsg : curBatch) {
+            if (StringUtils.isEmpty(svcMsg.getPlantCode())) {
+                String errorMsg = String.format("Eintrag %s ohne Plant in RMA Datei '%s'.",
+                        bulkProcess.getCnt(), importFileName);
+                logger.warn(errorMsg);
+                errorList.add(errorMsg);
+                continue;
+            }
+            if (StringUtils.isEmpty(svcMsg.getSerialObjectSerialNumber())) {
+                String errorMsg = String.format("Eintrag %s ohne SerialNumber (serial_no) in RMA Datei '%s'.",
+                        bulkProcess.getCnt(), importFileName);
+                logger.warn(errorMsg);
+                errorList.add(errorMsg);
                 continue;
             }
 
-            boolean isActive = evaluateActiveState(svcOrder);
-            String currentCode = svcOrder.getCode();
-            ServiceOrder existingSvcOrder = existingSvoMap.get(currentCode);
+            if (StringUtils.isEmpty(svcMsg.getMaterialSapNumber())) {
+                String errorMsg = String.format("Eintrag %s ohne SAP-Nummer (part_no) in RMA Datei '%s'.",
+                        bulkProcess.getCnt(), importFileName);
+                logger.warn(errorMsg);
+                errorList.add(errorMsg);
+                continue;
+            }
+
+            Material material = existingMats.get(svcMsg.getMaterialSapNumber());
+            Plant plant = existingPlants.get(svcMsg.getPlantCode());
+            MaterialRevision revision = findOrCreateRevision(svcMsg.getMaterialRevisionNo(), material, plant);
+
+            String currentCode = svcMsg.getCode();
+            ServiceOrder existingSvcOrder = existingMats.get(currentCode);
             if (existingSvcOrder != null) {
-                existingSvcOrder.setServiceOrderType(svcOrder.getType());
-                existingSvcOrder.setComment(svcOrder.getComment());
+                existingSvcOrder.setServiceOrderType(svcMsg.getType());
+                existingSvcOrder.setComment(svcMsg.getComment());
                 existingSvcOrder.setActive(isActive);
                 existingSvcOrder.setCustomer(existingCustomer);
-                existingSvcOrder.setDocumentDate(LocalDate.parse(svcOrder.getDocumentDate()));
-                existingSvcOrder.setShortText(svcOrder.getReportedBy());
+                existingSvcOrder.setDocumentDate(LocalDate.parse(svcMsg.getDocumentDate()));
+                existingSvcOrder.setShortText(svcMsg.getReportedBy());
             }
             else {
                 ServiceOrder newSvcOrder = new ServiceOrder(currentCode);
-                newSvcOrder.setServiceOrderType(svcOrder.getType());
-                newSvcOrder.setComment(svcOrder.getComment());
+                newSvcOrder.setServiceOrderType(svcMsg.getType());
+                newSvcOrder.setComment(svcMsg.getComment());
                 newSvcOrder.setActive(isActive);
                 newSvcOrder.setCustomer(existingCustomer);
-                newSvcOrder.setDocumentDate(LocalDate.parse(svcOrder.getDocumentDate()));
-                newSvcOrder.setShortText(svcOrder.getReportedBy());
+                newSvcOrder.setDocumentDate(LocalDate.parse(svcMsg.getDocumentDate()));
+                newSvcOrder.setShortText(svcMsg.getReportedBy());
 
                 newSvcOrder = serviceOrderManager.persist(newSvcOrder, false, false);
             }
@@ -152,18 +177,60 @@ public class SvcMsgImportServiceBean extends AbstractImportServiceBean<ServiceMe
         }
     }
 
+
+
     private void batchNormalisieren(List<ServiceMessageMappingType> curBatch) {
-        curBatch.forEach(importedRma -> {
-            importedRma.setCode(StringUtil.removeLeadingZero(importedRma.getCode()));
-            importedRma.setCustomerCode(StringUtil.removeLeadingZero(importedRma.getCustomerCode()));
+        curBatch.forEach(importedSvcMsg -> {
+            importedSvcMsg.setServiceMessageId(StringUtil.removeLeadingZero(importedSvcMsg.getServiceMessageId()));
+            importedSvcMsg.setMaterialSapNumber(StringUtil.removeLeadingZero(importedSvcMsg.getMaterialSapNumber()));
+            importedSvcMsg.setServiceOrderCode(StringUtil.removeLeadingZero(importedSvcMsg.getServiceOrderCode()));
+            importedSvcMsg.setDeliveryNoteNumber(StringUtil.removeLeadingZero(importedSvcMsg.getDeliveryNoteNumber()));
+            importedSvcMsg.setDefectComponent(StringUtil.removeLeadingZero(importedSvcMsg.getDefectComponent()));
         });
     }
 
-    private boolean evaluateActiveState(ServiceMessageMappingType svcOrder) {
-        return svcOrder != null
-                && svcOrder.getStatus() != null
-                && (svcOrder.getStatus().equalsIgnoreCase("Being processed")
-                        || svcOrder.getStatus().equalsIgnoreCase("Open"));
+
+    private Map<String, Plant> findOrCreatePlant(List<ServiceMessageMappingType> curBatch) {
+        Set<String> plantsOfBatch = curBatch.stream()
+                .map(ServiceMessageMappingType::getPlantCode)
+                .filter(Objects::nonNull)
+                .filter(Predicate.not(String::isEmpty))
+                .collect(Collectors.toSet());
+
+        Map<String, Plant> existingPlants = Plant.asMap(plantManager.findAll());
+        Set<String> existingPlantCodes = existingPlants.keySet();
+
+        Map<String, Plant> newCreatedPlants = plantsOfBatch.stream()
+                .filter(Predicate.not(existingPlantCodes::contains))
+                .map(missingCode -> {
+                    Plant plant = new Plant(missingCode);
+                    plant.setActive(true);
+                    plant.setComment("Automatically created at service message import");
+                    plant = plantManager.persist(plant, false, false);
+                    logger.info("neues Werk erstellt: " + plant);
+                    return plant;
+                })
+                .collect(Collectors.toMap(Plant::getCode, Function.identity()));
+
+        existingPlants.putAll(newCreatedPlants);
+
+        return existingPlants;
+    }
+
+    private MaterialRevision findOrCreateRevision(String repairRevNo, Material material, Plant plant) {
+        String revNo = RevisionUtil.calculateRevNumberBySapRevNumber(repairRevNo);
+        return material.getRevisions().stream()
+                .filter(rev -> rev.getPlant().getCode().equals(plant.getCode()))
+                .filter(rev -> rev.getRevisionNumber().equals(revNo))
+                .findFirst()
+                .orElseGet(() -> {
+                    MaterialRevision newRev = new MaterialRevision();
+                    newRev.setMaterial(material);
+                    newRev.setPlant(plant);
+                    newRev.setRevisionNumber(revNo);
+                    newRev = matRevManager.persist(newRev, true, true);
+                    return newRev;
+                });
     }
 
 }

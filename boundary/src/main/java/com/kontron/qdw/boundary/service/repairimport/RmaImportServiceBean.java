@@ -148,7 +148,6 @@ public class RmaImportServiceBean extends AbstractImportServiceBean<RMARootMappi
             String errorMsg = String.format("Fehler in RMA Datei '%s': unbekannte Customer '%s'.",
                     importFileName, String.join(", ", unknownCustomer));
             errorList.add(errorMsg);
-
         }
     }
 
