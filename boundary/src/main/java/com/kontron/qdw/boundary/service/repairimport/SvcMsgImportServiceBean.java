@@ -71,7 +71,7 @@ public class SvcMsgImportServiceBean extends AbstractImportServiceBean<ServiceMe
     @EJB
     private SerialObjectRepository serObjManager;
     @EJB
-    private FaultAnalysisRepository faultAnaManager;
+    private FaultAnalysisRepository faultManager;
 
 
     @Override
@@ -260,7 +260,7 @@ public class SvcMsgImportServiceBean extends AbstractImportServiceBean<ServiceMe
         Plant plant = existingPlants.get(importedSvcMsg.getPlantCode());
         MaterialRevision revision = findOrCreateRevision(importedSvcMsg.getMaterialRevisionNo(), material, plant);
         SerialObject serObj = existingSerObjs.get(new SerNoMatIdResult(material.getId(), importedSvcMsg.getSerialObjectSerialNumber()));
-        FaultAnalysis fault = existingFaults.get(importedSvcMsg.getFaultAnalysisCode() + "-" + importedSvcMsg.getFaultAnalysisGroup());
+        FaultAnalysis fault = existingFaults.get(importedSvcMsg.getFaultAnalysisGroup() + "-" + importedSvcMsg.getFaultAnalysisCode());
 
 
         // gibt es keinen Eintrag, so wurde zu der geparsten Id kein Eintrag in der Datenbank gefunden
@@ -408,12 +408,12 @@ public class SvcMsgImportServiceBean extends AbstractImportServiceBean<ServiceMe
                     if (StringUtils.isEmpty(importedSvcMsg.getFaultAnalysisCode()) || StringUtils.isEmpty(importedSvcMsg.getFaultAnalysisGroup())) {
                         return null;
                     }
-                    return importedSvcMsg.getFaultAnalysisCode() + "-" + importedSvcMsg.getFaultAnalysisGroup();
+                    return importedSvcMsg.getFaultAnalysisGroup() + "-" + importedSvcMsg.getFaultAnalysisCode();
                 })
                 .filter(Objects::nonNull)
                 .collect(Collectors.toSet());
 
-        List<FaultAnalysis> existingFaults = faultAnaManager.findByIds(requestedFaultCodes);
+        List<FaultAnalysis> existingFaults = faultManager.findByIds(requestedFaultCodes);
 
         Map<String, FaultAnalysis> existingFaultsPerCode = existingFaults.stream()
                 .collect(Collectors.toMap(FaultAnalysis::getCode, Function.identity()));
@@ -430,10 +430,9 @@ public class SvcMsgImportServiceBean extends AbstractImportServiceBean<ServiceMe
         Map<String, FaultAnalysis> newFaultsPerCode = requestedFaultCodes.stream()
                 .map(faultCode -> {
                     FaultAnalysis newFault = new FaultAnalysis(faultCode);
-                    newFault.setComment("Automatically created by QDW import");
-                    logger.debug("Neue FaultAnalyses mit code {} erstellt",
-                            faultCode);
-                    return faultAnaManager.persist(newFault, true, true);
+                    newFault.setShortText("Automatically created by QDW import");
+                    logger.debug("Neue FaultAnalyses mit code {} erstellt", faultCode);
+                    return faultManager.persist(newFault, true, true);
                 })
                 .collect(Collectors.toMap(FaultAnalysis::getCode, Function.identity()));
 

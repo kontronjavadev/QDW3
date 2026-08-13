@@ -94,7 +94,7 @@ public class RepairImportServiceBean {
     @Asynchronous
     @PermitAll
     @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
-    public void runSvcMsgImportImport() {
+    public void runSvcMsgImport() {
         if (!schedulerService.isExecuteImport()) {
             return;
         }
