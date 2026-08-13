@@ -24,6 +24,7 @@ import com.kontron.qdw.domain.base.Plant;
 import com.kontron.qdw.domain.material.Material;
 import com.kontron.qdw.domain.material.MaterialRevision;
 import com.kontron.qdw.domain.serial.SerialObject;
+import com.kontron.qdw.domain.service.FaultAnalysis;
 import com.kontron.qdw.domain.service.ServiceMessage;
 import com.kontron.qdw.repository.base.PlantRepository;
 import com.kontron.qdw.repository.material.MaterialRepository;
@@ -31,6 +32,7 @@ import com.kontron.qdw.repository.material.MaterialRevisionRepository;
 import com.kontron.qdw.repository.serial.SerialObjectRepository;
 import com.kontron.qdw.repository.serial.SerialObjectRepository.SerNoJeMatIdFilter;
 import com.kontron.qdw.repository.serial.SerialObjectRepository.SerNoMatIdResult;
+import com.kontron.qdw.repository.service.FaultAnalysisRepository;
 import com.kontron.qdw.repository.service.ServiceMessageRepository;
 import com.kontron.util.file.FileUtil.ImportType;
 import com.kontron.util.log.FileImportAbortedWithErrorsLog;
@@ -68,6 +70,8 @@ public class SvcMsgImportServiceBean extends AbstractImportServiceBean<ServiceMe
     private MaterialRevisionRepository matRevManager;
     @EJB
     private SerialObjectRepository serObjManager;
+    @EJB
+    private FaultAnalysisRepository faultAnaManager;
 
 
     @Override
@@ -127,7 +131,7 @@ public class SvcMsgImportServiceBean extends AbstractImportServiceBean<ServiceMe
         curBatch.stream()
                 .map(ServiceMessageMappingType::getId)
                 .forEach(msgStringId -> {
-                    // kann der String geparst werden, die Werte in beide Maps eintragen.
+                    // Wenn der String geparst werden kann, die Werte in beide Maps eintragen.
                     // Ansonsten nichts machen.
                     try {
                         Long longId = Long.parseLong(msgStringId);
@@ -143,7 +147,7 @@ public class SvcMsgImportServiceBean extends AbstractImportServiceBean<ServiceMe
 
         // Map an Service messages zu den originalen Ids als String (über oben aufgebaute Map)
         Map<String, ServiceMessage> svcMsgPerMsgStringId = importedSvcMsgs.stream()
-                .collect(Collectors.toMap(m -> msgStringIdPerLongIds.get(m.getId()), m -> m));
+                .collect(Collectors.toMap(m -> msgStringIdPerLongIds.get(m.getId()), Function.identity()));
 
 
         // in batch vorkommende Materialien holen
@@ -168,9 +172,12 @@ public class SvcMsgImportServiceBean extends AbstractImportServiceBean<ServiceMe
         Map<String, Plant> existingPlants = findOrCreatePlant(curBatch);
 
 
-        // in batch vorkommende SreialObjects holen und falls nötig anlegen (Suche erfolgt nach SerialNumber und Material id)
-        // wir brauchen also das Material oder die Ids zu einer MaterialSapNummer aus dem importierten Objekt ->
+        // in batch vorkommende SerialObjects holen und falls nötig anlegen (Suche erfolgt nach SerialNumber und Material id)
         Map<SerNoMatIdResult, SerialObject> existingSerObjs = findOrCreateSerObj(curBatch, existingMats);
+
+
+        // in batch vorkommende FaultAnalysos holen und falls nötig anlegen
+        Map<String, FaultAnalysis> existingFaults = findOrCreateFaultAnalysis(curBatch);
 
 
         for (ServiceMessageMappingType importedSvcMsg : curBatch) {
@@ -179,7 +186,7 @@ public class SvcMsgImportServiceBean extends AbstractImportServiceBean<ServiceMe
             try {
                 importEntry(importedSvcMsg, importFileName, bulkProcess.getCnt(), errorList,
                         longIdsPerMsgStringIds, svcMsgPerMsgStringId,
-                        existingMats, existingPlants, existingSerObjs);
+                        existingMats, existingPlants, existingSerObjs, existingFaults);
             }
             catch (Exception e) {
                 logger.error("failed", e);
@@ -196,7 +203,8 @@ public class SvcMsgImportServiceBean extends AbstractImportServiceBean<ServiceMe
 
     private void importEntry(ServiceMessageMappingType importedSvcMsg, String importFileName, int bulkCnt, List<String> errorList,
             Map<String, Long> longIdsPerMsgStringIds, Map<String, ServiceMessage> svcMsgPerMsgStringId,
-            Map<String, Material> existingMats, Map<String, Plant> existingPlants, Map<SerNoMatIdResult, SerialObject> existingSerObjs) {
+            Map<String, Material> existingMats, Map<String, Plant> existingPlants, Map<SerNoMatIdResult, SerialObject> existingSerObjs,
+            Map<String, FaultAnalysis> existingFaults) {
 
         if (StringUtils.isEmpty(importedSvcMsg.getId())) {
             String errorMsg = String.format("Eintrag %s ohne Transaction-Id (service_order) in RMA Datei '%s'.",
@@ -226,6 +234,13 @@ public class SvcMsgImportServiceBean extends AbstractImportServiceBean<ServiceMe
             errorList.add(errorMsg);
             return;
         }
+        if (StringUtils.isEmpty(importedSvcMsg.getFaultAnalysisCode()) || StringUtils.isEmpty(importedSvcMsg.getFaultAnalysisGroup())) {
+            String errorMsg = String.format("Eintrag %s ohne Defect code (defect_code) oder Defect code group (defect_code_group) in RMA Datei '%s'.",
+                    bulkCnt, importFileName);
+            logger.warn(errorMsg);
+            errorList.add(errorMsg);
+            return;
+        }
 
 
         Long transactionId = longIdsPerMsgStringIds.get(importedSvcMsg.getId());
@@ -245,6 +260,7 @@ public class SvcMsgImportServiceBean extends AbstractImportServiceBean<ServiceMe
         Plant plant = existingPlants.get(importedSvcMsg.getPlantCode());
         MaterialRevision revision = findOrCreateRevision(importedSvcMsg.getMaterialRevisionNo(), material, plant);
         SerialObject serObj = existingSerObjs.get(new SerNoMatIdResult(material.getId(), importedSvcMsg.getSerialObjectSerialNumber()));
+        FaultAnalysis fault = existingFaults.get(importedSvcMsg.getFaultAnalysisCode() + "-" + importedSvcMsg.getFaultAnalysisGroup());
 
 
         // gibt es keinen Eintrag, so wurde zu der geparsten Id kein Eintrag in der Datenbank gefunden
@@ -269,7 +285,7 @@ public class SvcMsgImportServiceBean extends AbstractImportServiceBean<ServiceMe
         existingSvcMsg.setSerialObject(serObj);
         existingSvcMsg.setAnalysisText(importedSvcMsg.getAnalysisText());
         existingSvcMsg.setCustomerReport(StringUtils.substring(importedSvcMsg.getCustomerReport(), 0, 4000));
-        existingSvcMsg.setFaultAnalysis(findFaultAnalysis(importedSvcMsg.getFaultAnalysisCode(), importedSvcMsg.getFaultAnalysisGroup()));
+        existingSvcMsg.setFaultAnalysis(fault);
         existingSvcMsg.setDeliveryNoteNumber(importedSvcMsg.getDeliveryNoteNumber());
         existingSvcMsg.setDesignator(importedSvcMsg.getDesignator());
     }
@@ -363,7 +379,7 @@ public class SvcMsgImportServiceBean extends AbstractImportServiceBean<ServiceMe
 
         // für unkomplizierten Zugriff die Materialien in eine Map nach Id packen
         Map<Long, Material> matPerId = existingMats.values().stream()
-                .collect(Collectors.toMap(Material::getId, m -> m));
+                .collect(Collectors.toMap(Material::getId, Function.identity()));
 
         // die nicht existierenden Einträge erzeugen und in die Struktur bringen, die als Rückgabe erwartet wird
         Map<SerNoMatIdResult, SerialObject> newSerObjPerSerNrAndMatId = requestedAsResultRecord.stream()
@@ -376,12 +392,55 @@ public class SvcMsgImportServiceBean extends AbstractImportServiceBean<ServiceMe
                             reqFilter.serialNumber(), material.getSapNumber());
                     return serObjManager.persist(newSerObj, true, true);
                 })
-                .collect(Collectors.toMap(so -> new SerNoMatIdResult(so.getMaterial().getId(), so.getSerialNumber()), so -> so));
+                .collect(Collectors.toMap(so -> new SerNoMatIdResult(so.getMaterial().getId(), so.getSerialNumber()), Function.identity()));
 
         // die fehlenden Einträge den existierenden hinzufügen
         existingSerObjPerSerNrAndMatId.putAll(newSerObjPerSerNrAndMatId);
 
         return existingSerObjPerSerNrAndMatId;
+    }
+
+
+
+    private Map<String, FaultAnalysis> findOrCreateFaultAnalysis(List<ServiceMessageMappingType> curBatch) {
+        Set<String> requestedFaultCodes = curBatch.stream()
+                .map(importedSvcMsg -> {
+                    if (StringUtils.isEmpty(importedSvcMsg.getFaultAnalysisCode()) || StringUtils.isEmpty(importedSvcMsg.getFaultAnalysisGroup())) {
+                        return null;
+                    }
+                    return importedSvcMsg.getFaultAnalysisCode() + "-" + importedSvcMsg.getFaultAnalysisGroup();
+                })
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
+
+        List<FaultAnalysis> existingFaults = faultAnaManager.findByIds(requestedFaultCodes);
+
+        Map<String, FaultAnalysis> existingFaultsPerCode = existingFaults.stream()
+                .collect(Collectors.toMap(FaultAnalysis::getCode, Function.identity()));
+
+        if (existingFaultsPerCode.size() == requestedFaultCodes.size()) {
+            return existingFaultsPerCode;
+        }
+
+
+        // die keys des Ergebnisses abziehen. Es verbleiben die Einträge, die es nicht in der Datenbank gobt
+        requestedFaultCodes.removeAll(existingFaultsPerCode.keySet());
+
+        // die nicht existierenden Einträge erzeugen und in die Struktur bringen, die als Rückgabe erwartet wird
+        Map<String, FaultAnalysis> newFaultsPerCode = requestedFaultCodes.stream()
+                .map(faultCode -> {
+                    FaultAnalysis newFault = new FaultAnalysis(faultCode);
+                    newFault.setComment("Automatically created by QDW import");
+                    logger.debug("Neue FaultAnalyses mit code {} erstellt",
+                            faultCode);
+                    return faultAnaManager.persist(newFault, true, true);
+                })
+                .collect(Collectors.toMap(FaultAnalysis::getCode, Function.identity()));
+
+        // die fehlenden Einträge den existierenden hinzufügen
+        existingFaultsPerCode.putAll(newFaultsPerCode);
+
+        return existingFaultsPerCode;
     }
 
 }

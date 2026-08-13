@@ -1,6 +1,10 @@
 package com.kontron.qdw.repository.service;
 
 import net.sourceforge.jbizmo.commons.random.*;
+
+import java.util.Collection;
+import java.util.List;
+
 import com.kontron.qdw.domain.service.*;
 import jakarta.persistence.*;
 import net.sourceforge.jbizmo.commons.jpa.*;
@@ -12,6 +16,16 @@ import net.sourceforge.jbizmo.commons.annotation.Generated;
 public class FaultAnalysisRepository extends AbstractRepository<FaultAnalysis, String> {
     @Generated
     private static final String PARAM_CODE = "code";
+
+    public List<FaultAnalysis> findByIds(Collection<String> codes) {
+        String stmt = "select a "
+                + "from FaultAnalysis a "
+                + "where a.code in :paramCodes ";
+        return em
+                .createQuery(stmt, FaultAnalysis.class)
+                .setParameter("paramCodes", codes)
+                .getResultList();
+    }
 
     /**
      * Find a persistent fault analysis by using the primary key of the provided object
