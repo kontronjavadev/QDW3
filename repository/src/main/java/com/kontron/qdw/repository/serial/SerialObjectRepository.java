@@ -83,7 +83,7 @@ public class SerialObjectRepository extends AbstractRepository<SerialObject, Lon
     /**
      * Find a list of persistent serial object object by list of record with serial number and material id
      */
-    public Map<SerNoMatIdResult, SerialObject> findBySerialNumberAndMaterialIds(List<SerNoJeMatIdFilter> serNoJeMatIdFilter) {
+    public Map<SerNoMatIdResult, SerialObject> findBySerialNumberAndMaterialIds(Collection<SerNoJeMatIdFilter> serNoJeMatIdFilter) {
         Map<SerNoMatIdResult, SerialObject> existingSerObjMap = new HashMap<>();
 
         for (SerNoJeMatIdFilter filter : serNoJeMatIdFilter) {

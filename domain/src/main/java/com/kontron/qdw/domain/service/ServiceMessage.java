@@ -72,6 +72,11 @@ public class ServiceMessage extends AbstractTransactionalEntity {
     public static final String NQ_GET_FAILUREMATERIALS = "ServiceMessage.getFailureMaterials";
     @Generated
     public static final String NQ_GET_REPAIRSERVICE = "ServiceMessage.getRepairService";
+
+    public static final int REBUILD_NOT_NECCESSARY = 0;
+    public static final int REBUILD_FOR_NEW_ENTRY = 1;
+    public static final int REBUILD_FOR_UPDATED_ENTRY = 2;
+
     @Column(name = "analysis_text", nullable = true, updatable = true, insertable = true, length = 100)
     @Size(max = 100, message = "Length of field \"analysisText\" is illegal!")
     @Generated
@@ -756,14 +761,17 @@ public class ServiceMessage extends AbstractTransactionalEntity {
     @Generated
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
+        }
 
-        if (obj == null)
+        if (obj == null) {
             return false;
+        }
 
-        if (getClass() != obj.getClass())
+        if (getClass() != obj.getClass()) {
             return false;
+        }
 
         final var bean = (ServiceMessage) obj;
 
