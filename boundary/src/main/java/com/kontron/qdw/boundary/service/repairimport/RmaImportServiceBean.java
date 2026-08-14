@@ -71,7 +71,7 @@ public class RmaImportServiceBean extends AbstractImportServiceBean<RMARootMappi
     }
 
     @Override
-    protected boolean isWithBulk() {
+    protected boolean execInBulks() {
         return false;
     }
 

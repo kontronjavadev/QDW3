@@ -9,6 +9,13 @@
 		</xs:sequence>
 	</xs:complexType>
 
+<!-- 
+Maximallängen 4000 auskommentert, da von SAP mehr geliefert wird.
+Wir übernehmen im Import nur cust_error_note (Customer Report) und schneiden nach 4000 Zeichen ab,
+aber nur so vermeiden wir eine SAXParseException.
+Die Alternative ist, die Angabe des Schemas wegzulassen, so wie es im alten QDW gemacht wurde.
+ -->
+
 	<xs:complexType name="ServiceMessageType">
 		<xs:sequence>
 			<xs:element maxOccurs="unbounded" minOccurs="0" name="x2" type="X2MessageType"/>
@@ -43,7 +50,9 @@
 			<xs:simpleType>
 				<xs:restriction base="xs:string">
 					<xs:minLength value="0"/>
+<!-- 
 					<xs:maxLength value="4000"/>
+ -->
 				</xs:restriction>
 			</xs:simpleType>
 		</xs:attribute>
@@ -131,7 +140,9 @@
 			<xs:simpleType>
 				<xs:restriction base="xs:string">
 					<xs:minLength value="0"/>
+<!-- 
 					<xs:maxLength value="4000"/>
+ -->
 				</xs:restriction>
 			</xs:simpleType>
 		</xs:attribute>
@@ -139,7 +150,9 @@
 			<xs:simpleType>
 				<xs:restriction base="xs:string">
 					<xs:minLength value="0"/>
+<!-- 
 					<xs:maxLength value="4000"/>
+ -->
 				</xs:restriction>
 			</xs:simpleType>
 		</xs:attribute>
@@ -273,7 +286,9 @@
 			<xs:simpleType>
 				<xs:restriction base="xs:string">
 					<xs:minLength value="0"/>
+<!-- 
 					<xs:maxLength value="4000"/>
+ -->
 				</xs:restriction>
 			</xs:simpleType>
 		</xs:attribute>

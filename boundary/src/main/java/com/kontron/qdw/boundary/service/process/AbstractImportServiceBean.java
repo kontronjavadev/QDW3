@@ -103,7 +103,7 @@ public abstract class AbstractImportServiceBean<ROOT, ELEM> implements TaskCall 
         logger.info("{} files found for " + getEntityName() + " import.", orderedImportFileNames);
         for (String importFileName : orderedImportFileNames) {
             importFile(getEntityName(), getFolderSubPath(), importFileName, ownTask, getImportDir(),
-                    unmarshaller, getGetElementsFunction(), isWithBulk());
+                    unmarshaller, getGetElementsFunction());
         }
 
 
@@ -115,7 +115,7 @@ public abstract class AbstractImportServiceBean<ROOT, ELEM> implements TaskCall 
 
     protected void importFile(String entityName, String folderSubPath, String importFileName, TaskNodeLog tsk, String importDir,
             Unmarshaller unmarshaller,
-            Function<ROOT, List<ELEM>> getElementsFunction, boolean withBulk) {
+            Function<ROOT, List<ELEM>> getElementsFunction) {
         logger.info("Lese " + entityName + "-Import Datei '{}'", importFileName);
 
         List<ELEM> importedElements;
@@ -136,8 +136,8 @@ public abstract class AbstractImportServiceBean<ROOT, ELEM> implements TaskCall 
 
 
         List<String> errorList = new ArrayList<>();
-        int bulkSize = BulkProcess.DEFAULT_BULK_SIZE;
-        if (!withBulk) {
+        int bulkSize = bulkSize();
+        if (!execInBulks()) {
             // alles auf einmal, also bulkSize auf Gesamtgröße setzen
             bulkSize = importedElements.size();
         }
@@ -188,7 +188,11 @@ public abstract class AbstractImportServiceBean<ROOT, ELEM> implements TaskCall 
         return exchangePath + getFolderSubPath();
     }
 
-    protected boolean isWithBulk() {
+    protected int bulkSize() {
+        return BulkProcess.DEFAULT_BULK_SIZE;
+    }
+
+    protected boolean execInBulks() {
         return true;
     }
 
