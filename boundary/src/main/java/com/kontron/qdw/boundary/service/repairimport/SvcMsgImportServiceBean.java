@@ -161,8 +161,7 @@ public class SvcMsgImportServiceBean extends AbstractImportServiceBean<ServiceMe
                 .map(Entry::getKey)
                 .collect(Collectors.toSet());
         if (!missingMats.isEmpty()) { // sofortiger Abbruch
-            String errorMsg = String.format("SAP-Nummer(n) (part_no) in RMA Datei '%s' nicht gefunden: '%s'",
-                    importFileName, Strings.join(missingMats, ','));
+            String errorMsg = String.format("SAP-Nummer(n) (part_no) nicht gefunden: '%s'", Strings.join(missingMats, ','));
             logger.error(errorMsg);
             throw new RuntimeException(errorMsg);
         }
@@ -184,7 +183,7 @@ public class SvcMsgImportServiceBean extends AbstractImportServiceBean<ServiceMe
             bulkProcess.logProcess(logger);
 
             try {
-                importEntry(importedSvcMsg, importFileName, bulkProcess.getCnt(), errorList,
+                importEntry(importedSvcMsg, bulkProcess.getCnt(), errorList,
                         longIdsPerMsgStringIds, svcMsgPerMsgStringId,
                         existingMats, existingPlants, existingSerObjs, existingFaults);
             }
@@ -201,44 +200,34 @@ public class SvcMsgImportServiceBean extends AbstractImportServiceBean<ServiceMe
 
 
 
-    private void importEntry(ServiceMessageMappingType importedSvcMsg, String importFileName, int bulkCnt, List<String> errorList,
+    private void importEntry(ServiceMessageMappingType importedSvcMsg, int bulkCnt, List<String> errorList,
             Map<String, Long> longIdsPerMsgStringIds, Map<String, ServiceMessage> svcMsgPerMsgStringId,
             Map<String, Material> existingMats, Map<String, Plant> existingPlants, Map<SerNoMatIdResult, SerialObject> existingSerObjs,
             Map<String, FaultAnalysis> existingFaults) {
 
         if (StringUtils.isEmpty(importedSvcMsg.getId())) {
-            String errorMsg = String.format("Eintrag %s ohne Transaction-Id (service_order) in RMA Datei '%s'.",
-                    bulkCnt + 1, importFileName);
-            logger.warn(errorMsg);
-            errorList.add(errorMsg);
+            String errorMsg = String.format("Eintrag %s ohne Transaction-Id (service_order).", bulkCnt + 1);
+            logger.info(errorMsg);
             return;
         }
         if (StringUtils.isEmpty(importedSvcMsg.getMaterialSapNumber())) {
-            String errorMsg = String.format("Eintrag %s ohne SAP-Nummer (part_no) in RMA Datei '%s'.",
-                    bulkCnt + 1, importFileName);
-            logger.warn(errorMsg);
-            errorList.add(errorMsg);
+            String errorMsg = String.format("Eintrag %s ohne SAP-Nummer (part_no).", bulkCnt + 1);
+            logger.info(errorMsg);
             return;
         }
         if (StringUtils.isEmpty(importedSvcMsg.getPlantCode())) {
-            String errorMsg = String.format("Eintrag %s ohne Plant in RMA Datei '%s'.",
-                    bulkCnt + 1, importFileName);
-            logger.warn(errorMsg);
-            errorList.add(errorMsg);
+            String errorMsg = String.format("Eintrag %s ohne Plant.", bulkCnt + 1);
+            logger.info(errorMsg);
             return;
         }
         if (StringUtils.isEmpty(importedSvcMsg.getSerialObjectSerialNumber())) {
-            String errorMsg = String.format("Eintrag %s ohne SerialNumber (serial_no) in RMA Datei '%s'.",
-                    bulkCnt + 1, importFileName);
-            logger.warn(errorMsg);
-            errorList.add(errorMsg);
+            String errorMsg = String.format("Eintrag %s ohne SerialNumber (serial_no).", bulkCnt + 1);
+            logger.info(errorMsg);
             return;
         }
         if (StringUtils.isEmpty(importedSvcMsg.getFaultAnalysisCode()) || StringUtils.isEmpty(importedSvcMsg.getFaultAnalysisGroup())) {
-            String errorMsg = String.format("Eintrag %s ohne Defect code (defect_code) oder Defect code group (defect_code_group) in RMA Datei '%s'.",
-                    bulkCnt + 1, importFileName);
-            logger.warn(errorMsg);
-            errorList.add(errorMsg);
+            String errorMsg = String.format("Eintrag %s ohne Defect code (defect_code) oder Defect code group (defect_code_group).", bulkCnt + 1);
+            logger.info(errorMsg);
             return;
         }
 
@@ -246,9 +235,8 @@ public class SvcMsgImportServiceBean extends AbstractImportServiceBean<ServiceMe
         Long transactionId = longIdsPerMsgStringIds.get(importedSvcMsg.getId());
         if (transactionId == null) {
             // gibt es keinen Eintrag, konnte die String-Id nicht geparst werden
-            String errorMsg = String.format("Eintrag %s mit korrupter Transaction-Id (service_order) '%s' in RMA Datei '%s'. "
-                    + "Es wird eine Zahl erwartet. Lediglich etwaige Großbuchstaben wurden dabei entfernt.",
-                    bulkCnt + 1, importedSvcMsg.getId(), importFileName);
+            String errorMsg = String.format("Eintrag %s mit korrupter Transaction-Id (service_order) '%s'. "
+                    + "Es wird eine Zahl erwartet. Lediglich etwaige Großbuchstaben wurden dabei entfernt.", bulkCnt + 1, importedSvcMsg.getId());
             logger.warn(errorMsg);
             errorList.add(errorMsg);
             return;
