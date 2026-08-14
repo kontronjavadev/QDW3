@@ -1,18 +1,20 @@
 package com.kontron.qdw.boundary.service.repairimport;
 
 import java.lang.invoke.MethodHandles;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.util.Strings;
+import org.apache.commons.lang3.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,6 +27,7 @@ import com.kontron.qdw.domain.material.Material;
 import com.kontron.qdw.domain.material.MaterialRevision;
 import com.kontron.qdw.domain.serial.SerialObject;
 import com.kontron.qdw.domain.service.FaultAnalysis;
+import com.kontron.qdw.domain.service.RepairErrorCode;
 import com.kontron.qdw.domain.service.ServiceMessage;
 import com.kontron.qdw.repository.base.PlantRepository;
 import com.kontron.qdw.repository.material.MaterialRepository;
@@ -33,6 +36,7 @@ import com.kontron.qdw.repository.serial.SerialObjectRepository;
 import com.kontron.qdw.repository.serial.SerialObjectRepository.SerNoJeMatIdFilter;
 import com.kontron.qdw.repository.serial.SerialObjectRepository.SerNoMatIdResult;
 import com.kontron.qdw.repository.service.FaultAnalysisRepository;
+import com.kontron.qdw.repository.service.RepairErrorCodeRepository;
 import com.kontron.qdw.repository.service.ServiceMessageRepository;
 import com.kontron.util.file.FileUtil.ImportType;
 import com.kontron.util.log.FileImportAbortedWithErrorsLog;
@@ -72,6 +76,8 @@ public class SvcMsgImportServiceBean extends AbstractImportServiceBean<ServiceMe
     private SerialObjectRepository serObjManager;
     @EJB
     private FaultAnalysisRepository faultManager;
+    @EJB
+    private RepairErrorCodeRepository errorCodeManager;
 
 
     @Override
@@ -161,7 +167,7 @@ public class SvcMsgImportServiceBean extends AbstractImportServiceBean<ServiceMe
                 .map(Entry::getKey)
                 .collect(Collectors.toSet());
         if (!missingMats.isEmpty()) { // sofortiger Abbruch
-            String errorMsg = String.format("SAP-Nummer(n) (part_no) nicht gefunden: '%s'", Strings.join(missingMats, ','));
+            String errorMsg = String.format("SAP-Nummer(n) (part_no) nicht gefunden: '%s'", String.join(", ", missingMats));
             logger.error(errorMsg);
             throw new RuntimeException(errorMsg);
         }
@@ -175,8 +181,12 @@ public class SvcMsgImportServiceBean extends AbstractImportServiceBean<ServiceMe
         Map<SerNoMatIdResult, SerialObject> existingSerObjs = findOrCreateSerObj(curBatch, existingMats);
 
 
-        // in batch vorkommende FaultAnalysos holen und falls nötig anlegen
+        // in batch vorkommende FaultAnalysis ("Symptom") holen und falls nötig anlegen
         Map<String, FaultAnalysis> existingFaults = findOrCreateFaultAnalysis(curBatch);
+
+
+        // in batch vorkommende Error Code ("Repair cause codes") holen und falls nötig anlegen
+        Map<String, RepairErrorCode> existingErrorCodes = findOrCreateRepairErrorCode(curBatch);
 
 
         for (ServiceMessageMappingType importedSvcMsg : curBatch) {
@@ -185,7 +195,8 @@ public class SvcMsgImportServiceBean extends AbstractImportServiceBean<ServiceMe
             try {
                 importEntry(importedSvcMsg, bulkProcess.getCnt(), errorList,
                         longIdsPerMsgStringIds, svcMsgPerMsgStringId,
-                        existingMats, existingPlants, existingSerObjs, existingFaults);
+                        existingMats, existingPlants, existingSerObjs,
+                        existingFaults, existingErrorCodes);
             }
             catch (Exception e) {
                 logger.error("failed", e);
@@ -203,7 +214,7 @@ public class SvcMsgImportServiceBean extends AbstractImportServiceBean<ServiceMe
     private void importEntry(ServiceMessageMappingType importedSvcMsg, int bulkCnt, List<String> errorList,
             Map<String, Long> longIdsPerMsgStringIds, Map<String, ServiceMessage> svcMsgPerMsgStringId,
             Map<String, Material> existingMats, Map<String, Plant> existingPlants, Map<SerNoMatIdResult, SerialObject> existingSerObjs,
-            Map<String, FaultAnalysis> existingFaults) {
+            Map<String, FaultAnalysis> existingFaults, Map<String, RepairErrorCode> existingErrorCodes) {
 
         if (StringUtils.isEmpty(importedSvcMsg.getId())) {
             String errorMsg = String.format("Eintrag %s ohne Transaction-Id (service_order).", bulkCnt + 1);
@@ -225,11 +236,11 @@ public class SvcMsgImportServiceBean extends AbstractImportServiceBean<ServiceMe
             logger.info(errorMsg);
             return;
         }
-        if (StringUtils.isEmpty(importedSvcMsg.getFaultAnalysisCode()) || StringUtils.isEmpty(importedSvcMsg.getFaultAnalysisGroup())) {
-            String errorMsg = String.format("Eintrag %s ohne Defect code (defect_code) oder Defect code group (defect_code_group).", bulkCnt + 1);
-            logger.info(errorMsg);
-            return;
-        }
+        // if (StringUtils.isEmpty(importedSvcMsg.getFaultAnalysisCode()) || StringUtils.isEmpty(importedSvcMsg.getFaultAnalysisGroup())) {
+        // String errorMsg = String.format("Eintrag %s ohne Defect code (defect_code) oder Defect code group (defect_code_group).", bulkCnt + 1);
+        // logger.info(errorMsg);
+        // return;
+        // }
 
 
         Long transactionId = longIdsPerMsgStringIds.get(importedSvcMsg.getId());
@@ -248,7 +259,12 @@ public class SvcMsgImportServiceBean extends AbstractImportServiceBean<ServiceMe
         Plant plant = existingPlants.get(importedSvcMsg.getPlantCode());
         MaterialRevision revision = findOrCreateRevision(importedSvcMsg.getMaterialRevisionNo(), material, plant);
         SerialObject serObj = existingSerObjs.get(new SerNoMatIdResult(material.getId(), importedSvcMsg.getSerialObjectSerialNumber()));
-        FaultAnalysis fault = existingFaults.get(importedSvcMsg.getFaultAnalysisGroup() + "-" + importedSvcMsg.getFaultAnalysisCode());
+        FaultAnalysis fault = existingFaults.get(importedSvcMsg.getFaultAnalysisGroup() + "-" + importedSvcMsg.getFaultAnalysisCode()); // kann null sein
+        RepairErrorCode errorCode = existingErrorCodes.get( // kann null sein
+                (StringUtils.isEmpty(importedSvcMsg.getRepairErrorCodeGroup())
+                        ? ""
+                        : importedSvcMsg.getRepairErrorCodeGroup() + "-")
+                        + importedSvcMsg.getRepairErrorCode());
 
 
         // gibt es keinen Eintrag, so wurde zu der geparsten Id kein Eintrag in der Datenbank gefunden
@@ -269,13 +285,36 @@ public class SvcMsgImportServiceBean extends AbstractImportServiceBean<ServiceMe
         }
 
 
-        existingSvcMsg.setMaterialRevision(revision);
         existingSvcMsg.setSerialObject(serObj);
+        existingSvcMsg.setPlant(plant);
+        existingSvcMsg.setMaterialRevision(revision);
         existingSvcMsg.setAnalysisText(importedSvcMsg.getAnalysisText());
         existingSvcMsg.setCustomerReport(StringUtils.substring(importedSvcMsg.getCustomerReport(), 0, 4000));
         existingSvcMsg.setFaultAnalysis(fault);
         existingSvcMsg.setDeliveryNoteNumber(importedSvcMsg.getDeliveryNoteNumber());
+
         existingSvcMsg.setDesignator(importedSvcMsg.getDesignator());
+        // Designator aus cause text ermitteln, wenn keiner angegeben ist
+        if (StringUtils.isEmpty(existingSvcMsg.getDesignator())) {
+            extractDesignatorFromCause(importedSvcMsg).ifPresent(existingSvcMsg::setDesignator);
+        }
+
+        existingSvcMsg.setEpidemicFailure(importedSvcMsg.isEpidemicFailure());
+        existingSvcMsg.setRepairErrorCode(errorCode);
+        existingSvcMsg.setOrigin(mapFailureOriginCode(importedSvcMsg.getOrigin()));
+        existingSvcMsg.setExternalReport(StringUtils.substring(importedSvcMsg.getExternalReport(), 0, 4000));
+        existingSvcMsg.setInternalReport(StringUtils.substring(importedSvcMsg.getInternalReport(), 0, 4000));
+        existingSvcMsg.setServiceOrder(findServiceOrder(importedSvcMsg.getServiceOrderCode()));
+        existingSvcMsg.setRepairState(findRepairState(importedSvcMsg.getRepairStateCode()));
+        existingSvcMsg.setServiceMessageId(importedSvcMsg.getServiceMessageId());
+        existingSvcMsg.setrMAType(findRMAType(importedSvcMsg.getrMATypeCode(), importedSvcMsg.getRmaTypeGroup()));
+        existingSvcMsg.setRepairTask(findRepairTask(importedSvcMsg.getRepairTaskCode(), importedSvcMsg.getRepairTaskGroup()));
+        existingSvcMsg.setDefectComponent(importedSvcMsg.getDefectComponent());
+        existingSvcMsg.setExternalSupplier(findSupplier(importedSvcMsg.getWorkCenter()));
+        existingSvcMsg.setCauseText(importedSvcMsg.getErrorText());
+        existingSvcMsg.setRepairDescription(importedSvcMsg.getRepairTaskText());
+
+
     }
 
 
@@ -428,6 +467,96 @@ public class SvcMsgImportServiceBean extends AbstractImportServiceBean<ServiceMe
         existingFaultsPerCode.putAll(newFaultsPerCode);
 
         return existingFaultsPerCode;
+    }
+
+    private Map<String, RepairErrorCode> findOrCreateRepairErrorCode(List<ServiceMessageMappingType> curBatch) {
+        // == Repair cause codes
+        Set<RepairErrorCodeRecord> requestedErrorCodes = curBatch.stream()
+                .map(importedSvcMsg -> {
+                    if (StringUtils.isEmpty(importedSvcMsg.getRepairErrorCode())) {
+                        return null;
+                    }
+
+                    String group = importedSvcMsg.getRepairErrorCodeGroup();
+                    String code = importedSvcMsg.getRepairErrorCode();
+                    if (!StringUtils.isEmpty(group)) {
+                        code = group + "-" + code;
+                    }
+                    return new RepairErrorCodeRecord(code, group);
+                })
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
+
+        List<RepairErrorCode> existingErrorCodes = errorCodeManager.findByIds(
+                requestedErrorCodes.stream().map(RepairErrorCodeRecord::code).collect(Collectors.toSet()));
+
+        Map<String, RepairErrorCode> existingErrorCodesPerCode = existingErrorCodes.stream()
+                .collect(Collectors.toMap(RepairErrorCode::getCode, Function.identity()));
+
+        if (existingErrorCodes.size() == requestedErrorCodes.size()) {
+            return existingErrorCodesPerCode;
+        }
+
+
+        // die keys des Ergebnisses abziehen. Es verbleiben die Einträge, die es nicht in der Datenbank gobt
+        requestedErrorCodes.removeIf(reqCode -> existingErrorCodesPerCode.containsKey(reqCode.code));
+
+        // die nicht existierenden Einträge erzeugen und in die Struktur bringen, die als Rückgabe erwartet wird
+        Map<String, RepairErrorCode> newFaultsPerCode = requestedErrorCodes.stream()
+                .map(errorCodeRec -> {
+                    RepairErrorCode newErrorCode = new RepairErrorCode(errorCodeRec.code);
+                    newErrorCode.setGroupName(errorCodeRec.group);
+                    newErrorCode.setActive(true);
+                    newErrorCode.setName(errorCodeRec.code);
+                    newErrorCode.setShortText("Automatically created by QDW import");
+                    logger.debug("Neuer RepairErrorCode mit code {} erstellt", errorCodeRec.code);
+                    return errorCodeManager.persist(newErrorCode, true, true);
+                })
+                .collect(Collectors.toMap(RepairErrorCode::getCode, Function.identity()));
+
+        // die fehlenden Einträge den existierenden hinzufügen
+        existingErrorCodesPerCode.putAll(newFaultsPerCode);
+
+        return existingErrorCodesPerCode;
+    }
+
+    record RepairErrorCodeRecord(String code, String group) {
+    }
+
+    private String mapFailureOriginCode(String origin) {
+        // Hinweis: Die Daten sollten besser aus SAP kommen. Die Erweiterung des Codes um einen Text ist programatisch eine schlechte Lösung,
+        // aber da auch nach Monaten SAP-seitig nichts geändert wurde, die einzige Lösung, die bleibt.
+        if (StringUtils.isEmpty(origin)) {
+            return origin;
+        }
+
+        return origin.trim()
+                .replaceAll("^800$", "800 - Customer")
+                .replaceAll("^805$", "805 - Vendor")
+                .replaceAll("^810$", "810 - Kontron")
+                .replaceAll("^815$", "815 - Unknown");
+    }
+
+
+    private Optional<String> extractDesignatorFromCause(ServiceMessageMappingType importedSvcMsg) {
+        String causeText = importedSvcMsg.getErrorText();
+
+        if (Strings.CS.contains(causeText, " - ")) {
+            return Optional.empty();
+        }
+
+        causeText = causeText.substring(0, causeText.indexOf(" - "));
+
+        // auf mögliche Designatorangaben filtern
+        // ein Großbuchstabe, gefolgt von 1-4 Ziffern, optional gefolgt von einem Großbuchstaben -> Designator
+        return Arrays.stream(StringUtils.split(causeText, ",."))
+                .filter(Objects::nonNull)
+                .map(String::trim)
+                .filter(potentialDesignator -> potentialDesignator.trim().matches("^[A-Z]\\d{1,4}[A-Z]{0,1}$"))
+                .sorted()
+                // Werte kommasepariert in Attribut "designator" übernehmen
+                // XXX: fürs erste nur den ersten Wert übernehmen, bis geklärt ist, welche Auswirkungen eine Mehrfachnennung hat
+                .findFirst();
     }
 
 }

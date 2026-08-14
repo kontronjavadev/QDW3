@@ -17,6 +17,16 @@ public class RepairErrorCodeRepository extends AbstractRepository<RepairErrorCod
     @Generated
     private static final String PARAM_CODE = "code";
 
+    public List<RepairErrorCode> findByIds(Collection<String> codes) {
+        String stmt = "select a "
+                + "from RepairErrorCode a "
+                + "where a.code in :paramCodes ";
+        return em
+                .createQuery(stmt, RepairErrorCode.class)
+                .setParameter("paramCodes", codes)
+                .getResultList();
+    }
+
     /**
      * Find a persistent repair error code by using the primary key of the provided object
      * @param repairErrorCode
