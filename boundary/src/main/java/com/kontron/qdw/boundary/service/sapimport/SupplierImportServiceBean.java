@@ -87,7 +87,7 @@ public class SupplierImportServiceBean extends AbstractImportServiceBean<Supplie
         List<SupplierXMLElement> curBatch = importedSuppliers.subList(bulkProcess.getBulkFromIdx(), bulkProcess.getBulkToIdx());
         batchNormalisieren(curBatch);
 
-        Map<String, Supplier> existingSupplierMap = supplierManager.findByIds(curBatch.stream()
+        Map<String, Supplier> existingSupplierMap = supplierManager.findByIdsAsMap(curBatch.stream()
                 .map(SupplierXMLElement::getCode)
                 .collect(Collectors.toSet()));
 

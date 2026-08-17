@@ -304,7 +304,7 @@ public class ArrivalImportServiceBean extends AbstractImportServiceBean<ArrivalR
     }
 
     private Map<String, Supplier> getSupplier(List<ArrivalMappingType> curBatch) {
-        return supplierManager.findByIds(curBatch.stream()
+        return supplierManager.findByIdsAsMap(curBatch.stream()
                 .map(ArrivalMappingType::getSupplierCode)
                 .collect(Collectors.toSet()));
     }

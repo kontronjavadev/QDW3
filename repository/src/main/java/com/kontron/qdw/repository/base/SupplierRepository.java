@@ -30,14 +30,8 @@ public class SupplierRepository extends AbstractRepository<Supplier, String> {
      * 
      * @return Map mit den gesuchten keys und den gefundenen Einträgen
      */
-    public Map<String, Supplier> findByIds(Collection<String> codes) {
-        String stmt = "select a "
-                + "from Supplier a "
-                + "where a.code in :paramCodes ";
-        List<Supplier> resultList = em
-                .createQuery(stmt, Supplier.class)
-                .setParameter("paramCodes", codes)
-                .getResultList();
+    public Map<String, Supplier> findByIdsAsMap(Collection<String> codes) {
+        List<Supplier> resultList = findByIds(codes);
 
         // touch: Map mit allen keys und value null erzeugen
         Map<String, Supplier> resultMap = new HashMap<>();
@@ -48,6 +42,16 @@ public class SupplierRepository extends AbstractRepository<Supplier, String> {
                         Collectors.reducing(null, (first, second) -> first == null ? second : first))));
 
         return resultMap;
+    }
+
+    public List<Supplier> findByIds(Collection<String> codes) {
+        String stmt = "select a "
+                + "from Supplier a "
+                + "where a.code in :paramCodes ";
+        return em
+                .createQuery(stmt, Supplier.class)
+                .setParameter("paramCodes", codes)
+                .getResultList();
     }
 
 
