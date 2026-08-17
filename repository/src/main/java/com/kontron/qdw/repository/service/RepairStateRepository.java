@@ -17,7 +17,6 @@ public class RepairStateRepository extends AbstractRepository<RepairState, Strin
     @Generated
     private static final String PARAM_CODE = "code";
 
-
     public List<RepairState> findByIds(Collection<String> codes) {
         String stmt = "select a "
                 + "from RepairState a "

@@ -30,8 +30,10 @@ import com.kontron.qdw.domain.material.MaterialRevision;
 import com.kontron.qdw.domain.mv.ServiceOrderType;
 import com.kontron.qdw.domain.serial.SerialObject;
 import com.kontron.qdw.domain.service.FaultAnalysis;
+import com.kontron.qdw.domain.service.RMAType;
 import com.kontron.qdw.domain.service.RepairErrorCode;
 import com.kontron.qdw.domain.service.RepairState;
+import com.kontron.qdw.domain.service.RepairTask;
 import com.kontron.qdw.domain.service.ServiceMessage;
 import com.kontron.qdw.domain.service.ServiceOrder;
 import com.kontron.qdw.repository.base.CustomerRepository;
@@ -42,8 +44,10 @@ import com.kontron.qdw.repository.serial.SerialObjectRepository;
 import com.kontron.qdw.repository.serial.SerialObjectRepository.SerNoJeMatIdFilter;
 import com.kontron.qdw.repository.serial.SerialObjectRepository.SerNoMatIdResult;
 import com.kontron.qdw.repository.service.FaultAnalysisRepository;
+import com.kontron.qdw.repository.service.RMATypeRepository;
 import com.kontron.qdw.repository.service.RepairErrorCodeRepository;
 import com.kontron.qdw.repository.service.RepairStateRepository;
+import com.kontron.qdw.repository.service.RepairTaskRepository;
 import com.kontron.qdw.repository.service.ServiceMessageRepository;
 import com.kontron.qdw.repository.service.ServiceOrderRepository;
 import com.kontron.util.file.FileUtil.ImportType;
@@ -73,6 +77,7 @@ public class SvcMsgImportServiceBean extends AbstractImportServiceBean<ServiceMe
     private static final String SCHEMA_NAME = "Repair.xsd";
 
     private static final String UNDEF_CUST = "0000";
+    private static final String AUTOMATICALLY_CREATED = "Automatically created by QDW import";
 
     @EJB
     private MaterialRepository materialManager;
@@ -94,6 +99,10 @@ public class SvcMsgImportServiceBean extends AbstractImportServiceBean<ServiceMe
     private CustomerRepository customerManager;
     @EJB
     private RepairStateRepository repairStateManager;
+    @EJB
+    private RMATypeRepository rmaTypeManager;
+    @EJB
+    private RepairTaskRepository repairTaskManager;
 
     record RepairErrorCodeRecord(String code, String group) {
     }
@@ -192,6 +201,14 @@ public class SvcMsgImportServiceBean extends AbstractImportServiceBean<ServiceMe
         Map<String, RepairState> existingRepStates = findOrCreateRepairState(curBatch);
 
 
+        // in batch vorkommende RMA Types holen und falls nötig anlegen
+        Map<String, RMAType> existingRmaTypes = findOrCreateRmaType(curBatch);
+
+
+        // in batch vorkommende Repair Tasks holen und falls nötig anlegen
+        Map<String, RepairTask> existingRepairTasks = findOrCreateRepairTask(curBatch);
+
+
         bulkProcess.start();
         for (ServiceMessageMappingType importedSvcMsg : curBatch) {
             bulkProcess.logProcess(logger);
@@ -201,7 +218,7 @@ public class SvcMsgImportServiceBean extends AbstractImportServiceBean<ServiceMe
                         longIdsPerMsgStringIds, svcMsgPerMsgStringId,
                         existingMats, existingPlants, existingSerObjs,
                         existingFaults, existingErrorCodes, existingSvcOrders,
-                        existingRepStates);
+                        existingRepStates, existingRmaTypes, existingRepairTasks);
             }
             catch (Exception e) {
                 logger.error("failed", e);
@@ -220,7 +237,7 @@ public class SvcMsgImportServiceBean extends AbstractImportServiceBean<ServiceMe
             Map<String, Long> longIdsPerMsgStringIds, Map<String, ServiceMessage> svcMsgPerMsgStringId,
             Map<String, Material> existingMats, Map<String, Plant> existingPlants, Map<SerNoMatIdResult, SerialObject> existingSerObjs,
             Map<String, FaultAnalysis> existingFaults, Map<String, RepairErrorCode> existingErrorCodes, Map<String, ServiceOrder> existingSvcOrders,
-            Map<String, RepairState> existingRepStates) {
+            Map<String, RepairState> existingRepStates, Map<String, RMAType> existingRmaTypes, Map<String, RepairTask> existingRepairTasks) {
 
         if (StringUtils.isEmpty(importedSvcMsg.getId())) {
             String errorMsg = String.format("Eintrag %s ohne Transaction-Id (service_order).", bulkCnt + 1);
@@ -268,6 +285,11 @@ public class SvcMsgImportServiceBean extends AbstractImportServiceBean<ServiceMe
                         + importedSvcMsg.getRepairErrorCode());
         ServiceOrder svcOrder = existingSvcOrders.get(importedSvcMsg.getServiceOrderCode());
         RepairState repState = existingRepStates.get(importedSvcMsg.getRepairStateCode());
+        RMAType rmaType = existingRmaTypes.get(importedSvcMsg.getRmaTypeGroup() + "-" + importedSvcMsg.getrMATypeCode()); // kann null sein
+        RepairTask repairTask = existingRepairTasks.get(importedSvcMsg.getRepairTaskGroup() + "-" + importedSvcMsg.getRepairTaskCode()); // kann null sein
+        if (repairTask.getMappedTo() != null) {
+            repairTask = repairTask.getMappedTo();
+        }
 
 
         // gibt es keinen Eintrag, so wurde zu der geparsten Id kein Eintrag in der Datenbank gefunden
@@ -310,8 +332,8 @@ public class SvcMsgImportServiceBean extends AbstractImportServiceBean<ServiceMe
         existingSvcMsg.setServiceOrder(svcOrder);
         existingSvcMsg.setRepairState(repState);
         existingSvcMsg.setServiceMessageId(importedSvcMsg.getServiceMessageId());
-        existingSvcMsg.setrMAType(findRMAType(importedSvcMsg.getrMATypeCode(), importedSvcMsg.getRmaTypeGroup()));
-        existingSvcMsg.setRepairTask(findRepairTask(importedSvcMsg.getRepairTaskCode(), importedSvcMsg.getRepairTaskGroup()));
+        existingSvcMsg.setrMAType(rmaType);
+        existingSvcMsg.setRepairTask(repairTask);
         existingSvcMsg.setDefectComponent(importedSvcMsg.getDefectComponent());
         existingSvcMsg.setExternalSupplier(findSupplier(importedSvcMsg.getWorkCenter()));
         existingSvcMsg.setCauseText(importedSvcMsg.getErrorText());
@@ -457,7 +479,7 @@ public class SvcMsgImportServiceBean extends AbstractImportServiceBean<ServiceMe
     private Map<String, FaultAnalysis> findOrCreateFaultAnalysis(List<ServiceMessageMappingType> curBatch) {
         Set<String> requestedFaultCodes = curBatch.stream()
                 .map(importedSvcMsg -> {
-                    if (StringUtils.isEmpty(importedSvcMsg.getFaultAnalysisCode()) || StringUtils.isEmpty(importedSvcMsg.getFaultAnalysisGroup())) {
+                    if (StringUtils.isEmpty(importedSvcMsg.getFaultAnalysisCode())) {
                         return null;
                     }
                     return importedSvcMsg.getFaultAnalysisGroup() + "-" + importedSvcMsg.getFaultAnalysisCode();
@@ -482,7 +504,7 @@ public class SvcMsgImportServiceBean extends AbstractImportServiceBean<ServiceMe
         Map<String, FaultAnalysis> newFaultsPerCode = requestedFaultCodes.stream()
                 .map(faultCode -> {
                     FaultAnalysis newFault = new FaultAnalysis(faultCode);
-                    newFault.setShortText("Automatically created by QDW import");
+                    newFault.setShortText(AUTOMATICALLY_CREATED);
                     logger.debug("Neue FaultAnalyses mit code {} erstellt", faultCode);
                     return faultManager.persist(newFault, true, true);
                 })
@@ -533,7 +555,7 @@ public class SvcMsgImportServiceBean extends AbstractImportServiceBean<ServiceMe
                     newErrorCode.setGroupName(errorCodeRec.group);
                     newErrorCode.setActive(true);
                     newErrorCode.setName(errorCodeRec.code);
-                    newErrorCode.setShortText("Automatically created by QDW import");
+                    newErrorCode.setShortText(AUTOMATICALLY_CREATED);
                     logger.debug("Neuer RepairErrorCode mit code {} erstellt", errorCodeRec.code);
                     return errorCodeManager.persist(newErrorCode, true, true);
                 })
@@ -575,7 +597,7 @@ public class SvcMsgImportServiceBean extends AbstractImportServiceBean<ServiceMe
                     newSvcOrder.setServiceOrderType(ServiceOrderType.RMA);
                     newSvcOrder.setDocumentDate(LocalDate.now());
                     newSvcOrder.setCustomer(undefCustomer);
-                    newSvcOrder.setShortText("Automatically created by QDW import");
+                    newSvcOrder.setShortText(AUTOMATICALLY_CREATED);
                     logger.debug("Neue ServiceOrder mit code {} erstellt", svcOrderCode);
                     return serviceOrderManager.persist(newSvcOrder, true, true);
                 })
@@ -615,7 +637,7 @@ public class SvcMsgImportServiceBean extends AbstractImportServiceBean<ServiceMe
                 .map(repStateCode -> {
                     RepairState newRepState = new RepairState(repStateCode);
                     newRepState.setName(repStateCode);
-                    newRepState.setShortText("Automatically created by QDW import");
+                    newRepState.setShortText(AUTOMATICALLY_CREATED);
                     logger.debug("Neuer Repair State mit code {} erstellt", repStateCode);
                     return repairStateManager.persist(newRepState, true, true);
                 })
@@ -625,6 +647,86 @@ public class SvcMsgImportServiceBean extends AbstractImportServiceBean<ServiceMe
         existingRepStatesPerCode.putAll(newRepStatesPerCode);
 
         return existingRepStatesPerCode;
+    }
+
+    private Map<String, RMAType> findOrCreateRmaType(List<ServiceMessageMappingType> curBatch) {
+        Set<String> requestedRmaTypeCodes = curBatch.stream()
+                .map(importedSvcMsg -> {
+                    if (StringUtils.isEmpty(importedSvcMsg.getrMATypeCode())) {
+                        return null;
+                    }
+                    return importedSvcMsg.getRmaTypeGroup() + "-" + importedSvcMsg.getrMATypeCode();
+                })
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
+
+        List<RMAType> existingRmaTypes = rmaTypeManager.findByIds(requestedRmaTypeCodes);
+
+        Map<String, RMAType> existingRmaTypesPerCode = existingRmaTypes.stream()
+                .collect(Collectors.toMap(RMAType::getCode, Function.identity()));
+
+        if (existingRmaTypesPerCode.size() == requestedRmaTypeCodes.size()) {
+            return existingRmaTypesPerCode;
+        }
+
+
+        // die keys des Ergebnisses abziehen. Es verbleiben die Einträge, die es nicht in der Datenbank gobt
+        requestedRmaTypeCodes.removeAll(existingRmaTypesPerCode.keySet());
+
+        // die nicht existierenden Einträge erzeugen und in die Struktur bringen, die als Rückgabe erwartet wird
+        Map<String, RMAType> newRmaTypesPerCode = requestedRmaTypeCodes.stream()
+                .map(rmaTypeCode -> {
+                    RMAType newRmaType = new RMAType(rmaTypeCode);
+                    newRmaType.setShortText(AUTOMATICALLY_CREATED);
+                    logger.debug("Neuer RMAType mit code {} erstellt", rmaTypeCode);
+                    return rmaTypeManager.persist(newRmaType, true, true);
+                })
+                .collect(Collectors.toMap(RMAType::getCode, Function.identity()));
+
+        // die fehlenden Einträge den existierenden hinzufügen
+        existingRmaTypesPerCode.putAll(newRmaTypesPerCode);
+
+        return existingRmaTypesPerCode;
+    }
+
+    private Map<String, RepairTask> findOrCreateRepairTask(List<ServiceMessageMappingType> curBatch) {
+        Set<String> requestedRepairTaskCodes = curBatch.stream()
+                .map(importedSvcMsg -> {
+                    if (StringUtils.isEmpty(importedSvcMsg.getRepairTaskCode())) {
+                        return null;
+                    }
+                    return importedSvcMsg.getRepairTaskGroup() + "-" + importedSvcMsg.getRepairTaskCode();
+                })
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
+
+        List<RepairTask> existingRepairTasks = repairTaskManager.findByIds(requestedRepairTaskCodes);
+
+        Map<String, RepairTask> existingRepairTasksPerCode = existingRepairTasks.stream()
+                .collect(Collectors.toMap(RepairTask::getCode, Function.identity()));
+
+        if (existingRepairTasksPerCode.size() == requestedRepairTaskCodes.size()) {
+            return existingRepairTasksPerCode;
+        }
+
+
+        // die keys des Ergebnisses abziehen. Es verbleiben die Einträge, die es nicht in der Datenbank gobt
+        requestedRepairTaskCodes.removeAll(existingRepairTasksPerCode.keySet());
+
+        // die nicht existierenden Einträge erzeugen und in die Struktur bringen, die als Rückgabe erwartet wird
+        Map<String, RepairTask> newRepairTasksPerCode = requestedRepairTaskCodes.stream()
+                .map(repairTaskCode -> {
+                    RepairTask newRepairTask = new RepairTask(repairTaskCode);
+                    newRepairTask.setShortText(AUTOMATICALLY_CREATED);
+                    logger.debug("Neuer RepairTask mit code {} erstellt", repairTaskCode);
+                    return repairTaskManager.persist(newRepairTask, true, true);
+                })
+                .collect(Collectors.toMap(RepairTask::getCode, Function.identity()));
+
+        // die fehlenden Einträge den existierenden hinzufügen
+        existingRepairTasksPerCode.putAll(newRepairTasksPerCode);
+
+        return existingRepairTasksPerCode;
     }
 
 
