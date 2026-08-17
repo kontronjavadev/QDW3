@@ -1,6 +1,7 @@
 package com.kontron.qdw.boundary.service.repairimport;
 
 import java.lang.invoke.MethodHandles;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -22,13 +23,18 @@ import com.kontron.qdw.boundary.service.mapping.svcmsg.ServiceMessageMappingType
 import com.kontron.qdw.boundary.service.mapping.svcmsg.ServiceMessageRootMappingType;
 import com.kontron.qdw.boundary.service.process.AbstractImportServiceBean;
 import com.kontron.qdw.boundary.service.process.BulkProcess;
+import com.kontron.qdw.domain.base.Customer;
 import com.kontron.qdw.domain.base.Plant;
 import com.kontron.qdw.domain.material.Material;
 import com.kontron.qdw.domain.material.MaterialRevision;
+import com.kontron.qdw.domain.mv.ServiceOrderType;
 import com.kontron.qdw.domain.serial.SerialObject;
 import com.kontron.qdw.domain.service.FaultAnalysis;
 import com.kontron.qdw.domain.service.RepairErrorCode;
+import com.kontron.qdw.domain.service.RepairState;
 import com.kontron.qdw.domain.service.ServiceMessage;
+import com.kontron.qdw.domain.service.ServiceOrder;
+import com.kontron.qdw.repository.base.CustomerRepository;
 import com.kontron.qdw.repository.base.PlantRepository;
 import com.kontron.qdw.repository.material.MaterialRepository;
 import com.kontron.qdw.repository.material.MaterialRevisionRepository;
@@ -37,7 +43,9 @@ import com.kontron.qdw.repository.serial.SerialObjectRepository.SerNoJeMatIdFilt
 import com.kontron.qdw.repository.serial.SerialObjectRepository.SerNoMatIdResult;
 import com.kontron.qdw.repository.service.FaultAnalysisRepository;
 import com.kontron.qdw.repository.service.RepairErrorCodeRepository;
+import com.kontron.qdw.repository.service.RepairStateRepository;
 import com.kontron.qdw.repository.service.ServiceMessageRepository;
+import com.kontron.qdw.repository.service.ServiceOrderRepository;
 import com.kontron.util.file.FileUtil.ImportType;
 import com.kontron.util.log.FileImportAbortedWithErrorsLog;
 import com.kontron.util.log.TaskNodeLog;
@@ -64,6 +72,8 @@ public class SvcMsgImportServiceBean extends AbstractImportServiceBean<ServiceMe
     private static final String FOLDER_SUB_PATH = "repair";
     private static final String SCHEMA_NAME = "Repair.xsd";
 
+    private static final String UNDEF_CUST = "0000";
+
     @EJB
     private MaterialRepository materialManager;
     @EJB
@@ -78,6 +88,15 @@ public class SvcMsgImportServiceBean extends AbstractImportServiceBean<ServiceMe
     private FaultAnalysisRepository faultManager;
     @EJB
     private RepairErrorCodeRepository errorCodeManager;
+    @EJB
+    private ServiceOrderRepository serviceOrderManager;
+    @EJB
+    private CustomerRepository customerManager;
+    @EJB
+    private RepairStateRepository repairStateManager;
+
+    record RepairErrorCodeRecord(String code, String group) {
+    }
 
 
     @Override
@@ -122,46 +141,8 @@ public class SvcMsgImportServiceBean extends AbstractImportServiceBean<ServiceMe
         batchNormalisieren(curBatch);
 
 
-        // Ids des Batch in Long umwandeln.
-        // Wir brauchen eine Map mit Long als key und original String als value: wir suchen die Service messages im bulk nach Id
-        // und erhalten eine Liste an Entitäten. Für den folgenden Zugriff auf diese brauchen wir eine Map der Entitäten mit den
-        // originalen String-Ids als key.
-        // Wird ein Objekt nicht gefunden, muss es neu erstellt werden. Dafür muss die String-Id erneut umgewandelt werden. Also
-        // erstellen wir auch gleich eine Map mit den String-Ids als key und den Long-Ids als value.
-        // Um feststellen zu können, dass eine String-Id nicht geparst werden kann, müssen wir das markieren. Etwa als Long.MIN_VALUE
-        // für long oder mit null bei Long-Werten oder einfach keinen Wert in die Map eintragen, weil auch dann das Ergebnis von get()
-        // null sein wird.
-        Map<Long, String> msgStringIdPerLongIds = new HashMap<>();
-        Map<String, Long> longIdsPerMsgStringIds = new HashMap<>();
-
-        curBatch.stream()
-                .map(ServiceMessageMappingType::getId)
-                .forEach(msgStringId -> {
-                    // Wenn der String geparst werden kann, die Werte in beide Maps eintragen.
-                    // Ansonsten nichts machen.
-                    try {
-                        Long longId = Long.parseLong(msgStringId);
-                        msgStringIdPerLongIds.put(longId, msgStringId);
-                        longIdsPerMsgStringIds.put(msgStringId, longId);
-                    }
-                    catch (NumberFormatException nfe) {
-                    }
-                });
-
-        // Service messages zu geparsten Long-Ids holen
-        List<ServiceMessage> importedSvcMsgs = svcMsgManager.findByIds(msgStringIdPerLongIds.keySet());
-
-        // Map an Service messages zu den originalen Ids als String (über oben aufgebaute Map)
-        Map<String, ServiceMessage> svcMsgPerMsgStringId = importedSvcMsgs.stream()
-                .collect(Collectors.toMap(m -> msgStringIdPerLongIds.get(m.getId()), Function.identity()));
-
-
         // in batch vorkommende Materialien holen
-        Set<String> matNrOfBatch = curBatch.stream()
-                .map(ServiceMessageMappingType::getMaterialSapNumber)
-                .collect(Collectors.toSet());
-
-        Map<String, Material> existingMats = materialManager.findBySAPNumbers(matNrOfBatch, true);
+        Map<String, Material> existingMats = findMaterials(curBatch);
         Set<String> missingMats = existingMats.entrySet().stream()
                 .filter(entry -> entry.getValue() == null)
                 .map(Entry::getKey)
@@ -171,6 +152,20 @@ public class SvcMsgImportServiceBean extends AbstractImportServiceBean<ServiceMe
             logger.error(errorMsg);
             throw new RuntimeException(errorMsg);
         }
+
+
+        // in batch vorkommende Service Messages ("Service orders") holen
+        // Ids des Batch in Long umwandeln.
+        // Wir brauchen eine Map mit Long als key und original String als value: wir suchen die Service messages im bulk nach Id
+        // und erhalten eine Liste an Entitäten. Für den folgenden Zugriff auf diese brauchen wir eine Map der Entitäten mit den
+        // originalen String-Ids als key.
+        // Wird ein Objekt nicht gefunden, muss es neu erstellt werden. Dafür muss die String-Id erneut umgewandelt werden. Also
+        // erstellen wir auch gleich eine Map mit den String-Ids als key und den Long-Ids als value.
+        // Um feststellen zu können, dass eine String-Id nicht geparst werden kann, müssen wir das markieren. Etwa als Long.MIN_VALUE
+        // für long oder mit null bei Long-Werten oder einfach keinen Wert in die Map eintragen, weil auch dann das Ergebnis von get()
+        // null sein wird.
+        Map<String, Long> longIdsPerMsgStringIds = new HashMap<>();
+        Map<String, ServiceMessage> svcMsgPerMsgStringId = findServiceMessages(curBatch, longIdsPerMsgStringIds);
 
 
         // in batch vorkommende Werke holen und falls nötig anlegen
@@ -189,6 +184,15 @@ public class SvcMsgImportServiceBean extends AbstractImportServiceBean<ServiceMe
         Map<String, RepairErrorCode> existingErrorCodes = findOrCreateRepairErrorCode(curBatch);
 
 
+        // in batch vorkommende Service Orders ("RMAs") holen und falls nötig anlegen
+        Map<String, ServiceOrder> existingSvcOrders = findOrCreateServiceOrder(curBatch);
+
+
+        // in batch vorkommende Repair states holen und falls nötig anlegen
+        Map<String, RepairState> existingRepStates = findOrCreateRepairState(curBatch);
+
+
+        bulkProcess.start();
         for (ServiceMessageMappingType importedSvcMsg : curBatch) {
             bulkProcess.logProcess(logger);
 
@@ -196,7 +200,8 @@ public class SvcMsgImportServiceBean extends AbstractImportServiceBean<ServiceMe
                 importEntry(importedSvcMsg, bulkProcess.getCnt(), errorList,
                         longIdsPerMsgStringIds, svcMsgPerMsgStringId,
                         existingMats, existingPlants, existingSerObjs,
-                        existingFaults, existingErrorCodes);
+                        existingFaults, existingErrorCodes, existingSvcOrders,
+                        existingRepStates);
             }
             catch (Exception e) {
                 logger.error("failed", e);
@@ -214,7 +219,8 @@ public class SvcMsgImportServiceBean extends AbstractImportServiceBean<ServiceMe
     private void importEntry(ServiceMessageMappingType importedSvcMsg, int bulkCnt, List<String> errorList,
             Map<String, Long> longIdsPerMsgStringIds, Map<String, ServiceMessage> svcMsgPerMsgStringId,
             Map<String, Material> existingMats, Map<String, Plant> existingPlants, Map<SerNoMatIdResult, SerialObject> existingSerObjs,
-            Map<String, FaultAnalysis> existingFaults, Map<String, RepairErrorCode> existingErrorCodes) {
+            Map<String, FaultAnalysis> existingFaults, Map<String, RepairErrorCode> existingErrorCodes, Map<String, ServiceOrder> existingSvcOrders,
+            Map<String, RepairState> existingRepStates) {
 
         if (StringUtils.isEmpty(importedSvcMsg.getId())) {
             String errorMsg = String.format("Eintrag %s ohne Transaction-Id (service_order).", bulkCnt + 1);
@@ -236,11 +242,6 @@ public class SvcMsgImportServiceBean extends AbstractImportServiceBean<ServiceMe
             logger.info(errorMsg);
             return;
         }
-        // if (StringUtils.isEmpty(importedSvcMsg.getFaultAnalysisCode()) || StringUtils.isEmpty(importedSvcMsg.getFaultAnalysisGroup())) {
-        // String errorMsg = String.format("Eintrag %s ohne Defect code (defect_code) oder Defect code group (defect_code_group).", bulkCnt + 1);
-        // logger.info(errorMsg);
-        // return;
-        // }
 
 
         Long transactionId = longIdsPerMsgStringIds.get(importedSvcMsg.getId());
@@ -265,6 +266,8 @@ public class SvcMsgImportServiceBean extends AbstractImportServiceBean<ServiceMe
                         ? ""
                         : importedSvcMsg.getRepairErrorCodeGroup() + "-")
                         + importedSvcMsg.getRepairErrorCode());
+        ServiceOrder svcOrder = existingSvcOrders.get(importedSvcMsg.getServiceOrderCode());
+        RepairState repState = existingRepStates.get(importedSvcMsg.getRepairStateCode());
 
 
         // gibt es keinen Eintrag, so wurde zu der geparsten Id kein Eintrag in der Datenbank gefunden
@@ -304,8 +307,8 @@ public class SvcMsgImportServiceBean extends AbstractImportServiceBean<ServiceMe
         existingSvcMsg.setOrigin(mapFailureOriginCode(importedSvcMsg.getOrigin()));
         existingSvcMsg.setExternalReport(StringUtils.substring(importedSvcMsg.getExternalReport(), 0, 4000));
         existingSvcMsg.setInternalReport(StringUtils.substring(importedSvcMsg.getInternalReport(), 0, 4000));
-        existingSvcMsg.setServiceOrder(findServiceOrder(importedSvcMsg.getServiceOrderCode()));
-        existingSvcMsg.setRepairState(findRepairState(importedSvcMsg.getRepairStateCode()));
+        existingSvcMsg.setServiceOrder(svcOrder);
+        existingSvcMsg.setRepairState(repState);
         existingSvcMsg.setServiceMessageId(importedSvcMsg.getServiceMessageId());
         existingSvcMsg.setrMAType(findRMAType(importedSvcMsg.getrMATypeCode(), importedSvcMsg.getRmaTypeGroup()));
         existingSvcMsg.setRepairTask(findRepairTask(importedSvcMsg.getRepairTaskCode(), importedSvcMsg.getRepairTaskGroup()));
@@ -319,20 +322,41 @@ public class SvcMsgImportServiceBean extends AbstractImportServiceBean<ServiceMe
 
 
 
-    private void batchNormalisieren(List<ServiceMessageMappingType> curBatch) {
-        curBatch.forEach(importedSvcMsg -> {
-            String transactionId = StringUtils.defaultString(importedSvcMsg.getId()).replaceAll("[A-Z]", "");
-            importedSvcMsg.setId(StringUtil.removeLeadingZero(transactionId));
+    private Map<String, Material> findMaterials(List<ServiceMessageMappingType> curBatch) {
+        Set<String> matNrOfBatch = curBatch.stream()
+                .map(ServiceMessageMappingType::getMaterialSapNumber)
+                .collect(Collectors.toSet());
 
-            importedSvcMsg.setServiceMessageId(StringUtil.removeLeadingZero(importedSvcMsg.getServiceMessageId()));
-            importedSvcMsg.setMaterialSapNumber(StringUtil.removeLeadingZero(importedSvcMsg.getMaterialSapNumber()));
-            importedSvcMsg.setServiceOrderCode(StringUtil.removeLeadingZero(importedSvcMsg.getServiceOrderCode()));
-            importedSvcMsg.setDeliveryNoteNumber(StringUtil.removeLeadingZero(importedSvcMsg.getDeliveryNoteNumber()));
-            importedSvcMsg.setDefectComponent(StringUtil.removeLeadingZero(importedSvcMsg.getDefectComponent()));
-            importedSvcMsg.setSerialObjectSerialNumber(StringUtil.removeLeadingZero(importedSvcMsg.getSerialObjectSerialNumber()));
-        });
+        Map<String, Material> existingMats = materialManager.findBySAPNumbers(matNrOfBatch, true);
+        return existingMats;
     }
 
+    private Map<String, ServiceMessage> findServiceMessages(List<ServiceMessageMappingType> curBatch, Map<String, Long> longIdsPerMsgStringIds) {
+        // ?? ("Open service orders", "Service orders (Standard)")
+        Map<Long, String> msgStringIdPerLongIds = new HashMap<>();
+
+        curBatch.stream()
+                .map(ServiceMessageMappingType::getId)
+                .forEach(msgStringId -> {
+                    // Wenn der String geparst werden kann, die Werte in beide Maps eintragen.
+                    // Ansonsten nichts machen.
+                    try {
+                        Long longId = Long.parseLong(msgStringId);
+                        msgStringIdPerLongIds.put(longId, msgStringId);
+                        longIdsPerMsgStringIds.put(msgStringId, longId);
+                    }
+                    catch (NumberFormatException nfe) {
+                    }
+                });
+
+        // Service messages zu geparsten Long-Ids holen
+        List<ServiceMessage> importedSvcMsgs = svcMsgManager.findByIds(msgStringIdPerLongIds.keySet());
+
+        // Map an Service messages zu den originalen Ids als String (über oben aufgebaute Map)
+        Map<String, ServiceMessage> svcMsgPerMsgStringId = importedSvcMsgs.stream()
+                .collect(Collectors.toMap(m -> msgStringIdPerLongIds.get(m.getId()), Function.identity()));
+        return svcMsgPerMsgStringId;
+    }
 
     private Map<String, Plant> findOrCreatePlant(List<ServiceMessageMappingType> curBatch) {
         Set<String> plantsOfBatch = curBatch.stream()
@@ -380,6 +404,7 @@ public class SvcMsgImportServiceBean extends AbstractImportServiceBean<ServiceMe
     }
 
     private Map<SerNoMatIdResult, SerialObject> findOrCreateSerObj(List<ServiceMessageMappingType> curBatch, Map<String, Material> existingMats) {
+        // == Serial objects
         Set<SerNoJeMatIdFilter> requestedSerObjPerSerNrAndMatId = curBatch.stream()
                 .map(importedSvcMsg -> {
                     String importedSerNr = importedSvcMsg.getSerialObjectSerialNumber();
@@ -520,7 +545,102 @@ public class SvcMsgImportServiceBean extends AbstractImportServiceBean<ServiceMe
         return existingErrorCodesPerCode;
     }
 
-    record RepairErrorCodeRecord(String code, String group) {
+    private Map<String, ServiceOrder> findOrCreateServiceOrder(List<ServiceMessageMappingType> curBatch) {
+        // == RMAs
+        Set<String> svcOrderCodes = curBatch.stream()
+                .map(ServiceMessageMappingType::getServiceOrderCode)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
+
+        List<ServiceOrder> existingSvcOrders = serviceOrderManager.findByIds(svcOrderCodes);
+
+        Map<String, ServiceOrder> existingSvcOrdersPerCode = existingSvcOrders.stream()
+                .collect(Collectors.toMap(ServiceOrder::getCode, Function.identity()));
+
+        if (existingSvcOrders.size() == svcOrderCodes.size()) {
+            return existingSvcOrdersPerCode;
+        }
+
+
+        // die keys des Ergebnisses abziehen. Es verbleiben die Einträge, die es nicht in der Datenbank gobt
+        svcOrderCodes.removeAll(existingSvcOrdersPerCode.keySet());
+
+        Customer undefCustomer = customerManager.getReference(UNDEF_CUST);
+
+        // die nicht existierenden Einträge erzeugen und in die Struktur bringen, die als Rückgabe erwartet wird
+        Map<String, ServiceOrder> newSvcOrdersPerCode = svcOrderCodes.stream()
+                .map(svcOrderCode -> {
+                    ServiceOrder newSvcOrder = new ServiceOrder(svcOrderCode);
+                    newSvcOrder.setActive(true);
+                    newSvcOrder.setServiceOrderType(ServiceOrderType.RMA);
+                    newSvcOrder.setDocumentDate(LocalDate.now());
+                    newSvcOrder.setCustomer(undefCustomer);
+                    newSvcOrder.setShortText("Automatically created by QDW import");
+                    logger.debug("Neue ServiceOrder mit code {} erstellt", svcOrderCode);
+                    return serviceOrderManager.persist(newSvcOrder, true, true);
+                })
+                .collect(Collectors.toMap(ServiceOrder::getCode, Function.identity()));
+
+        // die fehlenden Einträge den existierenden hinzufügen
+        existingSvcOrdersPerCode.putAll(newSvcOrdersPerCode);
+
+        return existingSvcOrdersPerCode;
+    }
+
+    private Map<String, RepairState> findOrCreateRepairState(List<ServiceMessageMappingType> curBatch) {
+        // == Repair states
+        Set<String> repStateCodes = curBatch.stream()
+                .map(ServiceMessageMappingType::getRepairStateCode)
+                // The respective XML attribute provides a list of different states separated by ' '. We just take the first one!
+                .filter(Objects::nonNull)
+                .filter(code -> code.contains(" "))
+                .map(code -> code.substring(0, code.indexOf(' ') + 1))
+                .collect(Collectors.toSet());
+
+        List<RepairState> existingRepStates = repairStateManager.findByIds(repStateCodes);
+
+        Map<String, RepairState> existingRepStatesPerCode = existingRepStates.stream()
+                .collect(Collectors.toMap(RepairState::getCode, Function.identity()));
+
+        if (existingRepStates.size() == repStateCodes.size()) {
+            return existingRepStatesPerCode;
+        }
+
+
+        // die keys des Ergebnisses abziehen. Es verbleiben die Einträge, die es nicht in der Datenbank gobt
+        repStateCodes.removeAll(existingRepStatesPerCode.keySet());
+
+        // die nicht existierenden Einträge erzeugen und in die Struktur bringen, die als Rückgabe erwartet wird
+        Map<String, RepairState> newRepStatesPerCode = repStateCodes.stream()
+                .map(repStateCode -> {
+                    RepairState newRepState = new RepairState(repStateCode);
+                    newRepState.setName(repStateCode);
+                    newRepState.setShortText("Automatically created by QDW import");
+                    logger.debug("Neuer Repair State mit code {} erstellt", repStateCode);
+                    return repairStateManager.persist(newRepState, true, true);
+                })
+                .collect(Collectors.toMap(RepairState::getCode, Function.identity()));
+
+        // die fehlenden Einträge den existierenden hinzufügen
+        existingRepStatesPerCode.putAll(newRepStatesPerCode);
+
+        return existingRepStatesPerCode;
+    }
+
+
+
+    private void batchNormalisieren(List<ServiceMessageMappingType> curBatch) {
+        curBatch.forEach(importedSvcMsg -> {
+            String transactionId = StringUtils.defaultString(importedSvcMsg.getId()).replaceAll("[A-Z]", "");
+            importedSvcMsg.setId(StringUtil.removeLeadingZero(transactionId));
+
+            importedSvcMsg.setServiceMessageId(StringUtil.removeLeadingZero(importedSvcMsg.getServiceMessageId()));
+            importedSvcMsg.setMaterialSapNumber(StringUtil.removeLeadingZero(importedSvcMsg.getMaterialSapNumber()));
+            importedSvcMsg.setServiceOrderCode(StringUtil.removeLeadingZero(importedSvcMsg.getServiceOrderCode()));
+            importedSvcMsg.setDeliveryNoteNumber(StringUtil.removeLeadingZero(importedSvcMsg.getDeliveryNoteNumber()));
+            importedSvcMsg.setDefectComponent(StringUtil.removeLeadingZero(importedSvcMsg.getDefectComponent()));
+            importedSvcMsg.setSerialObjectSerialNumber(StringUtil.removeLeadingZero(importedSvcMsg.getSerialObjectSerialNumber()));
+        });
     }
 
     private String mapFailureOriginCode(String origin) {
@@ -536,7 +656,6 @@ public class SvcMsgImportServiceBean extends AbstractImportServiceBean<ServiceMe
                 .replaceAll("^810$", "810 - Kontron")
                 .replaceAll("^815$", "815 - Unknown");
     }
-
 
     private Optional<String> extractDesignatorFromCause(ServiceMessageMappingType importedSvcMsg) {
         String causeText = importedSvcMsg.getErrorText();

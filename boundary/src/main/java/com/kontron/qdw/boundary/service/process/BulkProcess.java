@@ -20,7 +20,7 @@ public class BulkProcess {
 
     private final int listSize;
     private final int bulkSize;
-    private final long start;
+    private long start;
 
     private int cnt = 0;
     private int progressStep = 5;
@@ -55,6 +55,10 @@ public class BulkProcess {
         bulkToIdx = Math.min(listSize, bulkFromIdx + bulkSize);
     }
 
+
+    public void start() {
+        start = System.currentTimeMillis();
+    }
 
     /**
      * Logging, wenn je Eintrag informiert wird.

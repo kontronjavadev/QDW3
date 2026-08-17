@@ -17,6 +17,17 @@ public class RepairStateRepository extends AbstractRepository<RepairState, Strin
     @Generated
     private static final String PARAM_CODE = "code";
 
+
+    public List<RepairState> findByIds(Collection<String> codes) {
+        String stmt = "select a "
+                + "from RepairState a "
+                + "where a.code in :paramCodes ";
+        return em
+                .createQuery(stmt, RepairState.class)
+                .setParameter("paramCodes", codes)
+                .getResultList();
+    }
+
     /**
      * Find a persistent repair state by using the primary key of the provided object
      * @param repairState
