@@ -307,10 +307,11 @@ public class SvcMsgImportServiceBean extends AbstractImportServiceBean<ServiceMe
                         : importedSvcMsg.getRepairErrorCodeGroup() + "-")
                         + importedSvcMsg.getRepairErrorCode());
         ServiceOrder svcOrder = existingSvcOrders.get(importedSvcMsg.getServiceOrderCode());
+        // TODO: alle erzeugten Elemente auch in Map übernehmen!
         RepairState repState = existingRepStates.get(importedSvcMsg.getRepairStateCode());
         RMAType rmaType = existingRmaTypes.get(importedSvcMsg.getRmaTypeGroup() + "-" + importedSvcMsg.getrMATypeCode()); // kann null sein
         RepairTask repairTask = existingRepairTasks.get(importedSvcMsg.getRepairTaskGroup() + "-" + importedSvcMsg.getRepairTaskCode()); // kann null sein
-        if (repairTask.getMappedTo() != null) {
+        if (repairTask != null && repairTask.getMappedTo() != null) {
             repairTask = repairTask.getMappedTo();
         }
         Supplier supplier = existingSuppliers.get(importedSvcMsg.getWorkCenter());
@@ -848,7 +849,7 @@ public class SvcMsgImportServiceBean extends AbstractImportServiceBean<ServiceMe
     private Optional<String> extractDesignatorFromCause(ServiceMessageMappingType importedSvcMsg) {
         String causeText = importedSvcMsg.getErrorText();
 
-        if (Strings.CS.contains(causeText, " - ")) {
+        if (!Strings.CS.contains(causeText, " - ")) {
             return Optional.empty();
         }
 
