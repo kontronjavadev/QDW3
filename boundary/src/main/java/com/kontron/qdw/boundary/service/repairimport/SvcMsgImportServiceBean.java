@@ -10,6 +10,8 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -281,6 +283,11 @@ public class SvcMsgImportServiceBean extends AbstractImportServiceBean<ServiceMe
             logger.info(errorMsg);
             return;
         }
+        if (StringUtils.isEmpty(importedSvcMsg.getRepairStateCode())) {
+            String errorMsg = String.format("Eintrag %s ohne Repair State (state).", bulkCnt + 1);
+            logger.info(errorMsg);
+            return;
+        }
 
 
         Long transactionId = longIdsPerMsgStringIds.get(importedSvcMsg.getId());
@@ -301,20 +308,26 @@ public class SvcMsgImportServiceBean extends AbstractImportServiceBean<ServiceMe
         MaterialRevision revision = findOrCreateRevision(importedSvcMsg.getMaterialRevisionNo(), material, plant);
         SerialObject serObj = existingSerObjs.get(new SerNoMatIdResult(material.getId(), importedSvcMsg.getSerialObjectSerialNumber()));
         FaultAnalysis fault = existingFaults.get(importedSvcMsg.getFaultAnalysisGroup() + "-" + importedSvcMsg.getFaultAnalysisCode()); // kann null sein
+        ServiceOrder svcOrder = existingSvcOrders.get(importedSvcMsg.getServiceOrderCode());
+        RMAType rmaType = existingRmaTypes.get(importedSvcMsg.getRmaTypeGroup() + "-" + importedSvcMsg.getrMATypeCode()); // kann null sein
+        Supplier supplier = existingSuppliers.get(importedSvcMsg.getWorkCenter());
+
         RepairErrorCode errorCode = existingErrorCodes.get( // kann null sein
                 (StringUtils.isEmpty(importedSvcMsg.getRepairErrorCodeGroup())
                         ? ""
                         : importedSvcMsg.getRepairErrorCodeGroup() + "-")
                         + importedSvcMsg.getRepairErrorCode());
-        ServiceOrder svcOrder = existingSvcOrders.get(importedSvcMsg.getServiceOrderCode());
-        // TODO: alle erzeugten Elemente auch in Map übernehmen!
-        RepairState repState = existingRepStates.get(importedSvcMsg.getRepairStateCode());
-        RMAType rmaType = existingRmaTypes.get(importedSvcMsg.getRmaTypeGroup() + "-" + importedSvcMsg.getrMATypeCode()); // kann null sein
+
+        String importedRepStateCode = importedSvcMsg.getRepairStateCode();
+        String usedRepStateCode = importedRepStateCode.contains(" ")
+                ? importedRepStateCode.substring(0, importedRepStateCode.indexOf(' '))
+                : importedRepStateCode;
+        RepairState repState = existingRepStates.get(usedRepStateCode);
+
         RepairTask repairTask = existingRepairTasks.get(importedSvcMsg.getRepairTaskGroup() + "-" + importedSvcMsg.getRepairTaskCode()); // kann null sein
         if (repairTask != null && repairTask.getMappedTo() != null) {
             repairTask = repairTask.getMappedTo();
         }
-        Supplier supplier = existingSuppliers.get(importedSvcMsg.getWorkCenter());
 
 
         // gibt es keinen Eintrag, so wurde zu der geparsten Id kein Eintrag in der Datenbank gefunden
@@ -647,18 +660,29 @@ public class SvcMsgImportServiceBean extends AbstractImportServiceBean<ServiceMe
 
     private Map<String, RepairState> findOrCreateRepairStates(List<ServiceMessageMappingType> curBatch) {
         // == Repair states
-        Set<String> repStateCodes = curBatch.stream()
+        // Info: in der alten Implementierung wurde das Leerzeichen mitgenommen und der Code mit Leerzeichen gespeichert.
+        // Wie auch immer überhaupt etwas in der Datenbank gefunden werden konnte, ist mir rätselhaft, aber nun
+        // wird das Leerzeichen abgeschnitten und die Werte in der Datenbank wurden korrigiert.
+        // Die Anlagen in der Datenbank sind teilweise mit Großbuchstaben und nachfolgenden Kleinbuchstaben, teilweise
+        // ausschließlich Großbuchstaben. Daher brauchen wir einen caseinsentitiven Zugriff.
+        Set<String> repStateCodes = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
+        repStateCodes.addAll(curBatch.stream()
                 .map(ServiceMessageMappingType::getRepairStateCode)
-                // The respective XML attribute provides a list of different states separated by ' '. We just take the first one!
                 .filter(Objects::nonNull)
-                .filter(code -> code.contains(" "))
-                .map(code -> code.substring(0, code.indexOf(' ') + 1))
-                .collect(Collectors.toSet());
+                // The respective XML attribute provides a list of different states separated by ' '. We just take the first one!
+                .map(code -> {
+                    if (code.contains(" ")) {
+                        return code.substring(0, code.indexOf(' '));
+                    }
+                    return code;
+                })
+                .collect(Collectors.toSet()));
 
         List<RepairState> existingRepStates = repairStateManager.findByIds(repStateCodes);
 
-        Map<String, RepairState> existingRepStatesPerCode = existingRepStates.stream()
-                .collect(Collectors.toMap(RepairState::getCode, Function.identity()));
+        Map<String, RepairState> existingRepStatesPerCode = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+        existingRepStatesPerCode.putAll(existingRepStates.stream()
+                .collect(Collectors.toMap(RepairState::getCode, Function.identity())));
 
         if (existingRepStates.size() == repStateCodes.size()) {
             return existingRepStatesPerCode;
