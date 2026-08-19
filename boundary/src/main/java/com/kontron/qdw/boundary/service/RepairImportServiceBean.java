@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.kontron.qdw.boundary.service.process.TaskCall;
+import com.kontron.qdw.boundary.service.rebuild.SvcMsgRebuildMaterializedDeltaServiceBean;
 import com.kontron.qdw.boundary.service.repairimport.RmaImportServiceBean;
 import com.kontron.qdw.boundary.service.repairimport.SvcMsgImportServiceBean;
 import com.kontron.qdw.boundary.util.Constants;
@@ -39,7 +40,9 @@ public class RepairImportServiceBean {
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
+    private static final String TASKNAME_IMPORT_REBUILD = "Import and rebuild";
     private static final String TASKNAME_IMPORT = "Repair import";
+    private static final String TASKNAME_REBUILD = "rebuild materialized tables";
 
     private static final String PROP_XML_EXCHANGE_FOLDER = "sap_exchange_folder";
     private static final String PROP_XML_ARCHIVE_FOLDER = "sap_archive_folder";
@@ -52,6 +55,8 @@ public class RepairImportServiceBean {
     private RmaImportServiceBean rmaImportServiceBean;
     @EJB
     private SvcMsgImportServiceBean svcMsgImportServiceBean;
+    @EJB
+    private SvcMsgRebuildMaterializedDeltaServiceBean svcMsgRebuildServiceBean;
 
 
     private String exchangePath = new PropertyService().getStringProperty(PROP_XML_EXCHANGE_FOLDER);
@@ -67,10 +72,19 @@ public class RepairImportServiceBean {
             return;
         }
 
-        TaskNodeLog mainTask = initImport();
+        TaskNodeLog mainTask = initImportAndRebuild();
+        TaskNodeLog taskImport = mainTask.createNewSubTaskNode(TASKNAME_IMPORT);
 
-        executeTask(mainTask, rmaImportServiceBean);
-        executeTask(mainTask, svcMsgImportServiceBean);
+        ITaskNodeLog rmaImportTask = executeTask(taskImport, rmaImportServiceBean);
+        ITaskNodeLog svcMsgImportTask = executeTask(taskImport, svcMsgImportServiceBean);
+        taskImport.finishTask();
+
+        TaskNodeLog taskRebuild = mainTask.createNewSubTaskNode(TASKNAME_REBUILD);
+        if (rmaImportTask.wasAtLeastOneConcreteTaskPerformed() && rmaImportTask.isSuccess()
+                && svcMsgImportTask.wasAtLeastOneConcreteTaskPerformed() && svcMsgImportTask.isSuccess()) {
+            executeTask(taskRebuild, svcMsgRebuildServiceBean);
+        }
+        taskRebuild.finishTask();
 
         finishImport(mainTask);
     }
@@ -85,10 +99,19 @@ public class RepairImportServiceBean {
             return;
         }
 
-        TaskNodeLog taskImport = initImport();
-        executeTask(taskImport, rmaImportServiceBean);
+        TaskNodeLog mainTask = initImportAndRebuild();
 
-        finishImport(taskImport);
+        TaskNodeLog taskImport = mainTask.createNewSubTaskNode(TASKNAME_IMPORT);
+        ITaskNodeLog rmaImportTask = executeTask(taskImport, rmaImportServiceBean);
+        taskImport.finishTask();
+
+        TaskNodeLog taskRebuild = mainTask.createNewSubTaskNode(TASKNAME_REBUILD);
+        if (rmaImportTask.wasAtLeastOneConcreteTaskPerformed() && rmaImportTask.isSuccess()) {
+            executeTask(taskRebuild, svcMsgRebuildServiceBean);
+        }
+        taskRebuild.finishTask();
+
+        finishImport(mainTask);
     }
 
     @Asynchronous
@@ -99,14 +122,31 @@ public class RepairImportServiceBean {
             return;
         }
 
-        TaskNodeLog taskImport = initImport();
-        executeTask(taskImport, svcMsgImportServiceBean);
+        TaskNodeLog mainTask = initImportAndRebuild();
 
-        finishImport(taskImport);
+        TaskNodeLog taskImport = mainTask.createNewSubTaskNode(TASKNAME_IMPORT);
+        ITaskNodeLog svcMsgImportTask = executeTask(taskImport, svcMsgImportServiceBean);
+        taskImport.finishTask();
+
+        TaskNodeLog taskRebuild = mainTask.createNewSubTaskNode(TASKNAME_REBUILD);
+        if (svcMsgImportTask.wasAtLeastOneConcreteTaskPerformed() && svcMsgImportTask.isSuccess()) {
+            executeTask(taskRebuild, svcMsgRebuildServiceBean);
+        }
+        taskRebuild.finishTask();
+
+        finishImport(mainTask);
     }
 
 
 
+    private TaskNodeLog initImportAndRebuild() {
+        logger.info("Importing Repair files and rebuilding materialized tables");
+        logger.debug(String.format("exchangePath = %s, archivePath = %s", exchangePath, archivePath));
+
+        return new TaskNodeLog(TASKNAME_IMPORT_REBUILD);
+    }
+
+    @SuppressWarnings("unused")
     private TaskNodeLog initImport() {
         logger.info("Importing Repair files");
         logger.debug(String.format("exchangePath = %s, archivePath = %s", exchangePath, archivePath));
@@ -114,6 +154,12 @@ public class RepairImportServiceBean {
         return new TaskNodeLog(TASKNAME_IMPORT);
     }
 
+    @SuppressWarnings("unused")
+    private TaskNodeLog initRebuild() {
+        logger.info("Rebuilding materialized tables");
+
+        return new TaskNodeLog(TASKNAME_REBUILD);
+    }
 
 
     private ITaskNodeLog executeTask(TaskNodeLog parentTask, TaskCall execInstance) {
@@ -122,26 +168,6 @@ public class RepairImportServiceBean {
         execInstance.execTask(taskNodeLog);
         return taskNodeLog;
     }
-
-    // @SuppressWarnings("unused")
-    // private void sendeZwischenbericht(TaskNodeLog tsk) {
-    // String subjectText = Constants.APP_ENV + ": Repair import part 1 finished " + (tsk.isSuccess() ? "successfully" : "with errors");
-    // StringBuilder importLog = new StringBuilder();
-    // importLog.append(subjectText).append(".\n\n");
-    // importLog.append("First step was importing Repair files, next is analyzing and rebuilding materialized tables\n\n");
-    // importLog.append("Overview (Details below):\n");
-    // importLog.append(tsk.getTaskOverviewInformation()).append("\n\n");
-    // importLog.append("Details:\n");
-    // importLog.append(tsk.getTaskHierarchicalDetailInformation()).append("\n\n");
-    //
-    // // schicke Informationsmail
-    // try {
-    // MailServiceFacade.sendMail(Constants.getMailRecipient(), subjectText, importLog.toString());
-    // }
-    // catch (Exception mailException) {
-    // logger.error("Sending mail after importing Repair files failed!", mailException);
-    // }
-    // }
 
     private void finishImport(TaskNodeLog tsk) {
         tsk.finishTask();

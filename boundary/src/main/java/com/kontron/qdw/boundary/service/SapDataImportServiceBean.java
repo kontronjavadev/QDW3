@@ -49,6 +49,7 @@ public class SapDataImportServiceBean {
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
+    private static final String TASKNAME_IMPORT_REBUILD = "Import and rebuild";
     private static final String TASKNAME_IMPORT = "SAP import";
     private static final String TASKNAME_ANALYZE = "analyze";
     private static final String TASKNAME_REBUILD = "rebuild materialized tables";
@@ -102,19 +103,19 @@ public class SapDataImportServiceBean {
         }
 
         TaskNodeLog mainTask = initImportAndRebuild();
-        TaskNodeLog taskSapImport = mainTask.createNewSubTaskNode(TASKNAME_IMPORT);
+        TaskNodeLog taskImport = mainTask.createNewSubTaskNode(TASKNAME_IMPORT);
 
-        executeTask(taskSapImport, customerImportServiceBean);
-        executeTask(taskSapImport, supplierImportServiceBean);
-        executeTask(taskSapImport, materialImportServiceBean);
-        executeTask(taskSapImport, bomImportServiceBean);
+        executeTask(taskImport, customerImportServiceBean);
+        executeTask(taskImport, supplierImportServiceBean);
+        executeTask(taskImport, materialImportServiceBean);
+        executeTask(taskImport, bomImportServiceBean);
 
-        ITaskNodeLog arrivalImportTask = executeTask(taskSapImport, arrivalImportServiceBean);
-        ITaskNodeLog shipmentImportTask = executeTask(taskSapImport, shipmentImportServiceBean);
+        ITaskNodeLog arrivalImportTask = executeTask(taskImport, arrivalImportServiceBean);
+        ITaskNodeLog shipmentImportTask = executeTask(taskImport, shipmentImportServiceBean);
 
-        taskSapImport.finishTask();
+        taskImport.finishTask();
         // vorerst keinen Zwischenbericht senden, da der bisherige Teil ziemlich zügig durch läuft
-        // sendeZwischenbericht(taskSapImport);
+        // sendeZwischenbericht(taskImport);
 
 
         TaskNodeLog taskAnalyze = mainTask.createNewSubTaskNode(TASKNAME_ANALYZE);
@@ -147,10 +148,10 @@ public class SapDataImportServiceBean {
             return;
         }
 
-        TaskNodeLog taskSapImport = initImport();
-        executeTask(taskSapImport, customerImportServiceBean);
+        TaskNodeLog taskImport = initImport();
+        executeTask(taskImport, customerImportServiceBean);
 
-        finishImport(taskSapImport);
+        finishImport(taskImport);
     }
 
     @Asynchronous
@@ -161,10 +162,10 @@ public class SapDataImportServiceBean {
             return;
         }
 
-        TaskNodeLog taskSapImport = initImport();
-        executeTask(taskSapImport, supplierImportServiceBean);
+        TaskNodeLog taskImport = initImport();
+        executeTask(taskImport, supplierImportServiceBean);
 
-        finishImport(taskSapImport);
+        finishImport(taskImport);
     }
 
     @Asynchronous
@@ -175,10 +176,10 @@ public class SapDataImportServiceBean {
             return;
         }
 
-        TaskNodeLog taskSapImport = initImport();
-        executeTask(taskSapImport, materialImportServiceBean);
+        TaskNodeLog taskImport = initImport();
+        executeTask(taskImport, materialImportServiceBean);
 
-        finishImport(taskSapImport);
+        finishImport(taskImport);
     }
 
     @Asynchronous
@@ -189,10 +190,10 @@ public class SapDataImportServiceBean {
             return;
         }
 
-        TaskNodeLog taskSapImport = initImport();
-        executeTask(taskSapImport, bomImportServiceBean);
+        TaskNodeLog taskImport = initImport();
+        executeTask(taskImport, bomImportServiceBean);
 
-        finishImport(taskSapImport);
+        finishImport(taskImport);
     }
 
 
@@ -206,10 +207,10 @@ public class SapDataImportServiceBean {
         }
 
         TaskNodeLog mainTask = initImportAndRebuild();
-        TaskNodeLog taskSapImport = mainTask.createNewSubTaskNode(TASKNAME_IMPORT);
-        taskSapImport.finishTask();
 
-        ITaskNodeLog arrivalImportTask = executeTask(taskSapImport, arrivalImportServiceBean);
+        TaskNodeLog taskImport = mainTask.createNewSubTaskNode(TASKNAME_IMPORT);
+        ITaskNodeLog arrivalImportTask = executeTask(taskImport, arrivalImportServiceBean);
+        taskImport.finishTask();
 
         TaskNodeLog taskAnalyze = mainTask.createNewSubTaskNode(TASKNAME_ANALYZE);
         executeTask(taskAnalyze, serialObjectStructureAnalysisServiceBean);
@@ -233,10 +234,10 @@ public class SapDataImportServiceBean {
             return;
         }
 
-        TaskNodeLog taskSapImport = initRebuild();
-        executeTask(taskSapImport, arrivalRebuildMatServiceBean);
+        TaskNodeLog taskRebuild = initRebuild();
+        executeTask(taskRebuild, arrivalRebuildMatServiceBean);
 
-        finishImport(taskSapImport);
+        finishImport(taskRebuild);
     }
 
     @Asynchronous
@@ -247,10 +248,10 @@ public class SapDataImportServiceBean {
             return;
         }
 
-        TaskNodeLog taskSapImport = initRebuild();
-        executeTask(taskSapImport, arrivalRebuildAggServiceBean);
+        TaskNodeLog taskRebuild = initRebuild();
+        executeTask(taskRebuild, arrivalRebuildAggServiceBean);
 
-        finishImport(taskSapImport);
+        finishImport(taskRebuild);
     }
 
 
@@ -264,10 +265,10 @@ public class SapDataImportServiceBean {
         }
 
         TaskNodeLog mainTask = initImportAndRebuild();
-        TaskNodeLog taskSapImport = mainTask.createNewSubTaskNode(TASKNAME_IMPORT);
-        taskSapImport.finishTask();
 
-        ITaskNodeLog shipmentImportTask = executeTask(taskSapImport, shipmentImportServiceBean);
+        TaskNodeLog taskImport = mainTask.createNewSubTaskNode(TASKNAME_IMPORT);
+        ITaskNodeLog shipmentImportTask = executeTask(taskImport, shipmentImportServiceBean);
+        taskImport.finishTask();
 
         TaskNodeLog taskAnalyze = mainTask.createNewSubTaskNode(TASKNAME_ANALYZE);
         executeTask(taskAnalyze, serialObjectStructureAnalysisServiceBean);
@@ -292,10 +293,10 @@ public class SapDataImportServiceBean {
             return;
         }
 
-        TaskNodeLog taskSapImport = initRebuild();
-        executeTask(taskSapImport, shptArrvRebuildMatServiceBean);
+        TaskNodeLog taskRebuild = initRebuild();
+        executeTask(taskRebuild, shptArrvRebuildMatServiceBean);
 
-        finishImport(taskSapImport);
+        finishImport(taskRebuild);
     }
 
     @Asynchronous
@@ -306,10 +307,10 @@ public class SapDataImportServiceBean {
             return;
         }
 
-        TaskNodeLog taskSapImport = initRebuild();
-        executeTask(taskSapImport, shptRebuildAggServiceBean);
+        TaskNodeLog taskRebuild = initRebuild();
+        executeTask(taskRebuild, shptRebuildAggServiceBean);
 
-        finishImport(taskSapImport);
+        finishImport(taskRebuild);
     }
 
     @Asynchronous
@@ -320,10 +321,10 @@ public class SapDataImportServiceBean {
             return;
         }
 
-        TaskNodeLog taskSapImport = initRebuild();
-        executeTask(taskSapImport, shptArrvRebuildAggServiceBean);
+        TaskNodeLog taskRebuild = initRebuild();
+        executeTask(taskRebuild, shptArrvRebuildAggServiceBean);
 
-        finishImport(taskSapImport);
+        finishImport(taskRebuild);
     }
 
 
@@ -336,10 +337,10 @@ public class SapDataImportServiceBean {
             return;
         }
 
-        TaskNodeLog taskSapImport = initRebuild();
-        executeTask(taskSapImport, serialObjectStructureAnalysisServiceBean);
+        TaskNodeLog taskAnalyze = initRebuild();
+        executeTask(taskAnalyze, serialObjectStructureAnalysisServiceBean);
 
-        finishImport(taskSapImport);
+        finishImport(taskAnalyze);
     }
 
 
@@ -348,7 +349,7 @@ public class SapDataImportServiceBean {
         logger.info("Importing SAP files and rebuilding materialized tables");
         logger.debug(String.format("exchangePath = %s, archivePath = %s", exchangePath, archivePath));
 
-        return new TaskNodeLog("Import and rebuild");
+        return new TaskNodeLog(TASKNAME_IMPORT_REBUILD);
     }
 
     private TaskNodeLog initImport() {

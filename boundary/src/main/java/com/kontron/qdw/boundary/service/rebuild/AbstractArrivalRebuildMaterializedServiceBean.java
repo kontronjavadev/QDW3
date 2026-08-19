@@ -45,7 +45,7 @@ public class AbstractArrivalRebuildMaterializedServiceBean {
     }
 
     protected void execCreate(TaskNodeLog ownTask, String tableName, boolean delta) {
-        String executionSection = "create table materialized_arrival_mv_tmp_delta";
+        String executionSection = "create table " + tableName;
         logger.info(executionSection);
         TaskLeafLog subTsk = ownTask.createNewSubTaskLeaf(executionSection);
 
