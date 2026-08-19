@@ -8,9 +8,9 @@ import org.slf4j.LoggerFactory;
 import com.kontron.qdw.boundary.service.analysis.SerialObjectStructureAnalysisServiceBean;
 import com.kontron.qdw.boundary.service.process.TaskCall;
 import com.kontron.qdw.boundary.service.rebuild.ArrivalRebuildAggregatedServiceBean;
-import com.kontron.qdw.boundary.service.rebuild.ArrivalRebuildMaterializedServiceBean;
+import com.kontron.qdw.boundary.service.rebuild.ArrivalRebuildMaterializedDeltaServiceBean;
 import com.kontron.qdw.boundary.service.rebuild.ShipmentArrivalRebuildAggregatedServiceBean;
-import com.kontron.qdw.boundary.service.rebuild.ShipmentArrivalRebuildMaterializedServiceBean;
+import com.kontron.qdw.boundary.service.rebuild.ShipmentArrivalRebuildMaterializedDeltaServiceBean;
 import com.kontron.qdw.boundary.service.rebuild.ShipmentRebuildAggregatedServiceBean;
 import com.kontron.qdw.boundary.service.sapimport.ArrivalImportServiceBean;
 import com.kontron.qdw.boundary.service.sapimport.BoMImportServiceBean;
@@ -76,12 +76,12 @@ public class SapDataImportServiceBean {
     @EJB
     private SerialObjectStructureAnalysisServiceBean serialObjectStructureAnalysisServiceBean;
     @EJB
-    private ArrivalRebuildMaterializedServiceBean arrivalRebuildMatServiceBean;
+    private ArrivalRebuildMaterializedDeltaServiceBean arrivalRebuildMatServiceBean;
     @EJB
     private ArrivalRebuildAggregatedServiceBean arrivalRebuildAggServiceBean;
 
     @EJB
-    private ShipmentArrivalRebuildMaterializedServiceBean shptArrvRebuildMatServiceBean;
+    private ShipmentArrivalRebuildMaterializedDeltaServiceBean shptArrvRebuildMatServiceBean;
     @EJB
     private ShipmentRebuildAggregatedServiceBean shptRebuildAggServiceBean;
     @EJB

@@ -7,9 +7,11 @@ import org.slf4j.LoggerFactory;
 
 import com.kontron.qdw.boundary.service.process.TaskCall;
 import com.kontron.qdw.boundary.service.rebuild.ArrivalRebuildAggregatedServiceBean;
-import com.kontron.qdw.boundary.service.rebuild.ArrivalRebuildMaterializedServiceBean;
+import com.kontron.qdw.boundary.service.rebuild.ArrivalRebuildMaterializedDeltaServiceBean;
+import com.kontron.qdw.boundary.service.rebuild.ArrivalRebuildMaterializedFullServiceBean;
 import com.kontron.qdw.boundary.service.rebuild.ShipmentArrivalRebuildAggregatedServiceBean;
-import com.kontron.qdw.boundary.service.rebuild.ShipmentArrivalRebuildMaterializedServiceBean;
+import com.kontron.qdw.boundary.service.rebuild.ShipmentArrivalRebuildMaterializedDeltaServiceBean;
+import com.kontron.qdw.boundary.service.rebuild.ShipmentArrivalRebuildMaterializedFullServiceBean;
 import com.kontron.qdw.boundary.service.rebuild.ShipmentRebuildAggregatedServiceBean;
 import com.kontron.qdw.boundary.util.Constants;
 import com.kontron.qdw.boundary.util.MailServiceFacade;
@@ -47,12 +49,16 @@ public class RebuildServiceBean {
     private SchedulerServiceBean schedulerService;
 
     @EJB
-    private ArrivalRebuildMaterializedServiceBean arrivalRebuildMatServiceBean;
+    private ArrivalRebuildMaterializedDeltaServiceBean arrivalRebuildMatDeltaServiceBean;
     @EJB
-    private ArrivalRebuildAggregatedServiceBean arrivalRebuildAggServiceBean;
+    private ArrivalRebuildMaterializedFullServiceBean arrivalRebuildMatFullServiceBean;
+    @EJB
+    private ShipmentArrivalRebuildMaterializedDeltaServiceBean shptArrvRebuildMatDeltaServiceBean;
+    @EJB
+    private ShipmentArrivalRebuildMaterializedFullServiceBean shptArrvRebuildMatFullServiceBean;
 
     @EJB
-    private ShipmentArrivalRebuildMaterializedServiceBean shptArrvRebuildMatServiceBean;
+    private ArrivalRebuildAggregatedServiceBean arrivalRebuildAggServiceBean;
     @EJB
     private ShipmentRebuildAggregatedServiceBean shptRebuildAggServiceBean;
     @EJB
@@ -70,10 +76,10 @@ public class RebuildServiceBean {
 
         TaskNodeLog mainTask = initRebuild();
 
-        executeTask(mainTask, arrivalRebuildMatServiceBean);
-        executeTask(mainTask, arrivalRebuildAggServiceBean);
+        executeTask(mainTask, arrivalRebuildMatDeltaServiceBean);
+        executeTask(mainTask, shptArrvRebuildMatDeltaServiceBean);
 
-        executeTask(mainTask, shptArrvRebuildMatServiceBean);
+        executeTask(mainTask, arrivalRebuildAggServiceBean);
         executeTask(mainTask, shptRebuildAggServiceBean);
         executeTask(mainTask, shptArrvRebuildAggServiceBean);
         mainTask.finishTask();
@@ -91,10 +97,10 @@ public class RebuildServiceBean {
 
         TaskNodeLog mainTask = initRebuild();
 
-        executeTask(mainTask, arrivalRebuildMatServiceBean);
-        executeTask(mainTask, arrivalRebuildAggServiceBean);
+        executeTask(mainTask, arrivalRebuildMatFullServiceBean);
+        executeTask(mainTask, shptArrvRebuildMatFullServiceBean);
 
-        executeTask(mainTask, shptArrvRebuildMatServiceBean);
+        executeTask(mainTask, arrivalRebuildAggServiceBean);
         executeTask(mainTask, shptRebuildAggServiceBean);
         executeTask(mainTask, shptArrvRebuildAggServiceBean);
         mainTask.finishTask();
@@ -113,7 +119,7 @@ public class RebuildServiceBean {
         }
 
         TaskNodeLog taskSapImport = initRebuild();
-        executeTask(taskSapImport, arrivalRebuildMatServiceBean);
+        executeTask(taskSapImport, arrivalRebuildMatDeltaServiceBean);
 
         finishRebuild(taskSapImport, true);
     }
@@ -127,7 +133,7 @@ public class RebuildServiceBean {
         }
 
         TaskNodeLog taskSapImport = initRebuild();
-        executeTask(taskSapImport, shptArrvRebuildMatServiceBean);
+        executeTask(taskSapImport, shptArrvRebuildMatDeltaServiceBean);
 
         finishRebuild(taskSapImport, true);
     }
@@ -143,7 +149,7 @@ public class RebuildServiceBean {
         }
 
         TaskNodeLog taskSapImport = initRebuild();
-        executeTask(taskSapImport, arrivalRebuildMatServiceBean);
+        executeTask(taskSapImport, arrivalRebuildMatFullServiceBean);
 
         finishRebuild(taskSapImport, true);
     }
@@ -157,7 +163,7 @@ public class RebuildServiceBean {
         }
 
         TaskNodeLog taskSapImport = initRebuild();
-        executeTask(taskSapImport, shptArrvRebuildMatServiceBean);
+        executeTask(taskSapImport, shptArrvRebuildMatFullServiceBean);
 
         finishRebuild(taskSapImport, true);
     }
@@ -177,8 +183,6 @@ public class RebuildServiceBean {
 
         finishRebuild(taskSapImport, null);
     }
-
-
 
     @Asynchronous
     @PermitAll
