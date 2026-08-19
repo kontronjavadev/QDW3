@@ -25,15 +25,9 @@ import jakarta.persistence.PersistenceContext;
  */
 @Stateless
 @LocalBean // nötig, weil Interface implementiert wird und sonst keine No-Interface-View bereit gestellt wird
-public class ShipmentArrivalRebuildMaterializedFullServiceBean implements TaskCall {
+public class ShipmentArrivalRebuildMaterializedFullServiceBean extends AbstractShipmentArrivalRebuildMaterializedServiceBean implements TaskCall {
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-
-    private static final String SHIPMENT_MOVEMENT_TYPE_1 = "601";
-    private static final String CANCELED_SHIPMENT_MOVEMENT_TYPE_1 = "602";
-
-    private static final String SHIPMENT_MOVEMENT_TYPE_2 = "633";
-    private static final String CANCELED_SHIPMENT_MOVEMENT_TYPE_2 = "634";
 
     @PersistenceContext
     private EntityManager em;
@@ -52,390 +46,234 @@ public class ShipmentArrivalRebuildMaterializedFullServiceBean implements TaskCa
     @PermitAll
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void execTask(TaskNodeLog ownTask) {
-        execDrop(ownTask);
-        execCreate(ownTask);
-        execAddColumns(ownTask);
-        execUpdateArrId(ownTask);
-        execAddIndex(ownTask);
-        execUpdateArrDate(ownTask);
-        execDropIndex(ownTask);
-        execUpdateSrvMsg(ownTask);
-        execCopyData(ownTask);
-        execResetRebuild(ownTask);
+        execDrop(ownTask, "arrival_shipment_mv_new");
+        execCreate(ownTask, "arrival_shipment_mv_new", false);
+        execAddColumns(ownTask, "arrival_shipment_mv_new");
+        execUpdateArrId(ownTask, "arrival_shipment_mv_new");
+        execAddIndex(ownTask, "arrival_shipment_mv_new");
+        execUpdateArrDate(ownTask, "arrival_shipment_mv_new");
+        execDropIndex(ownTask, "arrival_shipment_mv_new");
+
+        execDropFormer(ownTask);
+        execRenameTmp2New(ownTask);
+        execAddIndices(ownTask);
+
         execRemoveCanceled(ownTask);
     }
 
 
 
-    private void execDrop(TaskNodeLog ownTask) {
-        String executionSection = "drop table arrival_shipment_mv_tmp_delta";
+    private void execDropFormer(TaskNodeLog ownTask) {
+        String executionSection = "drop table arrival_shipment_mv";
         logger.info(executionSection);
         TaskLeafLog subTsk = ownTask.createNewSubTaskLeaf(executionSection);
 
-        String sql = "DROP TABLE IF EXISTS arrival_shipment_mv_tmp_delta";
+        String sql = "drop table if exists arrival_shipment_mv";
 
         em.createNativeQuery(sql).executeUpdate();
         subTsk.finishTaskWithSuccess();
     }
 
-    private void execCreate(TaskNodeLog ownTask) {
-        String executionSection = "create table arrival_shipment_mv_tmp_delta";
+    private void execRenameTmp2New(TaskNodeLog ownTask) {
+        String executionSection = "rename arrival_shipment_mv_new to arrival_shipment_mv";
         logger.info(executionSection);
         TaskLeafLog subTsk = ownTask.createNewSubTaskLeaf(executionSection);
 
-        StringBuilder sql = new StringBuilder();
-        sql.append("create table arrival_shipment_mv_tmp_delta engine = InnoDb CHARSET=utf8mb4 COLLATE utf8mb4_0900_ai_ci as ");
-        sql.append("select a.id, ");
-        sql.append("b.id as serial_object_id, ");
-        sql.append("c.id as parent_serial_object_id, ");
-        sql.append("b.serial_number as serial_number, ");
-        sql.append("c.serial_number as parent_serial_number, ");
-        sql.append("e.material_number, ");
-        sql.append("f.material_number as parent_material_number, ");
-        sql.append("e.material_type, ");
-        sql.append("f.material_type as parent_material_type, ");
-        sql.append("e.short_text as material_short_text, ");
-        sql.append("f.short_text as parent_material_short_text, ");
-        sql.append("e.sap_number as sap_no, ");
-        sql.append("f.sap_number as parent_sap_no,");
-        sql.append("e.material_hierarchy, ");
-        sql.append("f.material_hierarchy as parent_material_hierarchy, ");
-        sql.append("d.id as revision_id, ");
-        sql.append("d.revision_number as revision_no, ");
-        sql.append("b.assembly_date, ");
-        sql.append("b.production_order_number as assembly_po, ");
-        sql.append("g.code as customer_code, ");
-        sql.append("g.name as customer_name, ");
-        sql.append("i.code as country_code, ");
-        sql.append("i.name as country_name, ");
-        sql.append("a.shipment_date, ");
-        sql.append("a.plant, ");
-        sql.append("a.movement_type as shipment_movement_type, ");
-        sql.append("a.order_number as customer_order_number, ");
-        sql.append("a.id as shipment_id, ");
-        sql.append("e.id as material, ");
-        sql.append("b.id as serial_object, ");
-        sql.append("e.owner_location ");
-        sql.append("from shipment_tab a ");
-        sql.append("inner join serial_object_tab b on (a.serial_object = b.id) ");
-        sql.append("left join serial_object_tab c on (b.parent_object = c.id) ");
-        sql.append("inner join material_revision_tab d on (a.material_revision = d.id) ");
-        sql.append("inner join material_tab e on (d.material = e.id) ");
-        sql.append("left join material_tab f on (c.material = f.id) ");
-        sql.append("inner join customer_tab g on (a.customer = g.code) ");
-        sql.append("inner join country_tab i on (g.country = i.code) ");
-        sql.append("where a.rebuild_flag = 1 ");
-
-        em.createNativeQuery(sql.toString()).executeUpdate();
-        subTsk.finishTaskWithSuccess();
-    }
-
-    private void execAddColumns(TaskNodeLog ownTask) {
-        String executionSection = "alter table arrival_shipment_mv_tmp_delta: add columns";
-        logger.info(executionSection);
-        TaskLeafLog subTsk = ownTask.createNewSubTaskLeaf(executionSection);
-
-        StringBuilder sql = new StringBuilder();
-        sql.append("alter table arrival_shipment_mv_tmp_delta ");
-        sql.append("ADD COLUMN parent_revision_id BIGINT NOT NULL DEFAULT 0, ");
-        sql.append("ADD COLUMN parent_revision_no VARCHAR(50), ");
-        sql.append("add column arrival_date date, ");
-        sql.append("add column supplier_code varchar(50), ");
-        sql.append("add column supplier_name varchar(100), ");
-        sql.append("add column arrival_movement_type varchar(50), ");
-        sql.append("add column purchase_order_number varchar(50), ");
-        sql.append("add column arrival_id BIGINT(20) ");
-
-        em.createNativeQuery(sql.toString()).executeUpdate();
-        subTsk.finishTaskWithSuccess();
-    }
-
-    private void execUpdateArrId(TaskNodeLog ownTask) {
-        String executionSection = "update to last arrival";
-        logger.info(executionSection);
-        TaskLeafLog subTsk = ownTask.createNewSubTaskLeaf(executionSection);
-
-        StringBuilder sql = new StringBuilder();
-        sql.append("update arrival_shipment_mv_tmp_delta t ");
-        sql.append("set t.arrival_id = (");
-        sql.append("    select max(a2.id) ");
-        sql.append("    from arrival_tab a2 ");
-        sql.append("    where a2.serial_object = t.serial_object_id ");
-        sql.append("    and a2.arrival_date = (");
-        sql.append("        select max(a1.arrival_date) ");
-        sql.append("        from arrival_tab a1 ");
-        sql.append("        where a1.serial_object = t.serial_object_id ");
-        sql.append("        and a1.arrival_date <= t.shipment_date");
-        sql.append("    )");
-        sql.append(")");
-
-        em.createNativeQuery(sql.toString()).executeUpdate();
-        subTsk.finishTaskWithSuccess();
-    }
-
-    private void execAddIndex(TaskNodeLog ownTask) {
-        String executionSection = "create index for arrival_id";
-        logger.info(executionSection);
-        TaskLeafLog subTsk = ownTask.createNewSubTaskLeaf(executionSection);
-
-        String sql = "ALTER TABLE arrival_shipment_mv_tmp_delta ADD INDEX IN_AS_ARR_ID_TEMP(arrival_id)";
+        String sql = "ALTER TABLE arrival_shipment_mv_new RENAME TO arrival_shipment_mv";
 
         em.createNativeQuery(sql).executeUpdate();
         subTsk.finishTaskWithSuccess();
     }
 
-    private void execUpdateArrDate(TaskNodeLog ownTask) {
-        String executionSection = "update arrival_date, supplier_code, supplier_name, arrival_movement_type, purchase_order_number";
-        logger.info(executionSection);
-        TaskLeafLog subTsk = ownTask.createNewSubTaskLeaf(executionSection);
+    private void execAddIndices(TaskNodeLog ownTask) {
+        TaskLeafLog subTsk = ownTask.createNewSubTaskLeaf("create indices");
+        String indexCommand = "ALTER TABLE arrival_shipment_mv ADD INDEX ";
 
+        logger.info("create index 1");
         StringBuilder sql = new StringBuilder();
-        sql.append("update arrival_shipment_mv_tmp_delta t ");
-        sql.append("inner join arrival_tab a on (t.arrival_id = a.id) ");
-        sql.append("inner join supplier_tab s on (a.supplier = s.code) ");
-        sql.append("set t.arrival_date = a.arrival_date, ");
-        sql.append("t.supplier_code = s.code, ");
-        sql.append("t.supplier_name = s.name, ");
-        sql.append("t.arrival_movement_type = a.movement_type, ");
-        sql.append("t.purchase_order_number = a.order_number");
-
-        em.createNativeQuery(sql.toString()).executeUpdate();
-        subTsk.finishTaskWithSuccess();
-    }
-
-    private void execDropIndex(TaskNodeLog ownTask) {
-        String executionSection = "drop index for arrival_id";
-        logger.info(executionSection);
-        TaskLeafLog subTsk = ownTask.createNewSubTaskLeaf(executionSection);
-
-        String sql = "ALTER TABLE arrival_shipment_mv_tmp_delta DROP INDEX IN_AS_ARR_ID_TEMP";
-
-        em.createNativeQuery(sql).executeUpdate();
-        subTsk.finishTaskWithSuccess();
-    }
-
-    private void execUpdateSrvMsg(TaskNodeLog ownTask) {
-        String executionSection = "update cust_ship_date in service_message_mv";
-        logger.info(executionSection);
-        TaskLeafLog subTsk = ownTask.createNewSubTaskLeaf(executionSection);
-
-        StringBuilder sql = new StringBuilder();
-        sql.append("update service_message_mv smmv, shipment_tab shipmentfilter ");
-        sql.append("set smmv.cust_ship_date = ( ");
-        sql.append("    select max(a.shipment_date) ");
-        sql.append("    from shipment_tab a ");
-        sql.append("    where a.serial_object = smmv.serial_object_id ");
-        sql.append("    and a.shipment_date <= smmv.internal_arrival_date ");
-        sql.append(") ");
-        sql.append("where shipmentfilter.serial_object = smmv.serial_object_id ");
-        sql.append("and shipmentfilter.rebuild_flag = 1 ");
-
+        sql.append(indexCommand).append("IN_AS_ID(id)");
         em.createNativeQuery(sql.toString()).executeUpdate();
 
+        logger.info("create index 2");
         sql = new StringBuilder();
-        sql.append("update service_message_mv smmv, shipment_tab shipmentfilter ");
-        sql.append("set smmv.cust_ship_date = ( ");
-        sql.append("    select max(a.shipment_date) ");
-        sql.append("    from assembly_shipment_mv a ");
-        sql.append("    where a.serial_object = smmv.serial_object_id ");
-        sql.append("    and a.shipment_date <= smmv.internal_arrival_date ");
-        sql.append(") ");
-        sql.append("where shipmentfilter.serial_object = smmv.serial_object_id ");
-        sql.append("and shipmentfilter.rebuild_flag = 1 ");
-        sql.append("and smmv.cust_ship_date is null ");
-
+        sql.append(indexCommand).append("IN_AS_SNR_ID(serial_object_id)");
         em.createNativeQuery(sql.toString()).executeUpdate();
-        subTsk.finishTaskWithSuccess();
-    }
 
-    private void execCopyData(TaskNodeLog ownTask) {
-        String executionSection = "copy data from arrival_shipment_mv_tmp_delta to arrival_shipment_mv";
-        logger.info(executionSection);
-        TaskLeafLog subTsk = ownTask.createNewSubTaskLeaf(executionSection);
-
-        StringBuilder columns_arrival_shipment_mv = new StringBuilder();
-        columns_arrival_shipment_mv.append("id, ");
-        columns_arrival_shipment_mv.append("serial_object_id, ");
-        columns_arrival_shipment_mv.append("parent_serial_object_id, ");
-        columns_arrival_shipment_mv.append("serial_number, ");
-        columns_arrival_shipment_mv.append("parent_serial_number, ");
-        columns_arrival_shipment_mv.append("material_number, ");
-        columns_arrival_shipment_mv.append("parent_material_number, ");
-        columns_arrival_shipment_mv.append("material_type, ");
-        columns_arrival_shipment_mv.append("parent_material_type, ");
-        columns_arrival_shipment_mv.append("material_short_text, ");
-        columns_arrival_shipment_mv.append("parent_material_short_text, ");
-        columns_arrival_shipment_mv.append("sap_no, ");
-        columns_arrival_shipment_mv.append("parent_sap_no,");
-        columns_arrival_shipment_mv.append("material_hierarchy, ");
-        columns_arrival_shipment_mv.append("parent_material_hierarchy, ");
-        columns_arrival_shipment_mv.append("revision_id, ");
-        columns_arrival_shipment_mv.append("revision_no, ");
-        columns_arrival_shipment_mv.append("assembly_date, ");
-        columns_arrival_shipment_mv.append("assembly_po, ");
-        columns_arrival_shipment_mv.append("customer_code, ");
-        columns_arrival_shipment_mv.append("customer_name, ");
-        columns_arrival_shipment_mv.append("country_code, ");
-        columns_arrival_shipment_mv.append("country_name, ");
-        columns_arrival_shipment_mv.append("shipment_date, ");
-        columns_arrival_shipment_mv.append("plant, ");
-        columns_arrival_shipment_mv.append("shipment_movement_type, ");
-        columns_arrival_shipment_mv.append("customer_order_number, ");
-        columns_arrival_shipment_mv.append("shipment_id, ");
-        columns_arrival_shipment_mv.append("material, ");
-        columns_arrival_shipment_mv.append("serial_object, ");
-        columns_arrival_shipment_mv.append("owner_location, ");
-        columns_arrival_shipment_mv.append("parent_revision_id, ");
-        columns_arrival_shipment_mv.append("parent_revision_no, ");
-        columns_arrival_shipment_mv.append("arrival_date, ");
-        columns_arrival_shipment_mv.append("supplier_code, ");
-        columns_arrival_shipment_mv.append("supplier_name, ");
-        columns_arrival_shipment_mv.append("arrival_movement_type, ");
-        columns_arrival_shipment_mv.append("purchase_order_number, ");
-        columns_arrival_shipment_mv.append("arrival_id ");
-
-        StringBuilder sql = new StringBuilder();
-        sql.append("insert into arrival_shipment_mv (");
-        sql.append(columns_arrival_shipment_mv);
-        sql.append(") ");
-        sql.append("select ");
-        sql.append(columns_arrival_shipment_mv);
-        sql.append("from arrival_shipment_mv_tmp_delta");
-
+        logger.info("create index 3");
+        sql = new StringBuilder();
+        sql.append(indexCommand).append("IN_AS_PSNR_ID(parent_serial_object_id)");
         em.createNativeQuery(sql.toString()).executeUpdate();
-        subTsk.finishTaskWithSuccess();
-    }
 
-    private void execResetRebuild(TaskNodeLog ownTask) {
-        String executionSection = "reset rebuild flag in shipments";
-        logger.info(executionSection);
-        TaskLeafLog subTsk = ownTask.createNewSubTaskLeaf(executionSection);
-
-        StringBuilder sql = new StringBuilder();
-        sql.append("update shipment_tab ");
-        sql.append("set rebuild_flag = 0 ");
-        sql.append("where rebuild_flag = 1 ");
-
+        logger.info("create index 4");
+        sql = new StringBuilder();
+        sql.append(indexCommand).append("IN_AS_SNR_NO(serial_number)");
         em.createNativeQuery(sql.toString()).executeUpdate();
-        subTsk.finishTaskWithSuccess();
-    }
 
-    private void execRemoveCanceled(TaskNodeLog ownTask) {
-        execRemoveCanceled1(ownTask);
-        execRemoveCanceled2(ownTask);
-        execRemoveCanceled3(ownTask);
-        execRemoveCanceled4(ownTask);
-    }
-
-
-
-    private void execRemoveCanceled1(TaskNodeLog ownTask) {
-        String executionSection = "delete canceled shipments from arrival_shipment_mv (1/4)";
-        logger.info(executionSection);
-        TaskLeafLog subTsk = ownTask.createNewSubTaskLeaf(executionSection);
-
-        // delete all SHIPMENT_MOVEMENT_TYPE_1 items which have a cancel entry (CANCELED_SHIPMENT_MOVEMENT_TYPE_1)
-        // and all SHIPMENT_MOVEMENT_TYPE_2 items which have a cancel entry (CANCELED_SHIPMENT_MOVEMENT_TYPE_2)
-        StringBuilder sql = new StringBuilder();
-        sql.append("DELETE asmv ");
-        sql.append("FROM arrival_shipment_mv asmv ");
-        sql.append("join ( ");
-        sql.append("     select a.id ");
-        sql.append("     from arrival_shipment_mv a, arrival_shipment_mv b ");
-        sql.append("     where a.id < b.id ");
-        sql.append("     and (");
-        sql.append("         ( ");
-        sql.append("             a.shipment_movement_type = '").append(SHIPMENT_MOVEMENT_TYPE_1).append("' ");
-        sql.append("             and b.shipment_movement_type = '").append(CANCELED_SHIPMENT_MOVEMENT_TYPE_1).append("' ");
-        sql.append("         ) ");
-        sql.append("         OR ");
-        sql.append("         ( ");
-        sql.append("             a.shipment_movement_type = '").append(SHIPMENT_MOVEMENT_TYPE_2).append("' ");
-        sql.append("             and b.shipment_movement_type = '").append(CANCELED_SHIPMENT_MOVEMENT_TYPE_2).append("' ");
-        sql.append("         ) ");
-        sql.append("     ) ");
-        sql.append("     and a.serial_number = b.serial_number ");
-        sql.append("     and a.customer_order_number = b.customer_order_number ");
-        sql.append("     and a.customer_order_number != '' ");
-        sql.append(") asdc ");
-        sql.append("on (asmv.id = asdc.id) ");
-
+        logger.info("create index 5");
+        sql = new StringBuilder();
+        sql.append(indexCommand).append("IN_AS_PSNR_NO(parent_serial_number)");
         em.createNativeQuery(sql.toString()).executeUpdate();
-        subTsk.finishTaskWithSuccess();
-    }
 
-    private void execRemoveCanceled2(TaskNodeLog ownTask) {
-        String executionSection = "delete canceled shipments from arrival_shipment_mv (2/4)";
-        logger.info(executionSection);
-        TaskLeafLog subTsk = ownTask.createNewSubTaskLeaf(executionSection);
-
-        // if customer_order_number is empty and shipment type CANCELED_SHIPMENT_MOVEMENT_TYPE_1 or CANCELED_SHIPMENT_MOVEMENT_TYPE_2
-        // then delete the last item which was transfered before
-        StringBuilder sql = new StringBuilder();
-        sql.append("DELETE asmv ");
-        sql.append("FROM arrival_shipment_mv asmv ");
-        sql.append("join ( ");
-        sql.append("     SELECT ");
-        sql.append("         (");
-        sql.append("             SELECT MAX(d.id) as id ");
-        sql.append("             FROM arrival_shipment_mv d ");
-        sql.append("             WHERE d.shipment_date <= e.shipment_date ");
-        sql.append("             and d.serial_number = e.serial_number ");
-        sql.append("             and d.shipment_movement_type = '").append(SHIPMENT_MOVEMENT_TYPE_1).append("' ");
-        sql.append("         ) AS my_vorgaenger_id ");
-        sql.append("     FROM arrival_shipment_mv e ");
-        sql.append("     where e.customer_order_number = '' ");
-        sql.append("     and e.shipment_movement_type = '").append(CANCELED_SHIPMENT_MOVEMENT_TYPE_1).append("' ");
-        sql.append(") asdc ");
-        sql.append("on (asmv.id = asdc.my_vorgaenger_id) ");
-
+        logger.info("create index 6");
+        sql = new StringBuilder();
+        sql.append(indexCommand).append("IN_AS_MAT_NO(material_number)");
         em.createNativeQuery(sql.toString()).executeUpdate();
-        subTsk.finishTaskWithSuccess();
-    }
 
-    private void execRemoveCanceled3(TaskNodeLog ownTask) {
-        String executionSection = "delete canceled shipments from arrival_shipment_mv (3/4)";
-        logger.info(executionSection);
-        TaskLeafLog subTsk = ownTask.createNewSubTaskLeaf(executionSection);
-
-        StringBuilder sql = new StringBuilder();
-        sql.append("DELETE asmv ");
-        sql.append("FROM arrival_shipment_mv asmv ");
-        sql.append("join ( ");
-        sql.append("     SELECT ");
-        sql.append("         (");
-        sql.append("             SELECT MAX(d.id) as id ");
-        sql.append("             FROM arrival_shipment_mv d ");
-        sql.append("             WHERE d.shipment_date <= e.shipment_date ");
-        sql.append("             and d.serial_number = e.serial_number ");
-        sql.append("             and d.shipment_movement_type = '").append(SHIPMENT_MOVEMENT_TYPE_2).append("' ");
-        sql.append("         ) AS my_vorgaenger_id ");
-        sql.append("     FROM arrival_shipment_mv e ");
-        sql.append("     where e.customer_order_number = '' ");
-        sql.append("     and e.shipment_movement_type = '").append(CANCELED_SHIPMENT_MOVEMENT_TYPE_2).append("' ");
-        sql.append(") asdc ");
-        sql.append("on (asmv.id = asdc.my_vorgaenger_id) ");
-
+        logger.info("create index 7");
+        sql = new StringBuilder();
+        sql.append(indexCommand).append("IN_AS_PMAT_NO(parent_material_number)");
         em.createNativeQuery(sql.toString()).executeUpdate();
-        subTsk.finishTaskWithSuccess();
-    }
 
-    private void execRemoveCanceled4(TaskNodeLog ownTask) {
-        String executionSection = "delete canceled shipments from arrival_shipment_mv (4/4)";
-        logger.info(executionSection);
-        TaskLeafLog subTsk = ownTask.createNewSubTaskLeaf(executionSection);
-
-        StringBuilder sql = new StringBuilder();
-        sql.append("DELETE asmv ");
-        sql.append("FROM arrival_shipment_mv asmv ");
-        sql.append("join ( ");
-        sql.append("    select '").append(CANCELED_SHIPMENT_MOVEMENT_TYPE_1).append("' as shipment_movement_type from dual ");
-        sql.append("    union ");
-        sql.append("    select '").append(CANCELED_SHIPMENT_MOVEMENT_TYPE_2).append("' as shipment_movement_type from dual");
-        sql.append(") asdc ");
-        sql.append("on (asmv.shipment_movement_type = asdc.shipment_movement_type) ");
-
+        logger.info("create index 8");
+        sql = new StringBuilder();
+        sql.append(indexCommand).append("IN_AS_MAT_TYPE(material_type)");
         em.createNativeQuery(sql.toString()).executeUpdate();
+
+        logger.info("create index 9");
+        sql = new StringBuilder();
+        sql.append(indexCommand).append("IN_AS_PMAT_TYPE(parent_material_type)");
+        em.createNativeQuery(sql.toString()).executeUpdate();
+
+        logger.info("create index 10");
+        sql = new StringBuilder();
+        sql.append(indexCommand).append("IN_AS_MAT_STEXT(material_short_text)");
+        em.createNativeQuery(sql.toString()).executeUpdate();
+
+        logger.info("create index 11");
+        sql = new StringBuilder();
+        sql.append(indexCommand).append("IN_AS_PMAT_STEXT(parent_material_short_text)");
+        em.createNativeQuery(sql.toString()).executeUpdate();
+
+        logger.info("create index 12");
+        sql = new StringBuilder();
+        sql.append(indexCommand).append("IN_AS_SAP_NO(sap_no)");
+        em.createNativeQuery(sql.toString()).executeUpdate();
+
+        logger.info("create index 13");
+        sql = new StringBuilder();
+        sql.append(indexCommand).append("IN_AS_PSAP_NO(parent_sap_no)");
+        em.createNativeQuery(sql.toString()).executeUpdate();
+
+        logger.info("create index 14");
+        sql = new StringBuilder();
+        sql.append(indexCommand).append("IN_AS_HIERARC(material_hierarchy)");
+        em.createNativeQuery(sql.toString()).executeUpdate();
+
+        logger.info("create index 15");
+        sql = new StringBuilder();
+        sql.append(indexCommand).append("IN_AS_PHIERARC(parent_material_hierarchy)");
+        em.createNativeQuery(sql.toString()).executeUpdate();
+
+        logger.info("create index 16");
+        sql = new StringBuilder();
+        sql.append(indexCommand).append("IN_AS_REV_ID(revision_id)");
+        em.createNativeQuery(sql.toString()).executeUpdate();
+
+        logger.info("create index 17");
+        sql = new StringBuilder();
+        sql.append(indexCommand).append("IN_AS_PREV_ID(parent_revision_id)");
+        em.createNativeQuery(sql.toString()).executeUpdate();
+
+        logger.info("create index 18");
+        sql = new StringBuilder();
+        sql.append(indexCommand).append("IN_AS_REV_NO(revision_no)");
+        em.createNativeQuery(sql.toString()).executeUpdate();
+
+        logger.info("create index 19");
+        sql = new StringBuilder();
+        sql.append(indexCommand).append("IN_AS_PREV_NO(parent_revision_no)");
+        em.createNativeQuery(sql.toString()).executeUpdate();
+
+        logger.info("create index 20");
+        sql = new StringBuilder();
+        sql.append(indexCommand).append("IN_AS_ASS_DATE(assembly_date)");
+        em.createNativeQuery(sql.toString()).executeUpdate();
+
+        logger.info("create index 21");
+        sql = new StringBuilder();
+        sql.append(indexCommand).append("IN_AS_ASS_PO(assembly_po)");
+        em.createNativeQuery(sql.toString()).executeUpdate();
+
+        logger.info("create index 22");
+        sql = new StringBuilder();
+        sql.append(indexCommand).append("IN_AS_CUST_CODE(customer_code)");
+        em.createNativeQuery(sql.toString()).executeUpdate();
+
+        logger.info("create index 23");
+        sql = new StringBuilder();
+        sql.append(indexCommand).append("IN_AS_CUST_NAME(customer_name)");
+        em.createNativeQuery(sql.toString()).executeUpdate();
+
+        logger.info("create index 24");
+        sql = new StringBuilder();
+        sql.append(indexCommand).append("IN_AS_COUNTRY_CODE(country_code)");
+        em.createNativeQuery(sql.toString()).executeUpdate();
+
+        logger.info("create index 25");
+        sql = new StringBuilder();
+        sql.append(indexCommand).append("IN_AS_COUNTRY_NAME(country_name)");
+        em.createNativeQuery(sql.toString()).executeUpdate();
+
+        logger.info("create index 26");
+        sql = new StringBuilder();
+        sql.append(indexCommand).append("IN_AS_SHIP_DATE(shipment_date)");
+        em.createNativeQuery(sql.toString()).executeUpdate();
+
+        logger.info("create index 27");
+        sql = new StringBuilder();
+        sql.append(indexCommand).append("IN_AS_ARR_DATE(arrival_date)");
+        em.createNativeQuery(sql.toString()).executeUpdate();
+
+        logger.info("create index 28");
+        sql = new StringBuilder();
+        sql.append(indexCommand).append("IN_AS_SUP_CODE(supplier_code)");
+        em.createNativeQuery(sql.toString()).executeUpdate();
+
+        logger.info("create index 29");
+        sql = new StringBuilder();
+        sql.append(indexCommand).append("IN_AS_SUP_NAME(supplier_name)");
+        em.createNativeQuery(sql.toString()).executeUpdate();
+
+        logger.info("create index 30");
+        sql = new StringBuilder();
+        sql.append(indexCommand).append("IN_AS_PLANT(plant)");
+        em.createNativeQuery(sql.toString()).executeUpdate();
+
+        logger.info("create index 31");
+        sql = new StringBuilder();
+        sql.append(indexCommand).append("IN_AS_SHIP_MT(shipment_movement_type)");
+        em.createNativeQuery(sql.toString()).executeUpdate();
+
+        logger.info("create index 32");
+        sql = new StringBuilder();
+        sql.append(indexCommand).append("IN_AS_ARR_MT(arrival_movement_type)");
+        em.createNativeQuery(sql.toString()).executeUpdate();
+
+        logger.info("create index 33");
+        sql = new StringBuilder();
+        sql.append(indexCommand).append("IN_AS_CUST_ORDER(customer_order_number)");
+        em.createNativeQuery(sql.toString()).executeUpdate();
+
+        logger.info("create index 34");
+        sql = new StringBuilder();
+        sql.append(indexCommand).append("IN_AS_PURCH_ORDER(purchase_order_number)");
+        em.createNativeQuery(sql.toString()).executeUpdate();
+
+        logger.info("create index 35");
+        sql = new StringBuilder();
+        sql.append(indexCommand).append("IN_AS_ARR_ID(arrival_id)");
+        em.createNativeQuery(sql.toString()).executeUpdate();
+
+        logger.info("create index 36");
+        sql = new StringBuilder();
+        sql.append(indexCommand).append("IN_AS_MATERIAL(material)");
+        em.createNativeQuery(sql.toString()).executeUpdate();
+
+        logger.info("create index 37");
+        sql = new StringBuilder();
+        sql.append(indexCommand).append("IN_AS_SNR(serial_object)");
+        em.createNativeQuery(sql.toString()).executeUpdate();
+
         subTsk.finishTaskWithSuccess();
     }
 
