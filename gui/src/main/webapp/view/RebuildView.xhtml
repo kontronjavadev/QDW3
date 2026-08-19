@@ -1,0 +1,100 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:h="jakarta.faces.html"
+	xmlns:f="jakarta.faces.core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/templates/ui.xhtml">
+
+<f:metadata>
+	<f:viewAction action="#{rebuildView.initView()}"/>
+</f:metadata>
+
+<ui:define name="content">
+	<p:growl id="growl" showDetail="true" skipDetailIfEqualsSummary="true" keepAlive="true" life="10000" />
+
+	<h:panelGrid columns="3">
+		<div class="pi pi-book" style="font-size: 2em"/>
+		<h:outputText id="lblFormTitle" value="&#160;#{rebuildView.formTitle}" styleClass="label-form-title"/>
+		<p:ajaxStatus style="width:16px;height:16px;">
+			<f:facet name="start">
+				<h:graphicImage value="/images/ajaxloading.gif"/>
+			</f:facet>
+
+			<f:facet name="complete">
+				<h:outputText value=""/>
+			</f:facet>
+		</p:ajaxStatus>
+	</h:panelGrid>
+
+
+
+<!-- RepairDataImport view dialog -->
+
+	<p:scrollPanel style="width:100%; height:calc(100vh - 141px);" mode="native">
+		<table>
+			<tr>
+				<td><p:commandButton id="cmdRebuildDelta" icon="pi pi-play" action="#{rebuildView.runRebuildDelta}" /></td>
+				<td><h:outputLabel value="#{i18n.rebuildview_run_rebuild_delta}" for="cmdRebuildDelta" styleClass="label-field-otional"/></td>
+			</tr>
+			<tr>
+				<td><p:commandButton style="margin-left: 1.5rem" id="cmdArrivalRebuildMaterializedDelta" icon="pi pi-play" action="#{rebuildView.runArrivalRebuildMaterializedDelta}" /></td>
+				<td><h:outputLabel value="#{i18n.rebuildview_runarrival_rebuild_materialized_delta}" for="cmdArrivalRebuildMaterializedDelta" styleClass="label-field-otional"/></td>
+			</tr>
+			<tr>
+				<td><p:commandButton style="margin-left: 1.5rem" id="cmdShptArrvRebuildMaterializedDelta" icon="pi pi-play" action="#{rebuildView.runShptArrvRebuildMaterializedDelta}" /></td>
+				<td><h:outputLabel value="#{i18n.rebuildview_runshptarrv_rebuild_materialized_delta}" for="cmdShptArrvRebuildMaterializedDelta" styleClass="label-field-otional"/></td>
+			</tr>
+			<tr>
+				<td><p:commandButton style="margin-left: 1.5rem" id="cmdArrivalRebuildAggregatedDelta" icon="pi pi-play" action="#{rebuildView.runArrivalRebuildAggregated}" /></td>
+				<td><h:outputLabel value="#{i18n.rebuildview_runarrival_rebuild_aggregated}" for="cmdArrivalRebuildAggregatedDelta" styleClass="label-field-otional"/></td>
+			</tr>
+			<tr>
+				<td><p:commandButton style="margin-left: 1.5rem" id="cmdShptRebuildAggregatedDelta" icon="pi pi-play" action="#{rebuildView.runShptRebuildAggregated}" /></td>
+				<td><h:outputLabel value="#{i18n.rebuildview_runshpt_rebuild_aggregated}" for="cmdShptRebuildAggregatedDelta" styleClass="label-field-otional"/></td>
+			</tr>
+			<tr>
+				<td><p:commandButton style="margin-left: 1.5rem" id="cmdShptArrvRebuildAggregatedDelta" icon="pi pi-play" action="#{rebuildView.runShptArrvRebuildAggregated}" /></td>
+				<td><h:outputLabel value="#{i18n.rebuildview_runshptarrv_rebuild_aggregated}" for="cmdShptArrvRebuildAggregatedDelta" styleClass="label-field-otional"/></td>
+			</tr>
+
+
+			<tr>
+				<td><p:commandButton id="cmdRebuildFull" icon="pi pi-play" action="#{rebuildView.runRebuildFull}" /></td>
+				<td><h:outputLabel value="#{i18n.rebuildview_run_rebuild_full}" for="cmdRebuildFull" styleClass="label-field-otional"/></td>
+			</tr>
+			<tr>
+				<td><p:commandButton style="margin-left: 1.5rem" id="cmdArrivalRebuildMaterializedFull" icon="pi pi-play" action="#{rebuildView.runArrivalRebuildMaterializedFull}" /></td>
+				<td><h:outputLabel value="#{i18n.rebuildview_runarrival_rebuild_materialized_full}" for="cmdArrivalRebuildMaterializedFull" styleClass="label-field-otional"/></td>
+			</tr>
+			<tr>
+				<td><p:commandButton style="margin-left: 1.5rem" id="cmdShptArrvRebuildMaterializedFull" icon="pi pi-play" action="#{rebuildView.runShptArrvRebuildMaterializedFull}" /></td>
+				<td><h:outputLabel value="#{i18n.rebuildview_runshptarrv_rebuild_materialized_full}" for="cmdShptArrvRebuildMaterializedFull" styleClass="label-field-otional"/></td>
+			</tr>
+			<tr>
+				<td><p:commandButton style="margin-left: 1.5rem" id="cmdArrivalRebuildAggregatedFull" icon="pi pi-play" action="#{rebuildView.runArrivalRebuildAggregated}" /></td>
+				<td><h:outputLabel value="#{i18n.rebuildview_runarrival_rebuild_aggregated}" for="cmdArrivalRebuildAggregatedFull" styleClass="label-field-otional"/></td>
+			</tr>
+			<tr>
+				<td><p:commandButton style="margin-left: 1.5rem" id="cmdShptRebuildAggregatedFull" icon="pi pi-play" action="#{rebuildView.runShptRebuildAggregated}" /></td>
+				<td><h:outputLabel value="#{i18n.rebuildview_runshpt_rebuild_aggregated}" for="cmdShptRebuildAggregatedFull" styleClass="label-field-otional"/></td>
+			</tr>
+			<tr>
+				<td><p:commandButton style="margin-left: 1.5rem" id="cmdShptArrvRebuildAggregatedFull" icon="pi pi-play" action="#{rebuildView.runShptArrvRebuildAggregated}" /></td>
+				<td><h:outputLabel value="#{i18n.rebuildview_runshptarrv_rebuild_aggregated}" for="cmdShptArrvRebuildAggregatedFull" styleClass="label-field-otional"/></td>
+			</tr>
+
+
+<!-- 
+			<tr>
+				<td><p:commandButton style="margin-left: 1.5rem" id="cmdXxx" icon="pi pi-play" action="#{rebuildView.runXxx}" /></td>
+				<td><h:outputLabel value="#{i18n.rebuildview_xxx}" for="cmdXxx" styleClass="label-field-otional"/></td>
+			</tr>
+ -->
+
+
+		</table>
+	</p:scrollPanel>
+
+
+</ui:define>
+</ui:composition>

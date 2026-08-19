@@ -104,6 +104,11 @@ public class NavigatorView implements Serializable {
                 new DefaultTreeNode<>(VIEW_TYPE, new TreeNavigatorItem(bundle.getString(FORM_REPAIRIMPORT_TITLE),
                         req.getContextPath() + "/view/RepairImportView.jsf"), itemGroup0001);
             
+            // Rebuild materialized and aggregated tables
+            if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_MAINTAINER))
+                new DefaultTreeNode<>(VIEW_TYPE, new TreeNavigatorItem(bundle.getString(FORM_REBUILD_TITLE),
+                        req.getContextPath() + "/view/RebuildView.jsf"), itemGroup0001);
+            
             // Notification
             if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_MAINTAINER))
                 new DefaultTreeNode<>(VIEW_TYPE, new TreeNavigatorItem(bundle.getString(FORM_NOTIFICATIONVIEW_TITLE),
