@@ -108,6 +108,10 @@ public class RebuildView extends CopyClipboard implements Serializable {
         rebuildServiceBean.runShptArrvRebuildMaterializedDelta();
     }
 
+    public void runSvcMsgRebuildMaterializedDelta() {
+        rebuildServiceBean.runSvcMsgRebuildMaterializedDelta();
+    }
+
 
 
     public void runRebuildFull() {
@@ -120,6 +124,10 @@ public class RebuildView extends CopyClipboard implements Serializable {
 
     public void runShptArrvRebuildMaterializedFull() {
         rebuildServiceBean.runShptArrvRebuildMaterializedFull();
+    }
+
+    public void runSvcMsgRebuildMaterializedFull() {
+        rebuildServiceBean.runSvcMsgRebuildMaterializedFull();
     }
 
 

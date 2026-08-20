@@ -13,6 +13,8 @@ import com.kontron.qdw.boundary.service.rebuild.ShipmentArrivalRebuildAggregated
 import com.kontron.qdw.boundary.service.rebuild.ShipmentArrivalRebuildMaterializedDeltaServiceBean;
 import com.kontron.qdw.boundary.service.rebuild.ShipmentArrivalRebuildMaterializedFullServiceBean;
 import com.kontron.qdw.boundary.service.rebuild.ShipmentRebuildAggregatedServiceBean;
+import com.kontron.qdw.boundary.service.rebuild.SvcMsgRebuildMaterializedDeltaServiceBean;
+import com.kontron.qdw.boundary.service.rebuild.SvcMsgRebuildMaterializedFullServiceBean;
 import com.kontron.qdw.boundary.util.Constants;
 import com.kontron.qdw.boundary.util.MailServiceFacade;
 import com.kontron.util.datetime.TimeUtil;
@@ -64,6 +66,11 @@ public class RebuildServiceBean {
     @EJB
     private ShipmentArrivalRebuildAggregatedServiceBean shptArrvRebuildAggServiceBean;
 
+    @EJB
+    private SvcMsgRebuildMaterializedDeltaServiceBean svcMsgRebuildMatDeltaServiceBean;
+    @EJB
+    private SvcMsgRebuildMaterializedFullServiceBean svcMsgRebuildMatFullServiceBean;
+
 
 
     @Asynchronous
@@ -82,6 +89,8 @@ public class RebuildServiceBean {
         executeTask(mainTask, arrivalRebuildAggServiceBean);
         executeTask(mainTask, shptRebuildAggServiceBean);
         executeTask(mainTask, shptArrvRebuildAggServiceBean);
+
+        executeTask(mainTask, svcMsgRebuildMatDeltaServiceBean);
         mainTask.finishTask();
 
         finishRebuild(mainTask, true);
@@ -103,6 +112,8 @@ public class RebuildServiceBean {
         executeTask(mainTask, arrivalRebuildAggServiceBean);
         executeTask(mainTask, shptRebuildAggServiceBean);
         executeTask(mainTask, shptArrvRebuildAggServiceBean);
+
+        executeTask(mainTask, svcMsgRebuildMatFullServiceBean);
         mainTask.finishTask();
 
         finishRebuild(mainTask, true);
@@ -138,6 +149,20 @@ public class RebuildServiceBean {
         finishRebuild(taskSapImport, true);
     }
 
+    @Asynchronous
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+    public void runSvcMsgRebuildMaterializedDelta() {
+        if (!schedulerService.isExecuteImport()) {
+            return;
+        }
+
+        TaskNodeLog taskSapImport = initRebuild();
+        executeTask(taskSapImport, svcMsgRebuildMatDeltaServiceBean);
+
+        finishRebuild(taskSapImport, true);
+    }
+
 
 
     @Asynchronous
@@ -164,6 +189,20 @@ public class RebuildServiceBean {
 
         TaskNodeLog taskSapImport = initRebuild();
         executeTask(taskSapImport, shptArrvRebuildMatFullServiceBean);
+
+        finishRebuild(taskSapImport, true);
+    }
+
+    @Asynchronous
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+    public void runSvcMsgRebuildMaterializedFull() {
+        if (!schedulerService.isExecuteImport()) {
+            return;
+        }
+
+        TaskNodeLog taskSapImport = initRebuild();
+        executeTask(taskSapImport, svcMsgRebuildMatFullServiceBean);
 
         finishRebuild(taskSapImport, true);
     }

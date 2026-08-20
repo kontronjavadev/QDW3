@@ -41,18 +41,29 @@
 				<td><h:outputLabel value="#{i18n.repairimportview_runrmaimport}" for="cmdRmaImport" styleClass="label-field-otional"/></td>
 			</tr>
 			<tr>
+				<td></td>
+				<td><p:link href="RebuildView.jsf" value="#{i18n.rebuildview_linked}" styleClass="label-field-otional"/></td>
+			</tr>
+			<tr>
+				<td><p:commandButton style="margin-left: 1.5rem" id="cmdSvcMsgRebuild1" icon="pi pi-play" action="#{repairImportView.runSvcMsgRebuild}" /></td>
+				<td><h:outputLabel value="#{i18n.repairimportview_runsvcmsgrebuild}" for="cmdSvcMsgRebuild1" styleClass="label-field-otional"/></td>
+			</tr>
+			<tr>
 				<td><p:commandButton style="margin-left: 1rem" id="cmdSvcMsgImport" icon="pi pi-play" action="#{repairImportView.runSvcMsgImport}" /></td>
 				<td><h:outputLabel value="#{i18n.repairimportview_runsvcmsgimport}" for="cmdSvcMsgImport" styleClass="label-field-otional"/></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td><p:link href="RebuildView.jsf" value="#{i18n.rebuildview_linked}" styleClass="label-field-otional"/></td>
+			</tr>
+			<tr>
+				<td><p:commandButton style="margin-left: 1.5rem" id="cmdSvcMsgRebuild2" icon="pi pi-play" action="#{repairImportView.runSvcMsgRebuild}" /></td>
+				<td><h:outputLabel value="#{i18n.repairimportview_runsvcmsgrebuild}" for="cmdSvcMsgRebuild2" styleClass="label-field-otional"/></td>
 			</tr>
 
 
 
 <!-- 
-			<tr>
-				<td></td>
-				<td><p:link href="RebuildView.jsf" value="#{i18n.rebuildview_linked}" styleClass="label-field-otional"/></td>
-			</tr>
-
 			<tr>
 				<td><p:commandButton style="margin-left: 1.5rem" id="cmdXxx" icon="pi pi-play" action="#{repairImportView.runXxx}" /></td>
 				<td><h:outputLabel value="#{i18n.repairimportview_xxx}" for="cmdXxx" styleClass="label-field-otional"/></td>

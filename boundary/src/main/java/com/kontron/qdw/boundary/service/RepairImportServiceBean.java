@@ -137,6 +137,19 @@ public class RepairImportServiceBean {
         finishImport(mainTask);
     }
 
+    @Asynchronous
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+    public void runSvcMsgRebuild() {
+        if (!schedulerService.isExecuteImport()) {
+            return;
+        }
+
+        TaskNodeLog taskRebuild = initRebuild();
+        executeTask(taskRebuild, svcMsgRebuildServiceBean);
+        finishImport(taskRebuild);
+    }
+
 
 
     private TaskNodeLog initImportAndRebuild() {
@@ -154,7 +167,6 @@ public class RepairImportServiceBean {
         return new TaskNodeLog(TASKNAME_IMPORT);
     }
 
-    @SuppressWarnings("unused")
     private TaskNodeLog initRebuild() {
         logger.info("Rebuilding materialized tables");
 
