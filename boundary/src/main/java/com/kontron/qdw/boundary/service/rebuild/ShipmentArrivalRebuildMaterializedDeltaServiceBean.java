@@ -50,9 +50,8 @@ public class ShipmentArrivalRebuildMaterializedDeltaServiceBean extends Abstract
         execCreate(ownTask, "arrival_shipment_mv_tmp_delta", true);
         execAddColumns(ownTask, "arrival_shipment_mv_tmp_delta");
         execUpdateArrId(ownTask, "arrival_shipment_mv_tmp_delta");
-        execAddIndex(ownTask, "arrival_shipment_mv_tmp_delta");
+        // execAddIndex(ownTask, "arrival_shipment_mv_tmp_delta");
         execUpdateArrDate(ownTask, "arrival_shipment_mv_tmp_delta");
-        execDropIndex(ownTask, "arrival_shipment_mv_tmp_delta");
 
         execUpdateSrvMsg(ownTask);
         execCopyData(ownTask);
@@ -69,29 +68,31 @@ public class ShipmentArrivalRebuildMaterializedDeltaServiceBean extends Abstract
         TaskLeafLog subTsk = ownTask.createNewSubTaskLeaf(executionSection);
 
         StringBuilder sql = new StringBuilder();
-        sql.append("update service_message_mv smmv, shipment_tab shipmentfilter ");
-        sql.append("set smmv.cust_ship_date = ( ");
-        sql.append("    select max(a.shipment_date) ");
-        sql.append("    from shipment_tab a ");
-        sql.append("    where a.serial_object = smmv.serial_object_id ");
-        sql.append("    and a.shipment_date <= smmv.internal_arrival_date ");
-        sql.append(") ");
-        sql.append("where shipmentfilter.serial_object = smmv.serial_object_id ");
-        sql.append("and shipmentfilter.rebuild_flag = 1 ");
+        sql.append("update service_message_mv smmv ");
+        sql.append("set smmv.cust_ship_date = COALESCE( ");
 
-        em.createNativeQuery(sql.toString()).executeUpdate();
+        // 1. Versuch: Datum aus shipment_tab
+        sql.append("    (select a.shipment_date ");
+        sql.append("     from shipment_tab a ");
+        sql.append("     where a.serial_object = smmv.serial_object_id ");
+        sql.append("     and a.shipment_date <= smmv.internal_arrival_date ");
+        sql.append("     order by a.shipment_date desc limit 1), ");
 
-        sql = new StringBuilder();
-        sql.append("update service_message_mv smmv, shipment_tab shipmentfilter ");
-        sql.append("set smmv.cust_ship_date = ( ");
-        sql.append("    select max(a.shipment_date) ");
-        sql.append("    from assembly_shipment_mv a ");
-        sql.append("    where a.serial_object = smmv.serial_object_id ");
-        sql.append("    and a.shipment_date <= smmv.internal_arrival_date ");
+        // 2. Versuch (nur ausgeführt, wenn 1. Versuch NULL ergab): Datum aus assembly_shipment_mv
+        sql.append("    (select b.shipment_date ");
+        sql.append("     from assembly_shipment_mv b ");
+        sql.append("     where b.serial_object = smmv.serial_object_id ");
+        sql.append("     and b.shipment_date <= smmv.internal_arrival_date ");
+        sql.append("     order by b.shipment_date desc limit 1) ");
+
         sql.append(") ");
-        sql.append("where shipmentfilter.serial_object = smmv.serial_object_id ");
-        sql.append("and shipmentfilter.rebuild_flag = 1 ");
-        sql.append("and smmv.cust_ship_date is null ");
+
+        // Sauberer Filter statt implizitem Join
+        sql.append("where exists ( ");
+        sql.append("    select 1 from shipment_tab f ");
+        sql.append("    where f.serial_object = smmv.serial_object_id ");
+        sql.append("    and f.rebuild_flag = 1 ");
+        sql.append(") ");
 
         em.createNativeQuery(sql.toString()).executeUpdate();
         subTsk.finishTaskWithSuccess();

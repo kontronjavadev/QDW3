@@ -120,8 +120,8 @@ public class AbstractShipmentArrivalRebuildMaterializedServiceBean {
 
         StringBuilder sql = new StringBuilder();
         sql.append("alter table  ").append(tableName).append(" ");
-        sql.append("ADD COLUMN parent_revision_id BIGINT NOT NULL DEFAULT 0, ");
-        sql.append("ADD COLUMN parent_revision_no VARCHAR(50), ");
+        sql.append("add column parent_revision_id BIGINT NOT NULL DEFAULT 0, ");
+        sql.append("add column parent_revision_no VARCHAR(50), ");
         sql.append("add column arrival_date date, ");
         sql.append("add column supplier_code varchar(50), ");
         sql.append("add column supplier_name varchar(100), ");
@@ -141,31 +141,28 @@ public class AbstractShipmentArrivalRebuildMaterializedServiceBean {
         StringBuilder sql = new StringBuilder();
         sql.append("update ").append(tableName).append(" t ");
         sql.append("set t.arrival_id = (");
-        sql.append("    select max(a2.id) ");
-        sql.append("    from arrival_tab a2 ");
-        sql.append("    where a2.serial_object = t.serial_object_id ");
-        sql.append("    and a2.arrival_date = (");
-        sql.append("        select max(a1.arrival_date) ");
-        sql.append("        from arrival_tab a1 ");
-        sql.append("        where a1.serial_object = t.serial_object_id ");
-        sql.append("        and a1.arrival_date <= t.shipment_date");
-        sql.append("    )");
+        sql.append("    select a.id ");
+        sql.append("    from arrival_tab a ");
+        sql.append("    where a.serial_object = t.serial_object_id ");
+        sql.append("    and a.arrival_date <= t.shipment_date ");
+        sql.append("    order by a.arrival_date desc, a.id desc ");
+        sql.append("    limit 1");
         sql.append(")");
 
         em.createNativeQuery(sql.toString()).executeUpdate();
         subTsk.finishTaskWithSuccess();
     }
 
-    protected void execAddIndex(TaskNodeLog ownTask, String tableName) {
-        String executionSection = "create index for arrival_id";
-        logger.info(executionSection);
-        TaskLeafLog subTsk = ownTask.createNewSubTaskLeaf(executionSection);
-
-        String sql = "ALTER TABLE " + tableName + " ADD INDEX IN_AS_ARR_ID_TEMP(arrival_id)";
-
-        em.createNativeQuery(sql).executeUpdate();
-        subTsk.finishTaskWithSuccess();
-    }
+    // protected void execAddIndex(TaskNodeLog ownTask, String tableName) {
+    // String executionSection = "create index for arrival_id";
+    // logger.info(executionSection);
+    // TaskLeafLog subTsk = ownTask.createNewSubTaskLeaf(executionSection);
+    //
+    // String sql = "ALTER TABLE " + tableName + " ADD INDEX IN_AS_ARR_ID_TEMP(arrival_id)";
+    //
+    // em.createNativeQuery(sql).executeUpdate();
+    // subTsk.finishTaskWithSuccess();
+    // }
 
     protected void execUpdateArrDate(TaskNodeLog ownTask, String tableName) {
         String executionSection = "update arrival_date, supplier_code, supplier_name, arrival_movement_type, purchase_order_number";
@@ -186,16 +183,16 @@ public class AbstractShipmentArrivalRebuildMaterializedServiceBean {
         subTsk.finishTaskWithSuccess();
     }
 
-    protected void execDropIndex(TaskNodeLog ownTask, String tableName) {
-        String executionSection = "drop index for arrival_id";
-        logger.info(executionSection);
-        TaskLeafLog subTsk = ownTask.createNewSubTaskLeaf(executionSection);
-
-        String sql = "ALTER TABLE " + tableName + " DROP INDEX IN_AS_ARR_ID_TEMP";
-
-        em.createNativeQuery(sql).executeUpdate();
-        subTsk.finishTaskWithSuccess();
-    }
+    // protected void execDropIndex(TaskNodeLog ownTask, String tableName) {
+    // String executionSection = "drop index for arrival_id";
+    // logger.info(executionSection);
+    // TaskLeafLog subTsk = ownTask.createNewSubTaskLeaf(executionSection);
+    //
+    // String sql = "ALTER TABLE " + tableName + " DROP INDEX IN_AS_ARR_ID_TEMP";
+    //
+    // em.createNativeQuery(sql).executeUpdate();
+    // subTsk.finishTaskWithSuccess();
+    // }
 
     protected void execRemoveCanceled(TaskNodeLog ownTask) {
         execRemoveCanceled1(ownTask);
