@@ -53,7 +53,7 @@ public class AbstractShipmentArrivalRebuildMaterializedServiceBean {
         TaskLeafLog subTsk = ownTask.createNewSubTaskLeaf(executionSection);
 
         StringBuilder sql = new StringBuilder();
-        sql.append("create table ").append(tableName).append("engine = InnoDb CHARSET=utf8mb4 COLLATE utf8mb4_0900_ai_ci as ");
+        sql.append("create table ").append(tableName).append(" engine = InnoDb CHARSET=utf8mb4 COLLATE utf8mb4_0900_ai_ci as ");
         sql.append("select a.id, ");
         sql.append("b.id as serial_object_id, ");
         sql.append("c.id as parent_serial_object_id, ");
