@@ -161,10 +161,19 @@ public class ArrivalRebuildMaterializedDeltaServiceBean extends AbstractArrivalR
         logger.info(executionSection);
         TaskLeafLog subTsk = ownTask.createNewSubTaskLeaf(executionSection);
 
+        // -> Um zu vermeiden, dass das rebuild-flag von zwischenzeitlich geänderten Werten
+        // zurück gesetzt wird, das Ganze auf die zuvor eingelesenen Einträge beschränken.
+        // Die Einschränkung auf das rebuild-flag wird damit obsolet.
+        // -> Für die Filterung auf die temporäre Tabelle materialized_arrival_mv_tmp_delta
+        // muss sinnvollerweise ein Index erstellt werden.
+
+        em.createNativeQuery("ALTER TABLE materialized_arrival_mv_tmp_delta ADD INDEX idx_arrvl_mv_tmp_delta(id)").executeUpdate();
+
+
         StringBuilder sql = new StringBuilder();
-        sql.append("update arrival_tab ");
-        sql.append("set rebuild_flag = 0 ");
-        sql.append("where rebuild_flag = 1 ");
+        sql.append("update arrival_tab a ");
+        sql.append("inner join materialized_arrival_mv_tmp_delta b on a.id = b.id ");
+        sql.append("set a.rebuild_flag = 0 ");
 
         em.createNativeQuery(sql.toString()).executeUpdate();
         subTsk.finishTaskWithSuccess();

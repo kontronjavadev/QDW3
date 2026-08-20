@@ -141,6 +141,12 @@ public class SvcMsgRebuildMaterializedDeltaServiceBean extends AbstractSvcMsgReb
         String colForInsertList = StringUtil.collectionToSqlWhereInString(columns_service_message_mv);
 
 
+        // -> Für die Filterung auf die temporäre Tabelle service_message_mv_tmp_delta
+        // muss sinnvollerweise ein Index erstellt werden.
+
+        em.createNativeQuery("ALTER TABLE service_message_mv_tmp_delta ADD INDEX idx_svcmsg_mv_tmp_delta(id)").executeUpdate();
+
+
         StringBuilder sql = new StringBuilder();
         // vorhandene Einträge aktualisieren (rebuild for updated entries)
         sql.append("update service_message_mv smmv, service_message_mv_tmp_delta smmvdelta ");
@@ -170,13 +176,11 @@ public class SvcMsgRebuildMaterializedDeltaServiceBean extends AbstractSvcMsgReb
         logger.info(executionSection);
         TaskLeafLog subTsk = ownTask.createNewSubTaskLeaf(executionSection);
 
-        // -> Um zu vermeiden, dass das rebuild-flag auch von zwischenzeitlich geänderten Werten
+        // -> Um zu vermeiden, dass das rebuild-flag von zwischenzeitlich geänderten Werten
         // zurück gesetzt wird, das Ganze auf die zuvor eingelesenen Einträge beschränken.
         // Die Einschränkung auf das rebuild-flag wird damit obsolet.
-        // -> Für die Filterung auf die temporäre Tabelle service_message_mv_tmp_delta muss sinnvollerweise
-        // ein Index erstellt werden.
-
-        em.createNativeQuery("ALTER TABLE service_message_mv_tmp_delta ADD INDEX idx_svcmsg_mv_tmp_delta(id)").executeUpdate();
+        // -> Für die Filterung auf die temporäre Tabelle service_message_mv_tmp_delta
+        // muss sinnvollerweise ein Index erstellt werden. (siehe execCopyData())
 
 
         StringBuilder sql = new StringBuilder();
