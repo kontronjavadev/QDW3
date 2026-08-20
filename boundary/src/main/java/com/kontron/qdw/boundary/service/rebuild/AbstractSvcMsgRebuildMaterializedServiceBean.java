@@ -91,7 +91,7 @@ public class AbstractSvcMsgRebuildMaterializedServiceBean {
         sql.append("a.customer_failure, ");
         sql.append("m.code as customer_code, ");
         sql.append("m.name as customer_name, ");
-        sql.append("n.name as customer_group, ");
+        sql.append("null as customer_group, ");
         sql.append("i.code as country_code, ");
         sql.append("i.name as country_name, ");
         sql.append("q.code as fault_analysis_code, ");
@@ -122,7 +122,6 @@ public class AbstractSvcMsgRebuildMaterializedServiceBean {
         sql.append("left join repair_service_tab j on (a.repair_service = j.code) ");
         sql.append("left join repair_task_tab k on (a.repair_task = k.code) ");
         sql.append("left join repair_state_tab l on (a.repair_state = l.code) ");
-        sql.append("left join customer_group_tab n on (m.customer_group = n.id) ");
         sql.append("left join repair_error_code_tab o on (a.repair_error_code = o.code) ");
         sql.append("left join fault_analysis_tab q on (a.fault_analysis = q.code) ");
         sql.append("left join supplier_tab p on (a.external_supplier = p.code) ");
