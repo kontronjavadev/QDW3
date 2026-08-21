@@ -131,20 +131,13 @@ public class AbstractArrivalRebuildMaterializedServiceBean {
         StringBuilder sql = new StringBuilder();
         sql.append("delete amv ");
         sql.append("from materialized_arrival_mv amv ");
-        sql.append("join ( ");
-        sql.append("    select b.id ");
-        sql.append("    from materialized_arrival_mv b, ( ");
-        sql.append("        select max(a.id) maxid, a.serial_object_id, a.order_number ");
-        sql.append("        from materialized_arrival_mv a ");
-        sql.append("        where a.movement_type = '").append(CANCELED_ARRIVAL_MOVEMENT_TYPE).append("' ");
-        sql.append("        group by a.serial_object_id, a.order_number ");
-        sql.append("    ) c ");
-        sql.append("    where b.movement_type = '").append(ARRIVAL_MOVEMENT_TYPE).append("' ");
-        sql.append("    and b.id < c.maxid ");
-        sql.append("    and b.serial_object_id = c.serial_object_id ");
-        sql.append("    and b.order_number = c.order_number ");
-        sql.append(") adc ");
-        sql.append("on (amv.id = adc.id) ");
+        sql.append("inner join materialized_arrival_mv cancel on ( ");
+        sql.append("    amv.serial_object_id = cancel.serial_object_id ");
+        sql.append("    and amv.order_number = cancel.order_number ");
+        sql.append(") ");
+        sql.append("where amv.movement_type = '").append(ARRIVAL_MOVEMENT_TYPE).append("' ");
+        sql.append("and cancel.movement_type = '").append(CANCELED_ARRIVAL_MOVEMENT_TYPE).append("' ");
+        sql.append("and amv.id < cancel.id ");
 
         em.createNativeQuery(sql.toString()).executeUpdate();
 

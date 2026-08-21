@@ -71,7 +71,7 @@ public class ArrivalRebuildMaterializedFullServiceBean extends AbstractArrivalRe
         logger.info("create indices");
         String indexCommand = "ALTER TABLE materialized_arrival_mv "
                 + "ADD INDEX IN_A_ID(id)"
-                + ", ADD INDEX IN_A_SNR_ID(serial_object_id)"
+                // + ", ADD INDEX IN_A_SNR_ID(serial_object_id)" // stattdessen erweiterten Index ganz unten nehmen
                 + ", ADD INDEX IN_A_PSNR_ID(parent_serial_object_id)"
                 + ", ADD INDEX IN_A_SNR_NO(serial_number)"
                 + ", ADD INDEX IN_A_PSNR_NO(parent_serial_number)"
@@ -100,7 +100,8 @@ public class ArrivalRebuildMaterializedFullServiceBean extends AbstractArrivalRe
                 + ", ADD INDEX IN_A_ARR_MT(movement_type)"
                 + ", ADD INDEX IN_A_PURCH_ORDER(order_number)"
                 + ", ADD INDEX IN_A_MATERIAL(material)"
-                + ", ADD INDEX IN_A_SNR(serial_object)";
+                + ", ADD INDEX IN_A_SNR(serial_object)"
+                + ", ADD INDEX idx_ar_serobj_ordernr_mvttype_id (serial_object_id, order_number, movement_type, id)";
 
         em.createNativeQuery(indexCommand).executeUpdate();
         subTsk.finishTaskWithSuccess();

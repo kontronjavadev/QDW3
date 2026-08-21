@@ -170,56 +170,38 @@ public class AbstractSvcMsgRebuildMaterializedServiceBean {
 
         StringBuilder sql = new StringBuilder();
         sql.append("update ").append(tableName).append(" t ");
-        sql.append("set t.cust_ship_date = (");
-        sql.append("   select max(a.shipment_date) ");
-        sql.append("   from shipment_tab a ");
-        sql.append("   where a.serial_object = t.serial_object_id ");
-        sql.append("   and a.shipment_date <= t.internal_arrival_date");
-        sql.append(")");
-
-        em.createNativeQuery(sql.toString()).executeUpdate();
-
-        // Null-Werte aus anderer Quelle beziehen und neu belegen
-        sql = new StringBuilder();
-        sql.append("update ").append(tableName).append(" t ");
-        sql.append("set t.cust_ship_date = (");
-        sql.append("   select max(a.shipment_date) ");
-        sql.append("   from assembly_shipment_mv a ");
-        sql.append("   where a.serial_object_id = t.serial_object_id");
-        sql.append("   and a.shipment_date <= t.internal_arrival_date");
-        sql.append(")");
-        sql.append("where t.cust_ship_date is null");
-
-        em.createNativeQuery(sql.toString()).executeUpdate();
-
-        sql = new StringBuilder();
-        sql.append("update ").append(tableName).append(" t ");
-        sql.append("set t.sup_arrival_date = (");
-        sql.append("    select max(ar.arrival_date) ");
+        // 1. shipment_date aus shipment_tab (prio 1)
+        sql.append("left join lateral ( ");
+        sql.append("    select a1.shipment_date ");
+        sql.append("    from shipment_tab a1 ");
+        sql.append("    where a1.serial_object = t.serial_object_id ");
+        sql.append("    and a1.shipment_date <= t.internal_arrival_date ");
+        sql.append("    order by a1.shipment_date desc, a1.id desc limit 1 ");
+        sql.append(") ship1 on true ");
+        // 2. shipment_date aus assembly_shipment_mv (prio 2)
+        // Achtung: hier serial_object_id statt serial_object
+        sql.append("left join lateral ( ");
+        sql.append("    select a2.shipment_date ");
+        sql.append("    from assembly_shipment_mv a2 ");
+        sql.append("    where a2.serial_object_id = t.serial_object_id ");
+        sql.append("    and a2.shipment_date <= t.internal_arrival_date ");
+        sql.append("    order by a2.shipment_date desc, a2.id desc limit 1 ");
+        sql.append(") ship2 on true ");
+        // 3. arrival daten direkt über das on-the-fly berechnete datum (coalesce) holen
+        sql.append("left join lateral ( ");
+        sql.append("    select ar.arrival_date, ar.supplier ");
         sql.append("    from arrival_tab ar ");
         sql.append("    where ar.serial_object = t.serial_object_id ");
-        sql.append("    and ar.arrival_date <= t.cust_ship_date");
-        sql.append("), ");
-        sql.append("t.supplier_code = (");
-        sql.append("    select max(b.supplier) ");
-        sql.append("    from arrival_tab b ");
-        sql.append("    where b.serial_object = t.serial_object_id ");
-        sql.append("    and b.arrival_date = (");
-        sql.append("        select max(a.arrival_date) ");
-        sql.append("        from arrival_tab a ");
-        sql.append("        where a.serial_object = t.serial_object_id ");
-        sql.append("        and a.arrival_date <= t.cust_ship_date");
-        sql.append("    )");
-        sql.append(")");
-
-        em.createNativeQuery(sql.toString()).executeUpdate();
-
-        // Supplier-Name aus Supplier-Code nachbelegen
-        sql = new StringBuilder();
-        sql.append("update ").append(tableName).append(" t ");
-        sql.append("inner join supplier_tab s on (t.supplier_code = s.code) ");
-        sql.append("set t.supplier_name = s.name ");
-        sql.append("where t.supplier_code is not null");
+        sql.append("    and ar.arrival_date <= coalesce(ship1.shipment_date, ship2.shipment_date) ");
+        sql.append("    order by ar.arrival_date desc, ar.id desc limit 1 ");
+        sql.append(") arr on true ");
+        // 4. Supplier-Name auflösen
+        sql.append("left join supplier_tab s on (arr.supplier = s.code) ");
+        // alle Zielspalten in einem einzigen, atomaren Schreibvorgang belegen
+        sql.append("set t.cust_ship_date = coalesce(ship1.shipment_date, ship2.shipment_date), ");
+        sql.append("    t.sup_arrival_date = arr.arrival_date, ");
+        sql.append("    t.supplier_code = arr.supplier, ");
+        sql.append("    t.supplier_name = s.name ");
 
         em.createNativeQuery(sql.toString()).executeUpdate();
         subTsk.finishTaskWithSuccess();

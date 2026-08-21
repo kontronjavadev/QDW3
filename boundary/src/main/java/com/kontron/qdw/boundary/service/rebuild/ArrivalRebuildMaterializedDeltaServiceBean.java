@@ -72,36 +72,28 @@ public class ArrivalRebuildMaterializedDeltaServiceBean extends AbstractArrivalR
         TaskLeafLog subTsk = ownTask.createNewSubTaskLeaf(executionSection);
 
         StringBuilder sql = new StringBuilder();
-        sql.append("update service_message_mv smmv, arrival_tab arfilter ");
-        sql.append("set smmv.sup_arrival_date = ( ");
-        sql.append("    select max(a2.arrival_date) ");
-        sql.append("    from arrival_tab a2 ");
-        sql.append("    where a2.serial_object = smmv.serial_object_id ");
-        sql.append("    and a2.arrival_date <= smmv.cust_ship_date ");
-        sql.append("), ");
-        sql.append("smmv.supplier_code = ( ");
-        sql.append("    select max(a3.supplier) ");
-        sql.append("    from arrival_tab a3 ");
-        sql.append("    where a3.serial_object = smmv.serial_object_id ");
-        sql.append("    and a3.arrival_date = ( ");
-        sql.append("        select max(a4.arrival_date) ");
-        sql.append("        from arrival_tab a4 ");
-        sql.append("        where a4.serial_object = smmv.serial_object_id ");
-        sql.append("        and a4.arrival_date <= smmv.cust_ship_date ");
-        sql.append("    ) ");
-        sql.append(") ");
-        sql.append("where arfilter.serial_object = smmv.serial_object_id ");
-        sql.append("and arfilter.rebuild_flag = 1 ");
-
-        em.createNativeQuery(sql.toString()).executeUpdate();
-
-        sql = new StringBuilder();
-        sql.append("update service_message_mv smmv, arrival_tab arfilter, supplier_tab s ");
-        sql.append("set smmv.supplier_name = s.name ");
-        sql.append("where arfilter.serial_object = smmv.serial_object_id ");
-        sql.append("and arfilter.rebuild_flag = 1 ");
-        sql.append("and smmv.supplier_code = s.code ");
-        sql.append("and smmv.supplier_code is not null ");
+        sql.append("update service_message_mv smmv ");
+        // 1. filter für relevante service messages
+        sql.append("inner join ( ");
+        sql.append("    select distinct serial_object ");
+        sql.append("    from arrival_tab ");
+        sql.append("    where rebuild_flag = 1 ");
+        sql.append(") delta_filter on (smmv.serial_object_id = delta_filter.serial_object) ");
+        // 2. lateral join für den aktuellsten datensatz
+        sql.append("left join lateral ( ");
+        sql.append("    select a.arrival_date, a.supplier ");
+        sql.append("    from arrival_tab a ");
+        sql.append("    where a.serial_object = smmv.serial_object_id ");
+        sql.append("    and a.arrival_date <= smmv.cust_ship_date ");
+        sql.append("    order by a.arrival_date desc, a.id desc ");
+        sql.append("    limit 1 ");
+        sql.append(") latest_arr on true ");
+        // 3. join für den namen des lieferanten
+        sql.append("left join supplier_tab s on (latest_arr.supplier = s.code) ");
+        // 4. werte in einem durchlauf setzen
+        sql.append("set smmv.sup_arrival_date = latest_arr.arrival_date, ");
+        sql.append("    smmv.supplier_code = latest_arr.supplier, ");
+        sql.append("    smmv.supplier_name = s.name ");
 
         em.createNativeQuery(sql.toString()).executeUpdate();
         subTsk.finishTaskWithSuccess();

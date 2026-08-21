@@ -12,7 +12,6 @@ import com.kontron.qdw.boundary.service.process.TaskCall;
 import com.kontron.qdw.domain.service.ServiceMessage;
 import com.kontron.util.log.TaskLeafLog;
 import com.kontron.util.log.TaskNodeLog;
-import com.kontron.util.text.StringUtil;
 
 import jakarta.annotation.security.PermitAll;
 import jakarta.ejb.LocalBean;
@@ -136,24 +135,24 @@ public class SvcMsgRebuildMaterializedDeltaServiceBean extends AbstractSvcMsgReb
         columns_service_message_mv.add("supplier_name");
 
         String colForUpdateSet = columns_service_message_mv.stream()
+                .filter(columnName -> !columnName.equals("id"))
                 .map(columnName -> String.format("smmv.%s = smmvdelta.%s", columnName, columnName))
                 .collect(Collectors.joining(", "));
 
-        String colForInsertList = StringUtil.collectionToSqlWhereInString(columns_service_message_mv);
+        String colForInsertList = String.join(", ", columns_service_message_mv);
 
 
         // -> Für die Filterung auf die temporäre Tabelle service_message_mv_tmp_delta
         // muss sinnvollerweise ein Index erstellt werden.
-
         em.createNativeQuery("ALTER TABLE service_message_mv_tmp_delta ADD INDEX idx_svcmsg_mv_tmp_delta(id)").executeUpdate();
 
 
         StringBuilder sql = new StringBuilder();
         // vorhandene Einträge aktualisieren (rebuild for updated entries)
-        sql.append("update service_message_mv smmv, service_message_mv_tmp_delta smmvdelta ");
+        sql.append("update service_message_mv smmv ");
+        sql.append("inner join service_message_mv_tmp_delta smmvdelta on (smmv.id = smmvdelta.id) ");
         sql.append("set ").append(colForUpdateSet).append(" ");
-        sql.append("where smmv.id = smmvdelta.id ");
-        sql.append("and smmvdelta.rebuild_flag = ").append(ServiceMessage.REBUILD_FOR_UPDATED_ENTRY).append(" ");
+        sql.append("where smmvdelta.rebuild_flag = ").append(ServiceMessage.REBUILD_FOR_UPDATED_ENTRY);
 
         em.createNativeQuery(sql.toString()).executeUpdate();
 
