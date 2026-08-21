@@ -49,47 +49,82 @@ public class AbstractArrivalRebuildMaterializedServiceBean {
         logger.info(executionSection);
         TaskLeafLog subTsk = ownTask.createNewSubTaskLeaf(executionSection);
 
-        StringBuilder sql = new StringBuilder();
-        sql.append("create table ").append(tableName).append(" engine = InnoDb CHARSET=utf8mb4 COLLATE utf8mb4_0900_ai_ci as ");
-        sql.append("select a.id, ");
-        sql.append("b.id as serial_object_id, ");
-        sql.append("c.id as parent_serial_object_id, ");
-        sql.append("b.serial_number as serial_number, ");
-        sql.append("c.serial_number as parent_serial_number, ");
-        sql.append("e.material_number, ");
-        sql.append("f.material_number as parent_material_number, ");
-        sql.append("e.material_type, ");
-        sql.append("f.material_type as parent_material_type, ");
-        sql.append("e.short_text as material_short_text, ");
-        sql.append("f.short_text as parent_material_short_text, ");
-        sql.append("e.sap_number as sap_no, ");
-        sql.append("f.sap_number as parent_sap_no,");
-        sql.append("e.material_hierarchy, ");
-        sql.append("f.material_hierarchy as parent_material_hierarchy, ");
-        sql.append("d.id as revision_id, ");
-        sql.append("d.revision_number as revision_no, ");
-        sql.append("b.assembly_date, ");
-        sql.append("b.production_order_number as assembly_po, ");
-        sql.append("g.code as supplier_code, ");
-        sql.append("g.name as supplier_name, ");
-        sql.append("h.code as country_code, ");
-        sql.append("h.name as country_name, ");
-        sql.append("a.arrival_date, ");
-        sql.append("a.plant, ");
-        sql.append("a.movement_type as movement_type, ");
-        sql.append("a.order_number as order_number, ");
-        sql.append("e.id as material, ");
-        sql.append("b.id as serial_object ");
-        sql.append("from arrival_tab a ");
-        sql.append("inner join serial_object_tab b on (a.serial_object = b.id) ");
-        sql.append("left join serial_object_tab c on (b.parent_object = c.id) ");
-        sql.append("inner join material_revision_tab d on (a.material_revision = d.id) ");
-        sql.append("inner join material_tab e on (d.material = e.id) ");
-        sql.append("left join material_tab f on (c.material = f.id) ");
-        sql.append("inner join supplier_tab g on (a.supplier = g.code) ");
-        sql.append("inner join country_tab h on (g.country = h.code) ");
+        StringBuilder ddl = new StringBuilder();
+        ddl.append("create table ").append(tableName).append(" ( ");
+        ddl.append("  id bigint NOT NULL,");
+        ddl.append("  serial_object_id bigint NOT NULL DEFAULT '0',");
+        ddl.append("  parent_serial_object_id bigint DEFAULT '0',");
+        ddl.append("  serial_number varchar(50) CHARACTER SET utf8mb3 NOT NULL,");
+        ddl.append("  parent_serial_number varchar(50) CHARACTER SET utf8mb3,");
+        ddl.append("  material_number varchar(50) CHARACTER SET utf8mb3 NOT NULL,");
+        ddl.append("  parent_material_number varchar(50) CHARACTER SET utf8mb3,");
+        ddl.append("  material_type varchar(50) CHARACTER SET utf8mb3 NOT NULL,");
+        ddl.append("  parent_material_type varchar(50) CHARACTER SET utf8mb3,");
+        ddl.append("  material_short_text varchar(200) CHARACTER SET utf8mb3 NOT NULL,");
+        ddl.append("  parent_material_short_text varchar(200) CHARACTER SET utf8mb3,");
+        ddl.append("  sap_no varchar(20) CHARACTER SET utf8mb3 NOT NULL,");
+        ddl.append("  parent_sap_no varchar(20) CHARACTER SET utf8mb3,");
+        ddl.append("  material_hierarchy varchar(250) CHARACTER SET utf8mb3 DEFAULT NULL,");
+        ddl.append("  parent_material_hierarchy varchar(250) CHARACTER SET utf8mb3 DEFAULT NULL,");
+        ddl.append("  revision_id bigint NOT NULL DEFAULT '0',");
+        ddl.append("  revision_no varchar(50) CHARACTER SET utf8mb3 NOT NULL,");
+        ddl.append("  assembly_date date DEFAULT NULL,");
+        ddl.append("  assembly_po varchar(50) CHARACTER SET utf8mb3 DEFAULT NULL,");
+        ddl.append("  supplier_code varchar(50) CHARACTER SET utf8mb3 NOT NULL,");
+        ddl.append("  supplier_name varchar(100) CHARACTER SET utf8mb3 NOT NULL,");
+        ddl.append("  country_code varchar(50) CHARACTER SET utf8mb3 NOT NULL,");
+        ddl.append("  country_name varchar(100) CHARACTER SET utf8mb3 NOT NULL,");
+        ddl.append("  arrival_date date NOT NULL,");
+        ddl.append("  plant varchar(50) CHARACTER SET utf8mb3 NOT NULL,");
+        ddl.append("  movement_type varchar(50) CHARACTER SET utf8mb3 NOT NULL,");
+        ddl.append("  order_number varchar(50) CHARACTER SET utf8mb3 NOT NULL,");
+        ddl.append("  material bigint NOT NULL DEFAULT '0',");
+        ddl.append("  serial_object bigint NOT NULL DEFAULT '0',");
+        ddl.append("  parent_revision_id bigint NOT NULL DEFAULT '0',");
+        ddl.append("  parent_revision_no varchar(50) DEFAULT NULL");
+        ddl.append(") engine = InnoDb CHARSET=utf8mb4 COLLATE utf8mb4_0900_ai_ci");
+
+        StringBuilder insert = new StringBuilder();
+        insert.append("insert into ").append(tableName).append(" (");
+        insert.append("  select a.id, ");
+        insert.append("  b.id as serial_object_id, ");
+        insert.append("  c.id as parent_serial_object_id, ");
+        insert.append("  b.serial_number as serial_number, ");
+        insert.append("  c.serial_number as parent_serial_number, ");
+        insert.append("  e.material_number, ");
+        insert.append("  f.material_number as parent_material_number, ");
+        insert.append("  e.material_type, ");
+        insert.append("  f.material_type as parent_material_type, ");
+        insert.append("  e.short_text as material_short_text, ");
+        insert.append("  f.short_text as parent_material_short_text, ");
+        insert.append("  e.sap_number as sap_no, ");
+        insert.append("  f.sap_number as parent_sap_no,");
+        insert.append("  e.material_hierarchy, ");
+        insert.append("  f.material_hierarchy as parent_material_hierarchy, ");
+        insert.append("  d.id as revision_id, ");
+        insert.append("  d.revision_number as revision_no, ");
+        insert.append("  b.assembly_date, ");
+        insert.append("  b.production_order_number as assembly_po, ");
+        insert.append("  g.code as supplier_code, ");
+        insert.append("  g.name as supplier_name, ");
+        insert.append("  h.code as country_code, ");
+        insert.append("  h.name as country_name, ");
+        insert.append("  a.arrival_date, ");
+        insert.append("  a.plant, ");
+        insert.append("  a.movement_type as movement_type, ");
+        insert.append("  a.order_number as order_number, ");
+        insert.append("  e.id as material, ");
+        insert.append("  b.id as serial_object ");
+        insert.append("from arrival_tab a ");
+        insert.append("inner join serial_object_tab b on (a.serial_object = b.id) ");
+        insert.append("left join serial_object_tab c on (b.parent_object = c.id) ");
+        insert.append("inner join material_revision_tab d on (a.material_revision = d.id) ");
+        insert.append("inner join material_tab e on (d.material = e.id) ");
+        insert.append("left join material_tab f on (c.material = f.id) ");
+        insert.append("inner join supplier_tab g on (a.supplier = g.code) ");
+        insert.append("inner join country_tab h on (g.country = h.code) ");
         if (delta) {
-            sql.append("where a.rebuild_flag = 1 ");
+            insert.append("where a.rebuild_flag = 1 ");
         }
 
 
@@ -99,27 +134,14 @@ public class AbstractArrivalRebuildMaterializedServiceBean {
         em.createNativeQuery("set session sql_log_bin = 0").executeUpdate();
 
         try {
-            em.createNativeQuery(sql.toString()).executeUpdate();
+            em.createNativeQuery(ddl.toString()).executeUpdate();
+            em.createNativeQuery(insert.toString()).executeUpdate();
         }
         finally {
             // auf Standard zurücksetzen
             em.createNativeQuery("set session transaction isolation level repeatable read").executeUpdate();
             em.createNativeQuery("set session sql_log_bin = 1").executeUpdate();
         }
-        subTsk.finishTaskWithSuccess();
-    }
-
-    protected void execAddColumns(TaskNodeLog ownTask, String tableName) {
-        String executionSection = "alter table " + tableName + ": add columns";
-        logger.info(executionSection);
-        TaskLeafLog subTsk = ownTask.createNewSubTaskLeaf(executionSection);
-
-        StringBuilder sql = new StringBuilder();
-        sql.append("ALTER TABLE ").append(tableName).append(" ");
-        sql.append("add COLUMN parent_revision_id BIGINT NOT NULL DEFAULT 0, ");
-        sql.append("add COLUMN parent_revision_no VARCHAR(50);");
-
-        em.createNativeQuery(sql.toString()).executeUpdate();
         subTsk.finishTaskWithSuccess();
     }
 

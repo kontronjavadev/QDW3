@@ -48,12 +48,8 @@ public class ShipmentArrivalRebuildMaterializedFullServiceBean extends AbstractS
     public void execTask(TaskNodeLog ownTask) {
         execDrop(ownTask, "arrival_shipment_mv_new");
         execCreate(ownTask, "arrival_shipment_mv_new", false);
-        execAddColumns(ownTask, "arrival_shipment_mv_new");
 
         execAddIndices(ownTask);
-        execUpdateArrId(ownTask, "arrival_shipment_mv_new");
-        execUpdateArrDate(ownTask, "arrival_shipment_mv_new");
-
         execDropFormer(ownTask);
         execRenameTmp2New(ownTask);
 

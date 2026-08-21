@@ -52,49 +52,93 @@ public class AbstractShipmentArrivalRebuildMaterializedServiceBean {
         logger.info(executionSection);
         TaskLeafLog subTsk = ownTask.createNewSubTaskLeaf(executionSection);
 
-        StringBuilder sql = new StringBuilder();
-        sql.append("create table ").append(tableName).append(" engine = InnoDb CHARSET=utf8mb4 COLLATE utf8mb4_0900_ai_ci as ");
-        sql.append("select a.id, ");
-        sql.append("b.id as serial_object_id, ");
-        sql.append("c.id as parent_serial_object_id, ");
-        sql.append("b.serial_number as serial_number, ");
-        sql.append("c.serial_number as parent_serial_number, ");
-        sql.append("e.material_number, ");
-        sql.append("f.material_number as parent_material_number, ");
-        sql.append("e.material_type, ");
-        sql.append("f.material_type as parent_material_type, ");
-        sql.append("e.short_text as material_short_text, ");
-        sql.append("f.short_text as parent_material_short_text, ");
-        sql.append("e.sap_number as sap_no, ");
-        sql.append("f.sap_number as parent_sap_no,");
-        sql.append("e.material_hierarchy, ");
-        sql.append("f.material_hierarchy as parent_material_hierarchy, ");
-        sql.append("d.id as revision_id, ");
-        sql.append("d.revision_number as revision_no, ");
-        sql.append("b.assembly_date, ");
-        sql.append("b.production_order_number as assembly_po, ");
-        sql.append("g.code as customer_code, ");
-        sql.append("g.name as customer_name, ");
-        sql.append("i.code as country_code, ");
-        sql.append("i.name as country_name, ");
-        sql.append("a.shipment_date, ");
-        sql.append("a.plant, ");
-        sql.append("a.movement_type as shipment_movement_type, ");
-        sql.append("a.order_number as customer_order_number, ");
-        sql.append("a.id as shipment_id, ");
-        sql.append("e.id as material, ");
-        sql.append("b.id as serial_object, ");
-        sql.append("e.owner_location ");
-        sql.append("from shipment_tab a ");
-        sql.append("inner join serial_object_tab b on (a.serial_object = b.id) ");
-        sql.append("left join serial_object_tab c on (b.parent_object = c.id) ");
-        sql.append("inner join material_revision_tab d on (a.material_revision = d.id) ");
-        sql.append("inner join material_tab e on (d.material = e.id) ");
-        sql.append("left join material_tab f on (c.material = f.id) ");
-        sql.append("inner join customer_tab g on (a.customer = g.code) ");
-        sql.append("inner join country_tab i on (g.country = i.code) ");
+        StringBuilder ddl = new StringBuilder();
+        ddl.append("create table ").append(tableName).append(" ( ");
+        ddl.append("  id bigint not null, ");
+        ddl.append("  serial_object_id bigint not null default 0, ");
+        ddl.append("  parent_serial_object_id bigint default 0, ");
+        ddl.append("  serial_number varchar(50) not null, ");
+        ddl.append("  parent_serial_number varchar(50), ");
+        ddl.append("  material_number varchar(50) not null, ");
+        ddl.append("  parent_material_number varchar(50), ");
+        ddl.append("  material_type varchar(50) not null, ");
+        ddl.append("  parent_material_type varchar(50), ");
+        ddl.append("  material_short_text varchar(200) not null, ");
+        ddl.append("  parent_material_short_text varchar(200), ");
+        ddl.append("  sap_no varchar(20) not null, ");
+        ddl.append("  parent_sap_no varchar(20), ");
+        ddl.append("  material_hierarchy varchar(250) default null, ");
+        ddl.append("  parent_material_hierarchy varchar(250) default null, ");
+        ddl.append("  revision_id bigint not null default 0, ");
+        ddl.append("  revision_no varchar(50) not null, ");
+        ddl.append("  assembly_date date default null, ");
+        ddl.append("  assembly_po varchar(50) default null, ");
+        ddl.append("  customer_code varchar(50) not null, ");
+        ddl.append("  customer_name varchar(100) not null, ");
+        ddl.append("  country_code varchar(50) not null, ");
+        ddl.append("  country_name varchar(100) not null, ");
+        ddl.append("  shipment_date date not null, ");
+        ddl.append("  plant varchar(50) not null, ");
+        ddl.append("  shipment_movement_type varchar(50) not null, ");
+        ddl.append("  customer_order_number varchar(50) not null, ");
+        ddl.append("  shipment_id bigint not null, ");
+        ddl.append("  material bigint not null default 0, ");
+        ddl.append("  serial_object bigint not null default 0, ");
+        ddl.append("  owner_location varchar(50) not null, ");
+        ddl.append("  parent_revision_id bigint not null default 0, ");
+        ddl.append("  parent_revision_no varchar(50) default null, ");
+        ddl.append("  arrival_date date default null, ");
+        ddl.append("  supplier_code varchar(50) default null, ");
+        ddl.append("  supplier_name varchar(100) default null, ");
+        ddl.append("  arrival_movement_type varchar(50) default null, ");
+        ddl.append("  purchase_order_number varchar(50) default null, ");
+        ddl.append("  arrival_id bigint default null, ");
+        ddl.append("  primary key (id) ");
+        ddl.append(") engine = innodb charset=utf8mb4 collate utf8mb4_0900_ai_ci");
+
+        // 2. Daten inkl. direkt aufgelöster Arrival-Informationen per Lateral Join einfügen
+        StringBuilder insert = new StringBuilder();
+        insert.append("insert into ").append(tableName).append(" ( ");
+        insert.append("  id, serial_object_id, parent_serial_object_id, serial_number, parent_serial_number, ");
+        insert.append("  material_number, parent_material_number, material_type, parent_material_type, ");
+        insert.append("  material_short_text, parent_material_short_text, sap_no, parent_sap_no, ");
+        insert.append("  material_hierarchy, parent_material_hierarchy, revision_id, revision_no, ");
+        insert.append("  assembly_date, assembly_po, customer_code, customer_name, country_code, ");
+        insert.append("  country_name, shipment_date, plant, shipment_movement_type, customer_order_number, ");
+        insert.append("  shipment_id, material, serial_object, owner_location, ");
+        insert.append("  arrival_date, supplier_code, supplier_name, arrival_movement_type, purchase_order_number, arrival_id ");
+        insert.append(") ");
+        insert.append("select ");
+        insert.append("  a.id, b.id, c.id, b.serial_number, c.serial_number, ");
+        insert.append("  e.material_number, f.material_number, e.material_type, f.material_type, ");
+        insert.append("  e.short_text, f.short_text, e.sap_number, f.sap_number, ");
+        insert.append("  e.material_hierarchy, f.material_hierarchy, d.id, d.revision_number, ");
+        insert.append("  b.assembly_date, b.production_order_number, g.code, g.name, i.code, i.name, ");
+        insert.append("  a.shipment_date, a.plant, a.movement_type, a.order_number, ");
+        insert.append("  a.id, e.id, b.id, e.owner_location, ");
+        insert.append("  arr.arrival_date, arr.supplier, sup.name, arr.movement_type, arr.order_number, arr.id ");
+        insert.append("from shipment_tab a ");
+        insert.append("inner join serial_object_tab b on (a.serial_object = b.id) ");
+        insert.append("left join serial_object_tab c on (b.parent_object = c.id) ");
+        insert.append("inner join material_revision_tab d on (a.material_revision = d.id) ");
+        insert.append("inner join material_tab e on (d.material = e.id) ");
+        insert.append("left join material_tab f on (c.material = f.id) ");
+        insert.append("inner join customer_tab g on (a.customer = g.code) ");
+        insert.append("inner join country_tab i on (g.country = i.code) ");
+
+        // Das ehemals separate Update direkt als performanter Lateral Join integriert:
+        insert.append("left join lateral ( ");
+        insert.append("  select ar.id, ar.arrival_date, ar.supplier, ar.movement_type, ar.order_number ");
+        insert.append("  from arrival_tab ar ");
+        insert.append("  where ar.serial_object = a.serial_object ");
+        insert.append("  and ar.arrival_date <= a.shipment_date ");
+        insert.append("  order by ar.arrival_date desc, ar.id desc limit 1 ");
+        insert.append(") arr on true ");
+
+        insert.append("left join supplier_tab sup on (arr.supplier = sup.code) ");
+
         if (delta) {
-            sql.append("where a.rebuild_flag = 1 ");
+            insert.append("where a.rebuild_flag = 1 ");
         }
 
 
@@ -103,72 +147,14 @@ public class AbstractShipmentArrivalRebuildMaterializedServiceBean {
         em.createNativeQuery("set session sql_log_bin = 0").executeUpdate();
 
         try {
-            em.createNativeQuery(sql.toString()).executeUpdate();
+            em.createNativeQuery(ddl.toString()).executeUpdate();
+            em.createNativeQuery(insert.toString()).executeUpdate();
         }
         finally {
             // auf Standard zurücksetzen
             em.createNativeQuery("set session transaction isolation level repeatable read").executeUpdate();
             em.createNativeQuery("set session sql_log_bin = 1").executeUpdate();
         }
-        subTsk.finishTaskWithSuccess();
-    }
-
-    protected void execAddColumns(TaskNodeLog ownTask, String tableName) {
-        String executionSection = "alter table " + tableName + ": add columns";
-        logger.info(executionSection);
-        TaskLeafLog subTsk = ownTask.createNewSubTaskLeaf(executionSection);
-
-        StringBuilder sql = new StringBuilder();
-        sql.append("alter table  ").append(tableName).append(" ");
-        sql.append("add column parent_revision_id BIGINT NOT NULL DEFAULT 0, ");
-        sql.append("add column parent_revision_no VARCHAR(50), ");
-        sql.append("add column arrival_date date, ");
-        sql.append("add column supplier_code varchar(50), ");
-        sql.append("add column supplier_name varchar(100), ");
-        sql.append("add column arrival_movement_type varchar(50), ");
-        sql.append("add column purchase_order_number varchar(50), ");
-        sql.append("add column arrival_id BIGINT(20) ");
-
-        em.createNativeQuery(sql.toString()).executeUpdate();
-        subTsk.finishTaskWithSuccess();
-    }
-
-    protected void execUpdateArrId(TaskNodeLog ownTask, String tableName) {
-        String executionSection = "update to last arrival";
-        logger.info(executionSection);
-        TaskLeafLog subTsk = ownTask.createNewSubTaskLeaf(executionSection);
-
-        StringBuilder sql = new StringBuilder();
-        sql.append("update ").append(tableName).append(" t ");
-        sql.append("set t.arrival_id = (");
-        sql.append("    select a.id ");
-        sql.append("    from arrival_tab a ");
-        sql.append("    where a.serial_object = t.serial_object_id ");
-        sql.append("    and a.arrival_date <= t.shipment_date ");
-        sql.append("    order by a.arrival_date desc, a.id desc ");
-        sql.append("    limit 1");
-        sql.append(")");
-
-        em.createNativeQuery(sql.toString()).executeUpdate();
-        subTsk.finishTaskWithSuccess();
-    }
-
-    protected void execUpdateArrDate(TaskNodeLog ownTask, String tableName) {
-        String executionSection = "update arrival_date, supplier_code, supplier_name, arrival_movement_type, purchase_order_number";
-        logger.info(executionSection);
-        TaskLeafLog subTsk = ownTask.createNewSubTaskLeaf(executionSection);
-
-        StringBuilder sql = new StringBuilder();
-        sql.append("update ").append(tableName).append(" t ");
-        sql.append("inner join arrival_tab a on (t.arrival_id = a.id) ");
-        sql.append("inner join supplier_tab s on (a.supplier = s.code) ");
-        sql.append("set t.arrival_date = a.arrival_date, ");
-        sql.append("t.supplier_code = s.code, ");
-        sql.append("t.supplier_name = s.name, ");
-        sql.append("t.arrival_movement_type = a.movement_type, ");
-        sql.append("t.purchase_order_number = a.order_number");
-
-        em.createNativeQuery(sql.toString()).executeUpdate();
         subTsk.finishTaskWithSuccess();
     }
 

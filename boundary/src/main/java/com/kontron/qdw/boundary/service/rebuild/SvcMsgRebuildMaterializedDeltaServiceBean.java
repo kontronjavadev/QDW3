@@ -52,8 +52,6 @@ public class SvcMsgRebuildMaterializedDeltaServiceBean extends AbstractSvcMsgReb
     public void execTask(TaskNodeLog ownTask) {
         execDrop(ownTask, "service_message_mv_tmp_delta");
         execCreate(ownTask, "service_message_mv_tmp_delta", true);
-        execAddColumns(ownTask, "service_message_mv_tmp_delta");
-        execUpdate(ownTask, "service_message_mv_tmp_delta");
 
         execCopyData(ownTask);
         execResetRebuild(ownTask);

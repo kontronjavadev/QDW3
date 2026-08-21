@@ -48,11 +48,8 @@ public class ShipmentArrivalRebuildMaterializedDeltaServiceBean extends Abstract
     public void execTask(TaskNodeLog ownTask) {
         execDrop(ownTask, "arrival_shipment_mv_tmp_delta");
         execCreate(ownTask, "arrival_shipment_mv_tmp_delta", true);
-        execAddColumns(ownTask, "arrival_shipment_mv_tmp_delta");
-        execUpdateArrId(ownTask, "arrival_shipment_mv_tmp_delta");
-        execUpdateArrDate(ownTask, "arrival_shipment_mv_tmp_delta");
 
-        execUpdateSrvMsg(ownTask);
+        execUpdateSvcMsg(ownTask);
         execCopyData(ownTask);
         execResetRebuild(ownTask);
 
@@ -62,7 +59,7 @@ public class ShipmentArrivalRebuildMaterializedDeltaServiceBean extends Abstract
 
 
 
-    private void execUpdateSrvMsg(TaskNodeLog ownTask) {
+    private void execUpdateSvcMsg(TaskNodeLog ownTask) {
         String executionSection = "update cust_ship_date in service_message_mv";
         logger.info(executionSection);
         TaskLeafLog subTsk = ownTask.createNewSubTaskLeaf(executionSection);

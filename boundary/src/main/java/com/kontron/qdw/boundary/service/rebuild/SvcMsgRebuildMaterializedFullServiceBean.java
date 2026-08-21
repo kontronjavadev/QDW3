@@ -47,12 +47,9 @@ public class SvcMsgRebuildMaterializedFullServiceBean extends AbstractSvcMsgRebu
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void execTask(TaskNodeLog ownTask) {
         execDrop(ownTask, "service_message_mv_new");
-        execCreate(ownTask, "service_message_mv_new", true);
-        execAddColumns(ownTask, "service_message_mv_new");
+        execCreate(ownTask, "service_message_mv_new", false);
 
         execAddIndices(ownTask);
-        execUpdate(ownTask, "service_message_mv_new");
-
         execDropFormer(ownTask);
         execRenameTmp2New(ownTask);
         ownTask.finishTask();

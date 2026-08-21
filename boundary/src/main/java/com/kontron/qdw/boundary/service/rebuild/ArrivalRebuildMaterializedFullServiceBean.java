@@ -54,7 +54,6 @@ public class ArrivalRebuildMaterializedFullServiceBean extends AbstractArrivalRe
     public void execTask(TaskNodeLog ownTask) {
         execDrop(ownTask, "materialized_arrival_mv_new");
         execCreate(ownTask, "materialized_arrival_mv_new", false);
-        execAddColumns(ownTask, "materialized_arrival_mv_new");
 
         execAddIndices(ownTask);
         execDropFormer(ownTask);

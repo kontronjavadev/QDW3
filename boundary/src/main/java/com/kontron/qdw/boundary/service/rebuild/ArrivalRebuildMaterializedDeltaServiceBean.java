@@ -54,9 +54,8 @@ public class ArrivalRebuildMaterializedDeltaServiceBean extends AbstractArrivalR
     public void execTask(TaskNodeLog ownTask) {
         execDrop(ownTask, "materialized_arrival_mv_tmp_delta");
         execCreate(ownTask, "materialized_arrival_mv_tmp_delta", true);
-        execAddColumns(ownTask, "materialized_arrival_mv_tmp_delta");
 
-        execUpdate(ownTask);
+        execUpdateSvcMsg(ownTask);
         execCopyData(ownTask);
         execResetRebuild(ownTask);
 
@@ -66,20 +65,22 @@ public class ArrivalRebuildMaterializedDeltaServiceBean extends AbstractArrivalR
 
 
 
-    private void execUpdate(TaskNodeLog ownTask) {
+    private void execUpdateSvcMsg(TaskNodeLog ownTask) {
         String executionSection = "update sup_arrival_date, supplier_code, supplier_name in service_message_mv";
         logger.info(executionSection);
         TaskLeafLog subTsk = ownTask.createNewSubTaskLeaf(executionSection);
 
         StringBuilder sql = new StringBuilder();
         sql.append("update service_message_mv smmv ");
+
         // 1. filter für relevante service messages
         sql.append("inner join ( ");
         sql.append("    select distinct serial_object ");
         sql.append("    from arrival_tab ");
         sql.append("    where rebuild_flag = 1 ");
         sql.append(") delta_filter on (smmv.serial_object_id = delta_filter.serial_object) ");
-        // 2. lateral join für den aktuellsten datensatz
+
+        // 2. lateral join für den aktuellsten Datensatz
         sql.append("left join lateral ( ");
         sql.append("    select a.arrival_date, a.supplier ");
         sql.append("    from arrival_tab a ");
@@ -88,9 +89,11 @@ public class ArrivalRebuildMaterializedDeltaServiceBean extends AbstractArrivalR
         sql.append("    order by a.arrival_date desc, a.id desc ");
         sql.append("    limit 1 ");
         sql.append(") latest_arr on true ");
-        // 3. join für den namen des lieferanten
+
+        // 3. join für den Namen des Suppliers
         sql.append("left join supplier_tab s on (latest_arr.supplier = s.code) ");
-        // 4. werte in einem durchlauf setzen
+
+        // 4. Werte in einem Durchlauf setzen
         sql.append("set smmv.sup_arrival_date = latest_arr.arrival_date, ");
         sql.append("    smmv.supplier_code = latest_arr.supplier, ");
         sql.append("    smmv.supplier_name = s.name ");
