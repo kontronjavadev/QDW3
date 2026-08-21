@@ -63,7 +63,7 @@ public class SvcMsgRebuildMaterializedFullServiceBean extends AbstractSvcMsgRebu
     private void execAddIndices(TaskNodeLog ownTask) {
         TaskLeafLog subTsk = ownTask.createNewSubTaskLeaf("create indices");
         logger.info("create indices");
-        String indexCommand = "ALTER TABLE service_message_mv "
+        String indexCommand = "ALTER TABLE service_message_mv_new "
                 + "add index IN_SM_ID (id)"
                 + ", add index IN_SM_SNR_ID (serial_object_id)"
                 + ", add index IN_SM_PSNR_ID (parent_serial_object_id)"

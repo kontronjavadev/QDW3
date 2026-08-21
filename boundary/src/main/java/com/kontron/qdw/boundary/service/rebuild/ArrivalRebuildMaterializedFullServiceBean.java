@@ -69,7 +69,7 @@ public class ArrivalRebuildMaterializedFullServiceBean extends AbstractArrivalRe
     private void execAddIndices(TaskNodeLog ownTask) {
         TaskLeafLog subTsk = ownTask.createNewSubTaskLeaf("create indices");
         logger.info("create indices");
-        String indexCommand = "ALTER TABLE materialized_arrival_mv "
+        String indexCommand = "ALTER TABLE materialized_arrival_mv_new "
                 + "add index IN_A_ID (id)"
                 // + ", add index IN_A_SNR_ID (serial_object_id)" // stattdessen erweiterten Index ganz unten nehmen
                 + ", add index IN_A_PSNR_ID (parent_serial_object_id)"
