@@ -390,6 +390,99 @@ public class SvcMsgImportServiceBean extends AbstractImportServiceBean<ServiceMe
         dateMapper(importedSvcMsg::getBasicStartDate, existingSvcMsg::setBasicStartDate);
         dateMapper(importedSvcMsg::getInternalArrivalDate, existingSvcMsg::setInternalArrivalDate);
         dateMapper(importedSvcMsg::getInternalShipmentDate, existingSvcMsg::setInternalShipmentDate);
+
+
+
+        // Hier kommen die X2-Messages; Aus der alten Applikation aus ServiceMessageExchangeService#importX2Messages(...)
+        // übernommen und als groben Schlachtplan abgebildet.
+        // X2-Messages werden aktuell nicht geliefert, daher ist dieser Code nicht ausgearbeitet.
+        // boolean persist = false;
+        //
+        // x2Normalisieren(importedSvcMsg.getX2Messages());
+        // for (X2MessageMappingType importedX2Msg : importedSvcMsg.getX2Messages()) {
+        // X2Message x2Message = null;
+        // persist = false;
+        //
+        // if (StringUtils.isEmpty(importedX2Msg.getMaterialSapNumber())) {
+        // continue;
+        // }
+        //
+        // if (StringUtils.isEmpty(importedX2Msg.getSerialObjectSerialNumber())) {
+        // continue;
+        // }
+        //
+        //
+        // // --->: Vorabsuche nach Materialnummer erweitern und diese mitnehmen!
+        // // Das ist wichtig, weil diese Suche fetch revision verwendet und wir im Folgenden die Revision ermitteln müssen.
+        // // Das bedeutet auch, dass die Normalisierung bereits vorher schon passieren muss.
+        // /*Material*/ material = materialManager.findBySapNumber(importedX2Msg.getMaterialSapNumber());
+        //
+        // if (material == null) {
+        // throw new IllegalStateException("Material " + importedX2Msg.getMaterialSapNumber() + " not found!");
+        // }
+        //
+        //
+        // /*MaterialRevision*/ revision = findOrCreateRevision(importedX2Msg.getMaterialRevisionNo(), material, plant);
+        // String x2MsgIdString = importedX2Msg.getId();
+        // Long x2MsgId;
+        // if (StringUtils.isEmpty(x2MsgIdString)) {
+        // try {
+        // x2MsgId = Long.parseLong(x2MsgIdString);
+        // }
+        // catch (NumberFormatException nfe) {
+        // x2MsgId = null;
+        // }
+        // }
+        // if (x2MsgId == null) {
+        // // gibt es keinen Eintrag, konnte die String-Id nicht geparst werden
+        // String errorMsg = String.format("Eintrag %s mit korrupter x2Msg-Id (x2 - id) '%s'. "
+        // + "Es wird eine Zahl erwartet. Lediglich etwaige Großbuchstaben wurden dabei entfernt.", bulkCnt + 1, importedSvcMsg.getId());
+        // logger.warn(errorMsg);
+        // errorList.add(errorMsg);
+        // return;
+        // }
+        //
+        // if (importedX2Msg.getId() != null) {
+        // x2Message = x2MessageCRUD.findX2MessageById(x2MsgId);
+        // }
+        //
+        // if (x2Message == null) {
+        // x2Message = new X2Message();
+        //
+        // x2Message.setId(Long.parseLong(x2MsgIdString));
+        // persist = true;
+        // }
+        //
+        // x2Message.setMaterialRevision(revision);
+        // x2Message.setSerialObject(findSerialObject(StringUtil.removeLeadingZeroIfNumber(importedX2Msg.getSerialObjectSerialNumber()), material));
+        // x2Message.setServiceMessage(serviceMessage);
+        // x2Message.setAnalysisText(importedX2Msg.getAnalysisText());
+        // if (importedX2Msg.getCustomerReport().length() > 4000) {
+        // x2Message.setCustomerReport(importedX2Msg.getCustomerReport().substring(0, 4000));
+        // }
+        // else {
+        // x2Message.setCustomerReport(importedX2Msg.getCustomerReport());
+        // }
+        // x2Message.setFaultAnalysis(findFaultAnalysis(importedX2Msg.getFaultAnalysisCode(), importedX2Msg.getFaultAnalysisGroup()));
+        // x2Message.setDesignator(importedX2Msg.getDesignator());
+        // x2Message.setRepairErrorCode(findRepairErrorCode(importedX2Msg.getRepairErrorCode(), importedX2Msg.getErrorCodeGroup()));
+        // x2Message.setDefectComponent(importedX2Msg.getDefectComponent());
+        // x2Message.setRepairState(findRepairState(importedX2Msg.getRepairStateCode()));
+        // x2Message.setWorkCenter(importedX2Msg.getWorkCenter());
+        // x2Message.setCauseText(importedX2Msg.getErrorText());
+        //
+        // if (importedX2Msg.getDefectComponent() != null && !importedX2Msg.getDefectComponent().isEmpty()) {
+        // Material defectMaterial = materialManager.getMaterialBySapNumber(importedX2Msg.getDefectComponent());
+        //
+        // if (defectMaterial != null) {
+        // x2Message.setDefectMaterial(defectMaterial);
+        // }
+        // }
+        //
+        // if (persist) {
+        // x2Message = x2MessageCRUD.persistX2Message(x2Message, false, false, false);
+        // }
+        // }
     }
 
 
@@ -855,6 +948,16 @@ public class SvcMsgImportServiceBean extends AbstractImportServiceBean<ServiceMe
             importedSvcMsg.setSerialObjectSerialNumber(StringUtil.removeLeadingZero(importedSvcMsg.getSerialObjectSerialNumber()));
         });
     }
+
+    // private void x2Normalisieren(List<X2MessageMappingType> x2Msgs) {
+    // x2Msgs.forEach(importedX2Msg -> {
+    // String x2MsgId = StringUtils.defaultString(importedX2Msg.getId()).replaceAll("[A-Z]", "");
+    // importedX2Msg.setId(StringUtil.removeLeadingZero(x2MsgId));
+    //
+    // importedX2Msg.setMaterialSapNumber(StringUtil.removeLeadingZero(importedX2Msg.getMaterialSapNumber()));
+    // importedX2Msg.setDefectComponent(StringUtil.removeLeadingZero(importedX2Msg.getDefectComponent()));
+    // });
+    // }
 
     private String mapFailureOriginCode(String origin) {
         // Hinweis: Die Daten sollten besser aus SAP kommen. Die Erweiterung des Codes um einen Text ist programatisch eine schlechte Lösung,

@@ -47,10 +47,12 @@ public class MaterialRepository extends AbstractRepository<Material, Long> {
 
     /**
      * Find material by sapNumber
+     * (Original wirft eine Exception, wenn das Ergebnis nicht eindeutig ist)
      * 
      * @return Material oder das zuletzt erstellte, wenn nicht eindeutig oder <code>null</code> wenn keines gefunden
      */
-    public Material findBySAPNumber(String sapNumber) {
+    @Generated
+    public Material findBySapNumber(String sapNumber) {
         List<Material> resultList = em
                 .createQuery("select a "
                         + "from Material a "
@@ -373,26 +375,6 @@ public class MaterialRepository extends AbstractRepository<Material, Long> {
         query.setParameter(PARAM_SAPNUMBER, sapNumber);
 
         return query.getResultList();
-    }
-
-    /**
-     * Find a persistent material object by using the provided parameters
-     * @param sapNumber
-     * @return the material object or null if it could not be found
-     * @throws IllegalStateException if the query returned more than one object
-     */
-    @Generated
-    public Material findBySapNumber(String sapNumber) {
-        final TypedQuery<Material> query = em.createNamedQuery(Material.NQ_UK_FIND_BY_SAPNUMBER, Material.class);
-        query.setParameter(PARAM_SAPNUMBER, sapNumber);
-
-        final List<Material> resultList = query.getResultList();
-
-        if (resultList.size() <= 1) {
-            return resultList.stream().findFirst().orElse(null);
-        }
-
-        throw new IllegalStateException("Non unique result!");
     }
 
     /**
