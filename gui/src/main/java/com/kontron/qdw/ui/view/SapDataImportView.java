@@ -13,7 +13,7 @@ import java.util.TimeZone;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.kontron.qdw.boundary.service.SapDataImportServiceBean;
+import com.kontron.qdw.boundary.service.sapimport.SapDataImportServiceBean;
 import com.kontron.qdw.ui.UserSession;
 import com.kontron.qdw.ui.view.util.CopyClipboard;
 

@@ -56,6 +56,7 @@ public class ArrivalRebuildAggregatedServiceBean implements TaskCall {
         execDropFormer(ownTask);
         execRenameTmp2New(ownTask);
         execAddIndices(ownTask);
+        ownTask.finishTask();
     }
 
     private void execDrop(TaskNodeLog ownTask) {

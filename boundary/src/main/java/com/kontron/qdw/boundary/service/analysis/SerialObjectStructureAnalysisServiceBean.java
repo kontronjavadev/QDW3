@@ -104,6 +104,7 @@ public class SerialObjectStructureAnalysisServiceBean implements TaskCall {
         if (!serObjIds.isEmpty()) {
             execSapComparison(ownTask, serObjIds);
         }
+        ownTask.finishTask();
     }
 
 

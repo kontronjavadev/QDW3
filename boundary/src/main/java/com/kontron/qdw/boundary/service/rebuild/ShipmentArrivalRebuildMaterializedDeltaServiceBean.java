@@ -58,6 +58,7 @@ public class ShipmentArrivalRebuildMaterializedDeltaServiceBean extends Abstract
         execResetRebuild(ownTask);
 
         execRemoveCanceled(ownTask);
+        ownTask.finishTask();
     }
 
 

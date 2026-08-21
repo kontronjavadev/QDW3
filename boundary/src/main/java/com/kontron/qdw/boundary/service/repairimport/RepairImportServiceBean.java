@@ -1,14 +1,13 @@
-package com.kontron.qdw.boundary.service;
+package com.kontron.qdw.boundary.service.repairimport;
 
 import java.lang.invoke.MethodHandles;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.kontron.qdw.boundary.service.SchedulerServiceBean;
 import com.kontron.qdw.boundary.service.process.TaskCall;
 import com.kontron.qdw.boundary.service.rebuild.SvcMsgRebuildMaterializedDeltaServiceBean;
-import com.kontron.qdw.boundary.service.repairimport.RmaImportServiceBean;
-import com.kontron.qdw.boundary.service.repairimport.SvcMsgImportServiceBean;
 import com.kontron.qdw.boundary.util.Constants;
 import com.kontron.qdw.boundary.util.MailServiceFacade;
 import com.kontron.util.datetime.TimeUtil;
@@ -73,8 +72,8 @@ public class RepairImportServiceBean {
         }
 
         TaskNodeLog mainTask = initImportAndRebuild();
-        TaskNodeLog taskImport = mainTask.createNewSubTaskNode(TASKNAME_IMPORT);
 
+        TaskNodeLog taskImport = mainTask.createNewSubTaskNode(TASKNAME_IMPORT);
         ITaskNodeLog rmaImportTask = executeTask(taskImport, rmaImportServiceBean);
         ITaskNodeLog svcMsgImportTask = executeTask(taskImport, svcMsgImportServiceBean);
         taskImport.finishTask();

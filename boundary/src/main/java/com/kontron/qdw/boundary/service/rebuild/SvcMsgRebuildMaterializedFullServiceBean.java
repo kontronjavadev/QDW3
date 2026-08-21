@@ -54,6 +54,7 @@ public class SvcMsgRebuildMaterializedFullServiceBean extends AbstractSvcMsgRebu
         execAddIndices(ownTask);
         execDropFormer(ownTask);
         execRenameTmp2New(ownTask);
+        ownTask.finishTask();
     }
 
 

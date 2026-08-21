@@ -15,7 +15,7 @@ import java.util.TimeZone;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.kontron.qdw.boundary.service.RebuildServiceBean;
+import com.kontron.qdw.boundary.service.rebuild.RebuildServiceBean;
 import com.kontron.qdw.ui.UserSession;
 import com.kontron.qdw.ui.view.util.CopyClipboard;
 

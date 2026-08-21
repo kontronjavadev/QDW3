@@ -1,10 +1,11 @@
-package com.kontron.qdw.boundary.service;
+package com.kontron.qdw.boundary.service.sapimport;
 
 import java.lang.invoke.MethodHandles;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.kontron.qdw.boundary.service.SchedulerServiceBean;
 import com.kontron.qdw.boundary.service.analysis.SerialObjectStructureAnalysisServiceBean;
 import com.kontron.qdw.boundary.service.process.TaskCall;
 import com.kontron.qdw.boundary.service.rebuild.ArrivalRebuildAggregatedServiceBean;
@@ -12,12 +13,6 @@ import com.kontron.qdw.boundary.service.rebuild.ArrivalRebuildMaterializedDeltaS
 import com.kontron.qdw.boundary.service.rebuild.ShipmentArrivalRebuildAggregatedServiceBean;
 import com.kontron.qdw.boundary.service.rebuild.ShipmentArrivalRebuildMaterializedDeltaServiceBean;
 import com.kontron.qdw.boundary.service.rebuild.ShipmentRebuildAggregatedServiceBean;
-import com.kontron.qdw.boundary.service.sapimport.ArrivalImportServiceBean;
-import com.kontron.qdw.boundary.service.sapimport.BoMImportServiceBean;
-import com.kontron.qdw.boundary.service.sapimport.CustomerImportServiceBean;
-import com.kontron.qdw.boundary.service.sapimport.MaterialImportServiceBean;
-import com.kontron.qdw.boundary.service.sapimport.ShipmentImportServiceBean;
-import com.kontron.qdw.boundary.service.sapimport.SupplierImportServiceBean;
 import com.kontron.qdw.boundary.util.Constants;
 import com.kontron.qdw.boundary.util.MailServiceFacade;
 import com.kontron.util.datetime.TimeUtil;
@@ -103,8 +98,8 @@ public class SapDataImportServiceBean {
         }
 
         TaskNodeLog mainTask = initImportAndRebuild();
-        TaskNodeLog taskImport = mainTask.createNewSubTaskNode(TASKNAME_IMPORT);
 
+        TaskNodeLog taskImport = mainTask.createNewSubTaskNode(TASKNAME_IMPORT);
         executeTask(taskImport, customerImportServiceBean);
         executeTask(taskImport, supplierImportServiceBean);
         executeTask(taskImport, materialImportServiceBean);

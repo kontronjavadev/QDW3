@@ -1,20 +1,12 @@
-package com.kontron.qdw.boundary.service;
+package com.kontron.qdw.boundary.service.rebuild;
 
 import java.lang.invoke.MethodHandles;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.kontron.qdw.boundary.service.SchedulerServiceBean;
 import com.kontron.qdw.boundary.service.process.TaskCall;
-import com.kontron.qdw.boundary.service.rebuild.ArrivalRebuildAggregatedServiceBean;
-import com.kontron.qdw.boundary.service.rebuild.ArrivalRebuildMaterializedDeltaServiceBean;
-import com.kontron.qdw.boundary.service.rebuild.ArrivalRebuildMaterializedFullServiceBean;
-import com.kontron.qdw.boundary.service.rebuild.ShipmentArrivalRebuildAggregatedServiceBean;
-import com.kontron.qdw.boundary.service.rebuild.ShipmentArrivalRebuildMaterializedDeltaServiceBean;
-import com.kontron.qdw.boundary.service.rebuild.ShipmentArrivalRebuildMaterializedFullServiceBean;
-import com.kontron.qdw.boundary.service.rebuild.ShipmentRebuildAggregatedServiceBean;
-import com.kontron.qdw.boundary.service.rebuild.SvcMsgRebuildMaterializedDeltaServiceBean;
-import com.kontron.qdw.boundary.service.rebuild.SvcMsgRebuildMaterializedFullServiceBean;
 import com.kontron.qdw.boundary.util.Constants;
 import com.kontron.qdw.boundary.util.MailServiceFacade;
 import com.kontron.util.datetime.TimeUtil;
@@ -91,7 +83,6 @@ public class RebuildServiceBean {
         executeTask(mainTask, shptArrvRebuildAggServiceBean);
 
         executeTask(mainTask, svcMsgRebuildMatDeltaServiceBean);
-        mainTask.finishTask();
 
         finishRebuild(mainTask, true);
     }
@@ -114,7 +105,6 @@ public class RebuildServiceBean {
         executeTask(mainTask, shptArrvRebuildAggServiceBean);
 
         executeTask(mainTask, svcMsgRebuildMatFullServiceBean);
-        mainTask.finishTask();
 
         finishRebuild(mainTask, true);
     }

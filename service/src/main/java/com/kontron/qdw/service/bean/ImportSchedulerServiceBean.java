@@ -2,8 +2,8 @@ package com.kontron.qdw.service.bean;
 
 import java.util.concurrent.TimeUnit;
 
-import com.kontron.qdw.boundary.service.RepairImportServiceBean;
-import com.kontron.qdw.boundary.service.SapDataImportServiceBean;
+import com.kontron.qdw.boundary.service.repairimport.RepairImportServiceBean;
+import com.kontron.qdw.boundary.service.sapimport.SapDataImportServiceBean;
 
 import jakarta.ejb.AccessTimeout;
 import jakarta.ejb.EJB;

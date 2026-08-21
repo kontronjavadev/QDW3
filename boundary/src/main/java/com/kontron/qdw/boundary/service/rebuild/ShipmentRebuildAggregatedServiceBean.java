@@ -52,6 +52,7 @@ public class ShipmentRebuildAggregatedServiceBean implements TaskCall {
         execDropFormer(ownTask);
         execRenameTmp2New(ownTask);
         execAddIndices(ownTask);
+        ownTask.finishTask();
     }
 
 

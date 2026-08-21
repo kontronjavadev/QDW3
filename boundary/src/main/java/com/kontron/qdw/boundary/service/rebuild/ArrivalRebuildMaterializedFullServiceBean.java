@@ -61,6 +61,7 @@ public class ArrivalRebuildMaterializedFullServiceBean extends AbstractArrivalRe
         execRenameTmp2New(ownTask);
 
         execRemoveCanceled(ownTask);
+        ownTask.finishTask();
     }
 
 

@@ -58,6 +58,7 @@ public class SvcMsgRebuildMaterializedDeltaServiceBean extends AbstractSvcMsgReb
 
         execCopyData(ownTask);
         execResetRebuild(ownTask);
+        ownTask.finishTask();
     }
 
 
