@@ -49,9 +49,10 @@ public class SvcMsgRebuildMaterializedFullServiceBean extends AbstractSvcMsgRebu
         execDrop(ownTask, "service_message_mv_new");
         execCreate(ownTask, "service_message_mv_new", true);
         execAddColumns(ownTask, "service_message_mv_new");
-        execUpdate(ownTask, "service_message_mv_new");
 
         execAddIndices(ownTask);
+        execUpdate(ownTask, "service_message_mv_new");
+
         execDropFormer(ownTask);
         execRenameTmp2New(ownTask);
         ownTask.finishTask();
