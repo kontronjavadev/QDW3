@@ -50,7 +50,6 @@ public class ShipmentArrivalRebuildMaterializedDeltaServiceBean extends Abstract
         execCreate(ownTask, "arrival_shipment_mv_tmp_delta", true);
         execAddColumns(ownTask, "arrival_shipment_mv_tmp_delta");
         execUpdateArrId(ownTask, "arrival_shipment_mv_tmp_delta");
-        // execAddIndex(ownTask, "arrival_shipment_mv_tmp_delta");
         execUpdateArrDate(ownTask, "arrival_shipment_mv_tmp_delta");
 
         execUpdateSrvMsg(ownTask);

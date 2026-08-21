@@ -153,17 +153,6 @@ public class AbstractShipmentArrivalRebuildMaterializedServiceBean {
         subTsk.finishTaskWithSuccess();
     }
 
-    // protected void execAddIndex(TaskNodeLog ownTask, String tableName) {
-    // String executionSection = "create index for arrival_id";
-    // logger.info(executionSection);
-    // TaskLeafLog subTsk = ownTask.createNewSubTaskLeaf(executionSection);
-    //
-    // String sql = "ALTER TABLE " + tableName + " ADD INDEX IN_AS_ARR_ID_TEMP(arrival_id)";
-    //
-    // em.createNativeQuery(sql).executeUpdate();
-    // subTsk.finishTaskWithSuccess();
-    // }
-
     protected void execUpdateArrDate(TaskNodeLog ownTask, String tableName) {
         String executionSection = "update arrival_date, supplier_code, supplier_name, arrival_movement_type, purchase_order_number";
         logger.info(executionSection);
@@ -183,131 +172,102 @@ public class AbstractShipmentArrivalRebuildMaterializedServiceBean {
         subTsk.finishTaskWithSuccess();
     }
 
-    // protected void execDropIndex(TaskNodeLog ownTask, String tableName) {
-    // String executionSection = "drop index for arrival_id";
-    // logger.info(executionSection);
-    // TaskLeafLog subTsk = ownTask.createNewSubTaskLeaf(executionSection);
-    //
-    // String sql = "ALTER TABLE " + tableName + " DROP INDEX IN_AS_ARR_ID_TEMP";
-    //
-    // em.createNativeQuery(sql).executeUpdate();
-    // subTsk.finishTaskWithSuccess();
-    // }
-
     protected void execRemoveCanceled(TaskNodeLog ownTask) {
         execRemoveCanceled1(ownTask);
         execRemoveCanceled2(ownTask);
         execRemoveCanceled3(ownTask);
-        execRemoveCanceled4(ownTask);
     }
 
 
 
     private void execRemoveCanceled1(TaskNodeLog ownTask) {
-        String executionSection = "delete canceled shipments from arrival_shipment_mv (1/4)";
+        String executionSection = "delete canceled shipments from arrival_shipment_mv (1/3)";
         logger.info(executionSection);
         TaskLeafLog subTsk = ownTask.createNewSubTaskLeaf(executionSection);
 
         // delete all SHIPMENT_MOVEMENT_TYPE_1 items which have a cancel entry (CANCELED_SHIPMENT_MOVEMENT_TYPE_1)
         // and all SHIPMENT_MOVEMENT_TYPE_2 items which have a cancel entry (CANCELED_SHIPMENT_MOVEMENT_TYPE_2)
         StringBuilder sql = new StringBuilder();
-        sql.append("DELETE asmv ");
-        sql.append("FROM arrival_shipment_mv asmv ");
-        sql.append("join ( ");
-        sql.append("     select a.id ");
-        sql.append("     from arrival_shipment_mv a, arrival_shipment_mv b ");
-        sql.append("     where a.id < b.id ");
-        sql.append("     and (");
-        sql.append("         ( ");
-        sql.append("             a.shipment_movement_type = '").append(SHIPMENT_MOVEMENT_TYPE_1).append("' ");
-        sql.append("             and b.shipment_movement_type = '").append(CANCELED_SHIPMENT_MOVEMENT_TYPE_1).append("' ");
-        sql.append("         ) ");
-        sql.append("         OR ");
-        sql.append("         ( ");
-        sql.append("             a.shipment_movement_type = '").append(SHIPMENT_MOVEMENT_TYPE_2).append("' ");
-        sql.append("             and b.shipment_movement_type = '").append(CANCELED_SHIPMENT_MOVEMENT_TYPE_2).append("' ");
-        sql.append("         ) ");
-        sql.append("     ) ");
-        sql.append("     and a.serial_number = b.serial_number ");
-        sql.append("     and a.customer_order_number = b.customer_order_number ");
-        sql.append("     and a.customer_order_number != '' ");
-        sql.append(") asdc ");
-        sql.append("on (asmv.id = asdc.id) ");
+        sql.append("delete amv ");
+        sql.append("from arrival_shipment_mv amv ");
+
+        // direkter self-join über die fachlichen Schlüssel
+        sql.append("inner join arrival_shipment_mv cancel on ( ");
+        sql.append("    amv.serial_number = cancel.serial_number ");
+        sql.append("    and amv.customer_order_number = cancel.customer_order_number ");
+        sql.append(") ");
+
+        sql.append("where amv.customer_order_number != '' ");
+        sql.append("and amv.id < cancel.id ");
+
+        // die movementtypes paarweise abgleichen
+        sql.append("and ( ");
+        sql.append("    (amv.shipment_movement_type = '").append(SHIPMENT_MOVEMENT_TYPE_1).append("' ");
+        sql.append("     and cancel.shipment_movement_type = '").append(CANCELED_SHIPMENT_MOVEMENT_TYPE_1).append("') ");
+        sql.append("    or ");
+        sql.append("    (amv.shipment_movement_type = '").append(SHIPMENT_MOVEMENT_TYPE_2).append("' ");
+        sql.append("     and cancel.shipment_movement_type = '").append(CANCELED_SHIPMENT_MOVEMENT_TYPE_2).append("') ");
+        sql.append(") ");
 
         em.createNativeQuery(sql.toString()).executeUpdate();
         subTsk.finishTaskWithSuccess();
     }
 
     private void execRemoveCanceled2(TaskNodeLog ownTask) {
-        String executionSection = "delete canceled shipments from arrival_shipment_mv (2/4)";
+        String executionSection = "delete canceled shipments from arrival_shipment_mv (2/3)";
         logger.info(executionSection);
         TaskLeafLog subTsk = ownTask.createNewSubTaskLeaf(executionSection);
 
         // if customer_order_number is empty and shipment type CANCELED_SHIPMENT_MOVEMENT_TYPE_1 or CANCELED_SHIPMENT_MOVEMENT_TYPE_2
         // then delete the last item which was transfered before
         StringBuilder sql = new StringBuilder();
-        sql.append("DELETE asmv ");
-        sql.append("FROM arrival_shipment_mv asmv ");
-        sql.append("join ( ");
-        sql.append("     SELECT ");
-        sql.append("         (");
-        sql.append("             SELECT MAX(d.id) as id ");
-        sql.append("             FROM arrival_shipment_mv d ");
-        sql.append("             WHERE d.shipment_date <= e.shipment_date ");
-        sql.append("             and d.serial_number = e.serial_number ");
-        sql.append("             and d.shipment_movement_type = '").append(SHIPMENT_MOVEMENT_TYPE_1).append("' ");
-        sql.append("         ) AS my_vorgaenger_id ");
-        sql.append("     FROM arrival_shipment_mv e ");
-        sql.append("     where e.customer_order_number = '' ");
-        sql.append("     and e.shipment_movement_type = '").append(CANCELED_SHIPMENT_MOVEMENT_TYPE_1).append("' ");
-        sql.append(") asdc ");
-        sql.append("on (asmv.id = asdc.my_vorgaenger_id) ");
+        sql.append("delete amv ");
+
+        // Die treibende Tabelle sind die Stornos (alias cancel) für beide Typen
+        sql.append("from arrival_shipment_mv cancel ");
+
+        // LATERAL Join: Ermittelt pro Storno den neuesten Vorgänger
+        // passend zum jeweiligen Bewegungstyp-Paar.
+        sql.append("inner join lateral ( ");
+        sql.append("    select d.id ");
+        sql.append("    from arrival_shipment_mv d ");
+        sql.append("    where d.serial_number = cancel.serial_number ");
+        sql.append("    and d.shipment_date <= cancel.shipment_date ");
+        sql.append("    and ( ");
+        sql.append("          (");
+        sql.append("            cancel.shipment_movement_type = '").append(CANCELED_SHIPMENT_MOVEMENT_TYPE_1);
+        sql.append("'           and d.shipment_movement_type = '").append(SHIPMENT_MOVEMENT_TYPE_1).append("'");
+        sql.append("          ) or (");
+        sql.append("            cancel.shipment_movement_type = '").append(CANCELED_SHIPMENT_MOVEMENT_TYPE_2);
+        sql.append("'           and d.shipment_movement_type = '").append(SHIPMENT_MOVEMENT_TYPE_2).append("'");
+        sql.append("          ) ");
+        sql.append("    ) ");
+        sql.append("    order by d.id desc limit 1 ");
+        sql.append(") pred on true ");
+
+        // Den ermittelten Vorgänger zum Löschen anbinden
+        sql.append("inner join arrival_shipment_mv amv on (amv.id = pred.id) ");
+
+        // Filterbedingungen: Beide Storno-Typen ohne Auftragsnummer abfangen
+        sql.append("where cancel.shipment_movement_type in ('");
+        sql.append(CANCELED_SHIPMENT_MOVEMENT_TYPE_1).append("', '").append(CANCELED_SHIPMENT_MOVEMENT_TYPE_2).append("') ");
+        sql.append("and cancel.customer_order_number = '' ");
 
         em.createNativeQuery(sql.toString()).executeUpdate();
         subTsk.finishTaskWithSuccess();
     }
 
     private void execRemoveCanceled3(TaskNodeLog ownTask) {
-        String executionSection = "delete canceled shipments from arrival_shipment_mv (3/4)";
+        String executionSection = "delete canceled shipments from arrival_shipment_mv (3/3)";
         logger.info(executionSection);
         TaskLeafLog subTsk = ownTask.createNewSubTaskLeaf(executionSection);
 
         StringBuilder sql = new StringBuilder();
-        sql.append("DELETE asmv ");
-        sql.append("FROM arrival_shipment_mv asmv ");
-        sql.append("join ( ");
-        sql.append("     SELECT ");
-        sql.append("         (");
-        sql.append("             SELECT MAX(d.id) as id ");
-        sql.append("             FROM arrival_shipment_mv d ");
-        sql.append("             WHERE d.shipment_date <= e.shipment_date ");
-        sql.append("             and d.serial_number = e.serial_number ");
-        sql.append("             and d.shipment_movement_type = '").append(SHIPMENT_MOVEMENT_TYPE_2).append("' ");
-        sql.append("         ) AS my_vorgaenger_id ");
-        sql.append("     FROM arrival_shipment_mv e ");
-        sql.append("     where e.customer_order_number = '' ");
-        sql.append("     and e.shipment_movement_type = '").append(CANCELED_SHIPMENT_MOVEMENT_TYPE_2).append("' ");
-        sql.append(") asdc ");
-        sql.append("on (asmv.id = asdc.my_vorgaenger_id) ");
-
-        em.createNativeQuery(sql.toString()).executeUpdate();
-        subTsk.finishTaskWithSuccess();
-    }
-
-    private void execRemoveCanceled4(TaskNodeLog ownTask) {
-        String executionSection = "delete canceled shipments from arrival_shipment_mv (4/4)";
-        logger.info(executionSection);
-        TaskLeafLog subTsk = ownTask.createNewSubTaskLeaf(executionSection);
-
-        StringBuilder sql = new StringBuilder();
-        sql.append("DELETE asmv ");
-        sql.append("FROM arrival_shipment_mv asmv ");
-        sql.append("join ( ");
-        sql.append("    select '").append(CANCELED_SHIPMENT_MOVEMENT_TYPE_1).append("' as shipment_movement_type from dual ");
-        sql.append("    union ");
-        sql.append("    select '").append(CANCELED_SHIPMENT_MOVEMENT_TYPE_2).append("' as shipment_movement_type from dual");
-        sql.append(") asdc ");
-        sql.append("on (asmv.shipment_movement_type = asdc.shipment_movement_type) ");
+        sql.append("delete from arrival_shipment_mv ");
+        sql.append("where shipment_movement_type in (");
+        sql.append("    '").append(CANCELED_SHIPMENT_MOVEMENT_TYPE_1).append("', ");
+        sql.append("    '").append(CANCELED_SHIPMENT_MOVEMENT_TYPE_2).append("'");
+        sql.append(")");
 
         em.createNativeQuery(sql.toString()).executeUpdate();
         subTsk.finishTaskWithSuccess();

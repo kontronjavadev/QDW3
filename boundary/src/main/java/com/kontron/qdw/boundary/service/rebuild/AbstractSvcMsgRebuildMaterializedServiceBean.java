@@ -170,6 +170,7 @@ public class AbstractSvcMsgRebuildMaterializedServiceBean {
 
         StringBuilder sql = new StringBuilder();
         sql.append("update ").append(tableName).append(" t ");
+
         // 1. shipment_date aus shipment_tab (prio 1)
         sql.append("left join lateral ( ");
         sql.append("    select a1.shipment_date ");
@@ -178,6 +179,7 @@ public class AbstractSvcMsgRebuildMaterializedServiceBean {
         sql.append("    and a1.shipment_date <= t.internal_arrival_date ");
         sql.append("    order by a1.shipment_date desc, a1.id desc limit 1 ");
         sql.append(") ship1 on true ");
+
         // 2. shipment_date aus assembly_shipment_mv (prio 2)
         // Achtung: hier serial_object_id statt serial_object
         sql.append("left join lateral ( ");
@@ -187,6 +189,7 @@ public class AbstractSvcMsgRebuildMaterializedServiceBean {
         sql.append("    and a2.shipment_date <= t.internal_arrival_date ");
         sql.append("    order by a2.shipment_date desc, a2.id desc limit 1 ");
         sql.append(") ship2 on true ");
+
         // 3. arrival daten direkt über das on-the-fly berechnete datum (coalesce) holen
         sql.append("left join lateral ( ");
         sql.append("    select ar.arrival_date, ar.supplier ");
@@ -195,6 +198,7 @@ public class AbstractSvcMsgRebuildMaterializedServiceBean {
         sql.append("    and ar.arrival_date <= coalesce(ship1.shipment_date, ship2.shipment_date) ");
         sql.append("    order by ar.arrival_date desc, ar.id desc limit 1 ");
         sql.append(") arr on true ");
+
         // 4. Supplier-Name auflösen
         sql.append("left join supplier_tab s on (arr.supplier = s.code) ");
         // alle Zielspalten in einem einzigen, atomaren Schreibvorgang belegen
