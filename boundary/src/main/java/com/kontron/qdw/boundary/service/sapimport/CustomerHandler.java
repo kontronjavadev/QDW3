@@ -10,6 +10,7 @@ import org.xml.sax.helpers.DefaultHandler;
 import com.kontron.qdw.domain.base.Country;
 import com.kontron.qdw.domain.base.Customer;
 import com.kontron.qdw.domain.base.VerticalSector;
+import com.kontron.util.text.StringUtil;
 
 import jakarta.interceptor.ExcludeDefaultInterceptors;
 
@@ -110,7 +111,7 @@ public class CustomerHandler extends DefaultHandler {
         currentElement = qName;
 
         if (currentElement.equals(ELEMENT_CUSTOMER)) {
-            customer.setCode(Integer.toString(Integer.parseInt(id)));
+            customer.setCode(StringUtil.removeLeadingZero(id));
             customer.setName(name1 + " (" + id + ")");
             customer.setShortText(name2);
             customer.setCity(city);
