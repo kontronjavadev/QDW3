@@ -32,7 +32,7 @@ public class AbstractShipmentArrivalRebuildMaterializedServiceBean {
     private static final String CANCELED_SHIPMENT_MOVEMENT_TYPE_2 = "634";
 
     @PersistenceContext
-    private EntityManager em;
+    protected EntityManager em;
 
 
 

@@ -14,8 +14,6 @@ import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 
 /**
  * Rebuild der Shipment-Arrival-"Materialized table".
@@ -28,9 +26,6 @@ import jakarta.persistence.PersistenceContext;
 public class ShipmentArrivalRebuildMaterializedFullServiceBean extends AbstractShipmentArrivalRebuildMaterializedServiceBean implements TaskCall {
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-
-    @PersistenceContext
-    private EntityManager em;
 
 
 

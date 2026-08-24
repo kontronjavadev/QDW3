@@ -26,7 +26,7 @@ public class AbstractSvcMsgRebuildMaterializedServiceBean {
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     @PersistenceContext
-    private EntityManager em;
+    protected EntityManager em;
 
 
 

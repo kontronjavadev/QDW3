@@ -29,7 +29,7 @@ public class AbstractArrivalRebuildMaterializedServiceBean {
     private static final String CANCELED_ARRIVAL_MOVEMENT_TYPE = "102";
 
     @PersistenceContext
-    private EntityManager em;
+    protected EntityManager em;
 
 
 
@@ -85,36 +85,23 @@ public class AbstractArrivalRebuildMaterializedServiceBean {
         ddl.append(") engine = InnoDb CHARSET=utf8mb4 COLLATE utf8mb4_0900_ai_ci");
 
         StringBuilder insert = new StringBuilder();
-        insert.append("insert into ").append(tableName).append(" (");
-        insert.append("  select a.id, ");
-        insert.append("  b.id as serial_object_id, ");
-        insert.append("  c.id as parent_serial_object_id, ");
-        insert.append("  b.serial_number as serial_number, ");
-        insert.append("  c.serial_number as parent_serial_number, ");
-        insert.append("  e.material_number, ");
-        insert.append("  f.material_number as parent_material_number, ");
-        insert.append("  e.material_type, ");
-        insert.append("  f.material_type as parent_material_type, ");
-        insert.append("  e.short_text as material_short_text, ");
-        insert.append("  f.short_text as parent_material_short_text, ");
-        insert.append("  e.sap_number as sap_no, ");
-        insert.append("  f.sap_number as parent_sap_no,");
-        insert.append("  e.material_hierarchy, ");
-        insert.append("  f.material_hierarchy as parent_material_hierarchy, ");
-        insert.append("  d.id as revision_id, ");
-        insert.append("  d.revision_number as revision_no, ");
-        insert.append("  b.assembly_date, ");
-        insert.append("  b.production_order_number as assembly_po, ");
-        insert.append("  g.code as supplier_code, ");
-        insert.append("  g.name as supplier_name, ");
-        insert.append("  h.code as country_code, ");
-        insert.append("  h.name as country_name, ");
-        insert.append("  a.arrival_date, ");
-        insert.append("  a.plant, ");
-        insert.append("  a.movement_type as movement_type, ");
-        insert.append("  a.order_number as order_number, ");
-        insert.append("  e.id as material, ");
-        insert.append("  b.id as serial_object ");
+        insert.append("insert into ").append(tableName).append(" ( ");
+        insert.append("  id, serial_object_id, parent_serial_object_id, serial_number, parent_serial_number, ");
+        insert.append("  material_number, parent_material_number, material_type, parent_material_type, ");
+        insert.append("  material_short_text, parent_material_short_text, sap_no, parent_sap_no, ");
+        insert.append("  material_hierarchy, parent_material_hierarchy, revision_id, revision_no, ");
+        insert.append("  assembly_date, assembly_po, supplier_code, supplier_name, country_code, ");
+        insert.append("  country_name, arrival_date, plant, movement_type, order_number, material, serial_object, ");
+        insert.append("  parent_revision_id, parent_revision_no ");
+        insert.append(") ");
+        insert.append("select ");
+        insert.append("  a.id, b.id, c.id, b.serial_number, c.serial_number, ");
+        insert.append("  e.material_number, f.material_number, e.material_type, f.material_type, ");
+        insert.append("  e.short_text, f.short_text, e.sap_number, f.sap_number, ");
+        insert.append("  e.material_hierarchy, f.material_hierarchy, d.id, d.revision_number, ");
+        insert.append("  b.assembly_date, b.production_order_number, g.code, g.name, h.code, h.name, ");
+        insert.append("  a.arrival_date, a.plant, a.movement_type, a.order_number, e.id, b.id, ");
+        insert.append("  0, null ");
         insert.append("from arrival_tab a ");
         insert.append("inner join serial_object_tab b on (a.serial_object = b.id) ");
         insert.append("left join serial_object_tab c on (b.parent_object = c.id) ");
@@ -123,6 +110,7 @@ public class AbstractArrivalRebuildMaterializedServiceBean {
         insert.append("left join material_tab f on (c.material = f.id) ");
         insert.append("inner join supplier_tab g on (a.supplier = g.code) ");
         insert.append("inner join country_tab h on (g.country = h.code) ");
+
         if (delta) {
             insert.append("where a.rebuild_flag = 1 ");
         }
