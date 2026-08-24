@@ -206,6 +206,37 @@ public final class Constants {
     // }
 
 
+    public static String getTraceBoMSftpHost() {
+        return getApplicationConfiguration().getTraceBoMSftpHost();
+    }
+
+    public static String getTraceBoMSftpAuthUser() {
+        return getApplicationConfiguration().getTraceBoMSftpAuthUser();
+    }
+
+    public static String getTraceBoMSftpAuthPassword() {
+        return getApplicationConfiguration().getTraceBoMSftpAuthPassword();
+    }
+
+
+
+    public static String getTraceBoMLocalFolder() {
+        return getApplicationConfiguration().getTraceBoMLocalFolder();
+    }
+
+    public static String getTraceBoMBackupFolder() {
+        return getApplicationConfiguration().getTraceBoMBackupFolder();
+    }
+
+    public static String getTraceBoMLogisticFolder() {
+        return getApplicationConfiguration().getTraceBoMLogisticFolder();
+    }
+
+    public static String getTraceBoMErrorFolder() {
+        return getApplicationConfiguration().getTraceBoMErrorFolder();
+    }
+
+
 
     public static ExternalCoreConfiguration getExternalCoreConfiguration() {
         return externalCoreConfiguration;

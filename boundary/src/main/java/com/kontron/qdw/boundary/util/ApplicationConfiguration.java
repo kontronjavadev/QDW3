@@ -26,6 +26,7 @@ public class ApplicationConfiguration {
     private String mailRecipientImportJournal;
 
 
+
     @Inject
     @ApplicationProperty("url.external")
     private String urlExternal;
@@ -44,22 +45,45 @@ public class ApplicationConfiguration {
 
 
 
+    @Inject
+    @ApplicationProperty("tracebom.sftp.host")
+    private String traceBoMSftpHost;
+
+    @Inject
+    @ApplicationProperty("tracebom.sftp.auth.user")
+    private String traceBoMSftpAuthUser;
+
+    @Inject
+    @ApplicationProperty("tracebom.sftp.auth.password")
+    private String traceBoMSftpAuthPassword;
+
+
+
+    @Inject
+    @ApplicationProperty("tracebom.local.folder")
+    private String traceBoMLocalFolder;
+
+    @Inject
+    @ApplicationProperty("tracebom.backup.folder")
+    private String traceBoMBackupFolder;
+
+    @Inject
+    @ApplicationProperty("tracebom.logistic.folder")
+    private String traceBoMLogisticFolder;
+
+    @Inject
+    @ApplicationProperty("tracebom.error.folder")
+    private String traceBoMErrorFolder;
+
+
+
     public String getMailSenderAddress() {
         return mailSenderAddress;
-    }
-
-    public void setMailSenderAddress(String mailSenderAddress) {
-        this.mailSenderAddress = mailSenderAddress;
     }
 
     public String getMailSenderName() {
         return mailSenderName;
     }
-
-    public void setMailSenderName(String mailSenderName) {
-        this.mailSenderName = mailSenderName;
-    }
-
 
     public String getMailRecipientAdmin() {
         return mailRecipientAdmin;
@@ -70,20 +94,53 @@ public class ApplicationConfiguration {
     }
 
 
+
     public String getUrlExternal() {
-        return this.urlExternal;
+        return urlExternal;
     }
 
     public String getUrlRelativeProduction() {
-        return this.urlRelativeProduction;
+        return urlRelativeProduction;
     }
 
     public String getUrlRelativeQuote() {
-        return this.urlRelativeQuote;
+        return urlRelativeQuote;
     }
 
     public String getUrlRelativeGp() {
-        return this.urlRelativeGp;
+        return urlRelativeGp;
+    }
+
+
+
+    public String getTraceBoMSftpHost() {
+        return traceBoMSftpHost;
+    }
+
+    public String getTraceBoMSftpAuthUser() {
+        return traceBoMSftpAuthUser;
+    }
+
+    public String getTraceBoMSftpAuthPassword() {
+        return traceBoMSftpAuthPassword;
+    }
+
+
+
+    public String getTraceBoMLocalFolder() {
+        return traceBoMLocalFolder;
+    }
+
+    public String getTraceBoMBackupFolder() {
+        return traceBoMBackupFolder;
+    }
+
+    public String getTraceBoMLogisticFolder() {
+        return traceBoMLogisticFolder;
+    }
+
+    public String getTraceBoMErrorFolder() {
+        return traceBoMErrorFolder;
     }
 
 }
