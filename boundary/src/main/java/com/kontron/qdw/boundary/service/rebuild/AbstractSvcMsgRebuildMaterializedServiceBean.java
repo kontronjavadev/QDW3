@@ -219,19 +219,9 @@ public class AbstractSvcMsgRebuildMaterializedServiceBean {
         }
 
 
-        // Session für diesen Lauf optimieren
-        em.createNativeQuery("set session transaction isolation level read uncommitted").executeUpdate();
-        em.createNativeQuery("set session sql_log_bin = 0").executeUpdate();
+        em.createNativeQuery(ddl.toString()).executeUpdate();
+        em.createNativeQuery(sql.toString()).executeUpdate();
 
-        try {
-            em.createNativeQuery(ddl.toString()).executeUpdate();
-            em.createNativeQuery(sql.toString()).executeUpdate();
-        }
-        finally {
-            // auf Standard zurücksetzen
-            em.createNativeQuery("set session transaction isolation level repeatable read").executeUpdate();
-            em.createNativeQuery("set session sql_log_bin = 1").executeUpdate();
-        }
         subTsk.finishTaskWithSuccess();
     }
 
