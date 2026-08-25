@@ -3,14 +3,17 @@ package com.kontron.qdw.boundary.service.process;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
 import java.nio.channels.OverlappingFileLockException;
-import java.util.Vector;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -18,53 +21,46 @@ import jakarta.activation.MimetypesFileTypeMap;
 
 public class FileUtils {
 
+    public static final FileFilter XML_FILE_FILTER = f -> f.isFile() && FileUtils.isXmlFile(f);
+
+
     /**
      * Determine whether the file is a compressed file by using the mimetype methods from package javax.activation
      * @param fileName
      * @return true if the file is a ZIP file
-     * @throws IOException
      */
-    public static boolean isZipFile(final File file) throws IOException {
+    public static boolean isZipFile(final File file) {
         String tmpMimeType = null;
 
         MimetypesFileTypeMap mimeTypes = new MimetypesFileTypeMap();
-        Vector<String> validZipMimeTypes = new Vector<>();
+        Set<String> validZipMimeTypes = new TreeSet<>();
 
-        validZipMimeTypes.addElement("application/x-zip-compressed");
-        validZipMimeTypes.addElement("application/zip");
-        validZipMimeTypes.addElement("multipart/x-zip");
+        validZipMimeTypes.add("application/x-zip-compressed");
+        validZipMimeTypes.add("application/zip");
+        validZipMimeTypes.add("multipart/x-zip");
 
         tmpMimeType = mimeTypes.getContentType(file);
 
-        if (validZipMimeTypes.contains(tmpMimeType.toString()) || file.getName().toLowerCase().endsWith(".zip")) {
-            return true;
-        }
-
-        return false;
+        return validZipMimeTypes.contains(tmpMimeType.toString()) || file.getName().toLowerCase().endsWith(".zip");
     }
 
     /**
      * Determine whether the file is a XML file by using the mimetype methods from package javax.activation
      * @param fileName
      * @return true if the file is an XML file
-     * @throws IOException
      */
-    public static boolean isXmlFile(final File file) throws IOException {
+    public static boolean isXmlFile(final File file) {
         String tmpMimeType = null;
 
         MimetypesFileTypeMap mimeTypes = new MimetypesFileTypeMap();
-        Vector<String> validXmlMimeTypes = new Vector<>();
+        Set<String> validXmlMimeTypes = new TreeSet<>();
 
-        validXmlMimeTypes.addElement("application/xml");
-        validXmlMimeTypes.addElement("text/xml");
+        validXmlMimeTypes.add("application/xml");
+        validXmlMimeTypes.add("text/xml");
 
         tmpMimeType = mimeTypes.getContentType(file);
 
-        if (validXmlMimeTypes.contains(tmpMimeType.toString()) || file.getName().toLowerCase().endsWith(".xml")) {
-            return true;
-        }
-
-        return false;
+        return validXmlMimeTypes.contains(tmpMimeType.toString()) || file.getName().toLowerCase().endsWith(".xml");
     }
 
     /**
@@ -123,9 +119,9 @@ public class FileUtils {
      * @param destDir
      * @throws Exception
      */
-    public static void unzipFile(final File file, final String destDir) throws Exception {
-        ZipInputStream zipInputStream = null;
-        BufferedOutputStream out = null;
+    public static void unzipFile(final File file, final String destDir) throws IOException, FileNotFoundException {
+        // ZipInputStream zipInputStream = null;
+        // BufferedOutputStream out = null;
         final int BUFFER_SIZE = 8192;
 
         // If file is compressed than unzip the contained files
@@ -133,8 +129,7 @@ public class FileUtils {
             return;
         }
 
-        try {
-            zipInputStream = new ZipInputStream(new BufferedInputStream(new FileInputStream(file.getAbsolutePath())));
+        try (ZipInputStream zipInputStream = new ZipInputStream(new BufferedInputStream(new FileInputStream(file.getAbsolutePath())))) {
             ZipEntry zipEntry = null;
             int count;
             byte data[] = new byte[BUFFER_SIZE];
@@ -143,9 +138,7 @@ public class FileUtils {
             while ((zipEntry = zipInputStream.getNextEntry()) != null) {
                 String tmpPath = createFullPath(zipEntry.getName(), destDir);
 
-                try {
-                    out = new BufferedOutputStream(new FileOutputStream(tmpPath), BUFFER_SIZE);
-
+                try (BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(tmpPath), BUFFER_SIZE)) {
                     // Read until end of stream and write content to file
                     while ((count = zipInputStream.read(data, 0, BUFFER_SIZE)) != -1) {
                         out.write(data, 0, count);
@@ -153,16 +146,6 @@ public class FileUtils {
 
                     out.flush();
                 }
-                finally {
-                    if (out != null) {
-                        out.close();
-                    }
-                }
-            }
-        }
-        finally {
-            if (zipInputStream != null) {
-                zipInputStream.close();
             }
         }
     }

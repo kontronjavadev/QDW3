@@ -1,7 +1,13 @@
 package com.kontron.qdw.boundary.service.tracebomimport;
 
+import static com.kontron.qdw.boundary.service.process.FileUtils.XML_FILE_FILTER;
+
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.invoke.MethodHandles;
@@ -9,18 +15,25 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.kontron.common.filetransfer.FtException;
 import com.kontron.common.filetransfer.SftpAccess;
 import com.kontron.qdw.boundary.service.SchedulerServiceBean;
+import com.kontron.qdw.boundary.service.mapping.tracebomalt.TraceBoMRootMappingType;
+import com.kontron.qdw.boundary.service.mapping.tracebomneu.NewTraceBoMRootType;
 import com.kontron.qdw.boundary.service.process.FileUtils;
 import com.kontron.qdw.boundary.util.Constants;
 import com.kontron.qdw.boundary.util.MailServiceFacade;
 import com.kontron.util.datetime.TimeUtil;
+import com.kontron.util.log.FileImportAbortedWithErrorsLog;
 import com.kontron.util.log.TaskLeafLog;
 import com.kontron.util.log.TaskNodeLog;
 
@@ -55,6 +68,10 @@ public class TraceBoMImportServiceBean {
 
     // private static final String PROP_XML_EXCHANGE_FOLDER = "sap_exchange_folder";
     // private static final String PROP_XML_ARCHIVE_FOLDER = "sap_archive_folder";
+
+    private static final String ROOT_ELEMENT_STOCK_RECEIPT = "STOCK_RECEIPT";
+    private static final String ROOT_ELEMENT_TRACE_BOMS = "trace_boms";
+
 
 
     @EJB
@@ -102,8 +119,19 @@ public class TraceBoMImportServiceBean {
 
 
         // Iterate over all sub-folders of input folder as every contract manufacturer has its own sub-folder!
-        for (String ftpManufacturerFolder : rootFolders) {
-            splitNewFilesForFolder(mainTask, ftpAccess, ftpManufacturerFolder, folder);
+        try {
+            // Eine geworfene Exception führt zu Komplettabbruch
+            // Soll nur mit der nächsten Datei oder dem nächsten Hersteller fortgefahren werden,
+            // so muss ein Fehler-Task erstellt und zurück gekehrt werden.
+            for (String ftpManufacturerFolder : rootFolders) {
+                splitNewFilesForFolder(mainTask, ftpAccess, ftpManufacturerFolder, folder);
+            }
+        }
+        catch (Exception e) {
+            TaskLeafLog tskProcess = mainTask.createNewSubTaskLeaf("downloading and processing files");
+            tskProcess.finishTaskWithError(e);
+            mainTask.abortTask();
+            return;
         }
 
         // <--- execTask()
@@ -112,89 +140,204 @@ public class TraceBoMImportServiceBean {
 
 
 
-    private void splitNewFilesForFolder(TaskNodeLog mainTask, SftpAccess ftpAccess, String ftpManufacturerFolder, Folder folder) {
+    private void splitNewFilesForFolder(TaskNodeLog mainTask, SftpAccess ftpAccess, String ftpManufacturerFolder, Folder folder)
+    // throws FtException, IOException
+    {
         if (Constants.IS_PROD_ENVIRONMENT && ftpManufacturerFolder.equalsIgnoreCase("test")) {
             // Ein Test-Ordner für die Testumgebung
             return;
         }
 
-        Map<File, List<File>> zipToExtractedFilesMapping = new HashMap<>();
 
-        downloadAndUnzipFilesForFolder(mainTask, ftpAccess, ftpManufacturerFolder, zipToExtractedFilesMapping, folder);
-        splitFilesInFolder(mainTask, ftpAccess, ftpManufacturerFolder, zipToExtractedFilesMapping, folder);
+        try {
+            // Map, in der die Dateien einer heruntergeladenen zip-Datei aufgelöst sind.
+            // Ist die heruntergeladene Datei keine zip-Datei, ist hier auch nichts gelistet.
+            Map<File, List<File>> zipToExtractedFilesMapping = downloadAndUnzipFilesForFolder(mainTask, ftpAccess, ftpManufacturerFolder, folder);
+            splitFilesInFolder(mainTask, ftpAccess, ftpManufacturerFolder, zipToExtractedFilesMapping, folder);
+        }
+        catch (Exception e) { // FtException, SecurityException, IOException
+            mainTask.addSubTask(new FileImportAbortedWithErrorsLog(ftpManufacturerFolder, e));
+            return;
+        }
     }
 
 
-    private void downloadAndUnzipFilesForFolder(TaskNodeLog mainTask, SftpAccess ftpAccess, String ftpManufacturerFolder,
-            Map<File, List<File>> zipToExtractedFilesMapping, Folder folder) {
-        // Liste an Dateien in Verzeichnis holen
-        List<String> ftpFiles;
-        try {
-            ftpFiles = ftpAccess.getReadableFileList(ftpManufacturerFolder);
-        }
-        catch (FtException ftpe) {
-            String message = "Error while splitting trace files: reading file list failed!";
-            LoggingDTO logEntry = new LoggingDTO(message, System.currentTimeMillis() - start, ftpe);
-            logger.error(logEntry);
+    private Map<File, List<File>> downloadAndUnzipFilesForFolder(TaskNodeLog mainTask, SftpAccess ftpAccess, String ftpManufacturerFolder,
+            Folder folder)
+            throws FtException, SecurityException, IOException {
+        Map<File, List<File>> zipToExtractedFilesMapping = new HashMap<>();
 
-            StringWriter stackTraceWriter = new StringWriter();
-            ftpe.printStackTrace(new PrintWriter(stackTraceWriter));
-            // Send email that an error occurred!
-            QDWHelper.sendErrorMail(ftpe, message);
-            return;
-        }
-        if (ftpFiles.isEmpty()) {
-            return;
-        }
-
-
+        // Liste an Dateien in Verzeichnis holen (kann Exception werfen)
+        List<String> ftpFiles = ftpAccess.getReadableFileList(ftpManufacturerFolder);
 
         File curLocalFolder = new File(folder.localTraceBoMFolder.getAbsolutePath() + File.separator + ftpManufacturerFolder);
         curLocalFolder.mkdirs();
 
-        try {
-            // Download files and check if there are new files that are packed and unzip them if necessary!
-            for (String ftpFile : ftpFiles) {
-                // Dateiinhalt von sftp lesen
-                byte[] fileBytes = ftpAccess.getFileContent(ftpManufacturerFolder, ftpFile);
+        // Download files and check if there are new files that are packed and unzip them if necessary!
+        for (String ftpFile : ftpFiles) {
+            // Dateiinhalt von sftp lesen
+            byte[] fileBytes = ftpAccess.getFileContent(ftpManufacturerFolder, ftpFile);
 
-                // Dateiinhalt in lokale Datei schreiben
-                File localTraceFile = new File(curLocalFolder.getAbsolutePath() + File.separator + ftpFile);
-                try (FileOutputStream fos = new FileOutputStream(localTraceFile)) {
-                    fos.write(fileBytes);
-                    fos.flush();
-                }
+            // Dateiinhalt in lokale Datei schreiben
+            File localTraceFile = new File(curLocalFolder.getAbsolutePath() + File.separator + ftpFile);
+            try (FileOutputStream fos = new FileOutputStream(localTraceFile)) {
+                fos.write(fileBytes);
+                fos.flush();
+            }
 
-                // wenn es sich um eine zip-Datei handelt, ...
-                if (localTraceFile.isFile() && FileUtils.isZipFile(localTraceFile)) {
-                    // ... vorherige Dateiliste in lokalem Verzeichnis merken, ...
-                    List<File> filesBefore = Arrays.asList(curLocalFolder.listFiles()).stream()
-                            .filter(f -> f.isFile())
-                            .collect(Collectors.toList());
-                    // ... zip-Datei entpacken, ...
-                    FileUtils.unzipFile(localTraceFile, curLocalFolder.getAbsolutePath());
-                    // ... neu hinzu gekommene Dateien ermitteln ...
-                    List<File> extractedFiles = Arrays.asList(curLocalFolder.listFiles()).stream()
-                            .filter(f -> f.isFile() && !filesBefore.contains(f))
-                            .collect(Collectors.toList());
-                    // ... und in einer Map merken
-                    zipToExtractedFilesMapping.put(localTraceFile, extractedFiles);
-                }
+            // wenn es sich um eine zip-Datei handelt, ...
+            if (localTraceFile.isFile() && FileUtils.isZipFile(localTraceFile)) {
+                // ... vorherige Dateiliste in lokalem Verzeichnis merken, ...
+                List<File> filesBefore = Arrays.asList(curLocalFolder.listFiles()).stream()
+                        .filter(f -> f.isFile())
+                        .collect(Collectors.toList());
+                // ... zip-Datei entpacken, ...
+                FileUtils.unzipFile(localTraceFile, curLocalFolder.getAbsolutePath());
+                // ... neu hinzu gekommene Dateien ermitteln ...
+                List<File> extractedFiles = Arrays.asList(curLocalFolder.listFiles()).stream()
+                        .filter(f -> f.isFile() && !filesBefore.contains(f))
+                        .collect(Collectors.toList());
+                // ... und in einer Map merken
+                zipToExtractedFilesMapping.put(localTraceFile, extractedFiles);
             }
         }
-        catch (Exception e) {
-            String message = "Error while splitting trace files: reading file failed!";
-            LoggingDTO logEntry = new LoggingDTO(message, System.currentTimeMillis() - start, e);
-            logger.error(logEntry);
-
-            StringWriter stackTraceWriter = new StringWriter();
-            e.printStackTrace(new PrintWriter(stackTraceWriter));
-            // Send email that an error occurred!
-            QDWHelper.sendErrorMail(e, message);
-            return;
-        }
+        return zipToExtractedFilesMapping;
     }
 
+    private void splitFilesInFolder(TaskNodeLog mainTask, SftpAccess ftpAccess, String localManufacturerFolder,
+            Map<File, List<File>> zipToExtractedFilesMapping, Folder folder) {
+        if (Constants.IS_PROD_ENVIRONMENT && localManufacturerFolder.equalsIgnoreCase("test")) {
+            return;
+        }
+
+        File curLocalFolder = new File(folder.localTraceBoMFolder.getAbsolutePath() + File.separator + localManufacturerFolder);
+        curLocalFolder.mkdirs();
+
+
+        // erstelle Map aller xml-Dateien in lokalem Verzeichnis
+        File[] fileMap = curLocalFolder.listFiles(XML_FILE_FILTER);
+
+        // Iterate over all new incoming files and try to split them
+        for (File inputFile : fileMap) {
+
+            String xmlSignatureLine = null;
+            String rootElementLine = null;
+
+            // Datei nur für eine erste Analyse öffnen
+            try (BufferedReader input = new BufferedReader(new FileReader(inputFile))) {
+                xmlSignatureLine = input.readLine();
+                rootElementLine = input.readLine();
+
+                if (StringUtils.isEmpty(rootElementLine)) {
+                    // für den Fall, dass die Datei keinen Zeilenumbruch hat und somit alles in einer einzigen Zeile steht
+                    rootElementLine = xmlSignatureLine;
+                }
+            }
+            catch (Exception e) { // FileNotFoundException, IOException
+                mainTask.addSubTask(new FileImportAbortedWithErrorsLog(localManufacturerFolder + File.separator + inputFile.getName(),
+                        "File cannot be opened"));
+                continue;
+            }
+
+
+            try {
+                // TODO: warum 20 Sek. warten und dann doch nicht verarbeiten?
+                if (FileUtils.isBusy(inputFile)) {
+                    Thread.sleep(20);
+                    continue;
+                }
+
+
+                boolean success = false;
+
+                // ist es überhaupt eine XML-Datei?
+                if (!StringUtils.trimToEmpty(xmlSignatureLine).startsWith("<?xml")) {
+                    mainTask.addSubTask(new FileImportAbortedWithErrorsLog(localManufacturerFolder + File.separator + inputFile.getName(),
+                            "File is not a valid xml file"));
+                    continue;
+                }
+
+                // Unterscheidung, ob es sich um eine alte oder neue XML-Struktur handelt
+                if (rootElementLine.contains(ROOT_ELEMENT_TRACE_BOMS)) {
+                    NewTraceBoMRootType newRootMappingObject = createLogisticXMLFileFromNewStructure(inputFile, curLocalFolder);
+                    success = saveTraceBoMFromNewStructure(inputFile, newRootMappingObject);
+                    System.out.println("importiert: " + curLocalFolder + File.separator + inputFile.getName());
+                }
+                else if (rootElementLine.contains(ROOT_ELEMENT_STOCK_RECEIPT)) {
+                    TraceBoMRootMappingType rootMappingObject = createLogisticXMLFile(inputFile, curLocalFolder);
+                    success = saveTraceBoM(inputFile, rootMappingObject);
+                    System.out.println("importiert: " + curLocalFolder + File.separator + inputFile.getName());
+                }
+                // ist XML-Datei, aber weder alte, noch neue Trae-BoM-XML-Struktur
+                else {
+                    String errorMsg = String.format("Accepted xml root elements are '%s' and '%s' but root element was '%s'.",
+                            ROOT_ELEMENT_TRACE_BOMS, ROOT_ELEMENT_STOCK_RECEIPT, StringUtils.strip(rootElementLine, "<>"));
+                    mainTask.addSubTask(new FileImportAbortedWithErrorsLog(localManufacturerFolder + File.separator + inputFile.getName(),
+                            errorMsg));
+                    continue;
+                }
+
+
+                // check if the file originates from a zip file
+                Optional<Entry<File, List<File>>> zipFileEntrySet = zipToExtractedFilesMapping.entrySet().stream()
+                        .filter(e -> e.getValue().stream()
+                                .anyMatch(f -> f.equals(inputFile)))
+                        .findFirst();
+
+                if (zipFileEntrySet.isPresent()) {
+                    File zipFile = zipFileEntrySet.get().getKey();
+                    List<File> filesOfZipFile = zipFileEntrySet.get().getValue();
+
+                    filesOfZipFile.remove(inputFile);
+                    inputFile.delete();
+
+                    // the zip file might have been moved by a previous error, so we have to check if still exists
+                    if (zipFile.exists() && !success) {
+                        moveFile(zipFile, new File(folder.errorTraceBoMFolder.getAbsolutePath() + File.separator + localManufacturerFolder
+                                + File.separator + zipFile.getName()));
+                    }
+
+                    if (filesOfZipFile.isEmpty()) {
+                        if (zipFile.exists()) {
+                            moveFile(zipFile, new File(folder.backupTraceBoMFolder.getAbsolutePath() + File.separator + localManufacturerFolder
+                                    + File.separator + zipFile.getName()));
+                        }
+
+                        deleteFtpFile(ftpAccess, localManufacturerFolder, zipFile.getName());
+                    }
+                }
+                else {
+                    if (success) {
+                        moveFile(inputFile, new File(folder.backupTraceBoMFolder.getAbsolutePath() + File.separator + localManufacturerFolder
+                                + File.separator + inputFile.getName()));
+                    }
+                    else {
+                        moveFile(inputFile, new File(folder.errorTraceBoMFolder.getAbsolutePath() + File.separator + localManufacturerFolder
+                                + File.separator + inputFile.getName()));
+                    }
+
+                    deleteFtpFile(ftpAccess, localManufacturerFolder, inputFile.getName());
+                }
+
+            }
+            catch (FtException e) {
+                StringWriter stackTraceWriter = new StringWriter();
+                e.printStackTrace(new PrintWriter(stackTraceWriter));
+                String message = "Error while splitting trace files: deleting file on sftp failed!";
+
+                QDWHelper.sendErrorMail(e, message + inputFile != null ? inputFile.getAbsolutePath() : "null");
+                return;
+            }
+            catch (Exception e) {
+                StringWriter stackTraceWriter = new StringWriter();
+                e.printStackTrace(new PrintWriter(stackTraceWriter));
+                String message = "Error while splitting trace files: importing file failed!";
+
+                QDWHelper.sendErrorMail(e, message + inputFile != null ? inputFile.getAbsolutePath() : "null");
+                return;
+            }
+        } // end for(fileMap)
+    }
 
 
     private SftpAccess createSFTPClient(TaskNodeLog ownTask) throws FtException {
@@ -260,6 +403,15 @@ public class TraceBoMImportServiceBean {
 
     private void finishImport(TaskNodeLog tsk) {
         tsk.finishTask();
+        // keine Mail schicken, wenn es nichts zu importieren gab oder alles glatt gelaufen ist
+        if (!tsk.wasAtLeastOneConcreteTaskPerformed()) {
+            logger.info("Finished importing Trace-BoM files — no import files");
+            return;
+        }
+        if (tsk.isSuccess()) {
+            logger.info("Finished importing Trace-BoM files successfully");
+            return;
+        }
 
         // ist beendet
         long duration = tsk.getEndTime() - tsk.getStartTime();
