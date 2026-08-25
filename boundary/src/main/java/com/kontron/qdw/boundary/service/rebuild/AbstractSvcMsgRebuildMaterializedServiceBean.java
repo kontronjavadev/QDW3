@@ -82,9 +82,9 @@ public class AbstractSvcMsgRebuildMaterializedServiceBean {
         ddl.append("  designator varchar(50) default null, ");
         ddl.append("  defect_component varchar(100) default null, ");
         ddl.append("  analysis_text varchar(100) default null, ");
-        ddl.append("  internal_report varchar(4000) default null, ");
-        ddl.append("  external_report varchar(4000) default null, ");
-        ddl.append("  customer_report varchar(4000) default null, ");
+        ddl.append("  internal_report text, ");
+        ddl.append("  external_report text, ");
+        ddl.append("  customer_report text, ");
         ddl.append("  epidemic_failure tinyint(1) not null, ");
         ddl.append("  error_id varchar(100) default null, ");
         ddl.append("  origin varchar(100) default null, ");
@@ -102,7 +102,7 @@ public class AbstractSvcMsgRebuildMaterializedServiceBean {
         ddl.append("  external_supplier_code varchar(50), ");
         ddl.append("  external_supplier_name varchar(100), ");
         ddl.append("  delivery_note_number varchar(50) default null, ");
-        ddl.append("  repair_description varchar(4000) default null, ");
+        ddl.append("  repair_description text, ");
         ddl.append("  service_order_type varchar(255) not null, ");
         ddl.append("  material bigint not null default 0, ");
         ddl.append("  serial_object bigint not null default 0, ");
