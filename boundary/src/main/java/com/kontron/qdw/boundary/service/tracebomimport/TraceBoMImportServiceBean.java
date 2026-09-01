@@ -33,6 +33,7 @@ import org.slf4j.LoggerFactory;
 import com.kontron.common.filetransfer.FtException;
 import com.kontron.common.filetransfer.SftpAccess;
 import com.kontron.qdw.boundary.service.SchedulerServiceBean;
+import com.kontron.qdw.boundary.service.mapping.tracebomalt.TraceBoMHeaderType;
 import com.kontron.qdw.boundary.service.mapping.tracebomalt.TraceBoMMappingType;
 import com.kontron.qdw.boundary.service.mapping.tracebomalt.TraceBoMRootMappingType;
 import com.kontron.qdw.boundary.service.mapping.tracebomneu.NewTraceBoMHeaderType;
@@ -282,8 +283,8 @@ public class TraceBoMImportServiceBean {
                     System.out.println("importiert: " + curLocalFolder + File.separator + inputFile.getName());
                 }
                 else if (rootElementLine.contains(ROOT_ELEMENT_STOCK_RECEIPT)) { // altS
-                    TraceBoMRootMappingType rootMappingObject = createLogisticXMLFile(mainTask, curLocalFolder, inputFile, folder);
-                    success = saveTraceBoM(inputFile, rootMappingObject);
+                    TraceBoMRootMappingType rootMappingObject = createLogisticXMLFileFromOldStructure(mainTask, curLocalFolder, inputFile, folder);
+                    success = saveTraceBoMFromNewStructure(inputFile, rootMappingObject);
                     System.out.println("importiert: " + curLocalFolder + File.separator + inputFile.getName());
                 }
                 // ist XML-Datei, aber weder alte, noch neue Trae-BoM-XML-Struktur
@@ -451,7 +452,7 @@ public class TraceBoMImportServiceBean {
             unmarshaller = JAXBContext.newInstance(NewTraceBoMRootType.class).createUnmarshaller();
             unmarshaller.setSchema(schema);
         }
-        catch (Exception e) { // SAXException, JAXBException, NullPointerException
+        catch (Exception e) { // SAXException, JAXBException, NullPointerException, IllegalArgumentException
             throw new ImportAbortedException(new FileImportAbortedWithErrorsLog(localFolder.getName() + File.separator + sourceFile.getName(),
                     "Error initializing unmarshaller"));
         }
@@ -470,16 +471,16 @@ public class TraceBoMImportServiceBean {
         List<NewTraceBoMType> traceBoMs = rootMappingObject.getSerialObjects();
         NewTraceBoMHeaderType header = rootMappingObject.getHeader();
 
+        if (traceBoMs.isEmpty()) {
+            throw new ImportAbortedException(new FileImportAbortedWithErrorsLog(localFolder.getName() + File.separator + sourceFile.getName(),
+                    "No trace BoMs"));
+        }
+
         String outputFileName = sourceFile.getName().substring(0, (sourceFile.getName().length() - 4));
         if (!outputFileName.contains(header.getDeliveryNoteNumber())) {
             outputFileName = outputFileName + "_" + header.getDeliveryNoteNumber();
         }
         outputFileName = localFolder.getName() + "_" + outputFileName + ".xml";
-
-        if (traceBoMs.isEmpty()) {
-            throw new ImportAbortedException(new FileImportAbortedWithErrorsLog(localFolder.getName() + File.separator + sourceFile.getName(),
-                    "No trace BoMs"));
-        }
 
 
         // read first object, in order to get revision number
@@ -511,14 +512,12 @@ public class TraceBoMImportServiceBean {
             output.append("<SNRSET>\n");
 
             output.append("<SNR>").append(traceBoM.getSerialNumber()).append("</SNR>\n");
-
-            if (traceBoM.getCustomerSerialNumber().equals("")) {
+            if (StringUtils.isEmpty(traceBoM.getCustomerSerialNumber())) {
                 output.append("<SNR_CUST/>\n");
             }
             else {
                 output.append("<SNR_CUST>").append(traceBoM.getCustomerSerialNumber()).append("</SNR_CUST>\n");
             }
-
             output.append("<SNR_SYS1/>\n");
             output.append("<SNR_SYS2/>\n");
             output.append("<SNR_SYS3/>\n");
@@ -550,100 +549,159 @@ public class TraceBoMImportServiceBean {
 
 
     /** Create file for logistic */
-    private TraceBoMRootMappingType createLogisticXMLFile(TaskNodeLog mainTask, File localFolder, File sourceFile, Folder folder) {
-        StringBuilder content = new StringBuilder();
-        StringBuilder output = new StringBuilder();
-        long start = System.currentTimeMillis();
-
-        try (BufferedReader input = new BufferedReader(new FileReader(sourceFile))) {
-            String line = null;
+    private TraceBoMRootMappingType createLogisticXMLFileFromOldStructure(TaskNodeLog mainTask, File localFolder, File sourceFile, Folder folder)
+            throws ImportAbortedException {
+        String correctedContent;
+        try (BufferedReader input = new BufferedReader(new FileReader(sourceFile, ENCODING))) {
+            // Datei vollständig in StringBuilder einlesen, damit der Inhalt vorab korrigiert werden kann
+            StringBuilder content = new StringBuilder();
+            String line;
             while ((line = input.readLine()) != null) {
                 content.append(line);
             }
 
             // Some KDMS files have obscure characters at the beginning!
-            String correctedContent = content.substring(content.indexOf("<"));
-            StringReader inputReader = new StringReader(correctedContent);
-            Unmarshaller unmarshaller = JAXBContext.newInstance(TraceBoMRootMappingType.class).createUnmarshaller();
-            TraceBoMRootMappingType rootMappingObject = (TraceBoMRootMappingType) unmarshaller.unmarshal(inputReader);
+            correctedContent = content.substring(content.indexOf("<"));
+        }
+        catch (Exception e) { // FileNotFoundException, IOException
+            throw new ImportAbortedException(new FileImportAbortedWithErrorsLog(localFolder.getName() + File.separator + sourceFile.getName(),
+                    "File cannot be opened to correct the content"));
+        }
 
-            String outputFileName = sourceFile.getName().substring(0, (sourceFile.getName().length() - 4));
 
-            if (outputFileName.contains(rootMappingObject.getHeader().getDeliveryNoteNumber())) {
-                outputFileName = localFolder.getName() + "_" + outputFileName + ".xml";
+        Unmarshaller unmarshaller;
+        try {
+            unmarshaller = JAXBContext.newInstance(TraceBoMRootMappingType.class).createUnmarshaller();
+        }
+        catch (Exception e) { // JAXBException, IllegalArgumentException
+            throw new ImportAbortedException(new FileImportAbortedWithErrorsLog(localFolder.getName() + File.separator + sourceFile.getName(),
+                    "Error initializing unmarshaller"));
+        }
+
+
+        TraceBoMRootMappingType rootMappingObject;
+        try (StringReader inputReader = new StringReader(correctedContent)) {
+            rootMappingObject = (TraceBoMRootMappingType) unmarshaller.unmarshal(inputReader);
+        }
+        catch (Exception e) { // JAXBException, UnmarshalException, IllegalArgumentException
+            throw new ImportAbortedException(new FileImportAbortedWithErrorsLog(localFolder.getName() + File.separator + sourceFile.getName(),
+                    "Error unmarshalling file"));
+        }
+
+
+        List<TraceBoMMappingType> traceBoMs = rootMappingObject.getSerialObjects();
+        TraceBoMHeaderType header = rootMappingObject.getHeader();
+
+        if (traceBoMs.isEmpty()) {
+            throw new ImportAbortedException(new FileImportAbortedWithErrorsLog(localFolder.getName() + File.separator + sourceFile.getName(),
+                    "No trace BoMs"));
+        }
+
+        String outputFileName = sourceFile.getName().substring(0, (sourceFile.getName().length() - 4));
+        if (!outputFileName.contains(header.getDeliveryNoteNumber())) {
+            outputFileName = outputFileName + "_" + header.getDeliveryNoteNumber();
+        }
+        outputFileName = localFolder.getName() + "_" + outputFileName + ".xml";
+
+
+        StringBuilder output = new StringBuilder(1024);
+        output.append("<?xml version=\"1.0\" standalone=\"yes\" ?>\n");
+
+        // open list
+        output.append("<SHIPPING_LISTS>\n<SHIP_LIST>\n");
+
+        // Create header data
+        output.append("<HEADER>\n");
+        output.append("<LSNR>").append(header.getDeliveryNoteNumber()).append("</LSNR>\n");
+        output.append("<LotNr>").append(header.getLotNumber()).append("</LotNr>\n");
+        output.append("<CE_Nr>").append(header.getMaterialRevision().getRevisionNumber()).append("</CE_Nr>\n");
+        output.append("<BELEG_Nr>").append(header.getOrderNumber()).append("</BELEG_Nr>\n");
+        output.append("</HEADER>\n");
+
+        // Create serObj. data
+        output.append("<DATA>\n");
+        // Iterate over all serial numbers
+        for (TraceBoMMappingType traceBoM : traceBoMs) {
+            output.append("<SNRSET>\n");
+
+            output.append("<SNR>").append(traceBoM.getSerialNumber()).append("</SNR>\n");
+            if (StringUtils.isEmpty(traceBoM.getCustomerSerialNumber())) {
+                output.append("<SNR_CUST/>\n");
             }
             else {
-                outputFileName = localFolder.getName() + "_" + outputFileName + "_" + rootMappingObject.getHeader().getDeliveryNoteNumber()
-                        + ".xml";
+                output.append("<SNR_CUST>").append(traceBoM.getCustomerSerialNumber()).append("</SNR_CUST>\n");
             }
+            output.append("<SNR_SYS1/>\n");
+            output.append("<SNR_SYS2/>\n");
+            output.append("<SNR_SYS3/>\n");
+            output.append("<SNR_SYS4/>\n");
+            output.append("<SNR_SYS5/>\n");
 
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(folder.logisticTraceBoMFolder + File.separator + outputFileName))) {
-                // Create header
-                output.append("<?xml version=\"1.0\" standalone=\"yes\" ?>\n");
-                output.append("<SHIPPING_LISTS>\n<SHIP_LIST>\n<HEADER>\n");
-
-                output.append("<LSNR>").append(rootMappingObject.getHeader().getDeliveryNoteNumber()).append("</LSNR>\n");
-                output.append("<LotNr>").append(rootMappingObject.getHeader().getLotNumber()).append("</LotNr>\n");
-                output.append("<CE_Nr>").append(rootMappingObject.getHeader().getMaterialRevision().getRevisionNumber()).append("</CE_Nr>\n");
-                output.append("<BELEG_Nr>").append(rootMappingObject.getHeader().getOrderNumber()).append("</BELEG_Nr>\n");
-
-                output.append("</HEADER>\n<DATA>\n");
-
-                // Iterate over all serial numbers
-                for (TraceBoMMappingType traceBoM : rootMappingObject.getSerialObjects()) {
-                    output.append("<SNRSET>\n");
-
-                    output.append("<SNR>").append(traceBoM.getSerialNumber()).append("</SNR>\n");
-
-                    if (traceBoM.getCustomerSerialNumber().equals("")) {
-                        output.append("<SNR_CUST/>\n");
-                    }
-                    else {
-                        output.append("<SNR_CUST>").append(traceBoM.getCustomerSerialNumber()).append("</SNR_CUST>\n");
-                    }
-
-                    output.append("<SNR_SYS1/>\n");
-                    output.append("<SNR_SYS2/>\n");
-                    output.append("<SNR_SYS3/>\n");
-                    output.append("<SNR_SYS4/>\n");
-                    output.append("<SNR_SYS5/>\n");
-
-                    output.append("</SNRSET>\n");
-                }
-
-                output.append("</DATA>\n</SHIP_LIST>\n</SHIPPING_LISTS>\n");
-
-                writer.write(output.toString());
-            }
-
-            // Logistic file has been created successfully!
-            LoggingDTO logEntry = new LoggingDTO("Logistic file " + sourceFile.getName() + " created!", System.currentTimeMillis() - start);
-            logger.info(logEntry);
-
-            String subject = Constants.APP_ENV_MAIL_INFO + "XML file " + sourceFile.getName() + " has been processed";
-
-            // Send email that a new logistic XML is ready to be processed within ERP system
-            try {
-                String recipient = com.kontron.util.text.StringUtil.getNonEmptyStringFromObjectOrDefault(Constants.getQdwWebConfiguration(),
-                        q -> q.getMailRecipientLogistic(), Constants.EMAIL_LOGISTIC_RECIPIENT);
-
-                MailServiceFacade.sendMail(recipient, subject);
-            }
-            catch (MailServiceException e) {
-                e.printStackTrace();
-            }
-
-            return rootMappingObject;
+            output.append("</SNRSET>\n");
         }
-        catch (Throwable e) {
-            // Logistic file has been created successfully!
-            LoggingDTO logEntry = new LoggingDTO("Error while creating logistic XML file " + sourceFile.getName() + "!",
-                    System.currentTimeMillis() - start, e);
+        output.append("</DATA>\n");
+
+        // close list
+        output.append("</SHIP_LIST>\n</SHIPPING_LISTS>\n");
+
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(folder.logisticTraceBoMFolder + File.separator + outputFileName))) {
+            writer.write(output.toString());
+        }
+        catch (Exception e) { // IOException
+            throw new ImportAbortedException(new FileImportAbortedWithErrorsLog(localFolder.getName() + File.separator + sourceFile.getName(),
+                    "Error creating logistic XML file by Trace BoM file (old structure)"));
+        }
+
+
+        // Logistic file has been created successfully!
+        mainTask.addSubTask(new FileImportSuccessfulLog(localFolder.getName() + File.separator + sourceFile.getName(),
+                traceBoMs.size()));
+        return rootMappingObject;
+    }
+
+
+    /** @return success */
+    private boolean saveTraceBoMFromNewStructure(File sourceFile, NewTraceBoMRootType rootMappingObject) {
+        long start = System.currentTimeMillis();
+        try {
+            // Import trace BoM
+            traceBoMImportService.performTraceBoMXMLImportFromNewStructure(rootMappingObject);
+            return true;
+        }
+        catch (Exception ex) {
+            String subject = "Error while processing content of trace file " + sourceFile.getName() + "!";
+            LoggingDTO logEntry = new LoggingDTO(subject, System.currentTimeMillis() - start, ex);
             logger.error(logEntry);
 
-            // Send email that an error occurred!
-            QDWHelper.sendErrorMail("Error while creating logistic XML file!", sourceFile.getPath(), e);
-            return null;
+            // Send mail that content was not readable
+            QDWHelper.sendErrorMail(subject, sourceFile.getPath(), ex);
+            return false;
+        }
+    }
+
+    /** @return success */
+    private boolean saveTraceBoMFromNewStructure(File sourceFile, TraceBoMRootMappingType rootMappingObject) {
+        long start = System.currentTimeMillis();
+        try {
+            // Import trace BoM
+            traceBoMImportService.performTraceBoMXMLImport(rootMappingObject);
+            return true;
+        }
+        catch (Exception ex) {
+            String messageSubject = "Error while processing content of trace file " + sourceFile.getName() + "!";
+            LoggingDTO logEntry = new LoggingDTO(messageSubject, System.currentTimeMillis() - start, ex);
+            logger.error(logEntry);
+
+            double size = sourceFile.length() / 1024;
+
+            // Send mail that content was not readable
+            String stack = ExceptionUtil.stacktraceToString(ex);
+            String messageBody = sourceFile.getPath() + "\nFile size: " + size + "kB\n\n" + ExceptionUtil.getMoreUsefulExceptionMessage(ex)
+                    + "\n\nstack trace:\n" + stack;
+            QDWHelper.sendErrorMail(messageSubject, messageBody); // send Mail to Admins
+            QDWHelper.sendProductOwnerMail(messageSubject, messageBody); // send Mail to Product Owners
+            return false;
         }
     }
 
