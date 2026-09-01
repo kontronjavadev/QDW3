@@ -81,11 +81,11 @@ public abstract class AbstractImportServiceBean<ROOT, ELEM> implements TaskCall 
         }
 
 
+        SchemaFactory sf = SchemaFactory.newInstance(javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI);
+        URL fileURL = getClass().getResource(SCHEMA_PATH + getSchemaName());
         Unmarshaller unmarshaller;
         try {
-            URL fileURL = getClass().getResource(SCHEMA_PATH + getSchemaName());
             unmarshaller = JAXBContext.newInstance(getXmlRootClazz()).createUnmarshaller();
-            SchemaFactory sf = SchemaFactory.newInstance(javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI);
             Schema schema = sf.newSchema(fileURL);
             unmarshaller.setSchema(schema);
         }

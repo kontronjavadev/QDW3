@@ -22,6 +22,10 @@ public class ApplicationConfiguration {
     private String mailRecipientAdmin;
 
     @Inject
+    @ApplicationProperty("mail.recipient.logistic")
+    private String mailRecipientLogistic;
+
+    @Inject
     @ApplicationProperty("mail.recipient.import-journal")
     private String mailRecipientImportJournal;
 
@@ -87,6 +91,10 @@ public class ApplicationConfiguration {
 
     public String getMailRecipientAdmin() {
         return mailRecipientAdmin;
+    }
+
+    public String getMailRecipientLogistic() {
+        return mailRecipientLogistic;
     }
 
     public String getMailRecipientImportJournal() {

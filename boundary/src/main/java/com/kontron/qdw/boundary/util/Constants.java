@@ -57,6 +57,7 @@ public final class Constants {
     public static final String MAIL_SENDER_NAME = "GPE";
 
     private static final String MAIL_RECIPIENT = "javainhouseapps@kontron.com";
+    private static final String MAIL_LOGISTIC_RECIPIENT = "wareneingang@kontron.com";
     private static final String IMPORT_JOURNAL_EMAIL = "GL.GO.GPERevsion@kontron.com";
 
     public static final String MAIL_COMPANY_NAME = "KONTRON";
@@ -142,6 +143,11 @@ public final class Constants {
     public static String getMailRecipient() {
         return StringUtil.getNonEmptyStringFromObjectOrDefault(getApplicationConfiguration(),
                 ApplicationConfiguration::getMailRecipientAdmin, Constants.MAIL_RECIPIENT);
+    }
+
+    public static String getMailRecipientLogistic() {
+        return StringUtil.getNonEmptyStringFromObjectOrDefault(getApplicationConfiguration(),
+                ApplicationConfiguration::getMailRecipientLogistic, Constants.MAIL_LOGISTIC_RECIPIENT);
     }
 
     public static String getImportJournalMailRecipient() {
