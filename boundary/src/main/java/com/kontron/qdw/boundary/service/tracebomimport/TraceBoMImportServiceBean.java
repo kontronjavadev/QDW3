@@ -93,11 +93,11 @@ public class TraceBoMImportServiceBean {
 
         // ---> == execTask(), nur dass beim normalen Import noch eine Klammer darüber ist
         SftpAccess ftpAccess;
-        Folder folder;
+        FolderConfig folderConfig;
         List<String> rootFolders = null;
         try {
             ftpAccess = createSFTPClient(mainTask);
-            folder = setupFolders();
+            folderConfig = setupFolders();
             rootFolders = getRootFolders(ftpAccess);
         }
         catch (Exception e) {
@@ -114,7 +114,7 @@ public class TraceBoMImportServiceBean {
             // Soll nur mit der nächsten Datei oder dem nächsten Hersteller fortgefahren werden,
             // so muss ein Fehler-Task erstellt und zurück gekehrt werden.
             for (String ftpManufacturerFolder : rootFolders) {
-                splitNewFilesForFolder(mainTask, ftpAccess, ftpManufacturerFolder, folder);
+                splitNewFilesForFolder(mainTask, ftpAccess, ftpManufacturerFolder, folderConfig);
             }
         }
         catch (Exception e) {
@@ -130,9 +130,7 @@ public class TraceBoMImportServiceBean {
 
 
 
-    private void splitNewFilesForFolder(TaskNodeLog mainTask, SftpAccess ftpAccess, String ftpManufacturerFolder, Folder folder)
-    // throws FtException, IOException
-    {
+    private void splitNewFilesForFolder(TaskNodeLog mainTask, SftpAccess ftpAccess, String ftpManufacturerFolder, FolderConfig folderConfig) {
         if (Constants.IS_PROD_ENVIRONMENT && ftpManufacturerFolder.equalsIgnoreCase("test")) {
             // Ein Test-Ordner für die Testumgebung
             return;
@@ -143,25 +141,25 @@ public class TraceBoMImportServiceBean {
         try {
             // Map, in der die Dateien einer heruntergeladenen zip-Datei aufgelöst sind.
             // Ist die heruntergeladene Datei keine zip-Datei, ist hier auch nichts gelistet.
-            zipToExtractedFilesMapping = downloadAndUnzipFilesForFolder(ftpAccess, ftpManufacturerFolder, folder);
+            zipToExtractedFilesMapping = downloadAndUnzipFilesForFolder(ftpAccess, ftpManufacturerFolder, folderConfig);
         }
         catch (Exception e) { // FtException, SecurityException, IOException
             folderTask.addSubTask(new FileImportAbortedWithErrorsLog(ftpManufacturerFolder, e));
             folderTask.abortTask();
             return;
         }
-        splitFilesInFolder(folderTask, ftpAccess, ftpManufacturerFolder, zipToExtractedFilesMapping, folder);
+        splitFilesInFolder(folderTask, ftpAccess, ftpManufacturerFolder, zipToExtractedFilesMapping, folderConfig);
     }
 
     private Map<File, List<File>> downloadAndUnzipFilesForFolder(SftpAccess ftpAccess, String ftpManufacturerFolder,
-            Folder folder)
+            FolderConfig folderConfig)
             throws FtException, SecurityException, IOException {
         Map<File, List<File>> zipToExtractedFilesMapping = new HashMap<>();
 
         // Liste an Dateien in Verzeichnis holen (kann Exception werfen)
         List<String> ftpFiles = ftpAccess.getReadableFileList(ftpManufacturerFolder);
 
-        File curLocalFolder = new File(folder.localTraceBoMFolder.getAbsolutePath() + File.separator + ftpManufacturerFolder);
+        File curLocalFolder = new File(folderConfig.localTraceBoMFolder.getAbsolutePath() + File.separator + ftpManufacturerFolder);
         curLocalFolder.mkdirs();
 
         // Download files and check if there are new files that are packed and unzip them if necessary!
@@ -196,12 +194,12 @@ public class TraceBoMImportServiceBean {
     }
 
     private void splitFilesInFolder(TaskNodeLog folderTask, SftpAccess ftpAccess, String localManufacturerFolder,
-            Map<File, List<File>> zipToExtractedFilesMapping, Folder folder) {
+            Map<File, List<File>> zipToExtractedFilesMapping, FolderConfig folderConfig) {
         if (Constants.IS_PROD_ENVIRONMENT && localManufacturerFolder.equalsIgnoreCase("test")) {
             return;
         }
 
-        File curLocalFolder = new File(folder.localTraceBoMFolder.getAbsolutePath() + File.separator + localManufacturerFolder);
+        File curLocalFolder = new File(folderConfig.localTraceBoMFolder.getAbsolutePath() + File.separator + localManufacturerFolder);
         curLocalFolder.mkdirs();
 
 
@@ -254,13 +252,13 @@ public class TraceBoMImportServiceBean {
                 // Unterscheidung, ob es sich um eine alte oder neue XML-Struktur handelt
                 if (rootElementLine.contains(ROOT_ELEMENT_TRACE_BOMS)) { // neu
                     NewTraceBoMRootType newRootMappingObject = tbNewService.createLogisticXMLFileFromNewStructure(
-                            folderTask, curLocalFolder, inputFile, folder);
+                            folderTask, curLocalFolder, inputFile, folderConfig);
                     success = tbNewService.saveTraceBoMFromNewStructure(inputFile, newRootMappingObject);
                     System.out.println("importiert: " + curLocalFolder + File.separator + inputFile.getName());
                 }
                 else if (rootElementLine.contains(ROOT_ELEMENT_STOCK_RECEIPT)) { // alt
                     TraceBoMRootMappingType rootMappingObject = tbOldService.createLogisticXMLFileFromOldStructure(
-                            folderTask, curLocalFolder, inputFile, folder);
+                            folderTask, curLocalFolder, inputFile, folderConfig);
                     success = tbOldService.saveTraceBoMFromOldStructure(inputFile, rootMappingObject);
                     System.out.println("importiert: " + curLocalFolder + File.separator + inputFile.getName());
                 }
@@ -289,13 +287,13 @@ public class TraceBoMImportServiceBean {
 
                     // the zip file might have been moved by a previous error, so we have to check if still exists
                     if (zipFile.exists() && !success) {
-                        moveFile(zipFile, new File(folder.errorTraceBoMFolder.getAbsolutePath()
+                        moveFile(zipFile, new File(folderConfig.errorTraceBoMFolder.getAbsolutePath()
                                 + File.separator + localManufacturerFolder + File.separator + zipFile.getName()));
                     }
 
                     if (filesOfZipFile.isEmpty()) {
                         if (zipFile.exists()) {
-                            moveFile(zipFile, new File(folder.backupTraceBoMFolder.getAbsolutePath()
+                            moveFile(zipFile, new File(folderConfig.backupTraceBoMFolder.getAbsolutePath()
                                     + File.separator + localManufacturerFolder + File.separator + zipFile.getName()));
                         }
 
@@ -304,11 +302,11 @@ public class TraceBoMImportServiceBean {
                 }
                 else {
                     if (success) {
-                        moveFile(inputFile, new File(folder.backupTraceBoMFolder.getAbsolutePath()
+                        moveFile(inputFile, new File(folderConfig.backupTraceBoMFolder.getAbsolutePath()
                                 + File.separator + localManufacturerFolder + File.separator + inputFile.getName()));
                     }
                     else {
-                        moveFile(inputFile, new File(folder.errorTraceBoMFolder.getAbsolutePath()
+                        moveFile(inputFile, new File(folderConfig.errorTraceBoMFolder.getAbsolutePath()
                                 + File.separator + localManufacturerFolder + File.separator + inputFile.getName()));
                     }
 
@@ -340,19 +338,19 @@ public class TraceBoMImportServiceBean {
                 Constants.getTraceBoMSftpAuthPassword());
     }
 
-    private Folder setupFolders() throws IllegalAccessError, IllegalArgumentException {
+    private FolderConfig setupFolders() throws IllegalAccessError, IllegalArgumentException {
         try {
-            Folder folder = new Folder();
-            folder.localTraceBoMFolder = new File(Constants.getTraceBoMLocalFolder());
-            folder.backupTraceBoMFolder = new File(Constants.getTraceBoMBackupFolder());
-            folder.logisticTraceBoMFolder = new File(Constants.getTraceBoMLogisticFolder());
-            folder.errorTraceBoMFolder = new File(Constants.getTraceBoMErrorFolder());
+            FolderConfig folderConfig = new FolderConfig();
+            folderConfig.localTraceBoMFolder = new File(Constants.getTraceBoMLocalFolder());
+            folderConfig.backupTraceBoMFolder = new File(Constants.getTraceBoMBackupFolder());
+            folderConfig.logisticTraceBoMFolder = new File(Constants.getTraceBoMLogisticFolder());
+            folderConfig.errorTraceBoMFolder = new File(Constants.getTraceBoMErrorFolder());
 
-            ensureDirectoryExists(folder.localTraceBoMFolder);
-            ensureDirectoryExists(folder.backupTraceBoMFolder);
-            ensureDirectoryExists(folder.logisticTraceBoMFolder);
-            ensureDirectoryExists(folder.errorTraceBoMFolder);
-            return folder;
+            ensureDirectoryExists(folderConfig.localTraceBoMFolder);
+            ensureDirectoryExists(folderConfig.backupTraceBoMFolder);
+            ensureDirectoryExists(folderConfig.logisticTraceBoMFolder);
+            ensureDirectoryExists(folderConfig.errorTraceBoMFolder);
+            return folderConfig;
         }
         catch (Exception e) {
             throw new IllegalArgumentException(e);

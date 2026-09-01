@@ -68,7 +68,7 @@ public class TBOldImportServiceBean {
 
 
     /** Create file for logistic */
-    TraceBoMRootMappingType createLogisticXMLFileFromOldStructure(TaskNodeLog folderTask, File localFolder, File sourceFile, Folder folder)
+    TraceBoMRootMappingType createLogisticXMLFileFromOldStructure(TaskNodeLog folderTask, File localFolder, File sourceFile, FolderConfig folderConfig)
             throws ImportAbortedException {
         String correctedContent;
         try (BufferedReader input = new BufferedReader(new FileReader(sourceFile, ENCODING))) {
@@ -164,7 +164,7 @@ public class TBOldImportServiceBean {
         output.append("</SHIP_LIST>\n</SHIPPING_LISTS>\n");
 
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(folder.logisticTraceBoMFolder + File.separator + outputFileName))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(folderConfig.logisticTraceBoMFolder + File.separator + outputFileName))) {
             writer.write(output.toString());
         }
         catch (Exception e) { // IOException

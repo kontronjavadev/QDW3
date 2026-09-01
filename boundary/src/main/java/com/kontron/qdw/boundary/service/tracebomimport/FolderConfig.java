@@ -3,12 +3,12 @@ package com.kontron.qdw.boundary.service.tracebomimport;
 import java.io.File;
 
 /**
- * Konfiguration der verwendten Verzeichnisse.
+ * Konfiguration der verwendeten Verzeichnisse.
  * 
  * 2026 — © Kontron AG
  * @author Raymund Achner, achner.com
  */
-public class Folder {
+public class FolderConfig {
 
     File localTraceBoMFolder;
     File backupTraceBoMFolder;
