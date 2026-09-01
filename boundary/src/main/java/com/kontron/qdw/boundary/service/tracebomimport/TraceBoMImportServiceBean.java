@@ -3,18 +3,13 @@ package com.kontron.qdw.boundary.service.tracebomimport;
 import static com.kontron.qdw.boundary.service.process.FileUtils.XML_FILE_FILTER;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringReader;
-import java.io.StringWriter;
 import java.lang.invoke.MethodHandles;
-import java.net.URL;
-import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -23,9 +18,6 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
-
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,18 +25,13 @@ import org.slf4j.LoggerFactory;
 import com.kontron.common.filetransfer.FtException;
 import com.kontron.common.filetransfer.SftpAccess;
 import com.kontron.qdw.boundary.service.SchedulerServiceBean;
-import com.kontron.qdw.boundary.service.mapping.tracebomalt.TraceBoMHeaderType;
-import com.kontron.qdw.boundary.service.mapping.tracebomalt.TraceBoMMappingType;
 import com.kontron.qdw.boundary.service.mapping.tracebomalt.TraceBoMRootMappingType;
-import com.kontron.qdw.boundary.service.mapping.tracebomneu.NewTraceBoMHeaderType;
 import com.kontron.qdw.boundary.service.mapping.tracebomneu.NewTraceBoMRootType;
-import com.kontron.qdw.boundary.service.mapping.tracebomneu.NewTraceBoMType;
 import com.kontron.qdw.boundary.service.process.FileUtils;
 import com.kontron.qdw.boundary.util.Constants;
 import com.kontron.qdw.boundary.util.MailServiceFacade;
 import com.kontron.util.datetime.TimeUtil;
 import com.kontron.util.log.FileImportAbortedWithErrorsLog;
-import com.kontron.util.log.FileImportSuccessfulLog;
 import com.kontron.util.log.TaskLeafLog;
 import com.kontron.util.log.TaskNodeLog;
 
@@ -54,10 +41,6 @@ import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
-import jakarta.xml.bind.JAXBContext;
-import jakarta.xml.bind.Unmarshaller;
-import net.sourceforge.jbizmo.commons.server.logging.LoggingDTO;
-import net.sourceforge.jbizmo.commons.server.mail.MailServiceException;
 
 /**
  * Import der Trace-BoM-Dateien, die die Fertiger in verschiedenen Verzeichnissen auf dem sftp bereitstellen.
@@ -75,7 +58,6 @@ public class TraceBoMImportServiceBean {
      */
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private static final Charset ENCODING = Constants.CHARSET_UTF_8;
 
     // private static final String TASKNAME_IMPORT_REBUILD = "Import and rebuild";
     private static final String TASKNAME_IMPORT = "Trace-BoM import";
@@ -87,24 +69,14 @@ public class TraceBoMImportServiceBean {
     private static final String ROOT_ELEMENT_STOCK_RECEIPT = "STOCK_RECEIPT";
     private static final String ROOT_ELEMENT_TRACE_BOMS = "trace_boms";
 
-    private static final String SCHEMA_PATH = "/schema/";
-    private static final String SCHEMA_NAME = "TraceBoM.xsd";
-
 
 
     @EJB
     private SchedulerServiceBean schedulerService;
-
-    // @EJB
-    // private RmaImportServiceBean rmaImportServiceBean;
-    // @EJB
-    // private SvcMsgImportServiceBean svcMsgImportServiceBean;
-    // @EJB
-    // private SvcMsgRebuildMaterializedDeltaServiceBean svcMsgRebuildServiceBean;
-
-
-    // private String exchangePath = new PropertyService().getStringProperty(PROP_XML_EXCHANGE_FOLDER);
-    // private String archivePath = new PropertyService().getStringProperty(PROP_XML_ARCHIVE_FOLDER);
+    @EJB
+    private TBNewImportServiceBean tbNewService;
+    @EJB
+    private TBOldImportServiceBean tbOldService;
 
 
 
@@ -166,21 +138,22 @@ public class TraceBoMImportServiceBean {
             return;
         }
 
-
+        TaskNodeLog folderTask = mainTask.createNewSubTaskNode(ftpManufacturerFolder);
+        Map<File, List<File>> zipToExtractedFilesMapping;
         try {
             // Map, in der die Dateien einer heruntergeladenen zip-Datei aufgelöst sind.
             // Ist die heruntergeladene Datei keine zip-Datei, ist hier auch nichts gelistet.
-            Map<File, List<File>> zipToExtractedFilesMapping = downloadAndUnzipFilesForFolder(mainTask, ftpAccess, ftpManufacturerFolder, folder);
-            splitFilesInFolder(mainTask, ftpAccess, ftpManufacturerFolder, zipToExtractedFilesMapping, folder);
+            zipToExtractedFilesMapping = downloadAndUnzipFilesForFolder(ftpAccess, ftpManufacturerFolder, folder);
         }
         catch (Exception e) { // FtException, SecurityException, IOException
-            mainTask.addSubTask(new FileImportAbortedWithErrorsLog(ftpManufacturerFolder, e));
+            folderTask.addSubTask(new FileImportAbortedWithErrorsLog(ftpManufacturerFolder, e));
+            folderTask.abortTask();
             return;
         }
+        splitFilesInFolder(folderTask, ftpAccess, ftpManufacturerFolder, zipToExtractedFilesMapping, folder);
     }
 
-
-    private Map<File, List<File>> downloadAndUnzipFilesForFolder(TaskNodeLog mainTask, SftpAccess ftpAccess, String ftpManufacturerFolder,
+    private Map<File, List<File>> downloadAndUnzipFilesForFolder(SftpAccess ftpAccess, String ftpManufacturerFolder,
             Folder folder)
             throws FtException, SecurityException, IOException {
         Map<File, List<File>> zipToExtractedFilesMapping = new HashMap<>();
@@ -222,7 +195,7 @@ public class TraceBoMImportServiceBean {
         return zipToExtractedFilesMapping;
     }
 
-    private void splitFilesInFolder(TaskNodeLog mainTask, SftpAccess ftpAccess, String localManufacturerFolder,
+    private void splitFilesInFolder(TaskNodeLog folderTask, SftpAccess ftpAccess, String localManufacturerFolder,
             Map<File, List<File>> zipToExtractedFilesMapping, Folder folder) {
         if (Constants.IS_PROD_ENVIRONMENT && localManufacturerFolder.equalsIgnoreCase("test")) {
             return;
@@ -234,9 +207,19 @@ public class TraceBoMImportServiceBean {
 
         // erstelle Map aller xml-Dateien in lokalem Verzeichnis
         File[] fileMap = curLocalFolder.listFiles(XML_FILE_FILTER);
+        if (fileMap == null) {
+            folderTask.addSubTask(new FileImportAbortedWithErrorsLog(localManufacturerFolder, "I/O error reading files from directory"));
+            folderTask.abortTask();
+            return;
+        }
 
         // Iterate over all new incoming files and try to split them
         for (File inputFile : fileMap) {
+            if (FileUtils.isBusy(inputFile)) {
+                folderTask.addSubTask(new FileImportAbortedWithErrorsLog(localManufacturerFolder + File.separator + inputFile.getName(),
+                        "File is currently in usage"));
+                continue;
+            }
 
             String xmlSignatureLine = null;
             String rootElementLine = null;
@@ -252,46 +235,40 @@ public class TraceBoMImportServiceBean {
                 }
             }
             catch (Exception e) { // FileNotFoundException, IOException
-                mainTask.addSubTask(new FileImportAbortedWithErrorsLog(localManufacturerFolder + File.separator + inputFile.getName(),
+                folderTask.addSubTask(new FileImportAbortedWithErrorsLog(localManufacturerFolder + File.separator + inputFile.getName(),
                         "File cannot be opened"));
                 continue;
             }
 
 
             try {
-                // TODO: warum 20 Sek. warten und dann doch nicht verarbeiten?
-                // Vor allem ohne try-catch! Im äußeren catch wird einfach abgebrochen.
-                if (FileUtils.isBusy(inputFile)) {
-                    Thread.sleep(20);
-                    continue;
-                }
-
-
                 boolean success = false;
 
                 // ist es überhaupt eine XML-Datei?
                 if (!StringUtils.trimToEmpty(xmlSignatureLine).startsWith("<?xml")) {
-                    mainTask.addSubTask(new FileImportAbortedWithErrorsLog(localManufacturerFolder + File.separator + inputFile.getName(),
+                    folderTask.addSubTask(new FileImportAbortedWithErrorsLog(localManufacturerFolder + File.separator + inputFile.getName(),
                             "File is not a valid xml file"));
                     continue;
                 }
 
                 // Unterscheidung, ob es sich um eine alte oder neue XML-Struktur handelt
                 if (rootElementLine.contains(ROOT_ELEMENT_TRACE_BOMS)) { // neu
-                    NewTraceBoMRootType newRootMappingObject = createLogisticXMLFileFromNewStructure(mainTask, curLocalFolder, inputFile, folder);
-                    success = saveTraceBoMFromNewStructure(inputFile, newRootMappingObject);
+                    NewTraceBoMRootType newRootMappingObject = tbNewService.createLogisticXMLFileFromNewStructure(
+                            folderTask, curLocalFolder, inputFile, folder);
+                    success = tbNewService.saveTraceBoMFromNewStructure(inputFile, newRootMappingObject);
                     System.out.println("importiert: " + curLocalFolder + File.separator + inputFile.getName());
                 }
-                else if (rootElementLine.contains(ROOT_ELEMENT_STOCK_RECEIPT)) { // altS
-                    TraceBoMRootMappingType rootMappingObject = createLogisticXMLFileFromOldStructure(mainTask, curLocalFolder, inputFile, folder);
-                    success = saveTraceBoMFromNewStructure(inputFile, rootMappingObject);
+                else if (rootElementLine.contains(ROOT_ELEMENT_STOCK_RECEIPT)) { // alt
+                    TraceBoMRootMappingType rootMappingObject = tbOldService.createLogisticXMLFileFromOldStructure(
+                            folderTask, curLocalFolder, inputFile, folder);
+                    success = tbOldService.saveTraceBoMFromOldStructure(inputFile, rootMappingObject);
                     System.out.println("importiert: " + curLocalFolder + File.separator + inputFile.getName());
                 }
                 // ist XML-Datei, aber weder alte, noch neue Trae-BoM-XML-Struktur
                 else {
                     String errorMsg = String.format("Accepted xml root elements are '%s' and '%s' but root element was '%s'.",
                             ROOT_ELEMENT_TRACE_BOMS, ROOT_ELEMENT_STOCK_RECEIPT, StringUtils.strip(rootElementLine, "<>"));
-                    mainTask.addSubTask(new FileImportAbortedWithErrorsLog(localManufacturerFolder + File.separator + inputFile.getName(),
+                    folderTask.addSubTask(new FileImportAbortedWithErrorsLog(localManufacturerFolder + File.separator + inputFile.getName(),
                             errorMsg));
                     continue;
                 }
@@ -312,14 +289,14 @@ public class TraceBoMImportServiceBean {
 
                     // the zip file might have been moved by a previous error, so we have to check if still exists
                     if (zipFile.exists() && !success) {
-                        moveFile(zipFile, new File(folder.errorTraceBoMFolder.getAbsolutePath() + File.separator + localManufacturerFolder
-                                + File.separator + zipFile.getName()));
+                        moveFile(zipFile, new File(folder.errorTraceBoMFolder.getAbsolutePath()
+                                + File.separator + localManufacturerFolder + File.separator + zipFile.getName()));
                     }
 
                     if (filesOfZipFile.isEmpty()) {
                         if (zipFile.exists()) {
-                            moveFile(zipFile, new File(folder.backupTraceBoMFolder.getAbsolutePath() + File.separator + localManufacturerFolder
-                                    + File.separator + zipFile.getName()));
+                            moveFile(zipFile, new File(folder.backupTraceBoMFolder.getAbsolutePath()
+                                    + File.separator + localManufacturerFolder + File.separator + zipFile.getName()));
                         }
 
                         deleteFtpFile(ftpAccess, localManufacturerFolder, zipFile.getName());
@@ -327,40 +304,34 @@ public class TraceBoMImportServiceBean {
                 }
                 else {
                     if (success) {
-                        moveFile(inputFile, new File(folder.backupTraceBoMFolder.getAbsolutePath() + File.separator + localManufacturerFolder
-                                + File.separator + inputFile.getName()));
+                        moveFile(inputFile, new File(folder.backupTraceBoMFolder.getAbsolutePath()
+                                + File.separator + localManufacturerFolder + File.separator + inputFile.getName()));
                     }
                     else {
-                        moveFile(inputFile, new File(folder.errorTraceBoMFolder.getAbsolutePath() + File.separator + localManufacturerFolder
-                                + File.separator + inputFile.getName()));
+                        moveFile(inputFile, new File(folder.errorTraceBoMFolder.getAbsolutePath()
+                                + File.separator + localManufacturerFolder + File.separator + inputFile.getName()));
                     }
 
                     deleteFtpFile(ftpAccess, localManufacturerFolder, inputFile.getName());
                 }
 
             }
-            catch (FtException e) {
-                StringWriter stackTraceWriter = new StringWriter();
-                e.printStackTrace(new PrintWriter(stackTraceWriter));
-                String message = "Error while splitting trace files: deleting file on sftp failed!";
-
-                QDWHelper.sendErrorMail(e, message + inputFile != null ? inputFile.getAbsolutePath() : "null");
-                return;
-            }
             catch (ImportAbortedException e) {
-                mainTask.addSubTask(e.getLog());
+                folderTask.addSubTask(e.getTaskLog());
+                folderTask.abortTask();
                 continue;
             }
-            catch (Exception e) {
-                StringWriter stackTraceWriter = new StringWriter();
-                e.printStackTrace(new PrintWriter(stackTraceWriter));
-                String message = "Error while splitting trace files: importing file failed!";
-
-                QDWHelper.sendErrorMail(e, message + inputFile != null ? inputFile.getAbsolutePath() : "null");
-                return;
-            }
+            // catch (Exception e) {
+            // StringWriter stackTraceWriter = new StringWriter();
+            // e.printStackTrace(new PrintWriter(stackTraceWriter));
+            // String message = "Error while splitting trace files: importing file failed!";
+            //
+            // QDWHelper.sendErrorMail(e, message + inputFile != null ? inputFile.getAbsolutePath() : "null");
+            // return;
+            // }
         } // end for(fileMap)
     }
+
 
 
     private SftpAccess createSFTPClient(TaskNodeLog ownTask) throws FtException {
@@ -418,290 +389,27 @@ public class TraceBoMImportServiceBean {
     }
 
 
-
-    /** Create file for logistic, based on new xml structure for trace bom xmls */
-    private NewTraceBoMRootType createLogisticXMLFileFromNewStructure(TaskNodeLog mainTask, File localFolder, File sourceFile, Folder folder)
-            throws ImportAbortedException {
-        String correctedContent;
-        try (BufferedReader input = new BufferedReader(new FileReader(sourceFile, ENCODING))) {
-            // Datei vollständig in StringBuilder einlesen, damit der Inhalt vorab korrigiert werden kann
-            StringBuilder content = new StringBuilder();
-            String line;
-            while ((line = input.readLine()) != null) {
-                content.append(line);
-            }
-
-            // Some KDMS files have obscure characters at the beginning!
-            correctedContent = content.substring(content.indexOf("<"))
-                    .replace("revision_no=\"\"", "revision_no=\"?\"")
-                    .replace("part_no=\"\"", "part_no=\"0000-0000\"")
-                    .replace("order_no=\"\"", "order_no=\"?\"")
-                    .replace("&", "&amp;").replace("&amp;amp;", "&amp;");
-        }
-        catch (Exception e) { // FileNotFoundException, IOException
-            throw new ImportAbortedException(new FileImportAbortedWithErrorsLog(localFolder.getName() + File.separator + sourceFile.getName(),
-                    "File cannot be opened to correct the content"));
-        }
-
-
-        SchemaFactory sf = SchemaFactory.newInstance(javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI);
-        URL fileURL = getClass().getResource(SCHEMA_PATH + getSchemaName());
-        Unmarshaller unmarshaller;
+    /** Move file to the backup folder of the contract manufacturer */
+    private void moveFile(File sourceFile, File targetFile) throws ImportAbortedException {
         try {
-            Schema schema = sf.newSchema(fileURL);
-            unmarshaller = JAXBContext.newInstance(NewTraceBoMRootType.class).createUnmarshaller();
-            unmarshaller.setSchema(schema);
+            targetFile.mkdirs();
+            Files.move(sourceFile.toPath(), targetFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
         }
-        catch (Exception e) { // SAXException, JAXBException, NullPointerException, IllegalArgumentException
-            throw new ImportAbortedException(new FileImportAbortedWithErrorsLog(localFolder.getName() + File.separator + sourceFile.getName(),
-                    "Error initializing unmarshaller"));
-        }
-
-
-        NewTraceBoMRootType rootMappingObject;
-        try (StringReader inputReader = new StringReader(correctedContent)) {
-            rootMappingObject = (NewTraceBoMRootType) unmarshaller.unmarshal(inputReader);
-        }
-        catch (Exception e) { // JAXBException, UnmarshalException, IllegalArgumentException
-            throw new ImportAbortedException(new FileImportAbortedWithErrorsLog(localFolder.getName() + File.separator + sourceFile.getName(),
-                    "Error unmarshalling file"));
-        }
-
-
-        List<NewTraceBoMType> traceBoMs = rootMappingObject.getSerialObjects();
-        NewTraceBoMHeaderType header = rootMappingObject.getHeader();
-
-        if (traceBoMs.isEmpty()) {
-            throw new ImportAbortedException(new FileImportAbortedWithErrorsLog(localFolder.getName() + File.separator + sourceFile.getName(),
-                    "No trace BoMs"));
-        }
-
-        String outputFileName = sourceFile.getName().substring(0, (sourceFile.getName().length() - 4));
-        if (!outputFileName.contains(header.getDeliveryNoteNumber())) {
-            outputFileName = outputFileName + "_" + header.getDeliveryNoteNumber();
-        }
-        outputFileName = localFolder.getName() + "_" + outputFileName + ".xml";
-
-
-        // read first object, in order to get revision number
-        String revNo = traceBoMs.getFirst().getRevisionNumber();
-
-        StringBuilder output = new StringBuilder(1024);
-        output.append("<?xml version=\"1.0\" standalone=\"yes\" ?>\n");
-
-        // open list
-        output.append("<SHIPPING_LISTS>\n<SHIP_LIST>\n");
-
-        // Create header data
-        output.append("<HEADER>\n");
-        output.append("<LSNR>").append(header.getDeliveryNoteNumber()).append("</LSNR>\n");
-        output.append("<LotNr>").append(header.getLotNumber()).append("</LotNr>\n");
-        output.append("<CE_Nr>").append(revNo).append("</CE_Nr>\n");
-        output.append("<BELEG_Nr>").append(header.getOrderNumber()).append("</BELEG_Nr>\n");
-        output.append("</HEADER>\n");
-
-        // Create serObj. data
-        output.append("<DATA>\n");
-        // Iterate over all serial numbers
-        for (NewTraceBoMType traceBoM : traceBoMs) {
-            // check serial number field, as Plexus sometimes only fills customer serial number
-            if (traceBoM.getSerialNumber().isEmpty() && !traceBoM.getCustomerSerialNumber().isEmpty()) {
-                traceBoM.setSerialNumber(traceBoM.getCustomerSerialNumber());
-            }
-
-            output.append("<SNRSET>\n");
-
-            output.append("<SNR>").append(traceBoM.getSerialNumber()).append("</SNR>\n");
-            if (StringUtils.isEmpty(traceBoM.getCustomerSerialNumber())) {
-                output.append("<SNR_CUST/>\n");
-            }
-            else {
-                output.append("<SNR_CUST>").append(traceBoM.getCustomerSerialNumber()).append("</SNR_CUST>\n");
-            }
-            output.append("<SNR_SYS1/>\n");
-            output.append("<SNR_SYS2/>\n");
-            output.append("<SNR_SYS3/>\n");
-            output.append("<SNR_SYS4/>\n");
-            output.append("<SNR_SYS5/>\n");
-
-            output.append("</SNRSET>\n");
-        }
-        output.append("</DATA>\n");
-
-        // close list
-        output.append("</SHIP_LIST>\n</SHIPPING_LISTS>\n");
-
-
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(folder.logisticTraceBoMFolder + File.separator + outputFileName))) {
-            writer.write(output.toString());
-        }
-        catch (Exception e) { // IOException
-            throw new ImportAbortedException(new FileImportAbortedWithErrorsLog(localFolder.getName() + File.separator + sourceFile.getName(),
-                    "Error creating logistic XML file by Trace BoM file (new structure)"));
-        }
-
-
-        // Logistic file has been created successfully!
-        mainTask.addSubTask(new FileImportSuccessfulLog(localFolder.getName() + File.separator + sourceFile.getName(),
-                traceBoMs.size()));
-        return rootMappingObject;
-    }
-
-
-    /** Create file for logistic */
-    private TraceBoMRootMappingType createLogisticXMLFileFromOldStructure(TaskNodeLog mainTask, File localFolder, File sourceFile, Folder folder)
-            throws ImportAbortedException {
-        String correctedContent;
-        try (BufferedReader input = new BufferedReader(new FileReader(sourceFile, ENCODING))) {
-            // Datei vollständig in StringBuilder einlesen, damit der Inhalt vorab korrigiert werden kann
-            StringBuilder content = new StringBuilder();
-            String line;
-            while ((line = input.readLine()) != null) {
-                content.append(line);
-            }
-
-            // Some KDMS files have obscure characters at the beginning!
-            correctedContent = content.substring(content.indexOf("<"));
-        }
-        catch (Exception e) { // FileNotFoundException, IOException
-            throw new ImportAbortedException(new FileImportAbortedWithErrorsLog(localFolder.getName() + File.separator + sourceFile.getName(),
-                    "File cannot be opened to correct the content"));
-        }
-
-
-        Unmarshaller unmarshaller;
-        try {
-            unmarshaller = JAXBContext.newInstance(TraceBoMRootMappingType.class).createUnmarshaller();
-        }
-        catch (Exception e) { // JAXBException, IllegalArgumentException
-            throw new ImportAbortedException(new FileImportAbortedWithErrorsLog(localFolder.getName() + File.separator + sourceFile.getName(),
-                    "Error initializing unmarshaller"));
-        }
-
-
-        TraceBoMRootMappingType rootMappingObject;
-        try (StringReader inputReader = new StringReader(correctedContent)) {
-            rootMappingObject = (TraceBoMRootMappingType) unmarshaller.unmarshal(inputReader);
-        }
-        catch (Exception e) { // JAXBException, UnmarshalException, IllegalArgumentException
-            throw new ImportAbortedException(new FileImportAbortedWithErrorsLog(localFolder.getName() + File.separator + sourceFile.getName(),
-                    "Error unmarshalling file"));
-        }
-
-
-        List<TraceBoMMappingType> traceBoMs = rootMappingObject.getSerialObjects();
-        TraceBoMHeaderType header = rootMappingObject.getHeader();
-
-        if (traceBoMs.isEmpty()) {
-            throw new ImportAbortedException(new FileImportAbortedWithErrorsLog(localFolder.getName() + File.separator + sourceFile.getName(),
-                    "No trace BoMs"));
-        }
-
-        String outputFileName = sourceFile.getName().substring(0, (sourceFile.getName().length() - 4));
-        if (!outputFileName.contains(header.getDeliveryNoteNumber())) {
-            outputFileName = outputFileName + "_" + header.getDeliveryNoteNumber();
-        }
-        outputFileName = localFolder.getName() + "_" + outputFileName + ".xml";
-
-
-        StringBuilder output = new StringBuilder(1024);
-        output.append("<?xml version=\"1.0\" standalone=\"yes\" ?>\n");
-
-        // open list
-        output.append("<SHIPPING_LISTS>\n<SHIP_LIST>\n");
-
-        // Create header data
-        output.append("<HEADER>\n");
-        output.append("<LSNR>").append(header.getDeliveryNoteNumber()).append("</LSNR>\n");
-        output.append("<LotNr>").append(header.getLotNumber()).append("</LotNr>\n");
-        output.append("<CE_Nr>").append(header.getMaterialRevision().getRevisionNumber()).append("</CE_Nr>\n");
-        output.append("<BELEG_Nr>").append(header.getOrderNumber()).append("</BELEG_Nr>\n");
-        output.append("</HEADER>\n");
-
-        // Create serObj. data
-        output.append("<DATA>\n");
-        // Iterate over all serial numbers
-        for (TraceBoMMappingType traceBoM : traceBoMs) {
-            output.append("<SNRSET>\n");
-
-            output.append("<SNR>").append(traceBoM.getSerialNumber()).append("</SNR>\n");
-            if (StringUtils.isEmpty(traceBoM.getCustomerSerialNumber())) {
-                output.append("<SNR_CUST/>\n");
-            }
-            else {
-                output.append("<SNR_CUST>").append(traceBoM.getCustomerSerialNumber()).append("</SNR_CUST>\n");
-            }
-            output.append("<SNR_SYS1/>\n");
-            output.append("<SNR_SYS2/>\n");
-            output.append("<SNR_SYS3/>\n");
-            output.append("<SNR_SYS4/>\n");
-            output.append("<SNR_SYS5/>\n");
-
-            output.append("</SNRSET>\n");
-        }
-        output.append("</DATA>\n");
-
-        // close list
-        output.append("</SHIP_LIST>\n</SHIPPING_LISTS>\n");
-
-
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(folder.logisticTraceBoMFolder + File.separator + outputFileName))) {
-            writer.write(output.toString());
-        }
-        catch (Exception e) { // IOException
-            throw new ImportAbortedException(new FileImportAbortedWithErrorsLog(localFolder.getName() + File.separator + sourceFile.getName(),
-                    "Error creating logistic XML file by Trace BoM file (old structure)"));
-        }
-
-
-        // Logistic file has been created successfully!
-        mainTask.addSubTask(new FileImportSuccessfulLog(localFolder.getName() + File.separator + sourceFile.getName(),
-                traceBoMs.size()));
-        return rootMappingObject;
-    }
-
-
-    /** @return success */
-    private boolean saveTraceBoMFromNewStructure(File sourceFile, NewTraceBoMRootType rootMappingObject) {
-        long start = System.currentTimeMillis();
-        try {
-            // Import trace BoM
-            traceBoMImportService.performTraceBoMXMLImportFromNewStructure(rootMappingObject);
-            return true;
-        }
-        catch (Exception ex) {
-            String subject = "Error while processing content of trace file " + sourceFile.getName() + "!";
-            LoggingDTO logEntry = new LoggingDTO(subject, System.currentTimeMillis() - start, ex);
-            logger.error(logEntry);
-
-            // Send mail that content was not readable
-            QDWHelper.sendErrorMail(subject, sourceFile.getPath(), ex);
-            return false;
+        catch (Exception e) {
+            throw new ImportAbortedException(new FileImportAbortedWithErrorsLog(
+                    sourceFile.getName(), "Could not move splitted file to backup folder: " + e.getMessage()));
         }
     }
 
-    /** @return success */
-    private boolean saveTraceBoMFromNewStructure(File sourceFile, TraceBoMRootMappingType rootMappingObject) {
-        long start = System.currentTimeMillis();
+    private void deleteFtpFile(SftpAccess ftpAccess, String ftpFolder, String ftpFile) throws ImportAbortedException {
         try {
-            // Import trace BoM
-            traceBoMImportService.performTraceBoMXMLImport(rootMappingObject);
-            return true;
+            if (Constants.IS_PROD_ENVIRONMENT && ftpAccess != null) {
+                ftpAccess.deleteFile(ftpFolder, ftpFile);
+            }
         }
-        catch (Exception ex) {
-            String messageSubject = "Error while processing content of trace file " + sourceFile.getName() + "!";
-            LoggingDTO logEntry = new LoggingDTO(messageSubject, System.currentTimeMillis() - start, ex);
-            logger.error(logEntry);
-
-            double size = sourceFile.length() / 1024;
-
-            // Send mail that content was not readable
-            String stack = ExceptionUtil.stacktraceToString(ex);
-            String messageBody = sourceFile.getPath() + "\nFile size: " + size + "kB\n\n" + ExceptionUtil.getMoreUsefulExceptionMessage(ex)
-                    + "\n\nstack trace:\n" + stack;
-            QDWHelper.sendErrorMail(messageSubject, messageBody); // send Mail to Admins
-            QDWHelper.sendProductOwnerMail(messageSubject, messageBody); // send Mail to Product Owners
-            return false;
+        catch (FtException e) {
+            throw new ImportAbortedException(new FileImportAbortedWithErrorsLog(
+                    ftpFile, "Could not delete file on FTP: " + e.getMessage()));
         }
     }
 
@@ -749,33 +457,6 @@ public class TraceBoMImportServiceBean {
         }
     }
 
-    protected String getSchemaName() {
-        return SCHEMA_NAME;
-    }
-
-
-
-    class Folder {
-        File localTraceBoMFolder;
-        File backupTraceBoMFolder;
-        File errorTraceBoMFolder;
-        File logisticTraceBoMFolder;
-    }
-
-    class ImportAbortedException extends Exception {
-
-        private static final long serialVersionUID = 2515003477041142545L;
-        private final FileImportAbortedWithErrorsLog log;
-
-        ImportAbortedException(FileImportAbortedWithErrorsLog log) {
-            this.log = log;
-        }
-
-        public FileImportAbortedWithErrorsLog getLog() {
-            return log;
-        }
-
-    }
 
 
     /*

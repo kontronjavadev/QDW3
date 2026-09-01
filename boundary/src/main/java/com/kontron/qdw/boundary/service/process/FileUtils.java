@@ -8,12 +8,14 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.RandomAccessFile;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
-import java.nio.channels.OverlappingFileLockException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.concurrent.TimeUnit;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -64,34 +66,51 @@ public class FileUtils {
     }
 
     /**
-     * @param file
+     * @param file file to check
      * @return true if file is not locked by another system
      */
-    public static boolean isBusy(final File file) {
-
-        FileLock lock = null;
-
-        try (RandomAccessFile raf = new RandomAccessFile(file, "rw"); FileChannel channel = raf.getChannel()) {
-
-            // Get an exclusive lock on the file
-            try {
-                lock = channel.tryLock();
-            }
-            catch (OverlappingFileLockException e) {
-                return true;
-            }
-            finally {
-                if (lock != null) {
-                    lock.release();
-                    lock.close();
-                }
-            }
+    public static boolean isBusy(File file) {
+        Path filePath = file.toPath();
+        if (isFileReady(filePath)) {
+            return false; // Datei ist frei (==nicht busy)
         }
-        catch (Throwable e) {
+
+        try {
+            TimeUnit.SECONDS.sleep(15);
+        }
+        catch (InterruptedException e) {
+            // Wichtig im EE/WildFly-Kontext: Interrupt-Flag wiederherstellen
+            Thread.currentThread().interrupt();
             return true;
         }
 
-        return false;
+        // Nach 15 Sekunden erneuter Check. Wenn !isFileReady, ist sie immer noch busy.
+        return !isFileReady(filePath);
+    }
+
+    private static boolean isFileReady(Path file) {
+        try (FileChannel channel = FileChannel.open(file, StandardOpenOption.WRITE, StandardOpenOption.APPEND);
+                FileLock lock = channel.tryLock()) {
+
+            if (lock == null) {
+                return false;
+            }
+
+            // feststellen, ob die Datei gerade noch übertragen wird und sich die Größe ändert
+            long sizeBefore = Files.size(file);
+            TimeUnit.MILLISECONDS.sleep(150);
+            long sizeAfter = Files.size(file);
+
+            return sizeBefore == sizeAfter;
+        }
+        catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            return false;
+        }
+        catch (Exception e) {
+            // Greift bei fehlenden Rechten, gelöschter Datei oder OverlappingFileLockException
+            return false;
+        }
     }
 
     /**
