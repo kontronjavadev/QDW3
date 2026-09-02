@@ -240,8 +240,6 @@ public class TraceBoMImportServiceBean {
 
 
             try {
-                boolean success = false;
-
                 // ist es überhaupt eine XML-Datei?
                 if (!StringUtils.trimToEmpty(xmlSignatureLine).startsWith("<?xml")) {
                     folderTask.addSubTask(new FileImportAbortedWithErrorsLog(localManufacturerFolder + File.separator + inputFile.getName(),
@@ -249,17 +247,18 @@ public class TraceBoMImportServiceBean {
                     continue;
                 }
 
+                ImportResult result;
                 // Unterscheidung, ob es sich um eine alte oder neue XML-Struktur handelt
                 if (rootElementLine.contains(ROOT_ELEMENT_TRACE_BOMS)) { // neu
-                    NewTraceBoMRootType newRootMappingObject = tbNewService.createLogisticXMLFileFromNewStructure(
+                    NewTraceBoMRootType trBoMRootImported = tbNewService.createLogisticXMLFile(
                             folderTask, curLocalFolder, inputFile, folderConfig);
-                    success = tbNewService.saveTraceBoMFromNewStructure(inputFile, newRootMappingObject);
+                    result = tbNewService.saveTraceBoM(inputFile, trBoMRootImported);
                     System.out.println("importiert: " + curLocalFolder + File.separator + inputFile.getName());
                 }
                 else if (rootElementLine.contains(ROOT_ELEMENT_STOCK_RECEIPT)) { // alt
-                    TraceBoMRootMappingType rootMappingObject = tbOldService.createLogisticXMLFileFromOldStructure(
+                    TraceBoMRootMappingType trBoMRootImported = tbOldService.createLogisticXMLFile(
                             folderTask, curLocalFolder, inputFile, folderConfig);
-                    success = tbOldService.saveTraceBoMFromOldStructure(inputFile, rootMappingObject);
+                    result = tbOldService.saveTraceBoM(inputFile, trBoMRootImported);
                     System.out.println("importiert: " + curLocalFolder + File.separator + inputFile.getName());
                 }
                 // ist XML-Datei, aber weder alte, noch neue Trae-BoM-XML-Struktur
@@ -286,7 +285,7 @@ public class TraceBoMImportServiceBean {
                     inputFile.delete();
 
                     // the zip file might have been moved by a previous error, so we have to check if still exists
-                    if (zipFile.exists() && !success) {
+                    if (zipFile.exists() && !result.success()) {
                         moveFile(zipFile, new File(folderConfig.errorTraceBoMFolder.getAbsolutePath()
                                 + File.separator + localManufacturerFolder + File.separator + zipFile.getName()));
                     }
@@ -301,7 +300,7 @@ public class TraceBoMImportServiceBean {
                     }
                 }
                 else {
-                    if (success) {
+                    if (result.success()) {
                         moveFile(inputFile, new File(folderConfig.backupTraceBoMFolder.getAbsolutePath()
                                 + File.separator + localManufacturerFolder + File.separator + inputFile.getName()));
                     }

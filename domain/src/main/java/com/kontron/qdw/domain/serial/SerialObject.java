@@ -13,6 +13,7 @@ import com.kontron.qdw.domain.base.*;
 @Table(name = "serial_object_tab")
 @NamedQuery(name = SerialObject.NQ_UK_FIND_BY_SERIALNUMBER_AND_MATERIAL, query = "select a from SerialObject a where a.serialNumber = :serialNumber and a.material.id = :material")
 @NamedQuery(name = SerialObject.NQ_UK_FIND_BY_SERIALNUMBER_AND_MATERIAL_SAPNR, query = "select a from SerialObject a where a.serialNumber = :serialNumber and a.material.sapNumber = :materialSapNr")
+@NamedQuery(name = SerialObject.NQ_UK_FIND_BY_SERIALNUMBER_AND_MATERIAL_NR, query = "select a from SerialObject a where a.serialNumber = :serialNumber and a.material.materialNumber = :materialNr")
 @NamedQuery(name = SerialObject.NQ_UK_SEARCH_BY_SERIALNUMBER_AND_MATERIAL, query = "select a from SerialObject a where a.serialNumber like :serialNumber and a.material.id = :material")
 @NamedQuery(name = SerialObject.NQ_UK_EXISTS_BY_SERIALNUMBER_AND_MATERIAL, query = "select count(a) from SerialObject a where a.serialNumber = :serialNumber and a.material.id = :material")
 @NamedQuery(name = SerialObject.NQ_UK_EXISTS_BY_SERIALNUMBER_AND_MATERIAL_AND_ID, query = "select count(a) from SerialObject a where a.serialNumber = :serialNumber and a.material.id = :material and a.id <> :id")
@@ -38,6 +39,7 @@ public class SerialObject extends AbstractEntityWithId {
     @Generated
     public static final String NQ_UK_FIND_BY_SERIALNUMBER_AND_MATERIAL = "SerialObject.getBySerialNumber_And_Material";
     public static final String NQ_UK_FIND_BY_SERIALNUMBER_AND_MATERIAL_SAPNR = "SerialObject.getBySerialNumber_And_Material_SapNr";
+    public static final String NQ_UK_FIND_BY_SERIALNUMBER_AND_MATERIAL_NR = "SerialObject.getBySerialNumber_And_Material_Nr";
     @Generated
     public static final String NQ_DELETE = "SerialObject.delete";
     @Generated

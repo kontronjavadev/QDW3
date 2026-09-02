@@ -8,6 +8,8 @@ import java.io.FileWriter;
 import java.io.StringReader;
 import java.lang.invoke.MethodHandles;
 import java.nio.charset.Charset;
+import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -16,21 +18,35 @@ import org.slf4j.LoggerFactory;
 
 import com.kontron.qdw.boundary.service.mapping.tracebomalt.TraceBoMHeaderType;
 import com.kontron.qdw.boundary.service.mapping.tracebomalt.TraceBoMMappingType;
+import com.kontron.qdw.boundary.service.mapping.tracebomalt.TraceBoMRevisionMappingType;
 import com.kontron.qdw.boundary.service.mapping.tracebomalt.TraceBoMRootMappingType;
-import com.kontron.qdw.boundary.service.mapping.tracebomneu.NewTraceBoMRootType;
 import com.kontron.qdw.boundary.util.Constants;
+import com.kontron.qdw.domain.base.Supplier;
+import com.kontron.qdw.domain.material.Material;
+import com.kontron.qdw.domain.material.MaterialRevision;
+import com.kontron.qdw.domain.serial.SerialObject;
+import com.kontron.qdw.domain.serial.TraceBoM;
+import com.kontron.qdw.repository.base.PlantRepository;
+import com.kontron.qdw.repository.base.SupplierRepository;
+import com.kontron.qdw.repository.material.MaterialRepository;
+import com.kontron.qdw.repository.material.MaterialRevisionRepository;
+import com.kontron.qdw.repository.serial.SerialObjectRepository;
 import com.kontron.util.log.FileImportAbortedWithErrorsLog;
 import com.kontron.util.log.FileImportSuccessfulLog;
 import com.kontron.util.log.TaskNodeLog;
-import com.kontron.util.text.ExceptionUtil;
+import com.kontron.util.text.StringUtil;
 
+import jakarta.annotation.Resource;
 import jakarta.annotation.security.PermitAll;
+import jakarta.ejb.EJB;
+import jakarta.ejb.SessionContext;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.Unmarshaller;
-import net.sourceforge.jbizmo.commons.server.logging.LoggingDTO;
 
 /**
  * Import der Trace-BoM-Dateien, die die Fertiger in verschiedenen Verzeichnissen auf dem sftp bereitstellen.
@@ -39,7 +55,7 @@ import net.sourceforge.jbizmo.commons.server.logging.LoggingDTO;
  * @author Raymund Achner, achner.com
  */
 @Stateless
-public class TBOldImportServiceBean {
+public class TBOldImportServiceBean extends AbstractTBImportServiceBean {
     /*
      * Timeout konfigurieren:
      * standalone.xml, <subsystem xmlns="urn:jboss:domain:transactions:6.0">:
@@ -49,6 +65,26 @@ public class TBOldImportServiceBean {
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private static final Charset ENCODING = Constants.CHARSET_UTF_8;
+
+    private static final String DEFAULT_PLANT_CODE = "6000";
+    private static final String REVISION_NO_SUFFIX = " ALT(01)";
+
+
+    @EJB
+    private SupplierRepository supplierManager;
+    @EJB
+    private MaterialRevisionRepository materialRevisionManager;
+    @EJB
+    private MaterialRepository materialManager;
+    @EJB
+    private PlantRepository plantManager;
+    @EJB
+    private SerialObjectRepository serObjManager;
+
+    @PersistenceContext
+    private EntityManager em;
+    @Resource
+    private SessionContext ctx;
 
 
 
@@ -62,13 +98,10 @@ public class TBOldImportServiceBean {
     // private SvcMsgRebuildMaterializedDeltaServiceBean svcMsgRebuildServiceBean;
 
 
-    // private String exchangePath = new PropertyService().getStringProperty(PROP_XML_EXCHANGE_FOLDER);
-    // private String archivePath = new PropertyService().getStringProperty(PROP_XML_ARCHIVE_FOLDER);
-
-
 
     /** Create file for logistic */
-    TraceBoMRootMappingType createLogisticXMLFileFromOldStructure(TaskNodeLog folderTask, File localFolder, File sourceFile, FolderConfig folderConfig)
+    TraceBoMRootMappingType createLogisticXMLFile(TaskNodeLog folderTask, File localFolder, File sourceFile,
+            FolderConfig folderConfig)
             throws ImportAbortedException {
         String correctedContent;
         try (BufferedReader input = new BufferedReader(new FileReader(sourceFile, ENCODING))) {
@@ -184,29 +217,79 @@ public class TBOldImportServiceBean {
     /** @return success */
     @PermitAll
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public boolean saveTraceBoMFromOldStructure(File sourceFile, TraceBoMRootMappingType rootMappingObject) {
+    public ImportResult saveTraceBoM(File sourceFile, TraceBoMRootMappingType trBoMRootImported) {
         long start = System.currentTimeMillis();
         try {
             // Import trace BoM
-            traceBoMImportService.performTraceBoMXMLImport(rootMappingObject);
-            return true;
+            Supplier supplier = supplierManager.findById(trBoMRootImported.getHeader().getSupplierCode());
+
+            boolean persistTraceBoM = true;
+            HashMap<TraceBoM, TraceBoMMappingType> persistedBoMs = new HashMap<>();
+            TraceBoMRevisionMappingType trBoMRevisionImported = trBoMRootImported.getHeader().getMaterialRevision();
+
+            // Some CMs only deliver the Rev6 field. In order to find a proper revision the alternative number must be added!
+            String revisionNo = trBoMRevisionImported.getRevisionNumber();
+            if (!revisionNo.contains(REVISION_NO_SUFFIX)) {
+                revisionNo = (revisionNo + REVISION_NO_SUFFIX).trim();
+            }
+            trBoMRevisionImported.setRevisionNumber(revisionNo);
+
+
+            MaterialRevision materialRevision = findMaterialRevision(trBoMRevisionImported.getMaterialNumber(),
+                    trBoMRevisionImported.getRevisionNumber());
+            Material material = materialRevision.getMaterial();
+
+            LocalDate parsedProdDate = parseToLocalDate(trBoMRootImported.getHeader().getProductionDate());
+
+            for (TraceBoMMappingType trBoMImported : trBoMRootImported.getSerialObjects()) {
+                SerialObject serialObject = findSerialObject(trBoMImported.getSerialNumber(), trBoMImported.getCustomerSerialNumber(),
+                        material, trBoMRootImported.getHeader().getOrderNumber(), parsedProdDate);
+
+                // First we check if the current BoM has been already persisted!
+                for (TraceBoM persistedBoM : persistedBoMs.keySet()) {
+                    if (trBoMImported.equals(persistedBoMs.get(persistedBoM))) {
+                        persistTraceBoM = false;
+                        serialObject.setTraceBoM(persistedBoM);
+                        break;
+                    }
+                }
+
+                if (persistTraceBoM) {
+                    // Create a new trace BoM
+                    TraceBoM traceBoM = new TraceBoM();
+                    traceBoM.setDeliveryNoteNumber(trBoMRootImported.getHeader().getDeliveryNoteNumber());
+
+                    traceBoM.setProductionDate(parsedProdDate);
+
+                    traceBoM.setLotNumber(trBoMRootImported.getHeader().getLotNumber());
+                    traceBoM.setOrderNumber(trBoMRootImported.getHeader().getOrderNumber());
+                    traceBoM.setSupplier(supplier);
+                    traceBoM.setMaterialRevision(materialRevision);
+
+                    traceBoM = traceBoMCRUD.persistTraceBoM(traceBoM, true, true, true);
+
+                    // Save all trace BoMs that have been persisted
+                    persistedBoMs.put(traceBoM, trBoMImported);
+
+                    serialObject.setTraceBoM(traceBoM);
+
+                    // Add all trace BoM items to trace BoM
+                    importTraceBoMItems(traceBoM, trBoMImported, trBoMRootImported.getHeader());
+                }
+
+                persistTraceBoM = true;
+            }
+
+            em.flush();
+            return ImportResult.ok();
         }
-        catch (Exception ex) {
-            String messageSubject = "Error while processing content of trace file " + sourceFile.getName() + "!";
-            LoggingDTO logEntry = new LoggingDTO(messageSubject, System.currentTimeMillis() - start, ex);
-            logger.error(logEntry);
+        catch (Exception e) {
+            ctx.setRollbackOnly();
+            String errorMsg = "Error while processing trace file " + sourceFile.getName() + ": " + e.getMessage();
+            logger.error(errorMsg);
 
-            double size = sourceFile.length() / 1024;
-
-            // Send mail that content was not readable
-            String stack = ExceptionUtil.stacktraceToString(ex);
-            String messageBody = sourceFile.getPath() + "\nFile size: " + size + "kB\n\n" + ExceptionUtil.getMoreUsefulExceptionMessage(ex)
-                    + "\n\nstack trace:\n" + stack;
-            QDWHelper.sendErrorMail(messageSubject, messageBody); // send Mail to Admins
-            QDWHelper.sendProductOwnerMail(messageSubject, messageBody); // send Mail to Product Owners
-            return false;
+            return ImportResult.fail(errorMsg);
         }
     }
-
 
 }

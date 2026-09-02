@@ -120,6 +120,20 @@ public class SerialObjectRepository extends AbstractRepository<SerialObject, Lon
         throw new IllegalStateException("Non unique result!");
     }
 
+    public SerialObject findBySerialNumberAndMaterialNr(String serialNumber, String materialNr) {
+        final TypedQuery<SerialObject> query = em.createNamedQuery(SerialObject.NQ_UK_FIND_BY_SERIALNUMBER_AND_MATERIAL_NR, SerialObject.class);
+        query.setParameter(PARAM_SERIALNUMBER, serialNumber);
+        query.setParameter("materialNr", materialNr);
+
+        final List<SerialObject> resultList = query.getResultList();
+
+        if (resultList.size() <= 1) {
+            return resultList.stream().findFirst().orElse(null);
+        }
+
+        throw new IllegalStateException("Non unique result!");
+    }
+
     public List<SerialObject> findByIds(Collection<Long> ids) {
         // 1. Root-Graph erstellen
         EntityGraph<SerialObject> graph = em.createEntityGraph(SerialObject.class);
