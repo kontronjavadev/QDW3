@@ -59,7 +59,7 @@ public class RebuildView extends CopyClipboard implements Serializable {
     }
 
     public void initView() {
-        logger.debug("Initialize xml import view");
+        logger.debug("Initialize rebuild view");
 
         bundle = ResourceBundle.getBundle(DEFAULT_BUNDLE_NAME, userSession.getLocale());
 
@@ -77,7 +77,7 @@ public class RebuildView extends CopyClipboard implements Serializable {
                 .withZone(TimeZone.getTimeZone(userSession.getTimeZone()).toZoneId());
         decimalFormat.applyPattern(userSession.getNumberFormat());
 
-        logger.debug("XML import view initialization finished");
+        logger.debug("Rebuild view initialization finished");
     }
 
 

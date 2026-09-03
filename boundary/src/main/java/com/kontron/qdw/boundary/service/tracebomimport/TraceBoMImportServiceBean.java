@@ -81,6 +81,23 @@ public class TraceBoMImportServiceBean {
 
 
 
+    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+    public List<String> getRootFolders() throws IllegalAccessError, IllegalArgumentException, FtException {
+        SftpAccess ftpAccess = createSFTPClient();
+        List<String> rootFolders = null;
+        try {
+            rootFolders = ftpAccess.getReadableDirList(".");
+        }
+        catch (SecurityException | FtException se) {
+            throw new IllegalAccessError("Unable to access root folders");
+        }
+
+        if (rootFolders == null || rootFolders.isEmpty()) {
+            throw new IllegalArgumentException("No root folders found!");
+        }
+        return rootFolders;
+    }
+
     @Asynchronous
     @PermitAll
     @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
@@ -97,9 +114,9 @@ public class TraceBoMImportServiceBean {
         FolderConfig folderConfig;
         List<String> rootFolders = null;
         try {
-            ftpAccess = createSFTPClient(mainTask);
+            ftpAccess = createSFTPClient();
             folderConfig = setupFolders();
-            rootFolders = getRootFolders(ftpAccess);
+            rootFolders = getRootFolders();
         }
         catch (Exception e) {
             TaskLeafLog tskInit = mainTask.createNewSubTaskLeaf("initializing sftp access for import");
@@ -342,7 +359,7 @@ public class TraceBoMImportServiceBean {
 
 
 
-    private SftpAccess createSFTPClient(TaskNodeLog ownTask) throws FtException {
+    private SftpAccess createSFTPClient() throws FtException {
         return new SftpAccess(Constants.getTraceBoMSftpHost(),
                 Constants.getTraceBoMSftpAuthUser(),
                 Constants.getTraceBoMSftpAuthPassword());
@@ -379,21 +396,6 @@ public class TraceBoMImportServiceBean {
         if (!dir.isDirectory()) {
             throw new IllegalArgumentException("Is not a folder: " + dir.getAbsolutePath());
         }
-    }
-
-    private List<String> getRootFolders(SftpAccess ftpAccess) throws IllegalAccessError, IllegalArgumentException {
-        List<String> rootFolders = null;
-        try {
-            rootFolders = ftpAccess.getReadableDirList(".");
-        }
-        catch (SecurityException | FtException se) {
-            throw new IllegalAccessError("Unable to access root folders");
-        }
-
-        if (rootFolders == null || rootFolders.isEmpty()) {
-            throw new IllegalArgumentException("No root folders found!");
-        }
-        return rootFolders;
     }
 
 

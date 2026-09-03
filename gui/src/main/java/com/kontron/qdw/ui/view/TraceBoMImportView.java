@@ -24,15 +24,15 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
 
-@Named("repairImportView")
+@Named("traceBoMImportView")
 @SessionScoped
-public class RepairImportView extends CopyClipboard implements Serializable {
+public class TraceBoMImportView extends CopyClipboard implements Serializable {
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private static final long serialVersionUID = 1L;
 
     protected static final String ITEM_LABEL_SEPARATOR = ": ";
-    public static final String PAGE_URL = "/view/repairImportView.jsf?faces-redirect=true";
+    public static final String PAGE_URL = "/view/traceBoMImportView.jsf?faces-redirect=true";
     private String formTitle;
 
     private final UserSession userSession;
@@ -46,20 +46,20 @@ public class RepairImportView extends CopyClipboard implements Serializable {
 
 
     @Generated
-    public RepairImportView() {
+    public TraceBoMImportView() {
         userSession = null;
         importServiceBean = null;
     }
 
     @Inject
     @Generated
-    public RepairImportView(UserSession userSession, RepairImportServiceBean importServiceBean) {
+    public TraceBoMImportView(UserSession userSession, RepairImportServiceBean importServiceBean) {
         this.userSession = userSession;
         this.importServiceBean = importServiceBean;
     }
 
     public void initView() {
-        logger.debug("Initialize repair import view");
+        logger.debug("Initialize trace BoM import view");
 
         bundle = ResourceBundle.getBundle(DEFAULT_BUNDLE_NAME, userSession.getLocale());
 
@@ -77,7 +77,7 @@ public class RepairImportView extends CopyClipboard implements Serializable {
                 .withZone(TimeZone.getTimeZone(userSession.getTimeZone()).toZoneId());
         decimalFormat.applyPattern(userSession.getNumberFormat());
 
-        logger.debug("Repair import view initialization finished");
+        logger.debug("Trace BoM import view initialization finished");
     }
 
 
