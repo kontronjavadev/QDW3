@@ -55,7 +55,7 @@ public class ImportSchedulerServiceBean {
 
     /**
      * Scheduler für automatischen Import der Trace-BoM-Daten für die Prod-Umgebung.
-     * Jede Viertelstunde, beginnend mit Minute 0
+     * Jede Viertelstunde zu Minute 15, 30, 45, 00
      */
     @Schedule(dayOfWeek = "*", hour = "*", minute = "*/15", second = "0", persistent = false)
     @AccessTimeout(value = 5, unit = TimeUnit.MINUTES)
@@ -67,9 +67,13 @@ public class ImportSchedulerServiceBean {
 
     /**
      * Scheduler für automatischen Import der Trace-BoM-Daten für die Test-Umgebung.
-     * Einmal stündlich bei Minute 0
+     * Jede Viertelstunde zu Minute 12, 27, 42, 57, also jeweils drei Minuten vor der Produktionsumgebung.
+     * 
+     * Hintergrund: Nach Verarbeitung der Importdateien löscht die Produktion die Daten auf dem Server.
+     * Was in den verbleibenden 3 Minuten auf dem FTP-Server landet, haben wir nicht in der Hand, aber
+     * zumindest sollte die Testumgebung mit dieser Maßnahme mit den meisten Daten versorgt werden.
      */
-    @Schedule(dayOfWeek = "*", hour = "*", minute = "0", second = "0", persistent = false)
+    @Schedule(dayOfWeek = "*", hour = "*", minute = "12/15", second = "0", persistent = false)
     @AccessTimeout(value = 5, unit = TimeUnit.MINUTES)
     public void runScheduledTraceBoMImportTest() {
         if (!Constants.IS_PROD_ENVIRONMENT) {

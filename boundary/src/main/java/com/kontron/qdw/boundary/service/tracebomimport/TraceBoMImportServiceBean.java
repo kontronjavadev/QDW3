@@ -32,6 +32,7 @@ import com.kontron.qdw.boundary.util.Constants;
 import com.kontron.qdw.boundary.util.MailServiceFacade;
 import com.kontron.util.datetime.TimeUtil;
 import com.kontron.util.log.FileImportAbortedWithErrorsLog;
+import com.kontron.util.log.FileImportSuccessfulLog;
 import com.kontron.util.log.TaskLeafLog;
 import com.kontron.util.log.TaskNodeLog;
 
@@ -213,6 +214,7 @@ public class TraceBoMImportServiceBean {
 
         // Iterate over all new incoming files and try to split them
         for (File inputFile : fileMap) {
+            long startTime = System.currentTimeMillis();
             if (FileUtils.isBusy(inputFile)) {
                 folderTask.addSubTask(new FileImportAbortedWithErrorsLog(localManufacturerFolder + File.separator + inputFile.getName(),
                         "File is currently in usage"));
@@ -246,6 +248,15 @@ public class TraceBoMImportServiceBean {
                             "File is not a valid xml file"));
                     continue;
                 }
+                // ist zwar eine XML-Datei, aber weder alte, noch neue Trae-BoM-XML-Struktur
+                if (!rootElementLine.contains(ROOT_ELEMENT_TRACE_BOMS) && !rootElementLine.contains(ROOT_ELEMENT_STOCK_RECEIPT)) {
+                    String errorMsg = String.format("Accepted xml root elements are '%s' and '%s' but root element was '%s'.",
+                            ROOT_ELEMENT_TRACE_BOMS, ROOT_ELEMENT_STOCK_RECEIPT, StringUtils.strip(rootElementLine, "<>"));
+                    folderTask.addSubTask(new FileImportAbortedWithErrorsLog(localManufacturerFolder + File.separator + inputFile.getName(),
+                            errorMsg));
+                    continue;
+                }
+
 
                 ImportResult result;
                 // Unterscheidung, ob es sich um eine alte oder neue XML-Struktur handelt
@@ -253,22 +264,13 @@ public class TraceBoMImportServiceBean {
                     NewTraceBoMRootType trBoMRootImported = tbNewService.createLogisticXMLFile(
                             folderTask, curLocalFolder, inputFile, folderConfig);
                     result = tbNewService.saveTraceBoM(inputFile, trBoMRootImported);
-                    System.out.println("importiert: " + curLocalFolder + File.separator + inputFile.getName());
                 }
-                else if (rootElementLine.contains(ROOT_ELEMENT_STOCK_RECEIPT)) { // alt
+                else { // ROOT_ELEMENT_STOCK_RECEIPT (alt)
                     TraceBoMRootMappingType trBoMRootImported = tbOldService.createLogisticXMLFile(
                             folderTask, curLocalFolder, inputFile, folderConfig);
                     result = tbOldService.saveTraceBoM(inputFile, trBoMRootImported);
-                    System.out.println("importiert: " + curLocalFolder + File.separator + inputFile.getName());
                 }
-                // ist XML-Datei, aber weder alte, noch neue Trae-BoM-XML-Struktur
-                else {
-                    String errorMsg = String.format("Accepted xml root elements are '%s' and '%s' but root element was '%s'.",
-                            ROOT_ELEMENT_TRACE_BOMS, ROOT_ELEMENT_STOCK_RECEIPT, StringUtils.strip(rootElementLine, "<>"));
-                    folderTask.addSubTask(new FileImportAbortedWithErrorsLog(localManufacturerFolder + File.separator + inputFile.getName(),
-                            errorMsg));
-                    continue;
-                }
+                logger.info("importiert: {}{}{}", curLocalFolder, File.separator, inputFile.getName());
 
 
                 // check if the file originates from a zip file
@@ -312,6 +314,15 @@ public class TraceBoMImportServiceBean {
                     deleteFtpFile(ftpAccess, localManufacturerFolder, inputFile.getName());
                 }
 
+                // Information für Mail erstellen
+                if (result.success()) {
+                    folderTask.addSubTask(new FileImportSuccessfulLog(localManufacturerFolder + File.separator + inputFile.getName(),
+                            result.numberEntries(), startTime));
+                }
+                else {
+                    folderTask.addSubTask(new FileImportAbortedWithErrorsLog(localManufacturerFolder + File.separator + inputFile.getName(),
+                            result.errorMessage()));
+                }
             }
             catch (ImportAbortedException e) {
                 folderTask.addSubTask(e.getTaskLog());

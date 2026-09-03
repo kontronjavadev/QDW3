@@ -223,7 +223,7 @@ public class TBOldImportServiceBean extends AbstractTBImportServiceBean<TraceBoM
             em.flush();
             sendIllegalRatioMail(trBoMHeaderImported, illegalRatioMsgs);
 
-            return ImportResult.ok();
+            return ImportResult.ok(trBoMRootImported.getSerialObjects().size());
         }
         catch (Exception e) {
             ctx.setRollbackOnly();

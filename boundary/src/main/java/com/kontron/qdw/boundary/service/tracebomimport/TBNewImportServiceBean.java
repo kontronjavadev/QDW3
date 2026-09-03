@@ -248,7 +248,7 @@ public class TBNewImportServiceBean extends AbstractTBImportServiceBean<NewTrace
             em.flush();
             sendIllegalRatioMail(trBoMHeaderImported, illegalRatioMsgs);
 
-            return ImportResult.ok();
+            return ImportResult.ok(trBoMRootImported.getSerialObjects().size());
         }
         catch (Exception e) {
             ctx.setRollbackOnly();
