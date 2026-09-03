@@ -34,7 +34,7 @@ public abstract class AbstractTBImportServiceBean {
     // private static final String SCHEMA_NAME = "TraceBoM.xsd";
     //
     private static final String DEFAULT_PLANT_CODE = "6000";
-    // private static final String REVISION_NO_SUFFIX = " ALT(01)";
+    private static final String REVISION_NO_SUFFIX = " ALT(01)";
 
     private static final DateTimeFormatter FLEXIBLE_FORMATTER = new DateTimeFormatterBuilder()
             .appendOptional(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"))
@@ -138,6 +138,13 @@ public abstract class AbstractTBImportServiceBean {
         catch (DateTimeParseException dtpe) {
             throw new Exception("Production date " + dateText + " has no accepted format.");
         }
+    }
+
+    String correctRevNr(String revNoImported) {
+        if (revNoImported.contains(REVISION_NO_SUFFIX)) {
+            return revNoImported;
+        }
+        return revNoImported + REVISION_NO_SUFFIX;
     }
 
 }
