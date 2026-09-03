@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.kontron.qdw.boundary.service.mapping.tracebom.TraceBoMTypeIF;
+
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
@@ -13,9 +15,9 @@ import jakarta.xml.bind.annotation.XmlType;
 
 @XmlType(name = "TraceBoMMappingType")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class TraceBoMMappingType implements Serializable {
+public class TraceBoMMappingType implements Serializable, TraceBoMTypeIF<TraceBoMItemMappingType> {
 
-    private static final long serialVersionUID = -8940036294446795405L;
+    private static final long serialVersionUID = 341886962449041859L;
 
     @XmlAttribute(name = "SERIAL_NO", required = true)
     private String serialNumber;
@@ -48,6 +50,7 @@ public class TraceBoMMappingType implements Serializable {
         this.customerSerialNumber = customerSerialNumber;
     }
 
+    @Override
     public List<TraceBoMItemMappingType> getTraceBoMItems() {
         return this.traceBoMItems;
     }

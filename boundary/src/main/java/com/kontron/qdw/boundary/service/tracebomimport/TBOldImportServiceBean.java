@@ -11,10 +11,12 @@ import java.nio.charset.Charset;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -26,6 +28,7 @@ import com.kontron.qdw.boundary.service.mapping.tracebomalt.TraceBoMItemMappingT
 import com.kontron.qdw.boundary.service.mapping.tracebomalt.TraceBoMMappingType;
 import com.kontron.qdw.boundary.service.mapping.tracebomalt.TraceBoMRevisionMappingType;
 import com.kontron.qdw.boundary.service.mapping.tracebomalt.TraceBoMRootMappingType;
+import com.kontron.qdw.boundary.service.mapping.tracebomneu.NewTraceBoMHeaderType;
 import com.kontron.qdw.boundary.util.Constants;
 import com.kontron.qdw.boundary.util.MailServiceFacade;
 import com.kontron.qdw.domain.base.Supplier;
@@ -66,9 +69,9 @@ import jakarta.xml.bind.Unmarshaller;
  * @author Raymund Achner, achner.com
  */
 @Stateless
-public class TBOldImportServiceBean extends AbstractTBImportServiceBean {
+public class TBOldImportServiceBean extends AbstractTBImportServiceBean<TraceBoMMappingType, TraceBoMHeaderType, TraceBoMItemMappingType> {
     /*
-     * Timeout konfigurieren:
+     * Timeout konfigurieren: 
      * standalone.xml, <subsystem xmlns="urn:jboss:domain:transactions:6.0">:
      * <coordinator-environment ... default-timeout="14400"/>
      * Angabe in Sekunden; 4 Stunden = 60*60*4 = 14400
@@ -76,8 +79,6 @@ public class TBOldImportServiceBean extends AbstractTBImportServiceBean {
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private static final Charset ENCODING = Constants.CHARSET_UTF_8;
-
-    private static final double TRACE_BOM_WARNING_THRESHOLD = 10.0;
 
 
     @EJB
@@ -234,12 +235,12 @@ public class TBOldImportServiceBean extends AbstractTBImportServiceBean {
     @PermitAll
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public ImportResult saveTraceBoM(File sourceFile, TraceBoMRootMappingType trBoMRootImported) {
-        long start = System.currentTimeMillis();
         try {
             // Import trace BoM
-            Supplier supplier = supplierManager.findById(trBoMRootImported.getHeader().getSupplierCode());
+            TraceBoMHeaderType trBoMHeaderImported = trBoMRootImported.getHeader();
+            TraceBoMRevisionMappingType trBoMRevisionImported = trBoMHeaderImported.getMaterialRevision();
 
-            TraceBoMRevisionMappingType trBoMRevisionImported = trBoMRootImported.getHeader().getMaterialRevision();
+            Supplier supplier = supplierManager.findById(trBoMHeaderImported.getSupplierCode());
 
             // Some CMs only deliver the Rev6 field. In order to find a proper revision the alternative number must be added!
             String revisionNo = correctRevNr(trBoMRevisionImported.getRevisionNumber());
@@ -247,13 +248,14 @@ public class TBOldImportServiceBean extends AbstractTBImportServiceBean {
             MaterialRevision materialRevision = findMaterialRevision(trBoMRevisionImported.getMaterialNumber(), revisionNo);
             Material material = materialRevision.getMaterial();
 
-            LocalDate parsedProdDate = parseToLocalDate(trBoMRootImported.getHeader().getProductionDate());
+            LocalDate parsedProdDate = parseToLocalDate(trBoMHeaderImported.getProductionDate());
 
             Map<TraceBoMMappingType, TraceBoM> persistedBoMPerImportedBoM = new HashMap<>();
+            List<String> illegalRatioMsgs = new ArrayList<>();
 
             for (TraceBoMMappingType trBoMImported : trBoMRootImported.getSerialObjects()) {
                 SerialObject serialObject = findSerialObject(trBoMImported.getSerialNumber(), trBoMImported.getCustomerSerialNumber(),
-                        material, trBoMRootImported.getHeader().getOrderNumber(), parsedProdDate);
+                        material, trBoMHeaderImported.getOrderNumber(), parsedProdDate);
 
                 // First we check if the current BoM has been already persisted!
                 TraceBoM persistedBoM = persistedBoMPerImportedBoM.get(trBoMImported);
@@ -262,26 +264,9 @@ public class TBOldImportServiceBean extends AbstractTBImportServiceBean {
                 }
 
                 if (persistedBoM == null) {
-                    // Create a new trace BoM
-                    TraceBoM traceBoM = new TraceBoM();
-                    traceBoM.setDeliveryNoteNumber(trBoMRootImported.getHeader().getDeliveryNoteNumber());
-
-                    traceBoM.setProductionDate(parsedProdDate);
-
-                    traceBoM.setLotNumber(trBoMRootImported.getHeader().getLotNumber());
-                    traceBoM.setOrderNumber(trBoMRootImported.getHeader().getOrderNumber());
-                    traceBoM.setSupplier(supplier);
-                    traceBoM.setMaterialRevision(materialRevision);
-
-                    traceBoM = trBoMManager.persist(traceBoM, true, true);
-
-                    // Save all trace BoMs that have been persisted
-                    persistedBoMPerImportedBoM.put(trBoMImported, traceBoM);
-
-                    serialObject.setTraceBom(traceBoM);
-
-                    // Add all trace BoM items to trace BoM
-                    importTraceBoMItems(traceBoM, trBoMImported, trBoMRootImported.getHeader());
+                    persistedBoM = createTraceBoM(trBoMImported, trBoMHeaderImported, supplier, parsedProdDate, materialRevision, illegalRatioMsgs);
+                    serialObject.setTraceBom(persistedBoM);
+                    persistedBoMPerImportedBoM.put(trBoMImported, persistedBoM);
                 }
             }
 
@@ -299,73 +284,22 @@ public class TBOldImportServiceBean extends AbstractTBImportServiceBean {
 
 
 
-    /**
-     * Import trace BoM item objects
-     *
-     * @param traceBoM
-     * @param rootMappingObject
-     * @param bomHeader
-     */
-    private void importTraceBoMItems(TraceBoM traceBoM, TraceBoMMappingType rootMappingObject, TraceBoMHeaderType bomHeader) {
-        int totalSize = rootMappingObject.getTraceBoMItems().size();
-        int illegalItemCount = 0;
-        for (TraceBoMItemMappingType mappingObject : rootMappingObject.getTraceBoMItems()) {
-            String matSapNrImported = mappingObject.getMaterialSapNumber().replace("-", "");
-            Material material = materialManager.findBySapNumber(matSapNrImported);
-
-
-            if (material == null) {
-                IllegalTraceBoMItem illegalItem = new IllegalTraceBoMItem();
-                illegalItem.setTraceBom(traceBoM);
-                illegalItem.setMaterialNumber(matSapNrImported);
-                illegalItem.setManufacturer(mappingObject.getManufacturerName());
-                illegalItem.setManufacturerRevision(mappingObject.getManufacturerRevision());
-                illegalItem.setOrderCode(mappingObject.getOrderCode());
-                illegalItem.setDateCode(mappingObject.getDateCode());
-
-                illTrBoMItemManager.persist(illegalItem, false, false);
-                illegalItemCount++;
-            }
-            else {
-                TraceBoMItem traceBoMItem = new TraceBoMItem();
-                traceBoMItem.setTraceBom(traceBoM);
-                traceBoMItem.setMaterial(material);
-                traceBoMItem.setQuantity(mappingObject.getQuantity());
-                traceBoMItem.setManufacturerName(mappingObject.getManufacturerName());
-                traceBoMItem.setManufacturerRevision(mappingObject.getManufacturerRevision());
-                traceBoMItem.setOrderCode(mappingObject.getOrderCode());
-                traceBoMItem.setDateCode(mappingObject.getDateCode());
-                traceBoMItem.setInfoField1(mappingObject.getInfoField1());
-                traceBoMItem.setInfoField2(mappingObject.getInfoField2());
-                traceBoMItem.setInfoField3(mappingObject.getInfoField3());
-                traceBoMItem.setInfoField4(mappingObject.getInfoField4());
-
-                trBoMItemManager.persist(traceBoMItem, false, false);
-            }
-        } // end for rootMappingObject.getTraceBoMItems()
-
-        if (totalSize > 0) {
-            double illegalRatio = 100f * illegalItemCount / (double) totalSize;
-
-            // Send mail to responsible persons that number of illegal items exceeds threshold!
-            if (illegalRatio >= TRACE_BOM_WARNING_THRESHOLD) {
-                sendMail(bomHeader, illegalRatio);
-            }
-        }
-    }
-
     private void sendMail(TraceBoMHeaderType bomHeader, double illegalRatio) {
         DecimalFormat df = new DecimalFormat("0.00");
         StringBuilder messageText = new StringBuilder();
-        String subject = Constants.APP_ENV + "Illegal material ratio warning for delivery note no. "
-                + bomHeader.getDeliveryNoteNumber();
-        Collection<String> receivers = getIllegalRatioWarningRecipients();
-
         messageText.append("Illegal material ratio: " + df.format(illegalRatio) + "%\n");
         messageText.append("Delivery note no.: " + bomHeader.getDeliveryNoteNumber() + "\n");
         messageText.append("Lot no.: " + bomHeader.getLotNumber() + "\n");
         messageText.append("Order no.: " + bomHeader.getOrderNumber() + "\n");
         messageText.append("Supplier: " + bomHeader.getSupplierCode() + "\n");
+
+
+
+        String subject = Constants.APP_ENV + "Illegal material ratio warning for delivery note no. "
+                + bomHeader.getDeliveryNoteNumber();
+        List<String> receivers = Arrays.stream(Constants.getMailRecipientIllegalRatioWarning().split(";"))
+                .map(String::trim)
+                .collect(Collectors.toList());
 
         Collection<String> to = new ArrayList<>();
         for (String s : receivers) {

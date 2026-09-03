@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.kontron.qdw.boundary.service.mapping.tracebom.TraceBoMItemTypeIF;
+
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
@@ -12,10 +14,9 @@ import jakarta.xml.bind.annotation.XmlType;
 
 @XmlType(name = "TraceBoMItemType")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class NewTraceBoMItemType implements Serializable {
+public class NewTraceBoMItemType implements Serializable, TraceBoMItemTypeIF {
 
-
-    private static final long serialVersionUID = 3450335051389693157L;
+    private static final long serialVersionUID = -7457591599770542066L;
 
     @XmlAttribute(name = "part_no", required = true)
     private String materialSapNumber;
@@ -46,6 +47,7 @@ public class NewTraceBoMItemType implements Serializable {
     }
 
 
+    @Override
     public String getMaterialSapNumber() {
         return materialSapNumber;
     }
@@ -54,6 +56,7 @@ public class NewTraceBoMItemType implements Serializable {
         this.materialSapNumber = materialSapNumber;
     }
 
+    @Override
     public int getQuantity() {
         return quantity;
     }
@@ -62,6 +65,7 @@ public class NewTraceBoMItemType implements Serializable {
         this.quantity = quantity;
     }
 
+    @Override
     public String getManufacturerName() {
         return manufacturerName;
     }
@@ -70,6 +74,7 @@ public class NewTraceBoMItemType implements Serializable {
         this.manufacturerName = manufacturerName;
     }
 
+    @Override
     public String getOrderCode() {
         return orderCode;
     }
@@ -78,6 +83,7 @@ public class NewTraceBoMItemType implements Serializable {
         this.orderCode = orderCode;
     }
 
+    @Override
     public String getDateCode() {
         return dateCode;
     }
@@ -86,6 +92,7 @@ public class NewTraceBoMItemType implements Serializable {
         this.dateCode = dateCode;
     }
 
+    @Override
     public String getInfoField1() {
         return infoField1;
     }
@@ -94,6 +101,7 @@ public class NewTraceBoMItemType implements Serializable {
         this.infoField1 = infoField1;
     }
 
+    @Override
     public String getInfoField2() {
         return infoField2;
     }

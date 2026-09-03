@@ -2,6 +2,8 @@ package com.kontron.qdw.boundary.service.mapping.tracebomalt;
 
 import java.io.Serializable;
 
+import com.kontron.qdw.boundary.service.mapping.tracebom.TraceBoMItemTypeIF;
+
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
@@ -9,9 +11,9 @@ import jakarta.xml.bind.annotation.XmlType;
 
 @XmlType(name = "TraceBoMItemType")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class TraceBoMItemMappingType implements Serializable {
+public class TraceBoMItemMappingType implements Serializable, TraceBoMItemTypeIF {
 
-    private static final long serialVersionUID = 2212960387749961506L;
+    private static final long serialVersionUID = -9037534224353537658L;
 
     @XmlAttribute(name = "PART", required = true)
     private String materialSapNumber;
@@ -48,6 +50,7 @@ public class TraceBoMItemMappingType implements Serializable {
     }
 
 
+    @Override
     public String getMaterialSapNumber() {
         return this.materialSapNumber;
     }
@@ -56,6 +59,7 @@ public class TraceBoMItemMappingType implements Serializable {
         this.materialSapNumber = materialSapNumber;
     }
 
+    @Override
     public int getQuantity() {
         return this.quantity;
     }
@@ -64,6 +68,7 @@ public class TraceBoMItemMappingType implements Serializable {
         this.quantity = quantity;
     }
 
+    @Override
     public String getManufacturerName() {
         return this.manufacturerName;
     }
@@ -72,6 +77,7 @@ public class TraceBoMItemMappingType implements Serializable {
         this.manufacturerName = manufacturerName;
     }
 
+    @Override
     public String getOrderCode() {
         return this.orderCode;
     }
@@ -88,6 +94,7 @@ public class TraceBoMItemMappingType implements Serializable {
         this.manufacturerRevision = manufacturerRevision;
     }
 
+    @Override
     public String getDateCode() {
         return this.dateCode;
     }
@@ -96,6 +103,7 @@ public class TraceBoMItemMappingType implements Serializable {
         this.dateCode = dateCode;
     }
 
+    @Override
     public String getInfoField1() {
         return this.infoField1;
     }
@@ -104,6 +112,7 @@ public class TraceBoMItemMappingType implements Serializable {
         this.infoField1 = infoField1;
     }
 
+    @Override
     public String getInfoField2() {
         return this.infoField2;
     }

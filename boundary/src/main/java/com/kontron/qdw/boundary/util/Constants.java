@@ -58,6 +58,7 @@ public final class Constants {
 
     private static final String MAIL_RECIPIENT = "javainhouseapps@kontron.com";
     private static final String MAIL_LOGISTIC_RECIPIENT = "wareneingang@kontron.com";
+    private static final String ILLEGAL_RATIO_WARNING_RECIPIENTS = "javainhouseapps@kontron.com";
     private static final String IMPORT_JOURNAL_EMAIL = "GL.GO.GPERevsion@kontron.com";
 
     public static final String MAIL_COMPANY_NAME = "KONTRON";
@@ -148,6 +149,11 @@ public final class Constants {
     public static String getMailRecipientLogistic() {
         return StringUtil.getNonEmptyStringFromObjectOrDefault(getApplicationConfiguration(),
                 ApplicationConfiguration::getMailRecipientLogistic, Constants.MAIL_LOGISTIC_RECIPIENT);
+    }
+
+    public static String getMailRecipientIllegalRatioWarning() {
+        return StringUtil.getNonEmptyStringFromObjectOrDefault(getApplicationConfiguration(),
+                ApplicationConfiguration::getMailRecipientIllegalRatioWarning, Constants.ILLEGAL_RATIO_WARNING_RECIPIENTS);
     }
 
     public static String getImportJournalMailRecipient() {

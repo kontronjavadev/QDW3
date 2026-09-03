@@ -26,6 +26,10 @@ public class ApplicationConfiguration {
     private String mailRecipientLogistic;
 
     @Inject
+    @ApplicationProperty("mail.recipient.illegalRatioWarning")
+    private String mailRecipientIllegalRatioWarning;
+
+    @Inject
     @ApplicationProperty("mail.recipient.import-journal")
     private String mailRecipientImportJournal;
 
@@ -95,6 +99,10 @@ public class ApplicationConfiguration {
 
     public String getMailRecipientLogistic() {
         return mailRecipientLogistic;
+    }
+
+    public String getMailRecipientIllegalRatioWarning() {
+        return mailRecipientIllegalRatioWarning;
     }
 
     public String getMailRecipientImportJournal() {

@@ -2,6 +2,8 @@ package com.kontron.qdw.boundary.service.mapping.tracebomalt;
 
 import java.io.Serializable;
 
+import com.kontron.qdw.boundary.service.mapping.tracebom.TraceBoMHeaderTypeIF;
+
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlElement;
@@ -9,9 +11,9 @@ import jakarta.xml.bind.annotation.XmlType;
 
 @XmlType(name = "TraceBoMHeaderType")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class TraceBoMHeaderType implements Serializable {
+public class TraceBoMHeaderType implements Serializable, TraceBoMHeaderTypeIF {
 
-    private static final long serialVersionUID = 8404741216126093575L;
+    private static final long serialVersionUID = -8349545051419266144L;
 
     @XmlElement(name = "CREATION_DATE", required = true)
     private String productionDate;
@@ -44,6 +46,7 @@ public class TraceBoMHeaderType implements Serializable {
         this.productionDate = productionDate;
     }
 
+    @Override
     public String getDeliveryNoteNumber() {
         return this.deliveryNoteNumber;
     }
@@ -52,6 +55,7 @@ public class TraceBoMHeaderType implements Serializable {
         this.deliveryNoteNumber = deliveryNoteNumber;
     }
 
+    @Override
     public String getOrderNumber() {
         return this.orderNumber;
     }
@@ -60,6 +64,7 @@ public class TraceBoMHeaderType implements Serializable {
         this.orderNumber = orderNumber;
     }
 
+    @Override
     public String getLotNumber() {
         return this.lotNumber;
     }
@@ -68,6 +73,7 @@ public class TraceBoMHeaderType implements Serializable {
         this.lotNumber = lotNumber;
     }
 
+    @Override
     public String getSupplierCode() {
         return this.supplierCode;
     }

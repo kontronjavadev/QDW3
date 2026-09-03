@@ -1,21 +1,33 @@
 package com.kontron.qdw.boundary.service.tracebomimport;
 
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeParseException;
+import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.kontron.qdw.boundary.service.mapping.tracebom.TraceBoMHeaderTypeIF;
+import com.kontron.qdw.boundary.service.mapping.tracebom.TraceBoMItemTypeIF;
+import com.kontron.qdw.boundary.service.mapping.tracebom.TraceBoMTypeIF;
+import com.kontron.qdw.domain.base.Supplier;
 import com.kontron.qdw.domain.material.Material;
 import com.kontron.qdw.domain.material.MaterialRevision;
+import com.kontron.qdw.domain.serial.IllegalTraceBoMItem;
 import com.kontron.qdw.domain.serial.SerialObject;
+import com.kontron.qdw.domain.serial.TraceBoM;
+import com.kontron.qdw.domain.serial.TraceBoMItem;
 import com.kontron.qdw.repository.base.PlantRepository;
 import com.kontron.qdw.repository.base.SupplierRepository;
 import com.kontron.qdw.repository.material.MaterialRepository;
 import com.kontron.qdw.repository.material.MaterialRevisionRepository;
+import com.kontron.qdw.repository.serial.IllegalTraceBoMItemRepository;
 import com.kontron.qdw.repository.serial.SerialObjectRepository;
+import com.kontron.qdw.repository.serial.TraceBoMItemRepository;
+import com.kontron.qdw.repository.serial.TraceBoMRepository;
 import com.kontron.util.text.StringUtil;
 
 import jakarta.ejb.EJB;
@@ -26,7 +38,7 @@ import jakarta.ejb.EJB;
  * 2026 — © Kontron AG
  * @author Raymund Achner, achner.com
  */
-public abstract class AbstractTBImportServiceBean {
+public abstract class AbstractTBImportServiceBean<TB extends TraceBoMTypeIF<TBI>, TBH extends TraceBoMHeaderTypeIF, TBI extends TraceBoMItemTypeIF> {
     // private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     // private static final Charset ENCODING = Constants.CHARSET_UTF_8;
     //
@@ -35,6 +47,7 @@ public abstract class AbstractTBImportServiceBean {
     //
     private static final String DEFAULT_PLANT_CODE = "6000";
     private static final String REVISION_NO_SUFFIX = " ALT(01)";
+    private static final double TRACE_BOM_WARNING_THRESHOLD = 10.0;
 
     private static final DateTimeFormatter FLEXIBLE_FORMATTER = new DateTimeFormatterBuilder()
             .appendOptional(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"))
@@ -53,6 +66,12 @@ public abstract class AbstractTBImportServiceBean {
     private PlantRepository plantManager;
     @EJB
     private SerialObjectRepository serObjManager;
+    @EJB
+    private TraceBoMRepository trBoMManager;
+    @EJB
+    private TraceBoMItemRepository trBoMItemManager;
+    @EJB
+    private IllegalTraceBoMItemRepository illTrBoMItemManager;
 
     // @PersistenceContext
     // private EntityManager em;
@@ -124,6 +143,93 @@ public abstract class AbstractTBImportServiceBean {
         }
 
         return serialObject;
+    }
+
+
+
+    /** Create a new trace BoM */
+    TraceBoM createTraceBoM(TB trBoMImported, TBH trBoMHeaderImported, Supplier supplier,
+            LocalDate parsedProdDate, MaterialRevision materialRevision, List<String> illegalRatioMsgs) {
+        TraceBoM traceBoM = new TraceBoM();
+        traceBoM.setDeliveryNoteNumber(trBoMHeaderImported.getDeliveryNoteNumber());
+        traceBoM.setLotNumber(trBoMHeaderImported.getLotNumber());
+        traceBoM.setOrderNumber(trBoMHeaderImported.getOrderNumber());
+        traceBoM.setSupplier(supplier);
+        traceBoM.setProductionDate(parsedProdDate);
+        traceBoM.setMaterialRevision(materialRevision);
+
+        traceBoM = trBoMManager.persist(traceBoM, true, true);
+
+        // Add all trace BoM items to trace BoM
+        importTraceBoMItems(traceBoM, trBoMImported, trBoMHeaderImported, illegalRatioMsgs);
+        return traceBoM;
+    }
+
+    /** Import trace BoM items */
+    private void importTraceBoMItems(TraceBoM trBoMPersisted, TB trBoMImported, TBH trBoMHeaderImported,
+            List<String> illegalRatioMsgs) {
+        int totalSize = trBoMImported.getTraceBoMItems().size();
+        int illegalItemCount = 0;
+        for (TBI trBoMItemImported : trBoMImported.getTraceBoMItems()) {
+            String matSapNrImported = trBoMItemImported.getMaterialSapNumber().replace("-", "");
+            Material material = materialManager.findBySapNumber(matSapNrImported);
+
+            if (material == null) {
+                IllegalTraceBoMItem illegalItem = new IllegalTraceBoMItem();
+                illegalItem.setTraceBom(trBoMPersisted);
+                illegalItem.setMaterialNumber(matSapNrImported);
+                illegalItem.setManufacturer(trBoMItemImported.getManufacturerName());
+                illegalItem.setManufacturerRevision("");
+                illegalItem.setOrderCode(trBoMItemImported.getOrderCode());
+                illegalItem.setDateCode(trBoMItemImported.getDateCode());
+
+                illTrBoMItemManager.persist(illegalItem, false, false);
+                illegalItemCount++;
+            }
+            else {
+                TraceBoMItem traceBoMItem = new TraceBoMItem();
+                traceBoMItem.setTraceBom(trBoMPersisted);
+                traceBoMItem.setMaterial(material);
+                traceBoMItem.setQuantity(trBoMItemImported.getQuantity());
+                traceBoMItem.setManufacturerName(trBoMItemImported.getManufacturerName());
+                traceBoMItem.setManufacturerRevision("");
+                traceBoMItem.setOrderCode(trBoMItemImported.getOrderCode());
+                traceBoMItem.setDateCode(trBoMItemImported.getDateCode());
+                traceBoMItem.setInfoField1(trBoMItemImported.getInfoField1());
+                traceBoMItem.setInfoField2(trBoMItemImported.getInfoField2());
+                traceBoMItem.setInfoField3("");
+                traceBoMItem.setInfoField4("");
+
+                trBoMItemManager.persist(traceBoMItem, false, false);
+            }
+
+            /**********************************************************
+             * CURRENTLY MULTI-LEVEL for new TraceBoM IS NOT SUPPORTED
+             * - SHOULD BE IMPLEMENTED HERE
+             **********************************************************/
+        } // end for rootMappingObject.getTraceBoMItems()
+
+        if (totalSize > 0) {
+            double illegalRatio = 100f * illegalItemCount / (double) totalSize;
+
+            // Send mail to responsible persons that number of illegal items exceeds threshold!
+            if (illegalRatio >= TRACE_BOM_WARNING_THRESHOLD) {
+                illegalRatioMsgs.add(createIllegalRatioMsg(trBoMHeaderImported, illegalRatio));
+            }
+        }
+    }
+
+    private String createIllegalRatioMsg(TBH trBoMHeaderImported, double illegalRatio) {
+        String illegalRatioString = new DecimalFormat("0.00").format(illegalRatio);
+
+        StringBuilder msg = new StringBuilder();
+        msg.append("Illegal material ratio: ").append(illegalRatioString).append("%\n");
+        msg.append("Delivery note no.: ").append(trBoMHeaderImported.getDeliveryNoteNumber()).append("\n");
+        msg.append("Lot no.: ").append(trBoMHeaderImported.getLotNumber()).append("\n");
+        msg.append("Order no.: ").append(trBoMHeaderImported.getOrderNumber()).append("\n");
+        msg.append("Supplier: ").append(trBoMHeaderImported.getSupplierCode()).append("\n");
+
+        return msg.toString();
     }
 
 
