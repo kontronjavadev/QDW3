@@ -106,7 +106,7 @@ public class NavigatorView implements Serializable {
             
             // Trace BoM Import
             if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_MAINTAINER))
-                new DefaultTreeNode<>(VIEW_TYPE, new TreeNavigatorItem(bundle.getString(FORM_REBUILD_TITLE),
+                new DefaultTreeNode<>(VIEW_TYPE, new TreeNavigatorItem(bundle.getString(FORM_TRACEBOMIMPORT_TITLE),
                         req.getContextPath() + "/view/TraceBoMImportView.jsf"), itemGroup0001);
             
             // Rebuild materialized and aggregated tables

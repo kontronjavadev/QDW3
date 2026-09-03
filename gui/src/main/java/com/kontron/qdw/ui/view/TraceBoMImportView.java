@@ -1,6 +1,6 @@
 package com.kontron.qdw.ui.view;
 
-import static com.kontron.qdw.ui.TranslationKeys.FORM_REPAIRIMPORT_TITLE;
+import static com.kontron.qdw.ui.TranslationKeys.FORM_TRACEBOMIMPORT_TITLE;
 import static com.kontron.qdw.ui.UserSession.DEFAULT_BUNDLE_NAME;
 import static com.kontron.qdw.ui.UserSession.ROLE_ADMINISTRATOR;
 import static com.kontron.qdw.ui.UserSession.ROLE_MAINTAINER;
@@ -69,7 +69,7 @@ public class TraceBoMImportView extends CopyClipboard implements Serializable {
         }
 
 
-        formTitle = bundle.getString(FORM_REPAIRIMPORT_TITLE);
+        formTitle = bundle.getString(FORM_TRACEBOMIMPORT_TITLE);
 
         // Initialize formatters for items that represent number or date values
         dateFormat = DateTimeFormatter.ofPattern(userSession.getDateFormat()).withZone(TimeZone.getTimeZone(userSession.getTimeZone()).toZoneId());
