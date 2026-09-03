@@ -27,10 +27,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.kontron.common.mail.MailMessage;
-import com.kontron.qdw.boundary.service.mapping.tracebomneu.NewTraceBoMHeaderType;
-import com.kontron.qdw.boundary.service.mapping.tracebomneu.NewTraceBoMItemType;
-import com.kontron.qdw.boundary.service.mapping.tracebomneu.NewTraceBoMRootType;
-import com.kontron.qdw.boundary.service.mapping.tracebomneu.NewTraceBoMType;
+import com.kontron.qdw.boundary.service.mapping.tracebom.neu.NewTraceBoMHeaderType;
+import com.kontron.qdw.boundary.service.mapping.tracebom.neu.NewTraceBoMItemType;
+import com.kontron.qdw.boundary.service.mapping.tracebom.neu.NewTraceBoMRootType;
+import com.kontron.qdw.boundary.service.mapping.tracebom.neu.NewTraceBoMType;
 import com.kontron.qdw.boundary.util.Constants;
 import com.kontron.qdw.boundary.util.MailServiceFacade;
 import com.kontron.qdw.domain.base.Supplier;

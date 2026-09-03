@@ -1,4 +1,4 @@
-package com.kontron.qdw.boundary.service.mapping.tracebomneu;
+package com.kontron.qdw.boundary.service.mapping.tracebom.neu;
 
 import java.io.Serializable;
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package com.kontron.qdw.boundary.service.mapping.tracebomneu;
+package com.kontron.qdw.boundary.service.mapping.tracebom.alt;
 
 import java.io.Serializable;
 
@@ -6,38 +6,40 @@ import com.kontron.qdw.boundary.service.mapping.tracebom.TraceBoMHeaderTypeIF;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
-import jakarta.xml.bind.annotation.XmlAttribute;
+import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
 
-
-@XmlType(name = "HeaderType")
+@XmlType(name = "TraceBoMHeaderType")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class NewTraceBoMHeaderType implements Serializable, TraceBoMHeaderTypeIF {
+public class TraceBoMHeaderType implements Serializable, TraceBoMHeaderTypeIF {
 
-    private static final long serialVersionUID = 4051640829321986684L;
+    private static final long serialVersionUID = -8349545051419266144L;
 
-    @XmlAttribute(name = "prod_date", required = true)
+    @XmlElement(name = "CREATION_DATE", required = true)
     private String productionDate;
 
-    @XmlAttribute(name = "del_note_no", required = true)
+    @XmlElement(name = "DELIVERY_NOTE_NO", required = true)
     private String deliveryNoteNumber;
 
-    @XmlAttribute(name = "order_no", required = true)
+    @XmlElement(name = "ORDER_NO", required = true)
     private String orderNumber;
 
-    @XmlAttribute(name = "lot_no", required = false)
+    @XmlElement(name = "LOT_NO", required = false)
     private String lotNumber;
 
-    @XmlAttribute(name = "supplier", required = true)
+    @XmlElement(name = "SUPPLIER_ID", required = true)
     private String supplierCode;
 
+    @XmlElement(name = "ARTICLE", required = true)
+    private TraceBoMRevisionMappingType materialRevision;
 
-    public NewTraceBoMHeaderType() {
+
+    public TraceBoMHeaderType() {
     }
 
 
     public String getProductionDate() {
-        return productionDate;
+        return this.productionDate;
     }
 
     public void setProductionDate(String productionDate) {
@@ -46,7 +48,7 @@ public class NewTraceBoMHeaderType implements Serializable, TraceBoMHeaderTypeIF
 
     @Override
     public String getDeliveryNoteNumber() {
-        return deliveryNoteNumber;
+        return this.deliveryNoteNumber;
     }
 
     public void setDeliveryNoteNumber(String deliveryNoteNumber) {
@@ -55,7 +57,7 @@ public class NewTraceBoMHeaderType implements Serializable, TraceBoMHeaderTypeIF
 
     @Override
     public String getOrderNumber() {
-        return orderNumber;
+        return this.orderNumber;
     }
 
     public void setOrderNumber(String orderNumber) {
@@ -64,7 +66,7 @@ public class NewTraceBoMHeaderType implements Serializable, TraceBoMHeaderTypeIF
 
     @Override
     public String getLotNumber() {
-        return lotNumber;
+        return this.lotNumber;
     }
 
     public void setLotNumber(String lotNumber) {
@@ -73,11 +75,19 @@ public class NewTraceBoMHeaderType implements Serializable, TraceBoMHeaderTypeIF
 
     @Override
     public String getSupplierCode() {
-        return supplierCode;
+        return this.supplierCode;
     }
 
     public void setSupplierCode(String supplierCode) {
         this.supplierCode = supplierCode;
+    }
+
+    public TraceBoMRevisionMappingType getMaterialRevision() {
+        return this.materialRevision;
+    }
+
+    public void setMaterialRevision(TraceBoMRevisionMappingType materialRevision) {
+        this.materialRevision = materialRevision;
     }
 
 }

@@ -23,12 +23,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.kontron.common.mail.MailMessage;
-import com.kontron.qdw.boundary.service.mapping.tracebomalt.TraceBoMHeaderType;
-import com.kontron.qdw.boundary.service.mapping.tracebomalt.TraceBoMItemMappingType;
-import com.kontron.qdw.boundary.service.mapping.tracebomalt.TraceBoMMappingType;
-import com.kontron.qdw.boundary.service.mapping.tracebomalt.TraceBoMRevisionMappingType;
-import com.kontron.qdw.boundary.service.mapping.tracebomalt.TraceBoMRootMappingType;
-import com.kontron.qdw.boundary.service.mapping.tracebomneu.NewTraceBoMHeaderType;
+import com.kontron.qdw.boundary.service.mapping.tracebom.alt.TraceBoMHeaderType;
+import com.kontron.qdw.boundary.service.mapping.tracebom.alt.TraceBoMItemMappingType;
+import com.kontron.qdw.boundary.service.mapping.tracebom.alt.TraceBoMMappingType;
+import com.kontron.qdw.boundary.service.mapping.tracebom.alt.TraceBoMRevisionMappingType;
+import com.kontron.qdw.boundary.service.mapping.tracebom.alt.TraceBoMRootMappingType;
+import com.kontron.qdw.boundary.service.mapping.tracebom.neu.NewTraceBoMHeaderType;
 import com.kontron.qdw.boundary.util.Constants;
 import com.kontron.qdw.boundary.util.MailServiceFacade;
 import com.kontron.qdw.domain.base.Supplier;
