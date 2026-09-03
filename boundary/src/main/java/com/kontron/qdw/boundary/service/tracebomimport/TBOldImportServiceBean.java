@@ -8,44 +8,28 @@ import java.io.FileWriter;
 import java.io.StringReader;
 import java.lang.invoke.MethodHandles;
 import java.nio.charset.Charset;
-import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.kontron.common.mail.MailMessage;
 import com.kontron.qdw.boundary.service.mapping.tracebom.alt.TraceBoMHeaderType;
 import com.kontron.qdw.boundary.service.mapping.tracebom.alt.TraceBoMItemMappingType;
 import com.kontron.qdw.boundary.service.mapping.tracebom.alt.TraceBoMMappingType;
 import com.kontron.qdw.boundary.service.mapping.tracebom.alt.TraceBoMRevisionMappingType;
 import com.kontron.qdw.boundary.service.mapping.tracebom.alt.TraceBoMRootMappingType;
-import com.kontron.qdw.boundary.service.mapping.tracebom.neu.NewTraceBoMHeaderType;
 import com.kontron.qdw.boundary.util.Constants;
-import com.kontron.qdw.boundary.util.MailServiceFacade;
 import com.kontron.qdw.domain.base.Supplier;
 import com.kontron.qdw.domain.material.Material;
 import com.kontron.qdw.domain.material.MaterialRevision;
-import com.kontron.qdw.domain.serial.IllegalTraceBoMItem;
 import com.kontron.qdw.domain.serial.SerialObject;
 import com.kontron.qdw.domain.serial.TraceBoM;
-import com.kontron.qdw.domain.serial.TraceBoMItem;
-import com.kontron.qdw.repository.base.PlantRepository;
 import com.kontron.qdw.repository.base.SupplierRepository;
-import com.kontron.qdw.repository.material.MaterialRepository;
-import com.kontron.qdw.repository.material.MaterialRevisionRepository;
-import com.kontron.qdw.repository.serial.IllegalTraceBoMItemRepository;
-import com.kontron.qdw.repository.serial.SerialObjectRepository;
-import com.kontron.qdw.repository.serial.TraceBoMItemRepository;
-import com.kontron.qdw.repository.serial.TraceBoMRepository;
 import com.kontron.util.log.FileImportAbortedWithErrorsLog;
 import com.kontron.util.log.FileImportSuccessfulLog;
 import com.kontron.util.log.TaskNodeLog;
@@ -63,57 +47,24 @@ import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.Unmarshaller;
 
 /**
- * Import der Trace-BoM-Dateien, die die Fertiger in verschiedenen Verzeichnissen auf dem sftp bereitstellen.
+ * Import der Trace-BoM-Dateien im alten Format, die die Fertiger in verschiedenen Verzeichnissen auf dem sftp bereitstellen.
  * 
  * 2026 — © Kontron AG
  * @author Raymund Achner, achner.com
  */
 @Stateless
 public class TBOldImportServiceBean extends AbstractTBImportServiceBean<TraceBoMMappingType, TraceBoMHeaderType, TraceBoMItemMappingType> {
-    /*
-     * Timeout konfigurieren: 
-     * standalone.xml, <subsystem xmlns="urn:jboss:domain:transactions:6.0">:
-     * <coordinator-environment ... default-timeout="14400"/>
-     * Angabe in Sekunden; 4 Stunden = 60*60*4 = 14400
-     */
-
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private static final Charset ENCODING = Constants.CHARSET_UTF_8;
 
 
     @EJB
     private SupplierRepository supplierManager;
-    @EJB
-    private MaterialRevisionRepository materialRevisionManager;
-    @EJB
-    private MaterialRepository materialManager;
-    @EJB
-    private PlantRepository plantManager;
-    @EJB
-    private SerialObjectRepository serObjManager;
-    @EJB
-    private TraceBoMRepository trBoMManager;
-    @EJB
-    private TraceBoMItemRepository trBoMItemManager;
-    @EJB
-    private IllegalTraceBoMItemRepository illTrBoMItemManager;
 
     @PersistenceContext
     private EntityManager em;
     @Resource
     private SessionContext ctx;
-
-
-
-    // @EJB
-    // private SchedulerServiceBean schedulerService;
-    // @EJB
-    // private RmaImportServiceBean rmaImportServiceBean;
-    // @EJB
-    // private SvcMsgImportServiceBean svcMsgImportServiceBean;
-    // @EJB
-    // private SvcMsgRebuildMaterializedDeltaServiceBean svcMsgRebuildServiceBean;
-
 
 
     /** Create file for logistic */
@@ -230,16 +181,16 @@ public class TBOldImportServiceBean extends AbstractTBImportServiceBean<TraceBoM
     }
 
 
-
     /** @return success */
     @PermitAll
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public ImportResult saveTraceBoM(File sourceFile, TraceBoMRootMappingType trBoMRootImported) {
-        try {
-            // Import trace BoM
-            TraceBoMHeaderType trBoMHeaderImported = trBoMRootImported.getHeader();
-            TraceBoMRevisionMappingType trBoMRevisionImported = trBoMHeaderImported.getMaterialRevision();
+        // Import trace BoM
+        TraceBoMHeaderType trBoMHeaderImported = trBoMRootImported.getHeader();
+        TraceBoMRevisionMappingType trBoMRevisionImported = trBoMHeaderImported.getMaterialRevision();
+        List<String> illegalRatioMsgs = new ArrayList<>();
 
+        try {
             Supplier supplier = supplierManager.findById(trBoMHeaderImported.getSupplierCode());
 
             // Some CMs only deliver the Rev6 field. In order to find a proper revision the alternative number must be added!
@@ -251,7 +202,6 @@ public class TBOldImportServiceBean extends AbstractTBImportServiceBean<TraceBoM
             LocalDate parsedProdDate = parseToLocalDate(trBoMHeaderImported.getProductionDate());
 
             Map<TraceBoMMappingType, TraceBoM> persistedBoMPerImportedBoM = new HashMap<>();
-            List<String> illegalRatioMsgs = new ArrayList<>();
 
             for (TraceBoMMappingType trBoMImported : trBoMRootImported.getSerialObjects()) {
                 SerialObject serialObject = findSerialObject(trBoMImported.getSerialNumber(), trBoMImported.getCustomerSerialNumber(),
@@ -271,6 +221,8 @@ public class TBOldImportServiceBean extends AbstractTBImportServiceBean<TraceBoM
             }
 
             em.flush();
+            sendIllegalRatioMail(trBoMHeaderImported, illegalRatioMsgs);
+
             return ImportResult.ok();
         }
         catch (Exception e) {
@@ -279,43 +231,6 @@ public class TBOldImportServiceBean extends AbstractTBImportServiceBean<TraceBoM
             logger.error(errorMsg);
 
             return ImportResult.fail(errorMsg);
-        }
-    }
-
-
-
-    private void sendMail(TraceBoMHeaderType bomHeader, double illegalRatio) {
-        DecimalFormat df = new DecimalFormat("0.00");
-        StringBuilder messageText = new StringBuilder();
-        messageText.append("Illegal material ratio: " + df.format(illegalRatio) + "%\n");
-        messageText.append("Delivery note no.: " + bomHeader.getDeliveryNoteNumber() + "\n");
-        messageText.append("Lot no.: " + bomHeader.getLotNumber() + "\n");
-        messageText.append("Order no.: " + bomHeader.getOrderNumber() + "\n");
-        messageText.append("Supplier: " + bomHeader.getSupplierCode() + "\n");
-
-
-
-        String subject = Constants.APP_ENV + "Illegal material ratio warning for delivery note no. "
-                + bomHeader.getDeliveryNoteNumber();
-        List<String> receivers = Arrays.stream(Constants.getMailRecipientIllegalRatioWarning().split(";"))
-                .map(String::trim)
-                .collect(Collectors.toList());
-
-        Collection<String> to = new ArrayList<>();
-        for (String s : receivers) {
-            to.add(s);
-        }
-
-        try {
-            MailMessage msg = new MailMessage();
-            msg.setTo(to);
-            msg.setSubject(Constants.APP_ENV + subject);
-            msg.setMessage(messageText.toString());
-
-            MailServiceFacade.sendMail(msg);
-        }
-        catch (Exception mailException) {
-            mailException.printStackTrace();
         }
     }
 

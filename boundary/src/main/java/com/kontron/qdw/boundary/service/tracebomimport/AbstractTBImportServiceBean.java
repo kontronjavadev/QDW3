@@ -6,13 +6,18 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeParseException;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.kontron.common.mail.MailMessage;
 import com.kontron.qdw.boundary.service.mapping.tracebom.TraceBoMHeaderTypeIF;
 import com.kontron.qdw.boundary.service.mapping.tracebom.TraceBoMItemTypeIF;
 import com.kontron.qdw.boundary.service.mapping.tracebom.TraceBoMTypeIF;
+import com.kontron.qdw.boundary.util.Constants;
+import com.kontron.qdw.boundary.util.MailServiceFacade;
 import com.kontron.qdw.domain.base.Supplier;
 import com.kontron.qdw.domain.material.Material;
 import com.kontron.qdw.domain.material.MaterialRevision;
@@ -21,7 +26,6 @@ import com.kontron.qdw.domain.serial.SerialObject;
 import com.kontron.qdw.domain.serial.TraceBoM;
 import com.kontron.qdw.domain.serial.TraceBoMItem;
 import com.kontron.qdw.repository.base.PlantRepository;
-import com.kontron.qdw.repository.base.SupplierRepository;
 import com.kontron.qdw.repository.material.MaterialRepository;
 import com.kontron.qdw.repository.material.MaterialRevisionRepository;
 import com.kontron.qdw.repository.serial.IllegalTraceBoMItemRepository;
@@ -39,12 +43,6 @@ import jakarta.ejb.EJB;
  * @author Raymund Achner, achner.com
  */
 public abstract class AbstractTBImportServiceBean<TB extends TraceBoMTypeIF<TBI>, TBH extends TraceBoMHeaderTypeIF, TBI extends TraceBoMItemTypeIF> {
-    // private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    // private static final Charset ENCODING = Constants.CHARSET_UTF_8;
-    //
-    // private static final String SCHEMA_PATH = "/schema/";
-    // private static final String SCHEMA_NAME = "TraceBoM.xsd";
-    //
     private static final String DEFAULT_PLANT_CODE = "6000";
     private static final String REVISION_NO_SUFFIX = " ALT(01)";
     private static final double TRACE_BOM_WARNING_THRESHOLD = 10.0;
@@ -56,8 +54,6 @@ public abstract class AbstractTBImportServiceBean<TB extends TraceBoMTypeIF<TBI>
             .toFormatter();
 
 
-    @EJB
-    private SupplierRepository supplierManager;
     @EJB
     private MaterialRevisionRepository materialRevisionManager;
     @EJB
@@ -72,11 +68,6 @@ public abstract class AbstractTBImportServiceBean<TB extends TraceBoMTypeIF<TBI>
     private TraceBoMItemRepository trBoMItemManager;
     @EJB
     private IllegalTraceBoMItemRepository illTrBoMItemManager;
-
-    // @PersistenceContext
-    // private EntityManager em;
-    // @Resource
-    // private SessionContext ctx;
 
 
 
@@ -230,6 +221,26 @@ public abstract class AbstractTBImportServiceBean<TB extends TraceBoMTypeIF<TBI>
         msg.append("Supplier: ").append(trBoMHeaderImported.getSupplierCode()).append("\n");
 
         return msg.toString();
+    }
+
+    void sendIllegalRatioMail(TBH trBoMHeaderImported, List<String> illegalRatioMsgs) {
+        String subject = Constants.APP_ENV + "Illegal material ratio warning for delivery note no. "
+                + trBoMHeaderImported.getDeliveryNoteNumber();
+        List<String> receivers = Arrays.stream(Constants.getMailRecipientIllegalRatioWarning().split(";"))
+                .map(String::trim)
+                .collect(Collectors.toList());
+
+        try {
+            MailMessage msg = new MailMessage();
+            msg.setTo(receivers);
+            msg.setSubject(subject);
+            msg.setMessage(String.join("\n", illegalRatioMsgs));
+
+            MailServiceFacade.sendMail(msg);
+        }
+        catch (Exception mailException) {
+            mailException.printStackTrace();
+        }
     }
 
 
