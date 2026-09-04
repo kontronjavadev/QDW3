@@ -9,13 +9,16 @@ import java.io.Serializable;
 import java.lang.invoke.MethodHandles;
 import java.text.DecimalFormat;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.TimeZone;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.kontron.qdw.boundary.service.repairimport.RepairImportServiceBean;
+import com.kontron.qdw.boundary.service.tracebomimport.TraceBoMImportServiceBean;
+import com.kontron.qdw.boundary.util.Constants;
 import com.kontron.qdw.ui.UserSession;
 import com.kontron.qdw.ui.view.util.CopyClipboard;
 
@@ -41,8 +44,10 @@ public class TraceBoMImportView extends CopyClipboard implements Serializable {
     protected transient DateTimeFormatter dateTimeFormat;
     protected transient DateTimeFormatter dateFormat;
 
-    private final transient RepairImportServiceBean importServiceBean;
+    private final transient TraceBoMImportServiceBean importServiceBean;
 
+    private List<String> folders = new ArrayList<>();
+    private List<String> selectedFolders = new ArrayList<>();
 
 
     @Generated
@@ -53,7 +58,7 @@ public class TraceBoMImportView extends CopyClipboard implements Serializable {
 
     @Inject
     @Generated
-    public TraceBoMImportView(UserSession userSession, RepairImportServiceBean importServiceBean) {
+    public TraceBoMImportView(UserSession userSession, TraceBoMImportServiceBean importServiceBean) {
         this.userSession = userSession;
         this.importServiceBean = importServiceBean;
     }
@@ -77,6 +82,32 @@ public class TraceBoMImportView extends CopyClipboard implements Serializable {
                 .withZone(TimeZone.getTimeZone(userSession.getTimeZone()).toZoneId());
         decimalFormat.applyPattern(userSession.getNumberFormat());
 
+
+        // Code für Abfrage über FTP. Unnötig langsam, also erst Mal fest kodiert hier rein schreiben
+        // und ggf. mit anderen Mechanismen in der Datenbank persistieren.
+        // if (folders.isEmpty()) {
+        // try {
+        // folders.addAll(importServiceBean.getRootFolders());
+        // if (Constants.IS_PROD_ENVIRONMENT) {
+        // // Ein Test-Ordner für die Testumgebung
+        // folders.removeIf(folder -> folder.equalsIgnoreCase("test"));
+        // }
+        // }
+        // catch (Exception e) {
+        // folders.clear();
+        // MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_ERROR, OPERATION_FETCH_FAIL, e.getMessage());
+        // }
+        // }
+
+        if (folders.isEmpty()) {
+            folders.addAll(List.of("BMK", "ENNOCON", "ETL", "ISKRATEL", "KAT", "Kontron Electronics"));
+            if (!Constants.IS_PROD_ENVIRONMENT) {
+                // Ein Test-Ordner für die Testumgebung
+                folders.add("x TEST");
+            }
+        }
+
+
         logger.debug("Trace BoM import view initialization finished");
     }
 
@@ -97,21 +128,31 @@ public class TraceBoMImportView extends CopyClipboard implements Serializable {
 
 
     public void runImport() {
+        // TODO Raymund: Auswahl mit der Gesamtmenge abgleichen. Ist alles ausgewählt, ist das gleichbedeutend
+        // wie wenn nichts ausgewählt ist: es wird nicht gefiltert.
+        System.out.println("gewählt: " + String.join(",", selectedFolders));
+        if (System.currentTimeMillis() > 0) {
+            return;
+        }
         importServiceBean.runImport();
     }
 
 
 
-    public void runRmaImport() {
-        importServiceBean.runRmaImport();
+    public List<String> getFolders() {
+        return folders;
     }
 
-    public void runSvcMsgImport() {
-        importServiceBean.runSvcMsgImport();
+    public void setFolders(List<String> folders) {
+        this.folders = folders;
     }
 
-    public void runSvcMsgRebuild() {
-        importServiceBean.runSvcMsgRebuild();
+    public List<String> getSelectedFolders() {
+        return selectedFolders;
+    }
+
+    public void setSelectedFolders(List<String> selectedFolders) {
+        this.selectedFolders = selectedFolders;
     }
 
 }

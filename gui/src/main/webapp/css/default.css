@@ -243,6 +243,26 @@ body .ui-selectonemenu-panel .ui-selectonemenu-items .ui-selectonemenu-item.ui-s
 
 
 
+body .ui-selectcheckboxmenu .ui-selectcheckboxmenu-label-container,
+body .ui-selectcheckboxmenu-panel .ui-selectcheckboxmenu-header,
+body .ui-selectcheckboxmenu-panel .ui-selectcheckboxmenu-items .ui-selectcheckboxmenu-item {
+	padding: .15rem .5rem;
+	background: var(--inputfield);
+	color: var(--text);
+}
+
+body .ui-selectcheckboxmenu {
+	padding-right: 1.5rem;
+	background: var(--inputfield);
+	color: var(--text);
+}
+
+body .ui-selectcheckboxmenu-panel .ui-selectcheckboxmenu-items-wrapper {
+	padding: 0rem;
+}
+
+
+
 /* Menü */
 body .ui-menu .ui-menu-parent .ui-menu-child {
 	white-space: nowrap;

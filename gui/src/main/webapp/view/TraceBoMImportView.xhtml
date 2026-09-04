@@ -31,15 +31,27 @@
 <!-- TraceBoMImport view dialog -->
 
 	<p:scrollPanel style="width:100%; height:calc(100vh - 141px);" mode="native">
+		<h:outputLabel value="#{i18n.tracebomimportview_folderfilter}: " styleClass="label-field-otional"/>
+		<p:selectCheckboxMenu id="multiple"
+			label="#{i18n.filter_all_or_none_nofilter}"
+			emptyLabel="#{i18n.filter_all_or_none_nofilter}"
+			styleClass="filter-all-or-none"
+			updateLabel="true" 
+			scrollHeight="350"
+			value="#{traceBoMImportView.selectedFolders}">
+			<f:selectItems value="#{traceBoMImportView.folders}" />
+		</p:selectCheckboxMenu>
+	
 		<table>
 			<tr>
 				<td><p:commandButton id="cmdImport" icon="pi pi-play" action="#{traceBoMImportView.runImport}" /></td>
 				<td><h:outputLabel value="#{i18n.tracebomimportview_runimport}" for="cmdImport" styleClass="label-field-otional"/></td>
 			</tr>
+
 <!-- 
 			<tr>
-				<td><p:commandButton style="margin-left: 1rem" id="cmdRmaImport" icon="pi pi-play" action="#{traceBoMImportView.runRmaImport}" /></td>
-				<td><h:outputLabel value="#{i18n.tracebomimportview_runrmaimport}" for="cmdRmaImport" styleClass="label-field-otional"/></td>
+				<td><p:commandButton style="margin-left: 1rem" id="cmdImportFolder" icon="pi pi-play" action="#{traceBoMImportView.runImportFolder}" /></td>
+				<td><h:outputLabel value="#{i18n.tracebomimportview_runimportfolder}" for="cmdImportFolder" styleClass="label-field-otional"/></td>
 			</tr>
  -->
 

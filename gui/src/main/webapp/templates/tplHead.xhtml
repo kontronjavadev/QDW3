@@ -149,6 +149,39 @@ oder der Titel richtet sich nach dem Content (<ui:define name="title"/> in jedem
 				});
 			});
 			//]]>
+
+
+
+			if (PrimeFaces.widget.SelectCheckboxMenu) {
+				PrimeFaces.widget.SelectCheckboxMenu = PrimeFaces.widget.SelectCheckboxMenu.extend({
+					updateLabel: function() {
+						// Prüfen, ob dieses spezifische Menü die Steuer-Klasse "filter-all-or-none" hat.
+						// Die Auswahl dieses Checkbox-Menü dient zur Filterung. Ist nichts ausgewählt, wird nicht gefiltert.
+						// Ist alles ausgewählt, wird alles verwendet, also ebenfalls nicht gefiltert.
+						if (this.jq.hasClass('filter-all-or-none')) {
+							var checkedCount = this.inputs.filter(':checked').length;
+							var totalCount = this.inputs.length;
+
+							if (checkedCount === 0 || checkedCount === totalCount) {
+								// Bei 0 oder allen Elementen: Fixen Text setzen.
+								// Wir greifen dynamisch auf die in der Komponente konfigurierten Labels zurück.
+								var fallbackLabel = this.cfg.label || this.cfg.emptyLabel;
+								this.label.text(fallbackLabel);
+							} else {
+								// Bei teilweiser Auswahl: Das Original-Verhalten von PrimeFaces 
+								// aufrufen, welches die kommaseparierte Liste generiert.
+								this._super();
+							}
+						} else {
+							// Für alle anderen SelectCheckboxMenus ohne diese Klasse: Standardverhalten.
+							this._super();
+						}
+					}
+				});
+			}
+
+
+
 		</script>
 
 	</h:head>

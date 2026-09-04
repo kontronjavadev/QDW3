@@ -81,6 +81,7 @@ public class TraceBoMImportServiceBean {
 
 
 
+    @PermitAll
     @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
     public List<String> getRootFolders() throws IllegalAccessError, IllegalArgumentException, FtException {
         SftpAccess ftpAccess = createSFTPClient();
@@ -95,6 +96,7 @@ public class TraceBoMImportServiceBean {
         if (rootFolders == null || rootFolders.isEmpty()) {
             throw new IllegalArgumentException("No root folders found!");
         }
+
         return rootFolders;
     }
 
