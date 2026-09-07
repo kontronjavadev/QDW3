@@ -1,6 +1,7 @@
 package com.kontron.qdw.boundary.service.tracebomimport;
 
 import static com.kontron.qdw.boundary.service.process.FileUtils.XML_FILE_FILTER;
+import static com.kontron.qdw.boundary.service.process.FileUtils.ZIP_FILE_FILTER;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -11,13 +12,11 @@ import java.lang.invoke.MethodHandles;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -64,6 +63,8 @@ public class TraceBoMImportServiceBean {
 
     // private static final String TASKNAME_IMPORT_REBUILD = "Import and rebuild";
     private static final String TASKNAME_IMPORT = "Trace-BoM import";
+    private static final String TASKNAME_DOWNLOAD = "Trace-BoM download";
+    private static final String TASKNAME_PROCESS = "Trace-BoM process";
     // private static final String TASKNAME_REBUILD = "rebuild materialized tables";
 
     // private static final String PROP_XML_EXCHANGE_FOLDER = "sap_exchange_folder";
@@ -83,6 +84,16 @@ public class TraceBoMImportServiceBean {
 
 
 
+    /**
+     * Holt die Ordner-Liste vom SFTP. Aktuell wird eine fest kodierte Liste verwendet,
+     * da der Zugriff nur für die Anzeige der Ordner-Liste ist und dafür zu lange braucht.
+     * 
+     * @return Ordner-Liste im Grundverzeichnis des SFTP
+     * 
+     * @throws FtException wenn keine Verbindung zum SFTP aufgebaut werden kann
+     * @throws IllegalAccessError bei fehlender Berechtigung
+     * @throws IllegalArgumentException wenn der Basisordner leer ist
+     */
     @PermitAll
     @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
     public List<String> getRootFolders() throws IllegalAccessError, IllegalArgumentException, FtException {
@@ -132,60 +143,176 @@ public class TraceBoMImportServiceBean {
                     : getRootFolders();
         }
         catch (Exception e) {
-            TaskLeafLog tskInit = mainTask.createNewSubTaskLeaf("initializing sftp access for import");
+            TaskLeafLog tskInit = mainTask.createNewSubTaskLeaf("Run import", "initializing sftp access for import");
             tskInit.finishTaskWithError(e);
             mainTask.abortTask();
             return;
         }
 
 
-        // Iterate over all sub-folders of input folder as every contract manufacturer has its own sub-folder!
-        try {
-            // Eine geworfene Exception führt zu Komplettabbruch
-            // Soll nur mit der nächsten Datei oder dem nächsten Hersteller fortgefahren werden,
-            // so muss ein Fehler-Task erstellt und zurück gekehrt werden.
-            for (String ftpManufacturerFolder : rootFolders) {
-                splitNewFilesForFolder(mainTask, ftpAccess, ftpManufacturerFolder, folderConfig);
+        // Beachte: jeder Vertrags-Fertiger hat seinen eigenen Unterordner
+        // Alle Dateien runter laden
+        TaskNodeLog downloadTask = mainTask.createNewSubTaskNode(TASKNAME_DOWNLOAD);
+        for (String ftpManufacturerFolder : rootFolders) {
+            try {
+                downloadFilesFromFolder(ftpAccess, ftpManufacturerFolder, folderConfig);
+                downloadTask.addSubTask(new FileImportSuccessfulLog("folder " + ftpManufacturerFolder, 0));
+            }
+            catch (Exception e) {
+                downloadTask.addSubTask(new FileImportAbortedWithErrorsLog("folder " + ftpManufacturerFolder, "Error when downloading files"));
+                break;
             }
         }
-        catch (Exception e) {
-            TaskLeafLog tskProcess = mainTask.createNewSubTaskLeaf("downloading and processing files");
-            tskProcess.finishTaskWithError(e);
-            mainTask.abortTask();
-            return;
+
+
+        // alle heruntergeladenen Dateien ggf. entpacken und verarbeiten
+        // (Es können auch bereits Dateien im Verzeichnis liegen, die nicht gerade erst runtergeladen wurden.)
+        TaskNodeLog processTask = mainTask.createNewSubTaskNode(TASKNAME_PROCESS);
+        for (String ftpManufacturerFolder : rootFolders) {
+            try {
+                processFilesInFolder(processTask, ftpAccess, ftpManufacturerFolder, folderConfig);
+                processTask.addSubTask(new FileImportSuccessfulLog("folder " + ftpManufacturerFolder, 0));
+            }
+            catch (Exception e) {
+                processTask.addSubTask(new FileImportAbortedWithErrorsLog("folder " + ftpManufacturerFolder, "Error when processing files"));
+                break;
+            }
         }
+
+
 
         // <--- execTask()
         finishImport(mainTask);
     }
 
 
+    @Asynchronous
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+    public void runDownload(List<String> selectedFolders) {
+        if (!schedulerService.isExecuteImport()) {
+            return;
+        }
 
-    private void splitNewFilesForFolder(TaskNodeLog mainTask, SftpAccess ftpAccess, String ftpManufacturerFolder, FolderConfig folderConfig) {
+        TaskNodeLog downloadTask = initDownload();
+
+        // ---> == execTask(), nur dass beim normalen Import noch eine Klammer darüber ist
+        SftpAccess ftpAccess;
+        FolderConfig folderConfig;
+        List<String> rootFolders = null;
+        try {
+            ftpAccess = createSFTPClient();
+            folderConfig = setupFolders();
+            rootFolders = CollectionUtils.isEmpty(selectedFolders)
+                    ? new ArrayList<>(selectedFolders)
+                    : getRootFolders();
+        }
+        catch (Exception e) {
+            TaskLeafLog tskInit = downloadTask.createNewSubTaskLeaf("initializing sftp access for download");
+            tskInit.finishTaskWithError(e);
+            downloadTask.abortTask();
+            return;
+        }
+
+
+        // Beachte: jeder Vertrags-Fertiger hat seinen eigenen Unterordner
+        for (String ftpManufacturerFolder : rootFolders) {
+            try {
+                downloadFilesFromFolder(ftpAccess, ftpManufacturerFolder, folderConfig);
+                downloadTask.addSubTask(new FileImportSuccessfulLog("folder " + ftpManufacturerFolder, 0));
+            }
+            catch (Exception e) {
+                downloadTask.addSubTask(new FileImportAbortedWithErrorsLog("folder " + ftpManufacturerFolder, "Error when downloading files"));
+                break;
+            }
+        }
+
+        // <--- execTask()
+        finishImport(downloadTask);
+    }
+
+
+    @Asynchronous
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+    public void runProcess(List<String> selectedFolders) {
+        if (!schedulerService.isExecuteImport()) {
+            return;
+        }
+
+        TaskNodeLog processTask = initProcess();
+
+        // ---> == execTask(), nur dass beim normalen Import noch eine Klammer darüber ist
+        SftpAccess ftpAccess = null;
+        FolderConfig folderConfig;
+        List<String> rootFolders = null;
+        try {
+            if (Constants.IS_PROD_ENVIRONMENT) {
+                // Zugang zum SFTP wird beim Aufruf von processFilesInFolder nur benötigt,
+                // um die Dateien auf dem SFTP zu löschen und das macht nur die Produktivumgebung
+                ftpAccess = createSFTPClient();
+            }
+            folderConfig = setupFolders();
+            rootFolders = CollectionUtils.isEmpty(selectedFolders)
+                    ? new ArrayList<>(selectedFolders)
+                    : getRootFolders();
+        }
+        catch (Exception e) {
+            TaskLeafLog tskInit = processTask.createNewSubTaskLeaf("initializing sftp access for download");
+            tskInit.finishTaskWithError(e);
+            processTask.abortTask();
+            return;
+        }
+
+
+        // Beachte: jeder Vertrags-Fertiger hat seinen eigenen Unterordner
+        for (String ftpManufacturerFolder : rootFolders) {
+            try {
+                processFilesInFolder(processTask, ftpAccess, ftpManufacturerFolder, folderConfig);
+                processTask.addSubTask(new FileImportSuccessfulLog("folder " + ftpManufacturerFolder, 0));
+            }
+            catch (Exception e) {
+                processTask.addSubTask(new FileImportAbortedWithErrorsLog("folder " + ftpManufacturerFolder, "Error when downloading files"));
+                break;
+            }
+        }
+
+        // <--- execTask()
+        finishImport(processTask);
+    }
+
+
+
+    // private void splitNewFilesForFolder(TaskNodeLog mainTask, SftpAccess ftpAccess, String ftpManufacturerFolder, FolderConfig folderConfig) {
+    // if (Constants.IS_PROD_ENVIRONMENT && ftpManufacturerFolder.equalsIgnoreCase("test")) {
+    // // Ein Test-Ordner für die Testumgebung
+    // return;
+    // }
+    //
+    // TaskNodeLog folderTask = mainTask.createNewSubTaskNode(ftpManufacturerFolder);
+    // // Map<File, List<File>> zipToExtractedFilesMapping;
+    // try {
+    // // Map, in der die Dateien einer heruntergeladenen zip-Datei aufgelöst sind.
+    // // Ist die heruntergeladene Datei keine zip-Datei, ist hier auch nichts gelistet.
+    // /*zipToExtractedFilesMapping =*/ downloadFilesFromFolder(ftpAccess, ftpManufacturerFolder, folderConfig);
+    // }
+    // catch (Exception e) { // FtException, SecurityException, IOException
+    // folderTask.addSubTask(new FileImportAbortedWithErrorsLog(ftpManufacturerFolder, e));
+    // folderTask.abortTask();
+    // return;
+    // }
+    // processFilesInFolder(folderTask, ftpAccess, ftpManufacturerFolder, /*zipToExtractedFilesMapping,*/ folderConfig);
+    // }
+
+    private /*Map<File, List<File>>*/ void downloadFilesFromFolder(SftpAccess ftpAccess, String ftpManufacturerFolder,
+            FolderConfig folderConfig)
+            throws FtException, SecurityException, IOException {
         if (Constants.IS_PROD_ENVIRONMENT && ftpManufacturerFolder.equalsIgnoreCase("test")) {
             // Ein Test-Ordner für die Testumgebung
             return;
         }
 
-        TaskNodeLog folderTask = mainTask.createNewSubTaskNode(ftpManufacturerFolder);
-        Map<File, List<File>> zipToExtractedFilesMapping;
-        try {
-            // Map, in der die Dateien einer heruntergeladenen zip-Datei aufgelöst sind.
-            // Ist die heruntergeladene Datei keine zip-Datei, ist hier auch nichts gelistet.
-            zipToExtractedFilesMapping = downloadAndUnzipFilesForFolder(ftpAccess, ftpManufacturerFolder, folderConfig);
-        }
-        catch (Exception e) { // FtException, SecurityException, IOException
-            folderTask.addSubTask(new FileImportAbortedWithErrorsLog(ftpManufacturerFolder, e));
-            folderTask.abortTask();
-            return;
-        }
-        splitFilesInFolder(folderTask, ftpAccess, ftpManufacturerFolder, zipToExtractedFilesMapping, folderConfig);
-    }
-
-    private Map<File, List<File>> downloadAndUnzipFilesForFolder(SftpAccess ftpAccess, String ftpManufacturerFolder,
-            FolderConfig folderConfig)
-            throws FtException, SecurityException, IOException {
-        Map<File, List<File>> zipToExtractedFilesMapping = new HashMap<>();
+        // Map<File, List<File>> zipToExtractedFilesMapping = new HashMap<>();
 
         // Liste an Dateien in Verzeichnis holen (kann Exception werfen)
         List<String> ftpFiles = ftpAccess.getReadableFileList(ftpManufacturerFolder);
@@ -205,27 +332,20 @@ public class TraceBoMImportServiceBean {
                 fos.flush();
             }
 
-            // wenn es sich um eine zip-Datei handelt, ...
-            if (localTraceFile.isFile() && FileUtils.isZipFile(localTraceFile)) {
-                // ... vorherige Dateiliste in lokalem Verzeichnis merken, ...
-                List<File> filesBefore = Arrays.asList(curLocalFolder.listFiles()).stream()
-                        .filter(f -> f.isFile())
-                        .collect(Collectors.toList());
-                // ... zip-Datei entpacken, ...
-                FileUtils.unzipFile(localTraceFile, curLocalFolder.getAbsolutePath());
-                // ... neu hinzu gekommene Dateien ermitteln ...
-                List<File> extractedFiles = Arrays.asList(curLocalFolder.listFiles()).stream()
-                        .filter(f -> f.isFile() && !filesBefore.contains(f))
-                        .collect(Collectors.toList());
-                // ... und in einer Map merken
-                zipToExtractedFilesMapping.put(localTraceFile, extractedFiles);
-            }
+            // // wenn es sich um eine zip-Datei handelt, ...
+            // if (localTraceFile.isFile() && FileUtils.isZipFile(localTraceFile)) {
+            // // ... zip-Datei entpacken, ...
+            // List<File> extractedFiles = FileUtils.unzipFile(localTraceFile, curLocalFolder.getAbsolutePath());
+            // // ... und in einer Map merken
+            // zipToExtractedFilesMapping.put(localTraceFile, extractedFiles);
+            // }
         }
-        return zipToExtractedFilesMapping;
+        // return zipToExtractedFilesMapping;
     }
 
-    private void splitFilesInFolder(TaskNodeLog folderTask, SftpAccess ftpAccess, String localManufacturerFolder,
-            Map<File, List<File>> zipToExtractedFilesMapping, FolderConfig folderConfig) {
+    private void processFilesInFolder(TaskNodeLog folderTask, SftpAccess ftpAccess, String localManufacturerFolder,
+            // Map<File, List<File>> zipToExtractedFilesMappingXXXXXXXXXX,
+            FolderConfig folderConfig) {
         if (Constants.IS_PROD_ENVIRONMENT && localManufacturerFolder.equalsIgnoreCase("test")) {
             return;
         }
@@ -235,15 +355,39 @@ public class TraceBoMImportServiceBean {
 
 
         // erstelle Map aller xml-Dateien in lokalem Verzeichnis
-        File[] fileMap = curLocalFolder.listFiles(XML_FILE_FILTER);
-        if (fileMap == null) {
+        File[] zipFiles = curLocalFolder.listFiles(ZIP_FILE_FILTER);
+        if (zipFiles == null) {
+            folderTask.addSubTask(new FileImportAbortedWithErrorsLog(localManufacturerFolder, "I/O error reading files from directory"));
+            folderTask.abortTask();
+            return;
+        }
+
+        Map<File, List<File>> zipToExtractedFilesMapping = new HashMap<>();
+        for (File zipFile : zipFiles) {
+            try {
+                // zip-Datei entpacken, ...
+                List<File> extractedFiles = FileUtils.unzipFile(zipFile, curLocalFolder.getAbsolutePath());
+                // ... und in einer Map merken
+                zipToExtractedFilesMapping.put(zipFile, extractedFiles);
+            }
+            catch (IOException e) {
+                folderTask.addSubTask(new FileImportAbortedWithErrorsLog(zipFile.getAbsolutePath(), "Error when unzipping"));
+                folderTask.abortTask();
+                return;
+            }
+        }
+
+
+        // erstelle Map aller xml-Dateien in lokalem Verzeichnis
+        File[] xmlFiles = curLocalFolder.listFiles(XML_FILE_FILTER);
+        if (xmlFiles == null) {
             folderTask.addSubTask(new FileImportAbortedWithErrorsLog(localManufacturerFolder, "I/O error reading files from directory"));
             folderTask.abortTask();
             return;
         }
 
         // Iterate over all new incoming files and try to split them
-        for (File inputFile : fileMap) {
+        for (File inputFile : xmlFiles) {
             long startTime = System.currentTimeMillis();
             if (FileUtils.isBusy(inputFile)) {
                 folderTask.addSubTask(new FileImportAbortedWithErrorsLog(localManufacturerFolder + File.separator + inputFile.getName(),
@@ -444,23 +588,35 @@ public class TraceBoMImportServiceBean {
         return new TaskNodeLog(TASKNAME_IMPORT);
     }
 
+    private TaskNodeLog initDownload() {
+        logger.info("Downloading Trace-BoM files");
+
+        return new TaskNodeLog(TASKNAME_DOWNLOAD);
+    }
+
+    private TaskNodeLog initProcess() {
+        logger.info("Processing Trace-BoM files");
+
+        return new TaskNodeLog(TASKNAME_PROCESS);
+    }
+
     private void finishImport(TaskNodeLog tsk) {
         tsk.finishTask();
         // keine Mail schicken, wenn es nichts zu importieren gab oder alles glatt gelaufen ist
         if (!tsk.wasAtLeastOneConcreteTaskPerformed()) {
-            logger.info("Finished importing Trace-BoM files — no import files");
+            logger.info("Finished \"" + tsk.getTaskName() + "\" — no import files");
             return;
         }
         if (tsk.isSuccess()) {
-            logger.info("Finished importing Trace-BoM files successfully");
+            logger.info("Finished \"" + tsk.getTaskName() + "\" successfully");
             return;
         }
 
         // ist beendet
         long duration = tsk.getEndTime() - tsk.getStartTime();
-        logger.info("Finished importing Trace-BoM files");
+        logger.info("Finished \"" + tsk.getTaskName() + "\"");
 
-        String subjectText = Constants.APP_ENV + ": Trace-BoM import finished " + (tsk.isSuccess() ? "successfully" : "with errors");
+        String subjectText = Constants.APP_ENV + ": \"" + tsk.getTaskName() + "\" finished " + (tsk.isSuccess() ? "successfully" : "with errors");
         StringBuilder importLog = new StringBuilder();
         importLog.append(subjectText);
         importLog.append(" in ").append(TimeUtil.toBestPracticeStringShort(duration)).append(".\n\n");

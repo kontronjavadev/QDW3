@@ -13,6 +13,9 @@ import java.nio.channels.FileLock;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.TimeUnit;
@@ -24,6 +27,7 @@ import jakarta.activation.MimetypesFileTypeMap;
 public class FileUtils {
 
     public static final FileFilter XML_FILE_FILTER = f -> f.isFile() && FileUtils.isXmlFile(f);
+    public static final FileFilter ZIP_FILE_FILTER = f -> f.isFile() && FileUtils.isZipFile(f);
 
 
     /**
@@ -114,58 +118,54 @@ public class FileUtils {
     }
 
     /**
-     * Create full path from path and filename
-     * @param fileName
-     * @param destDir
-     * @return full path created from path and filename
-     */
-    public static String createFullPath(final String fileName, final String destDir) {
-        String fullPath = null;
-
-        if (destDir.charAt(destDir.length() - 1) != File.separatorChar) {
-            fullPath = destDir + File.separatorChar + fileName.toLowerCase();
-        }
-        else {
-            fullPath = destDir + fileName.toLowerCase();
-        }
-
-        return fullPath;
-    }
-
-    /**
      * Extract given ZIP file into given directory (only files in top level hierarchy of the zip file)
      * @param fileName
-     * @param destDir
+     * @param targetDir
      * @throws Exception
      */
-    public static void unzipFile(final File file, final String destDir) throws IOException, FileNotFoundException {
-        // ZipInputStream zipInputStream = null;
-        // BufferedOutputStream out = null;
+    public static List<File> unzipFile(final File zipFile, final String targetDir) throws IOException, FileNotFoundException {
         final int BUFFER_SIZE = 8192;
 
         // If file is compressed than unzip the contained files
-        if (!isZipFile(file)) {
-            return;
+        if (!isZipFile(zipFile)) {
+            return Collections.emptyList();
         }
 
-        try (ZipInputStream zipInputStream = new ZipInputStream(new BufferedInputStream(new FileInputStream(file.getAbsolutePath())))) {
+        List<File> extractedFiles = new ArrayList<>();
+        try (ZipInputStream zipInputStream = new ZipInputStream(new BufferedInputStream(new FileInputStream(zipFile.getAbsolutePath())))) {
             ZipEntry zipEntry = null;
             int count;
             byte data[] = new byte[BUFFER_SIZE];
 
             // Iterate through zipInputStream to get all contained files
             while ((zipEntry = zipInputStream.getNextEntry()) != null) {
-                String tmpPath = createFullPath(zipEntry.getName(), destDir);
+                File targetFile = createFullPath(zipEntry.getName(), targetDir);
+                extractedFiles.add(targetFile);
+                if (targetFile.exists()) {
+                    // wurde bereits entpackt
+                    continue;
+                }
 
-                try (BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(tmpPath), BUFFER_SIZE)) {
+                try (BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(targetFile), BUFFER_SIZE)) {
                     // Read until end of stream and write content to file
                     while ((count = zipInputStream.read(data, 0, BUFFER_SIZE)) != -1) {
                         out.write(data, 0, count);
                     }
-
                     out.flush();
                 }
             }
         }
+        return extractedFiles;
     }
+
+    /**
+     * Create full path from path and filename
+     * @param fileNameInZipFile
+     * @param destDir
+     * @return full path created from path and filename
+     */
+    private static File createFullPath(final String fileNameInZipFile, final String destDir) {
+        return new File(destDir, fileNameInZipFile.toLowerCase());
+    }
+
 }
