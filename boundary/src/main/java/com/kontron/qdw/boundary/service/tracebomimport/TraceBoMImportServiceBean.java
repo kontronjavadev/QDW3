@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -18,6 +19,7 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -104,6 +106,13 @@ public class TraceBoMImportServiceBean {
     @PermitAll
     @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
     public void runImport() {
+        runImport(null);
+    }
+
+    @Asynchronous
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+    public void runImport(List<String> selectedFolders) {
         // Original: "splitNewFiles()"
         if (!schedulerService.isExecuteImport()) {
             return;
@@ -118,7 +127,9 @@ public class TraceBoMImportServiceBean {
         try {
             ftpAccess = createSFTPClient();
             folderConfig = setupFolders();
-            rootFolders = getRootFolders();
+            rootFolders = CollectionUtils.isEmpty(selectedFolders)
+                    ? new ArrayList<>(selectedFolders)
+                    : getRootFolders();
         }
         catch (Exception e) {
             TaskLeafLog tskInit = mainTask.createNewSubTaskLeaf("initializing sftp access for import");
