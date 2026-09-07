@@ -97,21 +97,9 @@ public class TraceBoMImportServiceBean {
     @PermitAll
     @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
     public List<String> getRootFolders() throws IllegalAccessError, IllegalArgumentException, FtException {
-        SftpAccess ftpAccess = createSFTPClient();
-        List<String> rootFolders = null;
-        try {
-            rootFolders = ftpAccess.getReadableDirList(".");
-        }
-        catch (SecurityException | FtException se) {
-            throw new IllegalAccessError("Unable to access root folders");
-        }
-
-        if (rootFolders == null || rootFolders.isEmpty()) {
-            throw new IllegalArgumentException("No root folders found!");
-        }
-
-        return rootFolders;
+        return getRootFolders(null);
     }
+
 
     @Asynchronous
     @PermitAll
@@ -139,8 +127,8 @@ public class TraceBoMImportServiceBean {
             ftpAccess = createSFTPClient();
             folderConfig = setupFolders();
             rootFolders = CollectionUtils.isEmpty(selectedFolders)
-                    ? new ArrayList<>(selectedFolders)
-                    : getRootFolders();
+                    ? getRootFolders(ftpAccess)
+                    : new ArrayList<>(selectedFolders);
         }
         catch (Exception e) {
             TaskLeafLog tskInit = mainTask.createNewSubTaskLeaf("Run import", "initializing sftp access for import");
@@ -204,7 +192,7 @@ public class TraceBoMImportServiceBean {
             ftpAccess = createSFTPClient();
             folderConfig = setupFolders();
             rootFolders = CollectionUtils.isEmpty(selectedFolders)
-                    ? getRootFolders()
+                    ? getRootFolders(ftpAccess)
                     : new ArrayList<>(selectedFolders);
         }
         catch (Exception e) {
@@ -249,13 +237,14 @@ public class TraceBoMImportServiceBean {
         try {
             if (Constants.IS_PROD_ENVIRONMENT) {
                 // Zugang zum SFTP wird beim Aufruf von processFilesInFolder nur benötigt,
-                // um die Dateien auf dem SFTP zu löschen und das macht nur die Produktivumgebung
+                // um die Dateien auf dem SFTP zu löschen und das macht nur die Produktivumgebung,
+                // oder um ggf. die vollständige Ordnerliste zu holen (wird dort aufgebaut, falls nötig).
                 ftpAccess = createSFTPClient();
             }
             folderConfig = setupFolders();
             rootFolders = CollectionUtils.isEmpty(selectedFolders)
-                    ? new ArrayList<>(selectedFolders)
-                    : getRootFolders();
+                    ? getRootFolders(ftpAccess)
+                    : new ArrayList<>(selectedFolders);
         }
         catch (Exception e) {
             TaskLeafLog tskInit = processTask.createNewSubTaskLeaf("initializing sftp access for download");
@@ -515,6 +504,25 @@ public class TraceBoMImportServiceBean {
     }
 
 
+
+    private List<String> getRootFolders(SftpAccess ftpAccess) throws IllegalAccessError, IllegalArgumentException, FtException {
+        SftpAccess _ftpAccess = ftpAccess == null
+                ? createSFTPClient()
+                : ftpAccess;
+        List<String> rootFolders = null;
+        try {
+            rootFolders = _ftpAccess.getReadableDirList(".");
+        }
+        catch (SecurityException | FtException se) {
+            throw new IllegalAccessError("Unable to access root folders");
+        }
+
+        if (rootFolders == null || rootFolders.isEmpty()) {
+            throw new IllegalArgumentException("No root folders found!");
+        }
+
+        return rootFolders;
+    }
 
     private SftpAccess createSFTPClient() throws FtException {
         return new SftpAccess(Constants.getTraceBoMSftpHost(),
