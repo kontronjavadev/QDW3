@@ -204,8 +204,8 @@ public class TraceBoMImportServiceBean {
             ftpAccess = createSFTPClient();
             folderConfig = setupFolders();
             rootFolders = CollectionUtils.isEmpty(selectedFolders)
-                    ? new ArrayList<>(selectedFolders)
-                    : getRootFolders();
+                    ? getRootFolders()
+                    : new ArrayList<>(selectedFolders);
         }
         catch (Exception e) {
             TaskLeafLog tskInit = downloadTask.createNewSubTaskLeaf("initializing sftp access for download");

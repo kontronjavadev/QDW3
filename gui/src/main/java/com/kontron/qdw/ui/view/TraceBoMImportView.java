@@ -128,30 +128,18 @@ public class TraceBoMImportView extends CopyClipboard implements Serializable {
 
 
     public void runImport() {
-        System.out.println("gewählt: " + String.join(",", selectedFolders));
-        if (System.currentTimeMillis() > 0) {
-            return;
-        }
         importServiceBean.runImport(selectedFolders.size() == folders.size()
                 ? null
                 : selectedFolders);
     }
 
     public void runDownload() {
-        System.out.println("gewählt: " + String.join(",", selectedFolders));
-        if (System.currentTimeMillis() > 0) {
-            return;
-        }
         importServiceBean.runDownload(selectedFolders.size() == folders.size()
                 ? null
                 : selectedFolders);
     }
 
     public void runProcess() {
-        System.out.println("gewählt: " + String.join(",", selectedFolders));
-        if (System.currentTimeMillis() > 0) {
-            return;
-        }
         importServiceBean.runProcess(selectedFolders.size() == folders.size()
                 ? null
                 : selectedFolders);
