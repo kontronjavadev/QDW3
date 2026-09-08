@@ -178,7 +178,7 @@ public class TBOldImportServiceBean extends AbstractTBImportServiceBean<TraceBoM
 
         // Logistic file has been created successfully!
         folderTask.addSubTask(new FileImportSuccessfulLog(localFolder.getName() + File.separator + sourceFile.getName(),
-                traceBoMs.size()));
+                "creating logistic XML", traceBoMs.size()));
         return rootMappingObject;
     }
 

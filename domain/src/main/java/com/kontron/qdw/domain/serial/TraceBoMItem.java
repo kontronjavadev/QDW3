@@ -36,53 +36,54 @@ public class TraceBoMItem extends AbstractEntityWithId {
     @Basic(optional = false)
     @Column(name = "date_code", nullable = false, updatable = true, insertable = true, length = 255)
     @NotNull(message = "Field \"dateCode\" must not be null!")
-    @Size(min = 1, max = 255, message = "Length of field \"dateCode\" is illegal!")
+    @Size(max = 255, message = "Length of field \"dateCode\" is illegal!")
     @Generated
     private String dateCode;
     @Basic(optional = false)
     @Column(name = "info_field_1", nullable = false, updatable = true, insertable = true, length = 255)
     @NotNull(message = "Field \"infoField1\" must not be null!")
-    @Size(min = 1, max = 255, message = "Length of field \"infoField1\" is illegal!")
+    @Size(max = 255, message = "Length of field \"infoField1\" is illegal!")
     @Generated
     private String infoField1;
     @Basic(optional = false)
     @Column(name = "info_field_2", nullable = false, updatable = true, insertable = true, length = 255)
     @NotNull(message = "Field \"infoField2\" must not be null!")
-    @Size(min = 1, max = 255, message = "Length of field \"infoField2\" is illegal!")
+    @Size(max = 255, message = "Length of field \"infoField2\" is illegal!")
     @Generated
     private String infoField2;
     @Basic(optional = false)
     @Column(name = "info_field_3", nullable = false, updatable = true, insertable = true, length = 255)
     @NotNull(message = "Field \"infoField3\" must not be null!")
-    @Size(min = 1, max = 255, message = "Length of field \"infoField3\" is illegal!")
+    @Size(max = 255, message = "Length of field \"infoField3\" is illegal!")
     @Generated
     private String infoField3;
     @Basic(optional = false)
     @Column(name = "info_field_4", nullable = false, updatable = true, insertable = true, length = 255)
     @NotNull(message = "Field \"infoField4\" must not be null!")
-    @Size(min = 1, max = 255, message = "Length of field \"infoField4\" is illegal!")
+    @Size(max = 255, message = "Length of field \"infoField4\" is illegal!")
     @Generated
     private String infoField4;
     @Basic(optional = false)
     @Column(name = "manufacturer_name", nullable = false, updatable = true, insertable = true, length = 255)
     @NotNull(message = "Field \"manufacturerName\" must not be null!")
-    @Size(min = 1, max = 255, message = "Length of field \"manufacturerName\" is illegal!")
+    @Size(max = 255, message = "Length of field \"manufacturerName\" is illegal!")
     @Generated
     private String manufacturerName;
     @Basic(optional = false)
     @Column(name = "manufacturer_revision", nullable = false, updatable = true, insertable = true, length = 255)
     @NotNull(message = "Field \"manufacturerRevision\" must not be null!")
-    @Size(min = 1, max = 255, message = "Length of field \"manufacturerRevision\" is illegal!")
+    @Size(max = 255, message = "Length of field \"manufacturerRevision\" is illegal!")
     @Generated
     private String manufacturerRevision;
     @Basic(optional = false)
     @Column(name = "order_code", nullable = false, updatable = true, insertable = true, length = 255)
     @NotNull(message = "Field \"orderCode\" must not be null!")
-    @Size(min = 1, max = 255, message = "Length of field \"orderCode\" is illegal!")
+    @Size(max = 255, message = "Length of field \"orderCode\" is illegal!")
     @Generated
     private String orderCode;
     @Basic(optional = false)
     @Column(name = "quantity", nullable = false, updatable = true, insertable = true)
+    @Min(value = 0, message = "Field \"quantity\" must have a minimum value of 0!")
     @Generated
     private int quantity;
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

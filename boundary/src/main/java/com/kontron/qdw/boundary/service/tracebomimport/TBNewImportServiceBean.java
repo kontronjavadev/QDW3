@@ -199,7 +199,7 @@ public class TBNewImportServiceBean extends AbstractTBImportServiceBean<NewTrace
 
         // Logistic file has been created successfully!
         folderTask.addSubTask(new FileImportSuccessfulLog(localFolder.getName() + File.separator + sourceFile.getName(),
-                traceBoMs.size()));
+                "creating logistic XML", traceBoMs.size()));
         return rootMappingObject;
     }
 

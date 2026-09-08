@@ -32,31 +32,31 @@ public class IllegalTraceBoMItem extends AbstractEntityWithId {
     @Basic(optional = false)
     @Column(name = "date_code", nullable = false, updatable = true, insertable = true, length = 255)
     @NotNull(message = "Field \"dateCode\" must not be null!")
-    @Size(min = 1, max = 255, message = "Length of field \"dateCode\" is illegal!")
+    @Size(max = 255, message = "Length of field \"dateCode\" is illegal!")
     @Generated
     private String dateCode;
     @Basic(optional = false)
     @Column(name = "manufacturer", nullable = false, updatable = true, insertable = true, length = 255)
     @NotNull(message = "Field \"manufacturer\" must not be null!")
-    @Size(min = 1, max = 255, message = "Length of field \"manufacturer\" is illegal!")
+    @Size(max = 255, message = "Length of field \"manufacturer\" is illegal!")
     @Generated
     private String manufacturer;
     @Basic(optional = false)
     @Column(name = "manufacturer_revision", nullable = false, updatable = true, insertable = true, length = 255)
     @NotNull(message = "Field \"manufacturerRevision\" must not be null!")
-    @Size(min = 1, max = 255, message = "Length of field \"manufacturerRevision\" is illegal!")
+    @Size(max = 255, message = "Length of field \"manufacturerRevision\" is illegal!")
     @Generated
     private String manufacturerRevision;
     @Basic(optional = false)
     @Column(name = "material_number", nullable = false, updatable = true, insertable = true, length = 255)
     @NotNull(message = "Field \"materialNumber\" must not be null!")
-    @Size(min = 1, max = 255, message = "Length of field \"materialNumber\" is illegal!")
+    @Size(max = 255, message = "Length of field \"materialNumber\" is illegal!")
     @Generated
     private String materialNumber;
     @Basic(optional = false)
     @Column(name = "order_code", nullable = false, updatable = true, insertable = true, length = 255)
     @NotNull(message = "Field \"orderCode\" must not be null!")
-    @Size(min = 1, max = 255, message = "Length of field \"orderCode\" is illegal!")
+    @Size(max = 255, message = "Length of field \"orderCode\" is illegal!")
     @Generated
     private String orderCode;
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

@@ -16,6 +16,7 @@ import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.TimeUnit;
@@ -117,13 +118,36 @@ public class FileUtils {
         }
     }
 
+
     /**
-     * Extract given ZIP file into given directory (only files in top level hierarchy of the zip file)
-     * @param fileName
-     * @param targetDir
-     * @throws Exception
+     * Entpackt die übergebene zip-Datei in das angegebene Verzeichnis (lediglich Top-Level-Einträge der zip-Datei, keine hierarchische Verarbeitung)
+     * 
+     * @param zipFile zip-Datei
+     * @param targetDir Zielverzeichnis
+     * 
+     * @throws FileNotFoundException wenn zip-Datei nicht gefunde wird oder nicht geöffnet werden kann
+     *         oder Zieldatei nicht zum Schreiben geöffnet werden kann
+     * @throws SecurityException wenn es einen security manager gibt und desen checkRead-Methode den Lesezugriff auf die zip-Datei
+     *         oder Schreibzugriff auf die Zieldatei verbietet
      */
     public static List<File> unzipFile(final File zipFile, final String targetDir) throws IOException, FileNotFoundException {
+        return unzipFile(zipFile, targetDir, Optional.empty());
+    }
+
+    /**
+     * Entpackt die übergebene zip-Datei in das angegebene Verzeichnis (lediglich Top-Level-Einträge der zip-Datei, keine hierarchische Verarbeitung)
+     * 
+     * @param zipFile zip-Datei
+     * @param targetDir Zielverzeichnis
+     * @param fileFilter optionaler Dateifilter, der beschränkt, welche Dateien daraus entpackt werden sollen
+     * 
+     * @throws FileNotFoundException wenn zip-Datei nicht gefunde wird oder nicht geöffnet werden kann
+     *         oder Zieldatei nicht zum Schreiben geöffnet werden kann
+     * @throws SecurityException wenn es einen security manager gibt und desen checkRead-Methode den Lesezugriff auf die zip-Datei
+     *         oder Schreibzugriff auf die Zieldatei verbietet
+     */
+    public static List<File> unzipFile(final File zipFile, final String targetDir, Optional<FileFilter> fileFilter)
+            throws IOException, FileNotFoundException, SecurityException {
         final int BUFFER_SIZE = 8192;
 
         // If file is compressed than unzip the contained files
@@ -140,6 +164,10 @@ public class FileUtils {
             // Iterate through zipInputStream to get all contained files
             while ((zipEntry = zipInputStream.getNextEntry()) != null) {
                 File targetFile = createFullPath(zipEntry.getName(), targetDir);
+                if (fileFilter.isPresent() && !fileFilter.get().accept(targetFile)) {
+                    // Datei wird nicht akzeptiert, wird also nicht entpackt
+                    continue;
+                }
                 extractedFiles.add(targetFile);
                 if (targetFile.exists()) {
                     // wurde bereits entpackt

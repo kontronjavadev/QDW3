@@ -151,11 +151,14 @@ public class TraceBoMImportServiceBean {
         // (Es können auch bereits Dateien im Verzeichnis liegen, die nicht gerade erst runtergeladen wurden.)
         TaskNodeLog processTask = mainTask.createNewSubTaskNode(TASKNAME_PROCESS);
         for (String ftpManufacturerFolder : rootFolders) {
+            TaskNodeLog folderTask = processTask.createNewSubTaskNode("folder " + ftpManufacturerFolder);
             try {
-                processFilesInFolder(processTask, ftpAccess, ftpManufacturerFolder, folderConfig);
+                processFilesInFolder(folderTask, ftpAccess, ftpManufacturerFolder, folderConfig);
+                folderTask.finishTask();
             }
             catch (Exception e) {
-                processTask.addSubTask(new FileImportAbortedWithErrorsLog("folder " + ftpManufacturerFolder, "Error when processing files"));
+                folderTask.addSubTask(new FileImportAbortedWithErrorsLog("folder " + ftpManufacturerFolder, "Error when processing files"));
+                folderTask.abortTask();
                 break;
             }
         }
@@ -247,12 +250,14 @@ public class TraceBoMImportServiceBean {
 
         // Beachte: jeder Vertrags-Fertiger hat seinen eigenen Unterordner
         for (String ftpManufacturerFolder : rootFolders) {
+            TaskNodeLog folderTask = processTask.createNewSubTaskNode("folder " + ftpManufacturerFolder);
             try {
-                processFilesInFolder(processTask, ftpAccess, ftpManufacturerFolder, folderConfig);
-                processTask.addSubTask(new FileImportSuccessfulLog("folder " + ftpManufacturerFolder, 0));
+                processFilesInFolder(folderTask, ftpAccess, ftpManufacturerFolder, folderConfig);
+                folderTask.finishTask();
             }
             catch (Exception e) {
-                processTask.addSubTask(new FileImportAbortedWithErrorsLog("folder " + ftpManufacturerFolder, "Error when processing files"));
+                folderTask.addSubTask(new FileImportAbortedWithErrorsLog("folder " + ftpManufacturerFolder, "Error when processing files"));
+                folderTask.abortTask();
                 break;
             }
         }
@@ -295,9 +300,7 @@ public class TraceBoMImportServiceBean {
         folderTask.addSubTask(new FileImportSuccessfulLog(ftpManufacturerFolder, "downloading", ftpFiles.size(), startTime));
     }
 
-    private void processFilesInFolder(TaskNodeLog folderTask, SftpAccess ftpAccess, String localManufacturerFolder,
-            // Map<File, List<File>> zipToExtractedFilesMappingXXXXXXXXXX,
-            FolderConfig folderConfig) {
+    private void processFilesInFolder(TaskNodeLog folderTask, SftpAccess ftpAccess, String localManufacturerFolder, FolderConfig folderConfig) {
         if (Constants.IS_PROD_ENVIRONMENT && localManufacturerFolder.equalsIgnoreCase("test")) {
             return;
         }
@@ -318,11 +321,12 @@ public class TraceBoMImportServiceBean {
         for (File zipFile : zipFiles) {
             try {
                 // zip-Datei entpacken, ...
-                List<File> extractedFiles = FileUtils.unzipFile(zipFile, curLocalFolder.getAbsolutePath());
+                List<File> extractedFiles = FileUtils.unzipFile(zipFile, curLocalFolder.getAbsolutePath(),
+                        Optional.of(f -> f.getName().toLowerCase().endsWith(".xml")));
                 // ... und in einer Map merken
                 zipToExtractedFilesMapping.put(zipFile, extractedFiles);
             }
-            catch (IOException e) {
+            catch (IOException | SecurityException e) {
                 folderTask.addSubTask(new FileImportAbortedWithErrorsLog(zipFile.getAbsolutePath(), "Error when unzipping"));
                 folderTask.abortTask();
                 return;
@@ -566,14 +570,14 @@ public class TraceBoMImportServiceBean {
     private void finishImport(TaskNodeLog tsk) {
         tsk.finishTask();
         // keine Mail schicken, wenn es nichts zu importieren gab oder alles glatt gelaufen ist
-        // if (!tsk.wasAtLeastOneConcreteTaskPerformed()) {
-        // logger.info("Finished \"" + tsk.getTaskName() + "\" — no import files");
-        // return;
-        // }
-        // if (tsk.isSuccess()) {
-        // logger.info("Finished \"" + tsk.getTaskName() + "\" successfully");
-        // return;
-        // }
+        if (!tsk.wasAtLeastOneConcreteTaskPerformed()) {
+            logger.info("Finished \"" + tsk.getTaskName() + "\" — no import files");
+            return;
+        }
+        if (tsk.isSuccess()) {
+            logger.info("Finished \"" + tsk.getTaskName() + "\" successfully");
+            return;
+        }
 
         // ist beendet
         long duration = tsk.getEndTime() - tsk.getStartTime();

@@ -48,9 +48,10 @@ public abstract class AbstractTBImportServiceBean<TB extends TraceBoMTypeIF<TBI>
     private static final double TRACE_BOM_WARNING_THRESHOLD = 10.0;
 
     private static final DateTimeFormatter FLEXIBLE_FORMATTER = new DateTimeFormatterBuilder()
-            .appendOptional(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"))
-            .appendOptional(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss"))
-            .appendOptional(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"))
+            .appendPattern("[dd.MM.yyyy HH:mm[:ss]]")
+            .appendPattern("[yyyy/MM/dd HH:mm[:ss]]")
+            .appendPattern("[yyyy-MM-dd HH:mm[:ss]]")
+            .appendPattern("[dd-MM-yyyy HH:mm[:ss]]")
             .toFormatter();
 
 
@@ -94,8 +95,8 @@ public abstract class AbstractTBImportServiceBean<TB extends TraceBoMTypeIF<TBI>
                 materialRevision = materialRevisionManager.persist(materialRevision, true, true);
             }
             else {
-                throw new Exception("Material " + materialNumber + " does not exist, therefore revision "
-                        + revisionNumber + " could not be created.");
+                throw new Exception("Material '" + materialNumber + "' does not exist, therefore revision '"
+                        + revisionNumber + "' could not be created.");
             }
         }
 
@@ -253,7 +254,7 @@ public abstract class AbstractTBImportServiceBean<TB extends TraceBoMTypeIF<TBI>
             return LocalDateTime.parse(dateText, FLEXIBLE_FORMATTER).toLocalDate();
         }
         catch (DateTimeParseException dtpe) {
-            throw new Exception("Production date " + dateText + " has no accepted format.");
+            throw new Exception("Production date '" + dateText + "' has no accepted format.");
         }
     }
 

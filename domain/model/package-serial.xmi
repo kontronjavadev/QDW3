@@ -388,39 +388,39 @@
       <target href="package-base.xmi#//@domainObjects.0"/>
     </inheritance>
     <attributes name="dateCode" label="date code" labelPlural="date codes" fetchTypeEager="true" column="//@domainObjects.5/@databaseTable/@columns.4">
-      <domainAttributeValidator maxLength="255" minLength="1" maxValue="" minValue="" regularExpression=""/>
+      <domainAttributeValidator maxLength="255" minLength="0" maxValue="" minValue="" regularExpression=""/>
       <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
     </attributes>
     <attributes name="infoField1" label="info field 1" labelPlural="info field 1s" fetchTypeEager="true" column="//@domainObjects.5/@databaseTable/@columns.5">
-      <domainAttributeValidator maxLength="255" minLength="1" maxValue="" minValue="" regularExpression=""/>
+      <domainAttributeValidator maxLength="255" minLength="0" maxValue="" minValue="" regularExpression=""/>
       <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
     </attributes>
     <attributes name="infoField2" label="info field 2" labelPlural="info field 2s" fetchTypeEager="true" column="//@domainObjects.5/@databaseTable/@columns.6">
-      <domainAttributeValidator maxLength="255" minLength="1" maxValue="" minValue="" regularExpression=""/>
+      <domainAttributeValidator maxLength="255" minLength="0" maxValue="" minValue="" regularExpression=""/>
       <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
     </attributes>
     <attributes name="infoField3" label="info field 3" labelPlural="info field 3s" fetchTypeEager="true" column="//@domainObjects.5/@databaseTable/@columns.7">
-      <domainAttributeValidator maxLength="255" minLength="1" maxValue="" minValue="" regularExpression=""/>
+      <domainAttributeValidator maxLength="255" minLength="0" maxValue="" minValue="" regularExpression=""/>
       <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
     </attributes>
     <attributes name="infoField4" label="info field 4" labelPlural="info field 4s" fetchTypeEager="true" column="//@domainObjects.5/@databaseTable/@columns.8">
-      <domainAttributeValidator maxLength="255" minLength="1" maxValue="" minValue="" regularExpression=""/>
+      <domainAttributeValidator maxLength="255" minLength="0" maxValue="" minValue="" regularExpression=""/>
       <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
     </attributes>
     <attributes name="manufacturerName" label="manufacturer name" labelPlural="manufacturer names" fetchTypeEager="true" column="//@domainObjects.5/@databaseTable/@columns.9">
-      <domainAttributeValidator maxLength="255" minLength="1" maxValue="" minValue="" regularExpression=""/>
+      <domainAttributeValidator maxLength="255" minLength="0" maxValue="" minValue="" regularExpression=""/>
       <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
     </attributes>
     <attributes name="manufacturerRevision" label="manufacturer revision" labelPlural="manufacturer revisions" fetchTypeEager="true" column="//@domainObjects.5/@databaseTable/@columns.10">
-      <domainAttributeValidator maxLength="255" minLength="1" maxValue="" minValue="" regularExpression=""/>
+      <domainAttributeValidator maxLength="255" minLength="0" maxValue="" minValue="" regularExpression=""/>
       <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
     </attributes>
     <attributes name="orderCode" label="order code" labelPlural="order codes" fetchTypeEager="true" column="//@domainObjects.5/@databaseTable/@columns.11">
-      <domainAttributeValidator maxLength="255" minLength="1" maxValue="" minValue="" regularExpression=""/>
+      <domainAttributeValidator maxLength="255" minLength="0" maxValue="" minValue="" regularExpression=""/>
       <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
     </attributes>
     <attributes name="quantity" label="quantity" labelPlural="quantities" fetchTypeEager="true" column="//@domainObjects.5/@databaseTable/@columns.12">
-      <domainAttributeValidator maxValue="" minValue="" regularExpression=""/>
+      <domainAttributeValidator maxValue="" minValue="0" regularExpression=""/>
       <javaType href="project.xmi#/0/@allSupportedTypes.1"/>
     </attributes>
     <associations xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" name="material" owner="true" insertable="true" updatable="true" column="//@domainObjects.5/@databaseTable/@columns.13">
@@ -488,23 +488,23 @@
       <target href="package-base.xmi#//@domainObjects.0"/>
     </inheritance>
     <attributes name="dateCode" label="date code" labelPlural="date codes" fetchTypeEager="true" column="//@domainObjects.6/@databaseTable/@columns.4">
-      <domainAttributeValidator maxLength="255" minLength="1" maxValue="" minValue="" regularExpression=""/>
+      <domainAttributeValidator maxLength="255" minLength="0" maxValue="" minValue="" regularExpression=""/>
       <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
     </attributes>
     <attributes name="manufacturer" label="manufacturer" labelPlural="manufacturers" fetchTypeEager="true" column="//@domainObjects.6/@databaseTable/@columns.5">
-      <domainAttributeValidator maxLength="255" minLength="1" maxValue="" minValue="" regularExpression=""/>
+      <domainAttributeValidator maxLength="255" minLength="0" maxValue="" minValue="" regularExpression=""/>
       <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
     </attributes>
     <attributes name="manufacturerRevision" label="manufacturer revision" labelPlural="manufacturer revisions" fetchTypeEager="true" column="//@domainObjects.6/@databaseTable/@columns.6">
-      <domainAttributeValidator maxLength="255" minLength="1" maxValue="" minValue="" regularExpression=""/>
+      <domainAttributeValidator maxLength="255" minLength="0" maxValue="" minValue="" regularExpression=""/>
       <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
     </attributes>
     <attributes name="materialNumber" label="material number" labelPlural="material numbers" fetchTypeEager="true" column="//@domainObjects.6/@databaseTable/@columns.7">
-      <domainAttributeValidator maxLength="255" minLength="1" maxValue="" minValue="" regularExpression=""/>
+      <domainAttributeValidator maxLength="255" minLength="0" maxValue="" minValue="" regularExpression=""/>
       <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
     </attributes>
     <attributes name="orderCode" label="order code" labelPlural="order codes" fetchTypeEager="true" column="//@domainObjects.6/@databaseTable/@columns.8">
-      <domainAttributeValidator maxLength="255" minLength="1" maxValue="" minValue="" regularExpression=""/>
+      <domainAttributeValidator maxLength="255" minLength="0" maxValue="" minValue="" regularExpression=""/>
       <javaType href="project.xmi#/0/@allSupportedTypes.12"/>
     </attributes>
     <associations xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" name="traceBom" target="//@domainObjects.4" reverseAssociation="//@domainObjects.4/@associations.3" insertable="true" updatable="true" column="//@domainObjects.6/@databaseTable/@columns.9"/>
