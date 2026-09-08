@@ -106,6 +106,8 @@ public class TraceBoMImportView extends CopyClipboard implements Serializable {
                 folders.add("x TEST");
             }
         }
+        selectedFolders.clear();
+        selectedFolders.add("KAT");
 
 
         logger.debug("Trace BoM import view initialization finished");

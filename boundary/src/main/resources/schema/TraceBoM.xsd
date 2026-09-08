@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="qualified">
+
+	<xs:element name="trace_boms" type="TraceBoMRootType"/>
+
+	<xs:complexType name="TraceBoMRootType">
+		<xs:sequence>
+			<xs:element maxOccurs="1" minOccurs="1" name="header" type="HeaderType"/>
+			<xs:element maxOccurs="unbounded" minOccurs="0" name="trace_bom" type="TraceBoMType"/>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="HeaderType">
+		<xs:attribute name="prod_date" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:minLength value="1"/>
+					<xs:maxLength value="50"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="del_note_no" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:minLength value="1"/>
+					<xs:maxLength value="50"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="order_no" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:minLength value="1"/>
+					<xs:maxLength value="20"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="lot_no">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:minLength value="0"/>
+					<xs:maxLength value="20"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="supplier" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:minLength value="1"/>
+					<xs:maxLength value="50"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+	
+	<xs:complexType name="TraceBoMType">
+		<xs:sequence>
+			<xs:element maxOccurs="unbounded" minOccurs="0" name="bom_item" type="TraceBoMItemType"/>
+			<xs:element maxOccurs="unbounded" minOccurs="0" name="trace_bom" type="TraceBoMType"/>
+		</xs:sequence>
+		<xs:attribute name="snr" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:minLength value="0"/>
+					<xs:maxLength value="50"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="cust_snr">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:minLength value="0"/>
+					<xs:maxLength value="50"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="material_no" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:minLength value="1"/>
+					<xs:maxLength value="50"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="revision_no" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:minLength value="1"/>
+					<xs:maxLength value="50"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+
+	<xs:complexType name="TraceBoMItemType">
+		<xs:sequence>
+		</xs:sequence>
+		<xs:attribute name="part_no" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:minLength value="1"/>
+					<xs:maxLength value="50"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="qty" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:int">
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="man_name" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:minLength value="0"/>
+					<xs:maxLength value="255"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="order_code" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:minLength value="0"/>
+					<xs:maxLength value="255"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="date_code" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:minLength value="0"/>
+					<xs:maxLength value="255"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="add1">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:minLength value="0"/>
+					<xs:maxLength value="255"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="add2">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:minLength value="0"/>
+					<xs:maxLength value="255"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+</xs:schema>

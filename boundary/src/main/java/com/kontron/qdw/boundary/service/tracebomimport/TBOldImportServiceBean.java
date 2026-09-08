@@ -68,7 +68,9 @@ public class TBOldImportServiceBean extends AbstractTBImportServiceBean<TraceBoM
 
 
     /** Create file for logistic */
-    TraceBoMRootMappingType createLogisticXMLFile(TaskNodeLog folderTask, File localFolder, File sourceFile,
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+    public TraceBoMRootMappingType createLogisticXMLFile(TaskNodeLog folderTask, File localFolder, File sourceFile,
             FolderConfig folderConfig)
             throws ImportAbortedException {
         String correctedContent;

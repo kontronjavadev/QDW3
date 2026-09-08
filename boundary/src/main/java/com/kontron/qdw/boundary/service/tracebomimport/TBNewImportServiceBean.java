@@ -74,7 +74,9 @@ public class TBNewImportServiceBean extends AbstractTBImportServiceBean<NewTrace
 
 
     /** Create file for logistic, based on new xml structure for trace bom xmls */
-    NewTraceBoMRootType createLogisticXMLFile(TaskNodeLog folderTask, File localFolder, File sourceFile, FolderConfig folderConfig)
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+    public NewTraceBoMRootType createLogisticXMLFile(TaskNodeLog folderTask, File localFolder, File sourceFile, FolderConfig folderConfig)
             throws ImportAbortedException {
         String correctedContent;
         try (BufferedReader input = new BufferedReader(new FileReader(sourceFile, ENCODING))) {

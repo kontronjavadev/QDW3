@@ -384,18 +384,18 @@ public class TraceBoMImportServiceBean {
                 }
 
 
-                ImportResult result = ImportResult.fail("TESTTESTTEST");
-                // // Unterscheidung, ob es sich um eine alte oder neue XML-Struktur handelt
-                // if (rootElementLine.contains(ROOT_ELEMENT_TRACE_BOMS)) { // neu
-                // NewTraceBoMRootType trBoMRootImported = tbNewService.createLogisticXMLFile(
-                // folderTask, curLocalFolder, inputFile, folderConfig);
-                // result = tbNewService.saveTraceBoM(inputFile, trBoMRootImported);
-                // }
-                // else { // ROOT_ELEMENT_STOCK_RECEIPT (alt)
-                // TraceBoMRootMappingType trBoMRootImported = tbOldService.createLogisticXMLFile(
-                // folderTask, curLocalFolder, inputFile, folderConfig);
-                // result = tbOldService.saveTraceBoM(inputFile, trBoMRootImported);
-                // }
+                ImportResult result;
+                // Unterscheidung, ob es sich um eine alte oder neue XML-Struktur handelt
+                if (rootElementLine.contains(ROOT_ELEMENT_TRACE_BOMS)) { // neu
+                    NewTraceBoMRootType trBoMRootImported = tbNewService.createLogisticXMLFile(
+                            folderTask, curLocalFolder, inputFile, folderConfig);
+                    result = tbNewService.saveTraceBoM(inputFile, trBoMRootImported);
+                }
+                else { // ROOT_ELEMENT_STOCK_RECEIPT (alt)
+                    TraceBoMRootMappingType trBoMRootImported = tbOldService.createLogisticXMLFile(
+                            folderTask, curLocalFolder, inputFile, folderConfig);
+                    result = tbOldService.saveTraceBoM(inputFile, trBoMRootImported);
+                }
                 logger.info("importiert: {}{}{}", curLocalFolder, File.separator, inputFile.getName());
 
 
