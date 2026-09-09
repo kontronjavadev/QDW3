@@ -550,40 +550,36 @@ public class TraceBoMImportServiceBean {
 
 
     private TaskNodeLog initImport() {
-        logger.info("Importing Trace-BoM files");
-
-        return new TaskNodeLog(TASKNAME_IMPORT);
+        return init(TASKNAME_IMPORT);
     }
 
     private TaskNodeLog initDownload() {
-        logger.info("Downloading Trace-BoM files");
-
-        return new TaskNodeLog(TASKNAME_DOWNLOAD);
+        return init(TASKNAME_DOWNLOAD);
     }
 
     private TaskNodeLog initProcess() {
-        logger.info("Processing Trace-BoM files");
+        return init(TASKNAME_PROCESS);
+    }
 
-        return new TaskNodeLog(TASKNAME_PROCESS);
+    private TaskNodeLog init(String taskName) {
+        logger.info("\"" + taskName + "\" started");
+        return new TaskNodeLog(taskName);
     }
 
     private void finishImport(TaskNodeLog tsk) {
         tsk.finishTask();
-        // keine Mail schicken, wenn es nichts zu importieren gab oder alles glatt gelaufen ist
+        String baseMsg = "\"" + tsk.getTaskName() + "\" finished";
+        // keine Mail schicken, wenn es nichts zu importieren gab
         if (!tsk.wasAtLeastOneConcreteTaskPerformed()) {
-            logger.info("Finished \"" + tsk.getTaskName() + "\" — no import files");
-            return;
-        }
-        if (tsk.isSuccess()) {
-            logger.info("Finished \"" + tsk.getTaskName() + "\" successfully");
+            logger.info(baseMsg + " — no import files");
             return;
         }
 
-        // ist beendet
+        baseMsg += (tsk.isSuccess() ? " successfully" : " with errors");
+        logger.info(baseMsg);
+
         long duration = tsk.getEndTime() - tsk.getStartTime();
-        logger.info("Finished \"" + tsk.getTaskName() + "\"");
-
-        String subjectText = Constants.APP_ENV + ": \"" + tsk.getTaskName() + "\" finished " + (tsk.isSuccess() ? "successfully" : "with errors");
+        String subjectText = Constants.APP_ENV + ": " + baseMsg;
         StringBuilder importLog = new StringBuilder();
         importLog.append(subjectText);
         importLog.append(" in ").append(TimeUtil.toBestPracticeStringShort(duration)).append(".\n\n");
@@ -592,11 +588,10 @@ public class TraceBoMImportServiceBean {
         importLog.append("Details:\n");
         importLog.append(tsk.getTaskHierarchicalDetailInformation()).append("\n\n");
 
+        List<String> to = List.of(Constants.getMailRecipientLogistic(), Constants.getMailRecipient());
         // schicke Informationsmail
         try {
-            // MailServiceFacade.sendMail(Constants.getMailRecipient(), subjectText, importLog.toString());
-            // TODO: erfolgreich importierte Datenen gehen an getMailRecipientLogistic(). Informationsmail jedoch an getMailRecipient().
-            MailServiceFacade.sendMail(Constants.getMailRecipientLogistic(), subjectText, importLog.toString());
+            MailServiceFacade.sendMail(to, subjectText, importLog.toString());
         }
         catch (Exception mailException) {
             logger.error("Sending mail after importing Trace-BoM files failed!", mailException);

@@ -1,5 +1,7 @@
 package com.kontron.qdw.boundary.util;
 
+import java.util.Collection;
+
 import com.kontron.common.mail.MailService;
 import com.kontron.common.mail.MailServiceIF;
 import com.kontron.common.mail.MailServiceMock;
@@ -11,11 +13,11 @@ public final class MailServiceFacade {
     }
 
     private static MailServiceIF getMailServiceInstance() {
-        if (!Constants.IS_PROD_ENVIRONMENT) {
-            return getMockMailServiceInstance();
+        if (Constants.IS_PROD_ENVIRONMENT || Constants.IS_TEST_ENVIRONMENT) {
+            return getRealMailServiceInstance();
         }
         // Lokal mit Mock arbeiten.
-        return getRealMailServiceInstance();
+        return getMockMailServiceInstance();
     }
 
     private static MailService getRealMailServiceInstance() {
@@ -41,6 +43,12 @@ public final class MailServiceFacade {
         getMailServiceInstance().sendMail(to, subject, messageText, null /* fromEmail */, null /* fromName */);
     }
 
+    public static void sendMail(Collection<String> to, String subject, String messageText) {
+        // Der MailService von jbizmo generiert für "from" einen Absender aus "fromEmail" und "fromName".
+        // Sind diese leer, werden die bei der Instanziierung der MailService angegebenen Daten herangezogen, was jedoch völlig ausreicht.
+        getMailServiceInstance().sendMail(to, null /* cc */, subject, messageText, null /* fromEmail */, null /* fromName */);
+    }
+
     public static void sendMail(String to, String subject) {
         // Der MailService von jbizmo generiert für "from" einen Absender aus "fromEmail" und "fromName".
         // Sind diese leer, werden die bei der Instanziierung der MailService angegebenen Daten herangezogen, was jedoch völlig ausreicht.
@@ -49,15 +57,14 @@ public final class MailServiceFacade {
 
     public static void sendMail(net.sourceforge.jbizmo.commons.server.mail.MailMessage jbizmoMailMessage) {
         com.kontron.common.mail.MailMessage kontronMailMessage = new com.kontron.common.mail.MailMessage() //
-                .withFromEmail(jbizmoMailMessage.getFromEmail()) //
-                .withFromName(jbizmoMailMessage.getFromName()) //
-                .withTo(jbizmoMailMessage.getTo()) //
-                .withCc(jbizmoMailMessage.getCc()) //
-                .withSubject(jbizmoMailMessage.getSubject()) //
-                .withMessage(jbizmoMailMessage.getMessage()) //
-                .withAttachmentContent(jbizmoMailMessage.getAttachmentContent()) //
-                .withAttachmentName(jbizmoMailMessage.getAttachmentName()) //
-        ;
+                .withFromEmail(jbizmoMailMessage.getFromEmail())
+                .withFromName(jbizmoMailMessage.getFromName())
+                .withTo(jbizmoMailMessage.getTo())
+                .withCc(jbizmoMailMessage.getCc())
+                .withSubject(jbizmoMailMessage.getSubject())
+                .withMessage(jbizmoMailMessage.getMessage())
+                .withAttachmentContent(jbizmoMailMessage.getAttachmentContent())
+                .withAttachmentName(jbizmoMailMessage.getAttachmentName());
         getMailServiceInstance().sendMail(kontronMailMessage);
     }
 

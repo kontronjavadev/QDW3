@@ -76,7 +76,7 @@ public class ImportSchedulerServiceBean {
     @Schedule(dayOfWeek = "*", hour = "*", minute = "12/15", second = "0", persistent = false)
     @AccessTimeout(value = 5, unit = TimeUnit.MINUTES)
     public void runScheduledTraceBoMImportTest() {
-        if (!Constants.IS_PROD_ENVIRONMENT) {
+        if (Constants.IS_TEST_ENVIRONMENT) {
             traceBoMImportService.runImport();
         }
     }
