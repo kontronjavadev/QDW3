@@ -67,10 +67,24 @@ public class TBOldImportServiceBean extends AbstractTBImportServiceBean<TraceBoM
     private SessionContext ctx;
 
 
-    /** Create file for logistic */
+    /** @return success */
     @PermitAll
-    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
-    public TraceBoMRootMappingType createLogisticXMLFile(TaskNodeLog folderTask, File localFolder, File sourceFile,
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public ImportResult processFileInFolder(TaskNodeLog folderTask, File localFolder, File sourceFile, FolderConfig folderConfig) {
+        TraceBoMRootMappingType trBoMRootImported = null;
+        try {
+            trBoMRootImported = createLogisticXMLFile(folderTask, localFolder, sourceFile, folderConfig);
+        }
+        catch (ImportAbortedException e) {
+            return ImportResult.fail(e.getTaskLog().toString());
+        }
+        return saveTraceBoM(sourceFile, trBoMRootImported);
+    }
+
+
+
+    /** Create file for logistic */
+    private TraceBoMRootMappingType createLogisticXMLFile(TaskNodeLog folderTask, File localFolder, File sourceFile,
             FolderConfig folderConfig)
             throws ImportAbortedException {
         String correctedContent;
@@ -86,8 +100,8 @@ public class TBOldImportServiceBean extends AbstractTBImportServiceBean<TraceBoM
             correctedContent = content.substring(content.indexOf("<"));
         }
         catch (Exception e) { // FileNotFoundException, IOException
-            throw new ImportAbortedException(new FileImportAbortedWithErrorsLog(localFolder.getName() + File.separator + sourceFile.getName(),
-                    "File cannot be opened to correct the content"));
+            throw new ImportAbortedException(new FileImportAbortedWithErrorsLog(localFolder.getName() + File.separator + sourceFile.getName())
+                    .withErrorMsg("File cannot be opened to correct the content").withTaskDesc("creating logistic xml"));
         }
 
 
@@ -96,8 +110,8 @@ public class TBOldImportServiceBean extends AbstractTBImportServiceBean<TraceBoM
             unmarshaller = JAXBContext.newInstance(TraceBoMRootMappingType.class).createUnmarshaller();
         }
         catch (Exception e) { // JAXBException, IllegalArgumentException
-            throw new ImportAbortedException(new FileImportAbortedWithErrorsLog(localFolder.getName() + File.separator + sourceFile.getName(),
-                    "Error initializing unmarshaller"));
+            throw new ImportAbortedException(new FileImportAbortedWithErrorsLog(localFolder.getName() + File.separator + sourceFile.getName())
+                    .withErrorMsg("Error initializing unmarshaller").withException(e).withTaskDesc("creating logistic xml"));
         }
 
 
@@ -106,8 +120,8 @@ public class TBOldImportServiceBean extends AbstractTBImportServiceBean<TraceBoM
             rootMappingObject = (TraceBoMRootMappingType) unmarshaller.unmarshal(inputReader);
         }
         catch (Exception e) { // JAXBException, UnmarshalException, IllegalArgumentException
-            throw new ImportAbortedException(new FileImportAbortedWithErrorsLog(localFolder.getName() + File.separator + sourceFile.getName(),
-                    "Error unmarshalling file"));
+            throw new ImportAbortedException(new FileImportAbortedWithErrorsLog(localFolder.getName() + File.separator + sourceFile.getName())
+                    .withErrorMsg("Error unmarshalling file").withException(e).withTaskDesc("creating logistic xml"));
         }
 
 
@@ -115,8 +129,8 @@ public class TBOldImportServiceBean extends AbstractTBImportServiceBean<TraceBoM
         TraceBoMHeaderType header = rootMappingObject.getHeader();
 
         if (traceBoMs.isEmpty()) {
-            throw new ImportAbortedException(new FileImportAbortedWithErrorsLog(localFolder.getName() + File.separator + sourceFile.getName(),
-                    "No trace BoMs"));
+            throw new ImportAbortedException(new FileImportAbortedWithErrorsLog(localFolder.getName() + File.separator + sourceFile.getName())
+                    .withErrorMsg("No trace BoMs").withTaskDesc("creating logistic xml"));
         }
 
         String outputFileName = sourceFile.getName().substring(0, (sourceFile.getName().length() - 4));
@@ -171,8 +185,8 @@ public class TBOldImportServiceBean extends AbstractTBImportServiceBean<TraceBoM
             writer.write(output.toString());
         }
         catch (Exception e) { // IOException
-            throw new ImportAbortedException(new FileImportAbortedWithErrorsLog(localFolder.getName() + File.separator + sourceFile.getName(),
-                    "Error creating logistic XML file by Trace BoM file (old structure)"));
+            throw new ImportAbortedException(new FileImportAbortedWithErrorsLog(localFolder.getName() + File.separator + sourceFile.getName())
+                    .withErrorMsg("Error writing logistic XML file by Trace BoM file (old structure)").withTaskDesc("creating logistic xml"));
         }
 
 
@@ -184,9 +198,7 @@ public class TBOldImportServiceBean extends AbstractTBImportServiceBean<TraceBoM
 
 
     /** @return success */
-    @PermitAll
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public ImportResult saveTraceBoM(File sourceFile, TraceBoMRootMappingType trBoMRootImported) {
+    private ImportResult saveTraceBoM(File sourceFile, TraceBoMRootMappingType trBoMRootImported) {
         // Import trace BoM
         TraceBoMHeaderType trBoMHeaderImported = trBoMRootImported.getHeader();
         TraceBoMRevisionMappingType trBoMRevisionImported = trBoMHeaderImported.getMaterialRevision();

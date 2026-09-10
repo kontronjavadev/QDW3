@@ -73,10 +73,23 @@ public class TBNewImportServiceBean extends AbstractTBImportServiceBean<NewTrace
     private SessionContext ctx;
 
 
-    /** Create file for logistic, based on new xml structure for trace bom xmls */
+    /** @return success */
     @PermitAll
-    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
-    public NewTraceBoMRootType createLogisticXMLFile(TaskNodeLog folderTask, File localFolder, File sourceFile, FolderConfig folderConfig)
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public ImportResult processFileInFolder(TaskNodeLog folderTask, File localFolder, File sourceFile, FolderConfig folderConfig) {
+        NewTraceBoMRootType trBoMRootImported = null;
+        try {
+            trBoMRootImported = createLogisticXMLFile(folderTask, localFolder, sourceFile, folderConfig);
+        }
+        catch (ImportAbortedException e) {
+            return ImportResult.fail(e.getTaskLog().toString());
+        }
+        return saveTraceBoM(sourceFile, trBoMRootImported);
+    }
+
+
+    /** Create file for logistic, based on new xml structure for trace bom xmls */
+    private NewTraceBoMRootType createLogisticXMLFile(TaskNodeLog folderTask, File localFolder, File sourceFile, FolderConfig folderConfig)
             throws ImportAbortedException {
         String correctedContent;
         try (BufferedReader input = new BufferedReader(new FileReader(sourceFile, ENCODING))) {
@@ -95,8 +108,8 @@ public class TBNewImportServiceBean extends AbstractTBImportServiceBean<NewTrace
                     .replace("&", "&amp;").replace("&amp;amp;", "&amp;");
         }
         catch (Exception e) { // FileNotFoundException, IOException
-            throw new ImportAbortedException(new FileImportAbortedWithErrorsLog(localFolder.getName() + File.separator + sourceFile.getName(),
-                    "File cannot be opened to correct the content"));
+            throw new ImportAbortedException(new FileImportAbortedWithErrorsLog(localFolder.getName() + File.separator + sourceFile.getName())
+                    .withErrorMsg("File cannot be opened to correct the content").withTaskDesc("creating logistic xml"));
         }
 
 
@@ -109,8 +122,8 @@ public class TBNewImportServiceBean extends AbstractTBImportServiceBean<NewTrace
             unmarshaller.setSchema(schema);
         }
         catch (Exception e) { // SAXException, JAXBException, NullPointerException, IllegalArgumentException
-            throw new ImportAbortedException(new FileImportAbortedWithErrorsLog(localFolder.getName() + File.separator + sourceFile.getName(),
-                    "Error initializing unmarshaller"));
+            throw new ImportAbortedException(new FileImportAbortedWithErrorsLog(localFolder.getName() + File.separator + sourceFile.getName())
+                    .withErrorMsg("Error initializing unmarshaller").withException(e).withTaskDesc("creating logistic xml"));
         }
 
 
@@ -119,8 +132,8 @@ public class TBNewImportServiceBean extends AbstractTBImportServiceBean<NewTrace
             rootMappingObject = (NewTraceBoMRootType) unmarshaller.unmarshal(inputReader);
         }
         catch (Exception e) { // JAXBException, UnmarshalException, IllegalArgumentException
-            throw new ImportAbortedException(new FileImportAbortedWithErrorsLog(localFolder.getName() + File.separator + sourceFile.getName(),
-                    "Error unmarshalling file"));
+            throw new ImportAbortedException(new FileImportAbortedWithErrorsLog(localFolder.getName() + File.separator + sourceFile.getName())
+                    .withErrorMsg("Error unmarshalling file").withException(e).withTaskDesc("creating logistic xml"));
         }
 
 
@@ -128,8 +141,8 @@ public class TBNewImportServiceBean extends AbstractTBImportServiceBean<NewTrace
         NewTraceBoMHeaderType header = rootMappingObject.getHeader();
 
         if (traceBoMs.isEmpty()) {
-            throw new ImportAbortedException(new FileImportAbortedWithErrorsLog(localFolder.getName() + File.separator + sourceFile.getName(),
-                    "No trace BoMs"));
+            throw new ImportAbortedException(new FileImportAbortedWithErrorsLog(localFolder.getName() + File.separator + sourceFile.getName())
+                    .withErrorMsg("No trace BoMs").withTaskDesc("creating logistic xml"));
         }
 
         String outputFileName = sourceFile.getName().substring(0, (sourceFile.getName().length() - 4));
@@ -192,8 +205,8 @@ public class TBNewImportServiceBean extends AbstractTBImportServiceBean<NewTrace
             writer.write(output.toString());
         }
         catch (Exception e) { // IOException
-            throw new ImportAbortedException(new FileImportAbortedWithErrorsLog(localFolder.getName() + File.separator + sourceFile.getName(),
-                    "Error creating logistic XML file by Trace BoM file (new structure)"));
+            throw new ImportAbortedException(new FileImportAbortedWithErrorsLog(localFolder.getName() + File.separator + sourceFile.getName())
+                    .withErrorMsg("Error writing logistic XML file by Trace BoM file (new structure)").withTaskDesc("creating logistic xml"));
         }
 
 
@@ -205,9 +218,7 @@ public class TBNewImportServiceBean extends AbstractTBImportServiceBean<NewTrace
 
 
     /** @return success */
-    @PermitAll
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public ImportResult saveTraceBoM(File sourceFile, NewTraceBoMRootType trBoMRootImported) {
+    private ImportResult saveTraceBoM(File sourceFile, NewTraceBoMRootType trBoMRootImported) {
         // Import trace BoM
         NewTraceBoMHeaderType trBoMHeaderImported = trBoMRootImported.getHeader();
         List<String> illegalRatioMsgs = new ArrayList<>();

@@ -26,8 +26,6 @@ import org.slf4j.LoggerFactory;
 import com.kontron.common.filetransfer.FtException;
 import com.kontron.common.filetransfer.SftpAccess;
 import com.kontron.qdw.boundary.service.SchedulerServiceBean;
-import com.kontron.qdw.boundary.service.mapping.tracebom.alt.TraceBoMRootMappingType;
-import com.kontron.qdw.boundary.service.mapping.tracebom.neu.NewTraceBoMRootType;
 import com.kontron.qdw.boundary.service.process.FileUtils;
 import com.kontron.qdw.boundary.util.Constants;
 import com.kontron.qdw.boundary.util.MailServiceFacade;
@@ -371,6 +369,7 @@ public class TraceBoMImportServiceBean {
             }
 
 
+            ImportResult importResult = null;
             try {
                 // ist es überhaupt eine XML-Datei?
                 if (!StringUtils.trimToEmpty(xmlSignatureLine).startsWith("<?xml")) {
@@ -388,76 +387,32 @@ public class TraceBoMImportServiceBean {
                 }
 
 
-                ImportResult result;
                 // Unterscheidung, ob es sich um eine alte oder neue XML-Struktur handelt
                 if (rootElementLine.contains(ROOT_ELEMENT_TRACE_BOMS)) { // neu
-                    NewTraceBoMRootType trBoMRootImported = tbNewService.createLogisticXMLFile(
-                            folderTask, curLocalFolder, inputFile, folderConfig);
-                    result = tbNewService.saveTraceBoM(inputFile, trBoMRootImported);
+                    importResult = tbNewService.processFileInFolder(folderTask, curLocalFolder, inputFile, folderConfig);
                 }
                 else { // ROOT_ELEMENT_STOCK_RECEIPT (alt)
-                    TraceBoMRootMappingType trBoMRootImported = tbOldService.createLogisticXMLFile(
-                            folderTask, curLocalFolder, inputFile, folderConfig);
-                    result = tbOldService.saveTraceBoM(inputFile, trBoMRootImported);
+                    importResult = tbOldService.processFileInFolder(folderTask, curLocalFolder, inputFile, folderConfig);
                 }
                 logger.info("importiert: {}{}{}", curLocalFolder, File.separator, inputFile.getName());
 
 
-                // check if the file originates from a zip file
-                Optional<Entry<File, List<File>>> zipFileEntrySet = zipToExtractedFilesMapping.entrySet().stream()
-                        .filter(e -> e.getValue().stream()
-                                .anyMatch(f -> f.equals(inputFile)))
-                        .findFirst();
-
-                if (zipFileEntrySet.isPresent()) {
-                    File zipFile = zipFileEntrySet.get().getKey();
-                    List<File> filesOfZipFile = zipFileEntrySet.get().getValue();
-
-                    filesOfZipFile.remove(inputFile);
-                    inputFile.delete();
-
-                    // the zip file might have been moved by a previous error, so we have to check if still exists
-                    if (zipFile.exists() && !result.success()) {
-                        moveFile(zipFile, new File(folderConfig.errorTraceBoMFolder.getAbsolutePath()
-                                + File.separator + localManufacturerFolder + File.separator + zipFile.getName()));
-                    }
-
-                    if (filesOfZipFile.isEmpty()) {
-                        if (zipFile.exists()) {
-                            moveFile(zipFile, new File(folderConfig.backupTraceBoMFolder.getAbsolutePath()
-                                    + File.separator + localManufacturerFolder + File.separator + zipFile.getName()));
-                        }
-
-                        deleteFtpFile(ftpAccess, localManufacturerFolder, zipFile.getName());
-                    }
-                }
-                else {
-                    if (result.success()) {
-                        moveFile(inputFile, new File(folderConfig.backupTraceBoMFolder.getAbsolutePath()
-                                + File.separator + localManufacturerFolder + File.separator + inputFile.getName()));
-                    }
-                    else {
-                        moveFile(inputFile, new File(folderConfig.errorTraceBoMFolder.getAbsolutePath()
-                                + File.separator + localManufacturerFolder + File.separator + inputFile.getName()));
-                    }
-
-                    deleteFtpFile(ftpAccess, localManufacturerFolder, inputFile.getName());
-                }
+                cleanUp(ftpAccess, localManufacturerFolder, folderConfig, zipToExtractedFilesMapping, inputFile, importResult);
 
                 // Information für Mail erstellen
-                if (result.success()) {
+                if (importResult.success()) {
                     folderTask.addSubTask(new FileImportSuccessfulLog(localManufacturerFolder + File.separator + inputFile.getName(),
-                            result.numberEntries(), startTime));
+                            importResult.numberEntries(), startTime));
                 }
                 else {
                     folderTask.addSubTask(new FileImportAbortedWithErrorsLog(localManufacturerFolder + File.separator + inputFile.getName(),
-                            result.errorMessage()));
+                            importResult.errorMessage()));
                 }
             }
             catch (ImportAbortedException e) {
+                // ist nur noch Methode cleanUp(), die eine Exception werfen kann
                 folderTask.addSubTask(e.getTaskLog());
                 folderTask.abortTask();
-                continue;
             }
         } // end for(fileMap)
     }
@@ -522,6 +477,51 @@ public class TraceBoMImportServiceBean {
         }
     }
 
+
+
+    private void cleanUp(SftpAccess ftpAccess, String localManufacturerFolder, FolderConfig folderConfig,
+            Map<File, List<File>> zipToExtractedFilesMapping, File inputFile, ImportResult importResult) throws ImportAbortedException {
+        // check if the file originates from a zip file
+        Optional<Entry<File, List<File>>> zipFileEntrySet = zipToExtractedFilesMapping.entrySet().stream()
+                .filter(e -> e.getValue().stream()
+                        .anyMatch(f -> f.equals(inputFile)))
+                .findFirst();
+
+        if (zipFileEntrySet.isPresent()) {
+            File zipFile = zipFileEntrySet.get().getKey();
+            List<File> filesOfZipFile = zipFileEntrySet.get().getValue();
+
+            filesOfZipFile.remove(inputFile);
+            inputFile.delete();
+
+            // the zip file might have been moved by a previous error, so we have to check if still exists
+            if (zipFile.exists() && !importResult.success()) {
+                moveFile(zipFile, new File(folderConfig.errorTraceBoMFolder.getAbsolutePath()
+                        + File.separator + localManufacturerFolder + File.separator + zipFile.getName()));
+            }
+
+            if (filesOfZipFile.isEmpty()) {
+                if (zipFile.exists()) {
+                    moveFile(zipFile, new File(folderConfig.backupTraceBoMFolder.getAbsolutePath()
+                            + File.separator + localManufacturerFolder + File.separator + zipFile.getName()));
+                }
+
+                deleteFtpFile(ftpAccess, localManufacturerFolder, zipFile.getName());
+            }
+        }
+        else {
+            if (importResult.success()) {
+                moveFile(inputFile, new File(folderConfig.backupTraceBoMFolder.getAbsolutePath()
+                        + File.separator + localManufacturerFolder + File.separator + inputFile.getName()));
+            }
+            else {
+                moveFile(inputFile, new File(folderConfig.errorTraceBoMFolder.getAbsolutePath()
+                        + File.separator + localManufacturerFolder + File.separator + inputFile.getName()));
+            }
+
+            deleteFtpFile(ftpAccess, localManufacturerFolder, inputFile.getName());
+        }
+    }
 
     /** Move file to the backup folder of the contract manufacturer */
     private void moveFile(File sourceFile, File targetFile) throws ImportAbortedException {
