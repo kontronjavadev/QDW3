@@ -317,17 +317,31 @@ public class TraceBoMImportServiceBean {
 
         Map<File, List<File>> zipToExtractedFilesMapping = new HashMap<>();
         for (File zipFile : zipFiles) {
+            List<File> extractedFiles;
             try {
                 // zip-Datei entpacken, ...
-                List<File> extractedFiles = FileUtils.unzipFile(zipFile, curLocalFolder.getAbsolutePath(),
+                extractedFiles = FileUtils.unzipFile(zipFile, curLocalFolder.getAbsolutePath(),
                         Optional.of(f -> f.getName().toLowerCase().endsWith(".xml")));
-                // ... und in einer Map merken
-                zipToExtractedFilesMapping.put(zipFile, extractedFiles);
             }
             catch (IOException | SecurityException e) {
                 folderTask.addSubTask(new FileImportAbortedWithErrorsLog(zipFile.getAbsolutePath(), "Error when unzipping"));
                 folderTask.abortTask();
                 return;
+            }
+
+            if (extractedFiles.isEmpty()) {
+                // zip-Datei hat keine Inhalte, die wir iportieren können -> in Fehler-Ordner schieben
+                try {
+                    moveFile(zipFile, new File(folderConfig.backupTraceBoMFolder.getAbsolutePath()
+                            + File.separator + localManufacturerFolder + File.separator + zipFile.getName()));
+                }
+                catch (ImportAbortedException e) {
+                    folderTask.addSubTask(new FileImportAbortedWithErrorsLog(zipFile.getAbsolutePath(), "Zip file without unsupported files"));
+                }
+            }
+            else {
+                // andernfalls in Map merken
+                zipToExtractedFilesMapping.put(zipFile, extractedFiles);
             }
         }
 
@@ -414,6 +428,9 @@ public class TraceBoMImportServiceBean {
                 folderTask.addSubTask(e.getTaskLog());
                 folderTask.abortTask();
             }
+
+            // Sind alle Dateien behandelt, unabhängig davon, ob sie aus einer zip-Datei stammen oder direkt herunter geladen wurden,
+            // so sind die Dateien aus der zip-Datei gelöscht und die zip-Datei und die direkt herunter geladenen Dateien archiviert.
         } // end for(fileMap)
     }
 
@@ -488,33 +505,46 @@ public class TraceBoMImportServiceBean {
                 .findFirst();
 
         if (zipFileEntrySet.isPresent()) {
+            // Importierte Datei kam aus einer heruntergeladenen zip-Datei.
             File zipFile = zipFileEntrySet.get().getKey();
             List<File> filesOfZipFile = zipFileEntrySet.get().getValue();
 
+            // Importierte Datei aus der Liste des gemerkten Dateiinhalts der zip-Datei entfernen.
             filesOfZipFile.remove(inputFile);
+            // Datei physikalisch löschen
             inputFile.delete();
 
-            // the zip file might have been moved by a previous error, so we have to check if still exists
-            if (zipFile.exists() && !importResult.success()) {
+            // Im Falle eines Fehlers, die zip-Datei in den Fehler-Ordner verschieben.
+            // Da die Dateien bereits entpackt sind, könnte eine zuvor importierte Datei ebenfalls fehlerhaft
+            // gewesen sein und die zip-Datei bereits verschoben sein -> prüfen, ob sie noch da ist
+            if (!importResult.success() && zipFile.exists()) {
                 moveFile(zipFile, new File(folderConfig.errorTraceBoMFolder.getAbsolutePath()
                         + File.separator + localManufacturerFolder + File.separator + zipFile.getName()));
             }
 
+            // Sind nun alle Dateien aus der zip-Datei verarbeitet, so wird die zip-Datei in das Archiv geschoben,
+            // damit die zip-Datei nicht erneut entpackt wird.
             if (filesOfZipFile.isEmpty()) {
+                // Es müssen alle Dateien fehlerfrei importiert worden sein, da sie zip-Datei andernfalls im vorherigen Schritt
+                // bereits verschoben worden wäre. Ist si also noch da, kommt sie in den Backup-Ordner.
                 if (zipFile.exists()) {
                     moveFile(zipFile, new File(folderConfig.backupTraceBoMFolder.getAbsolutePath()
                             + File.separator + localManufacturerFolder + File.separator + zipFile.getName()));
                 }
 
+                // Unabhängig davon, ob der Inhalt der zip-Datei fehlerfrei oder fehlerhaft war, kann sie auf dem SFTP gelöscht werden.
                 deleteFtpFile(ftpAccess, localManufacturerFolder, zipFile.getName());
             }
         }
         else {
+            // Importierte Datei wurde direkt herunter geladen und kam NICHT aus einer heruntergeladenen zip-Datei.
             if (importResult.success()) {
+                // Im Erfolgsfall in den Backup-Ordner schieben.
                 moveFile(inputFile, new File(folderConfig.backupTraceBoMFolder.getAbsolutePath()
                         + File.separator + localManufacturerFolder + File.separator + inputFile.getName()));
             }
             else {
+                // Im Fehlerfall in den Fehler-Ordner schieben.
                 moveFile(inputFile, new File(folderConfig.errorTraceBoMFolder.getAbsolutePath()
                         + File.separator + localManufacturerFolder + File.separator + inputFile.getName()));
             }
