@@ -32,7 +32,6 @@ import com.kontron.qdw.boundary.util.MailServiceFacade;
 import com.kontron.util.datetime.TimeUtil;
 import com.kontron.util.log.FileImportAbortedWithErrorsLog;
 import com.kontron.util.log.FileImportSuccessfulLog;
-import com.kontron.util.log.ITaskHierarchyLog;
 import com.kontron.util.log.ITaskNodeLog;
 import com.kontron.util.log.TaskLeafLog;
 import com.kontron.util.log.TaskNodeLog;
@@ -661,11 +660,17 @@ public class TraceBoMImportServiceBean {
     }
 
     private boolean wasAtLeastOneConcreteDownloadTaskPerformed(Optional<ITaskNodeLog> tsk) {
-        return tsk.map(ITaskNodeLog::getSubTasks).stream()
+        if (tsk.isEmpty()) {
+            return false;
+        }
+        return tsk.get().getSubTasks().stream()
                 .filter(FileImportSuccessfulLog.class::isInstance)
                 .map(FileImportSuccessfulLog.class::cast)
                 .map(FileImportSuccessfulLog::getNumberEntries)
                 .anyMatch(nr -> nr > 0);
+
+        // stream() auf Optional liefert einen "Stream" über das Element des Optionals, mit dem weiter gearbeitet wird.
+        // Der Code ist schlecht verständlich: return tsk.stream().map(ITaskNodeLog::getSubTasks).flatMap(Collection::stream)...
     }
 
     private boolean wasAtLeastOneConcreteProcessTaskPerformed(Optional<ITaskNodeLog> tsk) {
@@ -674,93 +679,5 @@ public class TraceBoMImportServiceBean {
                 .map(ITaskNodeLog.class::cast)
                 .anyMatch(ITaskNodeLog::wasAtLeastOneConcreteTaskPerformed);
     }
-
-
-
-    /*
-    private void sendErrorMail(String additionalMsgBody) {
-        String msgHeader = "Error while splitting trace files";
-        logger.info(msgHeader + ": " + additionalMsgBody);
-    
-        String subjectText = Constants.APP_ENV + ": Trace-BoM import: " + msgHeader;
-        StringBuilder importLog = new StringBuilder();
-        importLog.append(msgHeader + ": " + additionalMsgBody);
-    
-        // schicke Informationsmail
-        try {
-            MailServiceFacade.sendMail(Constants.getMailRecipient(), subjectText, importLog.toString());
-        }
-        catch (Exception mailException) {
-            logger.error("Sending mail after importing Trace-BoM files failed!", mailException);
-        }
-    }
-     */
-
-
-
-    /*
-    
-    private TaskNodeLog initImportAndRebuild() {
-        logger.info("Importing Trace-BoM files and rebuilding materialized tables");
-        logger.debug(String.format("exchangePath = %s, archivePath = %s", exchangePath, archivePath));
-        
-        return new TaskNodeLog(TASKNAME_IMPORT_REBUILD);
-    }
-    
-    @SuppressWarnings("unused")
-    
-    private TaskNodeLog initRebuild() {
-        logger.info("Rebuilding materialized tables");
-    
-        return new TaskNodeLog(TASKNAME_REBUILD);
-    }
-    
-    
-    @SuppressWarnings("unused")
-    private ITaskNodeLog executeTask(TaskNodeLog parentTask, TaskCall execInstance) {
-        TaskNodeLog taskNodeLog = execInstance.initTask();
-        parentTask.addSubTask(taskNodeLog);
-        execInstance.execTask(taskNodeLog);
-        return taskNodeLog;
-    }
-    
-    
-    
-    @Asynchronous
-    @PermitAll
-    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
-    public void runRmaImport() {
-        if (!schedulerService.isExecuteImport()) {
-            return;
-        }
-    
-        TaskNodeLog mainTask = initImportAndRebuild();
-    
-        TaskNodeLog taskImport = mainTask.createNewSubTaskNode(TASKNAME_IMPORT);
-        // ITaskNodeLog rmaImportTask = executeTask(taskImport, rmaImportServiceBean);
-        taskImport.finishTask();
-    
-        TaskNodeLog taskRebuild = mainTask.createNewSubTaskNode(TASKNAME_REBUILD);
-        // if (rmaImportTask.wasAtLeastOneConcreteTaskPerformed() && rmaImportTask.isSuccess()) {
-        // executeTask(taskRebuild, svcMsgRebuildServiceBean);
-        // }
-        taskRebuild.finishTask();
-    
-        finishImport(mainTask);
-    }
-    
-    @Asynchronous
-    @PermitAll
-    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
-    public void runSvcMsgRebuild() {
-        if (!schedulerService.isExecuteImport()) {
-            return;
-        }
-    
-        TaskNodeLog taskRebuild = initRebuild();
-        // executeTask(taskRebuild, svcMsgRebuildServiceBean);
-        finishImport(taskRebuild);
-    }
-    */
 
 }
