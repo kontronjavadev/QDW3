@@ -32,6 +32,8 @@ import com.kontron.qdw.boundary.util.MailServiceFacade;
 import com.kontron.util.datetime.TimeUtil;
 import com.kontron.util.log.FileImportAbortedWithErrorsLog;
 import com.kontron.util.log.FileImportSuccessfulLog;
+import com.kontron.util.log.ITaskHierarchyLog;
+import com.kontron.util.log.ITaskNodeLog;
 import com.kontron.util.log.TaskLeafLog;
 import com.kontron.util.log.TaskNodeLog;
 
@@ -127,6 +129,7 @@ public class TraceBoMImportServiceBean {
             TaskLeafLog tskInit = mainTask.createNewSubTaskLeaf("Run import", "initializing sftp access for import");
             tskInit.finishTaskWithError(e);
             mainTask.abortTask();
+            finishImport(mainTask);
             return;
         }
 
@@ -192,6 +195,7 @@ public class TraceBoMImportServiceBean {
             TaskLeafLog tskInit = downloadTask.createNewSubTaskLeaf("initializing sftp access for download");
             tskInit.finishTaskWithError(e);
             downloadTask.abortTask();
+            finishImport(downloadTask);
             return;
         }
 
@@ -242,6 +246,7 @@ public class TraceBoMImportServiceBean {
             TaskLeafLog tskInit = processTask.createNewSubTaskLeaf("initializing sftp access for deleting files after processed");
             tskInit.finishTaskWithError(e);
             processTask.abortTask();
+            finishImport(processTask);
             return;
         }
 
@@ -336,7 +341,7 @@ public class TraceBoMImportServiceBean {
                             + File.separator + localManufacturerFolder + File.separator + zipFile.getName()));
                 }
                 catch (ImportAbortedException e) {
-                    folderTask.addSubTask(new FileImportAbortedWithErrorsLog(zipFile.getAbsolutePath(), "Zip file without unsupported files"));
+                    folderTask.addSubTask(new FileImportAbortedWithErrorsLog(zipFile.getAbsolutePath(), "Zip file without supported files"));
                 }
             }
             else {
@@ -600,7 +605,22 @@ public class TraceBoMImportServiceBean {
         tsk.finishTask();
         String baseMsg = "\"" + tsk.getTaskName() + "\" finished";
         // keine Mail schicken, wenn es nichts zu importieren gab
-        if (!tsk.wasAtLeastOneConcreteTaskPerformed()) {
+        // Bei QDW gibt es auf oberster Ebene zwei Subtasks, einen für den Download und einen für die Verarbeitung.
+        // Bei "process" ist die Ordnerstruktur als Subtask angelegt und der wiederum hat für jede Datei einen weiteren Subtask.
+        // Nur wenn es _dort_ nichts zu tun gibt, gibt es wirklich nichts zu tun.
+        // Bei "download" gibt es lediglich ordnerspezifische Subtasks, FileImportSuccessfulLog, die dann die Anzahl der heruntergeladenen
+        // Dateien hat.
+        // Falls der konkrete Vorgang, Download oder Verarbeitung, direkt aus der Administrationsoberfläche
+        // gestartet wird, ist dieser Vorgang der oberste Knoten!
+
+        Optional<ITaskNodeLog> downloadTsk = find(tsk, TASKNAME_DOWNLOAD);
+        Optional<ITaskNodeLog> processTsk = find(tsk, TASKNAME_PROCESS);
+        boolean anyDownloadTaskPerformed = wasAtLeastOneConcreteDownloadTaskPerformed(downloadTsk);
+        boolean anyProcessTaskPerformed = wasAtLeastOneConcreteProcessTaskPerformed(processTsk);
+
+        if (!anyDownloadTaskPerformed && !anyProcessTaskPerformed && tsk.isSuccess()) {
+            // Es gibt keine Subtasks, die etwas ausgeführt und geloggt haben und der komplette Prozess war erfolgreich.
+            // (Es könnte auch einen fehler gegeben haben, noch bevor Subtasks zu den einzelnen Ordner erstellt wurden)
             logger.info(baseMsg + " — no import files");
             return;
         }
@@ -626,6 +646,33 @@ public class TraceBoMImportServiceBean {
         catch (Exception mailException) {
             logger.error("Sending mail after importing Trace-BoM files failed!", mailException);
         }
+    }
+
+
+    private Optional<ITaskNodeLog> find(ITaskNodeLog tsk, String name) {
+        if (tsk.getTaskName().equals(name)) {
+            return Optional.of(tsk);
+        }
+        return tsk.getSubTasks().stream()
+                .filter(ITaskNodeLog.class::isInstance)
+                .map(ITaskNodeLog.class::cast)
+                .filter(t -> t.getTaskName().equals(name))
+                .findFirst();
+    }
+
+    private boolean wasAtLeastOneConcreteDownloadTaskPerformed(Optional<ITaskNodeLog> tsk) {
+        return tsk.map(ITaskNodeLog::getSubTasks).stream()
+                .filter(FileImportSuccessfulLog.class::isInstance)
+                .map(FileImportSuccessfulLog.class::cast)
+                .map(FileImportSuccessfulLog::getNumberEntries)
+                .anyMatch(nr -> nr > 0);
+    }
+
+    private boolean wasAtLeastOneConcreteProcessTaskPerformed(Optional<ITaskNodeLog> tsk) {
+        return tsk.map(ITaskNodeLog::getSubTasks).stream()
+                .filter(ITaskNodeLog.class::isInstance)
+                .map(ITaskNodeLog.class::cast)
+                .anyMatch(ITaskNodeLog::wasAtLeastOneConcreteTaskPerformed);
     }
 
 
