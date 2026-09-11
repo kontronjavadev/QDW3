@@ -225,6 +225,10 @@ public abstract class AbstractTBImportServiceBean<TB extends TraceBoMTypeIF<TBI>
     }
 
     void sendIllegalRatioMail(TBH trBoMHeaderImported, List<String> illegalRatioMsgs) {
+        if (illegalRatioMsgs.isEmpty()) {
+            return;
+        }
+
         String subject = Constants.APP_ENV + "Illegal material ratio warning for delivery note no. "
                 + trBoMHeaderImported.getDeliveryNoteNumber();
         List<String> receivers = Arrays.stream(Constants.getMailRecipientIllegalRatioWarning().split(";"))
