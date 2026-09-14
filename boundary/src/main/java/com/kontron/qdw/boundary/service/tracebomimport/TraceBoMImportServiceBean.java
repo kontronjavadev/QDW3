@@ -311,42 +311,11 @@ public class TraceBoMImportServiceBean {
         curLocalFolder.mkdirs();
 
 
-        // erstelle Map aller xml-Dateien in lokalem Verzeichnis
-        File[] zipFiles = curLocalFolder.listFiles(ZIP_FILE_FILTER);
-        if (zipFiles == null) {
-            folderTask.addSubTask(new FileImportAbortedWithErrorsLog(localManufacturerFolder, "I/O error reading files from directory"));
-            folderTask.abortTask();
+        // extrahiere xml-Dateien aus gefundenen (heruntergeladenen) zip-Dateien, sofern sie nicht bereits aus einem früheren Lauf existieren
+        // Im Fehlerfall ist eine Weiterarbeit nicht möglich. Der Rückgabewert ist null und der Task wurde abgebrochen. Dann zurückkehren.
+        Map<File, List<File>> zipToExtractedFilesMapping = unzipZipFilesToProcess(folderTask, localManufacturerFolder, curLocalFolder, folderConfig);
+        if (folderTask.isTaskAborted()) {
             return;
-        }
-
-        Map<File, List<File>> zipToExtractedFilesMapping = new HashMap<>();
-        for (File zipFile : zipFiles) {
-            List<File> extractedFiles;
-            try {
-                // zip-Datei entpacken, ...
-                extractedFiles = FileUtils.unzipFile(zipFile, curLocalFolder.getAbsolutePath(),
-                        Optional.of(f -> f.getName().toLowerCase().endsWith(".xml")));
-            }
-            catch (IOException | SecurityException e) {
-                folderTask.addSubTask(new FileImportAbortedWithErrorsLog(zipFile.getAbsolutePath(), "Error when unzipping"));
-                folderTask.abortTask();
-                return;
-            }
-
-            if (extractedFiles.isEmpty()) {
-                // zip-Datei hat keine Inhalte, die wir iportieren können -> in Fehler-Ordner schieben
-                try {
-                    moveFile(zipFile, new File(folderConfig.backupTraceBoMFolder.getAbsolutePath()
-                            + File.separator + localManufacturerFolder + File.separator + zipFile.getName()));
-                }
-                catch (ImportAbortedException e) {
-                    folderTask.addSubTask(new FileImportAbortedWithErrorsLog(zipFile.getAbsolutePath(), "Zip file without supported files"));
-                }
-            }
-            else {
-                // andernfalls in Map merken
-                zipToExtractedFilesMapping.put(zipFile, extractedFiles);
-            }
         }
 
 
@@ -359,83 +328,88 @@ public class TraceBoMImportServiceBean {
         }
 
         // Iterate over all new incoming files and try to split them
-        for (File inputFile : xmlFiles) {
-            long startTime = System.currentTimeMillis();
-            if (FileUtils.isBusy(inputFile)) {
-                folderTask.addSubTask(new FileImportAbortedWithErrorsLog(localManufacturerFolder + File.separator + inputFile.getName(),
-                        "File is currently in usage"));
-                continue;
-            }
-
-            String xmlSignatureLine = null;
-            String rootElementLine = null;
-
-            // Datei nur für eine erste Analyse öffnen
-            try (BufferedReader input = new BufferedReader(new FileReader(inputFile))) {
-                xmlSignatureLine = input.readLine();
-                rootElementLine = input.readLine();
-
-                if (StringUtils.isEmpty(rootElementLine)) {
-                    // für den Fall, dass die Datei keinen Zeilenumbruch hat und somit alles in einer einzigen Zeile steht
-                    rootElementLine = xmlSignatureLine;
-                }
-            }
-            catch (Exception e) { // FileNotFoundException, IOException
-                folderTask.addSubTask(new FileImportAbortedWithErrorsLog(localManufacturerFolder + File.separator + inputFile.getName(),
-                        "File cannot be opened"));
-                continue;
-            }
-
-
-            ImportResult importResult = null;
-            try {
-                // ist es überhaupt eine XML-Datei?
-                if (!StringUtils.trimToEmpty(xmlSignatureLine).startsWith("<?xml")) {
-                    folderTask.addSubTask(new FileImportAbortedWithErrorsLog(localManufacturerFolder + File.separator + inputFile.getName(),
-                            "File is not a valid xml file"));
-                    continue;
-                }
-                // ist zwar eine XML-Datei, aber weder alte, noch neue Trae-BoM-XML-Struktur
-                if (!rootElementLine.contains(ROOT_ELEMENT_TRACE_BOMS) && !rootElementLine.contains(ROOT_ELEMENT_STOCK_RECEIPT)) {
-                    String errorMsg = String.format("Accepted xml root elements are '%s' and '%s' but root element was '%s'.",
-                            ROOT_ELEMENT_TRACE_BOMS, ROOT_ELEMENT_STOCK_RECEIPT, StringUtils.strip(rootElementLine, "<>"));
-                    folderTask.addSubTask(new FileImportAbortedWithErrorsLog(localManufacturerFolder + File.separator + inputFile.getName(),
-                            errorMsg));
-                    continue;
-                }
-
-
-                // Unterscheidung, ob es sich um eine alte oder neue XML-Struktur handelt
-                if (rootElementLine.contains(ROOT_ELEMENT_TRACE_BOMS)) { // neu
-                    importResult = tbNewService.processFileInFolder(folderTask, curLocalFolder, inputFile, folderConfig);
-                }
-                else { // ROOT_ELEMENT_STOCK_RECEIPT (alt)
-                    importResult = tbOldService.processFileInFolder(folderTask, curLocalFolder, inputFile, folderConfig);
-                }
-                logger.info("importiert: {}{}{}", curLocalFolder, File.separator, inputFile.getName());
-
-
-                cleanUp(ftpAccess, localManufacturerFolder, folderConfig, zipToExtractedFilesMapping, inputFile, importResult);
-
-                // Information für Mail erstellen
-                if (importResult.success()) {
-                    folderTask.addSubTask(new FileImportSuccessfulLog(localManufacturerFolder + File.separator + inputFile.getName(),
-                            importResult.numberEntries(), startTime));
-                }
-                else {
-                    folderTask.addSubTask(new FileImportAbortedWithErrorsLog(localManufacturerFolder + File.separator + inputFile.getName(),
-                            importResult.errorMessage()));
-                }
-            }
-            catch (ImportAbortedException e) {
-                // ist nur noch Methode cleanUp(), die eine Exception werfen kann
-                folderTask.addSubTask(e.getTaskLog());
-                folderTask.abortTask();
-            }
-
-            // Sind alle Dateien behandelt, unabhängig davon, ob sie aus einer zip-Datei stammen oder direkt herunter geladen wurden,
-            // so sind die Dateien aus der zip-Datei gelöscht und die zip-Datei und die direkt herunter geladenen Dateien archiviert.
+        for (File sourceFile : xmlFiles) {
+            processFile(folderTask, sourceFile, zipToExtractedFilesMapping, localManufacturerFolder, curLocalFolder, ftpAccess, folderConfig);
         } // end for(fileMap)
+
+        // Sind alle Dateien behandelt, unabhängig davon, ob sie aus einer zip-Datei stammen oder direkt herunter geladen wurden,
+        // so sind die Dateien aus der zip-Datei gelöscht und die zip-Datei und die direkt herunter geladenen Dateien archiviert.
+    }
+
+    private void processFile(TaskNodeLog folderTask, File sourceFile, Map<File, List<File>> zipToExtractedFilesMapping,
+            String localManufacturerFolder, File curLocalFolder, SftpAccess ftpAccess, FolderConfig folderConfig) {
+        long startTime = System.currentTimeMillis();
+        if (FileUtils.isBusy(sourceFile)) {
+            folderTask.addSubTask(new FileImportAbortedWithErrorsLog(localManufacturerFolder + File.separator + sourceFile.getName(),
+                    "File is currently in usage"));
+            return;
+        }
+
+        String xmlSignatureLine = null;
+        String rootElementLine = null;
+
+        // Datei nur für eine erste Analyse öffnen
+        try (BufferedReader input = new BufferedReader(new FileReader(sourceFile))) {
+            xmlSignatureLine = input.readLine();
+            rootElementLine = input.readLine();
+
+            if (StringUtils.isEmpty(rootElementLine)) {
+                // für den Fall, dass die Datei keinen Zeilenumbruch hat und somit alles in einer einzigen Zeile steht
+                rootElementLine = xmlSignatureLine;
+            }
+        }
+        catch (Exception e) { // FileNotFoundException, IOException
+            folderTask.addSubTask(new FileImportAbortedWithErrorsLog(localManufacturerFolder + File.separator + sourceFile.getName(),
+                    "File cannot be opened"));
+            return;
+        }
+
+
+        ImportResult importResult = null;
+        try {
+            // ist es überhaupt eine XML-Datei?
+            if (!StringUtils.trimToEmpty(xmlSignatureLine).startsWith("<?xml")) {
+                folderTask.addSubTask(new FileImportAbortedWithErrorsLog(localManufacturerFolder + File.separator + sourceFile.getName(),
+                        "File is not a valid xml file"));
+                return;
+            }
+            // ist zwar eine XML-Datei, aber weder alte, noch neue Trae-BoM-XML-Struktur
+            if (!rootElementLine.contains(ROOT_ELEMENT_TRACE_BOMS) && !rootElementLine.contains(ROOT_ELEMENT_STOCK_RECEIPT)) {
+                String errorMsg = String.format("Accepted xml root elements are '%s' and '%s' but root element was '%s'.",
+                        ROOT_ELEMENT_TRACE_BOMS, ROOT_ELEMENT_STOCK_RECEIPT, StringUtils.strip(rootElementLine, "<>"));
+                folderTask.addSubTask(new FileImportAbortedWithErrorsLog(localManufacturerFolder + File.separator + sourceFile.getName(),
+                        errorMsg));
+                return;
+            }
+
+
+            // Unterscheidung, ob es sich um eine alte oder neue XML-Struktur handelt
+            if (rootElementLine.contains(ROOT_ELEMENT_TRACE_BOMS)) { // neu
+                importResult = tbNewService.processFile(folderTask, curLocalFolder, sourceFile, folderConfig);
+            }
+            else { // ROOT_ELEMENT_STOCK_RECEIPT (alt)
+                importResult = tbOldService.processFile(folderTask, curLocalFolder, sourceFile, folderConfig);
+            }
+            logger.info("importiert: {}{}{}", curLocalFolder, File.separator, sourceFile.getName());
+
+
+            cleanUp(ftpAccess, localManufacturerFolder, folderConfig, zipToExtractedFilesMapping, sourceFile, importResult);
+
+            // Information für Mail zusammenstellen
+            if (importResult.success()) {
+                folderTask.addSubTask(new FileImportSuccessfulLog(localManufacturerFolder + File.separator + sourceFile.getName(),
+                        importResult.numberEntries(), startTime));
+            }
+            else {
+                folderTask.addSubTask(new FileImportAbortedWithErrorsLog(localManufacturerFolder + File.separator + sourceFile.getName(),
+                        importResult.errorMessage()));
+            }
+        }
+        catch (ImportAbortedException e) {
+            // ist nur noch Methode cleanUp(), die eine Exception werfen kann
+            folderTask.addSubTask(e.getTaskLog());
+            folderTask.abortTask();
+        }
     }
 
 
@@ -499,6 +473,47 @@ public class TraceBoMImportServiceBean {
     }
 
 
+
+    private Map<File, List<File>> unzipZipFilesToProcess(TaskNodeLog folderTask, String localManufacturerFolder, File curLocalFolder,
+            FolderConfig folderConfig) {
+        File[] zipFiles = curLocalFolder.listFiles(ZIP_FILE_FILTER);
+        if (zipFiles == null) {
+            folderTask.addSubTask(new FileImportAbortedWithErrorsLog(localManufacturerFolder, "I/O error reading files from directory"));
+            folderTask.abortTask();
+            return null;
+        }
+
+        Map<File, List<File>> zipToExtractedFilesMapping = new HashMap<>();
+        for (File zipFile : zipFiles) {
+            List<File> extractedFiles;
+            try {
+                // zip-Datei entpacken, ...
+                extractedFiles = FileUtils.unzipFile(zipFile, curLocalFolder.getAbsolutePath(),
+                        Optional.of(f -> f.getName().toLowerCase().endsWith(".xml")));
+            }
+            catch (IOException | SecurityException e) {
+                folderTask.addSubTask(new FileImportAbortedWithErrorsLog(zipFile.getAbsolutePath(), "Error when unzipping"));
+                folderTask.abortTask();
+                return null;
+            }
+
+            if (extractedFiles.isEmpty()) {
+                // zip-Datei hat keine Inhalte, die wir iportieren können -> in Fehler-Ordner schieben
+                try {
+                    moveFile(zipFile, new File(folderConfig.backupTraceBoMFolder.getAbsolutePath()
+                            + File.separator + localManufacturerFolder + File.separator + zipFile.getName()));
+                }
+                catch (ImportAbortedException e) {
+                    folderTask.addSubTask(new FileImportAbortedWithErrorsLog(zipFile.getAbsolutePath(), "Zip file without supported files"));
+                }
+            }
+            else {
+                // andernfalls in Map merken
+                zipToExtractedFilesMapping.put(zipFile, extractedFiles);
+            }
+        }
+        return zipToExtractedFilesMapping;
+    }
 
     private void cleanUp(SftpAccess ftpAccess, String localManufacturerFolder, FolderConfig folderConfig,
             Map<File, List<File>> zipToExtractedFilesMapping, File inputFile, ImportResult importResult) throws ImportAbortedException {

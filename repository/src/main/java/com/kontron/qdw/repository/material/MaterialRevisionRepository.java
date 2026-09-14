@@ -1,7 +1,11 @@
 package com.kontron.qdw.repository.material;
 
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import com.kontron.qdw.domain.material.*;
+
 import jakarta.persistence.*;
 import net.sourceforge.jbizmo.commons.jpa.*;
 import jakarta.inject.*;
@@ -16,6 +20,9 @@ public class MaterialRevisionRepository extends AbstractRepository<MaterialRevis
     private static final String PARAM_ID = "id";
     @Generated
     private final BoMItemRepository boMItemManager;
+
+    public record MatRevKey(String materialNumber, String plantCode, String revisionNumber) {
+    }
 
     /**
      * Default constructor
@@ -75,11 +82,9 @@ public class MaterialRevisionRepository extends AbstractRepository<MaterialRevis
         // alle Revisionen anhand Materialnummer, Werk und Revisionsnummer, inkl. Revisionen mit Zeitstempel (umgekehrt chronologisch)
         StringBuilder statement = new StringBuilder();
         statement.append("select a from MaterialRevision a ");
-        statement.append("left join a.boMItems ");
-        statement.append("left join a.boMItems.material ");
         statement.append("where a.material.materialNumber = :paramMat ");
         statement.append("and a.plant.code = :paramPlant ");
-        statement.append("and (a.revisionNumber = :paramRev or a.revisionNumber like '" + revisionNumber + "-______\\_______') ");
+        statement.append("and (a.revisionNumber = :paramRev or a.revisionNumber like :paramRevLike) ");
         // <revnr> or <revnr>-ttmmjj_ssmmss => like <revnr>-<6Zeichen>_<6Zeichen>
         statement.append("order by a.creationDate desc ");
 
@@ -88,6 +93,7 @@ public class MaterialRevisionRepository extends AbstractRepository<MaterialRevis
         query.setParameter("paramMat", materialNumber);
         query.setParameter("paramPlant", plantCode);
         query.setParameter("paramRev", revisionNumber);
+        query.setParameter("paramRevLike", revisionNumber + "-______\\_______");
 
         List<MaterialRevision> revisionList = query.getResultList();
 
@@ -96,6 +102,63 @@ public class MaterialRevisionRepository extends AbstractRepository<MaterialRevis
         }
 
         return revisionList.getFirst();
+    }
+
+    /**
+     * Holt die zuletzt angelegte Revision anhand Materialnummer, Werk und Revisionsnummer
+     * 
+     * @param materialNumber
+     * @param revisionNumber
+     * @return a material revision if one has been found
+     */
+    public Map<MatRevKey, MaterialRevision> getLastMaterialRevisionByMatNr(Collection<MatRevKey> keys) {
+        if (keys == null || keys.isEmpty()) {
+            return Collections.emptyMap();
+        }
+
+        List<String> matNrs = keys.stream().map(MatRevKey::materialNumber).distinct().toList();
+        List<String> plants = keys.stream().map(MatRevKey::plantCode).distinct().toList();
+
+        // Mit einer Abfrage alle Revisionen anhand Materialnummer und Werk. Filterung nach Revisionsnummer erfolgt im Anschluss in Java
+        String statement = "select a from MaterialRevision a "
+                + "joind fetch a.material "
+                + "where a.material.materialNumber in :mats "
+                + "and a.plant.code in :plants ";
+
+        @SuppressWarnings("resource")
+        TypedQuery<MaterialRevision> query = getEntityManager().createQuery(statement, MaterialRevision.class);
+        query.setParameter("mats", matNrs);
+        query.setParameter("plants", plants);
+
+        List<MaterialRevision> bulkResults = query.getResultList();
+
+        Set<MatRevKey> requestedKeys = new HashSet<>(keys);
+        Map<MatRevKey, MaterialRevision> resultMap = new HashMap<>();
+        // Pattern für Postfix zu <revnr>-ttmmjj_ssmmss mit Vereinfachung auf bloße Ziffern
+        Pattern timestampSuffix = Pattern.compile("-\\d{6}_\\d{6}$");
+
+        // Zuordnung und Filterung komplett im RAM
+        for (MaterialRevision candidate : bulkResults) {
+            String fullRev = candidate.getRevisionNumber();
+
+            // Basis-Revision ermitteln, indem ein passendes Suffix abgeschnitten wird
+            Matcher matcher = timestampSuffix.matcher(fullRev);
+            String baseRev = matcher.find() ? fullRev.substring(0, matcher.start()) : fullRev;
+
+            MatRevKey candidateKey = new MatRevKey(
+                    candidate.getMaterial().getMaterialNumber(),
+                    candidate.getPlant().getCode(),
+                    baseRev);
+
+            // Nur verarbeiten, wenn wir diesen Key auch wirklich gesucht haben (filtert Beifang raus)
+            if (requestedKeys.contains(candidateKey)) {
+                // Merge behält bei Kollisionen den Eintrag mit dem jüngsten Datum
+                resultMap.merge(candidateKey, candidate,
+                        (existing, current) -> current.getCreationDate().compareTo(existing.getCreationDate()) > 0 ? current : existing);
+            }
+        }
+
+        return resultMap;
     }
 
 

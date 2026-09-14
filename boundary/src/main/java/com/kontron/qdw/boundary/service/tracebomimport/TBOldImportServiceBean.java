@@ -24,11 +24,13 @@ import com.kontron.qdw.boundary.service.mapping.tracebom.alt.TraceBoMMappingType
 import com.kontron.qdw.boundary.service.mapping.tracebom.alt.TraceBoMRevisionMappingType;
 import com.kontron.qdw.boundary.service.mapping.tracebom.alt.TraceBoMRootMappingType;
 import com.kontron.qdw.boundary.util.Constants;
+import com.kontron.qdw.domain.base.Plant;
 import com.kontron.qdw.domain.base.Supplier;
 import com.kontron.qdw.domain.material.Material;
 import com.kontron.qdw.domain.material.MaterialRevision;
 import com.kontron.qdw.domain.serial.SerialObject;
 import com.kontron.qdw.domain.serial.TraceBoM;
+import com.kontron.qdw.repository.base.PlantRepository;
 import com.kontron.qdw.repository.base.SupplierRepository;
 import com.kontron.util.log.FileImportAbortedWithErrorsLog;
 import com.kontron.util.log.FileImportSuccessfulLog;
@@ -60,6 +62,8 @@ public class TBOldImportServiceBean extends AbstractTBImportServiceBean<TraceBoM
 
     @EJB
     private SupplierRepository supplierManager;
+    @EJB
+    private PlantRepository plantManager;
 
     @PersistenceContext
     private EntityManager em;
@@ -70,7 +74,7 @@ public class TBOldImportServiceBean extends AbstractTBImportServiceBean<TraceBoM
     /** @return success */
     @PermitAll
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public ImportResult processFileInFolder(TaskNodeLog folderTask, File localFolder, File sourceFile, FolderConfig folderConfig) {
+    public ImportResult processFile(TaskNodeLog folderTask, File localFolder, File sourceFile, FolderConfig folderConfig) {
         TraceBoMRootMappingType trBoMRootImported = null;
         try {
             trBoMRootImported = createLogisticXMLFile(folderTask, localFolder, sourceFile, folderConfig);
@@ -206,11 +210,12 @@ public class TBOldImportServiceBean extends AbstractTBImportServiceBean<TraceBoM
 
         try {
             Supplier supplier = supplierManager.findById(trBoMHeaderImported.getSupplierCode());
+            Plant defaultPlant = plantManager.getReference(DEFAULT_PLANT_CODE);
 
             // Some CMs only deliver the Rev6 field. In order to find a proper revision the alternative number must be added!
             String revisionNo = correctRevNr(trBoMRevisionImported.getRevisionNumber());
 
-            MaterialRevision materialRevision = findMaterialRevision(trBoMRevisionImported.getMaterialNumber(), revisionNo);
+            MaterialRevision materialRevision = findMaterialRevision(trBoMRevisionImported.getMaterialNumber(), revisionNo, defaultPlant);
             Material material = materialRevision.getMaterial();
 
             LocalDate parsedProdDate = parseToLocalDate(trBoMHeaderImported.getProductionDate());
@@ -218,8 +223,8 @@ public class TBOldImportServiceBean extends AbstractTBImportServiceBean<TraceBoM
             Map<TraceBoMMappingType, TraceBoM> persistedBoMPerImportedBoM = new HashMap<>();
 
             for (TraceBoMMappingType trBoMImported : trBoMRootImported.getSerialObjects()) {
-                SerialObject serialObject = findSerialObject(trBoMImported.getSerialNumber(), trBoMImported.getCustomerSerialNumber(),
-                        material, trBoMHeaderImported.getOrderNumber(), parsedProdDate);
+                SerialObject serialObject = findSerialObject(trBoMImported.getSerialNumber(), material,
+                        trBoMImported.getCustomerSerialNumber(), trBoMHeaderImported.getOrderNumber(), parsedProdDate);
 
                 // First we check if the current BoM has been already persisted!
                 TraceBoM persistedBoM = persistedBoMPerImportedBoM.get(trBoMImported);

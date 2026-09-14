@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
@@ -27,15 +28,22 @@ import com.kontron.qdw.boundary.service.mapping.tracebom.neu.NewTraceBoMItemType
 import com.kontron.qdw.boundary.service.mapping.tracebom.neu.NewTraceBoMRootType;
 import com.kontron.qdw.boundary.service.mapping.tracebom.neu.NewTraceBoMType;
 import com.kontron.qdw.boundary.util.Constants;
+import com.kontron.qdw.domain.base.Plant;
 import com.kontron.qdw.domain.base.Supplier;
 import com.kontron.qdw.domain.material.Material;
 import com.kontron.qdw.domain.material.MaterialRevision;
 import com.kontron.qdw.domain.serial.SerialObject;
 import com.kontron.qdw.domain.serial.TraceBoM;
+import com.kontron.qdw.repository.material.MaterialRevisionRepository;
+import com.kontron.qdw.repository.base.PlantRepository;
 import com.kontron.qdw.repository.base.SupplierRepository;
+import com.kontron.qdw.repository.material.MaterialRevisionRepository.MatRevKey;
+import com.kontron.qdw.repository.serial.SerialObjectRepository;
+import com.kontron.qdw.repository.serial.SerialObjectRepository.SerNoMatNrKey;
 import com.kontron.util.log.FileImportAbortedWithErrorsLog;
 import com.kontron.util.log.FileImportSuccessfulLog;
 import com.kontron.util.log.TaskNodeLog;
+import com.kontron.util.text.StringUtil;
 
 import jakarta.annotation.Resource;
 import jakarta.annotation.security.PermitAll;
@@ -66,6 +74,12 @@ public class TBNewImportServiceBean extends AbstractTBImportServiceBean<NewTrace
 
     @EJB
     private SupplierRepository supplierManager;
+    @EJB
+    private PlantRepository plantManager;
+    @EJB
+    private MaterialRevisionRepository matRevManager;
+    @EJB
+    private SerialObjectRepository serObjManager;
 
     @PersistenceContext
     private EntityManager em;
@@ -76,7 +90,7 @@ public class TBNewImportServiceBean extends AbstractTBImportServiceBean<NewTrace
     /** @return success */
     @PermitAll
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public ImportResult processFileInFolder(TaskNodeLog folderTask, File localFolder, File sourceFile, FolderConfig folderConfig) {
+    public ImportResult processFile(TaskNodeLog folderTask, File localFolder, File sourceFile, FolderConfig folderConfig) {
         NewTraceBoMRootType trBoMRootImported = null;
         try {
             trBoMRootImported = createLogisticXMLFile(folderTask, localFolder, sourceFile, folderConfig);
@@ -218,50 +232,66 @@ public class TBNewImportServiceBean extends AbstractTBImportServiceBean<NewTrace
 
 
     /** @return success */
-    private ImportResult saveTraceBoM(File sourceFile, NewTraceBoMRootType trBoMRootImported) {
+    private ImportResult saveTraceBoM(File sourceFile, NewTraceBoMRootType importedTrBoMRoot) {
         // Import trace BoM
-        NewTraceBoMHeaderType trBoMHeaderImported = trBoMRootImported.getHeader();
+        NewTraceBoMHeaderType trBoMHeaderImported = importedTrBoMRoot.getHeader();
         List<String> illegalRatioMsgs = new ArrayList<>();
 
         try {
             Supplier supplier = supplierManager.findById(trBoMHeaderImported.getSupplierCode());
-            LocalDate parsedProdDate = parseToLocalDate(trBoMHeaderImported.getProductionDate());
+            Plant defaultPlant = plantManager.getReference(DEFAULT_PLANT_CODE);
 
-            // Map an
+            LocalDate parsedProdDate = parseToLocalDate(trBoMHeaderImported.getProductionDate());
+            List<NewTraceBoMType> importedTraceBoMs = importedTrBoMRoot.getSerialObjects();
+            batchNormalisieren(importedTraceBoMs);
+
+
+            // vorab im bulk Revisionen holen
+            List<MatRevKey> requestedMatRevs = importedTraceBoMs.stream()
+                    .map(so -> new MatRevKey(so.getMaterialNumber(), DEFAULT_PLANT_CODE, so.getRevisionNumber()))
+                    .collect(Collectors.toList());
+            Map<MatRevKey, MaterialRevision> lastMatRevPerKey = matRevManager.getLastMaterialRevisionByMatNr(requestedMatRevs);
+
+            // vorab im bulk SerialObjects holen
+            List<SerNoMatNrKey> requestedSerObjs = importedTraceBoMs.stream()
+                    .map(so -> new SerNoMatNrKey(so.getSerialNumber(), so.getCustomerSerialNumber()))
+                    .collect(Collectors.toList());
+            Map<SerNoMatNrKey, SerialObject> serObjPerKey = serObjManager.findBySerialNumberAndMaterialNrBulk(requestedSerObjs);
+
+
+            // Map an bereits persistierten TraceBoM per NewTraceBoMType
             Map<NewTraceBoMType, TraceBoM> persistedBoMPerImportedBoM = new HashMap<>();
 
-            for (NewTraceBoMType trBoMImported : trBoMRootImported.getSerialObjects()) {
+            for (NewTraceBoMType importedTraceBoM : importedTraceBoMs) {
                 // Some CMs only deliver the Rev6 field. In order to find a proper revision the alternative number must be added!
-                String revisionNo = correctRevNr(trBoMImported.getRevisionNumber());
+                String revisionNo = correctRevNr(importedTraceBoM.getRevisionNumber());
 
-                MaterialRevision materialRevision = findMaterialRevision(trBoMImported.getMaterialNumber(), revisionNo);
+                MaterialRevision materialRevision = findMaterialRevision(importedTraceBoM.getMaterialNumber(), revisionNo,
+                        lastMatRevPerKey, defaultPlant);
                 Material material = materialRevision.getMaterial();
 
-                // check serial number field, as Plexus sometimes only fills customer serial number
-                if (trBoMImported.getSerialNumber().isEmpty() && !trBoMImported.getCustomerSerialNumber().isEmpty()) {
-                    trBoMImported.setSerialNumber(trBoMImported.getCustomerSerialNumber());
-                }
 
-                SerialObject serialObject = findSerialObject(trBoMImported.getSerialNumber(), trBoMImported.getCustomerSerialNumber(),
-                        material, trBoMHeaderImported.getOrderNumber(), parsedProdDate);
+                SerialObject serialObject = findSerialObject(importedTraceBoM.getSerialNumber(), material, serObjPerKey,
+                        importedTraceBoM.getCustomerSerialNumber(), trBoMHeaderImported.getOrderNumber(), parsedProdDate);
 
                 // First we check if the current BoM has been already persisted!
-                TraceBoM persistedBoM = persistedBoMPerImportedBoM.get(trBoMImported);
+                TraceBoM persistedBoM = persistedBoMPerImportedBoM.get(importedTraceBoM);
                 if (persistedBoM != null) {
                     serialObject.setTraceBom(persistedBoM);
                 }
 
                 if (persistedBoM == null) {
-                    persistedBoM = createTraceBoM(trBoMImported, trBoMHeaderImported, supplier, parsedProdDate, materialRevision, illegalRatioMsgs);
+                    persistedBoM = createTraceBoM(importedTraceBoM, trBoMHeaderImported, supplier, parsedProdDate, materialRevision,
+                            illegalRatioMsgs);
                     serialObject.setTraceBom(persistedBoM);
-                    persistedBoMPerImportedBoM.put(trBoMImported, persistedBoM);
+                    persistedBoMPerImportedBoM.put(importedTraceBoM, persistedBoM);
                 }
             }
 
             em.flush();
             sendIllegalRatioMail(trBoMHeaderImported, illegalRatioMsgs);
 
-            return ImportResult.ok(trBoMRootImported.getSerialObjects().size());
+            return ImportResult.ok(importedTraceBoMs.size());
         }
         catch (Exception e) {
             ctx.setRollbackOnly();
@@ -270,6 +300,19 @@ public class TBNewImportServiceBean extends AbstractTBImportServiceBean<NewTrace
 
             return ImportResult.fail(errorMsg);
         }
+    }
+
+    private void batchNormalisieren(List<NewTraceBoMType> importedTraceBoMs) {
+        importedTraceBoMs.forEach(importedTraceBoM -> {
+            importedTraceBoM.setRevisionNumber(importedTraceBoM.getRevisionNumber());
+            importedTraceBoM.setSerialNumber(StringUtil.removeLeadingZeroIfNumber(importedTraceBoM.getSerialNumber()));
+            importedTraceBoM.setCustomerSerialNumber(StringUtil.removeLeadingZeroIfNumber(importedTraceBoM.getCustomerSerialNumber()));
+
+            // check serial number field, as Plexus sometimes only fills customer serial number
+            if (importedTraceBoM.getSerialNumber().isEmpty() && !importedTraceBoM.getCustomerSerialNumber().isEmpty()) {
+                importedTraceBoM.setSerialNumber(importedTraceBoM.getCustomerSerialNumber());
+            }
+        });
     }
 
 }

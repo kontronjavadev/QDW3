@@ -1,7 +1,9 @@
 package com.kontron.qdw.repository.serial;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -47,6 +49,9 @@ public class SerialObjectRepository extends AbstractRepository<SerialObject, Lon
     }
 
     public record SerNoJeMatIdFilter(Long materialId, Set<String> serialNumbers) {
+    }
+
+    public record SerNoMatNrKey(String matNr, String serialNumber) {
     }
 
 
@@ -132,6 +137,51 @@ public class SerialObjectRepository extends AbstractRepository<SerialObject, Lon
         }
 
         throw new IllegalStateException("Non unique result!");
+    }
+
+    public Map<SerNoMatNrKey, SerialObject> findBySerialNumberAndMaterialNrBulk(List<SerNoMatNrKey> keys) {
+        if (keys == null || keys.isEmpty()) {
+            return Collections.emptyMap();
+        }
+
+        List<String> matNrs = keys.stream().map(SerNoMatNrKey::matNr).distinct().toList();
+        List<String> serNrs = keys.stream().map(SerNoMatNrKey::serialNumber).distinct().toList();
+
+        // 2. Grober Bulk-Fetch mit JOIN FETCH zur Vermeidung von N+1 beim Mapping
+        String jpql = "select a from SerialObject a " +
+                "join fetch a.material m " +
+                "where a.serialNumber in :serNrs " +
+                "and m.materialNumber in :matNrs";
+
+        @SuppressWarnings("resource")
+        TypedQuery<SerialObject> query = getEntityManager().createQuery(jpql, SerialObject.class);
+        query.setParameter("serNrs", serNrs);
+        query.setParameter("matNrs", matNrs);
+
+        List<SerialObject> bulkResults = query.getResultList();
+
+        // 3. O(N) Zuordnung, Beifang-Filterung und Validierung
+        Set<SerNoMatNrKey> requestedKeys = new HashSet<>(keys);
+        Map<SerNoMatNrKey, SerialObject> resultMap = new HashMap<>();
+
+        for (SerialObject candidate : bulkResults) {
+            String candMatNr = candidate.getMaterial().getMaterialNumber();
+            String candSerNr = candidate.getSerialNumber();
+            SerNoMatNrKey candidateKey = new SerNoMatNrKey(candMatNr, candSerNr);
+
+            // Prüfen, ob dieses Paar überhaupt angefragt wurde
+            if (requestedKeys.contains(candidateKey)) {
+                // Fachliche Dubletten durch historische Daten (gleiche Materialnummer auf versch. Material-IDs)
+                if (resultMap.containsKey(candidateKey)) {
+                    throw new IllegalStateException(
+                            String.format("Non unique result for serialNumber '%s' and materialNumber '%s'", candSerNr, candMatNr));
+                }
+
+                resultMap.put(candidateKey, candidate);
+            }
+        }
+
+        return resultMap;
     }
 
     public List<SerialObject> findByIds(Collection<Long> ids) {

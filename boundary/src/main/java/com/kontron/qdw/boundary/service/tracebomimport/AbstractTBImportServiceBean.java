@@ -8,6 +8,7 @@ import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeParseException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
@@ -18,6 +19,7 @@ import com.kontron.qdw.boundary.service.mapping.tracebom.TraceBoMItemTypeIF;
 import com.kontron.qdw.boundary.service.mapping.tracebom.TraceBoMTypeIF;
 import com.kontron.qdw.boundary.util.Constants;
 import com.kontron.qdw.boundary.util.MailServiceFacade;
+import com.kontron.qdw.domain.base.Plant;
 import com.kontron.qdw.domain.base.Supplier;
 import com.kontron.qdw.domain.material.Material;
 import com.kontron.qdw.domain.material.MaterialRevision;
@@ -25,13 +27,14 @@ import com.kontron.qdw.domain.serial.IllegalTraceBoMItem;
 import com.kontron.qdw.domain.serial.SerialObject;
 import com.kontron.qdw.domain.serial.TraceBoM;
 import com.kontron.qdw.domain.serial.TraceBoMItem;
-import com.kontron.qdw.repository.base.PlantRepository;
 import com.kontron.qdw.repository.material.MaterialRepository;
 import com.kontron.qdw.repository.material.MaterialRevisionRepository;
+import com.kontron.qdw.repository.material.MaterialRevisionRepository.MatRevKey;
 import com.kontron.qdw.repository.serial.IllegalTraceBoMItemRepository;
 import com.kontron.qdw.repository.serial.SerialObjectRepository;
 import com.kontron.qdw.repository.serial.TraceBoMItemRepository;
 import com.kontron.qdw.repository.serial.TraceBoMRepository;
+import com.kontron.qdw.repository.serial.SerialObjectRepository.SerNoMatNrKey;
 import com.kontron.util.text.StringUtil;
 
 import jakarta.ejb.EJB;
@@ -43,7 +46,7 @@ import jakarta.ejb.EJB;
  * @author Raymund Achner, achner.com
  */
 public abstract class AbstractTBImportServiceBean<TB extends TraceBoMTypeIF<TBI>, TBH extends TraceBoMHeaderTypeIF, TBI extends TraceBoMItemTypeIF> {
-    private static final String DEFAULT_PLANT_CODE = "6000";
+    public static final String DEFAULT_PLANT_CODE = "6000";
     private static final String REVISION_NO_SUFFIX = " ALT(01)";
     private static final double TRACE_BOM_WARNING_THRESHOLD = 10.0;
 
@@ -60,8 +63,6 @@ public abstract class AbstractTBImportServiceBean<TB extends TraceBoMTypeIF<TBI>
     @EJB
     private MaterialRepository materialManager;
     @EJB
-    private PlantRepository plantManager;
-    @EJB
     private SerialObjectRepository serObjManager;
     @EJB
     private TraceBoMRepository trBoMManager;
@@ -74,10 +75,12 @@ public abstract class AbstractTBImportServiceBean<TB extends TraceBoMTypeIF<TBI>
 
     /**
      * Find material revision and tries to create it if not be found.
+     * 
+     * @param defaultPlant Da die Methode in einer Schleife aufgerufen wird, sollte das Default-Werk nur einmal geholt werden.
      *
      * @throws Exception if revision need to be created but material cannot be found
      */
-    MaterialRevision findMaterialRevision(String materialNumber, String revisionNumber) throws Exception {
+    MaterialRevision findMaterialRevision(String materialNumber, String revisionNumber, Plant defaultPlant) throws Exception {
         // TODO: traceBoM muss mit plant der Revision geliefert werden
         // Hinweis: im alten Code wurde eine Liste bis zwei Einträgen gesucht, um feststellen zu können, ob die Revisionsnummer eindeutig ist.
         // Dazu gibt es einen Datenbankconstraint. Es wird nun jedoch auch nach Revisionen mit Zeitstempel gesucht, um die letzte Revision zu erhalten.
@@ -89,7 +92,39 @@ public abstract class AbstractTBImportServiceBean<TB extends TraceBoMTypeIF<TBI>
             materialRevision = new MaterialRevision();
             materialRevision.setRevisionNumber(revisionNumber);
             materialRevision.setMaterial(materialManager.findByMaterialNumber(materialNumber));
-            materialRevision.setPlant(plantManager.getReference(DEFAULT_PLANT_CODE));
+            materialRevision.setPlant(defaultPlant);
+
+            if (materialRevision.getMaterial() != null) {
+                materialRevision = materialRevisionManager.persist(materialRevision, true, true);
+            }
+            else {
+                throw new Exception("Material '" + materialNumber + "' does not exist, therefore revision '"
+                        + revisionNumber + "' could not be created.");
+            }
+        }
+
+        return materialRevision;
+    }
+
+    /**
+     * Find material revision and tries to create it if not be found.
+     *
+     * @param defaultPlant Da die Methode in einer Schleife aufgerufen wird, sollte das Default-Werk nur einmal geholt werden.
+     * 
+     * @throws Exception if revision need to be created but material cannot be found
+     */
+    MaterialRevision findMaterialRevision(String materialNumber, String revisionNumber,
+            Map<MatRevKey, MaterialRevision> lastMatRevPerKey, Plant defaultPlant) throws Exception {
+        // TODO: traceBoM muss mit plant der Revision geliefert werden
+        // Hinweis: im alten Code wurde eine Liste bis zwei Einträgen gesucht, um feststellen zu können, ob die Revisionsnummer eindeutig ist.
+        // Dazu gibt es einen Datenbankconstraint. Es wird nun jedoch auch nach Revisionen mit Zeitstempel gesucht, um die letzte Revision zu erhalten.
+        MaterialRevision materialRevision = lastMatRevPerKey.get(new MatRevKey(materialNumber, DEFAULT_PLANT_CODE, revisionNumber));
+
+        if (materialRevision == null) {
+            materialRevision = new MaterialRevision();
+            materialRevision.setRevisionNumber(revisionNumber);
+            materialRevision.setMaterial(materialManager.findByMaterialNumber(materialNumber));
+            materialRevision.setPlant(defaultPlant);
 
             if (materialRevision.getMaterial() != null) {
                 materialRevision = materialRevisionManager.persist(materialRevision, true, true);
@@ -108,23 +143,48 @@ public abstract class AbstractTBImportServiceBean<TB extends TraceBoMTypeIF<TBI>
      *
      * @throws Exception if search was not unique
      */
-    SerialObject findSerialObject(String serialNumber, String custSerialNumber, Material material,
-            String prodOrderNr, LocalDate parsedProdDate) throws Exception {
-        String serNo = StringUtil.removeLeadingZeroIfNumber(serialNumber);
+    SerialObject findSerialObject(String serialNumber, Material material,
+            String custSerialNumber, String prodOrderNr, LocalDate parsedProdDate) throws Exception {
 
         SerialObject serialObject;
         try {
-            serialObject = serObjManager.findBySerialNumberAndMaterialNr(serNo, material.getMaterialNumber());
+            serialObject = serObjManager.findBySerialNumberAndMaterialNr(serialNumber, material.getMaterialNumber());
         }
         catch (IllegalStateException ise) {
-            throw new Exception("SerialObject for serial number " + serNo
+            throw new Exception("SerialObject for serial number " + serialNumber
                     + " and material number " + material.getMaterialNumber() + " is not unique.");
         }
 
         if (serialObject == null) {
             serialObject = new SerialObject();
 
-            serialObject.setSerialNumber(serNo);
+            serialObject.setSerialNumber(serialNumber);
+            serialObject.setMaterial(material);
+            serialObject.setCustomerSerialNumber(StringUtil.removeLeadingZeroIfNumber(custSerialNumber));
+            serialObject.setProductionOrderNumber(prodOrderNr);
+
+            serialObject.setAssemblyDate(parsedProdDate);
+
+            serialObject = serObjManager.persist(serialObject, true, true);
+        }
+
+        return serialObject;
+    }
+
+    /**
+     * Find serial object and tries to create it if not be found.
+     *
+     * @throws Exception if search was not unique
+     */
+    SerialObject findSerialObject(String serialNumber, Material material, Map<SerNoMatNrKey, SerialObject> serObjPerKey,
+            String custSerialNumber, String prodOrderNr, LocalDate parsedProdDate) throws Exception {
+
+        SerialObject serialObject = serObjPerKey.get(new SerNoMatNrKey(serialNumber, material.getMaterialNumber()));
+
+        if (serialObject == null) {
+            serialObject = new SerialObject();
+
+            serialObject.setSerialNumber(serialNumber);
             serialObject.setMaterial(material);
             serialObject.setCustomerSerialNumber(StringUtil.removeLeadingZeroIfNumber(custSerialNumber));
             serialObject.setProductionOrderNumber(prodOrderNr);
