@@ -121,8 +121,9 @@ public class MaterialRevisionRepository extends AbstractRepository<MaterialRevis
 
         // Mit einer Abfrage alle Revisionen anhand Materialnummer und Werk. Filterung nach Revisionsnummer erfolgt im Anschluss in Java
         String statement = "select a from MaterialRevision a "
-                + "joind fetch a.material "
-                + "where a.material.materialNumber in :mats "
+                + "join a.material m " // Join mit Alias 'm' für das Filtern; muss wohl in Kombination mit fetch sein
+                + "join fetch a.material " // Fetch Join (strikt ohne Alias) für den Heap
+                + "where m.materialNumber in :mats "
                 + "and a.plant.code in :plants ";
 
         @SuppressWarnings("resource")

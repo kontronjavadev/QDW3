@@ -251,22 +251,28 @@ public class TBNewImportServiceBean extends AbstractTBImportServiceBean<NewTrace
                     .map(so -> new MatRevKey(so.getMaterialNumber(), DEFAULT_PLANT_CODE, so.getRevisionNumber()))
                     .collect(Collectors.toList());
             Map<MatRevKey, MaterialRevision> lastMatRevPerKey = matRevManager.getLastMaterialRevisionByMatNr(requestedMatRevs);
+            logger.info("{} von {} Revisionen im bulk geholt", lastMatRevPerKey.size(), requestedMatRevs.size());
 
             // vorab im bulk SerialObjects holen
             List<SerNoMatNrKey> requestedSerObjs = importedTraceBoMs.stream()
-                    .map(so -> new SerNoMatNrKey(so.getSerialNumber(), so.getCustomerSerialNumber()))
+                    .map(so -> new SerNoMatNrKey(so.getSerialNumber(), so.getMaterialNumber()))
                     .collect(Collectors.toList());
             Map<SerNoMatNrKey, SerialObject> serObjPerKey = serObjManager.findBySerialNumberAndMaterialNrBulk(requestedSerObjs);
+            logger.info("{} von {} SerObj im bulk geholt", serObjPerKey.size(), requestedSerObjs.size());
 
 
             // Map an bereits persistierten TraceBoM per NewTraceBoMType
             Map<NewTraceBoMType, TraceBoM> persistedBoMPerImportedBoM = new HashMap<>();
 
             for (NewTraceBoMType importedTraceBoM : importedTraceBoMs) {
-                // Some CMs only deliver the Rev6 field. In order to find a proper revision the alternative number must be added!
-                String revisionNo = correctRevNr(importedTraceBoM.getRevisionNumber());
+                /* 
+                17:54:17,993 ERROR [com.kontron.qdw.boundary.service.tracebomimport.TBNewImportServiceBean] (EJB default - 5) 
+                Error while processing trace file 3180057134-10.xml: could not execute statement 
+                [Duplicate entry 'OBDR80255-365626' for key 'serial_object_tab.uk_serial_object_snr_mat'] 
+                [insert into qdw.serial_object_tab (assembly_date,creation_date,customer_serial_number,last_update,material,parent_object,production_order_number,serial_number,trace_bom,version) values (?,?,?,?,?,?,?,?,?,?)]
+                */
 
-                MaterialRevision materialRevision = findMaterialRevision(importedTraceBoM.getMaterialNumber(), revisionNo,
+                MaterialRevision materialRevision = findMaterialRevision(importedTraceBoM.getMaterialNumber(), importedTraceBoM.getRevisionNumber(),
                         lastMatRevPerKey, defaultPlant);
                 Material material = materialRevision.getMaterial();
 
@@ -304,7 +310,9 @@ public class TBNewImportServiceBean extends AbstractTBImportServiceBean<NewTrace
 
     private void batchNormalisieren(List<NewTraceBoMType> importedTraceBoMs) {
         importedTraceBoMs.forEach(importedTraceBoM -> {
-            importedTraceBoM.setRevisionNumber(importedTraceBoM.getRevisionNumber());
+            // Some CMs only deliver the Rev6 field. In order to find a proper revision the alternative number must be added!
+            importedTraceBoM.setRevisionNumber(correctRevNr(importedTraceBoM.getRevisionNumber()));
+
             importedTraceBoM.setSerialNumber(StringUtil.removeLeadingZeroIfNumber(importedTraceBoM.getSerialNumber()));
             importedTraceBoM.setCustomerSerialNumber(StringUtil.removeLeadingZeroIfNumber(importedTraceBoM.getCustomerSerialNumber()));
 

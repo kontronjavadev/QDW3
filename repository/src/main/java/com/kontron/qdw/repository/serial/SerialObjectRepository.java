@@ -148,10 +148,11 @@ public class SerialObjectRepository extends AbstractRepository<SerialObject, Lon
         List<String> serNrs = keys.stream().map(SerNoMatNrKey::serialNumber).distinct().toList();
 
         // 2. Grober Bulk-Fetch mit JOIN FETCH zur Vermeidung von N+1 beim Mapping
-        String jpql = "select a from SerialObject a " +
-                "join fetch a.material m " +
-                "where a.serialNumber in :serNrs " +
-                "and m.materialNumber in :matNrs";
+        String jpql = "select a from SerialObject a "
+                + "join a.material m " // Join mit Alias 'm' für das Filtern; muss wohl in Kombination mit fetch sein
+                + "join fetch a.material " // Fetch Join (strikt ohne Alias) für den Heap
+                + "where a.serialNumber in :serNrs "
+                + "and m.materialNumber in :matNrs";
 
         @SuppressWarnings("resource")
         TypedQuery<SerialObject> query = getEntityManager().createQuery(jpql, SerialObject.class);
