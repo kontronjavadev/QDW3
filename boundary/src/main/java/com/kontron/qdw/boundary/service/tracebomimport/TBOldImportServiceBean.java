@@ -10,9 +10,11 @@ import java.lang.invoke.MethodHandles;
 import java.nio.charset.Charset;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -24,7 +26,6 @@ import com.kontron.qdw.boundary.service.mapping.tracebom.alt.TraceBoMMappingType
 import com.kontron.qdw.boundary.service.mapping.tracebom.alt.TraceBoMRevisionMappingType;
 import com.kontron.qdw.boundary.service.mapping.tracebom.alt.TraceBoMRootMappingType;
 import com.kontron.qdw.boundary.util.Constants;
-import com.kontron.qdw.domain.base.Plant;
 import com.kontron.qdw.domain.base.Supplier;
 import com.kontron.qdw.domain.material.Material;
 import com.kontron.qdw.domain.material.MaterialRevision;
@@ -32,9 +33,14 @@ import com.kontron.qdw.domain.serial.SerialObject;
 import com.kontron.qdw.domain.serial.TraceBoM;
 import com.kontron.qdw.repository.base.PlantRepository;
 import com.kontron.qdw.repository.base.SupplierRepository;
+import com.kontron.qdw.repository.material.MaterialRepository;
+import com.kontron.qdw.repository.material.MaterialRevisionRepository;
+import com.kontron.qdw.repository.serial.SerialObjectRepository;
+import com.kontron.qdw.repository.serial.SerialObjectRepository.SerNoMatNrKey;
 import com.kontron.util.log.FileImportAbortedWithErrorsLog;
 import com.kontron.util.log.FileImportSuccessfulLog;
 import com.kontron.util.log.TaskNodeLog;
+import com.kontron.util.text.StringUtil;
 
 import jakarta.annotation.Resource;
 import jakarta.annotation.security.PermitAll;
@@ -64,6 +70,12 @@ public class TBOldImportServiceBean extends AbstractTBImportServiceBean<TraceBoM
     private SupplierRepository supplierManager;
     @EJB
     private PlantRepository plantManager;
+    @EJB
+    private MaterialRevisionRepository materialRevisionManager;
+    @EJB
+    private MaterialRepository materialManager;
+    @EJB
+    private SerialObjectRepository serObjManager;
 
     @PersistenceContext
     private EntityManager em;
@@ -202,47 +214,66 @@ public class TBOldImportServiceBean extends AbstractTBImportServiceBean<TraceBoM
 
 
     /** @return success */
-    private ImportResult saveTraceBoM(File sourceFile, TraceBoMRootMappingType trBoMRootImported) {
+    private ImportResult saveTraceBoM(File sourceFile, TraceBoMRootMappingType importedTrBoMRoot) {
         // Import trace BoM
-        TraceBoMHeaderType trBoMHeaderImported = trBoMRootImported.getHeader();
-        TraceBoMRevisionMappingType trBoMRevisionImported = trBoMHeaderImported.getMaterialRevision();
+        TraceBoMHeaderType importedTrBoMHeader = importedTrBoMRoot.getHeader();
+        TraceBoMRevisionMappingType importedTrBoMRevision = importedTrBoMHeader.getMaterialRevision();
+        List<TraceBoMMappingType> importedTraceBoMs = importedTrBoMRoot.getSerialObjects();
+        batchNormalisieren(importedTrBoMRoot);
         List<String> illegalRatioMsgs = new ArrayList<>();
 
         try {
-            Supplier supplier = supplierManager.findById(trBoMHeaderImported.getSupplierCode());
-            Plant defaultPlant = plantManager.getReference(DEFAULT_PLANT_CODE);
+            Supplier supplier = supplierManager.findById(importedTrBoMHeader.getSupplierCode());
 
-            // Some CMs only deliver the Rev6 field. In order to find a proper revision the alternative number must be added!
-            String revisionNo = correctRevNr(trBoMRevisionImported.getRevisionNumber());
-
-            MaterialRevision materialRevision = findMaterialRevision(trBoMRevisionImported.getMaterialNumber(), revisionNo, defaultPlant);
+            MaterialRevision materialRevision = findMaterialRevision(importedTrBoMRevision.getMaterialNumber(),
+                    importedTrBoMRevision.getRevisionNumber());
             Material material = materialRevision.getMaterial();
 
-            LocalDate parsedProdDate = parseToLocalDate(trBoMHeaderImported.getProductionDate());
+            LocalDate parsedProdDate = parseToLocalDate(importedTrBoMHeader.getProductionDate());
+
+
+            // vorab im bulk SerialObjects holen
+            List<SerNoMatNrKey> requestedSerObjs = importedTraceBoMs.stream()
+                    .map(so -> new SerNoMatNrKey(so.getSerialNumber(), importedTrBoMRevision.getMaterialNumber()))
+                    .collect(Collectors.toList());
+            Map<SerNoMatNrKey, SerialObject> serObjPerKey = serObjManager.findBySerialNumberAndMaterialNrBulk(requestedSerObjs);
+            logger.info("{} von {} SerObj im bulk geholt", serObjPerKey.size(), requestedSerObjs.size());
+
+            // vorab im bulk Material der BoMItems holen
+            List<String> requestedSapNr = importedTraceBoMs.stream()
+                    .map(TraceBoMMappingType::getTraceBoMItems)
+                    .flatMap(Collection::stream)
+                    .map(TraceBoMItemMappingType::getMaterialSapNumber)
+                    .distinct()
+                    .toList();
+            Map<String, Material> materialPerSAPNr = materialManager.findBySAPNumbers(requestedSapNr, false);
+            logger.info("{} von {} Materialien nach SAP-Nr. im bulk geholt", materialPerSAPNr.size(), requestedSapNr.size());
+
 
             Map<TraceBoMMappingType, TraceBoM> persistedBoMPerImportedBoM = new HashMap<>();
 
-            for (TraceBoMMappingType trBoMImported : trBoMRootImported.getSerialObjects()) {
-                SerialObject serialObject = findSerialObject(trBoMImported.getSerialNumber(), material,
-                        trBoMImported.getCustomerSerialNumber(), trBoMHeaderImported.getOrderNumber(), parsedProdDate);
+            for (TraceBoMMappingType importedTraceBoM : importedTraceBoMs) {
+                SerialObject serialObject = findSerialObject(importedTraceBoM.getSerialNumber(), material, serObjPerKey,
+                        importedTraceBoM.getCustomerSerialNumber(), importedTrBoMHeader.getOrderNumber(), parsedProdDate);
 
                 // First we check if the current BoM has been already persisted!
-                TraceBoM persistedBoM = persistedBoMPerImportedBoM.get(trBoMImported);
+                TraceBoM persistedBoM = persistedBoMPerImportedBoM.get(importedTraceBoM);
                 if (persistedBoM != null) {
                     serialObject.setTraceBom(persistedBoM);
                 }
 
                 if (persistedBoM == null) {
-                    persistedBoM = createTraceBoM(trBoMImported, trBoMHeaderImported, supplier, parsedProdDate, materialRevision, illegalRatioMsgs);
+                    persistedBoM = createTraceBoM(importedTraceBoM, importedTrBoMHeader, supplier, parsedProdDate, materialRevision,
+                            illegalRatioMsgs, materialPerSAPNr);
                     serialObject.setTraceBom(persistedBoM);
-                    persistedBoMPerImportedBoM.put(trBoMImported, persistedBoM);
+                    persistedBoMPerImportedBoM.put(importedTraceBoM, persistedBoM);
                 }
             }
 
             em.flush();
-            sendIllegalRatioMail(trBoMHeaderImported, illegalRatioMsgs);
+            sendIllegalRatioMail(importedTrBoMHeader, illegalRatioMsgs);
 
-            return ImportResult.ok(trBoMRootImported.getSerialObjects().size());
+            return ImportResult.ok(importedTraceBoMs.size());
         }
         catch (Exception e) {
             ctx.setRollbackOnly();
@@ -251,6 +282,55 @@ public class TBOldImportServiceBean extends AbstractTBImportServiceBean<TraceBoM
 
             return ImportResult.fail(errorMsg);
         }
+    }
+
+
+
+    /**
+     * Find material revision and tries to create it if not be found.
+     * 
+     * @throws Exception if revision need to be created but material cannot be found
+     */
+    private MaterialRevision findMaterialRevision(String materialNumber, String revisionNumber) throws Exception {
+        // TODO: traceBoM muss mit plant der Revision geliefert werden
+        // Hinweis: im alten Code wurde eine Liste bis zwei Einträgen gesucht, um feststellen zu können, ob die Revisionsnummer eindeutig ist.
+        // Dazu gibt es einen Datenbankconstraint. Es wird nun jedoch auch nach Revisionen mit Zeitstempel gesucht, um die letzte Revision zu erhalten.
+        MaterialRevision materialRevision = materialRevisionManager.getLastMaterialRevisionByMatNr(
+                materialNumber, DEFAULT_PLANT_CODE, revisionNumber);
+
+
+        if (materialRevision == null) {
+            materialRevision = new MaterialRevision();
+            materialRevision.setRevisionNumber(revisionNumber);
+            materialRevision.setMaterial(materialManager.findByMaterialNumber(materialNumber));
+            materialRevision.setPlant(plantManager.getReference(DEFAULT_PLANT_CODE));
+
+            if (materialRevision.getMaterial() != null) {
+                materialRevision = materialRevisionManager.persist(materialRevision, true, true);
+            }
+            else {
+                throw new Exception("Material '" + materialNumber + "' does not exist, therefore revision '"
+                        + revisionNumber + "' could not be created.");
+            }
+        }
+
+        return materialRevision;
+    }
+
+
+    private void batchNormalisieren(TraceBoMRootMappingType importedTrBoMRoot) {
+        // Some CMs only deliver the Rev6 field. In order to find a proper revision the alternative number must be added!
+        TraceBoMRevisionMappingType importedTrBoMRevision = importedTrBoMRoot.getHeader().getMaterialRevision();
+        importedTrBoMRevision.setRevisionNumber(correctRevNr(importedTrBoMRevision.getRevisionNumber()));
+
+        importedTrBoMRoot.getSerialObjects().forEach(importedTraceBoM -> {
+            importedTraceBoM.setSerialNumber(StringUtil.removeLeadingZeroIfNumber(importedTraceBoM.getSerialNumber()));
+            importedTraceBoM.setCustomerSerialNumber(StringUtil.removeLeadingZeroIfNumber(importedTraceBoM.getCustomerSerialNumber()));
+
+            importedTraceBoM.getTraceBoMItems().forEach(importedTBItem -> {
+                importedTBItem.setMaterialSapNumber(importedTBItem.getMaterialSapNumber().replace("-", ""));
+            });
+        });
     }
 
 }

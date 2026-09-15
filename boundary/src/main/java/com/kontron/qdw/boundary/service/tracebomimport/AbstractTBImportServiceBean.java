@@ -32,9 +32,9 @@ import com.kontron.qdw.repository.material.MaterialRevisionRepository;
 import com.kontron.qdw.repository.material.MaterialRevisionRepository.MatRevKey;
 import com.kontron.qdw.repository.serial.IllegalTraceBoMItemRepository;
 import com.kontron.qdw.repository.serial.SerialObjectRepository;
+import com.kontron.qdw.repository.serial.SerialObjectRepository.SerNoMatNrKey;
 import com.kontron.qdw.repository.serial.TraceBoMItemRepository;
 import com.kontron.qdw.repository.serial.TraceBoMRepository;
-import com.kontron.qdw.repository.serial.SerialObjectRepository.SerNoMatNrKey;
 import com.kontron.util.text.StringUtil;
 
 import jakarta.ejb.EJB;
@@ -75,39 +75,6 @@ public abstract class AbstractTBImportServiceBean<TB extends TraceBoMTypeIF<TBI>
 
     /**
      * Find material revision and tries to create it if not be found.
-     * 
-     * @param defaultPlant Da die Methode in einer Schleife aufgerufen wird, sollte das Default-Werk nur einmal geholt werden.
-     *
-     * @throws Exception if revision need to be created but material cannot be found
-     */
-    MaterialRevision findMaterialRevision(String materialNumber, String revisionNumber, Plant defaultPlant) throws Exception {
-        // TODO: traceBoM muss mit plant der Revision geliefert werden
-        // Hinweis: im alten Code wurde eine Liste bis zwei Einträgen gesucht, um feststellen zu können, ob die Revisionsnummer eindeutig ist.
-        // Dazu gibt es einen Datenbankconstraint. Es wird nun jedoch auch nach Revisionen mit Zeitstempel gesucht, um die letzte Revision zu erhalten.
-        MaterialRevision materialRevision = materialRevisionManager.getLastMaterialRevisionByMatNr(
-                materialNumber, DEFAULT_PLANT_CODE, revisionNumber);
-
-
-        if (materialRevision == null) {
-            materialRevision = new MaterialRevision();
-            materialRevision.setRevisionNumber(revisionNumber);
-            materialRevision.setMaterial(materialManager.findByMaterialNumber(materialNumber));
-            materialRevision.setPlant(defaultPlant);
-
-            if (materialRevision.getMaterial() != null) {
-                materialRevision = materialRevisionManager.persist(materialRevision, true, true);
-            }
-            else {
-                throw new Exception("Material '" + materialNumber + "' does not exist, therefore revision '"
-                        + revisionNumber + "' could not be created.");
-            }
-        }
-
-        return materialRevision;
-    }
-
-    /**
-     * Find material revision and tries to create it if not be found.
      *
      * @param defaultPlant Da die Methode in einer Schleife aufgerufen wird, sollte das Default-Werk nur einmal geholt werden.
      * 
@@ -138,38 +105,6 @@ public abstract class AbstractTBImportServiceBean<TB extends TraceBoMTypeIF<TBI>
         return materialRevision;
     }
 
-    /**
-     * Find serial object and tries to create it if not be found.
-     *
-     * @throws Exception if search was not unique
-     */
-    SerialObject findSerialObject(String serialNumber, Material material,
-            String custSerialNumber, String prodOrderNr, LocalDate parsedProdDate) throws Exception {
-
-        SerialObject serialObject;
-        try {
-            serialObject = serObjManager.findBySerialNumberAndMaterialNr(serialNumber, material.getMaterialNumber());
-        }
-        catch (IllegalStateException ise) {
-            throw new Exception("SerialObject for serial number " + serialNumber
-                    + " and material number " + material.getMaterialNumber() + " is not unique.");
-        }
-
-        if (serialObject == null) {
-            serialObject = new SerialObject();
-
-            serialObject.setSerialNumber(serialNumber);
-            serialObject.setMaterial(material);
-            serialObject.setCustomerSerialNumber(StringUtil.removeLeadingZeroIfNumber(custSerialNumber));
-            serialObject.setProductionOrderNumber(prodOrderNr);
-
-            serialObject.setAssemblyDate(parsedProdDate);
-
-            serialObject = serObjManager.persist(serialObject, true, true);
-        }
-
-        return serialObject;
-    }
 
     /**
      * Find serial object and tries to create it if not be found.
@@ -198,10 +133,10 @@ public abstract class AbstractTBImportServiceBean<TB extends TraceBoMTypeIF<TBI>
     }
 
 
-
     /** Create a new trace BoM */
     TraceBoM createTraceBoM(TB trBoMImported, TBH trBoMHeaderImported, Supplier supplier,
-            LocalDate parsedProdDate, MaterialRevision materialRevision, List<String> illegalRatioMsgs) {
+            LocalDate parsedProdDate, MaterialRevision materialRevision, List<String> illegalRatioMsgs,
+            Map<String, Material> materialPerSAPNr) {
         TraceBoM traceBoM = new TraceBoM();
         traceBoM.setDeliveryNoteNumber(trBoMHeaderImported.getDeliveryNoteNumber());
         traceBoM.setLotNumber(trBoMHeaderImported.getLotNumber());
@@ -213,23 +148,70 @@ public abstract class AbstractTBImportServiceBean<TB extends TraceBoMTypeIF<TBI>
         traceBoM = trBoMManager.persist(traceBoM, true, true);
 
         // Add all trace BoM items to trace BoM
-        importTraceBoMItems(traceBoM, trBoMImported, trBoMHeaderImported, illegalRatioMsgs);
+        importTraceBoMItems(traceBoM, trBoMImported, trBoMHeaderImported, materialPerSAPNr, illegalRatioMsgs);
         return traceBoM;
     }
 
+
+    LocalDate parseToLocalDate(String dateText) throws Exception {
+        if (StringUtils.isBlank(dateText)) {
+            throw new Exception("Production date is not set.");
+        }
+        try {
+            return LocalDateTime.parse(dateText, FLEXIBLE_FORMATTER).toLocalDate();
+        }
+        catch (DateTimeParseException dtpe) {
+            throw new Exception("Production date '" + dateText + "' has no accepted format.");
+        }
+    }
+
+
+    String correctRevNr(String revNoImported) {
+        if (revNoImported.contains(REVISION_NO_SUFFIX)) {
+            return revNoImported;
+        }
+        return revNoImported + REVISION_NO_SUFFIX;
+    }
+
+
+    void sendIllegalRatioMail(TBH trBoMHeaderImported, List<String> illegalRatioMsgs) {
+        if (illegalRatioMsgs.isEmpty()) {
+            return;
+        }
+
+        String subject = Constants.APP_ENV + "Illegal material ratio warning for delivery note no. "
+                + trBoMHeaderImported.getDeliveryNoteNumber();
+        List<String> receivers = Arrays.stream(Constants.getMailRecipientIllegalRatioWarning().split(";"))
+                .map(String::trim)
+                .collect(Collectors.toList());
+
+        try {
+            MailMessage msg = new MailMessage();
+            msg.setTo(receivers);
+            msg.setSubject(subject);
+            msg.setMessage(String.join("\n", illegalRatioMsgs));
+
+            MailServiceFacade.sendMail(msg);
+        }
+        catch (Exception mailException) {
+            mailException.printStackTrace();
+        }
+    }
+
+
+
     /** Import trace BoM items */
     private void importTraceBoMItems(TraceBoM trBoMPersisted, TB trBoMImported, TBH trBoMHeaderImported,
-            List<String> illegalRatioMsgs) {
+            Map<String, Material> materialPerSAPNr, List<String> illegalRatioMsgs) {
         int totalSize = trBoMImported.getTraceBoMItems().size();
         int illegalItemCount = 0;
         for (TBI trBoMItemImported : trBoMImported.getTraceBoMItems()) {
-            String matSapNrImported = trBoMItemImported.getMaterialSapNumber().replace("-", "");
-            Material material = materialManager.findBySapNumber(matSapNrImported);
+            Material material = materialPerSAPNr.get(trBoMItemImported.getMaterialSapNumber());
 
             if (material == null) {
                 IllegalTraceBoMItem illegalItem = new IllegalTraceBoMItem();
                 illegalItem.setTraceBom(trBoMPersisted);
-                illegalItem.setMaterialNumber(matSapNrImported);
+                illegalItem.setMaterialNumber(trBoMItemImported.getMaterialSapNumber());
                 illegalItem.setManufacturer(trBoMItemImported.getManufacturerName());
                 illegalItem.setManufacturerRevision("");
                 illegalItem.setOrderCode(trBoMItemImported.getOrderCode());
@@ -282,51 +264,6 @@ public abstract class AbstractTBImportServiceBean<TB extends TraceBoMTypeIF<TBI>
         msg.append("Supplier: ").append(trBoMHeaderImported.getSupplierCode()).append("\n");
 
         return msg.toString();
-    }
-
-    void sendIllegalRatioMail(TBH trBoMHeaderImported, List<String> illegalRatioMsgs) {
-        if (illegalRatioMsgs.isEmpty()) {
-            return;
-        }
-
-        String subject = Constants.APP_ENV + "Illegal material ratio warning for delivery note no. "
-                + trBoMHeaderImported.getDeliveryNoteNumber();
-        List<String> receivers = Arrays.stream(Constants.getMailRecipientIllegalRatioWarning().split(";"))
-                .map(String::trim)
-                .collect(Collectors.toList());
-
-        try {
-            MailMessage msg = new MailMessage();
-            msg.setTo(receivers);
-            msg.setSubject(subject);
-            msg.setMessage(String.join("\n", illegalRatioMsgs));
-
-            MailServiceFacade.sendMail(msg);
-        }
-        catch (Exception mailException) {
-            mailException.printStackTrace();
-        }
-    }
-
-
-
-    LocalDate parseToLocalDate(String dateText) throws Exception {
-        if (StringUtils.isBlank(dateText)) {
-            throw new Exception("Production date is not set.");
-        }
-        try {
-            return LocalDateTime.parse(dateText, FLEXIBLE_FORMATTER).toLocalDate();
-        }
-        catch (DateTimeParseException dtpe) {
-            throw new Exception("Production date '" + dateText + "' has no accepted format.");
-        }
-    }
-
-    String correctRevNr(String revNoImported) {
-        if (revNoImported.contains(REVISION_NO_SUFFIX)) {
-            return revNoImported;
-        }
-        return revNoImported + REVISION_NO_SUFFIX;
     }
 
 }

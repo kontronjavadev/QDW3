@@ -51,7 +51,7 @@ public class SerialObjectRepository extends AbstractRepository<SerialObject, Lon
     public record SerNoJeMatIdFilter(Long materialId, Set<String> serialNumbers) {
     }
 
-    public record SerNoMatNrKey(String matNr, String serialNumber) {
+    public record SerNoMatNrKey(String serialNumber, String matNr) {
     }
 
 
@@ -168,7 +168,7 @@ public class SerialObjectRepository extends AbstractRepository<SerialObject, Lon
         for (SerialObject candidate : bulkResults) {
             String candMatNr = candidate.getMaterial().getMaterialNumber();
             String candSerNr = candidate.getSerialNumber();
-            SerNoMatNrKey candidateKey = new SerNoMatNrKey(candMatNr, candSerNr);
+            SerNoMatNrKey candidateKey = new SerNoMatNrKey(candSerNr, candMatNr);
 
             // Prüfen, ob dieses Paar überhaupt angefragt wurde
             if (requestedKeys.contains(candidateKey)) {

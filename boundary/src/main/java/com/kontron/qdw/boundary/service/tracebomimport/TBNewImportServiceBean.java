@@ -11,6 +11,7 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,9 +35,10 @@ import com.kontron.qdw.domain.material.Material;
 import com.kontron.qdw.domain.material.MaterialRevision;
 import com.kontron.qdw.domain.serial.SerialObject;
 import com.kontron.qdw.domain.serial.TraceBoM;
-import com.kontron.qdw.repository.material.MaterialRevisionRepository;
 import com.kontron.qdw.repository.base.PlantRepository;
 import com.kontron.qdw.repository.base.SupplierRepository;
+import com.kontron.qdw.repository.material.MaterialRepository;
+import com.kontron.qdw.repository.material.MaterialRevisionRepository;
 import com.kontron.qdw.repository.material.MaterialRevisionRepository.MatRevKey;
 import com.kontron.qdw.repository.serial.SerialObjectRepository;
 import com.kontron.qdw.repository.serial.SerialObjectRepository.SerNoMatNrKey;
@@ -76,6 +78,8 @@ public class TBNewImportServiceBean extends AbstractTBImportServiceBean<NewTrace
     private SupplierRepository supplierManager;
     @EJB
     private PlantRepository plantManager;
+    @EJB
+    private MaterialRepository materialManager;
     @EJB
     private MaterialRevisionRepository matRevManager;
     @EJB
@@ -235,6 +239,8 @@ public class TBNewImportServiceBean extends AbstractTBImportServiceBean<NewTrace
     private ImportResult saveTraceBoM(File sourceFile, NewTraceBoMRootType importedTrBoMRoot) {
         // Import trace BoM
         NewTraceBoMHeaderType trBoMHeaderImported = importedTrBoMRoot.getHeader();
+        List<NewTraceBoMType> importedTraceBoMs = importedTrBoMRoot.getSerialObjects();
+        batchNormalisieren(importedTraceBoMs);
         List<String> illegalRatioMsgs = new ArrayList<>();
 
         try {
@@ -242,8 +248,6 @@ public class TBNewImportServiceBean extends AbstractTBImportServiceBean<NewTrace
             Plant defaultPlant = plantManager.getReference(DEFAULT_PLANT_CODE);
 
             LocalDate parsedProdDate = parseToLocalDate(trBoMHeaderImported.getProductionDate());
-            List<NewTraceBoMType> importedTraceBoMs = importedTrBoMRoot.getSerialObjects();
-            batchNormalisieren(importedTraceBoMs);
 
 
             // vorab im bulk Revisionen holen
@@ -260,18 +264,21 @@ public class TBNewImportServiceBean extends AbstractTBImportServiceBean<NewTrace
             Map<SerNoMatNrKey, SerialObject> serObjPerKey = serObjManager.findBySerialNumberAndMaterialNrBulk(requestedSerObjs);
             logger.info("{} von {} SerObj im bulk geholt", serObjPerKey.size(), requestedSerObjs.size());
 
+            // vorab im bulk Material der BoMItems holen
+            List<String> requestedSapNr = importedTraceBoMs.stream()
+                    .map(NewTraceBoMType::getTraceBoMItems)
+                    .flatMap(Collection::stream)
+                    .map(NewTraceBoMItemType::getMaterialSapNumber)
+                    .distinct()
+                    .toList();
+            Map<String, Material> materialPerSAPNr = materialManager.findBySAPNumbers(requestedSapNr, false);
+            logger.info("{} von {} Materialien nach SAP-Nr. im bulk geholt", materialPerSAPNr.size(), requestedSapNr.size());
+
 
             // Map an bereits persistierten TraceBoM per NewTraceBoMType
             Map<NewTraceBoMType, TraceBoM> persistedBoMPerImportedBoM = new HashMap<>();
 
             for (NewTraceBoMType importedTraceBoM : importedTraceBoMs) {
-                /* 
-                17:54:17,993 ERROR [com.kontron.qdw.boundary.service.tracebomimport.TBNewImportServiceBean] (EJB default - 5) 
-                Error while processing trace file 3180057134-10.xml: could not execute statement 
-                [Duplicate entry 'OBDR80255-365626' for key 'serial_object_tab.uk_serial_object_snr_mat'] 
-                [insert into qdw.serial_object_tab (assembly_date,creation_date,customer_serial_number,last_update,material,parent_object,production_order_number,serial_number,trace_bom,version) values (?,?,?,?,?,?,?,?,?,?)]
-                */
-
                 MaterialRevision materialRevision = findMaterialRevision(importedTraceBoM.getMaterialNumber(), importedTraceBoM.getRevisionNumber(),
                         lastMatRevPerKey, defaultPlant);
                 Material material = materialRevision.getMaterial();
@@ -288,7 +295,7 @@ public class TBNewImportServiceBean extends AbstractTBImportServiceBean<NewTrace
 
                 if (persistedBoM == null) {
                     persistedBoM = createTraceBoM(importedTraceBoM, trBoMHeaderImported, supplier, parsedProdDate, materialRevision,
-                            illegalRatioMsgs);
+                            illegalRatioMsgs, materialPerSAPNr);
                     serialObject.setTraceBom(persistedBoM);
                     persistedBoMPerImportedBoM.put(importedTraceBoM, persistedBoM);
                 }
@@ -308,6 +315,8 @@ public class TBNewImportServiceBean extends AbstractTBImportServiceBean<NewTrace
         }
     }
 
+
+
     private void batchNormalisieren(List<NewTraceBoMType> importedTraceBoMs) {
         importedTraceBoMs.forEach(importedTraceBoM -> {
             // Some CMs only deliver the Rev6 field. In order to find a proper revision the alternative number must be added!
@@ -320,6 +329,10 @@ public class TBNewImportServiceBean extends AbstractTBImportServiceBean<NewTrace
             if (importedTraceBoM.getSerialNumber().isEmpty() && !importedTraceBoM.getCustomerSerialNumber().isEmpty()) {
                 importedTraceBoM.setSerialNumber(importedTraceBoM.getCustomerSerialNumber());
             }
+
+            importedTraceBoM.getTraceBoMItems().forEach(importedTBItem -> {
+                importedTBItem.setMaterialSapNumber(importedTBItem.getMaterialSapNumber().replace("-", ""));
+            });
         });
     }
 
