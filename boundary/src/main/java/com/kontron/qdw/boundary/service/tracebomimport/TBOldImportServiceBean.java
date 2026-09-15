@@ -14,6 +14,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
@@ -233,19 +234,18 @@ public class TBOldImportServiceBean extends AbstractTBImportServiceBean<TraceBoM
 
 
             // vorab im bulk SerialObjects holen
-            List<SerNoMatNrKey> requestedSerObjs = importedTraceBoMs.stream()
+            Set<SerNoMatNrKey> requestedSerObjs = importedTraceBoMs.stream()
                     .map(so -> new SerNoMatNrKey(so.getSerialNumber(), importedTrBoMRevision.getMaterialNumber()))
-                    .collect(Collectors.toList());
+                    .collect(Collectors.toSet());
             Map<SerNoMatNrKey, SerialObject> serObjPerKey = serObjManager.findBySerialNumberAndMaterialNrBulk(requestedSerObjs);
             logger.info("{} von {} SerObj im bulk geholt", serObjPerKey.size(), requestedSerObjs.size());
 
             // vorab im bulk Material der BoMItems holen
-            List<String> requestedSapNr = importedTraceBoMs.stream()
+            Set<String> requestedSapNr = importedTraceBoMs.stream()
                     .map(TraceBoMMappingType::getTraceBoMItems)
                     .flatMap(Collection::stream)
                     .map(TraceBoMItemMappingType::getMaterialSapNumber)
-                    .distinct()
-                    .toList();
+                    .collect(Collectors.toSet());
             Map<String, Material> materialPerSAPNr = materialManager.findBySAPNumbers(requestedSapNr, false);
             logger.info("{} von {} Materialien nach SAP-Nr. im bulk geholt", materialPerSAPNr.size(), requestedSapNr.size());
 

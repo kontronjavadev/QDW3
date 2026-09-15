@@ -15,6 +15,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.xml.validation.Schema;
@@ -251,26 +252,25 @@ public class TBNewImportServiceBean extends AbstractTBImportServiceBean<NewTrace
 
 
             // vorab im bulk Revisionen holen
-            List<MatRevKey> requestedMatRevs = importedTraceBoMs.stream()
+            Set<MatRevKey> requestedMatRevs = importedTraceBoMs.stream()
                     .map(so -> new MatRevKey(so.getMaterialNumber(), DEFAULT_PLANT_CODE, so.getRevisionNumber()))
-                    .collect(Collectors.toList());
+                    .collect(Collectors.toSet());
             Map<MatRevKey, MaterialRevision> lastMatRevPerKey = matRevManager.getLastMaterialRevisionByMatNr(requestedMatRevs);
             logger.info("{} von {} Revisionen im bulk geholt", lastMatRevPerKey.size(), requestedMatRevs.size());
 
             // vorab im bulk SerialObjects holen
-            List<SerNoMatNrKey> requestedSerObjs = importedTraceBoMs.stream()
+            Set<SerNoMatNrKey> requestedSerObjs = importedTraceBoMs.stream()
                     .map(so -> new SerNoMatNrKey(so.getSerialNumber(), so.getMaterialNumber()))
-                    .collect(Collectors.toList());
+                    .collect(Collectors.toSet());
             Map<SerNoMatNrKey, SerialObject> serObjPerKey = serObjManager.findBySerialNumberAndMaterialNrBulk(requestedSerObjs);
             logger.info("{} von {} SerObj im bulk geholt", serObjPerKey.size(), requestedSerObjs.size());
 
             // vorab im bulk Material der BoMItems holen
-            List<String> requestedSapNr = importedTraceBoMs.stream()
+            Set<String> requestedSapNr = importedTraceBoMs.stream()
                     .map(NewTraceBoMType::getTraceBoMItems)
                     .flatMap(Collection::stream)
                     .map(NewTraceBoMItemType::getMaterialSapNumber)
-                    .distinct()
-                    .toList();
+                    .collect(Collectors.toSet());
             Map<String, Material> materialPerSAPNr = materialManager.findBySAPNumbers(requestedSapNr, false);
             logger.info("{} von {} Materialien nach SAP-Nr. im bulk geholt", materialPerSAPNr.size(), requestedSapNr.size());
 

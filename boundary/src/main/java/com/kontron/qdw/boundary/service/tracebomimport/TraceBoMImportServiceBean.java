@@ -689,7 +689,10 @@ public class TraceBoMImportServiceBean {
     }
 
     private boolean wasAtLeastOneConcreteProcessTaskPerformed(Optional<ITaskNodeLog> tsk) {
-        return tsk.map(ITaskNodeLog::getSubTasks).stream()
+        if (tsk.isEmpty()) {
+            return false;
+        }
+        return tsk.get().getSubTasks().stream()
                 .filter(ITaskNodeLog.class::isInstance)
                 .map(ITaskNodeLog.class::cast)
                 .anyMatch(ITaskNodeLog::wasAtLeastOneConcreteTaskPerformed);

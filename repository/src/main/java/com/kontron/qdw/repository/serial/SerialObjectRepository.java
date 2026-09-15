@@ -139,7 +139,7 @@ public class SerialObjectRepository extends AbstractRepository<SerialObject, Lon
         throw new IllegalStateException("Non unique result!");
     }
 
-    public Map<SerNoMatNrKey, SerialObject> findBySerialNumberAndMaterialNrBulk(List<SerNoMatNrKey> keys) {
+    public Map<SerNoMatNrKey, SerialObject> findBySerialNumberAndMaterialNrBulk(Collection<SerNoMatNrKey> keys) {
         if (keys == null || keys.isEmpty()) {
             return Collections.emptyMap();
         }
