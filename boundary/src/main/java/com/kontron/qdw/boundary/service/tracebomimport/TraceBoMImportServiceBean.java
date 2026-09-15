@@ -516,11 +516,11 @@ public class TraceBoMImportServiceBean {
     }
 
     private void cleanUp(SftpAccess ftpAccess, String localManufacturerFolder, FolderConfig folderConfig,
-            Map<File, List<File>> zipToExtractedFilesMapping, File inputFile, ImportResult importResult) throws ImportAbortedException {
+            Map<File, List<File>> zipToExtractedFilesMapping, File sourceFile, ImportResult importResult) throws ImportAbortedException {
         // check if the file originates from a zip file
         Optional<Entry<File, List<File>>> zipFileEntrySet = zipToExtractedFilesMapping.entrySet().stream()
                 .filter(e -> e.getValue().stream()
-                        .anyMatch(f -> f.equals(inputFile)))
+                        .anyMatch(f -> f.equals(sourceFile)))
                 .findFirst();
 
         if (zipFileEntrySet.isPresent()) {
@@ -529,9 +529,9 @@ public class TraceBoMImportServiceBean {
             List<File> filesOfZipFile = zipFileEntrySet.get().getValue();
 
             // Importierte Datei aus der Liste des gemerkten Dateiinhalts der zip-Datei entfernen.
-            filesOfZipFile.remove(inputFile);
+            filesOfZipFile.remove(sourceFile);
             // Datei physikalisch löschen
-            inputFile.delete();
+            sourceFile.delete();
 
             // Im Falle eines Fehlers, die zip-Datei in den Fehler-Ordner verschieben.
             // Da die Dateien bereits entpackt sind, könnte eine zuvor importierte Datei ebenfalls fehlerhaft
@@ -559,16 +559,16 @@ public class TraceBoMImportServiceBean {
             // Importierte Datei wurde direkt herunter geladen und kam NICHT aus einer heruntergeladenen zip-Datei.
             if (importResult.success()) {
                 // Im Erfolgsfall in den Backup-Ordner schieben.
-                moveFile(inputFile, new File(folderConfig.backupTraceBoMFolder.getAbsolutePath()
-                        + File.separator + localManufacturerFolder + File.separator + inputFile.getName()));
+                moveFile(sourceFile, new File(folderConfig.backupTraceBoMFolder.getAbsolutePath()
+                        + File.separator + localManufacturerFolder + File.separator + sourceFile.getName()));
             }
             else {
                 // Im Fehlerfall in den Fehler-Ordner schieben.
-                moveFile(inputFile, new File(folderConfig.errorTraceBoMFolder.getAbsolutePath()
-                        + File.separator + localManufacturerFolder + File.separator + inputFile.getName()));
+                moveFile(sourceFile, new File(folderConfig.errorTraceBoMFolder.getAbsolutePath()
+                        + File.separator + localManufacturerFolder + File.separator + sourceFile.getName()));
             }
 
-            deleteFtpFile(ftpAccess, localManufacturerFolder, inputFile.getName());
+            deleteFtpFile(ftpAccess, localManufacturerFolder, sourceFile.getName());
         }
     }
 
