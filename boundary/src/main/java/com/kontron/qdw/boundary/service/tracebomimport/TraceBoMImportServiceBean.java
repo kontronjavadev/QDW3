@@ -640,7 +640,8 @@ public class TraceBoMImportServiceBean {
         }
 
         baseMsg += (tsk.isSuccess() ? " successfully" : " with errors");
-        logger.info(baseMsg);
+        List<String> to = List.of(Constants.getMailRecipientLogistic(), Constants.getMailRecipient());
+        logger.atInfo().setMessage(baseMsg + ", going to send information mail to {}").addArgument(() -> String.join(", ", to)).log();
 
         long duration = tsk.getEndTime() - tsk.getStartTime();
         String subjectText = Constants.APP_ENV + ": " + baseMsg;
@@ -652,7 +653,6 @@ public class TraceBoMImportServiceBean {
         importLog.append("Details:\n");
         importLog.append(tsk.getTaskHierarchicalDetailInformation()).append("\n\n");
 
-        List<String> to = List.of(Constants.getMailRecipientLogistic(), Constants.getMailRecipient());
         // schicke Informationsmail
         try {
             MailServiceFacade.sendMail(to, subjectText, importLog.toString());
