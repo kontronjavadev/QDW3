@@ -130,19 +130,19 @@ public class TraceBoMImportView extends CopyClipboard implements Serializable {
 
 
     public void runImport() {
-        importServiceBean.runImport(selectedFolders.size() == folders.size()
+        importServiceBean.runImportAsync(selectedFolders.size() == folders.size()
                 ? null
                 : selectedFolders);
     }
 
     public void runDownload() {
-        importServiceBean.runDownload(selectedFolders.size() == folders.size()
+        importServiceBean.runDownloadAsync(selectedFolders.size() == folders.size()
                 ? null
                 : selectedFolders);
     }
 
     public void runProcess() {
-        importServiceBean.runProcess(selectedFolders.size() == folders.size()
+        importServiceBean.runProcessAsync(selectedFolders.size() == folders.size()
                 ? null
                 : selectedFolders);
     }

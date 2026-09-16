@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -39,7 +40,9 @@ import com.kontron.util.log.TaskNodeLog;
 import jakarta.annotation.security.PermitAll;
 import jakarta.ejb.Asynchronous;
 import jakarta.ejb.EJB;
-import jakarta.ejb.Stateless;
+import jakarta.ejb.Lock;
+import jakarta.ejb.LockType;
+import jakarta.ejb.Singleton;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 
@@ -49,7 +52,8 @@ import jakarta.ejb.TransactionAttributeType;
  * 2026 — © Kontron AG
  * @author Raymund Achner, achner.com
  */
-@Stateless
+@Singleton
+@Lock(LockType.READ) // Zwingend erforderlich, überschreibt das implizite WRITE-Lock des @Singleton!
 public class TraceBoMImportServiceBean {
     /*
      * Timeout konfigurieren:
@@ -59,6 +63,9 @@ public class TraceBoMImportServiceBean {
      */
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
+    // Unser eigener, Thread-sicherer Wächter
+    private final AtomicBoolean isRunning = new AtomicBoolean(false);
 
     private static final String TASKNAME_IMPORT = "Trace-BoM import";
     private static final String TASKNAME_DOWNLOAD = "Trace-BoM download";
@@ -95,173 +102,228 @@ public class TraceBoMImportServiceBean {
     }
 
 
+    /** Asynchroner Einstieg für die Administrationsoberfläche */
     @Asynchronous
     @PermitAll
     @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
-    public void runImport() {
+    public void runImportAsync() {
         runImport(null);
     }
 
+    /** Synchroner Einstieg für den Scheduler */
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+    public void runImportSched() {
+        runImport(null);
+    }
+
+    /** Asynchroner Einstieg für die Administrationsoberfläche */
     @Asynchronous
     @PermitAll
     @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
-    public void runImport(List<String> selectedFolders) {
+    public void runImportAsync(List<String> selectedFolders) {
+        runImport(selectedFolders);
+    }
+
+    /** Asynchroner Einstieg für die Administrationsoberfläche */
+    @Asynchronous
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+    public void runDownloadAsync(List<String> selectedFolders) {
+        runDownload(selectedFolders);
+    }
+
+    /** Asynchroner Einstieg für die Administrationsoberfläche */
+    @Asynchronous
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+    public void runProcessAsync(List<String> selectedFolders) {
+        runProcess(selectedFolders);
+    }
+
+
+
+    private void runImport(List<String> selectedFolders) {
         // Original: "splitNewFiles()"
         if (!schedulerService.isExecuteImport()) {
             return;
         }
 
-        TaskNodeLog mainTask = initImport();
-
-        // ---> == execTask(), nur dass beim normalen Import noch eine Klammer darüber ist
-        SftpAccess ftpAccess;
-        FolderConfig folderConfig;
-        List<String> rootFolders = null;
-        try {
-            ftpAccess = createSFTPClient();
-            folderConfig = setupFolders();
-            rootFolders = CollectionUtils.isEmpty(selectedFolders)
-                    ? getRootFolders(ftpAccess)
-                    : new ArrayList<>(selectedFolders);
-        }
-        catch (Exception e) {
-            TaskLeafLog tskInit = mainTask.createNewSubTaskLeaf("Run import", "initializing sftp access for import");
-            tskInit.finishTaskWithError(e);
-            mainTask.abortTask();
-            finishImport(mainTask);
+        // Atomare Prüfung und Setzen des Locks
+        if (!isRunning.compareAndSet(false, true)) {
+            logger.warn("Job läuft bereits!");
             return;
         }
 
+        TaskNodeLog mainTask = initImport();
 
-        // Beachte: jeder Vertrags-Fertiger hat seinen eigenen Unterordner
-        // Alle Dateien runter laden
-        TaskNodeLog downloadTask = mainTask.createNewSubTaskNode(TASKNAME_DOWNLOAD);
-        for (String ftpManufacturerFolder : rootFolders) {
+        try {
+            // ---> == execTask(), nur dass beim normalen Import noch eine Klammer darüber ist
+            SftpAccess ftpAccess;
+            FolderConfig folderConfig;
+            List<String> rootFolders = null;
             try {
-                downloadFilesFromFolder(downloadTask, ftpAccess, ftpManufacturerFolder, folderConfig);
+                ftpAccess = createSFTPClient();
+                folderConfig = setupFolders();
+                rootFolders = CollectionUtils.isEmpty(selectedFolders)
+                        ? getRootFolders(ftpAccess)
+                        : new ArrayList<>(selectedFolders);
             }
             catch (Exception e) {
-                downloadTask.addSubTask(new FileImportAbortedWithErrorsLog("folder " + ftpManufacturerFolder, "Error when downloading files"));
-                break;
+                TaskLeafLog tskInit = mainTask.createNewSubTaskLeaf("Run import", "initializing sftp access for import");
+                tskInit.finishTaskWithError(e);
+                mainTask.abortTask();
+                finishImport(mainTask);
+                return;
+            }
+
+
+            // Beachte: jeder Vertrags-Fertiger hat seinen eigenen Unterordner
+            // Alle Dateien runter laden
+            TaskNodeLog downloadTask = mainTask.createNewSubTaskNode(TASKNAME_DOWNLOAD);
+            for (String ftpManufacturerFolder : rootFolders) {
+                try {
+                    downloadFilesFromFolder(downloadTask, ftpAccess, ftpManufacturerFolder, folderConfig);
+                }
+                catch (Exception e) {
+                    downloadTask.addSubTask(new FileImportAbortedWithErrorsLog("folder " + ftpManufacturerFolder, "Error when downloading files"));
+                    break;
+                }
+            }
+
+
+            // alle heruntergeladenen Dateien ggf. entpacken und verarbeiten
+            // (Es können auch bereits Dateien im Verzeichnis liegen, die nicht gerade erst runtergeladen wurden.)
+            TaskNodeLog processTask = mainTask.createNewSubTaskNode(TASKNAME_PROCESS);
+            for (String ftpManufacturerFolder : rootFolders) {
+                TaskNodeLog folderTask = processTask.createNewSubTaskNode("folder " + ftpManufacturerFolder);
+                try {
+                    processFilesInFolder(folderTask, ftpAccess, ftpManufacturerFolder, folderConfig);
+                    folderTask.finishTask();
+                }
+                catch (Exception e) {
+                    folderTask.addSubTask(new FileImportAbortedWithErrorsLog("folder " + ftpManufacturerFolder, "Error when processing files"));
+                    folderTask.abortTask();
+                    break;
+                }
             }
         }
-
-
-        // alle heruntergeladenen Dateien ggf. entpacken und verarbeiten
-        // (Es können auch bereits Dateien im Verzeichnis liegen, die nicht gerade erst runtergeladen wurden.)
-        TaskNodeLog processTask = mainTask.createNewSubTaskNode(TASKNAME_PROCESS);
-        for (String ftpManufacturerFolder : rootFolders) {
-            TaskNodeLog folderTask = processTask.createNewSubTaskNode("folder " + ftpManufacturerFolder);
-            try {
-                processFilesInFolder(folderTask, ftpAccess, ftpManufacturerFolder, folderConfig);
-                folderTask.finishTask();
-            }
-            catch (Exception e) {
-                folderTask.addSubTask(new FileImportAbortedWithErrorsLog("folder " + ftpManufacturerFolder, "Error when processing files"));
-                folderTask.abortTask();
-                break;
-            }
+        finally {
+            isRunning.set(false);
         }
-
 
         // <--- execTask()
         finishImport(mainTask);
     }
 
-
-    @Asynchronous
-    @PermitAll
-    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
-    public void runDownload(List<String> selectedFolders) {
+    private void runDownload(List<String> selectedFolders) {
         if (!schedulerService.isExecuteImport()) {
+            return;
+        }
+
+        // Atomare Prüfung und Setzen des Locks
+        if (!isRunning.compareAndSet(false, true)) {
+            logger.warn("Job läuft bereits!");
             return;
         }
 
         TaskNodeLog downloadTask = initDownload();
 
-        // ---> == execTask(), nur dass beim normalen Import noch eine Klammer darüber ist
-        SftpAccess ftpAccess;
-        FolderConfig folderConfig;
-        List<String> rootFolders = null;
         try {
-            ftpAccess = createSFTPClient();
-            folderConfig = setupFolders();
-            rootFolders = CollectionUtils.isEmpty(selectedFolders)
-                    ? getRootFolders(ftpAccess)
-                    : new ArrayList<>(selectedFolders);
-        }
-        catch (Exception e) {
-            TaskLeafLog tskInit = downloadTask.createNewSubTaskLeaf("initializing sftp access for download");
-            tskInit.finishTaskWithError(e);
-            downloadTask.abortTask();
-            finishImport(downloadTask);
-            return;
-        }
-
-
-        // Beachte: jeder Vertrags-Fertiger hat seinen eigenen Unterordner
-        for (String ftpManufacturerFolder : rootFolders) {
+            // ---> == execTask(), nur dass beim normalen Import noch eine Klammer darüber ist
+            SftpAccess ftpAccess;
+            FolderConfig folderConfig;
+            List<String> rootFolders = null;
             try {
-                downloadFilesFromFolder(downloadTask, ftpAccess, ftpManufacturerFolder, folderConfig);
+                ftpAccess = createSFTPClient();
+                folderConfig = setupFolders();
+                rootFolders = CollectionUtils.isEmpty(selectedFolders)
+                        ? getRootFolders(ftpAccess)
+                        : new ArrayList<>(selectedFolders);
             }
             catch (Exception e) {
-                downloadTask.addSubTask(new FileImportAbortedWithErrorsLog("folder " + ftpManufacturerFolder, "Error when downloading files"));
-                break;
+                TaskLeafLog tskInit = downloadTask.createNewSubTaskLeaf("initializing sftp access for download");
+                tskInit.finishTaskWithError(e);
+                downloadTask.abortTask();
+                finishImport(downloadTask);
+                return;
             }
+
+
+            // Beachte: jeder Vertrags-Fertiger hat seinen eigenen Unterordner
+            for (String ftpManufacturerFolder : rootFolders) {
+                try {
+                    downloadFilesFromFolder(downloadTask, ftpAccess, ftpManufacturerFolder, folderConfig);
+                }
+                catch (Exception e) {
+                    downloadTask.addSubTask(new FileImportAbortedWithErrorsLog("folder " + ftpManufacturerFolder, "Error when downloading files"));
+                    break;
+                }
+            }
+        }
+        finally {
+            isRunning.set(false);
         }
 
         // <--- execTask()
         finishImport(downloadTask);
     }
 
-
-    @Asynchronous
-    @PermitAll
-    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
-    public void runProcess(List<String> selectedFolders) {
+    private void runProcess(List<String> selectedFolders) {
         if (!schedulerService.isExecuteImport()) {
+            return;
+        }
+
+        // Atomare Prüfung und Setzen des Locks
+        if (!isRunning.compareAndSet(false, true)) {
+            logger.warn("Job läuft bereits!");
             return;
         }
 
         TaskNodeLog processTask = initProcess();
 
-        // ---> == execTask(), nur dass beim normalen Import noch eine Klammer darüber ist
-        SftpAccess ftpAccess = null;
-        FolderConfig folderConfig;
-        List<String> rootFolders = null;
         try {
-            if (Constants.IS_PROD_ENVIRONMENT) {
-                // Zugang zum SFTP wird beim Aufruf von processFilesInFolder nur benötigt,
-                // um die Dateien auf dem SFTP zu löschen und das macht nur die Produktivumgebung,
-                // oder um ggf. die vollständige Ordnerliste zu holen (wird dort aufgebaut, falls nötig).
-                ftpAccess = createSFTPClient();
-            }
-            folderConfig = setupFolders();
-            rootFolders = CollectionUtils.isEmpty(selectedFolders)
-                    ? getRootFolders(ftpAccess)
-                    : new ArrayList<>(selectedFolders);
-        }
-        catch (Exception e) {
-            TaskLeafLog tskInit = processTask.createNewSubTaskLeaf("initializing sftp access for deleting files after processed");
-            tskInit.finishTaskWithError(e);
-            processTask.abortTask();
-            finishImport(processTask);
-            return;
-        }
-
-
-        // Beachte: jeder Vertrags-Fertiger hat seinen eigenen Unterordner
-        for (String ftpManufacturerFolder : rootFolders) {
-            TaskNodeLog folderTask = processTask.createNewSubTaskNode("folder " + ftpManufacturerFolder);
+            // ---> == execTask(), nur dass beim normalen Import noch eine Klammer darüber ist
+            SftpAccess ftpAccess = null;
+            FolderConfig folderConfig;
+            List<String> rootFolders = null;
             try {
-                processFilesInFolder(folderTask, ftpAccess, ftpManufacturerFolder, folderConfig);
-                folderTask.finishTask();
+                if (Constants.IS_PROD_ENVIRONMENT) {
+                    // Zugang zum SFTP wird beim Aufruf von processFilesInFolder nur benötigt,
+                    // um die Dateien auf dem SFTP zu löschen und das macht nur die Produktivumgebung,
+                    // oder um ggf. die vollständige Ordnerliste zu holen (wird dort aufgebaut, falls nötig).
+                    ftpAccess = createSFTPClient();
+                }
+                folderConfig = setupFolders();
+                rootFolders = CollectionUtils.isEmpty(selectedFolders)
+                        ? getRootFolders(ftpAccess)
+                        : new ArrayList<>(selectedFolders);
             }
             catch (Exception e) {
-                folderTask.addSubTask(new FileImportAbortedWithErrorsLog("folder " + ftpManufacturerFolder, "Error when processing files"));
-                folderTask.abortTask();
-                break;
+                TaskLeafLog tskInit = processTask.createNewSubTaskLeaf("initializing sftp access for deleting files after processed");
+                tskInit.finishTaskWithError(e);
+                processTask.abortTask();
+                finishImport(processTask);
+                return;
             }
+
+
+            // Beachte: jeder Vertrags-Fertiger hat seinen eigenen Unterordner
+            for (String ftpManufacturerFolder : rootFolders) {
+                TaskNodeLog folderTask = processTask.createNewSubTaskNode("folder " + ftpManufacturerFolder);
+                try {
+                    processFilesInFolder(folderTask, ftpAccess, ftpManufacturerFolder, folderConfig);
+                    folderTask.finishTask();
+                }
+                catch (Exception e) {
+                    folderTask.addSubTask(new FileImportAbortedWithErrorsLog("folder " + ftpManufacturerFolder, "Error when processing files"));
+                    folderTask.abortTask();
+                    break;
+                }
+            }
+        }
+        finally {
+            isRunning.set(false);
         }
 
         // <--- execTask()

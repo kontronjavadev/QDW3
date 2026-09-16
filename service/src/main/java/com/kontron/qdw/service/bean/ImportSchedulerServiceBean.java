@@ -61,7 +61,7 @@ public class ImportSchedulerServiceBean {
     @AccessTimeout(value = 5, unit = TimeUnit.MINUTES)
     public void runScheduledTraceBoMImportProd() {
         if (Constants.IS_PROD_ENVIRONMENT) {
-            traceBoMImportService.runImport();
+            traceBoMImportService.runImportSched();
         }
     }
 
@@ -77,7 +77,7 @@ public class ImportSchedulerServiceBean {
     @AccessTimeout(value = 5, unit = TimeUnit.MINUTES)
     public void runScheduledTraceBoMImportTest() {
         if (Constants.IS_TEST_ENVIRONMENT) {
-            traceBoMImportService.runImport();
+            traceBoMImportService.runImportSched();
         }
     }
 
