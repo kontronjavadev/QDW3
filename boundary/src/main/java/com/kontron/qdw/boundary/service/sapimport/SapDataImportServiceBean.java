@@ -1,6 +1,7 @@
 package com.kontron.qdw.boundary.service.sapimport;
 
 import java.lang.invoke.MethodHandles;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +23,9 @@ import com.kontron.util.log.TaskNodeLog;
 import jakarta.annotation.security.PermitAll;
 import jakarta.ejb.Asynchronous;
 import jakarta.ejb.EJB;
-import jakarta.ejb.Stateless;
+import jakarta.ejb.Lock;
+import jakarta.ejb.LockType;
+import jakarta.ejb.Singleton;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import net.sourceforge.jbizmo.commons.property.PropertyService;
@@ -33,7 +36,8 @@ import net.sourceforge.jbizmo.commons.property.PropertyService;
  * 2025 — © Kontron AG
  * @author Raymund Achner, achner.com
  */
-@Stateless
+@Singleton
+@Lock(LockType.READ) // Zwingend erforderlich, überschreibt das implizite WRITE-Lock des @Singleton!
 public class SapDataImportServiceBean {
     /*
      * Timeout konfigurieren:
@@ -43,6 +47,9 @@ public class SapDataImportServiceBean {
      */
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
+    // unser eigener, Thread-sicherer Wächter
+    private final AtomicBoolean isRunning = new AtomicBoolean(false);
 
     private static final String TASKNAME_IMPORT_REBUILD = "Import and rebuild";
     private static final String TASKNAME_IMPORT = "SAP import";
@@ -89,48 +96,258 @@ public class SapDataImportServiceBean {
 
 
 
+    /** Asynchroner Einstieg für die Administrationsoberfläche */
     @Asynchronous
     @PermitAll
     @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
-    public void runImport() {
+    public void runImportAsync() {
+        runImportSched();
+    }
+
+    /** Synchroner Einstieg für den Scheduler */
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+    public void runImportSched() {
         if (!schedulerService.isExecuteImport()) {
             return;
         }
 
+        // Atomare Prüfung und Setzen des Locks
+        if (!isRunning.compareAndSet(false, true)) {
+            logger.warn("Job läuft bereits!");
+            return;
+        }
+
         TaskNodeLog mainTask = initImportAndRebuild();
+        try {
+            TaskNodeLog taskImport = mainTask.createNewSubTaskNode(TASKNAME_IMPORT);
+            executeTask(taskImport, customerImportServiceBean);
+            executeTask(taskImport, supplierImportServiceBean);
+            executeTask(taskImport, materialImportServiceBean);
+            executeTask(taskImport, bomImportServiceBean);
 
-        TaskNodeLog taskImport = mainTask.createNewSubTaskNode(TASKNAME_IMPORT);
-        executeTask(taskImport, customerImportServiceBean);
-        executeTask(taskImport, supplierImportServiceBean);
-        executeTask(taskImport, materialImportServiceBean);
-        executeTask(taskImport, bomImportServiceBean);
+            ITaskNodeLog arrivalImportTask = executeTask(taskImport, arrivalImportServiceBean);
+            ITaskNodeLog shipmentImportTask = executeTask(taskImport, shipmentImportServiceBean);
 
-        ITaskNodeLog arrivalImportTask = executeTask(taskImport, arrivalImportServiceBean);
-        ITaskNodeLog shipmentImportTask = executeTask(taskImport, shipmentImportServiceBean);
-
-        taskImport.finishTask();
-        // vorerst keinen Zwischenbericht senden, da der bisherige Teil ziemlich zügig durch läuft
-        // sendeZwischenbericht(taskImport);
-
-
-        TaskNodeLog taskAnalyze = mainTask.createNewSubTaskNode(TASKNAME_ANALYZE);
-        executeTask(taskAnalyze, serialObjectStructureAnalysisServiceBean);
-        taskAnalyze.finishTask();
+            taskImport.finishTask();
+            // vorerst keinen Zwischenbericht senden, da der bisherige Teil ziemlich zügig durch läuft
+            // sendeZwischenbericht(taskImport);
 
 
-        TaskNodeLog taskRebuild = mainTask.createNewSubTaskNode(TASKNAME_REBUILD);
-        if (arrivalImportTask.wasAtLeastOneConcreteTaskPerformed() && arrivalImportTask.isSuccess()) {
+            TaskNodeLog taskAnalyze = mainTask.createNewSubTaskNode(TASKNAME_ANALYZE);
+            executeTask(taskAnalyze, serialObjectStructureAnalysisServiceBean);
+            taskAnalyze.finishTask();
+
+
+            TaskNodeLog taskRebuild = mainTask.createNewSubTaskNode(TASKNAME_REBUILD);
+            if (arrivalImportTask.wasAtLeastOneConcreteTaskPerformed() && arrivalImportTask.isSuccess()) {
+                executeTask(taskRebuild, arrivalRebuildMatServiceBean);
+                executeTask(taskRebuild, arrivalRebuildAggServiceBean);
+            }
+            if (shipmentImportTask.wasAtLeastOneConcreteTaskPerformed() && shipmentImportTask.isSuccess()) {
+                executeTask(taskRebuild, shptArrvRebuildMatServiceBean);
+                executeTask(taskRebuild, shptRebuildAggServiceBean);
+                executeTask(taskRebuild, shptArrvRebuildAggServiceBean);
+            }
+            taskRebuild.finishTask();
+        }
+        finally {
+            isRunning.set(false);
+        }
+
+        finishImport(mainTask);
+    }
+
+
+
+    @Asynchronous
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+    public void runCustomerImportAsync() {
+        if (!schedulerService.isExecuteImport()) {
+            return;
+        }
+
+        // Atomare Prüfung und Setzen des Locks
+        if (!isRunning.compareAndSet(false, true)) {
+            logger.warn("Job läuft bereits!");
+            return;
+        }
+
+        TaskNodeLog taskImport = initImport();
+        try {
+            executeTask(taskImport, customerImportServiceBean);
+        }
+        finally {
+            isRunning.set(false);
+        }
+
+        finishImport(taskImport);
+    }
+
+    @Asynchronous
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+    public void runSupplierImportAsync() {
+        if (!schedulerService.isExecuteImport()) {
+            return;
+        }
+
+        // Atomare Prüfung und Setzen des Locks
+        if (!isRunning.compareAndSet(false, true)) {
+            logger.warn("Job läuft bereits!");
+            return;
+        }
+
+        TaskNodeLog taskImport = initImport();
+        try {
+            executeTask(taskImport, supplierImportServiceBean);
+        }
+        finally {
+            isRunning.set(false);
+        }
+
+        finishImport(taskImport);
+    }
+
+    @Asynchronous
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+    public void runMaterialImportAsync() {
+        if (!schedulerService.isExecuteImport()) {
+            return;
+        }
+
+        // Atomare Prüfung und Setzen des Locks
+        if (!isRunning.compareAndSet(false, true)) {
+            logger.warn("Job läuft bereits!");
+            return;
+        }
+
+        TaskNodeLog taskImport = initImport();
+        try {
+            executeTask(taskImport, materialImportServiceBean);
+        }
+        finally {
+            isRunning.set(false);
+        }
+
+        finishImport(taskImport);
+    }
+
+    @Asynchronous
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+    public void runBoMImportAsync() {
+        if (!schedulerService.isExecuteImport()) {
+            return;
+        }
+
+        // Atomare Prüfung und Setzen des Locks
+        if (!isRunning.compareAndSet(false, true)) {
+            logger.warn("Job läuft bereits!");
+            return;
+        }
+
+        TaskNodeLog taskImport = initImport();
+        try {
+            executeTask(taskImport, bomImportServiceBean);
+        }
+        finally {
+            isRunning.set(false);
+        }
+
+        finishImport(taskImport);
+    }
+
+
+
+    @Asynchronous
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+    public void runArrivalImportAsync() {
+        if (!schedulerService.isExecuteImport()) {
+            return;
+        }
+
+        // Atomare Prüfung und Setzen des Locks
+        if (!isRunning.compareAndSet(false, true)) {
+            logger.warn("Job läuft bereits!");
+            return;
+        }
+
+        TaskNodeLog mainTask = initImportAndRebuild();
+        try {
+            TaskNodeLog taskImport = mainTask.createNewSubTaskNode(TASKNAME_IMPORT);
+            ITaskNodeLog arrivalImportTask = executeTask(taskImport, arrivalImportServiceBean);
+            taskImport.finishTask();
+
+            TaskNodeLog taskAnalyze = mainTask.createNewSubTaskNode(TASKNAME_ANALYZE);
+            executeTask(taskAnalyze, serialObjectStructureAnalysisServiceBean);
+            taskAnalyze.finishTask();
+
+            TaskNodeLog taskRebuild = mainTask.createNewSubTaskNode(TASKNAME_REBUILD);
+            if (arrivalImportTask.wasAtLeastOneConcreteTaskPerformed() && arrivalImportTask.isSuccess()) {
+                executeTask(taskRebuild, arrivalRebuildMatServiceBean);
+                executeTask(taskRebuild, arrivalRebuildAggServiceBean);
+            }
+            taskRebuild.finishTask();
+        }
+        finally {
+            isRunning.set(false);
+        }
+
+        finishImport(mainTask);
+    }
+
+    @Asynchronous
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+    public void runArrivalRebuildMaterializedAsync() {
+        if (!schedulerService.isExecuteImport()) {
+            return;
+        }
+
+        // Atomare Prüfung und Setzen des Locks
+        if (!isRunning.compareAndSet(false, true)) {
+            logger.warn("Job läuft bereits!");
+            return;
+        }
+
+        TaskNodeLog taskRebuild = initRebuild();
+        try {
             executeTask(taskRebuild, arrivalRebuildMatServiceBean);
+        }
+        finally {
+            isRunning.set(false);
+        }
+
+        finishImport(taskRebuild);
+    }
+
+    @Asynchronous
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+    public void runArrivalRebuildAggregatedAsync() {
+        if (!schedulerService.isExecuteImport()) {
+            return;
+        }
+
+        // Atomare Prüfung und Setzen des Locks
+        if (!isRunning.compareAndSet(false, true)) {
+            logger.warn("Job läuft bereits!");
+            return;
+        }
+
+        TaskNodeLog taskRebuild = initRebuild();
+        try {
             executeTask(taskRebuild, arrivalRebuildAggServiceBean);
         }
-        if (shipmentImportTask.wasAtLeastOneConcreteTaskPerformed() && shipmentImportTask.isSuccess()) {
-            executeTask(taskRebuild, shptArrvRebuildMatServiceBean);
-            executeTask(taskRebuild, shptRebuildAggServiceBean);
-            executeTask(taskRebuild, shptArrvRebuildAggServiceBean);
+        finally {
+            isRunning.set(false);
         }
-        taskRebuild.finishTask();
 
-        finishImport(mainTask);
+        finishImport(taskRebuild);
     }
 
 
@@ -138,85 +355,38 @@ public class SapDataImportServiceBean {
     @Asynchronous
     @PermitAll
     @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
-    public void runCustomerImport() {
+    public void runShipmentImportAsync() {
         if (!schedulerService.isExecuteImport()) {
             return;
         }
 
-        TaskNodeLog taskImport = initImport();
-        executeTask(taskImport, customerImportServiceBean);
-
-        finishImport(taskImport);
-    }
-
-    @Asynchronous
-    @PermitAll
-    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
-    public void runSupplierImport() {
-        if (!schedulerService.isExecuteImport()) {
-            return;
-        }
-
-        TaskNodeLog taskImport = initImport();
-        executeTask(taskImport, supplierImportServiceBean);
-
-        finishImport(taskImport);
-    }
-
-    @Asynchronous
-    @PermitAll
-    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
-    public void runMaterialImport() {
-        if (!schedulerService.isExecuteImport()) {
-            return;
-        }
-
-        TaskNodeLog taskImport = initImport();
-        executeTask(taskImport, materialImportServiceBean);
-
-        finishImport(taskImport);
-    }
-
-    @Asynchronous
-    @PermitAll
-    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
-    public void runBoMImport() {
-        if (!schedulerService.isExecuteImport()) {
-            return;
-        }
-
-        TaskNodeLog taskImport = initImport();
-        executeTask(taskImport, bomImportServiceBean);
-
-        finishImport(taskImport);
-    }
-
-
-
-    @Asynchronous
-    @PermitAll
-    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
-    public void runArrivalImport() {
-        if (!schedulerService.isExecuteImport()) {
+        // Atomare Prüfung und Setzen des Locks
+        if (!isRunning.compareAndSet(false, true)) {
+            logger.warn("Job läuft bereits!");
             return;
         }
 
         TaskNodeLog mainTask = initImportAndRebuild();
+        try {
+            TaskNodeLog taskImport = mainTask.createNewSubTaskNode(TASKNAME_IMPORT);
+            ITaskNodeLog shipmentImportTask = executeTask(taskImport, shipmentImportServiceBean);
+            taskImport.finishTask();
 
-        TaskNodeLog taskImport = mainTask.createNewSubTaskNode(TASKNAME_IMPORT);
-        ITaskNodeLog arrivalImportTask = executeTask(taskImport, arrivalImportServiceBean);
-        taskImport.finishTask();
+            TaskNodeLog taskAnalyze = mainTask.createNewSubTaskNode(TASKNAME_ANALYZE);
+            executeTask(taskAnalyze, serialObjectStructureAnalysisServiceBean);
+            taskAnalyze.finishTask();
 
-        TaskNodeLog taskAnalyze = mainTask.createNewSubTaskNode(TASKNAME_ANALYZE);
-        executeTask(taskAnalyze, serialObjectStructureAnalysisServiceBean);
-        taskAnalyze.finishTask();
-
-        TaskNodeLog taskRebuild = mainTask.createNewSubTaskNode(TASKNAME_REBUILD);
-        if (arrivalImportTask.wasAtLeastOneConcreteTaskPerformed() && arrivalImportTask.isSuccess()) {
-            executeTask(taskRebuild, arrivalRebuildMatServiceBean);
-            executeTask(taskRebuild, arrivalRebuildAggServiceBean);
+            TaskNodeLog taskRebuild = mainTask.createNewSubTaskNode(TASKNAME_REBUILD);
+            if (shipmentImportTask.wasAtLeastOneConcreteTaskPerformed() && shipmentImportTask.isSuccess()) {
+                executeTask(taskRebuild, shptArrvRebuildMatServiceBean);
+                executeTask(taskRebuild, shptRebuildAggServiceBean);
+                executeTask(taskRebuild, shptArrvRebuildAggServiceBean);
+            }
+            taskRebuild.finishTask();
         }
-        taskRebuild.finishTask();
+        finally {
+            isRunning.set(false);
+        }
 
         finishImport(mainTask);
     }
@@ -224,100 +394,74 @@ public class SapDataImportServiceBean {
     @Asynchronous
     @PermitAll
     @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
-    public void runArrivalRebuildMaterialized() {
+    public void runShptArrvRebuildMaterializedAsync() {
         if (!schedulerService.isExecuteImport()) {
+            return;
+        }
+
+        // Atomare Prüfung und Setzen des Locks
+        if (!isRunning.compareAndSet(false, true)) {
+            logger.warn("Job läuft bereits!");
             return;
         }
 
         TaskNodeLog taskRebuild = initRebuild();
-        executeTask(taskRebuild, arrivalRebuildMatServiceBean);
-
-        finishImport(taskRebuild);
-    }
-
-    @Asynchronous
-    @PermitAll
-    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
-    public void runArrivalRebuildAggregated() {
-        if (!schedulerService.isExecuteImport()) {
-            return;
-        }
-
-        TaskNodeLog taskRebuild = initRebuild();
-        executeTask(taskRebuild, arrivalRebuildAggServiceBean);
-
-        finishImport(taskRebuild);
-    }
-
-
-
-    @Asynchronous
-    @PermitAll
-    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
-    public void runShipmentImport() {
-        if (!schedulerService.isExecuteImport()) {
-            return;
-        }
-
-        TaskNodeLog mainTask = initImportAndRebuild();
-
-        TaskNodeLog taskImport = mainTask.createNewSubTaskNode(TASKNAME_IMPORT);
-        ITaskNodeLog shipmentImportTask = executeTask(taskImport, shipmentImportServiceBean);
-        taskImport.finishTask();
-
-        TaskNodeLog taskAnalyze = mainTask.createNewSubTaskNode(TASKNAME_ANALYZE);
-        executeTask(taskAnalyze, serialObjectStructureAnalysisServiceBean);
-        taskAnalyze.finishTask();
-
-        TaskNodeLog taskRebuild = mainTask.createNewSubTaskNode(TASKNAME_REBUILD);
-        if (shipmentImportTask.wasAtLeastOneConcreteTaskPerformed() && shipmentImportTask.isSuccess()) {
+        try {
             executeTask(taskRebuild, shptArrvRebuildMatServiceBean);
+        }
+        finally {
+            isRunning.set(false);
+        }
+
+        finishImport(taskRebuild);
+    }
+
+    @Asynchronous
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+    public void runShptRebuildAggregatedAsync() {
+        if (!schedulerService.isExecuteImport()) {
+            return;
+        }
+
+        // Atomare Prüfung und Setzen des Locks
+        if (!isRunning.compareAndSet(false, true)) {
+            logger.warn("Job läuft bereits!");
+            return;
+        }
+
+        TaskNodeLog taskRebuild = initRebuild();
+        try {
             executeTask(taskRebuild, shptRebuildAggServiceBean);
+        }
+        finally {
+            isRunning.set(false);
+        }
+
+        finishImport(taskRebuild);
+    }
+
+    @Asynchronous
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+    public void runShptArrvRebuildAggregatedAsync() {
+        if (!schedulerService.isExecuteImport()) {
+            return;
+        }
+
+        // Atomare Prüfung und Setzen des Locks
+        if (!isRunning.compareAndSet(false, true)) {
+            logger.warn("Job läuft bereits!");
+            return;
+        }
+
+        TaskNodeLog taskRebuild = initRebuild();
+        try {
             executeTask(taskRebuild, shptArrvRebuildAggServiceBean);
         }
-        taskRebuild.finishTask();
-
-        finishImport(mainTask);
-    }
-
-    @Asynchronous
-    @PermitAll
-    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
-    public void runShptArrvRebuildMaterialized() {
-        if (!schedulerService.isExecuteImport()) {
-            return;
+        finally {
+            isRunning.set(false);
         }
-
-        TaskNodeLog taskRebuild = initRebuild();
-        executeTask(taskRebuild, shptArrvRebuildMatServiceBean);
-
-        finishImport(taskRebuild);
-    }
-
-    @Asynchronous
-    @PermitAll
-    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
-    public void runShptRebuildAggregated() {
-        if (!schedulerService.isExecuteImport()) {
-            return;
-        }
-
-        TaskNodeLog taskRebuild = initRebuild();
-        executeTask(taskRebuild, shptRebuildAggServiceBean);
-
-        finishImport(taskRebuild);
-    }
-
-    @Asynchronous
-    @PermitAll
-    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
-    public void runShptArrvRebuildAggregated() {
-        if (!schedulerService.isExecuteImport()) {
-            return;
-        }
-
-        TaskNodeLog taskRebuild = initRebuild();
-        executeTask(taskRebuild, shptArrvRebuildAggServiceBean);
 
         finishImport(taskRebuild);
     }
@@ -327,13 +471,24 @@ public class SapDataImportServiceBean {
     @Asynchronous
     @PermitAll
     @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
-    public void runAnalyzeSerObjStructure() {
+    public void runAnalyzeSerObjStructureAsync() {
         if (!schedulerService.isExecuteImport()) {
+            return;
+        }
+
+        // Atomare Prüfung und Setzen des Locks
+        if (!isRunning.compareAndSet(false, true)) {
+            logger.warn("Job läuft bereits!");
             return;
         }
 
         TaskNodeLog taskAnalyze = initRebuild();
-        executeTask(taskAnalyze, serialObjectStructureAnalysisServiceBean);
+        try {
+            executeTask(taskAnalyze, serialObjectStructureAnalysisServiceBean);
+        }
+        finally {
+            isRunning.set(false);
+        }
 
         finishImport(taskAnalyze);
     }

@@ -38,7 +38,7 @@ public class ImportSchedulerServiceBean {
     @Schedule(dayOfWeek = "*", hour = "1", minute = "30", persistent = false)
     @AccessTimeout(value = 5, unit = TimeUnit.MINUTES)
     public void runScheduledSapImport() {
-        sapImportService.runImport();
+        sapImportService.runImportSched();
     }
 
     /**
@@ -48,7 +48,7 @@ public class ImportSchedulerServiceBean {
     @Schedule(dayOfWeek = "*", hour = "10", minute = "30", persistent = false)
     @AccessTimeout(value = 5, unit = TimeUnit.MINUTES)
     public void runScheduledRepairImport() {
-        repairImportService.runImport();
+        repairImportService.runImportSched();
     }
 
 

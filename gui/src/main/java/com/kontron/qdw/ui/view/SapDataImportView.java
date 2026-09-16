@@ -95,61 +95,61 @@ public class SapDataImportView extends CopyClipboard implements Serializable {
 
 
     public void runImport() {
-        importServiceBean.runImport();
+        importServiceBean.runImportAsync();
     }
 
 
 
     public void runCustomerImport() {
-        importServiceBean.runCustomerImport();
+        importServiceBean.runCustomerImportAsync();
     }
 
     public void runSupplierImport() {
-        importServiceBean.runSupplierImport();
+        importServiceBean.runSupplierImportAsync();
     }
 
     public void runMaterialImport() {
-        importServiceBean.runMaterialImport();
+        importServiceBean.runMaterialImportAsync();
     }
 
     public void runBoMImport() {
-        importServiceBean.runBoMImport();
+        importServiceBean.runBoMImportAsync();
     }
 
 
 
     public void runArrivalImport() {
-        importServiceBean.runArrivalImport();
+        importServiceBean.runArrivalImportAsync();
     }
 
     public void runAnalyzeSerObjStructure() {
-        importServiceBean.runAnalyzeSerObjStructure();
+        importServiceBean.runAnalyzeSerObjStructureAsync();
     }
 
     public void runArrivalRebuildMaterialized() {
-        importServiceBean.runArrivalRebuildMaterialized();
+        importServiceBean.runArrivalRebuildMaterializedAsync();
     }
 
     public void runArrivalRebuildAggregated() {
-        importServiceBean.runArrivalRebuildAggregated();
+        importServiceBean.runArrivalRebuildAggregatedAsync();
     }
 
 
 
     public void runShipmentImport() {
-        importServiceBean.runShipmentImport();
+        importServiceBean.runShipmentImportAsync();
     }
 
     public void runShptArrvRebuildMaterialized() {
-        importServiceBean.runShptArrvRebuildMaterialized();
+        importServiceBean.runShptArrvRebuildMaterializedAsync();
     }
 
     public void runShptRebuildAggregated() {
-        importServiceBean.runShptRebuildAggregated();
+        importServiceBean.runShptRebuildAggregatedAsync();
     }
 
     public void runShptArrvRebuildAggregated() {
-        importServiceBean.runShptArrvRebuildAggregated();
+        importServiceBean.runShptArrvRebuildAggregatedAsync();
     }
 
 }

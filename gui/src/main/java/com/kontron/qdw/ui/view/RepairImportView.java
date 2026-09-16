@@ -97,21 +97,21 @@ public class RepairImportView extends CopyClipboard implements Serializable {
 
 
     public void runImport() {
-        importServiceBean.runImport();
+        importServiceBean.runImportAsync();
     }
 
 
 
     public void runRmaImport() {
-        importServiceBean.runRmaImport();
+        importServiceBean.runRmaImportAsync();
     }
 
     public void runSvcMsgImport() {
-        importServiceBean.runSvcMsgImport();
+        importServiceBean.runSvcMsgImportAsync();
     }
 
     public void runSvcMsgRebuild() {
-        importServiceBean.runSvcMsgRebuild();
+        importServiceBean.runSvcMsgRebuildAsync();
     }
 
 }

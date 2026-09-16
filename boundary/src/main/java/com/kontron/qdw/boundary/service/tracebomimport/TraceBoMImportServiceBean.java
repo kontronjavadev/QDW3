@@ -64,7 +64,7 @@ public class TraceBoMImportServiceBean {
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    // Unser eigener, Thread-sicherer Wächter
+    // unser eigener, Thread-sicherer Wächter
     private final AtomicBoolean isRunning = new AtomicBoolean(false);
 
     private static final String TASKNAME_IMPORT = "Trace-BoM import";

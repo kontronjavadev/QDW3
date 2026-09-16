@@ -16,7 +16,9 @@ import com.kontron.util.log.TaskNodeLog;
 import jakarta.annotation.security.PermitAll;
 import jakarta.ejb.Asynchronous;
 import jakarta.ejb.EJB;
-import jakarta.ejb.Stateless;
+import jakarta.ejb.Lock;
+import jakarta.ejb.LockType;
+import jakarta.ejb.Singleton;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 
@@ -26,7 +28,8 @@ import jakarta.ejb.TransactionAttributeType;
  * 2026 — © Kontron AG
  * @author Raymund Achner, achner.com
  */
-@Stateless
+@Singleton
+@Lock(LockType.READ) // Zwingend erforderlich, überschreibt das implizite WRITE-Lock des @Singleton!
 public class RebuildServiceBean {
     /*
      * Timeout konfigurieren:

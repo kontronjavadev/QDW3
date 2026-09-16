@@ -1,6 +1,7 @@
 package com.kontron.qdw.boundary.service.repairimport;
 
 import java.lang.invoke.MethodHandles;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +18,9 @@ import com.kontron.util.log.TaskNodeLog;
 import jakarta.annotation.security.PermitAll;
 import jakarta.ejb.Asynchronous;
 import jakarta.ejb.EJB;
-import jakarta.ejb.Stateless;
+import jakarta.ejb.Lock;
+import jakarta.ejb.LockType;
+import jakarta.ejb.Singleton;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import net.sourceforge.jbizmo.commons.property.PropertyService;
@@ -28,7 +31,8 @@ import net.sourceforge.jbizmo.commons.property.PropertyService;
  * 2026 — © Kontron AG
  * @author Raymund Achner, achner.com
  */
-@Stateless
+@Singleton
+@Lock(LockType.READ) // Zwingend erforderlich, überschreibt das implizite WRITE-Lock des @Singleton!
 public class RepairImportServiceBean {
     /*
      * Timeout konfigurieren:
@@ -38,6 +42,9 @@ public class RepairImportServiceBean {
      */
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
+    // unser eigener, Thread-sicherer Wächter
+    private final AtomicBoolean isRunning = new AtomicBoolean(false);
 
     private static final String TASKNAME_IMPORT_REBUILD = "Import and rebuild";
     private static final String TASKNAME_IMPORT = "Repair import";
@@ -63,27 +70,45 @@ public class RepairImportServiceBean {
 
 
 
+    /** Asynchroner Einstieg für die Administrationsoberfläche */
     @Asynchronous
     @PermitAll
     @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
-    public void runImport() {
+    public void runImportAsync() {
+        runImportSched();
+    }
+
+    /** Synchroner Einstieg für den Scheduler */
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+    public void runImportSched() {
         if (!schedulerService.isExecuteImport()) {
             return;
         }
 
-        TaskNodeLog mainTask = initImportAndRebuild();
-
-        TaskNodeLog taskImport = mainTask.createNewSubTaskNode(TASKNAME_IMPORT);
-        ITaskNodeLog rmaImportTask = executeTask(taskImport, rmaImportServiceBean);
-        ITaskNodeLog svcMsgImportTask = executeTask(taskImport, svcMsgImportServiceBean);
-        taskImport.finishTask();
-
-        TaskNodeLog taskRebuild = mainTask.createNewSubTaskNode(TASKNAME_REBUILD);
-        if (rmaImportTask.wasAtLeastOneConcreteTaskPerformed() && rmaImportTask.isSuccess()
-                && svcMsgImportTask.wasAtLeastOneConcreteTaskPerformed() && svcMsgImportTask.isSuccess()) {
-            executeTask(taskRebuild, svcMsgRebuildServiceBean);
+        // Atomare Prüfung und Setzen des Locks
+        if (!isRunning.compareAndSet(false, true)) {
+            logger.warn("Job läuft bereits!");
+            return;
         }
-        taskRebuild.finishTask();
+
+        TaskNodeLog mainTask = initImportAndRebuild();
+        try {
+            TaskNodeLog taskImport = mainTask.createNewSubTaskNode(TASKNAME_IMPORT);
+            ITaskNodeLog rmaImportTask = executeTask(taskImport, rmaImportServiceBean);
+            ITaskNodeLog svcMsgImportTask = executeTask(taskImport, svcMsgImportServiceBean);
+            taskImport.finishTask();
+
+            TaskNodeLog taskRebuild = mainTask.createNewSubTaskNode(TASKNAME_REBUILD);
+            if (rmaImportTask.wasAtLeastOneConcreteTaskPerformed() && rmaImportTask.isSuccess()
+                    && svcMsgImportTask.wasAtLeastOneConcreteTaskPerformed() && svcMsgImportTask.isSuccess()) {
+                executeTask(taskRebuild, svcMsgRebuildServiceBean);
+            }
+            taskRebuild.finishTask();
+        }
+        finally {
+            isRunning.set(false);
+        }
 
         finishImport(mainTask);
     }
@@ -93,22 +118,32 @@ public class RepairImportServiceBean {
     @Asynchronous
     @PermitAll
     @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
-    public void runRmaImport() {
+    public void runRmaImportAsync() {
         if (!schedulerService.isExecuteImport()) {
             return;
         }
 
-        TaskNodeLog mainTask = initImportAndRebuild();
-
-        TaskNodeLog taskImport = mainTask.createNewSubTaskNode(TASKNAME_IMPORT);
-        ITaskNodeLog rmaImportTask = executeTask(taskImport, rmaImportServiceBean);
-        taskImport.finishTask();
-
-        TaskNodeLog taskRebuild = mainTask.createNewSubTaskNode(TASKNAME_REBUILD);
-        if (rmaImportTask.wasAtLeastOneConcreteTaskPerformed() && rmaImportTask.isSuccess()) {
-            executeTask(taskRebuild, svcMsgRebuildServiceBean);
+        // Atomare Prüfung und Setzen des Locks
+        if (!isRunning.compareAndSet(false, true)) {
+            logger.warn("Job läuft bereits!");
+            return;
         }
-        taskRebuild.finishTask();
+
+        TaskNodeLog mainTask = initImportAndRebuild();
+        try {
+            TaskNodeLog taskImport = mainTask.createNewSubTaskNode(TASKNAME_IMPORT);
+            ITaskNodeLog rmaImportTask = executeTask(taskImport, rmaImportServiceBean);
+            taskImport.finishTask();
+
+            TaskNodeLog taskRebuild = mainTask.createNewSubTaskNode(TASKNAME_REBUILD);
+            if (rmaImportTask.wasAtLeastOneConcreteTaskPerformed() && rmaImportTask.isSuccess()) {
+                executeTask(taskRebuild, svcMsgRebuildServiceBean);
+            }
+            taskRebuild.finishTask();
+        }
+        finally {
+            isRunning.set(false);
+        }
 
         finishImport(mainTask);
     }
@@ -116,22 +151,32 @@ public class RepairImportServiceBean {
     @Asynchronous
     @PermitAll
     @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
-    public void runSvcMsgImport() {
+    public void runSvcMsgImportAsync() {
         if (!schedulerService.isExecuteImport()) {
             return;
         }
 
-        TaskNodeLog mainTask = initImportAndRebuild();
-
-        TaskNodeLog taskImport = mainTask.createNewSubTaskNode(TASKNAME_IMPORT);
-        ITaskNodeLog svcMsgImportTask = executeTask(taskImport, svcMsgImportServiceBean);
-        taskImport.finishTask();
-
-        TaskNodeLog taskRebuild = mainTask.createNewSubTaskNode(TASKNAME_REBUILD);
-        if (svcMsgImportTask.wasAtLeastOneConcreteTaskPerformed() && svcMsgImportTask.isSuccess()) {
-            executeTask(taskRebuild, svcMsgRebuildServiceBean);
+        // Atomare Prüfung und Setzen des Locks
+        if (!isRunning.compareAndSet(false, true)) {
+            logger.warn("Job läuft bereits!");
+            return;
         }
-        taskRebuild.finishTask();
+
+        TaskNodeLog mainTask = initImportAndRebuild();
+        try {
+            TaskNodeLog taskImport = mainTask.createNewSubTaskNode(TASKNAME_IMPORT);
+            ITaskNodeLog svcMsgImportTask = executeTask(taskImport, svcMsgImportServiceBean);
+            taskImport.finishTask();
+
+            TaskNodeLog taskRebuild = mainTask.createNewSubTaskNode(TASKNAME_REBUILD);
+            if (svcMsgImportTask.wasAtLeastOneConcreteTaskPerformed() && svcMsgImportTask.isSuccess()) {
+                executeTask(taskRebuild, svcMsgRebuildServiceBean);
+            }
+            taskRebuild.finishTask();
+        }
+        finally {
+            isRunning.set(false);
+        }
 
         finishImport(mainTask);
     }
@@ -139,13 +184,25 @@ public class RepairImportServiceBean {
     @Asynchronous
     @PermitAll
     @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
-    public void runSvcMsgRebuild() {
+    public void runSvcMsgRebuildAsync() {
         if (!schedulerService.isExecuteImport()) {
+            return;
+        }
+
+        // Atomare Prüfung und Setzen des Locks
+        if (!isRunning.compareAndSet(false, true)) {
+            logger.warn("Job läuft bereits!");
             return;
         }
 
         TaskNodeLog taskRebuild = initRebuild();
-        executeTask(taskRebuild, svcMsgRebuildServiceBean);
+        try {
+            executeTask(taskRebuild, svcMsgRebuildServiceBean);
+        }
+        finally {
+            isRunning.set(false);
+        }
+
         finishImport(taskRebuild);
     }
 
