@@ -1,12 +1,14 @@
 package com.kontron.qdw.boundary.service.repairimport;
 
 import java.lang.invoke.MethodHandles;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.EnumSet;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.kontron.qdw.boundary.service.SchedulerServiceBean;
+import com.kontron.qdw.boundary.service.process.ImportResource;
+import com.kontron.qdw.boundary.service.process.ResourceLockManagerBean;
 import com.kontron.qdw.boundary.service.process.TaskCall;
 import com.kontron.qdw.boundary.service.rebuild.SvcMsgRebuildMaterializedDeltaServiceBean;
 import com.kontron.qdw.boundary.util.Constants;
@@ -23,6 +25,7 @@ import jakarta.ejb.LockType;
 import jakarta.ejb.Singleton;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
+import jakarta.inject.Inject;
 import net.sourceforge.jbizmo.commons.property.PropertyService;
 
 /**
@@ -43,15 +46,16 @@ public class RepairImportServiceBean {
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    // unser eigener, Thread-sicherer Wächter
-    private final AtomicBoolean isRunning = new AtomicBoolean(false);
-
     private static final String TASKNAME_IMPORT_REBUILD = "Import and rebuild";
     private static final String TASKNAME_IMPORT = "Repair import";
     private static final String TASKNAME_REBUILD = "rebuild materialized tables";
 
     private static final String PROP_XML_EXCHANGE_FOLDER = "sap_exchange_folder";
     private static final String PROP_XML_ARCHIVE_FOLDER = "sap_archive_folder";
+
+
+    @Inject
+    private ResourceLockManagerBean lockManager;
 
 
     @EJB
@@ -86,29 +90,21 @@ public class RepairImportServiceBean {
             return;
         }
 
-        // Atomare Prüfung und Setzen des Locks
-        if (!isRunning.compareAndSet(false, true)) {
-            logger.warn("Job läuft bereits!");
-            return;
-        }
-
         TaskNodeLog mainTask = initImportAndRebuild();
-        try {
-            TaskNodeLog taskImport = mainTask.createNewSubTaskNode(TASKNAME_IMPORT);
-            ITaskNodeLog rmaImportTask = executeTask(taskImport, rmaImportServiceBean);
-            ITaskNodeLog svcMsgImportTask = executeTask(taskImport, svcMsgImportServiceBean);
-            taskImport.finishTask();
+        lockManager.executeLocked(EnumSet.of(ImportResource.REPAIR_IMPORT), mainTask,
+                () -> {
+                    TaskNodeLog taskImport = mainTask.createNewSubTaskNode(TASKNAME_IMPORT);
+                    ITaskNodeLog rmaImportTask = executeTask(taskImport, rmaImportServiceBean);
+                    ITaskNodeLog svcMsgImportTask = executeTask(taskImport, svcMsgImportServiceBean);
+                    taskImport.finishTask();
 
-            TaskNodeLog taskRebuild = mainTask.createNewSubTaskNode(TASKNAME_REBUILD);
-            if (rmaImportTask.wasAtLeastOneConcreteTaskPerformed() && rmaImportTask.isSuccess()
-                    && svcMsgImportTask.wasAtLeastOneConcreteTaskPerformed() && svcMsgImportTask.isSuccess()) {
-                executeTask(taskRebuild, svcMsgRebuildServiceBean);
-            }
-            taskRebuild.finishTask();
-        }
-        finally {
-            isRunning.set(false);
-        }
+                    TaskNodeLog taskRebuild = mainTask.createNewSubTaskNode(TASKNAME_REBUILD);
+                    if (rmaImportTask.wasAtLeastOneConcreteTaskPerformed() && rmaImportTask.isSuccess()
+                            && svcMsgImportTask.wasAtLeastOneConcreteTaskPerformed() && svcMsgImportTask.isSuccess()) {
+                        executeTask(taskRebuild, svcMsgRebuildServiceBean);
+                    }
+                    taskRebuild.finishTask();
+                });
 
         finishImport(mainTask);
     }
@@ -123,27 +119,19 @@ public class RepairImportServiceBean {
             return;
         }
 
-        // Atomare Prüfung und Setzen des Locks
-        if (!isRunning.compareAndSet(false, true)) {
-            logger.warn("Job läuft bereits!");
-            return;
-        }
+        TaskNodeLog mainTask = initImportAndRebuild("RMA");
+        lockManager.executeLocked(EnumSet.of(ImportResource.REPAIR_IMPORT), mainTask,
+                () -> {
+                    TaskNodeLog taskImport = mainTask.createNewSubTaskNode(TASKNAME_IMPORT);
+                    ITaskNodeLog rmaImportTask = executeTask(taskImport, rmaImportServiceBean);
+                    taskImport.finishTask();
 
-        TaskNodeLog mainTask = initImportAndRebuild();
-        try {
-            TaskNodeLog taskImport = mainTask.createNewSubTaskNode(TASKNAME_IMPORT);
-            ITaskNodeLog rmaImportTask = executeTask(taskImport, rmaImportServiceBean);
-            taskImport.finishTask();
-
-            TaskNodeLog taskRebuild = mainTask.createNewSubTaskNode(TASKNAME_REBUILD);
-            if (rmaImportTask.wasAtLeastOneConcreteTaskPerformed() && rmaImportTask.isSuccess()) {
-                executeTask(taskRebuild, svcMsgRebuildServiceBean);
-            }
-            taskRebuild.finishTask();
-        }
-        finally {
-            isRunning.set(false);
-        }
+                    TaskNodeLog taskRebuild = mainTask.createNewSubTaskNode(TASKNAME_REBUILD);
+                    if (rmaImportTask.wasAtLeastOneConcreteTaskPerformed() && rmaImportTask.isSuccess()) {
+                        executeTask(taskRebuild, svcMsgRebuildServiceBean);
+                    }
+                    taskRebuild.finishTask();
+                });
 
         finishImport(mainTask);
     }
@@ -156,27 +144,19 @@ public class RepairImportServiceBean {
             return;
         }
 
-        // Atomare Prüfung und Setzen des Locks
-        if (!isRunning.compareAndSet(false, true)) {
-            logger.warn("Job läuft bereits!");
-            return;
-        }
+        TaskNodeLog mainTask = initImportAndRebuild("Service Messages");
+        lockManager.executeLocked(EnumSet.of(ImportResource.REPAIR_IMPORT), mainTask,
+                () -> {
+                    TaskNodeLog taskImport = mainTask.createNewSubTaskNode(TASKNAME_IMPORT);
+                    ITaskNodeLog svcMsgImportTask = executeTask(taskImport, svcMsgImportServiceBean);
+                    taskImport.finishTask();
 
-        TaskNodeLog mainTask = initImportAndRebuild();
-        try {
-            TaskNodeLog taskImport = mainTask.createNewSubTaskNode(TASKNAME_IMPORT);
-            ITaskNodeLog svcMsgImportTask = executeTask(taskImport, svcMsgImportServiceBean);
-            taskImport.finishTask();
-
-            TaskNodeLog taskRebuild = mainTask.createNewSubTaskNode(TASKNAME_REBUILD);
-            if (svcMsgImportTask.wasAtLeastOneConcreteTaskPerformed() && svcMsgImportTask.isSuccess()) {
-                executeTask(taskRebuild, svcMsgRebuildServiceBean);
-            }
-            taskRebuild.finishTask();
-        }
-        finally {
-            isRunning.set(false);
-        }
+                    TaskNodeLog taskRebuild = mainTask.createNewSubTaskNode(TASKNAME_REBUILD);
+                    if (svcMsgImportTask.wasAtLeastOneConcreteTaskPerformed() && svcMsgImportTask.isSuccess()) {
+                        executeTask(taskRebuild, svcMsgRebuildServiceBean);
+                    }
+                    taskRebuild.finishTask();
+                });
 
         finishImport(mainTask);
     }
@@ -189,19 +169,11 @@ public class RepairImportServiceBean {
             return;
         }
 
-        // Atomare Prüfung und Setzen des Locks
-        if (!isRunning.compareAndSet(false, true)) {
-            logger.warn("Job läuft bereits!");
-            return;
-        }
-
-        TaskNodeLog taskRebuild = initRebuild();
-        try {
-            executeTask(taskRebuild, svcMsgRebuildServiceBean);
-        }
-        finally {
-            isRunning.set(false);
-        }
+        TaskNodeLog taskRebuild = initRebuild("Service Messages");
+        lockManager.executeLocked(EnumSet.of(ImportResource.REPAIR_IMPORT), taskRebuild,
+                () -> {
+                    executeTask(taskRebuild, svcMsgRebuildServiceBean);
+                });
 
         finishImport(taskRebuild);
     }
@@ -209,24 +181,28 @@ public class RepairImportServiceBean {
 
 
     private TaskNodeLog initImportAndRebuild() {
+        return initImportAndRebuild(null);
+    }
+
+    private TaskNodeLog initImportAndRebuild(String description) {
         logger.info("Importing Repair files and rebuilding materialized tables");
         logger.debug(String.format("exchangePath = %s, archivePath = %s", exchangePath, archivePath));
 
-        return new TaskNodeLog(TASKNAME_IMPORT_REBUILD);
+        return new TaskNodeLog(TASKNAME_IMPORT_REBUILD, description);
     }
 
     @SuppressWarnings("unused")
-    private TaskNodeLog initImport() {
+    private TaskNodeLog initImport(String description) {
         logger.info("Importing Repair files");
         logger.debug(String.format("exchangePath = %s, archivePath = %s", exchangePath, archivePath));
 
-        return new TaskNodeLog(TASKNAME_IMPORT);
+        return new TaskNodeLog(TASKNAME_IMPORT, description);
     }
 
-    private TaskNodeLog initRebuild() {
+    private TaskNodeLog initRebuild(String description) {
         logger.info("Rebuilding materialized tables");
 
-        return new TaskNodeLog(TASKNAME_REBUILD);
+        return new TaskNodeLog(TASKNAME_REBUILD, description);
     }
 
 

@@ -1,11 +1,14 @@
 package com.kontron.qdw.boundary.service.rebuild;
 
 import java.lang.invoke.MethodHandles;
+import java.util.EnumSet;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.kontron.qdw.boundary.service.SchedulerServiceBean;
+import com.kontron.qdw.boundary.service.process.ImportResource;
+import com.kontron.qdw.boundary.service.process.ResourceLockManagerBean;
 import com.kontron.qdw.boundary.service.process.TaskCall;
 import com.kontron.qdw.boundary.util.Constants;
 import com.kontron.qdw.boundary.util.MailServiceFacade;
@@ -21,6 +24,7 @@ import jakarta.ejb.LockType;
 import jakarta.ejb.Singleton;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
+import jakarta.inject.Inject;
 
 /**
  * Rebuild der materialized und aggregated tables.
@@ -41,6 +45,11 @@ public class RebuildServiceBean {
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private static final String TASKNAME_REBUILD = "rebuild materialized tables";
+
+
+    @Inject
+    private ResourceLockManagerBean lockManager;
+
 
     @EJB
     private SchedulerServiceBean schedulerService;
@@ -77,15 +86,18 @@ public class RebuildServiceBean {
         }
 
         TaskNodeLog mainTask = initRebuild();
+        lockManager.executeLocked(EnumSet.of(ImportResource.SAP_IMPORT, ImportResource.REPAIR_IMPORT), mainTask,
+                () -> {
+                    executeTask(mainTask, arrivalRebuildMatDeltaServiceBean);
+                    executeTask(mainTask, shptArrvRebuildMatDeltaServiceBean);
 
-        executeTask(mainTask, arrivalRebuildMatDeltaServiceBean);
-        executeTask(mainTask, shptArrvRebuildMatDeltaServiceBean);
+                    executeTask(mainTask, arrivalRebuildAggServiceBean);
+                    executeTask(mainTask, shptRebuildAggServiceBean);
+                    executeTask(mainTask, shptArrvRebuildAggServiceBean);
 
-        executeTask(mainTask, arrivalRebuildAggServiceBean);
-        executeTask(mainTask, shptRebuildAggServiceBean);
-        executeTask(mainTask, shptArrvRebuildAggServiceBean);
+                    executeTask(mainTask, svcMsgRebuildMatDeltaServiceBean);
+                });
 
-        executeTask(mainTask, svcMsgRebuildMatDeltaServiceBean);
 
         finishRebuild(mainTask, true);
     }
