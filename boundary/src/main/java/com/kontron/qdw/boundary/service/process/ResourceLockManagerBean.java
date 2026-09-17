@@ -18,7 +18,7 @@ import jakarta.ejb.LockType;
 import jakarta.ejb.Singleton;
 
 @Singleton
-@Lock(LockType.READ)
+@Lock(LockType.READ) // Zwingend erforderlich, überschreibt das implizite WRITE-Lock des @Singleton!
 public class ResourceLockManagerBean {
 
     private static final Logger logger = LoggerFactory.getLogger(ResourceLockManagerBean.class);
