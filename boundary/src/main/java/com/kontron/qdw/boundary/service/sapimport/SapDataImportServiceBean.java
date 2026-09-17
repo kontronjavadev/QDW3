@@ -117,7 +117,7 @@ public class SapDataImportServiceBean {
         }
 
         TaskNodeLog mainTask = initImportAndRebuild();
-        lockManager.executeLocked(EnumSet.of(ImportResource.SAP_IMPORT), mainTask,
+        lockManager.executeLocked(EnumSet.of(ImportResource.SAP_IMPORT, ImportResource.REBUILD), mainTask,
                 () -> {
                     TaskNodeLog taskImport = mainTask.createNewSubTaskNode(TASKNAME_IMPORT);
                     executeTask(taskImport, customerImportServiceBean);
@@ -235,7 +235,7 @@ public class SapDataImportServiceBean {
         }
 
         TaskNodeLog mainTask = initImportAndRebuild("Arrival");
-        lockManager.executeLocked(EnumSet.of(ImportResource.SAP_IMPORT), mainTask,
+        lockManager.executeLocked(EnumSet.of(ImportResource.SAP_IMPORT, ImportResource.REBUILD), mainTask,
                 () -> {
                     TaskNodeLog taskImport = mainTask.createNewSubTaskNode(TASKNAME_IMPORT);
                     ITaskNodeLog arrivalImportTask = executeTask(taskImport, arrivalImportServiceBean);
@@ -265,7 +265,7 @@ public class SapDataImportServiceBean {
         }
 
         TaskNodeLog taskRebuild = initRebuild("Arrival-Materialized");
-        lockManager.executeLocked(EnumSet.of(ImportResource.SAP_IMPORT), taskRebuild,
+        lockManager.executeLocked(EnumSet.of(ImportResource.SAP_IMPORT, ImportResource.REBUILD), taskRebuild,
                 () -> {
                     executeTask(taskRebuild, arrivalRebuildMatServiceBean);
                 });
@@ -282,7 +282,7 @@ public class SapDataImportServiceBean {
         }
 
         TaskNodeLog taskRebuild = initRebuild("Arrival-Aggregated");
-        lockManager.executeLocked(EnumSet.of(ImportResource.SAP_IMPORT), taskRebuild,
+        lockManager.executeLocked(EnumSet.of(ImportResource.SAP_IMPORT, ImportResource.REBUILD), taskRebuild,
                 () -> {
                     executeTask(taskRebuild, arrivalRebuildAggServiceBean);
                 });
@@ -301,7 +301,7 @@ public class SapDataImportServiceBean {
         }
 
         TaskNodeLog mainTask = initImportAndRebuild("Shipment");
-        lockManager.executeLocked(EnumSet.of(ImportResource.SAP_IMPORT), mainTask,
+        lockManager.executeLocked(EnumSet.of(ImportResource.SAP_IMPORT, ImportResource.REBUILD), mainTask,
                 () -> {
                     TaskNodeLog taskImport = mainTask.createNewSubTaskNode(TASKNAME_IMPORT);
                     ITaskNodeLog shipmentImportTask = executeTask(taskImport, shipmentImportServiceBean);
@@ -332,7 +332,7 @@ public class SapDataImportServiceBean {
         }
 
         TaskNodeLog taskRebuild = initRebuild("Shipment-Arrival-Materialized");
-        lockManager.executeLocked(EnumSet.of(ImportResource.SAP_IMPORT), taskRebuild,
+        lockManager.executeLocked(EnumSet.of(ImportResource.SAP_IMPORT, ImportResource.REBUILD), taskRebuild,
                 () -> {
                     executeTask(taskRebuild, shptArrvRebuildMatServiceBean);
                 });
@@ -349,7 +349,7 @@ public class SapDataImportServiceBean {
         }
 
         TaskNodeLog taskRebuild = initRebuild("Shipment-Aggregated");
-        lockManager.executeLocked(EnumSet.of(ImportResource.SAP_IMPORT), taskRebuild,
+        lockManager.executeLocked(EnumSet.of(ImportResource.SAP_IMPORT, ImportResource.REBUILD), taskRebuild,
                 () -> {
                     executeTask(taskRebuild, shptRebuildAggServiceBean);
                 });
@@ -366,7 +366,7 @@ public class SapDataImportServiceBean {
         }
 
         TaskNodeLog taskRebuild = initRebuild("Shipment-Arrival-Aggregated");
-        lockManager.executeLocked(EnumSet.of(ImportResource.SAP_IMPORT), taskRebuild,
+        lockManager.executeLocked(EnumSet.of(ImportResource.SAP_IMPORT, ImportResource.REBUILD), taskRebuild,
                 () -> {
                     executeTask(taskRebuild, shptArrvRebuildAggServiceBean);
                 });

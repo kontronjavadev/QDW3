@@ -54,15 +54,19 @@ public class RebuildServiceBean {
     @EJB
     private SchedulerServiceBean schedulerService;
 
+    // Materialized: SAP-Import
     @EJB
     private ArrivalRebuildMaterializedDeltaServiceBean arrivalRebuildMatDeltaServiceBean;
     @EJB
-    private ArrivalRebuildMaterializedFullServiceBean arrivalRebuildMatFullServiceBean;
-    @EJB
     private ShipmentArrivalRebuildMaterializedDeltaServiceBean shptArrvRebuildMatDeltaServiceBean;
+
+    // Materialized: wird nicht von scheduler aufgerufen
+    @EJB
+    private ArrivalRebuildMaterializedFullServiceBean arrivalRebuildMatFullServiceBean;
     @EJB
     private ShipmentArrivalRebuildMaterializedFullServiceBean shptArrvRebuildMatFullServiceBean;
 
+    // Aggregated: SAP-Import
     @EJB
     private ArrivalRebuildAggregatedServiceBean arrivalRebuildAggServiceBean;
     @EJB
@@ -70,8 +74,11 @@ public class RebuildServiceBean {
     @EJB
     private ShipmentArrivalRebuildAggregatedServiceBean shptArrvRebuildAggServiceBean;
 
+    // Materialized: Repair
     @EJB
     private SvcMsgRebuildMaterializedDeltaServiceBean svcMsgRebuildMatDeltaServiceBean;
+
+    // Materialized: wird nicht von scheduler aufgerufen
     @EJB
     private SvcMsgRebuildMaterializedFullServiceBean svcMsgRebuildMatFullServiceBean;
 
@@ -86,7 +93,7 @@ public class RebuildServiceBean {
         }
 
         TaskNodeLog mainTask = initRebuild();
-        lockManager.executeLocked(EnumSet.of(ImportResource.SAP_IMPORT, ImportResource.REPAIR_IMPORT), mainTask,
+        lockManager.executeLocked(EnumSet.of(ImportResource.REBUILD, ImportResource.SAP_IMPORT, ImportResource.REPAIR_IMPORT), mainTask,
                 () -> {
                     executeTask(mainTask, arrivalRebuildMatDeltaServiceBean);
                     executeTask(mainTask, shptArrvRebuildMatDeltaServiceBean);
@@ -97,7 +104,6 @@ public class RebuildServiceBean {
 
                     executeTask(mainTask, svcMsgRebuildMatDeltaServiceBean);
                 });
-
 
         finishRebuild(mainTask, true);
     }
@@ -111,15 +117,17 @@ public class RebuildServiceBean {
         }
 
         TaskNodeLog mainTask = initRebuild();
+        lockManager.executeLocked(EnumSet.of(ImportResource.REBUILD, ImportResource.SAP_IMPORT), mainTask,
+                () -> {
+                    executeTask(mainTask, arrivalRebuildMatFullServiceBean);
+                    executeTask(mainTask, shptArrvRebuildMatFullServiceBean);
 
-        executeTask(mainTask, arrivalRebuildMatFullServiceBean);
-        executeTask(mainTask, shptArrvRebuildMatFullServiceBean);
+                    executeTask(mainTask, arrivalRebuildAggServiceBean);
+                    executeTask(mainTask, shptRebuildAggServiceBean);
+                    executeTask(mainTask, shptArrvRebuildAggServiceBean);
 
-        executeTask(mainTask, arrivalRebuildAggServiceBean);
-        executeTask(mainTask, shptRebuildAggServiceBean);
-        executeTask(mainTask, shptArrvRebuildAggServiceBean);
-
-        executeTask(mainTask, svcMsgRebuildMatFullServiceBean);
+                    executeTask(mainTask, svcMsgRebuildMatFullServiceBean);
+                });
 
         finishRebuild(mainTask, true);
     }
@@ -134,10 +142,13 @@ public class RebuildServiceBean {
             return;
         }
 
-        TaskNodeLog taskSapImport = initRebuild();
-        executeTask(taskSapImport, arrivalRebuildMatDeltaServiceBean);
+        TaskNodeLog taskRebuild = initRebuild("Arrival-Materialized");
+        lockManager.executeLocked(EnumSet.of(ImportResource.REBUILD, ImportResource.SAP_IMPORT), taskRebuild,
+                () -> {
+                    executeTask(taskRebuild, arrivalRebuildMatDeltaServiceBean);
+                });
 
-        finishRebuild(taskSapImport, true);
+        finishRebuild(taskRebuild, true);
     }
 
     @Asynchronous
@@ -148,10 +159,13 @@ public class RebuildServiceBean {
             return;
         }
 
-        TaskNodeLog taskSapImport = initRebuild();
-        executeTask(taskSapImport, shptArrvRebuildMatDeltaServiceBean);
+        TaskNodeLog taskRebuild = initRebuild("Shipment-Arrival-Materialized");
+        lockManager.executeLocked(EnumSet.of(ImportResource.REBUILD, ImportResource.SAP_IMPORT), taskRebuild,
+                () -> {
+                    executeTask(taskRebuild, shptArrvRebuildMatDeltaServiceBean);
+                });
 
-        finishRebuild(taskSapImport, true);
+        finishRebuild(taskRebuild, true);
     }
 
     @Asynchronous
@@ -162,10 +176,13 @@ public class RebuildServiceBean {
             return;
         }
 
-        TaskNodeLog taskSapImport = initRebuild();
-        executeTask(taskSapImport, svcMsgRebuildMatDeltaServiceBean);
+        TaskNodeLog taskRebuild = initRebuild("Service Messages");
+        lockManager.executeLocked(EnumSet.of(ImportResource.REBUILD, ImportResource.REPAIR_IMPORT), taskRebuild,
+                () -> {
+                    executeTask(taskRebuild, svcMsgRebuildMatDeltaServiceBean);
+                });
 
-        finishRebuild(taskSapImport, true);
+        finishRebuild(taskRebuild, true);
     }
 
 
@@ -178,10 +195,13 @@ public class RebuildServiceBean {
             return;
         }
 
-        TaskNodeLog taskSapImport = initRebuild();
-        executeTask(taskSapImport, arrivalRebuildMatFullServiceBean);
+        TaskNodeLog taskRebuild = initRebuild("Arrival-Materialized");
+        lockManager.executeLocked(EnumSet.of(ImportResource.REBUILD), taskRebuild,
+                () -> {
+                    executeTask(taskRebuild, arrivalRebuildMatFullServiceBean);
+                });
 
-        finishRebuild(taskSapImport, true);
+        finishRebuild(taskRebuild, true);
     }
 
     @Asynchronous
@@ -192,10 +212,13 @@ public class RebuildServiceBean {
             return;
         }
 
-        TaskNodeLog taskSapImport = initRebuild();
-        executeTask(taskSapImport, shptArrvRebuildMatFullServiceBean);
+        TaskNodeLog taskRebuild = initRebuild("Shipment-Arrival-Materialized");
+        lockManager.executeLocked(EnumSet.of(ImportResource.REBUILD), taskRebuild,
+                () -> {
+                    executeTask(taskRebuild, shptArrvRebuildMatFullServiceBean);
+                });
 
-        finishRebuild(taskSapImport, true);
+        finishRebuild(taskRebuild, true);
     }
 
     @Asynchronous
@@ -206,10 +229,13 @@ public class RebuildServiceBean {
             return;
         }
 
-        TaskNodeLog taskSapImport = initRebuild();
-        executeTask(taskSapImport, svcMsgRebuildMatFullServiceBean);
+        TaskNodeLog taskRebuild = initRebuild("Service Messages");
+        lockManager.executeLocked(EnumSet.of(ImportResource.REBUILD), taskRebuild,
+                () -> {
+                    executeTask(taskRebuild, svcMsgRebuildMatFullServiceBean);
+                });
 
-        finishRebuild(taskSapImport, true);
+        finishRebuild(taskRebuild, true);
     }
 
 
@@ -222,10 +248,13 @@ public class RebuildServiceBean {
             return;
         }
 
-        TaskNodeLog taskSapImport = initRebuild();
-        executeTask(taskSapImport, arrivalRebuildAggServiceBean);
+        TaskNodeLog taskRebuild = initRebuild("Arrival-Aggregated");
+        lockManager.executeLocked(EnumSet.of(ImportResource.REBUILD, ImportResource.SAP_IMPORT), taskRebuild,
+                () -> {
+                    executeTask(taskRebuild, arrivalRebuildAggServiceBean);
+                });
 
-        finishRebuild(taskSapImport, null);
+        finishRebuild(taskRebuild, null);
     }
 
     @Asynchronous
@@ -236,10 +265,13 @@ public class RebuildServiceBean {
             return;
         }
 
-        TaskNodeLog taskSapImport = initRebuild();
-        executeTask(taskSapImport, shptRebuildAggServiceBean);
+        TaskNodeLog taskRebuild = initRebuild("Shipment-Aggregated");
+        lockManager.executeLocked(EnumSet.of(ImportResource.REBUILD, ImportResource.SAP_IMPORT), taskRebuild,
+                () -> {
+                    executeTask(taskRebuild, shptRebuildAggServiceBean);
+                });
 
-        finishRebuild(taskSapImport, null);
+        finishRebuild(taskRebuild, null);
     }
 
     @Asynchronous
@@ -250,24 +282,31 @@ public class RebuildServiceBean {
             return;
         }
 
-        TaskNodeLog taskSapImport = initRebuild();
-        executeTask(taskSapImport, shptArrvRebuildAggServiceBean);
+        TaskNodeLog taskRebuild = initRebuild("Shipment-Arrival-Aggregated");
+        lockManager.executeLocked(EnumSet.of(ImportResource.REBUILD, ImportResource.SAP_IMPORT), taskRebuild,
+                () -> {
+                    executeTask(taskRebuild, shptArrvRebuildAggServiceBean);
+                });
 
-        finishRebuild(taskSapImport, null);
+        finishRebuild(taskRebuild, null);
     }
 
 
 
     private TaskNodeLog initRebuild() {
+        return initRebuild(null);
+    }
+
+    private TaskNodeLog initRebuild(String description) {
         logger.info("Rebuilding materialized and aggregated tables");
 
-        return new TaskNodeLog(TASKNAME_REBUILD);
+        return new TaskNodeLog(TASKNAME_REBUILD, description);
     }
 
 
-    private ITaskNodeLog executeTask(TaskNodeLog taskSapImport, TaskCall task) {
+    private ITaskNodeLog executeTask(TaskNodeLog taskRebuild, TaskCall task) {
         TaskNodeLog taskNodeLog = task.initTask();
-        taskSapImport.addSubTask(taskNodeLog);
+        taskRebuild.addSubTask(taskNodeLog);
         task.execTask(taskNodeLog);
         return taskNodeLog;
     }

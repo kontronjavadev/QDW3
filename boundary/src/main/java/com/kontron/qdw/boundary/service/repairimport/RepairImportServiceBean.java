@@ -91,7 +91,7 @@ public class RepairImportServiceBean {
         }
 
         TaskNodeLog mainTask = initImportAndRebuild();
-        lockManager.executeLocked(EnumSet.of(ImportResource.REPAIR_IMPORT), mainTask,
+        lockManager.executeLocked(EnumSet.of(ImportResource.REPAIR_IMPORT, ImportResource.REBUILD), mainTask,
                 () -> {
                     TaskNodeLog taskImport = mainTask.createNewSubTaskNode(TASKNAME_IMPORT);
                     ITaskNodeLog rmaImportTask = executeTask(taskImport, rmaImportServiceBean);
@@ -120,7 +120,7 @@ public class RepairImportServiceBean {
         }
 
         TaskNodeLog mainTask = initImportAndRebuild("RMA");
-        lockManager.executeLocked(EnumSet.of(ImportResource.REPAIR_IMPORT), mainTask,
+        lockManager.executeLocked(EnumSet.of(ImportResource.REPAIR_IMPORT, ImportResource.REBUILD), mainTask,
                 () -> {
                     TaskNodeLog taskImport = mainTask.createNewSubTaskNode(TASKNAME_IMPORT);
                     ITaskNodeLog rmaImportTask = executeTask(taskImport, rmaImportServiceBean);
@@ -145,7 +145,7 @@ public class RepairImportServiceBean {
         }
 
         TaskNodeLog mainTask = initImportAndRebuild("Service Messages");
-        lockManager.executeLocked(EnumSet.of(ImportResource.REPAIR_IMPORT), mainTask,
+        lockManager.executeLocked(EnumSet.of(ImportResource.REPAIR_IMPORT, ImportResource.REBUILD), mainTask,
                 () -> {
                     TaskNodeLog taskImport = mainTask.createNewSubTaskNode(TASKNAME_IMPORT);
                     ITaskNodeLog svcMsgImportTask = executeTask(taskImport, svcMsgImportServiceBean);
@@ -170,7 +170,7 @@ public class RepairImportServiceBean {
         }
 
         TaskNodeLog taskRebuild = initRebuild("Service Messages");
-        lockManager.executeLocked(EnumSet.of(ImportResource.REPAIR_IMPORT), taskRebuild,
+        lockManager.executeLocked(EnumSet.of(ImportResource.REPAIR_IMPORT, ImportResource.REBUILD), taskRebuild,
                 () -> {
                     executeTask(taskRebuild, svcMsgRebuildServiceBean);
                 });

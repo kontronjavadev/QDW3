@@ -12,12 +12,12 @@ import java.lang.invoke.MethodHandles;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -28,6 +28,8 @@ import com.kontron.common.filetransfer.FtException;
 import com.kontron.common.filetransfer.SftpAccess;
 import com.kontron.qdw.boundary.service.SchedulerServiceBean;
 import com.kontron.qdw.boundary.service.process.FileUtils;
+import com.kontron.qdw.boundary.service.process.ImportResource;
+import com.kontron.qdw.boundary.service.process.ResourceLockManagerBean;
 import com.kontron.qdw.boundary.util.Constants;
 import com.kontron.qdw.boundary.util.MailServiceFacade;
 import com.kontron.util.datetime.TimeUtil;
@@ -45,6 +47,7 @@ import jakarta.ejb.LockType;
 import jakarta.ejb.Singleton;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
+import jakarta.inject.Inject;
 
 /**
  * Import der Trace-BoM-Dateien, die die Fertiger in verschiedenen Verzeichnissen auf dem sftp bereitstellen.
@@ -64,8 +67,6 @@ public class TraceBoMImportServiceBean {
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    // unser eigener, Thread-sicherer Wächter
-    private final AtomicBoolean isRunning = new AtomicBoolean(false);
 
     private static final String TASKNAME_IMPORT = "Trace-BoM import";
     private static final String TASKNAME_DOWNLOAD = "Trace-BoM download";
@@ -74,6 +75,9 @@ public class TraceBoMImportServiceBean {
     private static final String ROOT_ELEMENT_STOCK_RECEIPT = "STOCK_RECEIPT";
     private static final String ROOT_ELEMENT_TRACE_BOMS = "trace_boms";
 
+
+    @Inject
+    private ResourceLockManagerBean lockManager;
 
 
     @EJB
@@ -149,70 +153,63 @@ public class TraceBoMImportServiceBean {
             return;
         }
 
-        // Atomare Prüfung und Setzen des Locks
-        if (!isRunning.compareAndSet(false, true)) {
-            logger.warn("Job läuft bereits!");
-            return;
-        }
-
         TaskNodeLog mainTask = initImport();
-
-        try {
-            // ---> == execTask(), nur dass beim normalen Import noch eine Klammer darüber ist
-            SftpAccess ftpAccess;
-            FolderConfig folderConfig;
-            List<String> rootFolders = null;
-            try {
-                ftpAccess = createSFTPClient();
-                folderConfig = setupFolders();
-                rootFolders = CollectionUtils.isEmpty(selectedFolders)
-                        ? getRootFolders(ftpAccess)
-                        : new ArrayList<>(selectedFolders);
-            }
-            catch (Exception e) {
-                TaskLeafLog tskInit = mainTask.createNewSubTaskLeaf("Run import", "initializing sftp access for import");
-                tskInit.finishTaskWithError(e);
-                mainTask.abortTask();
-                finishImport(mainTask);
-                return;
-            }
-
-
-            // Beachte: jeder Vertrags-Fertiger hat seinen eigenen Unterordner
-            // Alle Dateien runter laden
-            TaskNodeLog downloadTask = mainTask.createNewSubTaskNode(TASKNAME_DOWNLOAD);
-            for (String ftpManufacturerFolder : rootFolders) {
-                try {
-                    downloadFilesFromFolder(downloadTask, ftpAccess, ftpManufacturerFolder, folderConfig);
-                }
-                catch (Exception e) {
-                    downloadTask.addSubTask(new FileImportAbortedWithErrorsLog("folder " + ftpManufacturerFolder, "Error when downloading files"));
-                    break;
-                }
-            }
+        lockManager.executeLocked(EnumSet.of(ImportResource.TRACEBOM_IMPORT), mainTask,
+                () -> {
+                    // ---> == execTask(), nur dass beim normalen Import noch eine Klammer darüber ist
+                    SftpAccess ftpAccess;
+                    FolderConfig folderConfig;
+                    List<String> rootFolders = null;
+                    try {
+                        ftpAccess = createSFTPClient();
+                        folderConfig = setupFolders();
+                        rootFolders = CollectionUtils.isEmpty(selectedFolders)
+                                ? getRootFolders(ftpAccess)
+                                : new ArrayList<>(selectedFolders);
+                    }
+                    catch (Exception e) {
+                        TaskLeafLog tskInit = mainTask.createNewSubTaskLeaf("Run import", "initializing sftp access for import");
+                        tskInit.finishTaskWithError(e);
+                        mainTask.abortTask();
+                        finishImport(mainTask);
+                        return;
+                    }
 
 
-            // alle heruntergeladenen Dateien ggf. entpacken und verarbeiten
-            // (Es können auch bereits Dateien im Verzeichnis liegen, die nicht gerade erst runtergeladen wurden.)
-            TaskNodeLog processTask = mainTask.createNewSubTaskNode(TASKNAME_PROCESS);
-            for (String ftpManufacturerFolder : rootFolders) {
-                TaskNodeLog folderTask = processTask.createNewSubTaskNode("folder " + ftpManufacturerFolder);
-                try {
-                    processFilesInFolder(folderTask, ftpAccess, ftpManufacturerFolder, folderConfig);
-                    folderTask.finishTask();
-                }
-                catch (Exception e) {
-                    folderTask.addSubTask(new FileImportAbortedWithErrorsLog("folder " + ftpManufacturerFolder, "Error when processing files"));
-                    folderTask.abortTask();
-                    break;
-                }
-            }
-        }
-        finally {
-            isRunning.set(false);
-        }
+                    // Beachte: jeder Vertrags-Fertiger hat seinen eigenen Unterordner
+                    // Alle Dateien runter laden
+                    TaskNodeLog downloadTask = mainTask.createNewSubTaskNode(TASKNAME_DOWNLOAD);
+                    for (String ftpManufacturerFolder : rootFolders) {
+                        try {
+                            downloadFilesFromFolder(downloadTask, ftpAccess, ftpManufacturerFolder, folderConfig);
+                        }
+                        catch (Exception e) {
+                            downloadTask.addSubTask(
+                                    new FileImportAbortedWithErrorsLog("folder " + ftpManufacturerFolder, "Error when downloading files"));
+                            break;
+                        }
+                    }
 
-        // <--- execTask()
+
+                    // alle heruntergeladenen Dateien ggf. entpacken und verarbeiten
+                    // (Es können auch bereits Dateien im Verzeichnis liegen, die nicht gerade erst runtergeladen wurden.)
+                    TaskNodeLog processTask = mainTask.createNewSubTaskNode(TASKNAME_PROCESS);
+                    for (String ftpManufacturerFolder : rootFolders) {
+                        TaskNodeLog folderTask = processTask.createNewSubTaskNode("folder " + ftpManufacturerFolder);
+                        try {
+                            processFilesInFolder(folderTask, ftpAccess, ftpManufacturerFolder, folderConfig);
+                            folderTask.finishTask();
+                        }
+                        catch (Exception e) {
+                            folderTask
+                                    .addSubTask(new FileImportAbortedWithErrorsLog("folder " + ftpManufacturerFolder, "Error when processing files"));
+                            folderTask.abortTask();
+                            break;
+                        }
+                    }
+                    // <--- execTask()
+                });
+
         finishImport(mainTask);
     }
 
@@ -221,51 +218,43 @@ public class TraceBoMImportServiceBean {
             return;
         }
 
-        // Atomare Prüfung und Setzen des Locks
-        if (!isRunning.compareAndSet(false, true)) {
-            logger.warn("Job läuft bereits!");
-            return;
-        }
-
         TaskNodeLog downloadTask = initDownload();
+        lockManager.executeLocked(EnumSet.of(ImportResource.TRACEBOM_IMPORT), downloadTask,
+                () -> {
+                    // ---> == execTask(), nur dass beim normalen Import noch eine Klammer darüber ist
+                    SftpAccess ftpAccess;
+                    FolderConfig folderConfig;
+                    List<String> rootFolders = null;
+                    try {
+                        ftpAccess = createSFTPClient();
+                        folderConfig = setupFolders();
+                        rootFolders = CollectionUtils.isEmpty(selectedFolders)
+                                ? getRootFolders(ftpAccess)
+                                : new ArrayList<>(selectedFolders);
+                    }
+                    catch (Exception e) {
+                        TaskLeafLog tskInit = downloadTask.createNewSubTaskLeaf("initializing sftp access for download");
+                        tskInit.finishTaskWithError(e);
+                        downloadTask.abortTask();
+                        finishImport(downloadTask);
+                        return;
+                    }
 
-        try {
-            // ---> == execTask(), nur dass beim normalen Import noch eine Klammer darüber ist
-            SftpAccess ftpAccess;
-            FolderConfig folderConfig;
-            List<String> rootFolders = null;
-            try {
-                ftpAccess = createSFTPClient();
-                folderConfig = setupFolders();
-                rootFolders = CollectionUtils.isEmpty(selectedFolders)
-                        ? getRootFolders(ftpAccess)
-                        : new ArrayList<>(selectedFolders);
-            }
-            catch (Exception e) {
-                TaskLeafLog tskInit = downloadTask.createNewSubTaskLeaf("initializing sftp access for download");
-                tskInit.finishTaskWithError(e);
-                downloadTask.abortTask();
-                finishImport(downloadTask);
-                return;
-            }
 
+                    // Beachte: jeder Vertrags-Fertiger hat seinen eigenen Unterordner
+                    for (String ftpManufacturerFolder : rootFolders) {
+                        try {
+                            downloadFilesFromFolder(downloadTask, ftpAccess, ftpManufacturerFolder, folderConfig);
+                        }
+                        catch (Exception e) {
+                            downloadTask.addSubTask(
+                                    new FileImportAbortedWithErrorsLog("folder " + ftpManufacturerFolder, "Error when downloading files"));
+                            break;
+                        }
+                    }
+                    // <--- execTask()
+                });
 
-            // Beachte: jeder Vertrags-Fertiger hat seinen eigenen Unterordner
-            for (String ftpManufacturerFolder : rootFolders) {
-                try {
-                    downloadFilesFromFolder(downloadTask, ftpAccess, ftpManufacturerFolder, folderConfig);
-                }
-                catch (Exception e) {
-                    downloadTask.addSubTask(new FileImportAbortedWithErrorsLog("folder " + ftpManufacturerFolder, "Error when downloading files"));
-                    break;
-                }
-            }
-        }
-        finally {
-            isRunning.set(false);
-        }
-
-        // <--- execTask()
         finishImport(downloadTask);
     }
 
@@ -274,59 +263,51 @@ public class TraceBoMImportServiceBean {
             return;
         }
 
-        // Atomare Prüfung und Setzen des Locks
-        if (!isRunning.compareAndSet(false, true)) {
-            logger.warn("Job läuft bereits!");
-            return;
-        }
-
         TaskNodeLog processTask = initProcess();
+        lockManager.executeLocked(EnumSet.of(ImportResource.TRACEBOM_IMPORT), processTask,
+                () -> {
+                    // ---> == execTask(), nur dass beim normalen Import noch eine Klammer darüber ist
+                    SftpAccess ftpAccess = null;
+                    FolderConfig folderConfig;
+                    List<String> rootFolders = null;
+                    try {
+                        if (Constants.IS_PROD_ENVIRONMENT) {
+                            // Zugang zum SFTP wird beim Aufruf von processFilesInFolder nur benötigt,
+                            // um die Dateien auf dem SFTP zu löschen und das macht nur die Produktivumgebung,
+                            // oder um ggf. die vollständige Ordnerliste zu holen (wird dort aufgebaut, falls nötig).
+                            ftpAccess = createSFTPClient();
+                        }
+                        folderConfig = setupFolders();
+                        rootFolders = CollectionUtils.isEmpty(selectedFolders)
+                                ? getRootFolders(ftpAccess)
+                                : new ArrayList<>(selectedFolders);
+                    }
+                    catch (Exception e) {
+                        TaskLeafLog tskInit = processTask.createNewSubTaskLeaf("initializing sftp access for deleting files after processed");
+                        tskInit.finishTaskWithError(e);
+                        processTask.abortTask();
+                        finishImport(processTask);
+                        return;
+                    }
 
-        try {
-            // ---> == execTask(), nur dass beim normalen Import noch eine Klammer darüber ist
-            SftpAccess ftpAccess = null;
-            FolderConfig folderConfig;
-            List<String> rootFolders = null;
-            try {
-                if (Constants.IS_PROD_ENVIRONMENT) {
-                    // Zugang zum SFTP wird beim Aufruf von processFilesInFolder nur benötigt,
-                    // um die Dateien auf dem SFTP zu löschen und das macht nur die Produktivumgebung,
-                    // oder um ggf. die vollständige Ordnerliste zu holen (wird dort aufgebaut, falls nötig).
-                    ftpAccess = createSFTPClient();
-                }
-                folderConfig = setupFolders();
-                rootFolders = CollectionUtils.isEmpty(selectedFolders)
-                        ? getRootFolders(ftpAccess)
-                        : new ArrayList<>(selectedFolders);
-            }
-            catch (Exception e) {
-                TaskLeafLog tskInit = processTask.createNewSubTaskLeaf("initializing sftp access for deleting files after processed");
-                tskInit.finishTaskWithError(e);
-                processTask.abortTask();
-                finishImport(processTask);
-                return;
-            }
 
+                    // Beachte: jeder Vertrags-Fertiger hat seinen eigenen Unterordner
+                    for (String ftpManufacturerFolder : rootFolders) {
+                        TaskNodeLog folderTask = processTask.createNewSubTaskNode("folder " + ftpManufacturerFolder);
+                        try {
+                            processFilesInFolder(folderTask, ftpAccess, ftpManufacturerFolder, folderConfig);
+                            folderTask.finishTask();
+                        }
+                        catch (Exception e) {
+                            folderTask
+                                    .addSubTask(new FileImportAbortedWithErrorsLog("folder " + ftpManufacturerFolder, "Error when processing files"));
+                            folderTask.abortTask();
+                            break;
+                        }
+                    }
+                    // <--- execTask()
+                });
 
-            // Beachte: jeder Vertrags-Fertiger hat seinen eigenen Unterordner
-            for (String ftpManufacturerFolder : rootFolders) {
-                TaskNodeLog folderTask = processTask.createNewSubTaskNode("folder " + ftpManufacturerFolder);
-                try {
-                    processFilesInFolder(folderTask, ftpAccess, ftpManufacturerFolder, folderConfig);
-                    folderTask.finishTask();
-                }
-                catch (Exception e) {
-                    folderTask.addSubTask(new FileImportAbortedWithErrorsLog("folder " + ftpManufacturerFolder, "Error when processing files"));
-                    folderTask.abortTask();
-                    break;
-                }
-            }
-        }
-        finally {
-            isRunning.set(false);
-        }
-
-        // <--- execTask()
         finishImport(processTask);
     }
 
@@ -684,8 +665,8 @@ public class TraceBoMImportServiceBean {
         // Bei QDW gibt es auf oberster Ebene zwei Subtasks, einen für den Download und einen für die Verarbeitung.
         // Bei "process" ist die Ordnerstruktur als Subtask angelegt und der wiederum hat für jede Datei einen weiteren Subtask.
         // Nur wenn es _dort_ nichts zu tun gibt, gibt es wirklich nichts zu tun.
-        // Bei "download" gibt es lediglich ordnerspezifische Subtasks, FileImportSuccessfulLog, die dann die Anzahl der heruntergeladenen
-        // Dateien hat.
+        // Bei "download" gibt es lediglich ordnerspezifische Subtasks, FileImportSuccessfulLog, die dann die Anzahl der
+        // heruntergeladenen Dateien hat.
         // Falls der konkrete Vorgang, Download oder Verarbeitung, direkt aus der Administrationsoberfläche
         // gestartet wird, ist dieser Vorgang der oberste Knoten!
 

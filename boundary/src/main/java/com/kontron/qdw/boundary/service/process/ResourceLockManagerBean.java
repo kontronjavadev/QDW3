@@ -47,25 +47,26 @@ public class ResourceLockManagerBean {
         List<ImportResource> acquiredLocks = new ArrayList<>();
 
         try {
-            // 2. Alle angeforderten Locks nacheinander versuchen zu holen
+            // 2. versuchen, alle angeforderten Locks nacheinander zu holen
             for (ImportResource resource : sortedLocks) {
                 if (locks.get(resource).compareAndSet(false, true)) {
                     acquiredLocks.add(resource);
                 }
                 else {
-                    String msg = "Job '" + jobName + "' rejected: Ressource '"
-                            + acquiredLocks.stream().map(ImportResource::toString).collect(Collectors.joining(", "))
-                            + "' is blocked.";
+                    String msg = "Job '" + jobName + "' rejected: Ressource '" + resource + "' is blocked.";
                     TaskLeafLog tskUnmarshall = mainTask.createNewSubTaskLeaf("trying to get execution lock");
                     tskUnmarshall.finishTaskWithError(msg);
-
                     logger.warn(msg);
                     return; // Early Exit. Das finally räumt die bereits geholten Locks sauber auf.
                 }
             }
 
-            // 3. Wenn wir hier sind, haben wir ALLE angeforderten Locks erfolgreich erhalten
-            logger.info("Job '{}' startet mit exklusivem Zugriff auf: {}", jobName, acquiredLocks);
+            // 3. An dieser Stelle haben wir alle angeforderten Locks erfolgreich erhalten
+            logger.atInfo().setMessage("Job '{}' startet mit exklusivem Zugriff auf: {}")
+                    .addArgument(jobName)
+                    .addArgument(() -> acquiredLocks.stream().map(ImportResource::toString).collect(Collectors.joining(", ")))
+                    .log();
+
             taskExecutor.run();
         }
         finally {
