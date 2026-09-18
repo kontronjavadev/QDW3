@@ -232,7 +232,7 @@ public class ShipmentImportServiceBean extends AbstractImportServiceBean<Shipmen
     }
 
     private List<ShipmentMappingType> batchFiltern(List<ShipmentMappingType> curBatch) {
-        curBatch = curBatch.stream()
+        return curBatch.stream()
                 .filter(importedShipment -> StringUtils.isNotEmpty(importedShipment.getSerialNumber()))
                 .filter(importedShipment -> StringUtils.isNotEmpty(importedShipment.getId()))
                 // CANCELED_SHIPMENT_MOVEMENT_TYPE_1 must be taken over without order number because
@@ -240,7 +240,6 @@ public class ShipmentImportServiceBean extends AbstractImportServiceBean<Shipmen
                 .filter(importedShipment -> StringUtils.isNotEmpty(importedShipment.getOrderNumber())
                         || Objects.equals(importedShipment.getMovementTypeCode(), CANCELED_SHIPMENT_MOVEMENT_TYPE_1))
                 .collect(Collectors.toList());
-        return curBatch;
     }
 
 

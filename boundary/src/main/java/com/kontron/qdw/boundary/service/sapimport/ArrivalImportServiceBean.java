@@ -263,12 +263,11 @@ public class ArrivalImportServiceBean extends AbstractImportServiceBean<ArrivalR
     }
 
     private List<ArrivalMappingType> batchFiltern(List<ArrivalMappingType> curBatch) {
-        curBatch = curBatch.stream()
+        return curBatch.stream()
                 .filter(importedArrival -> StringUtils.isNotEmpty(importedArrival.getMaterialSapNumber()))
                 .filter(importedArrival -> StringUtils.isNotEmpty(importedArrival.getSerialNumber()))
                 .filter(importedArrival -> StringUtils.isNotEmpty(importedArrival.getId()))
                 .collect(Collectors.toList());
-        return curBatch;
     }
 
 

@@ -420,9 +420,9 @@ public class SapDataImportServiceBean {
     }
 
 
-    private ITaskNodeLog executeTask(TaskNodeLog taskSapImport, TaskCall task) {
+    private ITaskNodeLog executeTask(TaskNodeLog taskImport, TaskCall task) {
         TaskNodeLog taskNodeLog = task.initTask();
-        taskSapImport.addSubTask(taskNodeLog);
+        taskImport.addSubTask(taskNodeLog);
         task.execTask(taskNodeLog);
         return taskNodeLog;
     }
