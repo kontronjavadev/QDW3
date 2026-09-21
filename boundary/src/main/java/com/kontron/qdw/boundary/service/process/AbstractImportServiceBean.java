@@ -3,17 +3,18 @@ package com.kontron.qdw.boundary.service.process;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FilenameFilter;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.invoke.MethodHandles;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
+import org.apache.commons.lang3.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
@@ -52,9 +53,6 @@ public abstract class AbstractImportServiceBean<ROOT, ELEM> implements TaskCall 
 
     private static final String ENCODING = Constants.UTF_8;
 
-    // Definition of simple filter to get only *.xml files
-    private static final FilenameFilter SIMPLE_XML_FILTER = FileType.XML.getFilenameFilterAllWithExtension();
-
     private String exchangePath = new PropertyService().getStringProperty(PROP_XML_EXCHANGE_FOLDER);
 
     @PersistenceContext
@@ -74,8 +72,8 @@ public abstract class AbstractImportServiceBean<ROOT, ELEM> implements TaskCall 
     @PermitAll
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void execTask(TaskNodeLog ownTask) {
-        String[] importFileNames = new File(getImportDir()).list(SIMPLE_XML_FILTER);
-        if (importFileNames.length == 0) {
+        List<String> orderedImportFileNames = getOrderedImportFileNames();
+        if (orderedImportFileNames.isEmpty()) {
             ownTask.finishTask();
             return;
         }
@@ -97,13 +95,10 @@ public abstract class AbstractImportServiceBean<ROOT, ELEM> implements TaskCall 
         }
 
 
-        List<String> orderedImportFileNames = com.kontron.util.file.FileUtil.getOrderedSAPImportFileNames(importFileNames, getImportType());
-
         // Read all xml files from given path
         logger.info("{} files found for " + getEntityName() + " import.", orderedImportFileNames);
         for (String importFileName : orderedImportFileNames) {
-            importFile(getEntityName(), getFolderSubPath(), importFileName, ownTask, getImportDir(),
-                    unmarshaller, getGetElementsFunction());
+            importFile(importFileName, ownTask, unmarshaller);
         }
 
 
@@ -113,20 +108,12 @@ public abstract class AbstractImportServiceBean<ROOT, ELEM> implements TaskCall 
 
 
 
-    protected void importFile(String entityName, String folderSubPath, String importFileName, TaskNodeLog tsk, String importDir,
-            Unmarshaller unmarshaller,
-            Function<ROOT, List<ELEM>> getElementsFunction) {
-        logger.info("Lese " + entityName + "-Import Datei '{}'", importFileName);
+    protected void importFile(String importFileName, TaskNodeLog tsk, Unmarshaller unmarshaller) {
+        logger.info("Lese " + getEntityName() + "-Import Datei '{}'", importFileName);
 
         List<ELEM> importedElements;
-        // parse xml file into list of entities
-        try (InputStream is = new FileInputStream(new File(importDir, importFileName));
-                InputStreamReader isr = new InputStreamReader(is, ENCODING)) {
-            InputSource isrc = new InputSource(isr);
-            isrc.setEncoding(ENCODING);
-            @SuppressWarnings("unchecked")
-            ROOT xmlRoot = (ROOT) unmarshaller.unmarshal(isrc);
-            importedElements = getElementsFunction.apply(xmlRoot);
+        try {
+            importedElements = unmarshal(unmarshaller, importFileName, tsk);
         }
         catch (Exception e) {
             // add error to response and continue with next file
@@ -169,12 +156,24 @@ public abstract class AbstractImportServiceBean<ROOT, ELEM> implements TaskCall 
         }
 
         try {
-            XMLDataImportUtils.moveFileToArchive(folderSubPath, importFileName);
+            XMLDataImportUtils.moveFileToArchive(getFolderSubPath(), importFileName);
         }
         catch (Exception e) {
             tsk.addSubTask(new FileImportAbortedWithErrorsLog(importFileName, "Failed moving file to import archive", importFileName, e));
             tsk.abortTask();
             return;
+        }
+    }
+
+    protected List<ELEM> unmarshal(Unmarshaller unmarshaller, String importFileName, TaskNodeLog tsk) throws Exception {
+        // parse xml file into list of entities
+        try (FileInputStream is = new FileInputStream(new File(getImportDir(), importFileName));
+                InputStreamReader isr = new InputStreamReader(is, ENCODING)) {
+            InputSource isrc = new InputSource(isr);
+            isrc.setEncoding(ENCODING);
+            @SuppressWarnings("unchecked")
+            ROOT xmlRoot = (ROOT) unmarshaller.unmarshal(isrc);
+            return getGetElementsFunction().apply(xmlRoot);
         }
     }
 
@@ -186,6 +185,19 @@ public abstract class AbstractImportServiceBean<ROOT, ELEM> implements TaskCall 
 
     private String getImportDir() {
         return exchangePath + getFolderSubPath();
+    }
+
+    protected List<String> getOrderedImportFileNames() {
+        List<String> importFileNames = Arrays.asList(new File(getImportDir()).list(getImportFilenameFilter()));
+        if (importFileNames.isEmpty()) {
+            return importFileNames;
+        }
+        return com.kontron.util.file.FileUtil.getOrderedSAPImportFileNames(importFileNames, getImportType());
+    }
+
+    protected FilenameFilter getImportFilenameFilter() {
+        return (File dir, String name) -> Strings.CI.endsWith(name, FileType.XML.getFilenameExtension())
+                && Strings.CI.startsWith(name, getImportType().getPrefix());
     }
 
     protected int bulkSize() {
