@@ -134,6 +134,7 @@ public abstract class AbstractImportServiceBean<ROOT, ELEM> implements TaskCall 
         while (bulkProcess.getBulkToIdx() - bulkProcess.getBulkFromIdx() > 0) {
             try {
                 importBulk(importFileName, tsk, importedElements, errorList, bulkProcess);
+                em.flush();
             }
             catch (Exception e) {
                 logger.error("failed", e);
@@ -141,10 +142,11 @@ public abstract class AbstractImportServiceBean<ROOT, ELEM> implements TaskCall 
                 tsk.abortTask();
                 return;
             }
+            finally {
+                em.clear();
+            }
 
             bulkProcess.nextBulk();
-            em.flush();
-            em.clear();
         } // end bulk
         logger.info("100% done");
 
