@@ -17,6 +17,7 @@ import com.kontron.util.datetime.TimeUtil;
 public class BulkProcess {
 
     public static final int DEFAULT_BULK_SIZE = 2000;
+    public static final int DEFAULT_PROGRESS_STEP_SIZE = 5;
 
     private final int listSize;
     private final int bulkSize;
@@ -35,10 +36,16 @@ public class BulkProcess {
     }
 
     public BulkProcess(int listSize, int bulkSize) {
+        this(listSize, bulkSize, DEFAULT_PROGRESS_STEP_SIZE);
+    }
+
+    public BulkProcess(int listSize, int bulkSize, int progressStep) {
         this.listSize = listSize;
         this.bulkSize = bulkSize;
         bulkToIdx = Math.min(listSize, bulkSize);
         start = System.currentTimeMillis();
+        this.progressStep = progressStep;
+        this.progress = progressStep;
     }
 
 
