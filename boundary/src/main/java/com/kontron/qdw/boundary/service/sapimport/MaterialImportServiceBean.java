@@ -43,7 +43,7 @@ import jakarta.ejb.Stateless;
  * @author Raymund Achner, achner.com
  */
 @Stateless
-@LocalBean // nötig, weil Superklasse Interface implementiert und sonst keine No-Interface-View bereit gestellt wird
+@LocalBean // nötig, weil Superklasse Interface implementiert und sonst eine No-Interface-View bereit gestellt wird
 public class MaterialImportServiceBean extends AbstractImportServiceBean<MaterialXMLRoot, MaterialXMLElement> {
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());

@@ -49,7 +49,7 @@ import net.sourceforge.jbizmo.commons.property.PropertyService;
  * @author Raymund Achner, achner.com
  */
 @Stateless
-@LocalBean // nötig, weil Superklasse Interface implementiert und sonst keine No-Interface-View bereit gestellt wird
+@LocalBean // nötig, weil Interface implementiert wird und sonst eine No-Interface-View bereit gestellt wird
 public class CustomerImportServiceBean implements TaskCall {
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
