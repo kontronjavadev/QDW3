@@ -31,7 +31,7 @@
 <!-- TraceBoMImport view dialog -->
 
 	<p:scrollPanel style="width:100%; height:calc(100vh - 141px);" mode="native">
-		<h:outputLabel value="#{i18n.tracebomimportview_folderfilter}: " styleClass="label-field-otional"/>
+		<h:outputText value="#{i18n.tracebomimportview_folderfilter}: " styleClass="label-field-otional"/>
 		<p:selectCheckboxMenu id="multiple"
 			label="#{i18n.filter_all_or_none_nofilter}"
 			emptyLabel="#{i18n.filter_all_or_none_nofilter}"
@@ -45,30 +45,17 @@
 		<table>
 			<tr>
 				<td><p:commandButton id="cmdImport" icon="pi pi-play" action="#{traceBoMImportView.runImport}" /></td>
-				<td><h:outputLabel value="#{i18n.tracebomimportview_runimport}" for="cmdImport" styleClass="label-field-otional"/></td>
+				<td><h:outputText value="#{i18n.tracebomimportview_runimport}" styleClass="label-field-otional"/></td>
 			</tr>
 
 			<tr>
 				<td><p:commandButton style="margin-left: 1rem" id="cmdDownload" icon="pi pi-play" action="#{traceBoMImportView.runDownload}" /></td>
-				<td><h:outputLabel value="#{i18n.tracebomimportview_rundownload}" for="cmdDownload" styleClass="label-field-otional"/></td>
+				<td><h:outputText value="#{i18n.tracebomimportview_rundownload}" styleClass="label-field-otional"/></td>
 			</tr>
 			<tr>
 				<td><p:commandButton style="margin-left: 1rem" id="cmdProcess" icon="pi pi-play" action="#{traceBoMImportView.runProcess}" /></td>
-				<td><h:outputLabel value="#{i18n.tracebomimportview_runprocess}" for="cmdProcess" styleClass="label-field-otional"/></td>
+				<td><h:outputText value="#{i18n.tracebomimportview_runprocess}" styleClass="label-field-otional"/></td>
 			</tr>
-<!-- 
- -->
-
-
-
-<!-- 
-			<tr>
-				<td><p:commandButton style="margin-left: 1.5rem" id="cmdXxx" icon="pi pi-play" action="#{traceBoMImportView.runXxx}" /></td>
-				<td><h:outputLabel value="#{i18n.tracebomimportview_xxx}" for="cmdXxx" styleClass="label-field-otional"/></td>
-			</tr>
- -->
-
-
 		</table>
 	</p:scrollPanel>
 
