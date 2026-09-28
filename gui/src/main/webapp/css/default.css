@@ -15,6 +15,8 @@
 	--disabled: #dfe7f3;
 	--label: #000;
 	--headerlabel: #4a83b1; /* farblich gehighlighteter Text */
+	--link: #0e70c0;
+	--hoverlink: #0c65ad;
 
 	--active: #4a83b1; /* active bzw. highlight) */
 	--activemarked: #9dbed9; /* active bzw. highlight) */
@@ -47,6 +49,8 @@
 	--disabled: #2B4C66;
 	--label: #ddd;
 	--headerlabel: #e67022;
+	--link: #e7a071;
+	--hoverlink: #e19462;
 
 	--active: #e67022;
 	--activemarked: #f2b994;
@@ -112,6 +116,16 @@ body .navigator-scrollpanel > .ui-panel-content.ui-widget-content {
 .ui-widget-italic {
 	font-style: italic !important;
 }
+
+
+body .ui-link {
+	color: var(--link);
+}
+
+body .ui-link:hover {
+	color: var(--hoverlink);
+}
+
 
 body.lov {
 	padding: 10px;
