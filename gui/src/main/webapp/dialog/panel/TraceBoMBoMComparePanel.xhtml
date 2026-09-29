@@ -27,109 +27,100 @@
 	>
 		<p:ajax event="rowDblselect" listener="#{traceBoMBoMComparePanel.onBomItemsGridDoubleClickFst}"/>
 
-		<p:column sortBy="#{boMFstPanelItem.lineNumber}" width="80" >
-			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materialrevisionbompanel_linenumber}"/>
-			</f:facet>
-			<h:outputText value="#{boMFstPanelItem.lineNumber}"/>
-		</p:column>
-
-		<p:column sortBy="#{boMFstPanelItem.materialMaterialNumber}" width="100" 
+		<p:column sortBy="#{boMFstPanelItem.materialMaterialNumber}" width="150" 
 			exportValue="#{boMFstPanelItem.materialMaterialNumber}" class="tdnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materialrevisionbompanel_materialmaterialnumber}"/>
+				<h:outputText value="#{i18n.col_tracebomtracebomitemspanel_materialmaterialnumber}"/>
 			</f:facet>
-			<h:outputText value="#{boMFstPanelItem.materialMaterialNumber}" id="materialMaterialNumberFst"/>
-			<p:tooltip for="materialMaterialNumberFst" value="#{boMFstPanelItem.materialMaterialNumber}" position="top" showDelay="50"/>
+			<h:outputText value="#{boMFstPanelItem.materialMaterialNumber}" styleClass="pf-tooltip-target" />
 		</p:column>
 
-		<p:column sortBy="#{boMFstPanelItem.materialSapNumber}" width="100" >
+		<p:column sortBy="#{boMFstPanelItem.materialSapNumber}" width="150" 
+			exportValue="#{boMFstPanelItem.materialSapNumber}" class="tdnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materialrevisionbompanel_materialsapnumber}"/>
+				<h:outputText value="#{i18n.col_tracebomtracebomitemspanel_materialsapnumber}"/>
 			</f:facet>
-			<h:outputText value="#{boMFstPanelItem.materialSapNumber}">
-			</h:outputText>
+			<h:outputText value="#{boMFstPanelItem.materialSapNumber}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{boMFstPanelItem.materialShortText}" width="250" 
 			exportValue="#{boMFstPanelItem.materialShortText}" class="tdnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materialrevisionbompanel_materialshorttext}"/>
+				<h:outputText value="#{i18n.col_tracebomtracebomitemspanel_materialshorttext}"/>
 			</f:facet>
-			<h:outputText value="#{boMFstPanelItem.materialShortText}" id="materialShortTextFst"/>
-			<p:tooltip for="materialShortTextFst" value="#{boMFstPanelItem.materialShortText}" position="top" showDelay="50"/>
-		</p:column>
-
-		<p:column sortBy="#{boMFstPanelItem.materialEol}" width="80" >
-			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materialrevisionbompanel_materialeol}"/>
-			</f:facet>
-			<p:selectBooleanCheckbox value="#{boMFstPanelItem.materialEol}" disabled="true"/>
-		</p:column>
-
-		<p:column sortBy="#{boMFstPanelItem.materialTypeCode}" width="80" >
-			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materialrevisionbompanel_materialtypecode}"/>
-			</f:facet>
-			<h:outputText value="#{boMFstPanelItem.materialTypeCode}">
-			</h:outputText>
-		</p:column>
-
-		<p:column sortBy="#{boMFstPanelItem.materialClassCode}" width="120" 
-			exportValue="#{boMFstPanelItem.materialClassCode}" class="tdnowrap" >
-			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materialrevisionbompanel_materialclasscode}"/>
-			</f:facet>
-			<h:outputText value="#{boMFstPanelItem.materialClassCode}" id="materialClassCodeFst"/>
-			<p:tooltip for="materialClassCodeFst" value="#{boMFstPanelItem.materialClassCode}" position="top" showDelay="50"/>
+			<h:outputText value="#{boMFstPanelItem.materialShortText}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{boMFstPanelItem.quantity}" width="80" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materialrevisionbompanel_quantity}"/>
+				<h:outputText value="#{i18n.lbl_attr_tracebomitem_quantity}"/>
 			</f:facet>
 			<h:outputText value="#{boMFstPanelItem.quantity}">
-				<f:convertNumber pattern="#{userSession.numberFormat}"/>
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{boMFstPanelItem.label}" width="100" >
+		<p:column sortBy="#{boMFstPanelItem.manufacturerName}" width="200" 
+			exportValue="#{boMFstPanelItem.manufacturerName}" class="tdnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.lbl_attr_bomitem_label}"/>
+				<h:outputText value="#{i18n.col_tracebomtracebomitemspanel_manufacturername}"/>
 			</f:facet>
-			<h:outputText value="#{boMFstPanelItem.label}">
-			</h:outputText>
+			<h:outputText value="#{boMFstPanelItem.manufacturerName}" styleClass="pf-tooltip-target" />
 		</p:column>
 
-		<p:column sortBy="#{boMFstPanelItem.assembly}" width="70" >
+		<p:column sortBy="#{boMFstPanelItem.orderCode}" width="150" 
+			exportValue="#{boMFstPanelItem.orderCode}" class="tdnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.lbl_attr_bomitem_assembly}"/>
+				<h:outputText value="#{i18n.lbl_attr_tracebomitem_ordercode}"/>
 			</f:facet>
-			<p:selectBooleanCheckbox value="#{boMFstPanelItem.assembly}" disabled="true"/>
+			<h:outputText value="#{boMFstPanelItem.orderCode}" styleClass="pf-tooltip-target" />
 		</p:column>
 
-		<p:column sortBy="#{boMFstPanelItem.consignment}" width="80" >
+		<p:column sortBy="#{boMFstPanelItem.dateCode}" width="100" 
+			exportValue="#{boMFstPanelItem.dateCode}" class="tdnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materialrevisionbompanel_consignment}"/>
+				<h:outputText value="#{i18n.lbl_attr_tracebomitem_datecode}"/>
 			</f:facet>
-			<p:selectBooleanCheckbox value="#{boMFstPanelItem.consignment}" disabled="true"/>
+			<h:outputText value="#{boMFstPanelItem.dateCode}" styleClass="pf-tooltip-target" />
 		</p:column>
 
-		<p:column sortBy="#{boMFstPanelItem.alternativeGroup}" width="100" >
+		<p:column sortBy="#{boMFstPanelItem.manufacturerRevision}" width="150" 
+			exportValue="#{boMFstPanelItem.manufacturerRevision}" class="tdnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materialrevisionbompanel_alternativegroup}"/>
+				<h:outputText value="#{i18n.lbl_attr_tracebomitem_manufacturerrevision}"/>
 			</f:facet>
-			<h:outputText value="#{boMFstPanelItem.alternativeGroup}">
-			</h:outputText>
+			<h:outputText value="#{boMFstPanelItem.manufacturerRevision}" styleClass="pf-tooltip-target" />
 		</p:column>
 
-		<p:column sortBy="#{boMFstPanelItem.usageProbability}" width="100" exportHeaderValue="#{i18n.lbl_attr_bomitem_usageprobability}" class="thnowrap" >
+		<p:column sortBy="#{boMFstPanelItem.infoField1}" width="150" 
+			exportValue="#{boMFstPanelItem.infoField1}" class="tdnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materialrevisionbompanel_usageprobability}" id="usageProbability"/>
-				<p:tooltip for="usageProbability" value="#{i18n.lbl_attr_bomitem_usageprobability}" position="top" showDelay="50"/>
+				<h:outputText value="#{i18n.lbl_attr_tracebomitem_infofield1}"/>
 			</f:facet>
-			<h:outputText value="#{boMFstPanelItem.usageProbability}">
-			</h:outputText>
+			<h:outputText value="#{boMFstPanelItem.infoField1}" styleClass="pf-tooltip-target" />
+		</p:column>
+
+		<p:column sortBy="#{boMFstPanelItem.infoField2}" width="150" 
+			exportValue="#{boMFstPanelItem.infoField2}" class="tdnowrap" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_tracebomitem_infofield2}"/>
+			</f:facet>
+			<h:outputText value="#{boMFstPanelItem.infoField2}" styleClass="pf-tooltip-target" />
+		</p:column>
+
+		<p:column sortBy="#{boMFstPanelItem.infoField3}" width="150" 
+			exportValue="#{boMFstPanelItem.infoField3}" class="tdnowrap" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_tracebomitem_infofield3}"/>
+			</f:facet>
+			<h:outputText value="#{boMFstPanelItem.infoField3}" styleClass="pf-tooltip-target" />
+		</p:column>
+
+		<p:column sortBy="#{boMFstPanelItem.infoField4}" width="150" 
+			exportValue="#{boMFstPanelItem.infoField4}" class="tdnowrap" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_tracebomitem_infofield4}"/>
+			</f:facet>
+			<h:outputText value="#{boMFstPanelItem.infoField4}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{boMFstPanelItem.creationDate}" width="120" >
@@ -137,7 +128,9 @@
 				<h:outputText value="#{i18n.lbl_attr_abstractentitywithid_creationdate}"/>
 			</f:facet>
 			<h:outputText value="#{boMFstPanelItem.creationDate}">
-				<f:convertDateTime pattern="#{userSession.dateTimeFormat}" timeZone="#{userSession.timeZone}"/>
+				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateTimeConverter"/>
+				<f:attribute name="pattern" value="#{userSession.dateTimeFormat}"/>
+				<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
 			</h:outputText>
 		</p:column>
 
@@ -146,7 +139,9 @@
 				<h:outputText value="#{i18n.lbl_attr_abstractentitywithid_lastupdate}"/>
 			</f:facet>
 			<h:outputText value="#{boMFstPanelItem.lastUpdate}">
-				<f:convertDateTime pattern="#{userSession.dateTimeFormat}" timeZone="#{userSession.timeZone}"/>
+				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateTimeConverter"/>
+				<f:attribute name="pattern" value="#{userSession.dateTimeFormat}"/>
+				<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
 			</h:outputText>
 		</p:column>
 	</p:dataTable>
@@ -168,110 +163,100 @@
 	>
 		<p:ajax event="rowDblselect" listener="#{traceBoMBoMComparePanel.onBomItemsGridDoubleClickSnd}"/>
 
-		<p:column sortBy="#{boMSndPanelItem.lineNumber}" width="80" >
-			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materialrevisionbompanel_linenumber}"/>
-			</f:facet>
-			<h:outputText value="#{boMSndPanelItem.lineNumber}">
-			</h:outputText>
-		</p:column>
-
-		<p:column sortBy="#{boMSndPanelItem.materialMaterialNumber}" width="100" 
+		<p:column sortBy="#{boMSndPanelItem.materialMaterialNumber}" width="150" 
 			exportValue="#{boMSndPanelItem.materialMaterialNumber}" class="tdnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materialrevisionbompanel_materialmaterialnumber}"/>
+				<h:outputText value="#{i18n.col_tracebomtracebomitemspanel_materialmaterialnumber}"/>
 			</f:facet>
-			<h:outputText value="#{boMSndPanelItem.materialMaterialNumber}" id="materialMaterialNumberSnd"/>
-			<p:tooltip for="materialMaterialNumberSnd" value="#{boMSndPanelItem.materialMaterialNumber}" position="top" showDelay="50"/>
+			<h:outputText value="#{boMSndPanelItem.materialMaterialNumber}" styleClass="pf-tooltip-target" />
 		</p:column>
 
-		<p:column sortBy="#{boMSndPanelItem.materialSapNumber}" width="100" >
+		<p:column sortBy="#{boMSndPanelItem.materialSapNumber}" width="150" 
+			exportValue="#{boMSndPanelItem.materialSapNumber}" class="tdnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materialrevisionbompanel_materialsapnumber}"/>
+				<h:outputText value="#{i18n.col_tracebomtracebomitemspanel_materialsapnumber}"/>
 			</f:facet>
-			<h:outputText value="#{boMSndPanelItem.materialSapNumber}">
-			</h:outputText>
+			<h:outputText value="#{boMSndPanelItem.materialSapNumber}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{boMSndPanelItem.materialShortText}" width="250" 
 			exportValue="#{boMSndPanelItem.materialShortText}" class="tdnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materialrevisionbompanel_materialshorttext}"/>
+				<h:outputText value="#{i18n.col_tracebomtracebomitemspanel_materialshorttext}"/>
 			</f:facet>
-			<h:outputText value="#{boMSndPanelItem.materialShortText}" id="materialShortTextSnd"/>
-			<p:tooltip for="materialShortTextSnd" value="#{boMSndPanelItem.materialShortText}" position="top" showDelay="50"/>
-		</p:column>
-
-		<p:column sortBy="#{boMSndPanelItem.materialEol}" width="80" >
-			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materialrevisionbompanel_materialeol}"/>
-			</f:facet>
-			<p:selectBooleanCheckbox value="#{boMSndPanelItem.materialEol}" disabled="true"/>
-		</p:column>
-
-		<p:column sortBy="#{boMSndPanelItem.materialTypeCode}" width="80" >
-			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materialrevisionbompanel_materialtypecode}"/>
-			</f:facet>
-			<h:outputText value="#{boMSndPanelItem.materialTypeCode}">
-			</h:outputText>
-		</p:column>
-
-		<p:column sortBy="#{boMSndPanelItem.materialClassCode}" width="120" 
-			exportValue="#{boMSndPanelItem.materialClassCode}" class="tdnowrap" >
-			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materialrevisionbompanel_materialclasscode}"/>
-			</f:facet>
-			<h:outputText value="#{boMSndPanelItem.materialClassCode}" id="materialClassCodeSnd"/>
-			<p:tooltip for="materialClassCodeSnd" value="#{boMSndPanelItem.materialClassCode}" position="top" showDelay="50"/>
+			<h:outputText value="#{boMSndPanelItem.materialShortText}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{boMSndPanelItem.quantity}" width="80" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materialrevisionbompanel_quantity}"/>
+				<h:outputText value="#{i18n.lbl_attr_tracebomitem_quantity}"/>
 			</f:facet>
 			<h:outputText value="#{boMSndPanelItem.quantity}">
-				<f:convertNumber pattern="#{userSession.numberFormat}"/>
 			</h:outputText>
 		</p:column>
 
-		<p:column sortBy="#{boMSndPanelItem.label}" width="100" >
+		<p:column sortBy="#{boMSndPanelItem.manufacturerName}" width="200" 
+			exportValue="#{boMSndPanelItem.manufacturerName}" class="tdnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.lbl_attr_bomitem_label}"/>
+				<h:outputText value="#{i18n.col_tracebomtracebomitemspanel_manufacturername}"/>
 			</f:facet>
-			<h:outputText value="#{boMSndPanelItem.label}">
-			</h:outputText>
+			<h:outputText value="#{boMSndPanelItem.manufacturerName}" styleClass="pf-tooltip-target" />
 		</p:column>
 
-		<p:column sortBy="#{boMSndPanelItem.assembly}" width="70" >
+		<p:column sortBy="#{boMSndPanelItem.orderCode}" width="150" 
+			exportValue="#{boMSndPanelItem.orderCode}" class="tdnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.lbl_attr_bomitem_assembly}"/>
+				<h:outputText value="#{i18n.lbl_attr_tracebomitem_ordercode}"/>
 			</f:facet>
-			<p:selectBooleanCheckbox value="#{boMSndPanelItem.assembly}" disabled="true"/>
+			<h:outputText value="#{boMSndPanelItem.orderCode}" styleClass="pf-tooltip-target" />
 		</p:column>
 
-		<p:column sortBy="#{boMSndPanelItem.consignment}" width="80" >
+		<p:column sortBy="#{boMSndPanelItem.dateCode}" width="100" 
+			exportValue="#{boMSndPanelItem.dateCode}" class="tdnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materialrevisionbompanel_consignment}"/>
+				<h:outputText value="#{i18n.lbl_attr_tracebomitem_datecode}"/>
 			</f:facet>
-			<p:selectBooleanCheckbox value="#{boMSndPanelItem.consignment}" disabled="true"/>
+			<h:outputText value="#{boMSndPanelItem.dateCode}" styleClass="pf-tooltip-target" />
 		</p:column>
 
-		<p:column sortBy="#{boMSndPanelItem.alternativeGroup}" width="100" >
+		<p:column sortBy="#{boMSndPanelItem.manufacturerRevision}" width="150" 
+			exportValue="#{boMSndPanelItem.manufacturerRevision}" class="tdnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materialrevisionbompanel_alternativegroup}"/>
+				<h:outputText value="#{i18n.lbl_attr_tracebomitem_manufacturerrevision}"/>
 			</f:facet>
-			<h:outputText value="#{boMSndPanelItem.alternativeGroup}">
-			</h:outputText>
+			<h:outputText value="#{boMSndPanelItem.manufacturerRevision}" styleClass="pf-tooltip-target" />
 		</p:column>
 
-		<p:column sortBy="#{boMSndPanelItem.usageProbability}" width="100" exportHeaderValue="#{i18n.lbl_attr_bomitem_usageprobability}" class="thnowrap" >
+		<p:column sortBy="#{boMSndPanelItem.infoField1}" width="150" 
+			exportValue="#{boMSndPanelItem.infoField1}" class="tdnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materialrevisionbompanel_usageprobability}" id="usageProbability"/>
-				<p:tooltip for="usageProbability" value="#{i18n.lbl_attr_bomitem_usageprobability}" position="top" showDelay="50"/>
+				<h:outputText value="#{i18n.lbl_attr_tracebomitem_infofield1}"/>
 			</f:facet>
-			<h:outputText value="#{boMSndPanelItem.usageProbability}">
-			</h:outputText>
+			<h:outputText value="#{boMSndPanelItem.infoField1}" styleClass="pf-tooltip-target" />
+		</p:column>
+
+		<p:column sortBy="#{boMSndPanelItem.infoField2}" width="150" 
+			exportValue="#{boMSndPanelItem.infoField2}" class="tdnowrap" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_tracebomitem_infofield2}"/>
+			</f:facet>
+			<h:outputText value="#{boMSndPanelItem.infoField2}" styleClass="pf-tooltip-target" />
+		</p:column>
+
+		<p:column sortBy="#{boMSndPanelItem.infoField3}" width="150" 
+			exportValue="#{boMSndPanelItem.infoField3}" class="tdnowrap" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_tracebomitem_infofield3}"/>
+			</f:facet>
+			<h:outputText value="#{boMSndPanelItem.infoField3}" styleClass="pf-tooltip-target" />
+		</p:column>
+
+		<p:column sortBy="#{boMSndPanelItem.infoField4}" width="150" 
+			exportValue="#{boMSndPanelItem.infoField4}" class="tdnowrap" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_tracebomitem_infofield4}"/>
+			</f:facet>
+			<h:outputText value="#{boMSndPanelItem.infoField4}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{boMSndPanelItem.creationDate}" width="120" >
@@ -279,7 +264,9 @@
 				<h:outputText value="#{i18n.lbl_attr_abstractentitywithid_creationdate}"/>
 			</f:facet>
 			<h:outputText value="#{boMSndPanelItem.creationDate}">
-				<f:convertDateTime pattern="#{userSession.dateTimeFormat}" timeZone="#{userSession.timeZone}"/>
+				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateTimeConverter"/>
+				<f:attribute name="pattern" value="#{userSession.dateTimeFormat}"/>
+				<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
 			</h:outputText>
 		</p:column>
 
@@ -288,7 +275,9 @@
 				<h:outputText value="#{i18n.lbl_attr_abstractentitywithid_lastupdate}"/>
 			</f:facet>
 			<h:outputText value="#{boMSndPanelItem.lastUpdate}">
-				<f:convertDateTime pattern="#{userSession.dateTimeFormat}" timeZone="#{userSession.timeZone}"/>
+				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateTimeConverter"/>
+				<f:attribute name="pattern" value="#{userSession.dateTimeFormat}"/>
+				<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
 			</h:outputText>
 		</p:column>
 	</p:dataTable>
