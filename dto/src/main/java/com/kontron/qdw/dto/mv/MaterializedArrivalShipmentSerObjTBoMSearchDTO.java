@@ -2,6 +2,8 @@ package com.kontron.qdw.dto.mv;
 
 import java.time.*;
 import java.io.Serializable;
+import java.sql.Date;
+
 import net.sourceforge.jbizmo.commons.annotation.Generated;
 
 public class MaterializedArrivalShipmentSerObjTBoMSearchDTO implements Serializable {
@@ -68,23 +70,23 @@ public class MaterializedArrivalShipmentSerObjTBoMSearchDTO implements Serializa
     @Generated
     public static final String ATTR_SEROBJTBOMLOTNUMBER = "serObjTBomLotNumber";
     @Generated
-    public static final String SELECT_COUNTRYCODE = "a.countryCode";
+    public static final String SELECT_COUNTRYCODE = "a.country_code";
     @Generated
-    public static final String SELECT_COUNTRYNAME = "a.countryName";
+    public static final String SELECT_COUNTRYNAME = "a.country_name";
     @Generated
-    public static final String SELECT_CUSTOMERCODE = "a.customerCode";
+    public static final String SELECT_CUSTOMERCODE = "a.customer_code";
     @Generated
-    public static final String SELECT_CUSTOMERNAME = "a.customerName";
+    public static final String SELECT_CUSTOMERNAME = "a.customer_name";
     @Generated
     public static final String SELECT_ID = "a.id";
     @Generated
-    public static final String SELECT_SERIALNUMBER = "a.serialNumber";
+    public static final String SELECT_SERIALNUMBER = "a.serial_number";
     @Generated
-    public static final String SELECT_PARENTSERIALNUMBER = "a.parentSerialNumber";
+    public static final String SELECT_PARENTSERIALNUMBER = "a.parent_serial_number";
     @Generated
-    public static final String SELECT_ASSEMBLYDATE = "a.assemblyDate";
+    public static final String SELECT_ASSEMBLYDATE = "a.assembly_date";
     @Generated
-    public static final String SELECT_ASSEMBLYPO = "a.assemblyPO";
+    public static final String SELECT_ASSEMBLYPO = "a.assembly_po";
     @Generated
     public static final String SELECT_PLANT = "a.plant";
     @Generated
@@ -92,7 +94,7 @@ public class MaterializedArrivalShipmentSerObjTBoMSearchDTO implements Serializa
     @Generated
     public static final String SELECT_SEROBJID = "c.id";
     @Generated
-    public static final String SELECT_SEROBJIDCUSTOMERSERIALNUMBER = "c.customerSerialNumber";
+    public static final String SELECT_SEROBJIDCUSTOMERSERIALNUMBER = "c.customer_serial_number";
     @Generated
     public static final String SELECT_SEROBJTBOMID = "h.id";
     @Generated
@@ -104,15 +106,15 @@ public class MaterializedArrivalShipmentSerObjTBoMSearchDTO implements Serializa
     @Generated
     public static final String SELECT_SEROBJTBOMMATREVMATID = "o.id";
     @Generated
-    public static final String SELECT_SEROBJTBOMMATREVMATMATERIALNUMBER = "o.materialNumber";
+    public static final String SELECT_SEROBJTBOMMATREVMATMATERIALNUMBER = "o.material_number";
     @Generated
-    public static final String SELECT_SEROBJTBOMMATREVREVISIONNUMBER = "j.revisionNumber";
+    public static final String SELECT_SEROBJTBOMMATREVREVISIONNUMBER = "j.revision_number";
     @Generated
-    public static final String SELECT_SEROBJTBOMMATREVMATSAPNUMBER = "o.sapNumber";
+    public static final String SELECT_SEROBJTBOMMATREVMATSAPNUMBER = "o.sap_number";
     @Generated
-    public static final String SELECT_SEROBJTBOMMATREVMATMATERIALHIERARCHY = "o.materialHierarchy";
+    public static final String SELECT_SEROBJTBOMMATREVMATMATERIALHIERARCHY = "o.material_hierarchy";
     @Generated
-    public static final String SELECT_SEROBJTBOMMATREVMATSHORTTEXT = "o.shortText";
+    public static final String SELECT_SEROBJTBOMMATREVMATSHORTTEXT = "o.short_text";
     @Generated
     public static final String SELECT_SEROBJTBOMMATREVMATOWNERLOCATIONCODE = "r.code";
     @Generated
@@ -120,13 +122,13 @@ public class MaterializedArrivalShipmentSerObjTBoMSearchDTO implements Serializa
     @Generated
     public static final String SELECT_SEROBJTBOMMATREVMATMATERIALCLASSCODE = "s.code";
     @Generated
-    public static final String SELECT_SEROBJTBOMPRODUCTIONDATE = "h.productionDate";
+    public static final String SELECT_SEROBJTBOMPRODUCTIONDATE = "h.production_date";
     @Generated
-    public static final String SELECT_SEROBJTBOMDELIVERYNOTENUMBER = "h.deliveryNoteNumber";
+    public static final String SELECT_SEROBJTBOMDELIVERYNOTENUMBER = "h.delivery_note_number";
     @Generated
-    public static final String SELECT_SEROBJTBOMORDERNUMBER = "h.orderNumber";
+    public static final String SELECT_SEROBJTBOMORDERNUMBER = "h.order_number";
     @Generated
-    public static final String SELECT_SEROBJTBOMLOTNUMBER = "h.lotNumber";
+    public static final String SELECT_SEROBJTBOMLOTNUMBER = "h.lot_number";
     @Generated
     private String countryCode;
     @Generated
@@ -239,12 +241,12 @@ public class MaterializedArrivalShipmentSerObjTBoMSearchDTO implements Serializa
      */
     @Generated
     public MaterializedArrivalShipmentSerObjTBoMSearchDTO(String countryCode, String countryName, String customerCode, String customerName, long id,
-            String serialNumber, String parentSerialNumber, LocalDate assemblyDate, String assemblyPO, String plant, long a_MatId, long serObjId,
+            String serialNumber, String parentSerialNumber, Date assemblyDate, String assemblyPO, String plant, long a_MatId, long serObjId,
             String serObjIdCustomerSerialNumber, Long serObjTBomId, String serObjTBomSupplierCode, String serObjTBomSupplierName,
             Long serObjTBomMatrevId, Long serObjTBomMatrevMatId, String serObjTBomMatrevMatMaterialNumber, String serObjTBomMatrevRevisionNumber,
             String serObjTBomMatrevMatSapNumber, String serObjTBomMatrevMatMaterialHierarchy, String serObjTBomMatrevMatShortText,
             String serObjTBomMatrevMatOwnerLocationCode, String serObjTBomMatrevMatMaterialTypeCode, String serObjTBomMatrevMatMaterialClassCode,
-            LocalDate serObjTBomProductionDate, String serObjTBomDeliveryNoteNumber, String serObjTBomOrderNumber, String serObjTBomLotNumber) {
+            Date serObjTBomProductionDate, String serObjTBomDeliveryNoteNumber, String serObjTBomOrderNumber, String serObjTBomLotNumber) {
         this.countryCode = countryCode;
         this.countryName = countryName;
         this.customerCode = customerCode;
@@ -252,7 +254,7 @@ public class MaterializedArrivalShipmentSerObjTBoMSearchDTO implements Serializa
         this.id = id;
         this.serialNumber = serialNumber;
         this.parentSerialNumber = parentSerialNumber;
-        this.assemblyDate = assemblyDate;
+        this.assemblyDate = assemblyDate != null ? assemblyDate.toLocalDate() : null;
         this.assemblyPO = assemblyPO;
         this.plant = plant;
         this.a_MatId = a_MatId;
@@ -271,7 +273,7 @@ public class MaterializedArrivalShipmentSerObjTBoMSearchDTO implements Serializa
         this.serObjTBomMatrevMatOwnerLocationCode = serObjTBomMatrevMatOwnerLocationCode;
         this.serObjTBomMatrevMatMaterialTypeCode = serObjTBomMatrevMatMaterialTypeCode;
         this.serObjTBomMatrevMatMaterialClassCode = serObjTBomMatrevMatMaterialClassCode;
-        this.serObjTBomProductionDate = serObjTBomProductionDate;
+        this.serObjTBomProductionDate = serObjTBomProductionDate != null ? serObjTBomProductionDate.toLocalDate() : null;
         this.serObjTBomDeliveryNoteNumber = serObjTBomDeliveryNoteNumber;
         this.serObjTBomOrderNumber = serObjTBomOrderNumber;
         this.serObjTBomLotNumber = serObjTBomLotNumber;

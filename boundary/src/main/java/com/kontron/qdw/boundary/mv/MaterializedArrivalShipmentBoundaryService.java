@@ -4,6 +4,7 @@ import java.util.*;
 import jakarta.validation.ConstraintViolationException;
 import com.kontron.qdw.domain.mv.*;
 import com.kontron.qdw.dto.mv.*;
+import com.kontron.qdw.repository.NativeQueryAbstractRepository;
 import com.kontron.qdw.repository.mv.*;
 import net.sourceforge.jbizmo.commons.search.exception.*;
 import jakarta.inject.*;
@@ -16,6 +17,7 @@ import net.sourceforge.jbizmo.commons.annotation.Generated;
 public class MaterializedArrivalShipmentBoundaryService {
     @Generated
     private final MaterializedArrivalShipmentRepository repository;
+    private final NativeQueryAbstractRepository nativeQueryAbstRepo;
 
     /**
      * Default constructor
@@ -23,6 +25,7 @@ public class MaterializedArrivalShipmentBoundaryService {
     @Generated
     public MaterializedArrivalShipmentBoundaryService() {
         this.repository = null;
+        nativeQueryAbstRepo = null;
     }
 
     /**
@@ -31,8 +34,10 @@ public class MaterializedArrivalShipmentBoundaryService {
      */
     @Inject
     @Generated
-    public MaterializedArrivalShipmentBoundaryService(MaterializedArrivalShipmentRepository repository) {
+    public MaterializedArrivalShipmentBoundaryService(MaterializedArrivalShipmentRepository repository,
+            NativeQueryAbstractRepository abstractRepository) {
         this.repository = repository;
+        this.nativeQueryAbstRepo = abstractRepository;
     }
 
     /**
@@ -176,10 +181,18 @@ public class MaterializedArrivalShipmentBoundaryService {
         selectTokens.add(MaterializedArrivalShipmentSerObjTBoMSearchDTO.SELECT_SEROBJTBOMORDERNUMBER);
         selectTokens.add(MaterializedArrivalShipmentSerObjTBoMSearchDTO.SELECT_SEROBJTBOMLOTNUMBER);
 
-        searchObj.setFromClause(
-                "from MaterializedArrivalShipment a join a.material b join a.serialObject c join c.traceBom h join h.materialRevision j join h.supplier k join j.material o join o.ownerLocation r join o.materialClass s join o.materialType t");
+        searchObj.setFromClause("from qdw.trace_bom_tab h "
+                + "straight_join qdw.serial_object_tab c on c.trace_bom = h.id "
+                + "straight_join qdw.arrival_shipment_mv a on a.serial_object = c.id "
+                + "straight_join qdw.material_tab b on a.material = b.id "
+                + "straight_join qdw.material_revision_tab j on h.material_revision = j.id "
+                + "straight_join qdw.supplier_tab k on h.supplier = k.code "
+                + "straight_join qdw.material_tab o on j.material = o.id "
+                + "straight_join qdw.location_tab r on o.owner_location = r.code "
+                + "straight_join qdw.material_class_tab s on o.material_class = s.code "
+                + "straight_join qdw.material_type_tab t on o.material_type = t.code ");
 
-        return repository.search(searchObj, MaterializedArrivalShipmentSerObjTBoMSearchDTO.class, selectTokens);
+        return nativeQueryAbstRepo.search(searchObj, MaterializedArrivalShipmentSerObjTBoMSearchDTO.class, selectTokens);
     }
 
     /**
@@ -192,10 +205,18 @@ public class MaterializedArrivalShipmentBoundaryService {
     @PermitAll
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public long countAllMaterializedArrivalShipmentSerObjTBoMs(SearchDTO searchObj) {
-        searchObj.setFromClause(
-                "from MaterializedArrivalShipment a join a.material b join a.serialObject c join c.traceBom h join h.materialRevision j join h.supplier k join j.material o join o.ownerLocation r join o.materialClass s join o.materialType t");
+        searchObj.setFromClause("from qdw.trace_bom_tab h "
+                + "straight_join qdw.serial_object_tab c on c.trace_bom = h.id "
+                + "straight_join qdw.arrival_shipment_mv a on a.serial_object = c.id "
+                + "straight_join qdw.material_tab b on a.material = b.id "
+                + "straight_join qdw.material_revision_tab j on h.material_revision = j.id "
+                + "straight_join qdw.supplier_tab k on h.supplier = k.code "
+                + "straight_join qdw.material_tab o on j.material = o.id "
+                + "straight_join qdw.location_tab r on o.owner_location = r.code "
+                + "straight_join qdw.material_class_tab s on o.material_class = s.code "
+                + "straight_join qdw.material_type_tab t on o.material_type = t.code ");
 
-        return repository.count(searchObj);
+        return nativeQueryAbstRepo.count(searchObj);
     }
 
 }
