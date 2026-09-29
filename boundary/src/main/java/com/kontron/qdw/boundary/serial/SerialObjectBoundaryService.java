@@ -512,4 +512,30 @@ public class SerialObjectBoundaryService {
         return repository.search(searchObj, SerialObjectAssemblyRecordsDTO.class, selectTokens);
     }
 
+    /**
+     * @param id
+     * @return the serial object object
+     */
+    @Generated
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public SerialObjectCompareDTO findCompareSerObj(long id) {
+        // Find persistent object
+        final SerialObject serialObject = repository.findById(id, true);
+
+        final var dto = new SerialObjectCompareDTO();
+        dto.setId(serialObject.getId());
+        dto.setSerialNumber(serialObject.getSerialNumber());
+        dto.setMaterialId(serialObject.getMaterial().getId());
+        dto.setMaterialMaterialNumber(serialObject.getMaterial().getMaterialNumber());
+
+        if (serialObject.getTraceBom() != null)
+            dto.setTraceBomId(serialObject.getTraceBom().getId());
+        else
+            dto.setTraceBomId(Long.MIN_VALUE);
+
+
+        return dto;
+    }
+
 }

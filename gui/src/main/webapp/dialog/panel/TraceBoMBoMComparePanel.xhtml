@@ -1,0 +1,345 @@
+<ui:composition xmlns="https://jakarta.ee/xml/ns/jakartaee"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:h="jakarta.faces.html"
+	xmlns:f="jakarta.faces.core"
+	xmlns:p="http://primefaces.org/ui">
+
+
+	<p:menubar>
+		<p:submenu icon="pi pi-refresh" label="#{i18n.mnu_view}">
+			<p:menuitem value="#{i18n.action_refresh}" ajax="false" icon="pi pi-refresh" actionListener="#{traceBoMBoMComparePanel.fetchBomItems}"/>
+		</p:submenu>
+		<p:submenu icon="pi pi-print" label="#{i18n.mnu_export}">
+			<p:menuitem value="#{i18n.action_export_xls}" ajax="false" icon="pi pi-file-excel">
+				<p:dataExporter type="xlsxstream" target="TraceBoMFstTable,TraceBoMSndTable" fileName="RevisionBoMItemCompareList"/>
+			</p:menuitem>
+		</p:submenu>
+	</p:menubar>
+
+
+	<p:dataTable id="TraceBoMFstTable" var="boMFstPanelItem" 
+		selectionMode="single" selectionTextDisabled="false"
+		selection="#{traceBoMBoMComparePanel.selItemOfBomItemsFst}"
+		loadingMessage="#{i18n.action_fetch_data}"
+		value="#{traceBoMBoMComparePanel.bomItemsFst}"
+        scrollable="true" styleClass="compareViewPanelScrollable" allowUnsorting="true" 
+		rowKey="#{boMFstPanelItem.id}" resizableColumns="true" resizeMode="expand"
+	>
+		<p:ajax event="rowDblselect" listener="#{traceBoMBoMComparePanel.onBomItemsGridDoubleClickFst}"/>
+
+		<p:column sortBy="#{boMFstPanelItem.lineNumber}" width="80" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materialrevisionbompanel_linenumber}"/>
+			</f:facet>
+			<h:outputText value="#{boMFstPanelItem.lineNumber}"/>
+		</p:column>
+
+		<p:column sortBy="#{boMFstPanelItem.materialMaterialNumber}" width="100" 
+			exportValue="#{boMFstPanelItem.materialMaterialNumber}" class="tdnowrap" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materialrevisionbompanel_materialmaterialnumber}"/>
+			</f:facet>
+			<h:outputText value="#{boMFstPanelItem.materialMaterialNumber}" id="materialMaterialNumberFst"/>
+			<p:tooltip for="materialMaterialNumberFst" value="#{boMFstPanelItem.materialMaterialNumber}" position="top" showDelay="50"/>
+		</p:column>
+
+		<p:column sortBy="#{boMFstPanelItem.materialSapNumber}" width="100" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materialrevisionbompanel_materialsapnumber}"/>
+			</f:facet>
+			<h:outputText value="#{boMFstPanelItem.materialSapNumber}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{boMFstPanelItem.materialShortText}" width="250" 
+			exportValue="#{boMFstPanelItem.materialShortText}" class="tdnowrap" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materialrevisionbompanel_materialshorttext}"/>
+			</f:facet>
+			<h:outputText value="#{boMFstPanelItem.materialShortText}" id="materialShortTextFst"/>
+			<p:tooltip for="materialShortTextFst" value="#{boMFstPanelItem.materialShortText}" position="top" showDelay="50"/>
+		</p:column>
+
+		<p:column sortBy="#{boMFstPanelItem.materialEol}" width="80" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materialrevisionbompanel_materialeol}"/>
+			</f:facet>
+			<p:selectBooleanCheckbox value="#{boMFstPanelItem.materialEol}" disabled="true"/>
+		</p:column>
+
+		<p:column sortBy="#{boMFstPanelItem.materialTypeCode}" width="80" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materialrevisionbompanel_materialtypecode}"/>
+			</f:facet>
+			<h:outputText value="#{boMFstPanelItem.materialTypeCode}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{boMFstPanelItem.materialClassCode}" width="120" 
+			exportValue="#{boMFstPanelItem.materialClassCode}" class="tdnowrap" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materialrevisionbompanel_materialclasscode}"/>
+			</f:facet>
+			<h:outputText value="#{boMFstPanelItem.materialClassCode}" id="materialClassCodeFst"/>
+			<p:tooltip for="materialClassCodeFst" value="#{boMFstPanelItem.materialClassCode}" position="top" showDelay="50"/>
+		</p:column>
+
+		<p:column sortBy="#{boMFstPanelItem.quantity}" width="80" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materialrevisionbompanel_quantity}"/>
+			</f:facet>
+			<h:outputText value="#{boMFstPanelItem.quantity}">
+				<f:convertNumber pattern="#{userSession.numberFormat}"/>
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{boMFstPanelItem.label}" width="100" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_bomitem_label}"/>
+			</f:facet>
+			<h:outputText value="#{boMFstPanelItem.label}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{boMFstPanelItem.assembly}" width="70" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_bomitem_assembly}"/>
+			</f:facet>
+			<p:selectBooleanCheckbox value="#{boMFstPanelItem.assembly}" disabled="true"/>
+		</p:column>
+
+		<p:column sortBy="#{boMFstPanelItem.consignment}" width="80" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materialrevisionbompanel_consignment}"/>
+			</f:facet>
+			<p:selectBooleanCheckbox value="#{boMFstPanelItem.consignment}" disabled="true"/>
+		</p:column>
+
+		<p:column sortBy="#{boMFstPanelItem.alternativeGroup}" width="100" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materialrevisionbompanel_alternativegroup}"/>
+			</f:facet>
+			<h:outputText value="#{boMFstPanelItem.alternativeGroup}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{boMFstPanelItem.usageProbability}" width="100" exportHeaderValue="#{i18n.lbl_attr_bomitem_usageprobability}" class="thnowrap" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materialrevisionbompanel_usageprobability}" id="usageProbability"/>
+				<p:tooltip for="usageProbability" value="#{i18n.lbl_attr_bomitem_usageprobability}" position="top" showDelay="50"/>
+			</f:facet>
+			<h:outputText value="#{boMFstPanelItem.usageProbability}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{boMFstPanelItem.creationDate}" width="120" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_abstractentitywithid_creationdate}"/>
+			</f:facet>
+			<h:outputText value="#{boMFstPanelItem.creationDate}">
+				<f:convertDateTime pattern="#{userSession.dateTimeFormat}" timeZone="#{userSession.timeZone}"/>
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{boMFstPanelItem.lastUpdate}" width="120" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_abstractentitywithid_lastupdate}"/>
+			</f:facet>
+			<h:outputText value="#{boMFstPanelItem.lastUpdate}">
+				<f:convertDateTime pattern="#{userSession.dateTimeFormat}" timeZone="#{userSession.timeZone}"/>
+			</h:outputText>
+		</p:column>
+	</p:dataTable>
+
+	<p/>
+	<h:outputText styleClass="label-field-mandatory" value="#{i18n.result_total_number_records} #{traceBoMBoMComparePanel.bomItemsFst.size()} #{i18n.tracebom_compare_result_onlyin} #{materialRevisionDocumentsComparePanel.revisionFst.toString()}"/>
+
+
+	<p/>
+
+
+ 	<p:dataTable id="TraceBoMSndTable" var="boMSndPanelItem" 
+		selectionMode="single" selectionTextDisabled="false"
+		selection="#{traceBoMBoMComparePanel.selItemOfBomItemsSnd}"
+		loadingMessage="#{i18n.action_fetch_data}"
+		value="#{traceBoMBoMComparePanel.bomItemsSnd}"
+        scrollable="true" styleClass="compareViewPanelScrollable" allowUnsorting="true" 
+		rowKey="#{boMSndPanelItem.id}" resizableColumns="true" resizeMode="expand" 
+	>
+		<p:ajax event="rowDblselect" listener="#{traceBoMBoMComparePanel.onBomItemsGridDoubleClickSnd}"/>
+
+		<p:column sortBy="#{boMSndPanelItem.lineNumber}" width="80" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materialrevisionbompanel_linenumber}"/>
+			</f:facet>
+			<h:outputText value="#{boMSndPanelItem.lineNumber}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{boMSndPanelItem.materialMaterialNumber}" width="100" 
+			exportValue="#{boMSndPanelItem.materialMaterialNumber}" class="tdnowrap" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materialrevisionbompanel_materialmaterialnumber}"/>
+			</f:facet>
+			<h:outputText value="#{boMSndPanelItem.materialMaterialNumber}" id="materialMaterialNumberSnd"/>
+			<p:tooltip for="materialMaterialNumberSnd" value="#{boMSndPanelItem.materialMaterialNumber}" position="top" showDelay="50"/>
+		</p:column>
+
+		<p:column sortBy="#{boMSndPanelItem.materialSapNumber}" width="100" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materialrevisionbompanel_materialsapnumber}"/>
+			</f:facet>
+			<h:outputText value="#{boMSndPanelItem.materialSapNumber}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{boMSndPanelItem.materialShortText}" width="250" 
+			exportValue="#{boMSndPanelItem.materialShortText}" class="tdnowrap" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materialrevisionbompanel_materialshorttext}"/>
+			</f:facet>
+			<h:outputText value="#{boMSndPanelItem.materialShortText}" id="materialShortTextSnd"/>
+			<p:tooltip for="materialShortTextSnd" value="#{boMSndPanelItem.materialShortText}" position="top" showDelay="50"/>
+		</p:column>
+
+		<p:column sortBy="#{boMSndPanelItem.materialEol}" width="80" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materialrevisionbompanel_materialeol}"/>
+			</f:facet>
+			<p:selectBooleanCheckbox value="#{boMSndPanelItem.materialEol}" disabled="true"/>
+		</p:column>
+
+		<p:column sortBy="#{boMSndPanelItem.materialTypeCode}" width="80" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materialrevisionbompanel_materialtypecode}"/>
+			</f:facet>
+			<h:outputText value="#{boMSndPanelItem.materialTypeCode}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{boMSndPanelItem.materialClassCode}" width="120" 
+			exportValue="#{boMSndPanelItem.materialClassCode}" class="tdnowrap" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materialrevisionbompanel_materialclasscode}"/>
+			</f:facet>
+			<h:outputText value="#{boMSndPanelItem.materialClassCode}" id="materialClassCodeSnd"/>
+			<p:tooltip for="materialClassCodeSnd" value="#{boMSndPanelItem.materialClassCode}" position="top" showDelay="50"/>
+		</p:column>
+
+		<p:column sortBy="#{boMSndPanelItem.quantity}" width="80" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materialrevisionbompanel_quantity}"/>
+			</f:facet>
+			<h:outputText value="#{boMSndPanelItem.quantity}">
+				<f:convertNumber pattern="#{userSession.numberFormat}"/>
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{boMSndPanelItem.label}" width="100" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_bomitem_label}"/>
+			</f:facet>
+			<h:outputText value="#{boMSndPanelItem.label}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{boMSndPanelItem.assembly}" width="70" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_bomitem_assembly}"/>
+			</f:facet>
+			<p:selectBooleanCheckbox value="#{boMSndPanelItem.assembly}" disabled="true"/>
+		</p:column>
+
+		<p:column sortBy="#{boMSndPanelItem.consignment}" width="80" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materialrevisionbompanel_consignment}"/>
+			</f:facet>
+			<p:selectBooleanCheckbox value="#{boMSndPanelItem.consignment}" disabled="true"/>
+		</p:column>
+
+		<p:column sortBy="#{boMSndPanelItem.alternativeGroup}" width="100" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materialrevisionbompanel_alternativegroup}"/>
+			</f:facet>
+			<h:outputText value="#{boMSndPanelItem.alternativeGroup}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{boMSndPanelItem.usageProbability}" width="100" exportHeaderValue="#{i18n.lbl_attr_bomitem_usageprobability}" class="thnowrap" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materialrevisionbompanel_usageprobability}" id="usageProbability"/>
+				<p:tooltip for="usageProbability" value="#{i18n.lbl_attr_bomitem_usageprobability}" position="top" showDelay="50"/>
+			</f:facet>
+			<h:outputText value="#{boMSndPanelItem.usageProbability}">
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{boMSndPanelItem.creationDate}" width="120" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_abstractentitywithid_creationdate}"/>
+			</f:facet>
+			<h:outputText value="#{boMSndPanelItem.creationDate}">
+				<f:convertDateTime pattern="#{userSession.dateTimeFormat}" timeZone="#{userSession.timeZone}"/>
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{boMSndPanelItem.lastUpdate}" width="120" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_abstractentitywithid_lastupdate}"/>
+			</f:facet>
+			<h:outputText value="#{boMSndPanelItem.lastUpdate}">
+				<f:convertDateTime pattern="#{userSession.dateTimeFormat}" timeZone="#{userSession.timeZone}"/>
+			</h:outputText>
+		</p:column>
+	</p:dataTable>
+
+	<p/>
+	<h:outputText styleClass="label-field-mandatory" value="#{i18n.result_total_number_records} #{traceBoMBoMComparePanel.bomItemsSnd.size()} #{i18n.tracebom_compare_result_onlyin} #{materialRevisionDocumentsComparePanel.revisionSnd.toString()}"/>
+
+
+
+<!--Kontextmenü mit Möglichkeit, eine Zelle oder eine Zeile zu kopieren -->
+	<h:inputHidden id="bomcellText" value="#{traceBoMBoMComparePanel.cellText}" />
+	<h:inputHidden id="bomrowCsv" value="#{traceBoMBoMComparePanel.rowCsv}" />
+
+	<p:contextMenu for="TraceBoMFstTable" beforeShow="updateContextData(event, 'form:tabview2', 'bom')" >
+		<p:menuitem value="#{i18n.action_view}" ajax="true" icon="pi pi-file" id="TraceBoMFstTable_mniView" 
+		rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;MATERIAL_MASTER')}" action="#{traceBoMBoMComparePanel.openViewBoMItemDialogFst}">
+			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{traceBoMBoMComparePanel.currentPageURL}"/>
+		</p:menuitem>
+
+		<!-- manuell hinzu gefügt -->
+		<p:menuitem value="#{i18n.action_materialRevisionBoMPanel_viewmaterial}" ajax="true" icon="pi pi-file" id="TraceBoMFstTable_viewmaterial" 
+			rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;MATERIAL_MASTER')}" action="#{traceBoMBoMComparePanel.openViewMaterialDialogFst}">
+			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{traceBoMBoMComparePanel.currentPageURL}"/>
+		</p:menuitem>
+
+		<p:menuitem value="#{i18n.action_refresh}" ajax="false" type="push" icon="pi pi-refresh" id="TraceBoMFstTable_mniRefresh" actionListener="#{traceBoMBoMComparePanel.refresh}"/>
+
+		<p:separator/>
+
+		<p:menuitem value="#{i18n.ctxmenu_copy_cell}" actionListener="#{traceBoMBoMComparePanel.copyCellToClipboard}" icon="pi pi-copy" update="@none"/>
+		<p:menuitem value="#{i18n.ctxmenu_copy_row}" actionListener="#{traceBoMBoMComparePanel.copyRowToClipboard}" icon="pi pi-copy" update="@none"/>
+	</p:contextMenu>
+
+	<p:contextMenu for="TraceBoMSndTable" beforeShow="updateContextData(event, 'form:tabview2', 'bom')" >
+		<p:menuitem value="#{i18n.action_view}" ajax="true" icon="pi pi-file" id="TraceBoMSndTable_mniView" 
+		rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;MATERIAL_MASTER')}" action="#{traceBoMBoMComparePanel.openViewBoMItemDialogSnd}">
+			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{traceBoMBoMComparePanel.currentPageURL}"/>
+		</p:menuitem>
+
+		<!-- manuell hinzu gefügt -->
+		<p:menuitem value="#{i18n.action_materialRevisionBoMPanel_viewmaterial}" ajax="true" icon="pi pi-file" id="TraceBoMSndTable_viewmaterial" 
+			rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;MATERIAL_MASTER')}" action="#{traceBoMBoMComparePanel.openViewMaterialDialogSnd}">
+			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{traceBoMBoMComparePanel.currentPageURL}"/>
+		</p:menuitem>
+
+		<p:menuitem value="#{i18n.action_refresh}" ajax="false" type="push" icon="pi pi-refresh" id="TraceBoMSndTable_mniRefresh" actionListener="#{traceBoMBoMComparePanel.refresh}"/>
+
+		<p:separator/>
+
+		<p:menuitem value="#{i18n.ctxmenu_copy_cell}" actionListener="#{traceBoMBoMComparePanel.copyCellToClipboard}" icon="pi pi-copy" update="@none"/>
+		<p:menuitem value="#{i18n.ctxmenu_copy_row}" actionListener="#{traceBoMBoMComparePanel.copyRowToClipboard}" icon="pi pi-copy" update="@none"/>
+	</p:contextMenu>
+
+</ui:composition>

@@ -1,32 +1,46 @@
 package com.kontron.qdw.ui.view;
 
-import com.kontron.qdw.boundary.base.*;
-import org.slf4j.*;
-import com.kontron.qdw.boundary.material.*;
-import java.lang.invoke.*;
-import com.kontron.qdw.dto.mv.*;
-import com.kontron.qdw.boundary.mv.*;
-import org.primefaces.model.DualListModel;
-import net.sourceforge.jbizmo.commons.webclient.primefaces.search.*;
 import static com.kontron.qdw.ui.TranslationKeys.*;
-import net.sourceforge.jbizmo.commons.webclient.primefaces.util.*;
-import jakarta.faces.application.FacesMessage;
-import java.util.*;
-import jakarta.faces.view.*;
-import java.text.*;
 import static com.kontron.qdw.ui.UserSession.*;
-import com.kontron.qdw.ui.*;
+
+import java.io.Serializable;
+import java.lang.invoke.MethodHandles;
+import java.text.DecimalFormatSymbols;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.ResourceBundle;
+
+import org.primefaces.model.DualListModel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.kontron.qdw.boundary.base.SupplierBoundaryService;
+import com.kontron.qdw.boundary.material.MaterialBoundaryService;
+import com.kontron.qdw.boundary.material.MaterialTypeBoundaryService;
+import com.kontron.qdw.boundary.mv.MaterializedArrivalShipmentBoundaryService;
+import com.kontron.qdw.dto.mv.MaterializedArrivalShipmentSerObjTBoMSearchDTO;
+import com.kontron.qdw.service.SavedQueryService;
+import com.kontron.qdw.ui.UserSession;
+import com.kontron.qdw.ui.dialog.CompareTraceBoMDialog;
 import com.kontron.qdw.ui.dialog.ViewSerialObjectDialog;
 import com.kontron.qdw.ui.dialog.ViewTraceBoMDialog;
 import com.kontron.qdw.ui.view.util.OnCompleteHelper;
 import com.kontron.qdw.ui.view.util.SuperView;
-import com.kontron.qdw.service.*;
-import jakarta.faces.model.*;
-import jakarta.inject.*;
-import net.sourceforge.jbizmo.commons.search.dto.*;
+
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.model.SelectItem;
+import jakarta.faces.view.ViewScoped;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 import net.sourceforge.jbizmo.commons.annotation.Customized;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
-import java.io.*;
+import net.sourceforge.jbizmo.commons.search.dto.SearchDTO;
+import net.sourceforge.jbizmo.commons.search.dto.SearchFieldDTO;
+import net.sourceforge.jbizmo.commons.search.dto.SearchFieldDataTypeEnum;
+import net.sourceforge.jbizmo.commons.webclient.primefaces.search.JSFSearchFieldDTO;
+import net.sourceforge.jbizmo.commons.webclient.primefaces.search.SearchInputFieldValidationException;
+import net.sourceforge.jbizmo.commons.webclient.primefaces.util.MessageUtil;
 
 @Named("serialObjectWithTraceBoMView")
 @ViewScoped
@@ -353,6 +367,16 @@ public class SerialObjectWithTraceBoMView extends SuperView implements Serializa
 
         if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY)) {
             url = ViewSerialObjectDialog.PAGE_INIT_URL + selectedObject.getSerObjId();
+        }
+
+        return url;
+    }
+
+    public String openCompareTraceBoMDialog() {
+        var url = "";
+
+        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY)) {
+            url = CompareTraceBoMDialog.PAGE_INIT_URL + selectedObject.getSerObjId();
         }
 
         return url;

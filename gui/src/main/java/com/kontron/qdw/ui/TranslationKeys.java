@@ -1041,6 +1041,7 @@ public interface TranslationKeys {
     String OPERATION_EXPORT_FAIL = "operation_export_fail";
     String OPERATION_EXPORT_OK = "operation_export_ok";
     String OPERATION_FETCH_FAIL = "operation_fetch_fail";
+    String FORM_COMPARETRACEBOMDIALOG_TITLE = "form_comparetracebomdialog_title";
     String OPERATION_FETCH_NO_DATA = "operation_fetch_no_data";
     String OPERATION_IMPORT_FAIL = "operation_import_fail";
     String OPERATION_IMPORT_OK = "operation_import_ok";

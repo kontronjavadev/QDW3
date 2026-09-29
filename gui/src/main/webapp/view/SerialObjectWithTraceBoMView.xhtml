@@ -652,6 +652,10 @@
 			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{serialObjectWithTraceBoMView.currentPageURL}"/>
 		</p:menuitem>
 		<p:menuitem value="#{i18n.action_copy}" ajax="true" icon="pi pi-copy" id="panData_mniCopy" rendered="false" onclick="PF('copyConfirm').show()"/>
+		<p:menuitem value="#{i18n.action_cmptracebom}" ajax="true" icon="pi pi-file" id="panData_mniCmpTB" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY')}" 
+			action="#{serialObjectWithTraceBoMView.openCompareTraceBoMDialog}">
+			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{serialObjectWithTraceBoMView.currentPageURL}"/>
+		</p:menuitem>
 		<p:menuitem value="#{i18n.action_refresh}" ajax="false" type="push" icon="pi pi-refresh" id="panData_mniRefresh" actionListener="#{serialObjectWithTraceBoMView.fetchMaterializedArrivalShipments}"/>
 
 		<p:separator/>
