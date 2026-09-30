@@ -111,7 +111,6 @@ public class CompareTraceBoMDialog implements Serializable {
             else {
                 sndSerObj = new SerialObjectCompareDTO();
                 sndSerObj.setSerialNumber(fstSerObj.getSerialNumber());
-                sndSerObj.setMaterialMaterialNumber(fstSerObj.getMaterialMaterialNumber());
             }
 
             logger.debug("Dialog initialization finished");
@@ -150,9 +149,7 @@ public class CompareTraceBoMDialog implements Serializable {
      */
     public List<SerialObjectCompareDTO> onCompleteSerObj(String filter) {
         try {
-            // TODO: implementieren
-            // return serObjService.findMaterialRevisions(filter);
-            return Collections.emptyList();
+            return serObjService.findSerialObjectsForCompare(filter);
         }
         catch (final Exception e) {
             logger.error("Error while fetching data for proposal text field 'cboSndSerObj'!", e);
@@ -181,7 +178,6 @@ public class CompareTraceBoMDialog implements Serializable {
         if (sndSerObj == null || sndSerObj.getId() == 0) {
             this.sndSerObj = new SerialObjectCompareDTO();
             this.sndSerObj.setSerialNumber(fstSerObj.getSerialNumber());
-            this.sndSerObj.setMaterialMaterialNumber(fstSerObj.getMaterialMaterialNumber());
         }
         else {
             // -> vollständig holen, da in allen Tabs für Anzeige MatNr/RevNr/Werk benötigt wird

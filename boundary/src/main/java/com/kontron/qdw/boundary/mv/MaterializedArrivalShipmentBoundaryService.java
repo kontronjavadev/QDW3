@@ -11,6 +11,7 @@ import jakarta.inject.*;
 import jakarta.ejb.*;
 import jakarta.annotation.security.*;
 import net.sourceforge.jbizmo.commons.search.dto.*;
+import net.sourceforge.jbizmo.commons.annotation.Customized;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
 
 @Stateless
@@ -144,7 +145,7 @@ public class MaterializedArrivalShipmentBoundaryService {
      * @return a list of materialized arrival shipment objects
      * @throws GeneralSearchException if the search operation has failed
      */
-    @Generated
+    @Customized
     @PermitAll
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public List<MaterializedArrivalShipmentSerObjTBoMSearchDTO> searchAllMaterializedArrivalShipmentSerObjTBoMs(SearchDTO searchObj) {
@@ -201,7 +202,7 @@ public class MaterializedArrivalShipmentBoundaryService {
      * @return the number of objects a query would return
      * @throws GeneralSearchException if the count operation has failed
      */
-    @Generated
+    @Customized
     @PermitAll
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public long countAllMaterializedArrivalShipmentSerObjTBoMs(SearchDTO searchObj) {

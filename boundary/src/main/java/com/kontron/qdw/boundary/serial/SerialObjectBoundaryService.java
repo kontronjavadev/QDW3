@@ -15,6 +15,7 @@ import jakarta.annotation.security.*;
 import com.kontron.qdw.repository.serial.*;
 import net.sourceforge.jbizmo.commons.search.dto.*;
 import net.sourceforge.jbizmo.commons.repository.*;
+import net.sourceforge.jbizmo.commons.annotation.Customized;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
 import static net.sourceforge.jbizmo.commons.jpa.AbstractRepository.SMALL_LIST_SIZE;
 
@@ -41,6 +42,66 @@ public class SerialObjectBoundaryService {
         this.repository = repository;
     }
 
+
+
+    @Customized
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public SerialObjectCompareDTO findCompareSerObj(long id) {
+        // Find persistent object
+        final SerialObject serialObject = repository.findById(id, true);
+
+        final var dto = new SerialObjectCompareDTO();
+        dto.setId(serialObject.getId());
+        dto.setSerialNumber(serialObject.getSerialNumber());
+        dto.setMaterialId(serialObject.getMaterial().getId());
+        dto.setMaterialMaterialNumber(serialObject.getMaterial().getMaterialNumber());
+
+        if (serialObject.getTraceBom() != null) {
+            dto.setTraceBomId(serialObject.getTraceBom().getId());
+        }
+
+        return dto;
+    }
+
+    /**
+     * Search for serial object objects
+     * @param filter
+     * @return a list of serial object objects
+     * @throws GeneralSearchException if the search operation has failed
+     */
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public List<SerialObjectCompareDTO> findSerialObjectsForCompare(String filter) {
+        // Collect the select tokens of all fields that should be fetched
+        final var selectTokens = new ArrayList<String>();
+        selectTokens.add("a.id");
+        selectTokens.add("a.serialNumber");
+        selectTokens.add("m.id");
+        selectTokens.add("m.materialNumber");
+        selectTokens.add("t.id");
+
+        // Initialize the search object
+        final var searchObj = new SearchDTO();
+        searchObj.setExactFilterMatch(true);
+        searchObj.setCaseSensitive(true);
+        searchObj.setMaxResult(SMALL_LIST_SIZE);
+        searchObj.setFromClause("from SerialObject a "
+                + "join a.material m "
+                + "left join a.traceBom t ");
+
+        final var filterField = searchObj.addSearchField("a.serialNumber", SearchFieldDataTypeEnum.STRING);
+        filterField.setSortIndex(1);
+        filterField.setSortOrder(SortDirectionEnum.ASC);
+        if (filter != null && !filter.isEmpty() && !filter.equals(WILDCARD)) {
+            filterField.setFilterCriteria(filter + WILDCARD);
+        }
+
+        return repository.search(searchObj, SerialObjectCompareDTO.class, selectTokens);
+    }
+
+
+
     /**
      * Search for serial object objects
      * @param filter
@@ -51,13 +112,14 @@ public class SerialObjectBoundaryService {
     @PermitAll
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public List<SerialObjectListDTO> findSerialObjects(String filter) {
-        if (filter != null && !filter.isEmpty() && !filter.equals(WILDCARD))
+        if (filter != null && !filter.isEmpty() && !filter.equals(WILDCARD)) {
             try {
                 Long.parseLong(filter);
             }
             catch (NumberFormatException e) {
                 return Collections.emptyList();
             }
+        }
 
         // Collect the select tokens of all fields that should be fetched
         final var selectTokens = new ArrayList<String>();
@@ -510,32 +572,6 @@ public class SerialObjectBoundaryService {
         parentFilterField.setFilterCriteria(Long.toString(id));
 
         return repository.search(searchObj, SerialObjectAssemblyRecordsDTO.class, selectTokens);
-    }
-
-    /**
-     * @param id
-     * @return the serial object object
-     */
-    @Generated
-    @PermitAll
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public SerialObjectCompareDTO findCompareSerObj(long id) {
-        // Find persistent object
-        final SerialObject serialObject = repository.findById(id, true);
-
-        final var dto = new SerialObjectCompareDTO();
-        dto.setId(serialObject.getId());
-        dto.setSerialNumber(serialObject.getSerialNumber());
-        dto.setMaterialId(serialObject.getMaterial().getId());
-        dto.setMaterialMaterialNumber(serialObject.getMaterial().getMaterialNumber());
-
-        if (serialObject.getTraceBom() != null)
-            dto.setTraceBomId(serialObject.getTraceBom().getId());
-        else
-            dto.setTraceBomId(Long.MIN_VALUE);
-
-
-        return dto;
     }
 
 }

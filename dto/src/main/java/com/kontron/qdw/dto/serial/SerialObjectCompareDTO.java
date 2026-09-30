@@ -1,6 +1,8 @@
 package com.kontron.qdw.dto.serial;
 
 import java.io.Serializable;
+
+import net.sourceforge.jbizmo.commons.annotation.Customized;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
 
 public class SerialObjectCompareDTO implements Serializable {
@@ -24,8 +26,8 @@ public class SerialObjectCompareDTO implements Serializable {
     private long materialId;
     @Generated
     private String materialMaterialNumber;
-    @Generated
-    private long traceBomId;
+    @Customized
+    private Long traceBomId;
 
     /**
      * Default constructor
@@ -51,8 +53,8 @@ public class SerialObjectCompareDTO implements Serializable {
      * @param materialMaterialNumber
      * @param traceBomId
      */
-    @Generated
-    public SerialObjectCompareDTO(long id, String serialNumber, long materialId, String materialMaterialNumber, long traceBomId) {
+    @Customized
+    public SerialObjectCompareDTO(long id, String serialNumber, long materialId, String materialMaterialNumber, Long traceBomId) {
         this.id = id;
         this.serialNumber = serialNumber;
         this.materialId = materialId;
@@ -146,8 +148,8 @@ public class SerialObjectCompareDTO implements Serializable {
     /**
      * @param traceBomId the id of the trace BoM to set
      */
-    @Generated
-    public void setTraceBomId(long traceBomId) {
+    @Customized
+    public void setTraceBomId(Long traceBomId) {
         this.traceBomId = traceBomId;
     }
 
