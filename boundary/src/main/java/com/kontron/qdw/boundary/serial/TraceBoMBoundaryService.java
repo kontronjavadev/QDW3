@@ -6,6 +6,11 @@ import static net.sourceforge.jbizmo.commons.jpa.AbstractRepository.MAX_LIST_SIZ
 import static net.sourceforge.jbizmo.commons.jpa.AbstractRepository.WILDCARD;
 import com.kontron.qdw.dto.base.*;
 import java.util.*;
+import java.util.stream.Collectors;
+
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+
 import jakarta.validation.ConstraintViolationException;
 import com.kontron.qdw.dto.serial.*;
 import com.kontron.qdw.dto.material.*;
@@ -19,6 +24,13 @@ import static net.sourceforge.jbizmo.commons.jpa.AbstractRepository.SMALL_LIST_S
 
 @Stateless
 public class TraceBoMBoundaryService {
+
+    private static final Comparator<TraceBoMTraceBoMItemsDTO> TBI_COMPARATOR_NOT_REGARDING_QTY = Comparator
+            .comparing((TraceBoMTraceBoMItemsDTO tbi) -> StringUtils.defaultString(tbi.getManufacturerName()))
+            .thenComparing(Comparator.comparing((TraceBoMTraceBoMItemsDTO tbi) -> StringUtils.defaultString(tbi.getManufacturerRevision())))
+            .thenComparing(Comparator.comparing((TraceBoMTraceBoMItemsDTO tbi) -> StringUtils.defaultString(tbi.getOrderCode())))
+            .thenComparing(Comparator.comparing((TraceBoMTraceBoMItemsDTO tbi) -> StringUtils.defaultString(tbi.getDateCode())));
+
     @Generated
     private final TraceBoMRepository repository;
 
@@ -39,6 +51,97 @@ public class TraceBoMBoundaryService {
     public TraceBoMBoundaryService(TraceBoMRepository repository) {
         this.repository = repository;
     }
+
+
+
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public Map<Boolean, List<TraceBoMTraceBoMItemsDTO>> compareBoMs(Long originTraceBoMId, Long compareTraceBoMId) throws GeneralSearchException {
+        // Map an TraceBoMItems zu Material-Id zu beiden TB-Ids aufbauen
+        List<TraceBoMTraceBoMItemsDTO> originBoMItems = originTraceBoMId == null
+                ? Collections.emptyList()
+                : getTraceBoMItemsOfTraceBoM(originTraceBoMId);
+        Map<Long, TraceBoMTraceBoMItemsDTO> originMap = originBoMItems.stream()
+                .collect(Collectors.groupingBy(TraceBoMTraceBoMItemsDTO::getMaterialId,
+                        Collectors.reducing(null, (first, second) -> first == null ? second : first)));
+
+        List<TraceBoMTraceBoMItemsDTO> compareBoMItems = compareTraceBoMId == null
+                ? Collections.emptyList()
+                : getTraceBoMItemsOfTraceBoM(compareTraceBoMId);
+        Map<Long, TraceBoMTraceBoMItemsDTO> compareMap = compareBoMItems.stream()
+                .collect(Collectors.groupingBy(TraceBoMTraceBoMItemsDTO::getMaterialId,
+                        Collectors.reducing(null, (first, second) -> first == null ? second : first)));
+
+
+        // Unterschiede berechnen
+
+        // Schnittmenge der keys (Material-Ids) ermitteln
+        Collection<Long> intersectionOfKeys = CollectionUtils.intersection(originMap.keySet(), compareMap.keySet());
+
+        // alle Werte der originMap einsammeln, deren key NICHT zur Schnittmenge gehört, die also NUR in der originMap vorkommen
+        List<TraceBoMTraceBoMItemsDTO> onlyInOrgin = originMap.values().stream()
+                .filter(bomItem -> !intersectionOfKeys.contains(bomItem.getMaterialId()))
+                .collect(Collectors.toList());
+
+        // alle Werte der compareMap einsammeln, deren key NICHT zur Schnittmenge gehört, die also NUR in der compareMap vorkommen
+        List<TraceBoMTraceBoMItemsDTO> onlyInCompare = compareMap.values().stream()
+                .filter(bomItem -> !intersectionOfKeys.contains(bomItem.getMaterialId()))
+                .collect(Collectors.toList());
+
+
+        // alle Einträge, die in beiden Maps vorkommen, vergleichen, Differenz bilden und eine der Listen zuordnen
+        for (Long key : intersectionOfKeys) {
+            TraceBoMTraceBoMItemsDTO originEntry = originMap.get(key);
+            TraceBoMTraceBoMItemsDTO compareEntry = compareMap.get(key);
+
+            if (originEntry == null) {
+                onlyInCompare.add(compareEntry);
+                continue;
+            }
+            else if (compareEntry == null) {
+                onlyInOrgin.add(originEntry);
+                continue;
+            }
+            // else: beide haben einen Wert
+
+            if (TBI_COMPARATOR_NOT_REGARDING_QTY.compare(originEntry, compareEntry) != 0) {
+                // Einträge unterscheiden sich, also beide in die jeweilieg Liste packen
+                onlyInOrgin.add(originEntry);
+                onlyInCompare.add(compareEntry);
+                continue;
+            }
+
+            int originQty = originEntry.getQuantity();
+            int compareQty = compareEntry.getQuantity();
+
+            if (originQty > compareQty) {
+                // in der originMap liegt der Eintrag in höherer Stückzahl vor
+                // -> diesen Eintrag verwenden und die Differenz zur Stückzahl des Eintrags in der compareMap eintragen
+                // -> diese Stückzahl ist "included" aus Sicht der originMap gegenüber der compareMap
+                originEntry.setQuantity(originQty - compareQty);
+                onlyInOrgin.add(originEntry);
+            }
+            else if (compareQty > originQty) {
+                // in der compareMap liegt der Eintrag in höherer Stückzahl vor
+                // -> diesen Eintrag verwenden und die Differenz zur Stückzahl des Eintrags in der originMap eintragen
+                // -> diese Stückzahl ist "not included" aus Sicht der originMap gegenüber der compareMap
+                compareEntry.setQuantity(compareQty - originQty);
+                onlyInCompare.add(compareEntry);
+            }
+            // else: kein Unterschied in der Stückzahl, also in keine Liste eintragen
+        }
+
+        onlyInOrgin.sort(Comparator.comparing(TraceBoMTraceBoMItemsDTO::getMaterialMaterialNumber));
+        onlyInCompare.sort(Comparator.comparing(TraceBoMTraceBoMItemsDTO::getMaterialMaterialNumber));
+
+        HashMap<Boolean, List<TraceBoMTraceBoMItemsDTO>> map = new HashMap<>();
+        map.put(true, onlyInOrgin);
+        map.put(false, onlyInCompare);
+
+        return map;
+    }
+
+
 
     /**
      * Search for trace BoM objects

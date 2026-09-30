@@ -15,7 +15,7 @@ import java.util.ResourceBundle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.kontron.qdw.boundary.serial.SerialObjectBoundaryService;
+import com.kontron.qdw.boundary.serial.TraceBoMBoundaryService;
 import com.kontron.qdw.dto.serial.SerialObjectCompareDTO;
 import com.kontron.qdw.dto.serial.TraceBoMTraceBoMItemsDTO;
 import com.kontron.qdw.ui.UserSession;
@@ -37,7 +37,7 @@ public class TraceBoMBoMComparePanel extends CopyClipboard implements Serializab
     private final UserSession userSession;
     @SuppressWarnings("unused")
     private transient ResourceBundle bundle;
-    private final transient SerialObjectBoundaryService serObjService;
+    private final transient TraceBoMBoundaryService tbService;
 
     private SerialObjectCompareDTO serObjFst;
     private SerialObjectCompareDTO serObjSnd;
@@ -51,13 +51,13 @@ public class TraceBoMBoMComparePanel extends CopyClipboard implements Serializab
 
     public TraceBoMBoMComparePanel() {
         userSession = null;
-        serObjService = null;
+        tbService = null;
     }
 
     @Inject
-    public TraceBoMBoMComparePanel(UserSession userSession, SerialObjectBoundaryService serObjService) {
+    public TraceBoMBoMComparePanel(UserSession userSession, TraceBoMBoundaryService tbService) {
         this.userSession = userSession;
-        this.serObjService = serObjService;
+        this.tbService = tbService;
     }
 
 
@@ -148,8 +148,7 @@ public class TraceBoMBoMComparePanel extends CopyClipboard implements Serializab
     }
 
     public void refresh() {
-        // TODO: implementieren
-        // diffBoMItems = serObjService.compareLogisticBoMs(serObjFst.getId(), serObjSnd.getId());
+        diffBoMItems = tbService.compareBoMs(serObjFst.getTraceBomId(), serObjSnd.getTraceBomId());
     }
 
 

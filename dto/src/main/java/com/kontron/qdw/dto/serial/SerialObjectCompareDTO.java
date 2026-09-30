@@ -140,8 +140,8 @@ public class SerialObjectCompareDTO implements Serializable {
     /**
      * @return the id of the trace BoM
      */
-    @Generated
-    public long getTraceBomId() {
+    @Customized
+    public Long getTraceBomId() {
         return this.traceBomId;
     }
 
