@@ -63,23 +63,11 @@ public class SerialObjectCompareDTO implements Serializable {
 
     @Override
     public String toString() {
-
-        if (getMaterialMaterialNumber() == null) {
-            return toStringOhneMatNr();
-        }
-        return toStringMitMatNr();
-    }
-
-    private String toStringOhneMatNr() {
         if (getSerialNumber() == null) {
             // es steht wohl überhaupt nichts im DTO, mglw. vom Converter produziert, aber wir wollen trotzdem etwas sehen!
             return "id " + getId();
         }
         return getSerialNumber();
-    }
-
-    private String toStringMitMatNr() {
-        return String.format("%s (%s)", getSerialNumber(), getMaterialMaterialNumber());
     }
 
 

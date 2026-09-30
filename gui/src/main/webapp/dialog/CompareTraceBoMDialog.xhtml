@@ -34,16 +34,32 @@
 
 	<p:panel>
 		<h:panelGrid columns="6">
-			<!-- als Link für Berechtigte und Text für Übrige -->
-            <h:outputLabel value="#{i18n.lbl_compare_fst_serobj}:" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY')}" for="cboFstSerObj" styleClass="label-field-optional"/>
-            <p:commandLink rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY')}" id="cboFstSerObj" style="font-weight: bold;color: #0063ac" action="#{compareTraceBoMDialog.openViewTraceBoMDialog}">
-                <f:setPropertyActionListener target="#{userSession.lastPage}" value="#{compareTraceBoMDialog.currentPageURL}"/>
-                <h:outputText value="#{compareTraceBoMDialog.fstSerObj.toString()}"/>
-            </p:commandLink>
+			<h:outputText value="#{i18n.lbl_compare_fst_serobj}:" styleClass="label-field-optional"/>
+			<p:panel styleClass="ui-backgroundpanel">
+				<!-- als Link für Berechtigte und Text für Übrige -->
+	            <p:commandLink rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY')}" id="cboFstSerObj" style="font-weight: bold;color: #0063ac" action="#{compareTraceBoMDialog.openViewTraceBoMDialog}">
+	                <f:setPropertyActionListener target="#{userSession.lastPage}" value="#{compareTraceBoMDialog.currentPageURL}"/>
+	                <h:outputText value="#{compareTraceBoMDialog.fstSerObj.toString()}"/>
+	            </p:commandLink>
 
-            <h:outputLabel value="#{i18n.lbl_compare_fst_serobj}:" rendered="#{!userSession.checkAuthorizationString('ADMINISTRATOR;READONLY')}" for="cboFstSerObjAlt" styleClass="label-field-optional"/>
-            <h:outputText styleClass="label-field-value" rendered="#{!userSession.checkAuthorizationString('ADMINISTRATOR;READONLY')}" id="cboFstSerObjAlt" value="#{compareTraceBoMDialog.fstSerObj.toString()}"/>
-            <p:tooltip for="cboFstSerObj" value=""/>
+	            <h:outputLabel value="#{i18n.lbl_compare_fst_serobj}:" rendered="#{!userSession.checkAuthorizationString('ADMINISTRATOR;READONLY')}" for="cboFstSerObjAlt" styleClass="label-field-optional"/>
+	            <h:outputText styleClass="label-field-value" rendered="#{!userSession.checkAuthorizationString('ADMINISTRATOR;READONLY')}" id="cboFstSerObjAlt" value="#{compareTraceBoMDialog.fstSerObj.toString()}"/>
+
+
+				<!-- als Link für Berechtigte und Text für Übrige -->
+	            <h:outputText value=" (#{i18n.lbl_compare_fst_serobj_mat} " styleClass="label-field-optional"/>
+	            <p:commandLink rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY')}" id="cboFstSerObjMat" style="font-weight: bold;color: #0063ac" action="#{compareTraceBoMDialog.openViewMaterialDialog}">
+	                <f:setPropertyActionListener target="#{userSession.lastPage}" value="#{compareTraceBoMDialog.currentPageURL}"/>
+	                <h:outputText value="#{compareTraceBoMDialog.fstSerObj.materialMaterialNumber}"/>
+	            </p:commandLink>
+	
+	            <h:outputLabel value="(#{i18n.lbl_compare_fst_serobj_mat} " rendered="#{!userSession.checkAuthorizationString('ADMINISTRATOR;READONLY')}" for="cboFstSerObjMatAlt" styleClass="label-field-optional"/>
+	            <h:outputText styleClass="label-field-value" rendered="#{!userSession.checkAuthorizationString('ADMINISTRATOR;READONLY')}" id="cboFstSerObjMatAlt" value="#{compareTraceBoMDialog.fstSerObj.materialMaterialNumber}"/>
+
+	            <h:outputText value=")" styleClass="label-field-optional"/>
+			</p:panel>
+            <h:outputText value=""/>
+
 
 
 			<h:outputLabel value="#{i18n.lbl_compare_snd_serobj}:" for="cboSndSerObj" styleClass="label-field-optional"/>
@@ -51,7 +67,7 @@
 			kein this.select(), um Text zu markieren, da das in diesem Fall die Handhabung erschwert -->
 			<p:autoComplete styleClass="ui-wideautocomplete" id="cboSndSerObj" widgetVar="widvarSndSerObj" var="cboSndSerObjItem" itemValue="#{cboSndSerObjItem}" itemLabel="#{cboSndSerObjItem}" 
 				value="#{compareTraceBoMDialog.sndSerObj}" onclick="if(PF('widvarSndSerObj').input.val().length > 1) {PF('widvarSndSerObj').search(PF('widvarSndSerObj').input.val())};" 
-				converter="#{materialRevisionListDTOConverter}" scrollHeight="300" minQueryLength="1" forceSelection="true" completeMethod="#{compareTraceBoMDialog.onCompleteRevision}">
+				converter="#{serialObjectCompareDTOConverter}" scrollHeight="300" minQueryLength="1" forceSelection="true" completeMethod="#{compareTraceBoMDialog.onCompleteSerObj}">
 				<p:ajax event="itemSelect" listener="#{compareTraceBoMDialog.sndSerObjSelected}" update="tabview2"/>
 			</p:autoComplete>
 			<p:tooltip for="cboSndSerObj" value=""/>

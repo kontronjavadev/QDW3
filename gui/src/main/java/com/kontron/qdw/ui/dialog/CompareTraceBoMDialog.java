@@ -110,6 +110,7 @@ public class CompareTraceBoMDialog implements Serializable {
             }
             else {
                 sndSerObj = new SerialObjectCompareDTO();
+                sndSerObj.setSerialNumber(fstSerObj.getSerialNumber());
                 sndSerObj.setMaterialMaterialNumber(fstSerObj.getMaterialMaterialNumber());
             }
 
@@ -179,6 +180,7 @@ public class CompareTraceBoMDialog implements Serializable {
         // so wird der ursprüngliche Dummy mit der Materialnummer und Id = 0 übergeben. Dann Abbruch.
         if (sndSerObj == null || sndSerObj.getId() == 0) {
             this.sndSerObj = new SerialObjectCompareDTO();
+            this.sndSerObj.setSerialNumber(fstSerObj.getSerialNumber());
             this.sndSerObj.setMaterialMaterialNumber(fstSerObj.getMaterialMaterialNumber());
         }
         else {
