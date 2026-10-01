@@ -103,16 +103,7 @@ public class TraceBoMBoundaryService {
         for (Long key : intersectionOfKeys) {
             TraceBoMTraceBoMItemsDTO originEntry = originMap.get(key);
             TraceBoMTraceBoMItemsDTO compareEntry = compareMap.get(key);
-
-            if (originEntry == null) {
-                onlyInCompare.add(compareEntry);
-                continue;
-            }
-            else if (compareEntry == null) {
-                onlyInOrgin.add(originEntry);
-                continue;
-            }
-            // else: beide haben einen Wert
+            // beide haben einen Wert, sichergestellt durch Schnittmengenbildung!
 
             if (TBI_COMPARATOR_NOT_REGARDING_QTY.compare(originEntry, compareEntry) != 0) {
                 // Einträge unterscheiden sich, also beide in die jeweilieg Liste packen
@@ -163,13 +154,14 @@ public class TraceBoMBoundaryService {
     @PermitAll
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public List<TraceBoMListDTO> findTraceBoMs(String filter) {
-        if (filter != null && !filter.isEmpty() && !filter.equals(WILDCARD))
+        if (filter != null && !filter.isEmpty() && !filter.equals(WILDCARD)) {
             try {
                 Long.parseLong(filter);
             }
             catch (NumberFormatException e) {
                 return Collections.emptyList();
             }
+        }
 
         // Collect the select tokens of all fields that should be fetched
         final var selectTokens = new ArrayList<String>();

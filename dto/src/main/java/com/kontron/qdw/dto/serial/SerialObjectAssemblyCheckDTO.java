@@ -1,6 +1,9 @@
 package com.kontron.qdw.dto.serial;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
 import net.sourceforge.jbizmo.commons.annotation.Generated;
 
 public class SerialObjectAssemblyCheckDTO implements Serializable {
@@ -31,31 +34,21 @@ public class SerialObjectAssemblyCheckDTO implements Serializable {
     @Generated
     private String traceBomOrderNumber;
 
-    /**
-     * Default constructor
-     */
+    private List<AssemblyCheckMaterialDTO> onlyInRevBoMList = new ArrayList<AssemblyCheckMaterialDTO>();
+    private List<AssemblyCheckMaterialDTO> onlyInTraceBoMList = new ArrayList<AssemblyCheckMaterialDTO>();
+    private List<AssemblyCheckMaterialDTO> diffQtyList = new ArrayList<AssemblyCheckMaterialDTO>();
+
+
+
     @Generated
     public SerialObjectAssemblyCheckDTO() {
     }
 
-    /**
-     * Constructor with ID attribute
-     * @param id
-     */
     @Generated
     public SerialObjectAssemblyCheckDTO(long id) {
         this.id = id;
     }
 
-    /**
-     * Constructor using fields
-     * @param id
-     * @param serialNumber
-     * @param materialMaterialNumber
-     * @param materialRevisionRevisionNumber
-     * @param traceBomLotNumber
-     * @param traceBomOrderNumber
-     */
     @Generated
     public SerialObjectAssemblyCheckDTO(long id, String serialNumber, String materialMaterialNumber, String materialRevisionRevisionNumber,
             String traceBomLotNumber, String traceBomOrderNumber) {
@@ -67,105 +60,8 @@ public class SerialObjectAssemblyCheckDTO implements Serializable {
         this.traceBomOrderNumber = traceBomOrderNumber;
     }
 
-    /**
-     * @return the id
-     */
-    @Generated
-    public long getId() {
-        return this.id;
-    }
 
-    /**
-     * @param id the id to set
-     */
-    @Generated
-    public void setId(long id) {
-        this.id = id;
-    }
 
-    /**
-     * @return the serial number
-     */
-    @Generated
-    public String getSerialNumber() {
-        return this.serialNumber;
-    }
-
-    /**
-     * @param serialNumber the serial number to set
-     */
-    @Generated
-    public void setSerialNumber(String serialNumber) {
-        this.serialNumber = serialNumber;
-    }
-
-    /**
-     * @return the material number of the material
-     */
-    @Generated
-    public String getMaterialMaterialNumber() {
-        return this.materialMaterialNumber;
-    }
-
-    /**
-     * @param materialMaterialNumber the material number of the material to set
-     */
-    @Generated
-    public void setMaterialMaterialNumber(String materialMaterialNumber) {
-        this.materialMaterialNumber = materialMaterialNumber;
-    }
-
-    /**
-     * @return the revision number of the material revision
-     */
-    @Generated
-    public String getMaterialRevisionRevisionNumber() {
-        return this.materialRevisionRevisionNumber;
-    }
-
-    /**
-     * @param materialRevisionRevisionNumber the revision number of the material revision to set
-     */
-    @Generated
-    public void setMaterialRevisionRevisionNumber(String materialRevisionRevisionNumber) {
-        this.materialRevisionRevisionNumber = materialRevisionRevisionNumber;
-    }
-
-    /**
-     * @return the lot number of the trace BoM
-     */
-    @Generated
-    public String getTraceBomLotNumber() {
-        return this.traceBomLotNumber;
-    }
-
-    /**
-     * @param traceBomLotNumber the lot number of the trace BoM to set
-     */
-    @Generated
-    public void setTraceBomLotNumber(String traceBomLotNumber) {
-        this.traceBomLotNumber = traceBomLotNumber;
-    }
-
-    /**
-     * @return the order number of the trace BoM
-     */
-    @Generated
-    public String getTraceBomOrderNumber() {
-        return this.traceBomOrderNumber;
-    }
-
-    /**
-     * @param traceBomOrderNumber the order number of the trace BoM to set
-     */
-    @Generated
-    public void setTraceBomOrderNumber(String traceBomOrderNumber) {
-        this.traceBomOrderNumber = traceBomOrderNumber;
-    }
-
-    /* (non-Javadoc)
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
     @Generated
     @Override
     public boolean equals(Object obj) {
@@ -186,13 +82,96 @@ public class SerialObjectAssemblyCheckDTO implements Serializable {
         return this.id == dto.getId();
     }
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#hashCode()
-     */
     @Generated
     @Override
     public int hashCode() {
         return (int) (id ^ (id >>> 32));
+    }
+
+
+
+    @Generated
+    public long getId() {
+        return this.id;
+    }
+
+    @Generated
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    @Generated
+    public String getSerialNumber() {
+        return this.serialNumber;
+    }
+
+    @Generated
+    public void setSerialNumber(String serialNumber) {
+        this.serialNumber = serialNumber;
+    }
+
+    @Generated
+    public String getMaterialMaterialNumber() {
+        return this.materialMaterialNumber;
+    }
+
+    @Generated
+    public void setMaterialMaterialNumber(String materialMaterialNumber) {
+        this.materialMaterialNumber = materialMaterialNumber;
+    }
+
+    @Generated
+    public String getMaterialRevisionRevisionNumber() {
+        return this.materialRevisionRevisionNumber;
+    }
+
+    @Generated
+    public void setMaterialRevisionRevisionNumber(String materialRevisionRevisionNumber) {
+        this.materialRevisionRevisionNumber = materialRevisionRevisionNumber;
+    }
+
+    @Generated
+    public String getTraceBomLotNumber() {
+        return this.traceBomLotNumber;
+    }
+
+    @Generated
+    public void setTraceBomLotNumber(String traceBomLotNumber) {
+        this.traceBomLotNumber = traceBomLotNumber;
+    }
+
+    @Generated
+    public String getTraceBomOrderNumber() {
+        return this.traceBomOrderNumber;
+    }
+
+    @Generated
+    public void setTraceBomOrderNumber(String traceBomOrderNumber) {
+        this.traceBomOrderNumber = traceBomOrderNumber;
+    }
+
+    public List<AssemblyCheckMaterialDTO> getOnlyInRevBoMList() {
+        return onlyInRevBoMList;
+    }
+
+    public void setOnlyInRevBoMList(List<AssemblyCheckMaterialDTO> onlyInRevBoMList) {
+        this.onlyInRevBoMList = onlyInRevBoMList;
+    }
+
+    public List<AssemblyCheckMaterialDTO> getOnlyInTraceBoMList() {
+        return onlyInTraceBoMList;
+    }
+
+    public void setOnlyInTraceBoMList(List<AssemblyCheckMaterialDTO> onlyInTraceBoMList) {
+        this.onlyInTraceBoMList = onlyInTraceBoMList;
+    }
+
+    public List<AssemblyCheckMaterialDTO> getDiffQtyList() {
+        return diffQtyList;
+    }
+
+    public void setDiffQtyList(List<AssemblyCheckMaterialDTO> diffQtyList) {
+        this.diffQtyList = diffQtyList;
     }
 
 }

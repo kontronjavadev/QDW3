@@ -1,11 +1,18 @@
 package com.kontron.qdw.boundary.serial;
 
+import com.kontron.qdw.domain.material.Material;
 import com.kontron.qdw.domain.serial.*;
 import net.sourceforge.jbizmo.commons.search.exception.*;
 import static net.sourceforge.jbizmo.commons.jpa.AbstractRepository.DEFAULT_LIST_SIZE;
 import static net.sourceforge.jbizmo.commons.jpa.AbstractRepository.WILDCARD;
 import com.kontron.qdw.dto.service.*;
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+
+import org.apache.commons.collections4.CollectionUtils;
+
 import jakarta.validation.ConstraintViolationException;
 import com.kontron.qdw.dto.serial.*;
 import com.kontron.qdw.dto.material.*;
@@ -21,6 +28,22 @@ import static net.sourceforge.jbizmo.commons.jpa.AbstractRepository.SMALL_LIST_S
 
 @Stateless
 public class SerialObjectBoundaryService {
+
+    private static final Collector<AssemblyCheckMaterialDTO, ?, Map<Long, AssemblyCheckMaterialDTO>> TBI_PER_MAT_ID_COLLECTOR = Collectors.toMap(
+            AssemblyCheckMaterialDTO::getMaterialId,
+            Function.identity(),
+            (first, second) -> {
+                first.setTraceBoMQuantity(first.getTraceBoMQuantity() + second.getTraceBoMQuantity());
+                return first;
+            });
+    private static final Collector<AssemblyCheckMaterialDTO, ?, Map<Long, AssemblyCheckMaterialDTO>> BI_PER_MAT_ID_COLLECTOR = Collectors.toMap(
+            AssemblyCheckMaterialDTO::getMaterialId,
+            Function.identity(),
+            (first, second) -> {
+                first.setBomQuantity(first.getBomQuantity() + second.getBomQuantity());
+                return first;
+            });
+
     @Generated
     private final SerialObjectRepository repository;
 
@@ -43,6 +66,101 @@ public class SerialObjectBoundaryService {
     }
 
 
+
+    /**
+     * Find serial object by its ID and calculates assembly differences.
+     * @param id
+     */
+    @Customized
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public SerialObjectAssemblyCheckDTO findSerialObjectAssemblyCheck(long id) {
+        // Find persistent object
+        final SerialObject serialObject = repository.findById(id, true);
+
+        final var dto = new SerialObjectAssemblyCheckDTO();
+        dto.setId(serialObject.getId());
+        dto.setSerialNumber(serialObject.getSerialNumber());
+
+        if (serialObject.getTraceBom() == null) {
+            return dto;
+        }
+
+        dto.setMaterialMaterialNumber(serialObject.getTraceBom().getMaterialRevision().getMaterial().getMaterialNumber());
+        dto.setMaterialRevisionRevisionNumber(serialObject.getTraceBom().getMaterialRevision().getRevisionNumber());
+        dto.setTraceBomLotNumber(serialObject.getTraceBom().getLotNumber());
+        dto.setTraceBomOrderNumber(serialObject.getTraceBom().getOrderNumber());
+
+
+        // Map an AssemblyCheckMaterialDTO zu Material-Id zu Trace-BoM und Revisions-BoM aufbauen
+        Map<Long, AssemblyCheckMaterialDTO> traceBoMMap = CollectionUtils.emptyIfNull(serialObject.getTraceBom().getTraceBoMItems()).stream()
+                .map(tbi -> {
+                    Material m = tbi.getMaterial();
+                    return new AssemblyCheckMaterialDTO(m.getId(), m.getMaterialNumber(), 0, tbi.getQuantity(),
+                            m.getShortText(), m.getMaterialHierarchy(), m.getMaterialType().getCode());
+                })
+                .collect(TBI_PER_MAT_ID_COLLECTOR);
+
+        Map<Long, AssemblyCheckMaterialDTO> revBoMMap = serialObject.getTraceBom().getMaterialRevision() == null
+                ? Collections.emptyMap()
+                : CollectionUtils.emptyIfNull(serialObject.getTraceBom().getMaterialRevision().getBoMItems())
+                        .stream()
+                        .filter(rbi -> rbi.getMaterial() != null) // Labels
+                        .filter(rbi -> rbi.getQuantity() != null) // sollte auch nur bei Labels der Fall sein!
+                        .map(rbi -> {
+                            Material m = rbi.getMaterial();
+                            return new AssemblyCheckMaterialDTO(m.getId(), m.getMaterialNumber(), rbi.getQuantity().intValue(), 0,
+                                    m.getShortText(), m.getMaterialHierarchy(), m.getMaterialType().getCode());
+                        })
+                        .collect(BI_PER_MAT_ID_COLLECTOR);
+
+
+        // Unterschiede berechnen
+
+        // Schnittmenge der keys (Material-Ids) ermitteln
+        Collection<Long> intersectionOfKeys = CollectionUtils.intersection(traceBoMMap.keySet(), revBoMMap.keySet());
+
+        // alle Werte der originMap einsammeln, deren key NICHT zur Schnittmenge gehört, die also NUR in der originMap vorkommen
+        List<AssemblyCheckMaterialDTO> onlyInTraceBoM = traceBoMMap.values().stream()
+                .filter(bomItem -> !intersectionOfKeys.contains(bomItem.getMaterialId()))
+                .collect(Collectors.toList());
+
+        // alle Werte der compareMap einsammeln, deren key NICHT zur Schnittmenge gehört, die also NUR in der compareMap vorkommen
+        List<AssemblyCheckMaterialDTO> onlyInRevBoM = revBoMMap.values().stream()
+                .filter(bomItem -> !intersectionOfKeys.contains(bomItem.getMaterialId()))
+                .collect(Collectors.toList());
+
+        List<AssemblyCheckMaterialDTO> diffQtys = new ArrayList<>();
+        // alle Einträge, die in beiden Maps vorkommen, vergleichen, Differenz bilden und eine der Listen zuordnen
+        for (Long key : intersectionOfKeys) {
+            AssemblyCheckMaterialDTO traceBoMEntry = traceBoMMap.get(key);
+            AssemblyCheckMaterialDTO revBoMEntry = revBoMMap.get(key);
+            // beide haben einen Wert, sichergestellt durch Schnittmengenbildung!
+
+            int traceBoMQty = traceBoMEntry.getTraceBoMQuantity();
+            int revBoMQty = revBoMEntry.getBomQuantity();
+
+            if (traceBoMQty == revBoMQty) {
+                // kein Unterschied in der Stückzahl, also nicht in Liste eintragen
+                continue;
+            }
+
+            // traceBoMEntry verwenden, andere qty nachtragen und in Liste eintragen
+            traceBoMEntry.setBomQuantity(revBoMQty);
+            diffQtys.add(revBoMEntry);
+        }
+
+
+        onlyInTraceBoM.sort(Comparator.comparing(AssemblyCheckMaterialDTO::getMaterialNumber));
+        onlyInRevBoM.sort(Comparator.comparing(AssemblyCheckMaterialDTO::getMaterialNumber));
+        diffQtys.sort(Comparator.comparing(AssemblyCheckMaterialDTO::getMaterialNumber));
+
+        dto.setOnlyInTraceBoMList(onlyInTraceBoM);
+        dto.setOnlyInRevBoMList(onlyInRevBoM);
+        dto.setDiffQtyList(diffQtys);
+
+        return dto;
+    }
 
     @Customized
     @PermitAll
@@ -112,13 +230,14 @@ public class SerialObjectBoundaryService {
     @PermitAll
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public List<SerialObjectListDTO> findSerialObjects(String filter) {
-        if (filter != null && !filter.isEmpty() && !filter.equals(WILDCARD))
+        if (filter != null && !filter.isEmpty() && !filter.equals(WILDCARD)) {
             try {
                 Long.parseLong(filter);
             }
             catch (NumberFormatException e) {
                 return Collections.emptyList();
             }
+        }
 
         // Collect the select tokens of all fields that should be fetched
         final var selectTokens = new ArrayList<String>();
@@ -571,32 +690,6 @@ public class SerialObjectBoundaryService {
         parentFilterField.setFilterCriteria(Long.toString(id));
 
         return repository.search(searchObj, SerialObjectAssemblyRecordsDTO.class, selectTokens);
-    }
-
-    /**
-     * Find serial object by its ID
-     * @param id
-     * @return the serial object object
-     */
-    @Generated
-    @PermitAll
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public SerialObjectAssemblyCheckDTO findSerialObjectAssemblyCheck(long id) {
-        // Find persistent object
-        final SerialObject serialObject = repository.findById(id, true);
-
-        final var dto = new SerialObjectAssemblyCheckDTO();
-        dto.setId(serialObject.getId());
-        dto.setSerialNumber(serialObject.getSerialNumber());
-
-        if (serialObject.getTraceBom() != null) {
-            dto.setMaterialMaterialNumber(serialObject.getTraceBom().getMaterialRevision().getMaterial().getMaterialNumber());
-            dto.setMaterialRevisionRevisionNumber(serialObject.getTraceBom().getMaterialRevision().getRevisionNumber());
-            dto.setTraceBomLotNumber(serialObject.getTraceBom().getLotNumber());
-            dto.setTraceBomOrderNumber(serialObject.getTraceBom().getOrderNumber());
-        }
-
-        return dto;
     }
 
 }
