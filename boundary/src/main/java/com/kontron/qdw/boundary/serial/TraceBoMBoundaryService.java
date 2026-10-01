@@ -6,6 +6,8 @@ import static net.sourceforge.jbizmo.commons.jpa.AbstractRepository.MAX_LIST_SIZ
 import static net.sourceforge.jbizmo.commons.jpa.AbstractRepository.WILDCARD;
 import com.kontron.qdw.dto.base.*;
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -30,6 +32,15 @@ public class TraceBoMBoundaryService {
             .thenComparing(Comparator.comparing((TraceBoMTraceBoMItemsDTO tbi) -> StringUtils.defaultString(tbi.getManufacturerRevision())))
             .thenComparing(Comparator.comparing((TraceBoMTraceBoMItemsDTO tbi) -> StringUtils.defaultString(tbi.getOrderCode())))
             .thenComparing(Comparator.comparing((TraceBoMTraceBoMItemsDTO tbi) -> StringUtils.defaultString(tbi.getDateCode())));
+
+    private static final Collector<TraceBoMTraceBoMItemsDTO, ?, Map<Long, TraceBoMTraceBoMItemsDTO>> TBI_PER_MAT_ID_COLLECTOR = Collectors.toMap(
+            TraceBoMTraceBoMItemsDTO::getMaterialId,
+            Function.identity(),
+            (first, second) -> {
+                first.setQuantity(first.getQuantity() + second.getQuantity());
+                return first;
+            });
+
 
     @Generated
     private final TraceBoMRepository repository;
@@ -61,16 +72,15 @@ public class TraceBoMBoundaryService {
         List<TraceBoMTraceBoMItemsDTO> originBoMItems = originTraceBoMId == null
                 ? Collections.emptyList()
                 : getTraceBoMItemsOfTraceBoM(originTraceBoMId);
+
         Map<Long, TraceBoMTraceBoMItemsDTO> originMap = originBoMItems.stream()
-                .collect(Collectors.groupingBy(TraceBoMTraceBoMItemsDTO::getMaterialId,
-                        Collectors.reducing(null, (first, second) -> first == null ? second : first)));
+                .collect(TBI_PER_MAT_ID_COLLECTOR);
 
         List<TraceBoMTraceBoMItemsDTO> compareBoMItems = compareTraceBoMId == null
                 ? Collections.emptyList()
                 : getTraceBoMItemsOfTraceBoM(compareTraceBoMId);
         Map<Long, TraceBoMTraceBoMItemsDTO> compareMap = compareBoMItems.stream()
-                .collect(Collectors.groupingBy(TraceBoMTraceBoMItemsDTO::getMaterialId,
-                        Collectors.reducing(null, (first, second) -> first == null ? second : first)));
+                .collect(TBI_PER_MAT_ID_COLLECTOR);
 
 
         // Unterschiede berechnen
