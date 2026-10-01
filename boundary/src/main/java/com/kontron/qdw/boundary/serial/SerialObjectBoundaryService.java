@@ -19,6 +19,8 @@ import com.kontron.qdw.dto.material.*;
 import jakarta.inject.*;
 import jakarta.ejb.*;
 import jakarta.annotation.security.*;
+
+import com.kontron.qdw.repository.material.MaterialRevisionRepository;
 import com.kontron.qdw.repository.serial.*;
 import net.sourceforge.jbizmo.commons.annotation.Customized;
 import net.sourceforge.jbizmo.commons.search.dto.*;
@@ -46,13 +48,17 @@ public class SerialObjectBoundaryService {
 
     @Generated
     private final SerialObjectRepository repository;
+    private final MaterialRevisionRepository matrevRepository;
+    private final TraceBoMRepository tbRepository;
 
     /**
      * Default constructor
      */
     @Generated
     public SerialObjectBoundaryService() {
-        this.repository = null;
+        repository = null;
+        matrevRepository = null;
+        tbRepository = null;
     }
 
     /**
@@ -61,8 +67,11 @@ public class SerialObjectBoundaryService {
      */
     @Inject
     @Generated
-    public SerialObjectBoundaryService(SerialObjectRepository repository) {
+    public SerialObjectBoundaryService(SerialObjectRepository repository, MaterialRevisionRepository matrevRepository,
+            TraceBoMRepository tbRepository) {
         this.repository = repository;
+        this.matrevRepository = matrevRepository;
+        this.tbRepository = tbRepository;
     }
 
 
@@ -76,6 +85,21 @@ public class SerialObjectBoundaryService {
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public SerialObjectAssemblyCheckDTO findSerialObjectAssemblyCheck(long id) {
         // Find persistent object
+        // String stmt = "select s "
+        // + "from SerialObject s "
+        // + "left join fetch s.traceBom "
+        // + "left join fetch s.traceBom.traceBoMItems "
+        // + "left join fetch s.traceBom.materialRevision "
+        // + "left join fetch s.traceBom.materialRevision.boMItems "
+        // + "where s.id = :id ";
+        //
+        // @SuppressWarnings("resource")
+        // final SerialObject serialObject = repository.getEntityManager()
+        // .createQuery(stmt, SerialObject.class)
+        // .setParameter("id", id)
+        // .getSingleResult();
+
+
         final SerialObject serialObject = repository.findById(id, true);
 
         final var dto = new SerialObjectAssemblyCheckDTO();
@@ -93,7 +117,7 @@ public class SerialObjectBoundaryService {
 
 
         // Map an AssemblyCheckMaterialDTO zu Material-Id zu Trace-BoM und Revisions-BoM aufbauen
-        Map<Long, AssemblyCheckMaterialDTO> traceBoMMap = CollectionUtils.emptyIfNull(serialObject.getTraceBom().getTraceBoMItems()).stream()
+        Map<Long, AssemblyCheckMaterialDTO> traceBoMMap = tbRepository.getTraceBoMItemsFetchMaterial(serialObject.getTraceBom().getId()).stream()
                 .map(tbi -> {
                     Material m = tbi.getMaterial();
                     return new AssemblyCheckMaterialDTO(m.getId(), m.getMaterialNumber(),
@@ -104,7 +128,7 @@ public class SerialObjectBoundaryService {
 
         Map<Long, AssemblyCheckMaterialDTO> revBoMMap = serialObject.getTraceBom().getMaterialRevision() == null
                 ? Collections.emptyMap()
-                : CollectionUtils.emptyIfNull(serialObject.getTraceBom().getMaterialRevision().getBoMItems())
+                : CollectionUtils.emptyIfNull(matrevRepository.getBoMItemsFetchMaterial(serialObject.getTraceBom().getMaterialRevision().getId()))
                         .stream()
                         .filter(rbi -> rbi.getMaterial() != null) // Labels
                         .filter(rbi -> rbi.getQuantity() != null) // sollte auch nur bei Labels der Fall sein!

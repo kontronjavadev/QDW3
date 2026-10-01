@@ -132,7 +132,8 @@ public class AssemblyCheckDialog implements Serializable {
 
             serialObject = serialObjectService.findSerialObjectAssemblyCheck(selectedObjectId);
 
-            panAssyCheck.setAssemblyCheckDtos(serialObject.getOnlyInTraceBoMList());
+            // panAssyCheck.setAssemblyCheckDtos(serialObject.getOnlyInTraceBoMList());
+            panAssyCheck.setAssemblyCheckDtos(serialObject.getOnlyInRevBoMList());
             panAssyCheck.setCurrentPageURL(AssemblyCheckDialog.PAGE_INIT_URL + selectedObjectId);
             panAssyCheck.initView();
 

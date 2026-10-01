@@ -144,6 +144,17 @@ public class TraceBoMRepository extends AbstractRepository<TraceBoM, Long> {
         return query.getResultList();
     }
 
+    public List<TraceBoMItem> getTraceBoMItemsFetchMaterial(long id) {
+        String stmt = "select b from TraceBoM a "
+                + "join a.traceBoMItems b "
+                + "join fetch b.material "
+                + "where a.id = :id";
+        return em
+                .createQuery(stmt, TraceBoMItem.class)
+                .setParameter("id", id)
+                .getResultList();
+    }
+
     /**
      * Get all illegal trace BoM items of this trace BoM
      * @param id

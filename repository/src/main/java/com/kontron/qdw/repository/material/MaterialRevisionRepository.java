@@ -260,6 +260,17 @@ public class MaterialRevisionRepository extends AbstractRepository<MaterialRevis
         return query.getResultList();
     }
 
+    public List<BoMItem> getBoMItemsFetchMaterial(long id) {
+        String stmt = "select b from MaterialRevision a "
+                + "join a.boMItems b "
+                + "join fetch b.material "
+                + "where a.id = :id";
+        return em
+                .createQuery(stmt, BoMItem.class)
+                .setParameter("id", id)
+                .getResultList();
+    }
+
     /**
      * Change the 'material' attribute of this material revision
      * @param id
