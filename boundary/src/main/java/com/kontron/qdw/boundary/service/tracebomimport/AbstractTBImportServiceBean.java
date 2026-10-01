@@ -95,6 +95,7 @@ public abstract class AbstractTBImportServiceBean<TB extends TraceBoMTypeIF<TBI>
 
             if (materialRevision.getMaterial() != null) {
                 materialRevision = materialRevisionManager.persist(materialRevision, true, true);
+                lastMatRevPerKey.put(new MatRevKey(materialNumber, DEFAULT_PLANT_CODE, revisionNumber), materialRevision);
             }
             else {
                 throw new Exception("Material '" + materialNumber + "' does not exist, therefore revision '"
@@ -127,6 +128,7 @@ public abstract class AbstractTBImportServiceBean<TB extends TraceBoMTypeIF<TBI>
             serialObject.setAssemblyDate(parsedProdDate);
 
             serialObject = serObjManager.persist(serialObject, true, true);
+            serObjPerKey.put(new SerNoMatNrKey(serialNumber, material.getMaterialNumber()), serialObject);
         }
 
         return serialObject;
