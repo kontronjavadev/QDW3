@@ -1,12 +1,12 @@
 package com.kontron.qdw.ui.test.page;
 
+import net.sourceforge.jbizmo.commons.selenium.page.imp.primefaces.*;
 import net.sourceforge.jbizmo.commons.selenium.junit.*;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
-import net.sourceforge.jbizmo.commons.selenium.page.imp.primefaces.*;
 
-public class ViewSerialObjectAssemblyCheckDialog extends AbstractPageObject {
+public class AssemblyCheckDialog extends AbstractPageObject {
     @Generated
-    public static final String RESOURCE_PATH = "/dialog/ViewSerialObjectAssemblyCheckDialog.jsf";
+    public static final String RESOURCE_PATH = "/dialog/AssemblyCheckDialog.jsf";
     @Generated
     public static final String FIELD_ID_TXTSERIALNUMBER = "form:txtSerialNumber";
     @Generated
@@ -25,7 +25,7 @@ public class ViewSerialObjectAssemblyCheckDialog extends AbstractPageObject {
      * @param testContext
      */
     @Generated
-    public ViewSerialObjectAssemblyCheckDialog(SeleniumTestContext testContext) {
+    public AssemblyCheckDialog(SeleniumTestContext testContext) {
         super(testContext);
 
         gridPanelServiceMessages = new SerialObjectServiceMessagesPanel(testContext, "form:gridSerialObjectServiceMessagesPanel");

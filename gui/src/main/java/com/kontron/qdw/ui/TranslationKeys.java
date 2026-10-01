@@ -2,6 +2,7 @@ package com.kontron.qdw.ui;
 
 public interface TranslationKeys {
     String ACTION_ADD = "action_add";
+    String ACTION_CMPASSEMBLY = "action_cmpassembly";
     String ACTION_CMPTRACEBOM = "action_cmptracebom";
     String ACTION_CONTINUE = "action_continue";
     String ACTION_COPY = "action_copy";
@@ -18,6 +19,8 @@ public interface TranslationKeys {
     String ACTION_SEARCH_INPUT = "action_search_input";
     String ACTION_VIEW = "action_view";
     String ACTION_VIEWARRIVAL = "action_viewarrival";
+    String ACTION_VIEWBOMITEM = "action_viewbomitem";
+    String ACTION_VIEWMATERIAL = "action_viewmaterial";
     String ACTION_VIEWSERIALOBJECT = "action_viewserialobject";
     String ACTION_VIEWSHIPMENT = "action_viewshipment";
     String ACTION_VIEWTRACEBOM = "action_viewtracebom";
@@ -526,6 +529,10 @@ public interface TranslationKeys {
     String FG_TOP_SERIAL_OBJECT = "fg_top_serial_object";
     String FG_TOP_SERVICE = "fg_top_service";
     String FG_TOP_SYSTEM = "fg_top_system";
+    String FIELD_ASSEMBLYCHECKDIALOG_TXTMATERIALMATERIALNUMBER = "field_assemblycheckdialog_txtmaterialmaterialnumber";
+    String FIELD_ASSEMBLYCHECKDIALOG_TXTMATERIALREVISIONREVISIONNUMBER = "field_assemblycheckdialog_txtmaterialrevisionrevisionnumber";
+    String FIELD_ASSEMBLYCHECKDIALOG_TXTTRACEBOMLOTNUMBER = "field_assemblycheckdialog_txttracebomlotnumber";
+    String FIELD_ASSEMBLYCHECKDIALOG_TXTTRACEBOMORDERNUMBER = "field_assemblycheckdialog_txttracebomordernumber";
     String FIELD_CHANGEPASSWORDDIALOG_TXTNEWPASSWORD = "field_changepassworddialog_txtnewpassword";
     String FIELD_CHANGEPASSWORDDIALOG_TXTNEWPASSWORDCONFIRM = "field_changepassworddialog_txtnewpasswordconfirm";
     String FIELD_CHANGEPASSWORDDIALOG_TXTOLDPASSWORD = "field_changepassworddialog_txtoldpassword";
@@ -599,6 +606,7 @@ public interface TranslationKeys {
     String FORM_AGGREGATEDSHIPMENTVIEW_TITLE = "form_aggregatedshipmentview_title";
     String FORM_ARRIVALLASTVIEW_TITLE = "form_arrivallastview_title";
     String FORM_ARRIVALVIEW_TITLE = "form_arrivalview_title";
+    String FORM_ASSEMBLYCHECKDIALOG_TITLE = "form_assemblycheckdialog_title";
     String FORM_BUSINESSUNITVIEW_TITLE = "form_businessunitview_title";
     String FORM_CHANGEPASSWORDDIALOG_TITLE = "form_changepassworddialog_title";
     String FORM_COMPARETRACEBOMDIALOG_TITLE = "form_comparetracebomdialog_title";
@@ -1066,6 +1074,7 @@ public interface TranslationKeys {
     String OPERATION_UPLOAD_FAIL = "operation_upload_fail";
     String OPERATION_UPLOAD_OK = "operation_upload_ok";
     String PANEL_ADMIN_TITLE = "panel_admin_title";
+    String PANEL_ASSEMBLYCHECKDIALOG_PANSERVICEMESSAGES_TITLE = "panel_assemblycheckdialog_panservicemessages_title";
     String PANEL_BASIC_TITLE = "panel_basic_title";
     String PANEL_COMPARETRACEBOMDIALOG_PANBOMITEMS_TITLE = "panel_comparetracebomdialog_panbomitems_title";
     String PANEL_CREATENEWEWSENTRYDIALOG_PANRECEIVERS_TITLE = "panel_createnewewsentrydialog_panreceivers_title";
@@ -1078,7 +1087,9 @@ public interface TranslationKeys {
     String PANEL_VIEWMATERIALDIALOG_PANREVISIONS_TITLE = "panel_viewmaterialdialog_panrevisions_title";
     String PANEL_VIEWMATERIALREVISIONDIALOG_PANBOMITEMS_TITLE = "panel_viewmaterialrevisiondialog_panbomitems_title";
     String PANEL_VIEWROLEDIALOG_USERS_TITLE = "panel_viewroledialog_users_title";
-    String PANEL_VIEWSERIALOBJECTASSEMBLYCHECKDIALOG_PANSERVICEMESSAGES_TITLE = "panel_viewserialobjectassemblycheckdialog_panservicemessages_title";
+    String PANEL_VIEWSERIALOBJECTASSEMBLYCHECKDIALOG_PANDIFFQTY_TITLE = "panel_viewserialobjectassemblycheckdialog_pandiffqty_title";
+    String PANEL_VIEWSERIALOBJECTASSEMBLYCHECKDIALOG_PANNOTINSAPBOM_TITLE = "panel_viewserialobjectassemblycheckdialog_pannotinsapbom_title";
+    String PANEL_VIEWSERIALOBJECTASSEMBLYCHECKDIALOG_PANNOTINTRACEBOM_TITLE = "panel_viewserialobjectassemblycheckdialog_pannotintracebom_title";
     String PANEL_VIEWSERIALOBJECTDIALOG_PANARRIVALS_TITLE = "panel_viewserialobjectdialog_panarrivals_title";
     String PANEL_VIEWSERIALOBJECTDIALOG_PANASSEMBLYRECORDS_TITLE = "panel_viewserialobjectdialog_panassemblyrecords_title";
     String PANEL_VIEWSERIALOBJECTDIALOG_PANSERIALOBJECTS_TITLE = "panel_viewserialobjectdialog_panserialobjects_title";

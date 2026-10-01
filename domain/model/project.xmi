@@ -13487,7 +13487,7 @@
       <domainAttribute href="package-base.xmi#//@domainObjects.0/@attributes.0"/>
     </attributes>
   </net.sourceforge.jbizmo.model.dto:DTOBean>
-  <net.sourceforge.jbizmo.model.client:Form name="ViewSerialObjectAssemblyCheckDialog" formType="READONLY" formGroup="/247" title="Assembly check" formPanels="/626 /627" dTO="/628" roles="/0/@roles.0 /0/@roles.1">
+  <net.sourceforge.jbizmo.model.client:Form name="AssemblyCheckDialog" formType="READONLY" formGroup="/247" title="Assembly check" formPanels="/626 /627" dTO="/628" roles="/0/@roles.0 /0/@roles.1">
     <actions name="actionGet" boundaryMethod="/301/@boundaryMethods.15" type="READ"/>
     <domainObject href="package-serial.xmi#//@domainObjects.0"/>
   </net.sourceforge.jbizmo.model.client:Form>

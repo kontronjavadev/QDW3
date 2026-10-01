@@ -16,6 +16,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.kontron.qdw.boundary.serial.TraceBoMBoundaryService;
+import com.kontron.qdw.dto.serial.AssemblyCheckMaterialDTO;
+import com.kontron.qdw.dto.serial.SerialObjectAssemblyCheckDTO;
 import com.kontron.qdw.dto.serial.SerialObjectCompareDTO;
 import com.kontron.qdw.dto.serial.TraceBoMTraceBoMItemsDTO;
 import com.kontron.qdw.ui.UserSession;
@@ -39,11 +41,7 @@ public class TraceBoMAssemblyCheckPanel extends CopyClipboard implements Seriali
     private transient ResourceBundle bundle;
     private final transient TraceBoMBoundaryService tbService;
 
-    private SerialObjectCompareDTO serObjFst;
-    private SerialObjectCompareDTO serObjSnd;
-    private Map<Boolean, List<TraceBoMTraceBoMItemsDTO>> diffBoMItems;
-    private TraceBoMTraceBoMItemsDTO selItemOfBomItemsFst;
-    private TraceBoMTraceBoMItemsDTO selItemOfBomItemsSnd;
+    private AssemblyCheckMaterialDTO assemblyCheckDto;
 
     private String currentPageURL;
 
@@ -76,97 +74,43 @@ public class TraceBoMAssemblyCheckPanel extends CopyClipboard implements Seriali
 
 
 
-    public void onBomItemsGridDoubleClickFst() {
+    public void onBomItemsGridDoubleClick() {
         logger.debug("Handle double-click event");
-
-        userSession.redirectTo(getCurrentPageURL(), openViewBoMItemDialogFst());
-    }
-
-    public void onBomItemsGridDoubleClickSnd() {
-        logger.debug("Handle double-click event");
-
-        userSession.redirectTo(getCurrentPageURL(), openViewBoMItemDialogSnd());
+        //
+        // userSession.redirectTo(getCurrentPageURL(), openViewBoMItemDialog());
     }
 
 
-    public String openViewBoMItemDialogFst() {
-        return openViewBoMItemDialog(selItemOfBomItemsFst);
-    }
-
-    public String openViewBoMItemDialogSnd() {
-        return openViewBoMItemDialog(selItemOfBomItemsSnd);
-    }
-
-    private String openViewBoMItemDialog(TraceBoMTraceBoMItemsDTO selItemOfBomItems) {
-        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY)) {
-            return ViewBoMItemDialog.PAGE_INIT_URL + selItemOfBomItems.getId();
-        }
-
+    public String openViewBoMItemDialog() {
+        // if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY)) {
+        // return ViewBoMItemDialog.PAGE_INIT_URL + selItemOfBomItems.getId();
+        // }
+        //
         return "";
     }
 
 
 
-    public String openViewMaterialDialogFst() {
-        return openViewMaterialDialog(selItemOfBomItemsFst);
-    }
-
-    public String openViewMaterialDialogSnd() {
-        return openViewMaterialDialog(selItemOfBomItemsSnd);
-    }
-
-    private String openViewMaterialDialog(TraceBoMTraceBoMItemsDTO selItemOfBomItems) {
-        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY)) {
-            return ViewMaterialDialog.PAGE_INIT_URL + selItemOfBomItems.getMaterialId();
-        }
-
+    public String openViewMaterialDialog() {
+        // if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY)) {
+        // return ViewMaterialDialog.PAGE_INIT_URL + selItemOfBomItems.getMaterialId();
+        // }
+        //
         return "";
     }
 
 
 
-    public void setSerObjsToCompare(SerialObjectCompareDTO serObjFst, SerialObjectCompareDTO serObjSnd) {
-        this.serObjFst = serObjFst;
-        this.serObjSnd = serObjSnd;
-        refresh();
+    public AssemblyCheckMaterialDTO getAssemblyCheckDto() {
+        return assemblyCheckDto;
     }
 
-    public SerialObjectCompareDTO getSerObjFst() {
-        return serObjFst;
-    }
-
-    public SerialObjectCompareDTO getSerObjSnd() {
-        return serObjSnd;
-    }
-
-    public List<TraceBoMTraceBoMItemsDTO> getBomItemsFst() {
-        return diffBoMItems.get(Boolean.TRUE);
-    }
-
-    public List<TraceBoMTraceBoMItemsDTO> getBomItemsSnd() {
-        return diffBoMItems.get(Boolean.FALSE);
+    public void setAssemblyCheckDto(AssemblyCheckMaterialDTO assemblyCheckDto) {
+        this.assemblyCheckDto = assemblyCheckDto;
     }
 
     public void refresh() {
-        diffBoMItems = tbService.compareBoMs(serObjFst.getTraceBomId(), serObjSnd.getTraceBomId());
-    }
-
-
-
-    public TraceBoMTraceBoMItemsDTO getSelItemOfBomItemsFst() {
-        return selItemOfBomItemsFst;
-    }
-
-    public void setSelItemOfBomItemsFst(TraceBoMTraceBoMItemsDTO selItemOfBomItemsFst) {
-        this.selItemOfBomItemsFst = selItemOfBomItemsFst;
-    }
-
-    public TraceBoMTraceBoMItemsDTO getSelItemOfBomItemsSnd() {
-        return selItemOfBomItemsSnd;
-    }
-
-    public void setSelItemOfBomItemsSnd(TraceBoMTraceBoMItemsDTO selItemOfBomItemsSnd) {
-        this.selItemOfBomItemsSnd = selItemOfBomItemsSnd;
+        // diffBoMItems = tbService.compareBoMs(serObjFst.getTraceBomId(), serObjSnd.getTraceBomId());
     }
 
 

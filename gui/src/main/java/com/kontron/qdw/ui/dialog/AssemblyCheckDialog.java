@@ -16,15 +16,15 @@ import jakarta.inject.*;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
 import java.io.*;
 
-@Named("viewSerialObjectAssemblyCheckDialog")
+@Named("assemblyCheckDialog")
 @ViewScoped
-public class ViewSerialObjectAssemblyCheckDialog implements Serializable {
+public class AssemblyCheckDialog implements Serializable {
     @Generated
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     @Generated
     private static final long serialVersionUID = 1L;
     @Generated
-    public static final String PAGE_INIT_URL = "/dialog/ViewSerialObjectAssemblyCheckDialog.jsf?faces-redirect=true&selectedObjectId=";
+    public static final String PAGE_INIT_URL = "/dialog/AssemblyCheckDialog.jsf?faces-redirect=true&selectedObjectId=";
     @Generated
     private SerialObjectAssemblyCheckDTO serialObject;
     @Generated
@@ -37,17 +37,16 @@ public class ViewSerialObjectAssemblyCheckDialog implements Serializable {
     private String formTitle = "";
     @Generated
     private transient ResourceBundle bundle;
-    @Generated
-    private final SerialObjectServiceMessagesPanel panServiceMessages;
+    private final TraceBoMAssemblyCheckPanel panAssyCheck;
 
     /**
      * Default constructor
      */
     @Generated
-    public ViewSerialObjectAssemblyCheckDialog() {
+    public AssemblyCheckDialog() {
         this.serialObjectService = null;
         this.userSession = null;
-        this.panServiceMessages = null;
+        this.panAssyCheck = null;
     }
 
     /**
@@ -58,11 +57,11 @@ public class ViewSerialObjectAssemblyCheckDialog implements Serializable {
      */
     @Inject
     @Generated
-    public ViewSerialObjectAssemblyCheckDialog(SerialObjectBoundaryService serialObjectService, UserSession userSession,
-            SerialObjectServiceMessagesPanel panServiceMessages) {
+    public AssemblyCheckDialog(SerialObjectBoundaryService serialObjectService, UserSession userSession,
+            TraceBoMAssemblyCheckPanel panAssyCheck) {
         this.serialObjectService = serialObjectService;
         this.userSession = userSession;
-        this.panServiceMessages = panServiceMessages;
+        this.panAssyCheck = panAssyCheck;
     }
 
     /**
@@ -123,8 +122,9 @@ public class ViewSerialObjectAssemblyCheckDialog implements Serializable {
         bundle = ResourceBundle.getBundle(DEFAULT_BUNDLE_NAME, userSession.getLocale());
 
         // Check if user is allowed to open this page!
-        if (!userSession.checkAuthorization(true, ROLE_ADMINISTRATOR, ROLE_READONLY))
+        if (!userSession.checkAuthorization(true, ROLE_ADMINISTRATOR, ROLE_READONLY)) {
             return;
+        }
 
 
         try {
@@ -132,13 +132,12 @@ public class ViewSerialObjectAssemblyCheckDialog implements Serializable {
 
             serialObject = serialObjectService.findSerialObjectAssemblyCheck(selectedObjectId);
 
-            panServiceMessages.setSelectedObjectId(selectedObjectId);
-            panServiceMessages.setCurrentPageURL(ViewSerialObjectAssemblyCheckDialog.PAGE_INIT_URL + selectedObjectId);
-            panServiceMessages.setReadOnly(true);
-            panServiceMessages.initView();
+            panAssyCheck.setSelectedSerialObjectId(selectedObjectId);
+            panAssyCheck.setCurrentPageURL(AssemblyCheckDialog.PAGE_INIT_URL + selectedObjectId);
+            panAssyCheck.initView();
 
 
-            formTitle = bundle.getString(FORM_VIEWSERIALOBJECTASSEMBLYCHECKDIALOG_TITLE) + " '" + selectedObjectId + "'";
+            formTitle = bundle.getString(FORM_ASSEMBLYCHECKDIALOG_TITLE) + " '" + selectedObjectId + "'";
 
             logger.debug("Dialog initialization finished");
         }
@@ -165,7 +164,7 @@ public class ViewSerialObjectAssemblyCheckDialog implements Serializable {
      */
     @Generated
     public String getCurrentPageURL() {
-        return ViewSerialObjectAssemblyCheckDialog.PAGE_INIT_URL + selectedObjectId;
+        return AssemblyCheckDialog.PAGE_INIT_URL + selectedObjectId;
     }
 
 }

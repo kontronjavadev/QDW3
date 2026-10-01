@@ -589,21 +589,12 @@ public class SerialObjectBoundaryService {
         dto.setId(serialObject.getId());
         dto.setSerialNumber(serialObject.getSerialNumber());
 
-        if (serialObject.getTraceBom() != null)
+        if (serialObject.getTraceBom() != null) {
             dto.setMaterialMaterialNumber(serialObject.getTraceBom().getMaterialRevision().getMaterial().getMaterialNumber());
-
-
-        if (serialObject.getTraceBom() != null)
             dto.setMaterialRevisionRevisionNumber(serialObject.getTraceBom().getMaterialRevision().getRevisionNumber());
-
-
-        if (serialObject.getTraceBom() != null)
             dto.setTraceBomLotNumber(serialObject.getTraceBom().getLotNumber());
-
-
-        if (serialObject.getTraceBom() != null)
             dto.setTraceBomOrderNumber(serialObject.getTraceBom().getOrderNumber());
-
+        }
 
         return dto;
     }

@@ -23,7 +23,7 @@ import com.kontron.qdw.dto.mv.MaterializedArrivalShipmentSerObjTBoMSearchDTO;
 import com.kontron.qdw.service.SavedQueryService;
 import com.kontron.qdw.ui.UserSession;
 import com.kontron.qdw.ui.dialog.CompareTraceBoMDialog;
-import com.kontron.qdw.ui.dialog.ViewSerialObjectAssemblyCheckDialog;
+import com.kontron.qdw.ui.dialog.AssemblyCheckDialog;
 import com.kontron.qdw.ui.dialog.ViewSerialObjectDialog;
 import com.kontron.qdw.ui.dialog.ViewTraceBoMDialog;
 import com.kontron.qdw.ui.view.util.OnCompleteHelper;
@@ -387,7 +387,7 @@ public class SerialObjectWithTraceBoMView extends SuperView implements Serializa
         var url = "";
 
         if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY)) {
-            url = ViewSerialObjectAssemblyCheckDialog.PAGE_INIT_URL + selectedObject.getSerObjId();
+            url = AssemblyCheckDialog.PAGE_INIT_URL + selectedObject.getSerObjId();
         }
 
         return url;
