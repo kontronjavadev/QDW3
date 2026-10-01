@@ -8,24 +8,31 @@ public class AssemblyCheckMaterialDTO implements Serializable {
 
     private long materialId;
     private String materialNumber;
-    private int bomQuantity;
-    private int traceBoMQuantity;
     private String shortText;
     private String materialHierarchy;
     private String materialType;
 
+    private int revBomQuantity;
+    private int traceBoMQuantity;
+    private long revBomItemId;
+    private long traceBomItemId;
 
 
-    public AssemblyCheckMaterialDTO(long materialId, String materialNumber, int bomQuantity, int traceBoMQuantity, String shortText,
-            String materialHierarchy, String materialType) {
+
+    public AssemblyCheckMaterialDTO(long materialId, String materialNumber,
+            String shortText, String materialHierarchy, String materialType,
+            int revBomQuantity, int traceBoMQuantity, long revBomItemId, long traceBomItemId) {
         super();
         this.materialId = materialId;
         this.materialNumber = materialNumber;
-        this.bomQuantity = bomQuantity;
-        this.traceBoMQuantity = traceBoMQuantity;
         this.shortText = shortText;
         this.materialHierarchy = materialHierarchy;
         this.materialType = materialType;
+
+        this.revBomQuantity = revBomQuantity;
+        this.traceBoMQuantity = traceBoMQuantity;
+        this.revBomItemId = revBomItemId;
+        this.traceBomItemId = traceBomItemId;
     }
 
 
@@ -46,12 +53,12 @@ public class AssemblyCheckMaterialDTO implements Serializable {
         this.materialNumber = materialNumber;
     }
 
-    public int getBomQuantity() {
-        return bomQuantity;
+    public int getRevBomQuantity() {
+        return revBomQuantity;
     }
 
-    public void setBomQuantity(int bomQuantity) {
-        this.bomQuantity = bomQuantity;
+    public void setRevBomQuantity(int bomQuantity) {
+        this.revBomQuantity = bomQuantity;
     }
 
     public int getTraceBoMQuantity() {
@@ -84,6 +91,22 @@ public class AssemblyCheckMaterialDTO implements Serializable {
 
     public void setMaterialType(String materialType) {
         this.materialType = materialType;
+    }
+
+    public long getRevBomItemId() {
+        return revBomItemId;
+    }
+
+    public void setRevBomItemId(long revBomItemId) {
+        this.revBomItemId = revBomItemId;
+    }
+
+    public long getTraceBomItemId() {
+        return traceBomItemId;
+    }
+
+    public void setTraceBomItemId(long traceBomItemId) {
+        this.traceBomItemId = traceBomItemId;
     }
 
 }

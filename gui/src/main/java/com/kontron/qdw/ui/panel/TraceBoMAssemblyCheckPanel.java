@@ -6,23 +6,17 @@ import static com.kontron.qdw.ui.UserSession.ROLE_READONLY;
 
 import java.io.Serializable;
 import java.lang.invoke.MethodHandles;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.ResourceBundle;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.kontron.qdw.boundary.serial.TraceBoMBoundaryService;
 import com.kontron.qdw.dto.serial.AssemblyCheckMaterialDTO;
-import com.kontron.qdw.dto.serial.SerialObjectAssemblyCheckDTO;
-import com.kontron.qdw.dto.serial.SerialObjectCompareDTO;
-import com.kontron.qdw.dto.serial.TraceBoMTraceBoMItemsDTO;
 import com.kontron.qdw.ui.UserSession;
 import com.kontron.qdw.ui.dialog.ViewBoMItemDialog;
 import com.kontron.qdw.ui.dialog.ViewMaterialDialog;
+import com.kontron.qdw.ui.dialog.ViewTraceBoMItemDialog;
 import com.kontron.qdw.ui.view.util.CopyClipboard;
 
 import jakarta.faces.view.ViewScoped;
@@ -39,9 +33,9 @@ public class TraceBoMAssemblyCheckPanel extends CopyClipboard implements Seriali
     private final UserSession userSession;
     @SuppressWarnings("unused")
     private transient ResourceBundle bundle;
-    private final transient TraceBoMBoundaryService tbService;
 
-    private AssemblyCheckMaterialDTO assemblyCheckDto;
+    private List<AssemblyCheckMaterialDTO> assemblyCheckDtos;
+    private AssemblyCheckMaterialDTO selectedAssemblyCheckDto;
 
     private String currentPageURL;
 
@@ -49,13 +43,11 @@ public class TraceBoMAssemblyCheckPanel extends CopyClipboard implements Seriali
 
     public TraceBoMAssemblyCheckPanel() {
         userSession = null;
-        tbService = null;
     }
 
     @Inject
-    public TraceBoMAssemblyCheckPanel(UserSession userSession, TraceBoMBoundaryService tbService) {
+    public TraceBoMAssemblyCheckPanel(UserSession userSession) {
         this.userSession = userSession;
-        this.tbService = tbService;
     }
 
 
@@ -64,10 +56,6 @@ public class TraceBoMAssemblyCheckPanel extends CopyClipboard implements Seriali
         logger.debug("Initialize grid panel");
 
         bundle = ResourceBundle.getBundle(DEFAULT_BUNDLE_NAME, userSession.getLocale());
-
-        diffBoMItems = new HashMap<>();
-        diffBoMItems.put(Boolean.TRUE, Collections.emptyList());
-        diffBoMItems.put(Boolean.FALSE, Collections.emptyList());
 
         logger.debug("Grid panel initialization finished");
     }
@@ -81,32 +69,46 @@ public class TraceBoMAssemblyCheckPanel extends CopyClipboard implements Seriali
     }
 
 
-    public String openViewBoMItemDialog() {
-        // if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY)) {
-        // return ViewBoMItemDialog.PAGE_INIT_URL + selItemOfBomItems.getId();
-        // }
-        //
+    public String openViewTraceBoMItemDialog() {
+        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY)) {
+            return ViewTraceBoMItemDialog.PAGE_INIT_URL + selectedAssemblyCheckDto.getTraceBomItemId();
+        }
+
         return "";
     }
 
+    public String openViewBoMItemDialog() {
+        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY)) {
+            return ViewBoMItemDialog.PAGE_INIT_URL + selectedAssemblyCheckDto.getRevBomItemId();
+        }
 
+        return "";
+    }
 
     public String openViewMaterialDialog() {
-        // if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY)) {
-        // return ViewMaterialDialog.PAGE_INIT_URL + selItemOfBomItems.getMaterialId();
-        // }
-        //
+        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY)) {
+            return ViewMaterialDialog.PAGE_INIT_URL + selectedAssemblyCheckDto.getMaterialId();
+        }
+
         return "";
     }
 
 
 
-    public AssemblyCheckMaterialDTO getAssemblyCheckDto() {
-        return assemblyCheckDto;
+    public List<AssemblyCheckMaterialDTO> getAssemblyCheckDtos() {
+        return assemblyCheckDtos;
     }
 
-    public void setAssemblyCheckDto(AssemblyCheckMaterialDTO assemblyCheckDto) {
-        this.assemblyCheckDto = assemblyCheckDto;
+    public void setAssemblyCheckDtos(List<AssemblyCheckMaterialDTO> assemblyCheckDtos) {
+        this.assemblyCheckDtos = assemblyCheckDtos;
+    }
+
+    public AssemblyCheckMaterialDTO getSelectedAssemblyCheckDto() {
+        return selectedAssemblyCheckDto;
+    }
+
+    public void setSelectedAssemblyCheckDto(AssemblyCheckMaterialDTO selectedAssemblyCheckDto) {
+        this.selectedAssemblyCheckDto = selectedAssemblyCheckDto;
     }
 
     public void refresh() {

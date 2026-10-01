@@ -7,11 +7,11 @@
 
 	<p:menubar>
 		<p:submenu icon="pi pi-refresh" label="#{i18n.mnu_view}">
-			<p:menuitem value="#{i18n.action_refresh}" ajax="false" icon="pi pi-refresh" actionListener="#{traceBoMBoMComparePanel.fetchBomItems}"/>
+			<p:menuitem value="#{i18n.action_refresh}" ajax="false" icon="pi pi-refresh" actionListener="#{traceBoMBoMComparePanel.refresh}"/>
 		</p:submenu>
 		<p:submenu icon="pi pi-print" label="#{i18n.mnu_export}">
 			<p:menuitem value="#{i18n.action_export_xls}" ajax="false" icon="pi pi-file-excel">
-				<p:dataExporter type="xlsxstream" target="TraceBoMFstTable,TraceBoMSndTable" fileName="RevisionBoMItemCompareList"/>
+				<p:dataExporter type="xlsxstream" target="TraceBoMFstTable,TraceBoMSndTable" fileName="TraceBoMItemCompareList"/>
 			</p:menuitem>
 		</p:submenu>
 	</p:menubar>
@@ -147,7 +147,7 @@
 	</p:dataTable>
 
 	<p/>
-	<h:outputText styleClass="label-field-mandatory" value="#{i18n.result_total_number_records} #{traceBoMBoMComparePanel.bomItemsFst.size()} #{i18n.tracebom_compare_result_onlyin} #{materialRevisionDocumentsComparePanel.revisionFst.toString()}"/>
+	<h:outputText styleClass="label-field-mandatory" value="#{i18n.result_total_number_records} #{traceBoMBoMComparePanel.bomItemsFst.size()} #{i18n.tracebom_compare_result_onlyin} #{traceBoMBoMComparePanel.serObjFst.toString()}"/>
 
 
 	<p/>
@@ -191,8 +191,7 @@
 			<f:facet name="header">
 				<h:outputText value="#{i18n.lbl_attr_tracebomitem_quantity}"/>
 			</f:facet>
-			<h:outputText value="#{boMSndPanelItem.quantity}">
-			</h:outputText>
+			<h:outputText value="#{boMSndPanelItem.quantity}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{boMSndPanelItem.manufacturerName}" width="200" 
@@ -283,7 +282,7 @@
 	</p:dataTable>
 
 	<p/>
-	<h:outputText styleClass="label-field-mandatory" value="#{i18n.result_total_number_records} #{traceBoMBoMComparePanel.bomItemsSnd.size()} #{i18n.tracebom_compare_result_onlyin} #{materialRevisionDocumentsComparePanel.revisionSnd.toString()}"/>
+	<h:outputText styleClass="label-field-mandatory" value="#{i18n.result_total_number_records} #{traceBoMBoMComparePanel.bomItemsSnd.size()} #{i18n.tracebom_compare_result_onlyin} #{traceBoMBoMComparePanel.serObjSnd.toString()}"/>
 
 
 
@@ -297,7 +296,6 @@
 			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{traceBoMBoMComparePanel.currentPageURL}"/>
 		</p:menuitem>
 
-		<!-- manuell hinzu gefügt -->
 		<p:menuitem value="#{i18n.action_viewmaterial}" ajax="true" icon="pi pi-file" id="TraceBoMFstTable_viewmaterial" 
 			rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;MATERIAL_MASTER')}" action="#{traceBoMBoMComparePanel.openViewMaterialDialogFst}">
 			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{traceBoMBoMComparePanel.currentPageURL}"/>
@@ -317,7 +315,6 @@
 			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{traceBoMBoMComparePanel.currentPageURL}"/>
 		</p:menuitem>
 
-		<!-- manuell hinzu gefügt -->
 		<p:menuitem value="#{i18n.action_viewmaterial}" ajax="true" icon="pi pi-file" id="TraceBoMSndTable_viewmaterial" 
 			rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;MATERIAL_MASTER')}" action="#{traceBoMBoMComparePanel.openViewMaterialDialogSnd}">
 			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{traceBoMBoMComparePanel.currentPageURL}"/>

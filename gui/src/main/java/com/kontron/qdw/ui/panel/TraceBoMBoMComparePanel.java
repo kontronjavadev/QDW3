@@ -1,8 +1,6 @@
 package com.kontron.qdw.ui.panel;
 
-import static com.kontron.qdw.ui.UserSession.DEFAULT_BUNDLE_NAME;
-import static com.kontron.qdw.ui.UserSession.ROLE_ADMINISTRATOR;
-import static com.kontron.qdw.ui.UserSession.ROLE_READONLY;
+import static com.kontron.qdw.ui.UserSession.*;
 
 import java.io.Serializable;
 import java.lang.invoke.MethodHandles;

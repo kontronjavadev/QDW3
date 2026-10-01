@@ -40,7 +40,7 @@ public class SerialObjectBoundaryService {
             AssemblyCheckMaterialDTO::getMaterialId,
             Function.identity(),
             (first, second) -> {
-                first.setBomQuantity(first.getBomQuantity() + second.getBomQuantity());
+                first.setRevBomQuantity(first.getRevBomQuantity() + second.getRevBomQuantity());
                 return first;
             });
 
@@ -96,8 +96,9 @@ public class SerialObjectBoundaryService {
         Map<Long, AssemblyCheckMaterialDTO> traceBoMMap = CollectionUtils.emptyIfNull(serialObject.getTraceBom().getTraceBoMItems()).stream()
                 .map(tbi -> {
                     Material m = tbi.getMaterial();
-                    return new AssemblyCheckMaterialDTO(m.getId(), m.getMaterialNumber(), 0, tbi.getQuantity(),
-                            m.getShortText(), m.getMaterialHierarchy(), m.getMaterialType().getCode());
+                    return new AssemblyCheckMaterialDTO(m.getId(), m.getMaterialNumber(),
+                            m.getShortText(), m.getMaterialHierarchy(), m.getMaterialType().getCode(),
+                            0, tbi.getQuantity(), 0, tbi.getId());
                 })
                 .collect(TBI_PER_MAT_ID_COLLECTOR);
 
@@ -109,8 +110,9 @@ public class SerialObjectBoundaryService {
                         .filter(rbi -> rbi.getQuantity() != null) // sollte auch nur bei Labels der Fall sein!
                         .map(rbi -> {
                             Material m = rbi.getMaterial();
-                            return new AssemblyCheckMaterialDTO(m.getId(), m.getMaterialNumber(), rbi.getQuantity().intValue(), 0,
-                                    m.getShortText(), m.getMaterialHierarchy(), m.getMaterialType().getCode());
+                            return new AssemblyCheckMaterialDTO(m.getId(), m.getMaterialNumber(),
+                                    m.getShortText(), m.getMaterialHierarchy(), m.getMaterialType().getCode(),
+                                    rbi.getQuantity().intValue(), 0, rbi.getId(), 0);
                         })
                         .collect(BI_PER_MAT_ID_COLLECTOR);
 
@@ -138,7 +140,7 @@ public class SerialObjectBoundaryService {
             // beide haben einen Wert, sichergestellt durch Schnittmengenbildung!
 
             int traceBoMQty = traceBoMEntry.getTraceBoMQuantity();
-            int revBoMQty = revBoMEntry.getBomQuantity();
+            int revBoMQty = revBoMEntry.getRevBomQuantity();
 
             if (traceBoMQty == revBoMQty) {
                 // kein Unterschied in der Stückzahl, also nicht in Liste eintragen
@@ -146,7 +148,8 @@ public class SerialObjectBoundaryService {
             }
 
             // traceBoMEntry verwenden, andere qty nachtragen und in Liste eintragen
-            traceBoMEntry.setBomQuantity(revBoMQty);
+            traceBoMEntry.setRevBomQuantity(revBoMQty);
+            traceBoMEntry.setRevBomItemId(revBoMEntry.getRevBomItemId());
             diffQtys.add(revBoMEntry);
         }
 
