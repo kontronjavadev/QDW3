@@ -2,6 +2,7 @@ package com.kontron.qdw.ui;
 
 public interface TranslationKeys {
     String ACTION_ADD = "action_add";
+    String ACTION_CMPTRACEBOM = "action_cmptracebom";
     String ACTION_CONTINUE = "action_continue";
     String ACTION_COPY = "action_copy";
     String ACTION_CREATE = "action_create";
@@ -556,6 +557,11 @@ public interface TranslationKeys {
     String FIELD_VIEWMATERIALDIALOG_TXTSAPNUMBER = "field_viewmaterialdialog_txtsapnumber";
     String FIELD_VIEWMATERIALREVISIONDIALOG_TXTALTERNATIVENUMBER = "field_viewmaterialrevisiondialog_txtalternativenumber";
     String FIELD_VIEWMATERIALREVISIONDIALOG_TXTREVISIONNUMBER = "field_viewmaterialrevisiondialog_txtrevisionnumber";
+    String FIELD_VIEWSERIALOBJECTASSEMBLYCHECKDIALOG_TXTMATERIALMATERIALNUMBER = "field_viewserialobjectassemblycheckdialog_txtmaterialmaterialnumber";
+    String FIELD_VIEWSERIALOBJECTASSEMBLYCHECKDIALOG_TXTMATERIALREVISIONREVISIONNUMBER = "field_viewserialobjectassemblycheckdialog_txtmaterialrevisionrevisionnumber";
+    String FIELD_VIEWSERIALOBJECTASSEMBLYCHECKDIALOG_TXTSERIALNUMBER = "field_viewserialobjectassemblycheckdialog_txtserialnumber";
+    String FIELD_VIEWSERIALOBJECTASSEMBLYCHECKDIALOG_TXTTRACEBOMLOTNUMBER = "field_viewserialobjectassemblycheckdialog_txttracebomlotnumber";
+    String FIELD_VIEWSERIALOBJECTASSEMBLYCHECKDIALOG_TXTTRACEBOMORDERNUMBER = "field_viewserialobjectassemblycheckdialog_txttracebomordernumber";
     String FIELD_VIEWSERIALOBJECTDIALOG_CBOPARENTOBJECT = "field_viewserialobjectdialog_cboparentobject";
     String FIELD_VIEWSERIALOBJECTDIALOG_CBOTRACEBOM = "field_viewserialobjectdialog_cbotracebom";
     String FIELD_VIEWSERIALOBJECTDIALOG_TXTCUSTOMERSERIALNUMBER = "field_viewserialobjectdialog_txtcustomerserialnumber";
@@ -586,6 +592,7 @@ public interface TranslationKeys {
     String FIELD_VIEWTRACEBOMITEMDIALOG_CBOTRACEBOM = "field_viewtracebomitemdialog_cbotracebom";
     String FIELD_VIEWX2MESSAGEDIALOG_CBOFAULTANALYSIS = "field_viewx2messagedialog_cbofaultanalysis";
     String FIELD_VIEWX2MESSAGEDIALOG_CBOSERVICEMESSAGE = "field_viewx2messagedialog_cboservicemessage";
+    String FILTER_ALL_OR_NONE_NOFILTER = "filter_all_or_none_nofilter";
     String FORM_ADDBOMITEMDIALOG_TITLE = "form_addbomitemdialog_title";
     String FORM_AGGREGATEDARRIVALVIEW_TITLE = "form_aggregatedarrivalview_title";
     String FORM_AGGREGATEDSHIPMENTARRIVALVIEW_TITLE = "form_aggregatedshipmentarrivalview_title";
@@ -594,6 +601,7 @@ public interface TranslationKeys {
     String FORM_ARRIVALVIEW_TITLE = "form_arrivalview_title";
     String FORM_BUSINESSUNITVIEW_TITLE = "form_businessunitview_title";
     String FORM_CHANGEPASSWORDDIALOG_TITLE = "form_changepassworddialog_title";
+    String FORM_COMPARETRACEBOMDIALOG_TITLE = "form_comparetracebomdialog_title";
     String FORM_COUNTRYVIEW_TITLE = "form_countryview_title";
     String FORM_CREATENEWBUSINESSUNITDIALOG_TITLE = "form_createnewbusinessunitdialog_title";
     String FORM_CREATENEWCOUNTRYDIALOG_TITLE = "form_createnewcountrydialog_title";
@@ -657,7 +665,9 @@ public interface TranslationKeys {
     String FORM_NOTIFICATIONUSERRELVIEW_TITLE = "form_notificationuserrelview_title";
     String FORM_NOTIFICATIONVIEW_TITLE = "form_notificationview_title";
     String FORM_PLANTVIEW_TITLE = "form_plantview_title";
+    String FORM_REBUILD_TITLE = "form_rebuild_title";
     String FORM_REPAIRERRORCODEVIEW_TITLE = "form_repairerrorcodeview_title";
+    String FORM_REPAIRIMPORT_TITLE = "form_repairimport_title";
     String FORM_REPAIRLOCATIONVIEW_TITLE = "form_repairlocationview_title";
     String FORM_REPAIRSERVICEVIEW_TITLE = "form_repairserviceview_title";
     String FORM_REPAIRSTATEVIEW_TITLE = "form_repairstateview_title";
@@ -666,6 +676,7 @@ public interface TranslationKeys {
     String FORM_RESETPASSWORDDIALOG_TITLE = "form_resetpassworddialog_title";
     String FORM_RMATYPEVIEW_TITLE = "form_rmatypeview_title";
     String FORM_ROLEVIEW_TITLE = "form_roleview_title";
+    String FORM_SAPDATAIMPORT_TITLE = "form_sapdataimport_title";
     String FORM_SERIALOBJECTTRACEBOMVIEW_TITLE = "form_serialobjecttracebomview_title";
     String FORM_SERIALOBJECTVIEW_TITLE = "form_serialobjectview_title";
     String FORM_SERIALOBJECTWITHTRACEBOMVIEW_TITLE = "form_serialobjectwithtracebomview_title";
@@ -674,6 +685,7 @@ public interface TranslationKeys {
     String FORM_SERVICEORDERVIEW_TITLE = "form_serviceorderview_title";
     String FORM_SHIPMENTVIEW_TITLE = "form_shipmentview_title";
     String FORM_SUPPLIERVIEW_TITLE = "form_supplierview_title";
+    String FORM_TRACEBOMIMPORT_TITLE = "form_tracebomimport_title";
     String FORM_TRACEBOMVIEW_TITLE = "form_tracebomview_title";
     String FORM_USERVIEW_TITLE = "form_userview_title";
     String FORM_VERTICALSECTORVIEW_TITLE = "form_verticalsectorview_title";
@@ -692,6 +704,7 @@ public interface TranslationKeys {
     String FORM_VIEWREPAIRTASKDIALOG_TITLE = "form_viewrepairtaskdialog_title";
     String FORM_VIEWRMATYPEDIALOG_TITLE = "form_viewrmatypedialog_title";
     String FORM_VIEWROLEDIALOG_TITLE = "form_viewroledialog_title";
+    String FORM_VIEWSERIALOBJECTASSEMBLYCHECKDIALOG_TITLE = "form_viewserialobjectassemblycheckdialog_title";
     String FORM_VIEWSERIALOBJECTDIALOG_TITLE = "form_viewserialobjectdialog_title";
     String FORM_VIEWSERVICEMESSAGEDIALOG_TITLE = "form_viewservicemessagedialog_title";
     String FORM_VIEWSERVICEORDERDIALOG_TITLE = "form_viewserviceorderdialog_title";
@@ -700,10 +713,6 @@ public interface TranslationKeys {
     String FORM_VIEWTRACEBOMDIALOG_TITLE = "form_viewtracebomdialog_title";
     String FORM_VIEWTRACEBOMITEMDIALOG_TITLE = "form_viewtracebomitemdialog_title";
     String FORM_VIEWX2MESSAGEDIALOG_TITLE = "form_viewx2messagedialog_title";
-    String FORM_SAPDATAIMPORT_TITLE = "form_sapdataimport_title";
-    String FORM_REPAIRIMPORT_TITLE = "form_repairimport_title";
-    String FORM_TRACEBOMIMPORT_TITLE = "form_tracebomimport_title";
-    String FORM_REBUILD_TITLE = "form_rebuild_title";
     String FORM_X2MESSAGEVIEW_TITLE = "form_x2messageview_title";
     String ILLEGAL_ITEM_SELECTED = "illegal_item_selected";
     String INVALID_MAIL_ADDRESS = "invalid_mail_address";
@@ -1012,6 +1021,9 @@ public interface TranslationKeys {
     String LBL_ATTR_X2MESSAGE_DESIGNATOR = "lbl_attr_x2message_designator";
     String LBL_ATTR_X2MESSAGE_WORKCENTER = "lbl_attr_x2message_workcenter";
     String LBL_ATTR_X2MESSAGEID_TOOLTIP = "lbl_attr_x2messageid_tooltip";
+    String LBL_COMPARE_FST_SEROBJ = "lbl_compare_fst_serobj";
+    String LBL_COMPARE_FST_SEROBJ_MAT = "lbl_compare_fst_serobj_mat";
+    String LBL_COMPARE_SND_SEROBJ = "lbl_compare_snd_serobj";
     String LOG_ON_FAILED = "log_on_failed";
     String LOGIN_COMMAND = "login_command";
     String LOGIN_LANGUAGE = "login_language";
@@ -1041,7 +1053,6 @@ public interface TranslationKeys {
     String OPERATION_EXPORT_FAIL = "operation_export_fail";
     String OPERATION_EXPORT_OK = "operation_export_ok";
     String OPERATION_FETCH_FAIL = "operation_fetch_fail";
-    String FORM_COMPARETRACEBOMDIALOG_TITLE = "form_comparetracebomdialog_title";
     String OPERATION_FETCH_NO_DATA = "operation_fetch_no_data";
     String OPERATION_IMPORT_FAIL = "operation_import_fail";
     String OPERATION_IMPORT_OK = "operation_import_ok";
@@ -1056,6 +1067,7 @@ public interface TranslationKeys {
     String OPERATION_UPLOAD_OK = "operation_upload_ok";
     String PANEL_ADMIN_TITLE = "panel_admin_title";
     String PANEL_BASIC_TITLE = "panel_basic_title";
+    String PANEL_COMPARETRACEBOMDIALOG_PANBOMITEMS_TITLE = "panel_comparetracebomdialog_panbomitems_title";
     String PANEL_CREATENEWEWSENTRYDIALOG_PANRECEIVERS_TITLE = "panel_createnewewsentrydialog_panreceivers_title";
     String PANEL_CREATENEWUSERDIALOG_PANROLES_TITLE = "panel_createnewuserdialog_panroles_title";
     String PANEL_EDITEWSENTRYDIALOG_PANRECEIVERS_TITLE = "panel_editewsentrydialog_panreceivers_title";
@@ -1066,6 +1078,7 @@ public interface TranslationKeys {
     String PANEL_VIEWMATERIALDIALOG_PANREVISIONS_TITLE = "panel_viewmaterialdialog_panrevisions_title";
     String PANEL_VIEWMATERIALREVISIONDIALOG_PANBOMITEMS_TITLE = "panel_viewmaterialrevisiondialog_panbomitems_title";
     String PANEL_VIEWROLEDIALOG_USERS_TITLE = "panel_viewroledialog_users_title";
+    String PANEL_VIEWSERIALOBJECTASSEMBLYCHECKDIALOG_PANSERVICEMESSAGES_TITLE = "panel_viewserialobjectassemblycheckdialog_panservicemessages_title";
     String PANEL_VIEWSERIALOBJECTDIALOG_PANARRIVALS_TITLE = "panel_viewserialobjectdialog_panarrivals_title";
     String PANEL_VIEWSERIALOBJECTDIALOG_PANASSEMBLYRECORDS_TITLE = "panel_viewserialobjectdialog_panassemblyrecords_title";
     String PANEL_VIEWSERIALOBJECTDIALOG_PANSERIALOBJECTS_TITLE = "panel_viewserialobjectdialog_panserialobjects_title";
@@ -1083,7 +1096,37 @@ public interface TranslationKeys {
     String PICK_LIST_REMOVE_ALL = "pick_list_remove_all";
     String QUERY_RENAME_NEWNAME = "query_rename_newname";
     String QUERY_RENAME_TITLE = "query_rename_title";
+    String REBUILDVIEW_LINKED = "rebuildview_linked";
+    String REBUILDVIEW_RUN_REBUILD_DELTA = "rebuildview_run_rebuild_delta";
+    String REBUILDVIEW_RUN_REBUILD_FULL = "rebuildview_run_rebuild_full";
+    String REBUILDVIEW_RUNARRIVAL_REBUILD_AGGREGATED = "rebuildview_runarrival_rebuild_aggregated";
+    String REBUILDVIEW_RUNARRIVAL_REBUILD_MATERIALIZED_DELTA = "rebuildview_runarrival_rebuild_materialized_delta";
+    String REBUILDVIEW_RUNARRIVAL_REBUILD_MATERIALIZED_FULL = "rebuildview_runarrival_rebuild_materialized_full";
+    String REBUILDVIEW_RUNIMPORT = "rebuildview_runimport";
+    String REBUILDVIEW_RUNSHPT_REBUILD_AGGREGATED = "rebuildview_runshpt_rebuild_aggregated";
+    String REBUILDVIEW_RUNSHPTARRV_REBUILD_AGGREGATED = "rebuildview_runshptarrv_rebuild_aggregated";
+    String REBUILDVIEW_RUNSHPTARRV_REBUILD_MATERIALIZED_DELTA = "rebuildview_runshptarrv_rebuild_materialized_delta";
+    String REBUILDVIEW_RUNSHPTARRV_REBUILD_MATERIALIZED_FULL = "rebuildview_runshptarrv_rebuild_materialized_full";
+    String REBUILDVIEW_RUNSVCMSG_REBUILD_MATERIALIZED_DELTA = "rebuildview_runsvcmsg_rebuild_materialized_delta";
+    String REBUILDVIEW_RUNSVCMSG_REBUILD_MATERIALIZED_FULL = "rebuildview_runsvcmsg_rebuild_materialized_full";
+    String REPAIRIMPORTVIEW_RUNIMPORT = "repairimportview_runimport";
+    String REPAIRIMPORTVIEW_RUNRMAIMPORT = "repairimportview_runrmaimport";
+    String REPAIRIMPORTVIEW_RUNSVCMSGIMPORT = "repairimportview_runsvcmsgimport";
+    String REPAIRIMPORTVIEW_RUNSVCMSGREBUILD = "repairimportview_runsvcmsgrebuild";
     String RESULT_TOTAL_NUMBER_RECORDS = "result_total_number_records";
+    String SAPDATAIMPORTVIEW_RUNARRIVAL_REBUILD_AGGREGATED = "sapdataimportview_runarrival_rebuild_aggregated";
+    String SAPDATAIMPORTVIEW_RUNARRIVAL_REBUILD_MATERIALIZED = "sapdataimportview_runarrival_rebuild_materialized";
+    String SAPDATAIMPORTVIEW_RUNARRIVALIMPORT = "sapdataimportview_runarrivalimport";
+    String SAPDATAIMPORTVIEW_RUNARRV_N_SHIPMENT_ANALYZE_SEROBJSTRUCT = "sapdataimportview_runarrv_n_shipment_analyze_serobjstruct";
+    String SAPDATAIMPORTVIEW_RUNBOMIMPORT = "sapdataimportview_runbomimport";
+    String SAPDATAIMPORTVIEW_RUNCUSTOMERIMPORT = "sapdataimportview_runcustomerimport";
+    String SAPDATAIMPORTVIEW_RUNIMPORT = "sapdataimportview_runimport";
+    String SAPDATAIMPORTVIEW_RUNMATERIALIMPORT = "sapdataimportview_runmaterialimport";
+    String SAPDATAIMPORTVIEW_RUNSHIPMENTIMPORT = "sapdataimportview_runshipmentimport";
+    String SAPDATAIMPORTVIEW_RUNSHPT_REBUILD_AGGREGATED = "sapdataimportview_runshpt_rebuild_aggregated";
+    String SAPDATAIMPORTVIEW_RUNSHPTARRV_REBUILD_AGGREGATED = "sapdataimportview_runshptarrv_rebuild_aggregated";
+    String SAPDATAIMPORTVIEW_RUNSHPTARRV_REBUILD_MATERIALIZED = "sapdataimportview_runshptarrv_rebuild_materialized";
+    String SAPDATAIMPORTVIEW_RUNSUPPLIERIMPORT = "sapdataimportview_runsupplierimport";
     String SAVED_QUERY_DELETE_SUCCESS = "saved_query_delete_success";
     String SAVED_QUERY_EMPTY_NAME = "saved_query_empty_name";
     String SAVED_QUERY_ILLEGAL_NAME = "saved_query_illegal_name";
@@ -1118,4 +1161,9 @@ public interface TranslationKeys {
     String SERVICEORDERTYPE_INCOMING_INSPECTION = "serviceordertype_incoming_inspection";
     String SERVICEORDERTYPE_PRODUCTION = "serviceordertype_production";
     String SERVICEORDERTYPE_RMA = "serviceordertype_rma";
+    String TRACEBOM_COMPARE_RESULT_ONLYIN = "tracebom_compare_result_onlyin";
+    String TRACEBOMIMPORTVIEW_FOLDERFILTER = "tracebomimportview_folderfilter";
+    String TRACEBOMIMPORTVIEW_RUNDOWNLOAD = "tracebomimportview_rundownload";
+    String TRACEBOMIMPORTVIEW_RUNIMPORT = "tracebomimportview_runimport";
+    String TRACEBOMIMPORTVIEW_RUNPROCESS = "tracebomimportview_runprocess";
 }

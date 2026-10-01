@@ -13,9 +13,9 @@ import jakarta.inject.*;
 import jakarta.ejb.*;
 import jakarta.annotation.security.*;
 import com.kontron.qdw.repository.serial.*;
+import net.sourceforge.jbizmo.commons.annotation.Customized;
 import net.sourceforge.jbizmo.commons.search.dto.*;
 import net.sourceforge.jbizmo.commons.repository.*;
-import net.sourceforge.jbizmo.commons.annotation.Customized;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
 import static net.sourceforge.jbizmo.commons.jpa.AbstractRepository.SMALL_LIST_SIZE;
 
@@ -112,14 +112,13 @@ public class SerialObjectBoundaryService {
     @PermitAll
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public List<SerialObjectListDTO> findSerialObjects(String filter) {
-        if (filter != null && !filter.isEmpty() && !filter.equals(WILDCARD)) {
+        if (filter != null && !filter.isEmpty() && !filter.equals(WILDCARD))
             try {
                 Long.parseLong(filter);
             }
             catch (NumberFormatException e) {
                 return Collections.emptyList();
             }
-        }
 
         // Collect the select tokens of all fields that should be fetched
         final var selectTokens = new ArrayList<String>();
@@ -572,6 +571,41 @@ public class SerialObjectBoundaryService {
         parentFilterField.setFilterCriteria(Long.toString(id));
 
         return repository.search(searchObj, SerialObjectAssemblyRecordsDTO.class, selectTokens);
+    }
+
+    /**
+     * Find serial object by its ID
+     * @param id
+     * @return the serial object object
+     */
+    @Generated
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public SerialObjectAssemblyCheckDTO findSerialObjectAssemblyCheck(long id) {
+        // Find persistent object
+        final SerialObject serialObject = repository.findById(id, true);
+
+        final var dto = new SerialObjectAssemblyCheckDTO();
+        dto.setId(serialObject.getId());
+        dto.setSerialNumber(serialObject.getSerialNumber());
+
+        if (serialObject.getTraceBom() != null)
+            dto.setMaterialMaterialNumber(serialObject.getTraceBom().getMaterialRevision().getMaterial().getMaterialNumber());
+
+
+        if (serialObject.getTraceBom() != null)
+            dto.setMaterialRevisionRevisionNumber(serialObject.getTraceBom().getMaterialRevision().getRevisionNumber());
+
+
+        if (serialObject.getTraceBom() != null)
+            dto.setTraceBomLotNumber(serialObject.getTraceBom().getLotNumber());
+
+
+        if (serialObject.getTraceBom() != null)
+            dto.setTraceBomOrderNumber(serialObject.getTraceBom().getOrderNumber());
+
+
+        return dto;
     }
 
 }

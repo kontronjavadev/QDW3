@@ -292,13 +292,13 @@
 	<h:inputHidden id="bomrowCsv" value="#{traceBoMBoMComparePanel.rowCsv}" />
 
 	<p:contextMenu for="TraceBoMFstTable" beforeShow="updateContextData(event, 'form:tabview2', 'bom')" >
-		<p:menuitem value="#{i18n.action_viewbomitem}" ajax="true" icon="pi pi-file" id="TraceBoMFstTable_mniView" 
+		<p:menuitem value="#{i18n.action_view}" ajax="true" icon="pi pi-file" id="TraceBoMFstTable_mniView" 
 		rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;MATERIAL_MASTER')}" action="#{traceBoMBoMComparePanel.openViewBoMItemDialogFst}">
 			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{traceBoMBoMComparePanel.currentPageURL}"/>
 		</p:menuitem>
 
 		<!-- manuell hinzu gefügt -->
-		<p:menuitem value="#{i18n.action_viewmaterial}" ajax="true" icon="pi pi-file" id="TraceBoMFstTable_viewmaterial" 
+		<p:menuitem value="#{i18n.action_materialRevisionBoMPanel_viewmaterial}" ajax="true" icon="pi pi-file" id="TraceBoMFstTable_viewmaterial" 
 			rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;MATERIAL_MASTER')}" action="#{traceBoMBoMComparePanel.openViewMaterialDialogFst}">
 			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{traceBoMBoMComparePanel.currentPageURL}"/>
 		</p:menuitem>
@@ -312,13 +312,13 @@
 	</p:contextMenu>
 
 	<p:contextMenu for="TraceBoMSndTable" beforeShow="updateContextData(event, 'form:tabview2', 'bom')" >
-		<p:menuitem value="#{i18n.action_viewbomitem}" ajax="true" icon="pi pi-file" id="TraceBoMSndTable_mniView" 
+		<p:menuitem value="#{i18n.action_view}" ajax="true" icon="pi pi-file" id="TraceBoMSndTable_mniView" 
 		rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;MATERIAL_MASTER')}" action="#{traceBoMBoMComparePanel.openViewBoMItemDialogSnd}">
 			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{traceBoMBoMComparePanel.currentPageURL}"/>
 		</p:menuitem>
 
 		<!-- manuell hinzu gefügt -->
-		<p:menuitem value="#{i18n.action_viewmaterial}" ajax="true" icon="pi pi-file" id="TraceBoMSndTable_viewmaterial" 
+		<p:menuitem value="#{i18n.action_materialRevisionBoMPanel_viewmaterial}" ajax="true" icon="pi pi-file" id="TraceBoMSndTable_viewmaterial" 
 			rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;MATERIAL_MASTER')}" action="#{traceBoMBoMComparePanel.openViewMaterialDialogSnd}">
 			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{traceBoMBoMComparePanel.currentPageURL}"/>
 		</p:menuitem>

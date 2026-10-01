@@ -1,0 +1,95 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:h="jakarta.faces.html"
+	xmlns:f="jakarta.faces.core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/templates/ui.xhtml">
+
+<f:metadata>
+	<f:viewAction action="#{viewSerialObjectAssemblyCheckDialog.initView()}"/>
+	<f:viewParam name="selectedObjectId" value="#{viewSerialObjectAssemblyCheckDialog.selectedObjectId}"/>
+</f:metadata>
+
+<ui:define name="title">#{viewSerialObjectAssemblyCheckDialog.formTitle}</ui:define>
+
+<ui:define name="content">
+	<p:dialog header="#{i18n.feedback_dialog_header}" modal="true" widgetVar="msgBox" visible="#{(not empty facesContext.messageList)}">
+		<p:messages id="messages" showDetail="true" showSummary="true"/>
+	</p:dialog>
+
+	<h:panelGrid columns="3">
+		<div class="pi pi-file" style="font-size: 2em"/>
+		<h:outputText id="lblFormTitle" value="&#160;#{viewSerialObjectAssemblyCheckDialog.formTitle}" styleClass="label-form-title"/>
+		<p:ajaxStatus style="width:16px;height:16px;">
+			<f:facet name="start">
+				<h:graphicImage value="/images/ajaxloading.gif"/>
+			</f:facet>
+
+			<f:facet name="complete">
+				<h:outputText value=""/>
+			</f:facet>
+		</p:ajaxStatus>
+	</h:panelGrid>
+
+	<p:panel>
+	<h:panelGrid columns="1">
+		<h:outputText styleClass="header-label" value="#{i18n.panel_basic_title}"/>
+	</h:panelGrid>
+
+	<h:panelGrid columns="6">
+
+		<h:outputLabel value="#{i18n.lbl_attr_serialobject_serialnumber}:" for="txtSerialNumber" styleClass="label-field-optional"/>
+		<p:inputText id="txtSerialNumber" value="#{viewSerialObjectAssemblyCheckDialog.serialObject.serialNumber}" readonly="true">
+		</p:inputText>
+		<p:tooltip for="txtSerialNumber" value=""/>
+		<h:outputLabel/>
+		<h:outputLabel/>
+		<h:outputLabel/>
+
+		<h:outputLabel value="#{i18n.field_viewserialobjectassemblycheckdialog_txtmaterialmaterialnumber}:" for="txtMaterialMaterialNumber" styleClass="label-field-optional"/>
+		<p:inputText id="txtMaterialMaterialNumber" value="#{viewSerialObjectAssemblyCheckDialog.serialObject.materialMaterialNumber}" readonly="true">
+		</p:inputText>
+		<p:tooltip for="txtMaterialMaterialNumber" value=""/>
+
+		<h:outputLabel value="#{i18n.field_viewserialobjectassemblycheckdialog_txtmaterialrevisionrevisionnumber}:" for="txtMaterialRevisionRevisionNumber" styleClass="label-field-optional"/>
+		<p:inputText id="txtMaterialRevisionRevisionNumber" value="#{viewSerialObjectAssemblyCheckDialog.serialObject.materialRevisionRevisionNumber}" readonly="true">
+		</p:inputText>
+		<p:tooltip for="txtMaterialRevisionRevisionNumber" value=""/>
+
+		<h:outputLabel value="#{i18n.field_viewserialobjectassemblycheckdialog_txttracebomlotnumber}:" for="txtTraceBomLotNumber" styleClass="label-field-optional"/>
+		<p:inputText id="txtTraceBomLotNumber" value="#{viewSerialObjectAssemblyCheckDialog.serialObject.traceBomLotNumber}" readonly="true">
+		</p:inputText>
+		<p:tooltip for="txtTraceBomLotNumber" value=""/>
+
+		<h:outputLabel value="#{i18n.field_viewserialobjectassemblycheckdialog_txttracebomordernumber}:" for="txtTraceBomOrderNumber" styleClass="label-field-optional"/>
+		<p:inputText id="txtTraceBomOrderNumber" value="#{viewSerialObjectAssemblyCheckDialog.serialObject.traceBomOrderNumber}" readonly="true">
+		</p:inputText>
+		<p:tooltip for="txtTraceBomOrderNumber" value=""/>
+
+	</h:panelGrid>
+	</p:panel>
+
+
+	<p:scrollPanel mode="native" style="flex: 1 1 auto; width: 100%; min-height: 80px; padding: unset; border: unset;" >
+		<h:panelGrid columns="1">
+			<h:outputText styleClass="header-label" value="#{i18n.panel_viewserialobjectassemblycheckdialog_pannotinsapbom_title}"/>
+			<!-- 
+panel_viewserialobjectassemblycheckdialog_pannotintracebom_title
+panel_viewserialobjectassemblycheckdialog_pandiffqty_title
+			 -->
+		</h:panelGrid>
+		<h:panelGrid columns="1">
+			<ui:include src="panel/SerialObjectServiceMessagesPanel.xhtml"/>
+		</h:panelGrid>
+	</p:scrollPanel>
+
+	<p/>
+
+	<h:panelGrid columns="1">
+		<p:commandButton id="cmdBack" icon="pi pi-caret-left" value="#{i18n.command_back}" action="#{userSession.getLastPage}" immediate="true" ajax="false"/>
+	</h:panelGrid>
+
+	<p:defaultCommand target=":form:cmdBack"/>
+
+</ui:define>
+</ui:composition>

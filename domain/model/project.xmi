@@ -4290,14 +4290,14 @@
       <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.0"/>
     </attributes>
   </net.sourceforge.jbizmo.model.dto:DTOBean>
-  <net.sourceforge.jbizmo.model.client:FormGroup name="Serial object" groupOrder="4" forms="/260 /266 /286 /307 /303 /322 /317 /339 /384 /388 /392 /346 /380 /292 /365 /331 /352 /374 /356" panels="/606 /615 /328 /612 /609 /371 /362" roles="/0/@roles.0 /0/@roles.1" project="/0"/>
+  <net.sourceforge.jbizmo.model.client:FormGroup name="Serial object" groupOrder="4" forms="/260 /266 /286 /307 /303 /322 /317 /339 /384 /388 /392 /346 /380 /292 /365 /625 /331 /352 /374 /356" panels="/606 /615 /328 /612 /609 /371 /362" roles="/0/@roles.0 /0/@roles.1" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="mv" parent="/2" javaTypes="/265 /271 /291 /316 /327 /344 /402" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="mv" parent="/1" javaTypes="/264 /270 /290 /315 /326 /343 /401" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="mv" parent="/3" javaTypes="/263 /269 /289 /320 /325 /342 /395 /400" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="mv" parent="/4" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="serial" parent="/2" javaTypes="/300 /302 /338 /351 /361 /370 /619" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="serial" parent="/1" javaTypes="/299 /618 /369 /301 /350 /337 /360" project="/0"/>
-  <net.sourceforge.jbizmo.model.java:Namespace name="serial" parent="/3" javaTypes="/295 /310 /306 /368 /608 /617 /624 /335 /296 /391 /330 /611 /387 /355 /349 /379 /373 /359 /336 /383 /364" project="/0"/>
+  <net.sourceforge.jbizmo.model.java:Namespace name="serial" parent="/3" javaTypes="/295 /310 /306 /368 /608 /617 /624 /335 /296 /391 /330 /611 /387 /355 /349 /379 /373 /359 /336 /383 /364 /628" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="serial" parent="/4" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="service" parent="/2" javaTypes="/408 /414 /429 /431 /433 /435 /437 /439 /441 /570" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="service" parent="/1" javaTypes="/407 /413 /428 /430 /432 /434 /436 /438 /440 /569" project="/0"/>
@@ -5579,6 +5579,9 @@
     </boundaryMethods>
     <boundaryMethods name="findCompareSerObj" comment="" returnType="/624" methodType="FIND_BY_ID" serviceMethod="/302/@repositoryMethods.0">
       <methodParameters name="id" type="/0/@allSupportedTypes.2" hint=""/>
+    </boundaryMethods>
+    <boundaryMethods name="findSerialObjectAssemblyCheck" comment="Find serial object by its ID" returnType="/628" methodType="FIND_BY_ID" serviceMethod="/302/@repositoryMethods.0">
+      <methodParameters name="id" type="/0/@allSupportedTypes.2"/>
     </boundaryMethods>
   </net.sourceforge.jbizmo.model.boundary:BoundaryBean>
   <net.sourceforge.jbizmo.model.repository:Repository name="SerialObjectRepository" comment="Create, read, update and delete services for serial object objects." namespace="/252">
@@ -13482,6 +13485,47 @@
     <attributes name="traceBomId">
       <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-serial.xmi#//@domainObjects.0/@associations.6"/>
       <domainAttribute href="package-base.xmi#//@domainObjects.0/@attributes.0"/>
+    </attributes>
+  </net.sourceforge.jbizmo.model.dto:DTOBean>
+  <net.sourceforge.jbizmo.model.client:Form name="ViewSerialObjectAssemblyCheckDialog" formType="READONLY" formGroup="/247" title="Assembly check" formPanels="/626 /627" dTO="/628" roles="/0/@roles.0 /0/@roles.1">
+    <actions name="actionGet" boundaryMethod="/301/@boundaryMethods.15" type="READ"/>
+    <domainObject href="package-serial.xmi#//@domainObjects.0"/>
+  </net.sourceforge.jbizmo.model.client:Form>
+  <net.sourceforge.jbizmo.model.client:FormPanel name="panBasic" label="Basic data" form="/625">
+    <fields name="txtSerialNumber" label="Serial number" readonly="true" width="140" dTOAttribute="/628/@attributes.1"/>
+    <fields name="txtMaterialMaterialNumber" rowIndex="2" label="Material no." readonly="true" width="140" dTOAttribute="/628/@attributes.2"/>
+    <fields name="txtMaterialRevisionRevisionNumber" colIndex="2" rowIndex="2" label="Revision no." readonly="true" width="140" dTOAttribute="/628/@attributes.3"/>
+    <fields name="txtTraceBomLotNumber" rowIndex="3" label="Lot no." readonly="true" mandatory="false" width="140" dTOAttribute="/628/@attributes.4"/>
+    <fields name="txtTraceBomOrderNumber" colIndex="2" rowIndex="3" label="Order no." readonly="true" mandatory="false" width="140" dTOAttribute="/628/@attributes.5"/>
+    <fields name="txtId" rowIndex="4" visible="false" label="Id" readonly="true" width="140" dTOAttribute="/628/@attributes.0"/>
+  </net.sourceforge.jbizmo.model.client:FormPanel>
+  <net.sourceforge.jbizmo.model.client:FormPanel name="panServiceMessages" colIndex="5" rowIndex="2" label="Service messages" form="/625" basePanel="/612"/>
+  <net.sourceforge.jbizmo.model.dto:DTOBean name="SerialObjectAssemblyCheckDTO" comment="Data transfer object for serial object objects" namespace="/254" standardConversion="true">
+    <domainObject href="package-serial.xmi#//@domainObjects.0"/>
+    <attributes name="id">
+      <domainAttribute href="package-base.xmi#//@domainObjects.0/@attributes.0"/>
+    </attributes>
+    <attributes name="serialNumber">
+      <domainAttribute href="package-serial.xmi#//@domainObjects.0/@attributes.0"/>
+    </attributes>
+    <attributes name="materialMaterialNumber">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-material.xmi#//@domainObjects.3/@associations.0"/>
+      <domainAttribute href="package-material.xmi#//@domainObjects.2/@attributes.0"/>
+      <associationList xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-serial.xmi#//@domainObjects.4/@associations.0"/>
+      <associationList xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-serial.xmi#//@domainObjects.0/@associations.6"/>
+    </attributes>
+    <attributes name="materialRevisionRevisionNumber">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-serial.xmi#//@domainObjects.4/@associations.0"/>
+      <domainAttribute href="package-material.xmi#//@domainObjects.3/@attributes.0"/>
+      <associationList xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-serial.xmi#//@domainObjects.0/@associations.6"/>
+    </attributes>
+    <attributes name="traceBomLotNumber">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-serial.xmi#//@domainObjects.0/@associations.6"/>
+      <domainAttribute href="package-serial.xmi#//@domainObjects.4/@attributes.1"/>
+    </attributes>
+    <attributes name="traceBomOrderNumber">
+      <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-serial.xmi#//@domainObjects.0/@associations.6"/>
+      <domainAttribute href="package-serial.xmi#//@domainObjects.4/@attributes.2"/>
     </attributes>
   </net.sourceforge.jbizmo.model.dto:DTOBean>
 </xmi:XMI>

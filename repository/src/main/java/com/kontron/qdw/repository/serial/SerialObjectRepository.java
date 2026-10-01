@@ -233,11 +233,9 @@ public class SerialObjectRepository extends AbstractRepository<SerialObject, Lon
     @Generated
     public SerialObject merge(SerialObject serialObject, boolean performChecks, boolean performFlush) {
         // Perform unique key checks
-        if (performChecks
-                && existsByIdAndSerialNumberAndMaterialId(serialObject.getId(), serialObject.getSerialNumber(), serialObject.getMaterial())) {
+        if (performChecks && existsByIdAndSerialNumberAndMaterialId(serialObject.getId(), serialObject.getSerialNumber(), serialObject.getMaterial()))
             throw new UniqueConstraintViolationException("Serial object with serial number '" + serialObject.getSerialNumber() + "' and material '"
                     + serialObject.getMaterial().getId() + "' already exists!");
-        }
 
         return merge(serialObject, performFlush);
     }
@@ -255,10 +253,9 @@ public class SerialObjectRepository extends AbstractRepository<SerialObject, Lon
     @Generated
     public SerialObject persist(SerialObject serialObject, boolean performChecks, boolean performFlush, boolean performRefresh) {
         // Perform unique key checks
-        if (performChecks && existsBySerialNumberAndMaterialId(serialObject.getSerialNumber(), serialObject.getMaterial())) {
+        if (performChecks && existsBySerialNumberAndMaterialId(serialObject.getSerialNumber(), serialObject.getMaterial()))
             throw new UniqueConstraintViolationException("Serial object with serial number '" + serialObject.getSerialNumber() + "' and material '"
                     + serialObject.getMaterial().getId() + "' already exists!");
-        }
 
         return persist(serialObject, performFlush, performRefresh);
     }
@@ -351,13 +348,11 @@ public class SerialObjectRepository extends AbstractRepository<SerialObject, Lon
      */
     @Generated
     public boolean existsBySerialNumberAndMaterialId(String serialNumber, Material material) {
-        if (serialNumber == null) {
+        if (serialNumber == null)
             throw new IllegalArgumentException("Parameter \"serialNumber\" must not be null!");
-        }
 
-        if (material == null) {
+        if (material == null)
             throw new IllegalArgumentException("Parameter \"material\" must not be null!");
-        }
 
         final TypedQuery<Long> query = em.createNamedQuery(SerialObject.NQ_UK_EXISTS_BY_SERIALNUMBER_AND_MATERIAL, Long.class);
         query.setParameter(PARAM_SERIALNUMBER, serialNumber);
@@ -375,13 +370,11 @@ public class SerialObjectRepository extends AbstractRepository<SerialObject, Lon
      */
     @Generated
     public boolean existsByIdAndSerialNumberAndMaterialId(long id, String serialNumber, Material material) {
-        if (serialNumber == null) {
+        if (serialNumber == null)
             throw new IllegalArgumentException("Parameter \"serialNumber\" must not be null!");
-        }
 
-        if (material == null) {
+        if (material == null)
             throw new IllegalArgumentException("Parameter \"material\" must not be null!");
-        }
 
         final TypedQuery<Long> query = em.createNamedQuery(SerialObject.NQ_UK_EXISTS_BY_SERIALNUMBER_AND_MATERIAL_AND_ID, Long.class);
         query.setFlushMode(FlushModeType.COMMIT);
@@ -422,9 +415,8 @@ public class SerialObjectRepository extends AbstractRepository<SerialObject, Lon
 
         final List<SerialObject> resultList = query.getResultList();
 
-        if (resultList.size() <= 1) {
+        if (resultList.size() <= 1)
             return resultList.stream().findFirst().orElse(null);
-        }
 
         throw new IllegalStateException("Non unique result!");
     }
@@ -545,9 +537,8 @@ public class SerialObjectRepository extends AbstractRepository<SerialObject, Lon
         final SerialObject bean = findById(id, true);
 
         // Perform unique key check
-        if (existsByIdAndSerialNumberAndMaterialId(bean.getId(), bean.getSerialNumber(), material)) {
+        if (existsByIdAndSerialNumberAndMaterialId(bean.getId(), bean.getSerialNumber(), material))
             throw new UniqueConstraintViolationException("A unique key constraint check for serial object with ID '" + id + "' has failed!");
-        }
 
         bean.setMaterial(material);
     }

@@ -163,14 +163,13 @@ public class TraceBoMBoundaryService {
     @PermitAll
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public List<TraceBoMListDTO> findTraceBoMs(String filter) {
-        if (filter != null && !filter.isEmpty() && !filter.equals(WILDCARD)) {
+        if (filter != null && !filter.isEmpty() && !filter.equals(WILDCARD))
             try {
                 Long.parseLong(filter);
             }
             catch (NumberFormatException e) {
                 return Collections.emptyList();
             }
-        }
 
         // Collect the select tokens of all fields that should be fetched
         final var selectTokens = new ArrayList<String>();
