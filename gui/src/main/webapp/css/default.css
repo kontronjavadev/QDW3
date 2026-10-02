@@ -884,11 +884,11 @@ body .ui-panelwithouttabs > .ui-panel-content {
 }
 
 body .ui-panelwithouttabs > .ui-panel-content .header-label {
-  background: var(--active);
-  color: var(--textonactive);
-  font-size: unset;
-  padding: .2rem .4rem;
-  margin-left: -.2rem;
+	background: var(--active);
+	color: var(--textonactive);
+	font-size: unset;
+	padding: .2rem .4rem;
+	margin-left: -.2rem;
 }
 
 body .ui-panelgrid .ui-panelgrid-cell {
