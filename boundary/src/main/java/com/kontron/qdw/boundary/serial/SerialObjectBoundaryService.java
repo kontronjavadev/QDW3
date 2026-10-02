@@ -10,6 +10,7 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.commons.collections4.CollectionUtils;
 
@@ -31,15 +32,27 @@ import static net.sourceforge.jbizmo.commons.jpa.AbstractRepository.SMALL_LIST_S
 @Stateless
 public class SerialObjectBoundaryService {
 
-    private static final Collector<AssemblyCheckMaterialDTO, ?, Map<Long, AssemblyCheckMaterialDTO>> TBI_PER_MAT_ID_COLLECTOR = Collectors.toMap(
-            AssemblyCheckMaterialDTO::getMaterialId,
+    private static final Collector<AssemblyCheckMaterialDTO, ?, Map<String, AssemblyCheckMaterialDTO>> TBI_PER_MAT_NR_COLLECTOR = Collectors.toMap(
+            dto -> dto.getMaterialNumber().toUpperCase(),
             Function.identity(),
             (first, second) -> {
-                first.setTraceBoMQuantity(first.getTraceBoMQuantity() + second.getTraceBoMQuantity());
-                return first;
+                // Gesamtsumme bilden
+                int totalQuantity = first.getTraceBoMQuantity() + second.getTraceBoMQuantity();
+
+                // Wenn 'first' eine echte Material-ID hat, aktualisiere und behalte 'first'
+                if (first.getMaterialId() != -1L) {
+                    first.setTraceBoMQuantity(totalQuantity);
+                    return first;
+                }
+                // Ansonsten aktualisiere und behalte 'second' (selbst wenn beide -1L haben, ist es egal welches gewinnt)
+                else {
+                    second.setTraceBoMQuantity(totalQuantity);
+                    return second;
+                }
             });
-    private static final Collector<AssemblyCheckMaterialDTO, ?, Map<Long, AssemblyCheckMaterialDTO>> BI_PER_MAT_ID_COLLECTOR = Collectors.toMap(
-            AssemblyCheckMaterialDTO::getMaterialId,
+
+    private static final Collector<AssemblyCheckMaterialDTO, ?, Map<String, AssemblyCheckMaterialDTO>> BI_PER_MAT_NR_COLLECTOR = Collectors.toMap(
+            dto -> dto.getMaterialNumber().toUpperCase(),
             Function.identity(),
             (first, second) -> {
                 first.setRevBomQuantity(first.getRevBomQuantity() + second.getRevBomQuantity());
@@ -100,17 +113,25 @@ public class SerialObjectBoundaryService {
         dto.setTraceBomOrderNumber(serialObject.getTraceBom().getOrderNumber());
 
 
-        // Map an AssemblyCheckMaterialDTO zu Material-Id zu Trace-BoM und Revisions-BoM aufbauen
-        Map<Long, AssemblyCheckMaterialDTO> traceBoMMap = tbRepository.getTraceBoMItemsFetchMaterial(serialObject.getTraceBom().getId()).stream()
+        // Map an AssemblyCheckMaterialDTO zu Material-Nr. zu Trace-BoM und illegalen Trace-BoM aufbauen
+        Stream<AssemblyCheckMaterialDTO> tbItemsStream = tbRepository.getTraceBoMItemsFetchMaterial(serialObject.getTraceBom().getId()).stream()
                 .map(tbi -> {
                     Material m = tbi.getMaterial();
                     return new AssemblyCheckMaterialDTO(m.getId(), m.getMaterialNumber(),
                             m.getShortText(), m.getMaterialHierarchy(), m.getMaterialType().getCode(),
-                            0, tbi.getQuantity(), 0, tbi.getId());
-                })
-                .collect(TBI_PER_MAT_ID_COLLECTOR);
+                            0, tbi.getQuantity(), 0L, tbi.getId());
+                });
 
-        Map<Long, AssemblyCheckMaterialDTO> revBoMMap = serialObject.getTraceBom().getMaterialRevision() == null
+        Stream<AssemblyCheckMaterialDTO> illegalTbItemsStream = tbRepository.getIllegalTraceBoMItems(serialObject.getTraceBom().getId()).stream()
+                .map(itbi -> new AssemblyCheckMaterialDTO(-1L, itbi.getMaterialNumber(), "ILLEGAL MATERIAL", "", "", 0, 1, -1L, -1L));
+
+
+        Map<String, AssemblyCheckMaterialDTO> traceBoMMap = Stream.concat(tbItemsStream, illegalTbItemsStream)
+                .collect(TBI_PER_MAT_NR_COLLECTOR);
+
+
+        // Map an AssemblyCheckMaterialDTO zu Material-Nr. zu Revisions-BoM aufbauen
+        Map<String, AssemblyCheckMaterialDTO> revBoMMap = serialObject.getTraceBom().getMaterialRevision() == null
                 ? Collections.emptyMap()
                 : CollectionUtils.emptyIfNull(matrevRepository.getBoMItemsFetchMaterial(serialObject.getTraceBom().getMaterialRevision().getId()))
                         .stream()
@@ -122,27 +143,27 @@ public class SerialObjectBoundaryService {
                                     m.getShortText(), m.getMaterialHierarchy(), m.getMaterialType().getCode(),
                                     rbi.getQuantity().intValue(), 0, rbi.getId(), 0);
                         })
-                        .collect(BI_PER_MAT_ID_COLLECTOR);
+                        .collect(BI_PER_MAT_NR_COLLECTOR);
 
 
         // Unterschiede berechnen
 
         // Schnittmenge der keys (Material-Ids) ermitteln
-        Collection<Long> intersectionOfKeys = CollectionUtils.intersection(traceBoMMap.keySet(), revBoMMap.keySet());
+        Collection<String> intersectionOfKeys = CollectionUtils.intersection(traceBoMMap.keySet(), revBoMMap.keySet());
 
         // alle Werte der originMap einsammeln, deren key NICHT zur Schnittmenge gehört, die also NUR in der originMap vorkommen
         List<AssemblyCheckMaterialDTO> onlyInTraceBoM = traceBoMMap.values().stream()
-                .filter(bomItem -> !intersectionOfKeys.contains(bomItem.getMaterialId()))
+                .filter(bomItem -> !intersectionOfKeys.contains(bomItem.getMaterialNumber()))
                 .collect(Collectors.toList());
 
         // alle Werte der compareMap einsammeln, deren key NICHT zur Schnittmenge gehört, die also NUR in der compareMap vorkommen
         List<AssemblyCheckMaterialDTO> onlyInRevBoM = revBoMMap.values().stream()
-                .filter(bomItem -> !intersectionOfKeys.contains(bomItem.getMaterialId()))
+                .filter(bomItem -> !intersectionOfKeys.contains(bomItem.getMaterialNumber()))
                 .collect(Collectors.toList());
 
         List<AssemblyCheckMaterialDTO> diffQtys = new ArrayList<>();
         // alle Einträge, die in beiden Maps vorkommen, vergleichen, Differenz bilden und eine der Listen zuordnen
-        for (Long key : intersectionOfKeys) {
+        for (String key : intersectionOfKeys) {
             AssemblyCheckMaterialDTO traceBoMEntry = traceBoMMap.get(key);
             AssemblyCheckMaterialDTO revBoMEntry = revBoMMap.get(key);
             // beide haben einen Wert, sichergestellt durch Schnittmengenbildung!
@@ -162,7 +183,10 @@ public class SerialObjectBoundaryService {
         }
 
 
-        onlyInTraceBoM.sort(Comparator.comparing(AssemblyCheckMaterialDTO::getMaterialNumber));
+        onlyInTraceBoM.sort(
+                Comparator.comparingInt((AssemblyCheckMaterialDTO tbi) -> "ILLEGAL MATERIAL".equals(tbi.getMaterialShortText()) ? 0 : 1)
+                        .thenComparing(AssemblyCheckMaterialDTO::getMaterialNumber));
+
         onlyInRevBoM.sort(Comparator.comparing(AssemblyCheckMaterialDTO::getMaterialNumber));
         diffQtys.sort(Comparator.comparing(AssemblyCheckMaterialDTO::getMaterialNumber));
 

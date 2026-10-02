@@ -65,26 +65,29 @@ public abstract class TraceBoMAssemblyCheckPanel extends CopyClipboard implement
 
 
     public String openViewTraceBoMItemDialog() {
-        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY)) {
+        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY) && selectedAssemblyCheckDto.getTraceBomItemId() != -1) {
             return ViewTraceBoMItemDialog.PAGE_INIT_URL + selectedAssemblyCheckDto.getTraceBomItemId();
         }
 
+        getUserSession().getLastPage();
         return "";
     }
 
     public String openViewRevisionBoMItemDialog() {
-        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY)) {
+        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY) && selectedAssemblyCheckDto.getRevBomItemId() != -1) {
             return ViewBoMItemDialog.PAGE_INIT_URL + selectedAssemblyCheckDto.getRevBomItemId();
         }
 
+        getUserSession().getLastPage();
         return "";
     }
 
     public String openViewMaterialDialog() {
-        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY)) {
+        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY) && selectedAssemblyCheckDto.getMaterialId() != -1) {
             return ViewMaterialDialog.PAGE_INIT_URL + selectedAssemblyCheckDto.getMaterialId();
         }
 
+        getUserSession().getLastPage();
         return "";
     }
 
