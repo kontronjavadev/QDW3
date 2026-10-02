@@ -84,22 +84,6 @@ public class SerialObjectBoundaryService {
     @PermitAll
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public SerialObjectAssemblyCheckDTO findSerialObjectAssemblyCheck(long id) {
-        // Find persistent object
-        // String stmt = "select s "
-        // + "from SerialObject s "
-        // + "left join fetch s.traceBom "
-        // + "left join fetch s.traceBom.traceBoMItems "
-        // + "left join fetch s.traceBom.materialRevision "
-        // + "left join fetch s.traceBom.materialRevision.boMItems "
-        // + "where s.id = :id ";
-        //
-        // @SuppressWarnings("resource")
-        // final SerialObject serialObject = repository.getEntityManager()
-        // .createQuery(stmt, SerialObject.class)
-        // .setParameter("id", id)
-        // .getSingleResult();
-
-
         final SerialObject serialObject = repository.findById(id, true);
 
         final var dto = new SerialObjectAssemblyCheckDTO();

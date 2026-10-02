@@ -6,6 +6,7 @@ import java.lang.invoke.*;
 import static com.kontron.qdw.ui.TranslationKeys.*;
 import jakarta.servlet.http.*;
 import java.util.*;
+
 import com.kontron.qdw.dto.serial.*;
 import com.kontron.qdw.boundary.serial.*;
 import jakarta.faces.view.*;
@@ -144,17 +145,27 @@ public class AssemblyCheckDialog implements Serializable {
 
             serialObject = serialObjectService.findSerialObjectAssemblyCheck(selectedObjectId);
 
+            Runnable refreshCallback = () -> {
+                serialObject = serialObjectService.findSerialObjectAssemblyCheck(selectedObjectId);
+                panAssyCheckOnlyTB.setAssemblyCheckDtos(serialObject.getOnlyInTraceBoMList());
+                panAssyCheckOnlyRB.setAssemblyCheckDtos(serialObject.getOnlyInRevBoMList());
+                panAssyCheckDiffQty.setAssemblyCheckDtos(serialObject.getDiffQtyList());
+            };
+
             panAssyCheckOnlyTB.setAssemblyCheckDtos(serialObject.getOnlyInTraceBoMList());
+            panAssyCheckOnlyTB.setRefreshCallback(refreshCallback);
             panAssyCheckOnlyTB.setCurrentPageURL(AssemblyCheckDialog.PAGE_INIT_URL + selectedObjectId);
             panAssyCheckOnlyTB.initView();
 
 
             panAssyCheckOnlyRB.setAssemblyCheckDtos(serialObject.getOnlyInRevBoMList());
+            panAssyCheckOnlyRB.setRefreshCallback(refreshCallback);
             panAssyCheckOnlyRB.setCurrentPageURL(AssemblyCheckDialog.PAGE_INIT_URL + selectedObjectId);
             panAssyCheckOnlyRB.initView();
 
 
             panAssyCheckDiffQty.setAssemblyCheckDtos(serialObject.getDiffQtyList());
+            panAssyCheckDiffQty.setRefreshCallback(refreshCallback);
             panAssyCheckDiffQty.setCurrentPageURL(AssemblyCheckDialog.PAGE_INIT_URL + selectedObjectId);
             panAssyCheckDiffQty.initView();
 

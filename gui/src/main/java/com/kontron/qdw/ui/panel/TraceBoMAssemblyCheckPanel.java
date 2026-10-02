@@ -28,6 +28,7 @@ public abstract class TraceBoMAssemblyCheckPanel extends CopyClipboard implement
     @SuppressWarnings("unused")
     private transient ResourceBundle bundle;
 
+    private Runnable refreshCallback;
     private List<AssemblyCheckMaterialDTO> assemblyCheckDtos;
     private AssemblyCheckMaterialDTO selectedAssemblyCheckDto;
 
@@ -60,12 +61,7 @@ public abstract class TraceBoMAssemblyCheckPanel extends CopyClipboard implement
 
     public abstract String defaultExcelExportFileName();
 
-
-    public void onBomItemsGridDoubleClick() {
-        logger.debug("Handle double-click event");
-        //
-        // userSession.redirectTo(getCurrentPageURL(), openViewBoMItemDialog());
-    }
+    public abstract void onBomItemsGridDoubleClick();
 
 
     public String openViewTraceBoMItemDialog() {
@@ -110,8 +106,14 @@ public abstract class TraceBoMAssemblyCheckPanel extends CopyClipboard implement
         this.selectedAssemblyCheckDto = selectedAssemblyCheckDto;
     }
 
+    public void setRefreshCallback(Runnable refreshCallback) {
+        this.refreshCallback = refreshCallback;
+    }
+
     public void refresh() {
-        // diffBoMItems = tbService.compareBoMs(serObjFst.getTraceBomId(), serObjSnd.getTraceBomId());
+        if (refreshCallback != null) {
+            refreshCallback.run();
+        }
     }
 
 
@@ -122,6 +124,10 @@ public abstract class TraceBoMAssemblyCheckPanel extends CopyClipboard implement
 
     public void setCurrentPageURL(String currentPageURL) {
         this.currentPageURL = currentPageURL;
+    }
+
+    UserSession getUserSession() {
+        return userSession;
     }
 
 }
