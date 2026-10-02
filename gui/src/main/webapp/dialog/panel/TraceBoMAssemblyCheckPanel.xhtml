@@ -75,10 +75,10 @@
 
 
 <!--Kontextmenü mit Möglichkeit, eine Zelle oder eine Zeile zu kopieren -->
-	<h:inputHidden id="bomcellText" value="#{controller.cellText}" />
-	<h:inputHidden id="bomrowCsv" value="#{controller.rowCsv}" />
+	<h:inputHidden id="cellText" value="#{controller.cellText}" />
+	<h:inputHidden id="rowCsv" value="#{controller.rowCsv}" />
 
-	<p:contextMenu for="TraceBoMTable" beforeShow="updateContextData(event, 'form:tabview2', 'bom')" >
+	<p:contextMenu for="TraceBoMTable" beforeShow="updateContextData(event, 'form:tabview2:#{copyVarPrefix}')" >
 		<p:menuitem value="#{i18n.action_view}" ajax="true" icon="pi pi-file" id="TraceBoMTable_mniView" 
 		rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;MATERIAL_MASTER')}" action="#{controller.openViewTraceBoMItemDialog}">
 			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{controller.currentPageURL}"/>
