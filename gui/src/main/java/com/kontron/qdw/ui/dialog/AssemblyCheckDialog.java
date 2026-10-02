@@ -37,7 +37,11 @@ public class AssemblyCheckDialog implements Serializable {
     private String formTitle = "";
     @Generated
     private transient ResourceBundle bundle;
-    private final TraceBoMAssemblyCheckPanel panAssyCheck;
+    private final TraceBoMAssemblyCheckOnlyTBPanel panAssyCheckOnlyTB;
+    private final TraceBoMAssemblyCheckOnlyRBPanel panAssyCheckOnlyRB;
+    private final TraceBoMAssemblyCheckDiffQtyPanel panAssyCheckDiffQty;
+
+
 
     /**
      * Default constructor
@@ -46,7 +50,9 @@ public class AssemblyCheckDialog implements Serializable {
     public AssemblyCheckDialog() {
         this.serialObjectService = null;
         this.userSession = null;
-        this.panAssyCheck = null;
+        this.panAssyCheckOnlyTB = null;
+        this.panAssyCheckOnlyRB = null;
+        this.panAssyCheckDiffQty = null;
     }
 
     /**
@@ -58,11 +64,17 @@ public class AssemblyCheckDialog implements Serializable {
     @Inject
     @Generated
     public AssemblyCheckDialog(SerialObjectBoundaryService serialObjectService, UserSession userSession,
-            TraceBoMAssemblyCheckPanel panAssyCheck) {
+            TraceBoMAssemblyCheckOnlyTBPanel panAssyCheckOnlyTB,
+            TraceBoMAssemblyCheckOnlyRBPanel panAssyCheckOnlyRB,
+            TraceBoMAssemblyCheckDiffQtyPanel panAssyCheckDiffQty) {
         this.serialObjectService = serialObjectService;
         this.userSession = userSession;
-        this.panAssyCheck = panAssyCheck;
+        this.panAssyCheckOnlyTB = panAssyCheckOnlyTB;
+        this.panAssyCheckOnlyRB = panAssyCheckOnlyRB;
+        this.panAssyCheckDiffQty = panAssyCheckDiffQty;
     }
+
+
 
     /**
      * @return the model object
@@ -132,10 +144,19 @@ public class AssemblyCheckDialog implements Serializable {
 
             serialObject = serialObjectService.findSerialObjectAssemblyCheck(selectedObjectId);
 
-            // panAssyCheck.setAssemblyCheckDtos(serialObject.getOnlyInTraceBoMList());
-            panAssyCheck.setAssemblyCheckDtos(serialObject.getOnlyInRevBoMList());
-            panAssyCheck.setCurrentPageURL(AssemblyCheckDialog.PAGE_INIT_URL + selectedObjectId);
-            panAssyCheck.initView();
+            panAssyCheckOnlyTB.setAssemblyCheckDtos(serialObject.getOnlyInTraceBoMList());
+            panAssyCheckOnlyTB.setCurrentPageURL(AssemblyCheckDialog.PAGE_INIT_URL + selectedObjectId);
+            panAssyCheckOnlyTB.initView();
+
+
+            panAssyCheckOnlyRB.setAssemblyCheckDtos(serialObject.getOnlyInRevBoMList());
+            panAssyCheckOnlyRB.setCurrentPageURL(AssemblyCheckDialog.PAGE_INIT_URL + selectedObjectId);
+            panAssyCheckOnlyRB.initView();
+
+
+            panAssyCheckDiffQty.setAssemblyCheckDtos(serialObject.getDiffQtyList());
+            panAssyCheckDiffQty.setCurrentPageURL(AssemblyCheckDialog.PAGE_INIT_URL + selectedObjectId);
+            panAssyCheckDiffQty.initView();
 
 
             formTitle = bundle.getString(FORM_ASSEMBLYCHECKDIALOG_TITLE) + " '" + selectedObjectId + "'";

@@ -19,13 +19,7 @@ import com.kontron.qdw.ui.dialog.ViewMaterialDialog;
 import com.kontron.qdw.ui.dialog.ViewTraceBoMItemDialog;
 import com.kontron.qdw.ui.view.util.CopyClipboard;
 
-import jakarta.faces.view.ViewScoped;
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
-
-@Named("traceBoMAssemblyCheckPanel")
-@ViewScoped
-public class TraceBoMAssemblyCheckPanel extends CopyClipboard implements Serializable {
+public abstract class TraceBoMAssemblyCheckPanel extends CopyClipboard implements Serializable {
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private static final long serialVersionUID = 1L;
@@ -41,12 +35,11 @@ public class TraceBoMAssemblyCheckPanel extends CopyClipboard implements Seriali
 
 
 
-    public TraceBoMAssemblyCheckPanel() {
+    TraceBoMAssemblyCheckPanel() {
         userSession = null;
     }
 
-    @Inject
-    public TraceBoMAssemblyCheckPanel(UserSession userSession) {
+    TraceBoMAssemblyCheckPanel(UserSession userSession) {
         this.userSession = userSession;
     }
 
@@ -60,6 +53,10 @@ public class TraceBoMAssemblyCheckPanel extends CopyClipboard implements Seriali
         logger.debug("Grid panel initialization finished");
     }
 
+
+    public abstract boolean isTBVisible();
+
+    public abstract boolean isRBVisible();
 
 
     public void onBomItemsGridDoubleClick() {

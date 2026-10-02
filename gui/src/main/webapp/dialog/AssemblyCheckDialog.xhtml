@@ -74,13 +74,35 @@
 	<p:scrollPanel mode="native" style="flex: 1 1 auto; width: 100%; min-height: 80px; padding: unset; border: unset;" >
 		<h:panelGrid columns="1">
 			<h:outputText styleClass="header-label" value="#{i18n.panel_assemblycheckdialog_panonlyintracebom_title}"/>
-			<!-- 
-panel_assemblycheckdialog_panonlyinrevbom_title
-panel_assemblycheckdialog_pandiffqty_title
-			 -->
 		</h:panelGrid>
 		<h:panelGrid columns="1">
-			<ui:include src="panel/TraceBoMAssemblyCheckPanel.xhtml"/>
+			<f:subview id="svOnlyInTB">
+				<ui:include src="panel/TraceBoMAssemblyCheckPanel.xhtml">
+					<ui:param name="controller" value="#{traceBoMAssemblyCheckOnlyTBPanel}" />
+				</ui:include>
+			</f:subview>
+		</h:panelGrid>
+
+		<h:panelGrid columns="1">
+			<h:outputText styleClass="header-label" value="#{i18n.panel_assemblycheckdialog_panonlyinrevbom_title}"/>
+		</h:panelGrid>
+		<h:panelGrid columns="1">
+			<f:subview id="svOnlyInRB">
+				<ui:include src="panel/TraceBoMAssemblyCheckPanel.xhtml">
+					<ui:param name="controller" value="#{traceBoMAssemblyCheckOnlyRBPanel}" />
+				</ui:include>
+			</f:subview>
+		</h:panelGrid>
+
+		<h:panelGrid columns="1">
+			<h:outputText styleClass="header-label" value="#{i18n.panel_assemblycheckdialog_pandiffqty_title}"/>
+		</h:panelGrid>
+		<h:panelGrid columns="1">
+			<f:subview id="svDiffQty">
+				<ui:include src="panel/TraceBoMAssemblyCheckPanel.xhtml">
+					<ui:param name="controller" value="#{traceBoMAssemblyCheckDiffQtyPanel}" />
+				</ui:include>
+			</f:subview>
 		</h:panelGrid>
 	</p:scrollPanel>
 

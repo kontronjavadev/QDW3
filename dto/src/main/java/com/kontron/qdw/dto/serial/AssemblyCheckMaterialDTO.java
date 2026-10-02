@@ -8,7 +8,7 @@ public class AssemblyCheckMaterialDTO implements Serializable {
 
     private long materialId;
     private String materialNumber;
-    private String shortText;
+    private String materialShortText;
     private String materialHierarchy;
     private String materialType;
 
@@ -20,12 +20,12 @@ public class AssemblyCheckMaterialDTO implements Serializable {
 
 
     public AssemblyCheckMaterialDTO(long materialId, String materialNumber,
-            String shortText, String materialHierarchy, String materialType,
+            String materialShortText, String materialHierarchy, String materialType,
             int revBomQuantity, int traceBoMQuantity, long revBomItemId, long traceBomItemId) {
         super();
         this.materialId = materialId;
         this.materialNumber = materialNumber;
-        this.shortText = shortText;
+        this.materialShortText = materialShortText;
         this.materialHierarchy = materialHierarchy;
         this.materialType = materialType;
 
@@ -69,12 +69,12 @@ public class AssemblyCheckMaterialDTO implements Serializable {
         this.traceBoMQuantity = traceBoMQuantity;
     }
 
-    public String getShortText() {
-        return shortText;
+    public String getMaterialShortText() {
+        return materialShortText;
     }
 
-    public void setShortText(String shortText) {
-        this.shortText = shortText;
+    public void setMaterialShortText(String materialShortText) {
+        this.materialShortText = materialShortText;
     }
 
     public String getMaterialHierarchy() {

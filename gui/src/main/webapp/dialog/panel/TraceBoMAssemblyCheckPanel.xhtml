@@ -7,7 +7,7 @@
 
 	<p:menubar>
 		<p:submenu icon="pi pi-refresh" label="#{i18n.mnu_view}">
-			<p:menuitem value="#{i18n.action_refresh}" ajax="false" icon="pi pi-refresh" actionListener="#{traceBoMBoMAssemblyCheckPanel.refresh}"/>
+			<p:menuitem value="#{i18n.action_refresh}" ajax="false" icon="pi pi-refresh" actionListener="#{controller.refresh}"/>
 		</p:submenu>
 		<p:submenu icon="pi pi-print" label="#{i18n.mnu_export}">
 			<p:menuitem value="#{i18n.action_export_xls}" ajax="false" icon="pi pi-file-excel">
@@ -19,13 +19,15 @@
 
 	<p:dataTable id="TraceBoMTable" var="boMPanelItem" 
 		selectionMode="single" selectionTextDisabled="false"
-		selection="#{traceBoMBoMAssemblyCheckPanel.selectedAssemblyCheckDto}"
+		selection="#{controller.selectedAssemblyCheckDto}"
 		loadingMessage="#{i18n.action_fetch_data}"
-		value="#{traceBoMBoMAssemblyCheckPanel.assemblyCheckDtos}"
+		value="#{controller.assemblyCheckDtos}"
         scrollable="true" styleClass="compareViewPanelScrollable" allowUnsorting="true" 
 		rowKey="#{boMPanelItem.materialId}" resizableColumns="true" resizeMode="expand"
 	>
-		<p:ajax event="rowDblselect" listener="#{traceBoMBoMAssemblyCheckPanel.onBomItemsGridDoubleClick}"/>
+<!-- 
+		<p:ajax event="rowDblselect" listener="#{controller.onBomItemsGridDoubleClick}"/>
+ -->
 
 		<p:column sortBy="#{boMPanelItem.materialNumber}" width="150" 
 			exportValue="#{boMPanelItem.materialNumber}" class="tdnowrap" >
@@ -68,31 +70,31 @@
 
 	</p:dataTable>
 	<p/>
-	<h:outputText styleClass="label-field-mandatory" value="#{i18n.result_total_number_records} #{traceBoMBoMAssemblyCheckPanel.assemblyCheckDtos.size()}"/>
+	<h:outputText styleClass="label-field-mandatory" value="#{i18n.result_total_number_records} #{controller.assemblyCheckDtos.size()}"/>
 
 
 
 <!--Kontextmenü mit Möglichkeit, eine Zelle oder eine Zeile zu kopieren -->
-	<h:inputHidden id="bomcellText" value="#{traceBoMBoMAssemblyCheckPanel.cellText}" />
-	<h:inputHidden id="bomrowCsv" value="#{traceBoMBoMAssemblyCheckPanel.rowCsv}" />
+	<h:inputHidden id="bomcellText" value="#{controller.cellText}" />
+	<h:inputHidden id="bomrowCsv" value="#{controller.rowCsv}" />
 
 	<p:contextMenu for="TraceBoMTable" beforeShow="updateContextData(event, 'form:tabview2', 'bom')" >
 		<p:menuitem value="#{i18n.action_view}" ajax="true" icon="pi pi-file" id="TraceBoMTable_mniView" 
-		rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;MATERIAL_MASTER')}" action="#{traceBoMBoMAssemblyCheckPanel.openViewTraceBoMItemDialog}">
-			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{traceBoMBoMAssemblyCheckPanel.currentPageURL}"/>
+		rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;MATERIAL_MASTER')}" action="#{controller.openViewTraceBoMItemDialog}">
+			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{controller.currentPageURL}"/>
 		</p:menuitem>
 
 		<p:menuitem value="#{i18n.action_materialRevisionBoMPanel_viewmaterial}" ajax="true" icon="pi pi-file" id="TraceBoMTable_viewmaterial" 
-			rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;MATERIAL_MASTER')}" action="#{traceBoMBoMAssemblyCheckPanel.openViewMaterialDialog}">
-			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{traceBoMBoMAssemblyCheckPanel.currentPageURL}"/>
+			rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;MATERIAL_MASTER')}" action="#{controller.openViewMaterialDialog}">
+			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{controller.currentPageURL}"/>
 		</p:menuitem>
 
-		<p:menuitem value="#{i18n.action_refresh}" ajax="false" type="push" icon="pi pi-refresh" id="TraceBoMTable_mniRefresh" actionListener="#{traceBoMBoMAssemblyCheckPanel.refresh}"/>
+		<p:menuitem value="#{i18n.action_refresh}" ajax="false" type="push" icon="pi pi-refresh" id="TraceBoMTable_mniRefresh" actionListener="#{controller.refresh}"/>
 
 		<p:separator/>
 
-		<p:menuitem value="#{i18n.ctxmenu_copy_cell}" actionListener="#{traceBoMBoMAssemblyCheckPanel.copyCellToClipboard}" icon="pi pi-copy" update="@none"/>
-		<p:menuitem value="#{i18n.ctxmenu_copy_row}" actionListener="#{traceBoMBoMAssemblyCheckPanel.copyRowToClipboard}" icon="pi pi-copy" update="@none"/>
+		<p:menuitem value="#{i18n.ctxmenu_copy_cell}" actionListener="#{controller.copyCellToClipboard}" icon="pi pi-copy" update="@none"/>
+		<p:menuitem value="#{i18n.ctxmenu_copy_row}" actionListener="#{controller.copyRowToClipboard}" icon="pi pi-copy" update="@none"/>
 	</p:contextMenu>
 
 </ui:composition>
