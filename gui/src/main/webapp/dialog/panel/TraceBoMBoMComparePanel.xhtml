@@ -291,7 +291,7 @@
 	<h:inputHidden id="bomrowCsv" value="#{traceBoMBoMComparePanel.rowCsv}" />
 
 	<p:contextMenu for="TraceBoMFstTable" beforeShow="updateContextData(event, 'form:tabview2', 'bom')" >
-		<p:menuitem value="#{i18n.action_viewbomitem}" ajax="true" icon="pi pi-file" id="TraceBoMFstTable_mniView" 
+		<p:menuitem value="#{i18n.action_viewtbitem}" ajax="true" icon="pi pi-file" id="TraceBoMFstTable_mniView" 
 		rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;MATERIAL_MASTER')}" action="#{traceBoMBoMComparePanel.openViewBoMItemDialogFst}">
 			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{traceBoMBoMComparePanel.currentPageURL}"/>
 		</p:menuitem>
@@ -310,7 +310,7 @@
 	</p:contextMenu>
 
 	<p:contextMenu for="TraceBoMSndTable" beforeShow="updateContextData(event, 'form:tabview2', 'bom')" >
-		<p:menuitem value="#{i18n.action_viewbomitem}" ajax="true" icon="pi pi-file" id="TraceBoMSndTable_mniView" 
+		<p:menuitem value="#{i18n.action_viewtbitem}" ajax="true" icon="pi pi-file" id="TraceBoMSndTable_mniView" 
 		rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;MATERIAL_MASTER')}" action="#{traceBoMBoMComparePanel.openViewBoMItemDialogSnd}">
 			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{traceBoMBoMComparePanel.currentPageURL}"/>
 		</p:menuitem>

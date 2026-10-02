@@ -35,4 +35,9 @@ public class TraceBoMAssemblyCheckOnlyRBPanel extends TraceBoMAssemblyCheckPanel
         return true;
     }
 
+    @Override
+    public String defaultExcelExportFileName() {
+        return "OnlyInRevisionBoMList";
+    }
+
 }

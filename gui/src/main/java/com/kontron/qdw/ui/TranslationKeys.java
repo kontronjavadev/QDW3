@@ -19,7 +19,6 @@ public interface TranslationKeys {
     String ACTION_SEARCH_INPUT = "action_search_input";
     String ACTION_VIEW = "action_view";
     String ACTION_VIEWARRIVAL = "action_viewarrival";
-    String ACTION_VIEWBOMITEM = "action_viewbomitem";
     String ACTION_VIEWMATERIAL = "action_viewmaterial";
     String ACTION_VIEWSERIALOBJECT = "action_viewserialobject";
     String ACTION_VIEWSHIPMENT = "action_viewshipment";

@@ -35,4 +35,9 @@ public class TraceBoMAssemblyCheckDiffQtyPanel extends TraceBoMAssemblyCheckPane
         return true;
     }
 
+    @Override
+    public String defaultExcelExportFileName() {
+        return "DifferentQuantityBoMList";
+    }
+
 }

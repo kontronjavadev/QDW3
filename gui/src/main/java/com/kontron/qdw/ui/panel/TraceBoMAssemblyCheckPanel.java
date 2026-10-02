@@ -58,6 +58,8 @@ public abstract class TraceBoMAssemblyCheckPanel extends CopyClipboard implement
 
     public abstract boolean isRBVisible();
 
+    public abstract String defaultExcelExportFileName();
+
 
     public void onBomItemsGridDoubleClick() {
         logger.debug("Handle double-click event");
@@ -74,7 +76,7 @@ public abstract class TraceBoMAssemblyCheckPanel extends CopyClipboard implement
         return "";
     }
 
-    public String openViewBoMItemDialog() {
+    public String openViewRevisionBoMItemDialog() {
         if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY)) {
             return ViewBoMItemDialog.PAGE_INIT_URL + selectedAssemblyCheckDto.getRevBomItemId();
         }

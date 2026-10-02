@@ -11,13 +11,13 @@
 		</p:submenu>
 		<p:submenu icon="pi pi-print" label="#{i18n.mnu_export}">
 			<p:menuitem value="#{i18n.action_export_xls}" ajax="false" icon="pi pi-file-excel">
-				<p:dataExporter type="xlsxstream" target="TraceBoMTable" fileName="OnlyInTraceBoMList"/>
+				<p:dataExporter type="xlsxstream" target="BoMTable" fileName="#{controller.defaultExcelExportFileName()}"/>
 			</p:menuitem>
 		</p:submenu>
 	</p:menubar>
 
 
-	<p:dataTable id="TraceBoMTable" var="boMPanelItem" 
+	<p:dataTable id="BoMTable" var="boMPanelItem" 
 		selectionMode="single" selectionTextDisabled="false"
 		selection="#{controller.selectedAssemblyCheckDto}"
 		loadingMessage="#{i18n.action_fetch_data}"
@@ -35,13 +35,6 @@
 				<h:outputText value="#{i18n.col_tracebomassemblypanel_materialnumber}"/>
 			</f:facet>
 			<h:outputText value="#{boMPanelItem.materialNumber}" styleClass="pf-tooltip-target" />
-		</p:column>
-
-		<p:column sortBy="#{boMPanelItem.traceBoMQuantity}" width="80" >
-			<f:facet name="header">
-				<h:outputText value="#{i18n.lbl_attr_tracebomitem_quantity}"/>
-			</f:facet>
-			<h:outputText value="#{boMPanelItem.traceBoMQuantity}" styleClass="pf-tooltip-target" />
 		</p:column>
 
 		<p:column sortBy="#{boMPanelItem.materialShortText}" width="250" 
@@ -68,6 +61,22 @@
 			<h:outputText value="#{boMPanelItem.materialType}" styleClass="pf-tooltip-target" />
 		</p:column>
 
+		<p:column sortBy="#{boMPanelItem.traceBoMQuantity}" width="80" 
+			rendered="#{controller.TBVisible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_tracebomassemblypanel_tbitem_quantity}"/>
+			</f:facet>
+			<h:outputText value="#{boMPanelItem.traceBoMQuantity}" styleClass="pf-tooltip-target" />
+		</p:column>
+
+		<p:column sortBy="#{boMPanelItem.revBomQuantity}" width="80" 
+			rendered="#{controller.RBVisible}" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_tracebomassemblypanel_rbitem_quantity}"/>
+			</f:facet>
+			<h:outputText value="#{boMPanelItem.revBomQuantity}" styleClass="pf-tooltip-target" />
+		</p:column>
+
 	</p:dataTable>
 	<p/>
 	<h:outputText styleClass="label-field-mandatory" value="#{i18n.result_total_number_records} #{controller.assemblyCheckDtos.size()}"/>
@@ -78,18 +87,23 @@
 	<h:inputHidden id="cellText" value="#{controller.cellText}" />
 	<h:inputHidden id="rowCsv" value="#{controller.rowCsv}" />
 
-	<p:contextMenu for="TraceBoMTable" beforeShow="updateContextData(event, 'form:tabview2:#{copyVarPrefix}')" >
-		<p:menuitem value="#{i18n.action_view}" ajax="true" icon="pi pi-file" id="TraceBoMTable_mniView" 
-		rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;MATERIAL_MASTER')}" action="#{controller.openViewTraceBoMItemDialog}">
+	<p:contextMenu for="BoMTable" beforeShow="updateContextData(event, 'form:tabview2:#{copyVarPrefix}')" >
+		<p:menuitem value="#{i18n.action_viewtbitem}" ajax="true" icon="pi pi-file" id="BoMTable_mniTBIView" 
+			rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY') and controller.TBVisible}" action="#{controller.openViewTraceBoMItemDialog}">
 			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{controller.currentPageURL}"/>
 		</p:menuitem>
 
-		<p:menuitem value="#{i18n.action_materialRevisionBoMPanel_viewmaterial}" ajax="true" icon="pi pi-file" id="TraceBoMTable_viewmaterial" 
-			rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;MATERIAL_MASTER')}" action="#{controller.openViewMaterialDialog}">
+		<p:menuitem value="#{i18n.action_viewrbitem}" ajax="true" icon="pi pi-file" id="BoMTable_mniRBIView" 
+			rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY') and controller.RBVisible}" action="#{controller.openViewRevisionBoMItemDialog}">
 			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{controller.currentPageURL}"/>
 		</p:menuitem>
 
-		<p:menuitem value="#{i18n.action_refresh}" ajax="false" type="push" icon="pi pi-refresh" id="TraceBoMTable_mniRefresh" actionListener="#{controller.refresh}"/>
+		<p:menuitem value="#{i18n.action_viewmaterial}" ajax="true" icon="pi pi-file" id="BoMTable_viewmaterial" 
+			rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY')}" action="#{controller.openViewMaterialDialog}">
+			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{controller.currentPageURL}"/>
+		</p:menuitem>
+
+		<p:menuitem value="#{i18n.action_refresh}" ajax="false" type="push" icon="pi pi-refresh" id="BoMTable_mniRefresh" actionListener="#{controller.refresh}"/>
 
 		<p:separator/>
 

@@ -174,7 +174,7 @@ public class SerialObjectBoundaryService {
             // traceBoMEntry verwenden, andere qty nachtragen und in Liste eintragen
             traceBoMEntry.setRevBomQuantity(revBoMQty);
             traceBoMEntry.setRevBomItemId(revBoMEntry.getRevBomItemId());
-            diffQtys.add(revBoMEntry);
+            diffQtys.add(traceBoMEntry);
         }
 
 
