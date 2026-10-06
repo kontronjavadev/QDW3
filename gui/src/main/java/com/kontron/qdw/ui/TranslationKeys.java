@@ -507,6 +507,7 @@ public interface TranslationKeys {
     String CTXMENU_COPY_ROW = "ctxmenu_copy_row";
     String DIALOG_COPY_QUESTION = "dialog_copy_question";
     String DIALOG_COPY_TITLE = "dialog_copy_title";
+    String DIALOG_DELETE_N_QUESTION = "dialog_delete_n_question";
     String DIALOG_DELETE_QUESTION = "dialog_delete_question";
     String DIALOG_DELETE_TITLE = "dialog_delete_title";
     String DIALOG_ILLEGAL_REFERENCE = "dialog_illegal_reference";

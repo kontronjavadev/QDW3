@@ -1,5 +1,6 @@
 package com.kontron.qdw.ui.view;
 
+import org.primefaces.component.datatable.DataTable;
 import org.primefaces.model.DualListModel;
 import net.sourceforge.jbizmo.commons.webclient.primefaces.search.*;
 import static com.kontron.qdw.ui.TranslationKeys.*;
@@ -18,10 +19,15 @@ import java.lang.invoke.*;
 import com.kontron.qdw.ui.dialog.*;
 import com.kontron.qdw.ui.view.util.OnCompleteHelper;
 import com.kontron.qdw.ui.view.util.SuperView;
+import com.kontron.util.text.StringUtil;
 
 import net.sourceforge.jbizmo.commons.webclient.primefaces.util.*;
 import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
+
 import java.util.*;
+import java.util.stream.Collectors;
+
 import jakarta.faces.view.*;
 import com.kontron.qdw.ui.*;
 import com.kontron.qdw.service.*;
@@ -38,8 +44,6 @@ public class ServiceMessageStandardView extends SuperView implements Serializabl
     private static final long serialVersionUID = 1L;
     @Generated
     private List<ServiceMessageStandardSearchDTO> serviceMessagesList = new ArrayList<>();
-    @Generated
-    private ServiceMessageStandardSearchDTO selectedObject;
     @Generated
     private final UserSession userSession;
     @Generated
@@ -71,6 +75,9 @@ public class ServiceMessageStandardView extends SuperView implements Serializabl
     private final transient MaterialTypeBoundaryService matTypeService;
     private final transient RMATypeBoundaryService rMATypeService;
     private final transient RepairTaskBoundaryService repairTaskService;
+
+    private List<ServiceMessageStandardSearchDTO> selectedObjects = new ArrayList<>();
+
 
     @Generated
     public static final String VIEW_ID = "com.kontron.qdw.ui.view.ServiceMessageStandardView";
@@ -382,10 +389,108 @@ public class ServiceMessageStandardView extends SuperView implements Serializabl
     }
 
     /**
+     * Create copy of selected element
+     * @return the navigation target
+     */
+    @Customized
+    public String copy() {
+        try {
+            logger.debug("Create a copy of the selected object with id '{}'", selectedObjects.getFirst().getId());
+
+            serviceMessageService.copy(selectedObjects.getFirst().getId(), userSession.getPrincipal().getId());
+        }
+        catch (final Exception e) {
+            logger.error("Error while creating a copy of the selected object!", e);
+
+            MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_ERROR, OPERATION_COPY_FAIL, e);
+            return "";
+        }
+
+        fetchServiceMessages();
+        return "";
+    }
+
+    /**
+     * Delete selected elements
+     */
+    @Customized
+    public void deleteServiceMessage() {
+        try {
+            if (logger.isDebugEnabled()) {
+                logger.debug("Delete {} selected objects with id '{}'", selectedObjects.size(),
+                        StringUtil.collectionToString(selectedObjects, ", ", ""));
+            }
+
+            selectedObjects.stream()
+                    .map(ServiceMessageStandardSearchDTO::getId)
+                    .forEach(serviceMessageService::deleteServiceMessage);
+        }
+        catch (final Exception e) {
+            logger.error("Error while deleting selected objects!", e);
+
+            MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_ERROR, OPERATION_DELETE_FAIL, e);
+        }
+
+        fetchServiceMessages();
+    }
+
+    public String getDeleteQuestion() {
+        if (selectedObjects.size() == 1) {
+            return bundle.getString(DIALOG_DELETE_QUESTION);
+        }
+        return new MessageFormat(bundle.getString(DIALOG_DELETE_N_QUESTION)).format(new Object[] { selectedObjects.size() });
+    }
+
+    /**
+     * @return the selected items
+     */
+    public List<ServiceMessageStandardSearchDTO> getSelectedObjects() {
+        return selectedObjects;
+    }
+
+    /**
+     * @param selectedObjects
+     */
+    public void setSelectedObjects(List<ServiceMessageStandardSearchDTO> selectedObjects) {
+        this.selectedObjects = selectedObjects;
+    }
+
+    /**
      * Handle single click event: set selection to reselect after switching to another view and back to this view.
      */
     public void onClick() {
-        onClickId(serviceMessagesList, ServiceMessageStandardSearchDTO::getId, this::setSelectedObject);
+        // onClickId(serviceMessagesList, ServiceMessageStandardSearchDTO::getId, this::setSelectedObject);
+        DataTable d = (DataTable) FacesContext.getCurrentInstance().getViewRoot().findComponent("form:panData");
+        if (d == null) {
+            return;
+        }
+        try {
+            String[] split = d.getSelectedRowKeysAsString().split(",");
+            Set<Long> selecedRowKeysAsLong = Arrays.stream(split)
+                    .map(Long::parseLong)
+                    .collect(Collectors.toSet());
+            selectedObjects.clear();
+            selectedObjects.addAll(serviceMessagesList.stream()
+                    .filter(dto -> selecedRowKeysAsLong.contains(dto.getId()))
+                    .collect(Collectors.toList()));
+        }
+        catch (NumberFormatException nfe) {
+        }
+    }
+
+    /**
+     * Open dialog
+     * @return the navigation target of the last selected
+     */
+    @Customized
+    public String openViewServiceMessageDialog() {
+        var url = "";
+
+        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY)) {
+            url = ViewServiceMessageDialog.PAGE_INIT_URL + selectedObjects.getLast().getId();
+        }
+
+        return url;
     }
 
 
@@ -460,22 +565,6 @@ public class ServiceMessageStandardView extends SuperView implements Serializabl
     }
 
     /**
-     * @return the selected item
-     */
-    @Generated
-    public ServiceMessageStandardSearchDTO getSelectedObject() {
-        return selectedObject;
-    }
-
-    /**
-     * @param selectedObject
-     */
-    @Generated
-    public void setSelectedObject(ServiceMessageStandardSearchDTO selectedObject) {
-        this.selectedObject = selectedObject;
-    }
-
-    /**
      * Event that will be fired if user performs a double-click on a grid row
      */
     @Generated
@@ -483,62 +572,6 @@ public class ServiceMessageStandardView extends SuperView implements Serializabl
         logger.debug("Handle double-click event");
 
         userSession.redirectTo(getCurrentPageURL(), openViewServiceMessageDialog());
-    }
-
-    /**
-     * Delete selected element
-     */
-    @Generated
-    public void deleteServiceMessage() {
-        try {
-            logger.debug("Delete selected object with id '{}'", selectedObject.getId());
-
-            serviceMessageService.deleteServiceMessage(selectedObject.getId());
-        }
-        catch (final Exception e) {
-            logger.error("Error while deleting selected object!", e);
-
-            MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_ERROR, OPERATION_DELETE_FAIL, e);
-        }
-
-        fetchServiceMessages();
-    }
-
-    /**
-     * Create copy of selected element
-     * @return the navigation target
-     */
-    @Generated
-    public String copy() {
-        try {
-            logger.debug("Create a copy of the selected object with id '{}'", selectedObject.getId());
-
-            serviceMessageService.copy(selectedObject.getId(), userSession.getPrincipal().getId());
-        }
-        catch (final Exception e) {
-            logger.error("Error while creating a copy of the selected object!", e);
-
-            MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_ERROR, OPERATION_COPY_FAIL, e);
-            return "";
-        }
-
-        fetchServiceMessages();
-        return "";
-    }
-
-    /**
-     * Open dialog
-     * @return the navigation target
-     */
-    @Generated
-    public String openViewServiceMessageDialog() {
-        var url = "";
-
-        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY)) {
-            url = ViewServiceMessageDialog.PAGE_INIT_URL + selectedObject.getId();
-        }
-
-        return url;
     }
 
     /**

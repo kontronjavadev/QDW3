@@ -779,8 +779,8 @@
 
 	<p:dataTable id="panData" var="serviceMessageStandardViewItem"  rows="#{serviceMessageStandardView.numberRows}"
 		selectionTextDisabled="false" allowUnsorting="true" resizeMode="expand" multiViewState="true" 
-		selectionMode="single"
-		selection="#{serviceMessageStandardView.selectedObject}"
+		selectionMode="multiple"
+		selection="#{serviceMessageStandardView.selectedObjects}"
 		loadingMessage="#{i18n.action_fetch_data}"
 		value="#{serviceMessageStandardView.serviceMessagesList}" scrollable="true" styleClass="viewScrollable"
 		paginatorPosition="top" paginatorAlwaysVisible="#{serviceMessageStandardView.paginatorAlwaysVisible}" paginator="true" resizableColumns="true"
@@ -788,7 +788,9 @@
 		paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 		rowsPerPageTemplate="50,150,400,1000">
 		<p:ajax event="rowDblselect" listener="#{serviceMessageStandardView.onDoubleClick}"/>
-		<p:ajax event="rowSelect" listener="#{serviceMessageStandardView.onClick}"/>
+		<p:ajax event="rowSelect" listener="#{serviceMessageStandardView.onClick}" update="@form:panData_menu,@form:deleteConfirmDialog"/>
+		<p:ajax event="rowUnselect" listener="#{serviceMessageStandardView.onClick}" update="@form:panData_menu,@form:deleteConfirmDialog"/>
+		<p:ajax event="contextMenu" listener="#{serviceMessageStandardView.onClick}" update="@form:panData_menu,@form:deleteConfirmDialog"/>
 
 		<p:column sortBy="#{serviceMessageStandardViewItem.id}" width="120" 
 			rendered="#{serviceMessageStandardView.searchObject.searchFields[0].visible}" displayPriority="#{serviceMessageStandardView.searchObject.searchFields[0].colOrder}" >
@@ -1243,12 +1245,15 @@
 	<h:inputHidden id="cellText" value="#{serviceMessageStandardView.cellText}" />
 	<h:inputHidden id="rowCsv" value="#{serviceMessageStandardView.rowCsv}" />
 
-	<p:contextMenu for="panData" beforeShow="updateContextData(event)" >
-		<p:menuitem value="#{i18n.action_delete}" ajax="true" icon="pi pi-trash" id="panData_mniDelete" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR')}" onclick="PF('deleteConfirm').show()"/>
+	<p:contextMenu for="panData" id="panData_menu" beforeShow="updateContextData(event)" >
+		<p:menuitem value="#{i18n.action_delete_n}" ajax="true" icon="pi pi-trash" id="panData_mniDelete" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR')}" onclick="PF('deleteConfirm').show()"/>
+
 		<p:menuitem value="#{i18n.action_view}" ajax="true" icon="pi pi-file" id="panData_mniView" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY')}" action="#{serviceMessageStandardView.openViewServiceMessageDialog}">
 			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{serviceMessageStandardView.currentPageURL}"/>
 		</p:menuitem>
-		<p:menuitem value="#{i18n.action_copy}" ajax="true" icon="pi pi-copy" id="panData_mniCopy" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR')}" onclick="PF('copyConfirm').show()"/>
+
+		<p:menuitem value="#{i18n.action_copy}" ajax="true" icon="pi pi-copy" id="panData_mniCopy" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR')}" disabled="#{serviceMessageStandardView.selectedObjects.size() ne 1}" onclick="PF('copyConfirm').show()"/>
+
 		<p:menuitem value="#{i18n.action_refresh}" ajax="false" type="push" icon="pi pi-refresh" id="panData_mniRefresh" actionListener="#{serviceMessageStandardView.fetchServiceMessages}"/>
 
 		<p:separator/>
@@ -1257,8 +1262,9 @@
 		<p:menuitem value="#{i18n.ctxmenu_copy_row}" actionListener="#{serviceMessageStandardView.copyRowToClipboard}" icon="pi pi-copy" update="@none"/>
 	</p:contextMenu>
 
-	<p:confirmDialog modal="true" closeOnEscape="true" message="#{i18n.dialog_delete_question}" header="#{i18n.dialog_delete_title}" severity="warn" widgetVar="deleteConfirm">
-		<p:commandButton value="#{i18n.command_yes}" oncomplete="PF('deleteConfirm').hide()" actionListener="#{serviceMessageStandardView.deleteServiceMessage}" id="panData_cmdYesDelete" ajax="false"/>
+
+	<p:confirmDialog modal="true" closeOnEscape="true" message="#{serviceMessageStandardView.getDeleteQuestion()}" header="#{i18n.dialog_delete_title}" severity="warn" widgetVar="deleteConfirm" id="deleteConfirmDialog" >
+		<p:commandButton value="#{i18n.command_yes}" oncomplete="PF('deleteConfirm').hide()" actionListener="#{serviceMessageStandardView.deleteServiceMessage}" id="panData_cmdYesDelete" ajax="true" update="growl,panData" />
 		<p:commandButton value="#{i18n.command_no}" onclick="PF('deleteConfirm').hide()" type="button"/>
 	</p:confirmDialog>
 
