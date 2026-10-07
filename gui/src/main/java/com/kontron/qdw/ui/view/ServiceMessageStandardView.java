@@ -77,6 +77,7 @@ public class ServiceMessageStandardView extends SuperView implements Serializabl
     private final transient RepairTaskBoundaryService repairTaskService;
 
     private List<ServiceMessageStandardSearchDTO> selectedObjects = new ArrayList<>();
+    private String errorId = "";
 
 
     @Generated
@@ -454,6 +455,35 @@ public class ServiceMessageStandardView extends SuperView implements Serializabl
     public void setSelectedObjects(List<ServiceMessageStandardSearchDTO> selectedObjects) {
         this.selectedObjects = selectedObjects;
     }
+
+    public String getErrorId() {
+        return errorId;
+    }
+
+    public void setErrorId(String errorId) {
+        this.errorId = errorId;
+    }
+
+    public void clearErrorId() {
+        errorId = "";
+    }
+
+    public void executeSettingErrorId() {
+        if (errorId.isEmpty() || selectedObjects.isEmpty()) {
+            return;
+        }
+        Set<Long> srvMsgIds = selectedObjects.stream()
+                .map(ServiceMessageStandardSearchDTO::getId) // transaction ids
+                .collect(Collectors.toSet());
+
+        logger.atInfo().setMessage("Set error id '{}' for selected service order transaction ids {}")
+                .addArgument(errorId)
+                .addArgument(() -> srvMsgIds.stream().map(Object::toString).collect(Collectors.joining(", ", "{", "}")))
+                .log();
+        // serviceMessageService.batchSetErrorId(srvMsgIds, errorId);
+    }
+
+
 
     /**
      * Handle single click event: set selection to reselect after switching to another view and back to this view.

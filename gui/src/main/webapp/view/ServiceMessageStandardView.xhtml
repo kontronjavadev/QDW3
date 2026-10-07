@@ -1234,7 +1234,7 @@
 	</p:dataTable>
 	<p/>
 
-	<h:outputText styleClass="label-field-mandatory" value="#{i18n.result_total_number_records} #{serviceMessageStandardView.serviceMessagesList.size()}"/>
+	<h:outputText id="listSize" styleClass="label-field-mandatory" value="#{i18n.result_total_number_records} #{serviceMessageStandardView.serviceMessagesList.size()}"/>
 	<h:outputText styleClass="label-field-mandatory" rendered="#{serviceMessageStandardView.searchObject.count}" value="&#160;#{i18n.search_input_count_of}&#160;"/>
 	<h:outputText styleClass="label-field-mandatory" rendered="#{serviceMessageStandardView.searchObject.count}" value="#{serviceMessageStandardView.countResult}"/>
 
@@ -1254,6 +1254,8 @@
 
 		<p:menuitem value="#{i18n.action_copy}" ajax="true" icon="pi pi-copy" id="panData_mniCopy" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR')}" disabled="#{serviceMessageStandardView.selectedObjects.size() ne 1}" onclick="PF('copyConfirm').show()"/>
 
+		<p:menuitem value="#{i18n.action_srvmsg_seterrorid}" ajax="true" icon="pi pi-flag" id="panData_mniSetError" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR')}" disabled="#{serviceMessageStandardView.selectedObjects.size() eq 0}" onclick="PF('dlgSetErrorId').show()"/>
+
 		<p:menuitem value="#{i18n.action_refresh}" ajax="false" type="push" icon="pi pi-refresh" id="panData_mniRefresh" actionListener="#{serviceMessageStandardView.fetchServiceMessages}"/>
 
 		<p:separator/>
@@ -1261,6 +1263,38 @@
 		<p:menuitem value="#{i18n.ctxmenu_copy_cell}" actionListener="#{serviceMessageStandardView.copyCellToClipboard}" icon="pi pi-copy" update="@none"/>
 		<p:menuitem value="#{i18n.ctxmenu_copy_row}" actionListener="#{serviceMessageStandardView.copyRowToClipboard}" icon="pi pi-copy" update="@none"/>
 	</p:contextMenu>
+
+
+
+<!-- Set-Error-Id-Dialog -->
+	<p:dialog widgetVar="dlgSetErrorId" id="dlgSetErrorId" modal="true" showEffect="fade" hideEffect="fade" focus="listSuppliersFilter" closeOnEscape="true">
+		<f:facet name="header">
+			<i class="pi pi-flag"/>
+			<h:outputText value="&#160;#{i18n.srvmsg_seterrorid_title}"/>
+		</f:facet>
+
+		<h:panelGrid columns="3">
+			<h:outputLabel value="#{i18n.srvmsg_seterrorid_errorid}:" for="txtErrorId" styleClass="label-field-optional" />
+			<p:inputText id="txtErrorId" value="#{serviceMessageStandardView.errorId}" maxlength="5" />
+			<p:tooltip for="txtErrorId" value="#{i18n.srvmsg_seterrorid_errorid_tooltip}"/>
+		</h:panelGrid>
+		<p/>
+
+		<f:facet name="footer">
+			<p:commandButton id="cmdSetErrorId" icon="pi pi-flag" value="#{i18n.action_srvmsg_seterrorid_short}" ajax="true" 
+				actionListener="#{serviceMessageStandardView.executeSettingErrorId()}"
+				update="panData,listSize" oncomplete="PF('dlgSetErrorId').hide()"/>
+
+			<p:commandButton id="cmdClearErrorId" icon="pi pi-eraser" value="#{i18n.command_clear}" ajax="true" 
+				action="#{serviceMessageStandardView.clearErrorId}" 
+				update="txtErrorId" />
+
+			<p:commandButton id="cmdCancelErrorId" icon="pi pi-times" value="#{i18n.command_cancel}" onclick="PF('dlgSetErrorId').hide()" />
+
+			<p:defaultCommand target="cmdSetErrorId" scope="dlgSetErrorId"/>
+		</f:facet>
+	</p:dialog>
+
 
 
 	<p:confirmDialog modal="true" closeOnEscape="true" message="#{serviceMessageStandardView.getDeleteQuestion()}" header="#{i18n.dialog_delete_title}" severity="warn" widgetVar="deleteConfirm" id="deleteConfirmDialog" >
