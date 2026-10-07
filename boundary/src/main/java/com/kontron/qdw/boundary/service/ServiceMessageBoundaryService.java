@@ -13,6 +13,7 @@ import com.kontron.qdw.dto.serial.*;
 import com.kontron.qdw.repository.service.*;
 import com.kontron.qdw.dto.material.*;
 import jakarta.inject.*;
+import jakarta.persistence.Query;
 import jakarta.ejb.*;
 import jakarta.annotation.security.*;
 import net.sourceforge.jbizmo.commons.search.dto.*;
@@ -40,6 +41,26 @@ public class ServiceMessageBoundaryService {
     public ServiceMessageBoundaryService(ServiceMessageRepository repository) {
         this.repository = repository;
     }
+
+
+
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    @SuppressWarnings("resource")
+    public void batchSetErrorId(Collection<Long> transactionIds, String errorId) {
+        Query q = repository.getEntityManager().createQuery("update ServiceMessage a "
+                + "set a.errorId = :errorId, "
+                + "a.rebuildFlag = :rebuildFlag "
+                + "where a.id in :transactionIds");
+        q.setParameter("errorId", errorId);
+        q.setParameter("rebuildFlag", ServiceMessage.REBUILD_FOR_UPDATED_ENTRY);
+        q.setParameter("transactionIds", transactionIds);
+
+        q.executeUpdate();
+        repository.getEntityManager().flush();
+    }
+
+
 
     /**
      * Search for service message objects

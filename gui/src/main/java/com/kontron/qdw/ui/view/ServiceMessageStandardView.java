@@ -1,5 +1,6 @@
 package com.kontron.qdw.ui.view;
 
+import org.apache.commons.lang3.StringUtils;
 import org.primefaces.component.datatable.DataTable;
 import org.primefaces.model.DualListModel;
 import net.sourceforge.jbizmo.commons.webclient.primefaces.search.*;
@@ -77,7 +78,7 @@ public class ServiceMessageStandardView extends SuperView implements Serializabl
     private final transient RepairTaskBoundaryService repairTaskService;
 
     private List<ServiceMessageStandardSearchDTO> selectedObjects = new ArrayList<>();
-    private String errorId = "";
+    private String errorId;
 
 
     @Generated
@@ -465,22 +466,30 @@ public class ServiceMessageStandardView extends SuperView implements Serializabl
     }
 
     public void clearErrorId() {
-        errorId = "";
+        errorId = null;
     }
 
     public void executeSettingErrorId() {
-        if (errorId.isEmpty() || selectedObjects.isEmpty()) {
+        if (selectedObjects.isEmpty()) {
             return;
         }
-        Set<Long> srvMsgIds = selectedObjects.stream()
-                .map(ServiceMessageStandardSearchDTO::getId) // transaction ids
-                .collect(Collectors.toSet());
+        // Leerstring in null wandeln und Speicherung durchführen, um auf diesem Weg eine gesetzte error id wieder zu löschen
+        errorId = StringUtils.trimToNull(errorId);
+
+        Set<Long> srvMsgIds = new TreeSet<>();
+        // error id in bereits gelesenen Objekten setzen, da per ajax und somit nicht erneut aus der DB gelesen wird
+        selectedObjects.stream()
+                .forEach(srvMsg -> {
+                    srvMsg.setErrorId(errorId);
+                    srvMsgIds.add(srvMsg.getId()); // transaction id
+                });
 
         logger.atInfo().setMessage("Set error id '{}' for selected service order transaction ids {}")
                 .addArgument(errorId)
                 .addArgument(() -> srvMsgIds.stream().map(Object::toString).collect(Collectors.joining(", ", "{", "}")))
                 .log();
-        // serviceMessageService.batchSetErrorId(srvMsgIds, errorId);
+
+        serviceMessageService.batchSetErrorId(srvMsgIds, errorId);
     }
 
 
