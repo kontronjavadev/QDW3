@@ -8,6 +8,7 @@ public interface TranslationKeys {
     String ACTION_COPY = "action_copy";
     String ACTION_CREATE = "action_create";
     String ACTION_DELETE = "action_delete";
+    String ACTION_DELETE_N = "action_delete_n";
     String ACTION_DOWNLOAD = "action_download";
     String ACTION_EDIT = "action_edit";
     String ACTION_EXPORT = "action_export";
@@ -17,11 +18,15 @@ public interface TranslationKeys {
     String ACTION_IMPORT = "action_import";
     String ACTION_REFRESH = "action_refresh";
     String ACTION_SEARCH_INPUT = "action_search_input";
+    String ACTION_SRVMSG_SETERRORID = "action_srvmsg_seterrorid";
+    String ACTION_SRVMSG_SETERRORID_SHORT = "action_srvmsg_seterrorid_short";
     String ACTION_VIEW = "action_view";
     String ACTION_VIEWARRIVAL = "action_viewarrival";
     String ACTION_VIEWMATERIAL = "action_viewmaterial";
+    String ACTION_VIEWRBITEM = "action_viewrbitem";
     String ACTION_VIEWSERIALOBJECT = "action_viewserialobject";
     String ACTION_VIEWSHIPMENT = "action_viewshipment";
+    String ACTION_VIEWTBITEM = "action_viewtbitem";
     String ACTION_VIEWTRACEBOM = "action_viewtracebom";
     String APPLICATION_TAB_TITLE = "application_tab_title";
     String APPLICATION_TITLE = "application_title";
@@ -460,6 +465,10 @@ public interface TranslationKeys {
     String COL_SHIPMENTVIEW_SERIALOBJECTSERIALNUMBER = "col_shipmentview_serialobjectserialnumber";
     String COL_SHIPMENTVIEW_SHIPMENTDATE = "col_shipmentview_shipmentdate";
     String COL_SUPPLIERVIEW_COUNTRYNAME = "col_supplierview_countryname";
+    String COL_TRACEBOMASSEMBLYPANEL_MATERIALNUMBER = "col_tracebomassemblypanel_materialnumber";
+    String COL_TRACEBOMASSEMBLYPANEL_MATERIALTYPE = "col_tracebomassemblypanel_materialtype";
+    String COL_TRACEBOMASSEMBLYPANEL_RBITEM_QUANTITY = "col_tracebomassemblypanel_rbitem_quantity";
+    String COL_TRACEBOMASSEMBLYPANEL_TBITEM_QUANTITY = "col_tracebomassemblypanel_tbitem_quantity";
     String COL_TRACEBOMILLEGALTRACEBOMITEMSPANEL_MATERIALNUMBER = "col_tracebomillegaltracebomitemspanel_materialnumber";
     String COL_TRACEBOMTRACEBOMITEMSPANEL_MANUFACTURERNAME = "col_tracebomtracebomitemspanel_manufacturername";
     String COL_TRACEBOMTRACEBOMITEMSPANEL_MATERIALMATERIALNUMBER = "col_tracebomtracebomitemspanel_materialmaterialnumber";
@@ -1074,6 +1083,9 @@ public interface TranslationKeys {
     String OPERATION_UPLOAD_FAIL = "operation_upload_fail";
     String OPERATION_UPLOAD_OK = "operation_upload_ok";
     String PANEL_ADMIN_TITLE = "panel_admin_title";
+    String PANEL_ASSEMBLYCHECKDIALOG_PANDIFFQTY_TITLE = "panel_assemblycheckdialog_pandiffqty_title";
+    String PANEL_ASSEMBLYCHECKDIALOG_PANONLYINREVBOM_TITLE = "panel_assemblycheckdialog_panonlyinrevbom_title";
+    String PANEL_ASSEMBLYCHECKDIALOG_PANONLYINTRACEBOM_TITLE = "panel_assemblycheckdialog_panonlyintracebom_title";
     String PANEL_ASSEMBLYCHECKDIALOG_PANSERVICEMESSAGES_TITLE = "panel_assemblycheckdialog_panservicemessages_title";
     String PANEL_BASIC_TITLE = "panel_basic_title";
     String PANEL_COMPARETRACEBOMDIALOG_PANBOMITEMS_TITLE = "panel_comparetracebomdialog_panbomitems_title";
@@ -1087,9 +1099,6 @@ public interface TranslationKeys {
     String PANEL_VIEWMATERIALDIALOG_PANREVISIONS_TITLE = "panel_viewmaterialdialog_panrevisions_title";
     String PANEL_VIEWMATERIALREVISIONDIALOG_PANBOMITEMS_TITLE = "panel_viewmaterialrevisiondialog_panbomitems_title";
     String PANEL_VIEWROLEDIALOG_USERS_TITLE = "panel_viewroledialog_users_title";
-    String PANEL_VIEWSERIALOBJECTASSEMBLYCHECKDIALOG_PANDIFFQTY_TITLE = "panel_viewserialobjectassemblycheckdialog_pandiffqty_title";
-    String PANEL_VIEWSERIALOBJECTASSEMBLYCHECKDIALOG_PANNOTINSAPBOM_TITLE = "panel_viewserialobjectassemblycheckdialog_pannotinsapbom_title";
-    String PANEL_VIEWSERIALOBJECTASSEMBLYCHECKDIALOG_PANNOTINTRACEBOM_TITLE = "panel_viewserialobjectassemblycheckdialog_pannotintracebom_title";
     String PANEL_VIEWSERIALOBJECTDIALOG_PANARRIVALS_TITLE = "panel_viewserialobjectdialog_panarrivals_title";
     String PANEL_VIEWSERIALOBJECTDIALOG_PANASSEMBLYRECORDS_TITLE = "panel_viewserialobjectdialog_panassemblyrecords_title";
     String PANEL_VIEWSERIALOBJECTDIALOG_PANSERIALOBJECTS_TITLE = "panel_viewserialobjectdialog_panserialobjects_title";
@@ -1172,6 +1181,9 @@ public interface TranslationKeys {
     String SERVICEORDERTYPE_INCOMING_INSPECTION = "serviceordertype_incoming_inspection";
     String SERVICEORDERTYPE_PRODUCTION = "serviceordertype_production";
     String SERVICEORDERTYPE_RMA = "serviceordertype_rma";
+    String SRVMSG_SETERRORID_ERRORID = "srvmsg_seterrorid_errorid";
+    String SRVMSG_SETERRORID_ERRORID_TOOLTIP = "srvmsg_seterrorid_errorid_tooltip";
+    String SRVMSG_SETERRORID_TITLE = "srvmsg_seterrorid_title";
     String TRACEBOM_COMPARE_RESULT_ONLYIN = "tracebom_compare_result_onlyin";
     String TRACEBOMIMPORTVIEW_FOLDERFILTER = "tracebomimportview_folderfilter";
     String TRACEBOMIMPORTVIEW_RUNDOWNLOAD = "tracebomimportview_rundownload";

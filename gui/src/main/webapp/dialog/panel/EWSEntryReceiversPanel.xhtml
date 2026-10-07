@@ -24,7 +24,8 @@
 		selectionMode="single"
 		selection="#{eWSEntryReceiversPanel.selItemOfReceivers}"
 		loadingMessage="#{i18n.action_fetch_data}"
-		value="#{eWSEntryReceiversPanel.receiversList}" scrollable="false"
+		value="#{eWSEntryReceiversPanel.receiversList}" 
+		scrollable="false" styleClass="panelScrollable" 
 		paginatorPosition="top" paginatorAlwaysVisible="false" paginator="true" resizableColumns="true"
 		rowKey="#{eWSEntryReceiversPanelItem.id}"
 		paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
@@ -62,11 +63,11 @@
 
 <!--Kontextmenü mit Möglichkeit, eine Zelle oder eine Zeile zu kopieren -->
 
-	<h:inputHidden id="cellText" value="#{eWSEntryReceiversPanel.cellText}" />
-	<h:inputHidden id="rowCsv" value="#{eWSEntryReceiversPanel.rowCsv}" />
+	<h:inputHidden id="ewsreccellText" value="#{eWSEntryReceiversPanel.cellText}" />
+	<h:inputHidden id="ewsrecrowCsv" value="#{eWSEntryReceiversPanel.rowCsv}" />
 
 
-	<p:contextMenu for="gridEWSEntryReceiversPanel" beforeShow="updateContextData(event)" >
+	<p:contextMenu for="gridEWSEntryReceiversPanel" beforeShow="updateContextData(event, 'form:tabview2', 'ewsrec')" >
 		<p:menuitem value="#{i18n.action_refresh}" ajax="false" type="push" icon="pi pi-refresh" id="gridEWSEntryReceiversPanel_mniRefresh" actionListener="#{eWSEntryReceiversPanel.fetchReceivers}"/>
 
 		<p:separator/>

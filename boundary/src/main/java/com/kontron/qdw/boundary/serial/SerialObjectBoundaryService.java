@@ -5,6 +5,7 @@ import com.kontron.qdw.domain.serial.*;
 import net.sourceforge.jbizmo.commons.search.exception.*;
 import static net.sourceforge.jbizmo.commons.jpa.AbstractRepository.DEFAULT_LIST_SIZE;
 import static net.sourceforge.jbizmo.commons.jpa.AbstractRepository.WILDCARD;
+import static net.sourceforge.jbizmo.commons.jpa.AbstractRepository.SMALL_LIST_SIZE;
 import com.kontron.qdw.dto.service.*;
 import java.util.*;
 import java.util.function.Function;
@@ -27,10 +28,11 @@ import net.sourceforge.jbizmo.commons.annotation.Customized;
 import net.sourceforge.jbizmo.commons.search.dto.*;
 import net.sourceforge.jbizmo.commons.repository.*;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
-import static net.sourceforge.jbizmo.commons.jpa.AbstractRepository.SMALL_LIST_SIZE;
 
 @Stateless
 public class SerialObjectBoundaryService {
+    @Generated
+    private final SerialObjectRepository repository;
 
     private static final Collector<AssemblyCheckMaterialDTO, ?, Map<String, AssemblyCheckMaterialDTO>> TBI_PER_MAT_NR_COLLECTOR = Collectors.toMap(
             dto -> dto.getMaterialNumber().toUpperCase(),
@@ -59,8 +61,6 @@ public class SerialObjectBoundaryService {
                 return first;
             });
 
-    @Generated
-    private final SerialObjectRepository repository;
     private final MaterialRevisionRepository matrevRepository;
     private final TraceBoMRepository tbRepository;
 
@@ -88,6 +88,26 @@ public class SerialObjectBoundaryService {
     }
 
 
+
+    @Customized
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public SerialObjectCompareDTO findCompareSerObj(long id) {
+        // Find persistent object
+        final SerialObject serialObject = repository.findById(id, true);
+
+        final var dto = new SerialObjectCompareDTO();
+        dto.setId(serialObject.getId());
+        dto.setSerialNumber(serialObject.getSerialNumber());
+        dto.setMaterialId(serialObject.getMaterial().getId());
+        dto.setMaterialMaterialNumber(serialObject.getMaterial().getMaterialNumber());
+
+        if (serialObject.getTraceBom() != null) {
+            dto.setTraceBomId(serialObject.getTraceBom().getId());
+        }
+
+        return dto;
+    }
 
     /**
      * Find serial object by its ID and calculates assembly differences.
@@ -193,26 +213,6 @@ public class SerialObjectBoundaryService {
         dto.setOnlyInTraceBoMList(onlyInTraceBoM);
         dto.setOnlyInRevBoMList(onlyInRevBoM);
         dto.setDiffQtyList(diffQtys);
-
-        return dto;
-    }
-
-    @Customized
-    @PermitAll
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public SerialObjectCompareDTO findCompareSerObj(long id) {
-        // Find persistent object
-        final SerialObject serialObject = repository.findById(id, true);
-
-        final var dto = new SerialObjectCompareDTO();
-        dto.setId(serialObject.getId());
-        dto.setSerialNumber(serialObject.getSerialNumber());
-        dto.setMaterialId(serialObject.getMaterial().getId());
-        dto.setMaterialMaterialNumber(serialObject.getMaterial().getMaterialNumber());
-
-        if (serialObject.getTraceBom() != null) {
-            dto.setTraceBomId(serialObject.getTraceBom().getId());
-        }
 
         return dto;
     }

@@ -29,7 +29,8 @@
 		selectionMode="single"
 		selection="#{materialRevisionBoMItemsPanel.selItemOfBoMItems}"
 		loadingMessage="#{i18n.action_fetch_data}"
-		value="#{materialRevisionBoMItemsPanel.boMItemsList}" scrollable="false"
+		value="#{materialRevisionBoMItemsPanel.boMItemsList}" 
+		scrollable="false" styleClass="panelScrollable" 
 		paginatorPosition="top" paginatorAlwaysVisible="false" paginator="true" resizableColumns="true"
 		rowKey="#{materialRevisionBoMItemsPanelItem.id}"
 		paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
@@ -131,10 +132,10 @@
 
 <!--Kontextmenü mit Möglichkeit, eine Zelle oder eine Zeile zu kopieren -->
 
-	<h:inputHidden id="cellText" value="#{materialRevisionBoMItemsPanel.cellText}" />
-	<h:inputHidden id="rowCsv" value="#{materialRevisionBoMItemsPanel.rowCsv}" />
+	<h:inputHidden id="mrevbomitcellText" value="#{materialRevisionBoMItemsPanel.cellText}" />
+	<h:inputHidden id="mrevbomitrowCsv" value="#{materialRevisionBoMItemsPanel.rowCsv}" />
 
-	<p:contextMenu for="gridMaterialRevisionBoMItemsPanel" beforeShow="updateContextData(event)" >
+	<p:contextMenu for="gridMaterialRevisionBoMItemsPanel" beforeShow="updateContextData(event, 'form:tabview2', 'mrevbomit')" >
 		<p:menuitem value="#{i18n.action_delete}" ajax="true" icon="pi pi-trash" id="gridMaterialRevisionBoMItemsPanel_mniDelete" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR') and not materialRevisionBoMItemsPanel.readOnly}" onclick="PF('deleteConfirmBoMItems').show()"/>
 		<p:menuitem value="#{i18n.action_edit}" ajax="true" icon="pi pi-pencil" id="gridMaterialRevisionBoMItemsPanel_mniUpdate" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR') and not materialRevisionBoMItemsPanel.readOnly}" action="#{materialRevisionBoMItemsPanel.openEditBoMItemDialog}">
 			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{materialRevisionBoMItemsPanel.currentPageURL}"/>

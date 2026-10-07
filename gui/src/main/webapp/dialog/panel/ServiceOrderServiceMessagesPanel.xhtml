@@ -21,7 +21,8 @@
 		selectionMode="single"
 		selection="#{serviceOrderServiceMessagesPanel.selItemOfServiceMessages}"
 		loadingMessage="#{i18n.action_fetch_data}"
-		value="#{serviceOrderServiceMessagesPanel.serviceMessagesList}" scrollable="false"
+		value="#{serviceOrderServiceMessagesPanel.serviceMessagesList}" 
+		scrollable="false" styleClass="panelScrollable" 
 		paginatorPosition="top" paginatorAlwaysVisible="false" paginator="true" resizableColumns="true"
 		rowKey="#{serviceOrderServiceMessagesPanelItem.id}"
 		paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
@@ -333,10 +334,10 @@
 
 <!--Kontextmenü mit Möglichkeit, eine Zelle oder eine Zeile zu kopieren -->
 
-	<h:inputHidden id="cellText" value="#{serviceOrderServiceMessagesPanel.cellText}" />
-	<h:inputHidden id="rowCsv" value="#{serviceOrderServiceMessagesPanel.rowCsv}" />
+	<h:inputHidden id="sosrvmsgcellText" value="#{serviceOrderServiceMessagesPanel.cellText}" />
+	<h:inputHidden id="sosrvmsgrowCsv" value="#{serviceOrderServiceMessagesPanel.rowCsv}" />
 
-	<p:contextMenu for="gridServiceOrderServiceMessagesPanel" beforeShow="updateContextData(event)" >
+	<p:contextMenu for="gridServiceOrderServiceMessagesPanel" beforeShow="updateContextData(event, 'form:tabview2', 'sosrvmsg')" >
 		<p:menuitem value="#{i18n.action_delete}" ajax="true" icon="pi pi-trash" id="gridServiceOrderServiceMessagesPanel_mniDelete" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR') and not serviceOrderServiceMessagesPanel.readOnly}" onclick="PF('deleteConfirmServiceMessages').show()"/>
 		<p:menuitem value="#{i18n.action_view}" ajax="true" icon="pi pi-file" id="gridServiceOrderServiceMessagesPanel_mniView" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY')}" action="#{serviceOrderServiceMessagesPanel.openViewServiceMessageDialog}">
 			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{serviceOrderServiceMessagesPanel.currentPageURL}"/>

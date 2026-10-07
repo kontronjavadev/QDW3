@@ -24,7 +24,8 @@
 		selectionMode="single"
 		selection="#{materialRevisionsPanel.selItemOfRevisions}"
 		loadingMessage="#{i18n.action_fetch_data}"
-		value="#{materialRevisionsPanel.revisionsList}" scrollable="false"
+		value="#{materialRevisionsPanel.revisionsList}" 
+		scrollable="false" styleClass="panelScrollable" 
 		resizableColumns="true"
 		rowKey="#{materialRevisionsPanelItem.id}" >
 		<p:ajax event="rowDblselect" listener="#{materialRevisionsPanel.onRevisionsGridDoubleClick}"/>
@@ -97,10 +98,10 @@
 
 <!--Kontextmenü mit Möglichkeit, eine Zelle oder eine Zeile zu kopieren -->
 
-	<h:inputHidden id="cellText" value="#{materialRevisionsPanel.cellText}" />
-	<h:inputHidden id="rowCsv" value="#{materialRevisionsPanel.rowCsv}" />
+	<h:inputHidden id="matrevcellText" value="#{materialRevisionsPanel.cellText}" />
+	<h:inputHidden id="matrevrowCsv" value="#{materialRevisionsPanel.rowCsv}" />
 
-	<p:contextMenu for="gridMaterialRevisionsPanel" beforeShow="updateContextData(event)" >
+	<p:contextMenu for="gridMaterialRevisionsPanel" beforeShow="updateContextData(event, 'form:tabview2', 'matrev')" >
 		<p:menuitem value="#{i18n.action_delete}" ajax="true" icon="pi pi-trash" id="gridMaterialRevisionsPanel_mniDelete" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR') and not materialRevisionsPanel.readOnly}" onclick="PF('deleteConfirmRevisions').show()"/>
 		<p:menuitem value="#{i18n.action_edit}" ajax="true" icon="pi pi-pencil" id="gridMaterialRevisionsPanel_mniUpdate" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR') and not materialRevisionsPanel.readOnly}" action="#{materialRevisionsPanel.openEditMaterialRevisionDialog}">
 			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{materialRevisionsPanel.currentPageURL}"/>
