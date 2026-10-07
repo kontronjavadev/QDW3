@@ -33,7 +33,7 @@ public class SvcMsgRebuildMaterializedFullServiceBean extends AbstractSvcMsgRebu
     @Override
     @PermitAll
     public TaskNodeLog initTask() {
-        return new TaskNodeLog("service message rebuild materialized");
+        return new TaskNodeLog("service message rebuild materialized (full)");
     }
 
     /** Perform rebuild */

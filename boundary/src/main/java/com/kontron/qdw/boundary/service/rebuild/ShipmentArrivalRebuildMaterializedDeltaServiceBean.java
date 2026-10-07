@@ -33,7 +33,7 @@ public class ShipmentArrivalRebuildMaterializedDeltaServiceBean extends Abstract
     @Override
     @PermitAll
     public TaskNodeLog initTask() {
-        return new TaskNodeLog("shipment arrival rebuild materialized");
+        return new TaskNodeLog("shipment arrival rebuild materialized (delta)");
     }
 
     /** Perform rebuild */

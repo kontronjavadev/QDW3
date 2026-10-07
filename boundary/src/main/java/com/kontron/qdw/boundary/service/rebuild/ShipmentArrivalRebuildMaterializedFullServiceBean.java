@@ -33,7 +33,7 @@ public class ShipmentArrivalRebuildMaterializedFullServiceBean extends AbstractS
     @Override
     @PermitAll
     public TaskNodeLog initTask() {
-        return new TaskNodeLog("shipment arrival rebuild materialized");
+        return new TaskNodeLog("shipment arrival rebuild materialized (full)");
     }
 
     /** Perform rebuild */

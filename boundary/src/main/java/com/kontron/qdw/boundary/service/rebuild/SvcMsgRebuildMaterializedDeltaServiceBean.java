@@ -37,7 +37,7 @@ public class SvcMsgRebuildMaterializedDeltaServiceBean extends AbstractSvcMsgReb
     @Override
     @PermitAll
     public TaskNodeLog initTask() {
-        return new TaskNodeLog("service message rebuild materialized");
+        return new TaskNodeLog("service message rebuild materialized (delta)");
     }
 
     /** Perform rebuild */

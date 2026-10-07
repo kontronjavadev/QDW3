@@ -39,7 +39,7 @@ public class ArrivalRebuildMaterializedDeltaServiceBean extends AbstractArrivalR
         // Das rebuild-flag wird wieder zurück gesetzt
         // Gecancelte Daten werden gelöscht
         // Dauer: wenige Minuten
-        return new TaskNodeLog("arrival rebuild materialized");
+        return new TaskNodeLog("arrival rebuild materialized (delta)");
     }
 
     /** Perform rebuild */

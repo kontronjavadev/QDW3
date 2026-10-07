@@ -47,7 +47,7 @@ public class ArrivalRebuildMaterializedFullServiceBean extends AbstractArrivalRe
     @PermitAll
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void execTask(TaskNodeLog ownTask) {
-        execDrop(ownTask, "materialized_arrival_mv_new");
+        execDrop(ownTask, "materialized_arrival_mv_new (full)");
         execCreate(ownTask, "materialized_arrival_mv_new", false);
 
         execAddIndices(ownTask);
