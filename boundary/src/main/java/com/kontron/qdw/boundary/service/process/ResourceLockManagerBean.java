@@ -54,20 +54,28 @@ public class ResourceLockManagerBean {
                 }
                 else {
                     String msg = "Job '" + jobName + "' rejected: Ressource '" + resource + "' is blocked.";
-                    TaskLeafLog tskUnmarshall = mainTask.createNewSubTaskLeaf("trying to get execution lock");
-                    tskUnmarshall.finishTaskWithError(msg);
+                    TaskLeafLog tskExecError = mainTask.createNewSubTaskLeaf("trying to get execution lock");
+                    tskExecError.finishTaskWithError(msg);
                     logger.warn(msg);
                     return; // Early Exit. Das finally räumt die bereits geholten Locks sauber auf.
                 }
             }
 
             // 3. An dieser Stelle haben wir alle angeforderten Locks erfolgreich erhalten
-            logger.atInfo().setMessage("Job '{}' startet mit exklusivem Zugriff auf: {}")
+            logger.atDebug().setMessage("Job '{}' startet mit exklusivem Zugriff auf: {}")
                     .addArgument(jobName)
                     .addArgument(() -> acquiredLocks.stream().map(ImportResource::toString).collect(Collectors.joining(", ")))
                     .log();
 
-            taskExecutor.run();
+            try {
+                taskExecutor.run();
+            }
+            catch (Exception e) {
+                String msg = "Executing job '" + jobName + "' crashed.";
+                TaskLeafLog tskExecError = mainTask.createNewSubTaskLeaf("trying to get execution lock");
+                tskExecError.finishTaskWithError(msg);
+                logger.error(msg);
+            }
         }
         finally {
             // 4. Locks zwingend wieder freigeben.

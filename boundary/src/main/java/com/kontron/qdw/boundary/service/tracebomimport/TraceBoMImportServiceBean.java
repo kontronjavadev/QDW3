@@ -654,7 +654,7 @@ public class TraceBoMImportServiceBean {
     }
 
     private TaskNodeLog init(String taskName) {
-        logger.info("\"" + taskName + "\" started");
+        logger.debug("\"" + taskName + "\" started");
         return new TaskNodeLog(taskName);
     }
 
@@ -678,7 +678,7 @@ public class TraceBoMImportServiceBean {
         if (!anyDownloadTaskPerformed && !anyProcessTaskPerformed && tsk.isSuccess()) {
             // Es gibt keine Subtasks, die etwas ausgeführt und geloggt haben und der komplette Prozess war erfolgreich.
             // (Es könnte auch einen fehler gegeben haben, noch bevor Subtasks zu den einzelnen Ordner erstellt wurden)
-            logger.info(baseMsg + " — no import files");
+            logger.debug(baseMsg + " — no import files");
             return;
         }
 

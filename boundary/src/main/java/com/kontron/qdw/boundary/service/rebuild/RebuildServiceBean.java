@@ -46,6 +46,9 @@ public class RebuildServiceBean {
 
     private static final String TASKNAME_REBUILD = "rebuild materialized tables";
 
+    enum Mode {
+        DELTA, FULL
+    }
 
     @Inject
     private ResourceLockManagerBean lockManager;
@@ -105,7 +108,7 @@ public class RebuildServiceBean {
                     executeTask(mainTask, svcMsgRebuildMatDeltaServiceBean);
                 });
 
-        finishRebuild(mainTask, true);
+        finishRebuild(mainTask, Mode.DELTA);
     }
 
     @Asynchronous
@@ -129,7 +132,7 @@ public class RebuildServiceBean {
                     executeTask(mainTask, svcMsgRebuildMatFullServiceBean);
                 });
 
-        finishRebuild(mainTask, true);
+        finishRebuild(mainTask, Mode.FULL);
     }
 
 
@@ -148,7 +151,7 @@ public class RebuildServiceBean {
                     executeTask(taskRebuild, arrivalRebuildMatDeltaServiceBean);
                 });
 
-        finishRebuild(taskRebuild, true);
+        finishRebuild(taskRebuild, Mode.DELTA);
     }
 
     @Asynchronous
@@ -165,7 +168,7 @@ public class RebuildServiceBean {
                     executeTask(taskRebuild, shptArrvRebuildMatDeltaServiceBean);
                 });
 
-        finishRebuild(taskRebuild, true);
+        finishRebuild(taskRebuild, Mode.DELTA);
     }
 
     @Asynchronous
@@ -182,7 +185,7 @@ public class RebuildServiceBean {
                     executeTask(taskRebuild, svcMsgRebuildMatDeltaServiceBean);
                 });
 
-        finishRebuild(taskRebuild, true);
+        finishRebuild(taskRebuild, Mode.DELTA);
     }
 
 
@@ -201,7 +204,7 @@ public class RebuildServiceBean {
                     executeTask(taskRebuild, arrivalRebuildMatFullServiceBean);
                 });
 
-        finishRebuild(taskRebuild, true);
+        finishRebuild(taskRebuild, Mode.FULL);
     }
 
     @Asynchronous
@@ -218,7 +221,7 @@ public class RebuildServiceBean {
                     executeTask(taskRebuild, shptArrvRebuildMatFullServiceBean);
                 });
 
-        finishRebuild(taskRebuild, true);
+        finishRebuild(taskRebuild, Mode.FULL);
     }
 
     @Asynchronous
@@ -235,7 +238,7 @@ public class RebuildServiceBean {
                     executeTask(taskRebuild, svcMsgRebuildMatFullServiceBean);
                 });
 
-        finishRebuild(taskRebuild, true);
+        finishRebuild(taskRebuild, Mode.FULL);
     }
 
 
@@ -311,14 +314,14 @@ public class RebuildServiceBean {
         return taskNodeLog;
     }
 
-    private void finishRebuild(TaskNodeLog tsk, Boolean delta) {
+    private void finishRebuild(TaskNodeLog tsk, Mode mode) {
         tsk.finishTask();
 
         // ist beendet
         long duration = tsk.getEndTime() - tsk.getStartTime();
-        logger.info("Finished rebuilding materialized and aggregated tables" + deltaToString(delta));
+        logger.info("Finished rebuilding materialized and aggregated tables" + modeToString(mode));
 
-        String subjectText = Constants.APP_ENV + ": rebuilding tables" + deltaToString(delta) + " finished "
+        String subjectText = Constants.APP_ENV + ": rebuilding tables" + modeToString(mode) + " finished "
                 + (tsk.isSuccess() ? "successfully" : "with errors");
         StringBuilder importLog = new StringBuilder();
         importLog.append(subjectText);
@@ -339,11 +342,11 @@ public class RebuildServiceBean {
 
 
 
-    private String deltaToString(Boolean delta) {
-        if (delta == null) {
+    private String modeToString(Mode mode) {
+        if (mode == null) {
             return "";
         }
-        return " (" + (delta ? "delta" : "full") + ")";
+        return " (" + (mode == Mode.DELTA ? "delta" : "full") + ")";
     }
 
 }
