@@ -23,15 +23,17 @@ public class NavigatorView implements Serializable {
     @Generated
     private static final long serialVersionUID = 1L;
     @Generated
-    private static final String FOLDER_TYPE = "folder_type";
-    @Generated
     private transient TreeNode<String> root;
     @Generated
     private final UserSession userSession;
     @Generated
     private transient ResourceBundle bundle;
+
+    @Generated
+    private static final String FOLDER_TYPE = "folder_type";
     @Generated
     private static final String VIEW_TYPE = "view_type";
+    private static final String CHART_TYPE = "chart_type";
 
     /**
      * Default constructor
@@ -346,6 +348,16 @@ public class NavigatorView implements Serializable {
             if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_SUPERUSER))
                 new DefaultTreeNode<>(VIEW_TYPE,new TreeNavigatorItem(bundle.getString(FORM_EWSENTRYVIEW_TITLE), 
                         req.getContextPath() + "/view/EWSEntryView.jsf"), itemGroup0007);
+        }
+
+        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_SUPERUSER)) {
+            // Form group: Special reports
+            final var itemGroup0008 = new DefaultTreeNode<>(FOLDER_TYPE, new TreeNavigatorItem(bundle.getString(FG_TOP_SPECIAL_REPORTS)), root);
+            itemGroup0008.setExpanded(true);
+
+            if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_SUPERUSER))
+                new DefaultTreeNode<>(CHART_TYPE,new TreeNavigatorItem(bundle.getString(FORM_FIELDPERFREPORT_TITLE), 
+                        req.getContextPath() + "/view/FieldPerfReport.jsf"), itemGroup0008);
         }
     }
 

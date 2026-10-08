@@ -537,6 +537,7 @@ public interface TranslationKeys {
     String FG_TOP_MATERIAL = "fg_top_material";
     String FG_TOP_SERIAL_OBJECT = "fg_top_serial_object";
     String FG_TOP_SERVICE = "fg_top_service";
+    String FG_TOP_SPECIAL_REPORTS = "fg_top_special_reports";
     String FG_TOP_SYSTEM = "fg_top_system";
     String FIELD_ASSEMBLYCHECKDIALOG_TXTMATERIALMATERIALNUMBER = "field_assemblycheckdialog_txtmaterialmaterialnumber";
     String FIELD_ASSEMBLYCHECKDIALOG_TXTMATERIALREVISIONREVISIONNUMBER = "field_assemblycheckdialog_txtmaterialrevisionrevisionnumber";
@@ -668,6 +669,7 @@ public interface TranslationKeys {
     String FORM_EDITUSERSETTINGSDIALOG_TITLE = "form_editusersettingsdialog_title";
     String FORM_EDITVERTICALSECTORDIALOG_TITLE = "form_editverticalsectordialog_title";
     String FORM_EWSENTRYVIEW_TITLE = "form_ewsentryview_title";
+    String FORM_FIELDPERFREPORT_TITLE = "form_fieldperfreport_title";
     String FORM_FAULTANALYSISVIEW_TITLE = "form_faultanalysisview_title";
     String FORM_LOCATIONVIEW_TITLE = "form_locationview_title";
     String FORM_MATERIALCLASSVIEW_TITLE = "form_materialclassview_title";
