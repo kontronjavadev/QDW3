@@ -74,7 +74,7 @@ public class ResourceLockManagerBean {
                 String msg = "Executing job '" + jobName + "' crashed.";
                 TaskLeafLog tskExecError = mainTask.createNewSubTaskLeaf("trying to get execution lock");
                 tskExecError.finishTaskWithError(msg);
-                logger.error(msg);
+                logger.error(msg, e);
             }
         }
         finally {

@@ -39,7 +39,7 @@ public class ArrivalRebuildMaterializedFullServiceBean extends AbstractArrivalRe
         // Das rebuild-flag wird wieder zurück gesetzt
         // Gecancelte Daten werden gelöscht
         // Dauer: wenige Minuten
-        return new TaskNodeLog("arrival rebuild materialized");
+        return new TaskNodeLog("arrival rebuild materialized (full)");
     }
 
     /** Perform rebuild */
@@ -47,7 +47,7 @@ public class ArrivalRebuildMaterializedFullServiceBean extends AbstractArrivalRe
     @PermitAll
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public void execTask(TaskNodeLog ownTask) {
-        execDrop(ownTask, "materialized_arrival_mv_new (full)");
+        execDrop(ownTask, "materialized_arrival_mv_new");
         execCreate(ownTask, "materialized_arrival_mv_new", false);
 
         execAddIndices(ownTask);
