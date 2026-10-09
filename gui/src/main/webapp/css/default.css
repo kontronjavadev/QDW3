@@ -538,6 +538,32 @@ body .ui-inputfield[readonly] {
 
 
 
+/** Autocomplete Inputfeld */
+body .ui-autocomplete-multiple {
+  width: calc(100vw - 480px);
+}
+body .ui-autocomplete .ui-autocomplete-multiple-container {
+	padding: 0rem .2rem;
+	width: auto;
+}
+body .ui-autocomplete .ui-autocomplete-multiple-container .ui-autocomplete-input-token {
+	padding: .2rem 0;
+	width: .1rem;
+}
+body .ui-autocomplete .ui-autocomplete-multiple-container .ui-autocomplete-token {
+	padding: .1rem 0;
+	background: var(--active);
+	color: var(--textonactive);
+}
+body .ui-autocomplete .ui-autocomplete-multiple-container .ui-autocomplete-token .ui-autocomplete-token-label {
+	padding: 0 1.5rem 0 .3rem;
+}
+body .ui-autocomplete .ui-autocomplete-multiple-container .ui-autocomplete-token .ui-autocomplete-token-icon {
+	margin-top: -0.55rem;
+}
+
+
+
 /* Checkbox */
 body .ui-chkbox .ui-chkbox-box {
 	background: var(--inputfield);
