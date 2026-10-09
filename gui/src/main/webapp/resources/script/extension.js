@@ -1,3 +1,5 @@
+
+// Copy & Paste für Zell- und Zeileninhalte einer Tabelle
 function updateContextData(event, formPrefix = 'form', varPrefix = '') {
 // Für eingebettete Panels ist das formPrefix form:tabView2 und wenn ein Dialog mehrere Panels eingebettet hat, gibt es einen Konflikt mit gleichen
 // Variablennamen. Daher müssen die Variablen einen Präfix (oder Postfix) haben, um eindeutig zu sein. Diesen gbt man ebenfalls an.
@@ -36,6 +38,9 @@ function getCellValue(td) {
 
 
 
+
+
+//Tooltip-Behandlung
 document.addEventListener('DOMContentLoaded', function() {
 	// 1. Tooltip-Element genau einmal im gesamten Dokument erzeugen
 	const tooltip = document.createElement('div');
@@ -125,6 +130,12 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
+
+
+
+// Zweck: Mehrfachauswahl für Filterung. Ist alles ausgewählt, hat das dieselbe Bedeutung, wie wenn nichts ausgewählt ist,
+// nämlich dass nicht gefiltert wird.
+// Zeigt lediglich das Label an, wenn alles ausgewählt ist, anstatt alle einzelnen Items aufzulisten. 
 document.addEventListener('DOMContentLoaded', function() {
 	if (PrimeFaces.widget.SelectCheckboxMenu) {
 		PrimeFaces.widget.SelectCheckboxMenu = PrimeFaces.widget.SelectCheckboxMenu.extend({
