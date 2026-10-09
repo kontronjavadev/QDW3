@@ -11,14 +11,17 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 import org.primefaces.model.DualListModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.kontron.qdw.boundary.material.MaterialBoundaryService;
+import com.kontron.qdw.boundary.service.RMATypeBoundaryService;
 import com.kontron.qdw.dto.material.MaterialListDTO;
 import com.kontron.qdw.dto.material.MaterialSearchDTO;
+import com.kontron.qdw.dto.service.RMATypeListDTO;
 import com.kontron.qdw.service.SavedQueryService;
 import com.kontron.qdw.ui.UserSession;
 import com.kontron.qdw.ui.dialog.EditMaterialDialog;
@@ -49,6 +52,7 @@ public class FieldPerfReport extends SuperView implements Serializable {
     public static final String VIEW_ID = "com.kontron.qdw.ui.view.FieldPerfReport";
 
     private final transient MaterialBoundaryService materialService;
+    private final transient RMATypeBoundaryService rmaTypeManager;
     private final transient SavedQueryService queryManager;
 
     private final UserSession userSession;
@@ -63,20 +67,25 @@ public class FieldPerfReport extends SuperView implements Serializable {
     private MaterialSearchDTO selectedObject;
 
     private List<String> matNrFilterList = new ArrayList<>();
+    private List<String> rmaTypes = new ArrayList<>();
+    private List<String> selectedRmaTypes = new ArrayList<>();
 
 
 
     public FieldPerfReport() {
-        this.userSession = null;
-        this.materialService = null;
-        this.queryManager = null;
+        userSession = null;
+        materialService = null;
+        queryManager = null;
+        rmaTypeManager = null;
     }
 
     @Inject
-    public FieldPerfReport(UserSession userSession, MaterialBoundaryService materialService, SavedQueryService queryManager) {
+    public FieldPerfReport(UserSession userSession, MaterialBoundaryService materialService, RMATypeBoundaryService rmaTypeManager,
+            SavedQueryService queryManager) {
         this.userSession = userSession;
         this.materialService = materialService;
         this.queryManager = queryManager;
+        this.rmaTypeManager = rmaTypeManager;
     }
 
     public void initView() {
@@ -108,6 +117,10 @@ public class FieldPerfReport extends SuperView implements Serializable {
 
         initProperties();
         fetchMaterials();
+
+        rmaTypes = rmaTypeManager.findAllRMATypes().stream()
+                .map(RMATypeListDTO::getCode)
+                .collect(Collectors.toList());
 
         logger.debug("View initialization finished");
     }
@@ -394,6 +407,22 @@ public class FieldPerfReport extends SuperView implements Serializable {
 
     public void setMatNrFilterList(List<String> matNrFilterList) {
         this.matNrFilterList = matNrFilterList;
+    }
+
+    public List<String> getRmaTypes() {
+        return rmaTypes;
+    }
+
+    public void setRmaTypes(List<String> rmaTypes) {
+        this.rmaTypes = rmaTypes;
+    }
+
+    public List<String> getSelectedRmaTypes() {
+        return selectedRmaTypes;
+    }
+
+    public void setSelectedRmaTypes(List<String> selectedRmaTypes) {
+        this.selectedRmaTypes = selectedRmaTypes;
     }
 
 

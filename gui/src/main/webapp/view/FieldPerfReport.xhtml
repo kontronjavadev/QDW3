@@ -283,11 +283,19 @@
 		action="#{fieldPerfReport.handlePastedMaterials}"
 		update="fi_matnr growl" />
 
-	<h:panelGrid columns="3">
-		<h:outputLabel styleClass="label-field-optional" for="fi_matnr" value="#{fieldPerfReport.searchObject.searchFields[0].colLabel}"/>
+	<h:panelGrid columns="2">
+		<h:outputLabel styleClass="label-field-optional" for="fi_matnr" value="#{i18n.col_fieldperfreportview_materialnumber}" />
 		<p:autoComplete id="fi_matnr" minQueryLength="2" maxResults="15" multiple="true" 
 			value="#{fieldPerfReport.matNrFilterList}" completeMethod="#{fieldPerfReport.onCompleteMaterialNumber}" />
-		<p:tooltip for="fi_matnr" value="nr1;;nr2;;..."/>
+
+		<h:outputLabel styleClass="label-field-optional" for="fi_rmatype" value="#{i18n.col_fieldperfreportview_rmatype}" />
+		<p:selectCheckboxMenu id="fi_rmatype"
+			updateLabel="true" 
+			scrollHeight="350"
+			value="#{fieldPerfReport.selectedRmaTypes}">
+			<f:selectItems value="#{fieldPerfReport.rmaTypes}" />
+		</p:selectCheckboxMenu>
+
 	</h:panelGrid>
 
 
@@ -297,144 +305,17 @@
 
 
 
-	<p:dataTable id="panData" var="fieldPerfReportItem" rows="#{fieldPerfReport.numberRows}"
-		selectionTextDisabled="false" allowUnsorting="true" resizeMode="expand" multiViewState="true" 
-		selectionMode="single"
-		selection="#{fieldPerfReport.selectedObject}"
-		loadingMessage="#{i18n.action_fetch_data}"
-		value="#{fieldPerfReport.materialsList}" scrollable="true" styleClass="viewScrollable"
-		paginatorPosition="top" paginatorAlwaysVisible="#{fieldPerfReport.paginatorAlwaysVisible}" paginator="true" resizableColumns="true"
-		rowKey="#{fieldPerfReportItem.id}"
-		paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-		rowsPerPageTemplate="50,150,400,1000">
-		<p:ajax event="rowDblselect" listener="#{fieldPerfReport.onDoubleClick}"/>
-<!-- 
-		<p:ajax event="rowSelect" listener="#{fieldPerfReport.onClick}"/>
- -->
-
-		<p:column sortBy="#{fieldPerfReportItem.materialNumber}" width="150" 
-			rendered="#{fieldPerfReport.searchObject.searchFields[0].visible}" displayPriority="#{fieldPerfReport.searchObject.searchFields[0].colOrder}" 
-			exportValue="#{fieldPerfReportItem.materialNumber}" class="tdnowrap" >
-			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materialview_materialnumber}"/>
-			</f:facet>
-			<h:outputText value="#{fieldPerfReportItem.materialNumber}" styleClass="pf-tooltip-target" />
-		</p:column>
-
-		<p:column sortBy="#{fieldPerfReportItem.sapNumber}" width="150" 
-			rendered="#{fieldPerfReport.searchObject.searchFields[1].visible}" displayPriority="#{fieldPerfReport.searchObject.searchFields[1].colOrder}" 
-			exportValue="#{fieldPerfReportItem.sapNumber}" class="tdnowrap" >
-			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materialview_sapnumber}"/>
-			</f:facet>
-			<h:outputText value="#{fieldPerfReportItem.sapNumber}" styleClass="pf-tooltip-target" />
-		</p:column>
-
-		<p:column sortBy="#{fieldPerfReportItem.materialTypeCode}" width="100" 
-			rendered="#{fieldPerfReport.searchObject.searchFields[2].visible}" displayPriority="#{fieldPerfReport.searchObject.searchFields[2].colOrder}" >
-			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materialview_materialtypecode}"/>
-			</f:facet>
-			<h:outputText value="#{fieldPerfReportItem.materialTypeCode}">
-			</h:outputText>
-		</p:column>
-
-		<p:column sortBy="#{fieldPerfReportItem.materialClassCode}" width="100" 
-			rendered="#{fieldPerfReport.searchObject.searchFields[3].visible}" displayPriority="#{fieldPerfReport.searchObject.searchFields[3].colOrder}" 
-			exportValue="#{fieldPerfReportItem.materialClassCode}" class="tdnowrap" >
-			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materialview_materialclasscode}"/>
-			</f:facet>
-			<h:outputText value="#{fieldPerfReportItem.materialClassCode}" styleClass="pf-tooltip-target" />
-		</p:column>
-
-		<p:column sortBy="#{fieldPerfReportItem.materialHierarchy}" width="150" 
-			rendered="#{fieldPerfReport.searchObject.searchFields[4].visible}" displayPriority="#{fieldPerfReport.searchObject.searchFields[4].colOrder}" >
-			<f:facet name="header">
-				<h:outputText value="#{i18n.lbl_attr_material_materialhierarchy}"/>
-			</f:facet>
-			<h:outputText value="#{fieldPerfReportItem.materialHierarchy}">
-			</h:outputText>
-		</p:column>
-
-		<p:column sortBy="#{fieldPerfReportItem.shortText}" width="250" 
-			rendered="#{fieldPerfReport.searchObject.searchFields[5].visible}" displayPriority="#{fieldPerfReport.searchObject.searchFields[5].colOrder}" 
-			exportValue="#{fieldPerfReportItem.shortText}" class="tdnowrap" >
-			<f:facet name="header">
-				<h:outputText value="#{i18n.lbl_attr_material_shorttext}"/>
-			</f:facet>
-			<h:outputText value="#{fieldPerfReportItem.shortText}" styleClass="pf-tooltip-target" />
-		</p:column>
-
-		<p:column sortBy="#{fieldPerfReportItem.ownerLocationCode}" width="100" 
-			rendered="#{fieldPerfReport.searchObject.searchFields[6].visible}" displayPriority="#{fieldPerfReport.searchObject.searchFields[6].colOrder}" >
-			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materialview_ownerlocationcode}"/>
-			</f:facet>
-			<h:outputText value="#{fieldPerfReportItem.ownerLocationCode}">
-			</h:outputText>
-		</p:column>
-
-		<p:column sortBy="#{fieldPerfReportItem.fitValue}" width="80" 
-			rendered="#{fieldPerfReport.searchObject.searchFields[7].visible}" displayPriority="#{fieldPerfReport.searchObject.searchFields[7].colOrder}" >
-			<f:facet name="header">
-				<h:outputText value="#{i18n.lbl_attr_material_fitvalue}"/>
-			</f:facet>
-			<h:outputText value="#{fieldPerfReportItem.fitValue}">
-				<f:convertNumber pattern="#{userSession.numberFormat}"/>
-			</h:outputText>
-		</p:column>
-
-		<p:column sortBy="#{fieldPerfReportItem.searchSubAssemblies}" width="100" 
-			rendered="#{fieldPerfReport.searchObject.searchFields[8].visible}" displayPriority="#{fieldPerfReport.searchObject.searchFields[8].colOrder}" 
-			exportHeaderValue="#{i18n.col_materialview_searchsubassemblies_tooltip}" class="thnowrap" >
-			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materialview_searchsubassemblies}" title="#{i18n.col_materialview_searchsubassemblies_tooltip}" styleClass="pf-tooltip-target" />
-			</f:facet>
-			<p:selectBooleanCheckbox value="#{fieldPerfReportItem.searchSubAssemblies}" disabled="true"/>
-		</p:column>
-
-		<p:column sortBy="#{fieldPerfReportItem.comment}" width="250" 
-			rendered="#{fieldPerfReport.searchObject.searchFields[9].visible}" displayPriority="#{fieldPerfReport.searchObject.searchFields[9].colOrder}" 
-			exportValue="#{fieldPerfReportItem.comment}" class="tdnowrap" >
-			<f:facet name="header">
-				<h:outputText value="#{i18n.lbl_attr_material_comment}"/>
-			</f:facet>
-			<h:outputText value="#{fieldPerfReportItem.comment}" styleClass="pf-tooltip-target" />
-		</p:column>
-
-		<p:column sortBy="#{fieldPerfReportItem.creationDate}" width="120" 
-			rendered="#{fieldPerfReport.searchObject.searchFields[10].visible}" displayPriority="#{fieldPerfReport.searchObject.searchFields[10].colOrder}" >
-			<f:facet name="header">
-				<h:outputText value="#{i18n.lbl_attr_abstractentitywithid_creationdate}"/>
-			</f:facet>
-			<h:outputText value="#{fieldPerfReportItem.creationDate}">
-				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateTimeConverter"/>
-				<f:attribute name="pattern" value="#{userSession.dateTimeFormat}"/>
-				<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
-			</h:outputText>
-		</p:column>
-
-		<p:column sortBy="#{fieldPerfReportItem.lastUpdate}" width="120" 
-			rendered="#{fieldPerfReport.searchObject.searchFields[11].visible}" displayPriority="#{fieldPerfReport.searchObject.searchFields[11].colOrder}" >
-			<f:facet name="header">
-				<h:outputText value="#{i18n.lbl_attr_abstractentitywithid_lastupdate}"/>
-			</f:facet>
-			<h:outputText value="#{fieldPerfReportItem.lastUpdate}">
-				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateTimeConverter"/>
-				<f:attribute name="pattern" value="#{userSession.dateTimeFormat}"/>
-				<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
-			</h:outputText>
-		</p:column>
-	</p:dataTable>
 	<p/>
 
+<!-- 
 	<h:outputText styleClass="label-field-mandatory" value="#{i18n.result_total_number_records} #{fieldPerfReport.materialsList.size()}"/>
+ -->	
 
 
 
 <!--Kontextmenü mit Möglichkeit, eine Zelle oder eine Zeile zu kopieren -->
 
+<!-- 
 	<h:inputHidden id="cellText" value="#{fieldPerfReport.cellText}" />
 	<h:inputHidden id="rowCsv" value="#{fieldPerfReport.rowCsv}" />
 
@@ -465,6 +346,7 @@
 	</p:dialog>
 
 	<p:defaultCommand target=":form:cmdSearch" scope="dlgSearchInput" />
+ -->
 
 </ui:define>
 </ui:composition>

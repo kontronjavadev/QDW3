@@ -263,6 +263,7 @@ body .ui-selectcheckboxmenu {
 	padding-right: 1.5rem;
 	background: var(--inputfield);
 	color: var(--text);
+	min-width: 5rem;
 }
 
 body .ui-selectcheckboxmenu-panel .ui-selectcheckboxmenu-items-wrapper {
@@ -540,7 +541,8 @@ body .ui-inputfield[readonly] {
 
 /** Autocomplete Inputfeld */
 body .ui-autocomplete-multiple {
-  width: calc(100vw - 480px);
+	width: auto;
+	min-width: 5rem;
 }
 body .ui-autocomplete .ui-autocomplete-multiple-container {
 	padding: 0rem .2rem;
@@ -548,7 +550,7 @@ body .ui-autocomplete .ui-autocomplete-multiple-container {
 }
 body .ui-autocomplete .ui-autocomplete-multiple-container .ui-autocomplete-input-token {
 	padding: .2rem 0;
-	width: .1rem;
+	width: 2rem;
 }
 body .ui-autocomplete .ui-autocomplete-multiple-container .ui-autocomplete-token {
 	padding: .1rem 0;

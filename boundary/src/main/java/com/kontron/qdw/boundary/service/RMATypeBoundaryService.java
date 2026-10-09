@@ -13,6 +13,7 @@ import jakarta.annotation.security.*;
 import net.sourceforge.jbizmo.commons.search.dto.*;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
 import static net.sourceforge.jbizmo.commons.jpa.AbstractRepository.SMALL_LIST_SIZE;
+import static net.sourceforge.jbizmo.commons.jpa.AbstractRepository.DEFAULT_LIST_SIZE;;
 
 @Stateless
 public class RMATypeBoundaryService {
@@ -35,6 +36,25 @@ public class RMATypeBoundaryService {
     @Generated
     public RMATypeBoundaryService(RMATypeRepository repository) {
         this.repository = repository;
+    }
+
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public List<RMATypeListDTO> findAllRMATypes() {
+        // Collect the select tokens of all fields that should be fetched
+        final var selectTokens = new ArrayList<String>();
+        selectTokens.add(RMATypeListDTO.SELECT_CODE);
+
+        // Initialize the search object
+        final var searchObj = new SearchDTO();
+        searchObj.setMaxResult(DEFAULT_LIST_SIZE);
+        searchObj.setFromClause("from RMAType a");
+
+        final var filterField = searchObj.addSearchField(RMATypeListDTO.SELECT_CODE, SearchFieldDataTypeEnum.STRING);
+        filterField.setSortIndex(1);
+        filterField.setSortOrder(SortDirectionEnum.ASC);
+
+        return repository.search(searchObj, RMATypeListDTO.class, selectTokens);
     }
 
     /**
