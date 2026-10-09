@@ -278,10 +278,14 @@
 
 
 
+	<!-- Das RemoteCommand für die Bulk-Validierung aus JavaScript -->
+	<p:remoteCommand name="processPastedMaterials"
+		action="#{fieldPerfReport.handlePastedMaterials}"
+		update="fi_matnr growl" />
 
-	<h:panelGrid columns="6">
+	<h:panelGrid columns="3">
 		<h:outputLabel styleClass="label-field-optional" for="fi_matnr" value="#{fieldPerfReport.searchObject.searchFields[0].colLabel}"/>
-		<p:autoComplete id="fi_matnr" minQueryLength="2" maxResults="10" size="30" multiple="true" 
+		<p:autoComplete id="fi_matnr" minQueryLength="2" maxResults="15" multiple="true" 
 			value="#{fieldPerfReport.matNrFilterList}" completeMethod="#{fieldPerfReport.onCompleteMaterialNumber}" />
 		<p:tooltip for="fi_matnr" value="nr1;;nr2;;..."/>
 	</h:panelGrid>

@@ -7,10 +7,14 @@ import static net.sourceforge.jbizmo.commons.jpa.AbstractRepository.WILDCARD;
 import com.kontron.qdw.dto.base.*;
 import com.kontron.qdw.domain.base.*;
 import java.util.*;
+
+import org.apache.commons.collections4.CollectionUtils;
+
 import jakarta.validation.ConstraintViolationException;
 import com.kontron.qdw.repository.material.*;
 import com.kontron.qdw.dto.material.*;
 import jakarta.inject.*;
+import jakarta.persistence.TypedQuery;
 import jakarta.ejb.*;
 import jakarta.annotation.security.*;
 import net.sourceforge.jbizmo.commons.annotation.Customized;
@@ -41,6 +45,26 @@ public class MaterialBoundaryService {
     public MaterialBoundaryService(MaterialRepository repository) {
         this.repository = repository;
     }
+
+
+
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public List<String> findExistingMaterialNumbers(List<String> materialNumbers) {
+        if (CollectionUtils.isEmpty(materialNumbers)) {
+            return Collections.emptyList();
+        }
+
+        final String jpql = "select m.materialNumber from Material m where m.materialNumber in :materialNumber";
+        @SuppressWarnings("resource")
+        final TypedQuery<String> query = repository.getEntityManager()
+                .createQuery(jpql, String.class)
+                .setParameter("materialNumber", materialNumbers);
+
+        return query.getResultList();
+    }
+
+
 
     /**
      * @param sapNumber

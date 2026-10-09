@@ -166,3 +166,41 @@ document.addEventListener('DOMContentLoaded', function() {
 	}
 });
 
+
+
+
+
+// Erlaubt das Einfügen einer fertigen Liste an ";;"-separierten Einträgen in ein multiple-autocomplete-Feld
+document.addEventListener("DOMContentLoaded", function() {
+	// Event Delegation: Hängt am document, lauscht aber nur auf die inneren Inputs der AutoComplete-Komponenten
+	document.addEventListener("paste", function(e) {
+		// Prüft, ob das Element, in das eingefügt wurde, unser PrimeFaces-Input ist
+        const target = e.target;
+
+		// Prüft, ob ein Input-Feld das Ziel ist UND ob es innerhalb des Multiple-AutoComplete-Containers liegt
+		if (target && target.tagName === 'INPUT' && target.closest('.ui-autocomplete-multiple')) {
+			const pasteData = (e.clipboardData || window.clipboardData).getData('text');
+			const separatorRegex = /(?:;;|[;,\n\r\t])+/;
+
+			if (pasteData && separatorRegex.test(pasteData)) {
+				// Blockiert die Standard-Eingabe des Browsers, bevor PrimeFaces reagieren kann
+				e.preventDefault();
+	
+				const tokens = pasteData.split(separatorRegex)
+					.map(t => t.trim())
+					.filter(t => t.length > 0);
+	
+				if (tokens.length > 0) {
+					// Prüft zur Sicherheit, ob das p:remoteCommand existiert und ruft es auf
+					if (typeof processPastedMaterials === "function") {
+						processPastedMaterials([{name: 'pastedTokens', value: tokens.join(';;')}]);
+					} else {
+						console.error("PrimeFaces remoteCommand 'processPastedMaterials' wurde nicht gefunden.");
+					}
+				}
+			}
+		}
+	});
+});
+
+

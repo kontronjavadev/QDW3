@@ -7,12 +7,11 @@ import java.io.Serializable;
 import java.lang.invoke.MethodHandles;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import org.primefaces.PrimeFaces;
 import org.primefaces.model.DualListModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +26,7 @@ import com.kontron.qdw.ui.dialog.ViewMaterialDialog;
 import com.kontron.qdw.ui.view.util.SuperView;
 
 import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 import jakarta.faces.model.SelectItem;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
@@ -268,34 +268,41 @@ public class FieldPerfReport extends SuperView implements Serializable {
 
 
 
-    public List<String> onCompleteMaterialNumber(String query) {
-        if (query != null && query.contains(";;")) {
-            final String[] parts = query.split(";;");
-            boolean modelChanged = false;
+    /** Diese Methode wird vom JavaScript via p:remoteCommand aufgerufen */
+    public void handlePastedMaterials() {
+        final var requestParams = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+        final String pastedTokensString = requestParams.get("pastedTokens");
 
-            for (final String part : parts) {
-                final String cleanPart = part.trim();
-                if (!cleanPart.isEmpty() && !matNrFilterList.contains(cleanPart)) {
-                    // TODO: Prüfen, ob das Material existiert
-                    matNrFilterList.add(cleanPart);
-                    modelChanged = true;
+        if (pastedTokensString != null && !pastedTokensString.isBlank()) {
+            // Die aus dem JS übergebenen Tokens wieder aufsplitten
+            final List<String> incomingTokens = Arrays.asList(pastedTokensString.split(";;"));
+
+            // 1. Bulk-Validierung gegen die Boundary (vermeidet N+1 Selects)
+            final List<String> existingNumbers = materialService.findExistingMaterialNumbers(incomingTokens);
+
+            // 2. Gültige Nummern der UI-Liste hinzufügen (falls noch nicht vorhanden)
+            for (final String validNum : existingNumbers) {
+                if (!matNrFilterList.contains(validNum)) {
+                    matNrFilterList.add(validNum);
                 }
             }
 
-            if (modelChanged) {
-                // Wichtig: Absoluter Client-ID-Pfad (z.B. ":myForm:fi_matnr")
-                final String clientId = ":formId:fi_matnr";
+            // 3. Ungültige Nummern ermitteln, um dem Anwender Feedback zu geben
+            final List<String> invalidNumbers = new ArrayList<>(incomingTokens);
+            invalidNumbers.removeAll(existingNumbers);
 
-                // Löscht den UIInput Cache (submittedValue)
-                PrimeFaces.current().resetInputs(clientId);
-                // Zeichnet die Komponente aus dem Model neu
-                PrimeFaces.current().ajax().update(clientId);
+            if (!invalidNumbers.isEmpty()) {
+                final FacesMessage msg = new FacesMessage(
+                        FacesMessage.SEVERITY_WARN,
+                        bundle.getString("fieldperfreportview_matnr_notexist_title"),
+                        bundle.getString("fieldperfreportview_matnr_notexist_msg") + ": " + String.join(", ", invalidNumbers));
+                FacesContext.getCurrentInstance().addMessage(null, msg);
             }
-
-            return Collections.emptyList();
         }
+    }
 
-        // Normales Suchverhalten für einzelne Eingaben
+
+    public List<String> onCompleteMaterialNumber(String query) {
         final var results = new ArrayList<String>();
         try {
             final Collection<MaterialListDTO> items = materialService.findMaterials(query + "%");
