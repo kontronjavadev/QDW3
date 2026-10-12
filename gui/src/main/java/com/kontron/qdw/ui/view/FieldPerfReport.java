@@ -18,8 +18,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.kontron.qdw.boundary.material.MaterialBoundaryService;
+import com.kontron.qdw.boundary.material.MaterialNumberSetBoundaryService;
 import com.kontron.qdw.boundary.service.RMATypeBoundaryService;
 import com.kontron.qdw.dto.material.MaterialListDTO;
+import com.kontron.qdw.dto.material.MaterialNumberSetDTO;
 import com.kontron.qdw.dto.material.MaterialSearchDTO;
 import com.kontron.qdw.dto.service.RMATypeListDTO;
 import com.kontron.qdw.service.SavedQueryService;
@@ -28,21 +30,20 @@ import com.kontron.qdw.ui.dialog.EditMaterialDialog;
 import com.kontron.qdw.ui.dialog.ViewMaterialDialog;
 import com.kontron.qdw.ui.view.util.SuperView;
 
+import jakarta.enterprise.context.SessionScoped;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.model.SelectItem;
-import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import net.sourceforge.jbizmo.commons.search.dto.SearchDTO;
 import net.sourceforge.jbizmo.commons.search.dto.SearchFieldDTO;
 import net.sourceforge.jbizmo.commons.search.dto.SearchFieldDataTypeEnum;
 import net.sourceforge.jbizmo.commons.webclient.primefaces.search.JSFSearchFieldDTO;
-import net.sourceforge.jbizmo.commons.webclient.primefaces.search.SearchInputFieldValidationException;
 import net.sourceforge.jbizmo.commons.webclient.primefaces.util.MessageUtil;
 
 @Named("fieldPerfReport")
-@ViewScoped
+@SessionScoped
 public class FieldPerfReport extends SuperView implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -51,9 +52,10 @@ public class FieldPerfReport extends SuperView implements Serializable {
     public static final String PAGE_URL = "/view/FieldPerfReport.jsf?faces-redirect=true";
     public static final String VIEW_ID = "com.kontron.qdw.ui.view.FieldPerfReport";
 
-    private final transient MaterialBoundaryService materialService;
-    private final transient RMATypeBoundaryService rmaTypeManager;
     private final transient SavedQueryService queryManager;
+    private final transient MaterialBoundaryService materialService;
+    private final transient RMATypeBoundaryService rmaTypeService;
+    private final transient MaterialNumberSetBoundaryService matNrSetService;
 
     private final UserSession userSession;
     private transient ResourceBundle bundle;
@@ -63,29 +65,35 @@ public class FieldPerfReport extends SuperView implements Serializable {
     private String savedQueryName;
     private String selectedSavedQuery;
 
-    private List<MaterialSearchDTO> materialsList = new ArrayList<>();
+    // private List<MaterialSearchDTO> materialsList = new ArrayList<>();
     private MaterialSearchDTO selectedObject;
 
     private List<String> matNrFilterList = new ArrayList<>();
     private List<String> rmaTypes = new ArrayList<>();
     private List<String> selectedRmaTypes = new ArrayList<>();
+    private List<MaterialNumberSetDTO> matNrSets = new ArrayList<>();
+    private MaterialNumberSetDTO selectedMatNrSet;
 
 
 
     public FieldPerfReport() {
         userSession = null;
-        materialService = null;
         queryManager = null;
-        rmaTypeManager = null;
+
+        materialService = null;
+        rmaTypeService = null;
+        matNrSetService = null;
     }
 
     @Inject
-    public FieldPerfReport(UserSession userSession, MaterialBoundaryService materialService, RMATypeBoundaryService rmaTypeManager,
-            SavedQueryService queryManager) {
+    public FieldPerfReport(UserSession userSession, SavedQueryService queryManager,
+            MaterialBoundaryService materialService, RMATypeBoundaryService rmaTypeService, MaterialNumberSetBoundaryService matNrSetService) {
         this.userSession = userSession;
-        this.materialService = materialService;
         this.queryManager = queryManager;
-        this.rmaTypeManager = rmaTypeManager;
+
+        this.materialService = materialService;
+        this.rmaTypeService = rmaTypeService;
+        this.matNrSetService = matNrSetService;
     }
 
     public void initView() {
@@ -116,122 +124,22 @@ public class FieldPerfReport extends SuperView implements Serializable {
         }
 
         initProperties();
-        fetchMaterials();
+        // fetchMaterials();
 
-        rmaTypes = rmaTypeManager.findAllRMATypes().stream()
+        rmaTypes = rmaTypeService.findAllRMATypes().stream()
                 .map(RMATypeListDTO::getCode)
                 .collect(Collectors.toList());
+
+        matNrSets = matNrSetService.findAll();
 
         logger.debug("View initialization finished");
     }
 
-    public void initSearchObject() {
-        searchObj = new SearchDTO();
-        int colOrderId = -1;
-
-        // Initialize search object
-        searchObj.setMaxResult(1000);
-        searchObj.setExactFilterMatch(true);
-        searchObj.setCaseSensitive(true);
-        searchObj.setCount(false);
-
-        refreshFormatSettings();
-
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterialSearchDTO.SELECT_MATERIALNUMBER,
-                bundle.getString(COL_MATERIALVIEW_MATERIALNUMBER), SearchFieldDataTypeEnum.STRING, 150);
-
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterialSearchDTO.SELECT_SAPNUMBER,
-                bundle.getString(COL_MATERIALVIEW_SAPNUMBER), SearchFieldDataTypeEnum.STRING, 150);
-
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterialSearchDTO.SELECT_MATERIALTYPECODE,
-                bundle.getString(COL_MATERIALVIEW_MATERIALTYPECODE), SearchFieldDataTypeEnum.STRING, 100);
-
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterialSearchDTO.SELECT_MATERIALCLASSCODE,
-                bundle.getString(COL_MATERIALVIEW_MATERIALCLASSCODE), SearchFieldDataTypeEnum.STRING, 100);
-
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterialSearchDTO.SELECT_MATERIALHIERARCHY,
-                bundle.getString(LBL_ATTR_MATERIAL_MATERIALHIERARCHY), SearchFieldDataTypeEnum.STRING, 150);
-
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterialSearchDTO.SELECT_SHORTTEXT,
-                bundle.getString(LBL_ATTR_MATERIAL_SHORTTEXT), SearchFieldDataTypeEnum.STRING, 250);
-
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterialSearchDTO.SELECT_OWNERLOCATIONCODE,
-                bundle.getString(COL_MATERIALVIEW_OWNERLOCATIONCODE), SearchFieldDataTypeEnum.STRING, 100);
-
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterialSearchDTO.SELECT_FITVALUE,
-                bundle.getString(LBL_ATTR_MATERIAL_FITVALUE), SearchFieldDataTypeEnum.DOUBLE, 80);
-
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterialSearchDTO.SELECT_SEARCHSUBASSEMBLIES,
-                bundle.getString(COL_MATERIALVIEW_SEARCHSUBASSEMBLIES), SearchFieldDataTypeEnum.BOOLEAN, 100);
-
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterialSearchDTO.SELECT_COMMENT,
-                bundle.getString(LBL_ATTR_MATERIAL_COMMENT), SearchFieldDataTypeEnum.STRING, 250);
-
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterialSearchDTO.SELECT_CREATIONDATE,
-                bundle.getString(LBL_ATTR_ABSTRACTENTITYWITHID_CREATIONDATE), SearchFieldDataTypeEnum.LOCAL_DATE_TIME, 120);
-
-
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterialSearchDTO.SELECT_LASTUPDATE,
-                bundle.getString(LBL_ATTR_ABSTRACTENTITYWITHID_LASTUPDATE), SearchFieldDataTypeEnum.LOCAL_DATE_TIME, 120);
-
-        visibleFields = new DualListModel<>();
-        visibleFields.setSource(new ArrayList<>());
-        visibleFields.setTarget(new ArrayList<>());
-
-        for (final SearchFieldDTO d : searchObj.getSearchFields()) {
-            if (!d.isVisible()) {
-                visibleFields.getSource().add(d);
-            }
-            else {
-                visibleFields.getTarget().add(d);
-            }
-        }
-    }
-
-
-
-    public void fetchMaterials() {
-        logger.debug("Perform data fetch operation");
-
-        try {
-            preSearch();
-        }
-        catch (final SearchInputFieldValidationException e) {
-            MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_INFO, SEARCH_INPUT_VALIDATION, "", e.getSearchFieldName());
-            return;
-        }
-
-        refreshFormatSettings();
-        setCountFilterDependent();
-
-        try {
-            materialsList = materialService.searchAllMaterials(searchObj);
-
-            if (searchObj.isCount()) {
-                if (materialsList.size() == searchObj.getMaxResult()) {
-                    countResult = materialService.countAllMaterials(searchObj);
-                }
-                else {
-                    countResult = materialsList.size();
-                }
-            }
-
-            queryManager.saveQuery(userSession.getPrincipal().getId(), VIEW_ID, null, searchObj);
-        }
-        catch (final Exception e) {
-            logger.error("Error while fetching data!", e);
-
-            MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_ERROR, OPERATION_FETCH_FAIL, e);
-        }
-        finally {
-            postSearch();
-        }
-    }
 
     @Override
     public void resetSearchObject() {
         initSearchObject();
-        fetchMaterials();
+        // fetchMaterials();
     }
 
 
@@ -384,7 +292,7 @@ public class FieldPerfReport extends SuperView implements Serializable {
         searchObj = queryManager.getSavedQuery(userSession.getPrincipal().getId(), VIEW_ID, selectedSavedQuery);
 
         prepareAfterLoad();
-        fetchMaterials();
+        // fetchMaterials();
     }
 
 
@@ -397,9 +305,9 @@ public class FieldPerfReport extends SuperView implements Serializable {
         this.selectedObject = selectedObject;
     }
 
-    public Collection<MaterialSearchDTO> getMaterialsList() {
-        return materialsList;
-    }
+    // public Collection<MaterialSearchDTO> getMaterialsList() {
+    // return materialsList;
+    // }
 
     public List<String> getMatNrFilterList() {
         return matNrFilterList;
@@ -409,12 +317,9 @@ public class FieldPerfReport extends SuperView implements Serializable {
         this.matNrFilterList = matNrFilterList;
     }
 
+
     public List<String> getRmaTypes() {
         return rmaTypes;
-    }
-
-    public void setRmaTypes(List<String> rmaTypes) {
-        this.rmaTypes = rmaTypes;
     }
 
     public List<String> getSelectedRmaTypes() {
@@ -423,6 +328,19 @@ public class FieldPerfReport extends SuperView implements Serializable {
 
     public void setSelectedRmaTypes(List<String> selectedRmaTypes) {
         this.selectedRmaTypes = selectedRmaTypes;
+    }
+
+
+    public List<MaterialNumberSetDTO> getMatNrSets() {
+        return matNrSets;
+    }
+
+    public MaterialNumberSetDTO getSelectedMatNrSet() {
+        return selectedMatNrSet;
+    }
+
+    public void setSelectedMatNrSet(MaterialNumberSetDTO selectedMatNrSet) {
+        this.selectedMatNrSet = selectedMatNrSet;
     }
 
 
@@ -464,5 +382,108 @@ public class FieldPerfReport extends SuperView implements Serializable {
     protected String getViewName() {
         return VIEW_ID;
     }
+
+
+
+    public void initSearchObject() {
+        searchObj = new SearchDTO();
+        int colOrderId = -1;
+
+        // Initialize search object
+        searchObj.setMaxResult(1000);
+        searchObj.setExactFilterMatch(true);
+        searchObj.setCaseSensitive(true);
+        searchObj.setCount(false);
+
+        refreshFormatSettings();
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterialSearchDTO.SELECT_MATERIALNUMBER,
+                bundle.getString(COL_MATERIALVIEW_MATERIALNUMBER), SearchFieldDataTypeEnum.STRING, 150);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterialSearchDTO.SELECT_SAPNUMBER,
+                bundle.getString(COL_MATERIALVIEW_SAPNUMBER), SearchFieldDataTypeEnum.STRING, 150);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterialSearchDTO.SELECT_MATERIALTYPECODE,
+                bundle.getString(COL_MATERIALVIEW_MATERIALTYPECODE), SearchFieldDataTypeEnum.STRING, 100);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterialSearchDTO.SELECT_MATERIALCLASSCODE,
+                bundle.getString(COL_MATERIALVIEW_MATERIALCLASSCODE), SearchFieldDataTypeEnum.STRING, 100);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterialSearchDTO.SELECT_MATERIALHIERARCHY,
+                bundle.getString(LBL_ATTR_MATERIAL_MATERIALHIERARCHY), SearchFieldDataTypeEnum.STRING, 150);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterialSearchDTO.SELECT_SHORTTEXT,
+                bundle.getString(LBL_ATTR_MATERIAL_SHORTTEXT), SearchFieldDataTypeEnum.STRING, 250);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterialSearchDTO.SELECT_OWNERLOCATIONCODE,
+                bundle.getString(COL_MATERIALVIEW_OWNERLOCATIONCODE), SearchFieldDataTypeEnum.STRING, 100);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterialSearchDTO.SELECT_FITVALUE,
+                bundle.getString(LBL_ATTR_MATERIAL_FITVALUE), SearchFieldDataTypeEnum.DOUBLE, 80);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterialSearchDTO.SELECT_SEARCHSUBASSEMBLIES,
+                bundle.getString(COL_MATERIALVIEW_SEARCHSUBASSEMBLIES), SearchFieldDataTypeEnum.BOOLEAN, 100);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterialSearchDTO.SELECT_COMMENT,
+                bundle.getString(LBL_ATTR_MATERIAL_COMMENT), SearchFieldDataTypeEnum.STRING, 250);
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterialSearchDTO.SELECT_CREATIONDATE,
+                bundle.getString(LBL_ATTR_ABSTRACTENTITYWITHID_CREATIONDATE), SearchFieldDataTypeEnum.LOCAL_DATE_TIME, 120);
+
+
+        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterialSearchDTO.SELECT_LASTUPDATE,
+                bundle.getString(LBL_ATTR_ABSTRACTENTITYWITHID_LASTUPDATE), SearchFieldDataTypeEnum.LOCAL_DATE_TIME, 120);
+
+        visibleFields = new DualListModel<>();
+        visibleFields.setSource(new ArrayList<>());
+        visibleFields.setTarget(new ArrayList<>());
+
+        for (final SearchFieldDTO d : searchObj.getSearchFields()) {
+            if (!d.isVisible()) {
+                visibleFields.getSource().add(d);
+            }
+            else {
+                visibleFields.getTarget().add(d);
+            }
+        }
+    }
+
+    // public void fetchMaterials() {
+    // logger.debug("Perform data fetch operation");
+    //
+    // try {
+    // preSearch();
+    // }
+    // catch (final SearchInputFieldValidationException e) {
+    // MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_INFO, SEARCH_INPUT_VALIDATION, "", e.getSearchFieldName());
+    // return;
+    // }
+    //
+    // refreshFormatSettings();
+    // setCountFilterDependent();
+    //
+    // try {
+    // materialsList = materialService.searchAllMaterials(searchObj);
+    //
+    // if (searchObj.isCount()) {
+    // if (materialsList.size() == searchObj.getMaxResult()) {
+    // countResult = materialService.countAllMaterials(searchObj);
+    // }
+    // else {
+    // countResult = materialsList.size();
+    // }
+    // }
+    //
+    // queryManager.saveQuery(userSession.getPrincipal().getId(), VIEW_ID, null, searchObj);
+    // }
+    // catch (final Exception e) {
+    // logger.error("Error while fetching data!", e);
+    //
+    // MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_ERROR, OPERATION_FETCH_FAIL, e);
+    // }
+    // finally {
+    // postSearch();
+    // }
+    // }
 
 }

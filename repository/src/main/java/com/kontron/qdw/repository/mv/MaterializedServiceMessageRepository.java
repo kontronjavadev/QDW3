@@ -162,4 +162,56 @@ public class MaterializedServiceMessageRepository extends AbstractRepository<Mat
         bean.setMaterial(material);
     }
 
+    /**
+     * Get the serial object of this materialized service message
+     * @param id
+     * @return the serial object of this materialized service message, or null if it could not be found
+     */
+    @Generated
+    public SerialObject getSerialObject(Long id) {
+        final TypedQuery<SerialObject> query = em.createNamedQuery(MaterializedServiceMessage.NQ_GET_SERIALOBJECT, SerialObject.class);
+        query.setParameter(PARAM_ID, id);
+
+        return query.getResultList().stream().findFirst().orElse(null);
+    }
+
+    /**
+     * Get the material of this materialized service message
+     * @param id
+     * @return the material of this materialized service message, or null if it could not be found
+     */
+    @Generated
+    public Material getMaterial(Long id) {
+        final TypedQuery<Material> query = em.createNamedQuery(MaterializedServiceMessage.NQ_GET_MATERIAL, Material.class);
+        query.setParameter(PARAM_ID, id);
+
+        return query.getResultList().stream().findFirst().orElse(null);
+    }
+
+    /**
+     * Change the 'serialObject' attribute of this materialized service message
+     * @param id
+     * @param serialObject
+     * @throws ConstraintViolationException if the validation of the persistent attributes has failed
+     */
+    @Generated
+    public void setSerialObject(Long id, SerialObject serialObject) {
+        final MaterializedServiceMessage bean = findById(id, true);
+
+        bean.setSerialObject(serialObject);
+    }
+
+    /**
+     * Change the 'material' attribute of this materialized service message
+     * @param id
+     * @param material
+     * @throws ConstraintViolationException if the validation of the persistent attributes has failed
+     */
+    @Generated
+    public void setMaterial(Long id, Material material) {
+        final MaterializedServiceMessage bean = findById(id, true);
+
+        bean.setMaterial(material);
+    }
+
 }

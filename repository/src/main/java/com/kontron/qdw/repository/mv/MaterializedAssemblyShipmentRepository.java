@@ -137,4 +137,56 @@ public class MaterializedAssemblyShipmentRepository extends AbstractRepository<M
         bean.setSerialObject(serialObject);
     }
 
+    /**
+     * Get the material of this materialized assembly shipment
+     * @param id
+     * @return the material of this materialized assembly shipment, or null if it could not be found
+     */
+    @Generated
+    public Material getMaterial(Long id) {
+        final TypedQuery<Material> query = em.createNamedQuery(MaterializedAssemblyShipment.NQ_GET_MATERIAL, Material.class);
+        query.setParameter(PARAM_ID, id);
+
+        return query.getResultList().stream().findFirst().orElse(null);
+    }
+
+    /**
+     * Get the serial object of this materialized assembly shipment
+     * @param id
+     * @return the serial object of this materialized assembly shipment, or null if it could not be found
+     */
+    @Generated
+    public SerialObject getSerialObject(Long id) {
+        final TypedQuery<SerialObject> query = em.createNamedQuery(MaterializedAssemblyShipment.NQ_GET_SERIALOBJECT, SerialObject.class);
+        query.setParameter(PARAM_ID, id);
+
+        return query.getResultList().stream().findFirst().orElse(null);
+    }
+
+    /**
+     * Change the 'material' attribute of this materialized assembly shipment
+     * @param id
+     * @param material
+     * @throws ConstraintViolationException if the validation of the persistent attributes has failed
+     */
+    @Generated
+    public void setMaterial(Long id, Material material) {
+        final MaterializedAssemblyShipment bean = findById(id, true);
+
+        bean.setMaterial(material);
+    }
+
+    /**
+     * Change the 'serialObject' attribute of this materialized assembly shipment
+     * @param id
+     * @param serialObject
+     * @throws ConstraintViolationException if the validation of the persistent attributes has failed
+     */
+    @Generated
+    public void setSerialObject(Long id, SerialObject serialObject) {
+        final MaterializedAssemblyShipment bean = findById(id, true);
+
+        bean.setSerialObject(serialObject);
+    }
+
 }
