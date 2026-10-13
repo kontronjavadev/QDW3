@@ -2148,8 +2148,8 @@
     </attributes>
   </net.sourceforge.jbizmo.model.dto:DTOBean>
   <net.sourceforge.jbizmo.model.java:Namespace name="material" parent="/2" javaTypes="/194 /584 /113 /632 /198 /196 /112 /631 /634 /633" project="/0"/>
-  <net.sourceforge.jbizmo.model.java:Namespace name="material" parent="/1" javaTypes="/193 /583 /197 /117 /635 /195 /129" project="/0"/>
-  <net.sourceforge.jbizmo.model.java:Namespace name="material" parent="/3" javaTypes="/208 /202 /190 /582 /588 /601 /597 /116 /233 /125 /121 /242 /239 /191 /321 /630 /205 /219 /192 /226 /223 /213 /246 /128 /232 /137 /133 /231 /565" project="/0"/>
+  <net.sourceforge.jbizmo.model.java:Namespace name="material" parent="/1" javaTypes="/193 /583 /197 /117 /635 /195 /129 /637" project="/0"/>
+  <net.sourceforge.jbizmo.model.java:Namespace name="material" parent="/3" javaTypes="/208 /202 /190 /582 /588 /601 /597 /116 /233 /125 /121 /242 /239 /191 /321 /630 /205 /219 /192 /226 /223 /213 /246 /128 /232 /137 /133 /231 /565 /636" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="material" parent="/4" project="/0"/>
   <net.sourceforge.jbizmo.model.repository:Repository name="MaterialTypeRepository" comment="Create, read, update and delete services for material type objects." namespace="/108">
     <domainObject href="package-material.xmi#//@domainObjects.0"/>
@@ -14017,5 +14017,21 @@
     <boundaryMethods name="findById" comment="" returnType="/630" methodType="FIND_BY_ID" serviceMethod="/632/@repositoryMethods.0">
       <methodParameters name="id" type="/0/@allSupportedTypes.2" hint=""/>
     </boundaryMethods>
+  </net.sourceforge.jbizmo.model.boundary:BoundaryBean>
+  <net.sourceforge.jbizmo.model.dto:DTOBean name="SerialNumberSetDTO" comment="Instances of this class represent data transfer objects that are mapped to serial number set domain objects" namespace="/110" createdManually="true">
+    <domainObject href="package-material.xmi#//@domainObjects.7"/>
+    <attributes name="code" selectToken="a.code">
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.0"/>
+    </attributes>
+    <attributes name="shortText" selectToken="a.shortText">
+      <domainAttribute href="package-base.xmi#//@domainObjects.4/@attributes.1"/>
+    </attributes>
+  </net.sourceforge.jbizmo.model.dto:DTOBean>
+  <net.sourceforge.jbizmo.model.boundary:BoundaryBean name="SerialNumberSetBoundaryServiceBean" comment="Boundary service for serial number set objects" namespace="/109" interfaceName="SerialNumberSetBoundaryService" repository="/633">
+    <domainObject href="package-material.xmi#//@domainObjects.7"/>
+    <boundaryMethods name="findById" comment="" returnType="/636" methodType="FIND_BY_ID" serviceMethod="/633/@repositoryMethods.0">
+      <methodParameters name="code" type="/0/@allSupportedTypes.12" hint=""/>
+    </boundaryMethods>
+    <boundaryMethods name="findAll" comment="" returnType="/636" returnTypeModifier="List" methodType="FIND_ALL" serviceMethod="/633/@repositoryMethods.8"/>
   </net.sourceforge.jbizmo.model.boundary:BoundaryBean>
 </xmi:XMI>

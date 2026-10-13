@@ -302,13 +302,24 @@
 	<h:panelGrid columns="4">
 		<h:outputLabel styleClass="label-field-optional" for="fi_matnrset" value="#{i18n.col_fieldperfreportview_matnrset}" />
 		<p:selectOneMenu id="fi_matnrset" converter="#{materialNumberSetDTOConverter}" 
-			scrollHeight="350"
+			scrollHeight="350" 
 			value="#{fieldPerfReport.selectedMatNrSet}">
 
 			<p:ajax process="@this" />
 			<f:selectItem itemLabel="" itemValue="#{null}" noSelectionOption="true" />
 			<f:selectItems value="#{fieldPerfReport.matNrSets}" var="matNrSetItem" 
 				itemLabel="#{matNrSetItem.label}" itemValue="#{matNrSetItem}" />
+		</p:selectOneMenu>
+
+		<h:outputLabel styleClass="label-field-optional" for="fi_sernrset" value="#{i18n.col_fieldperfreportview_sernrset}" />
+		<p:selectOneMenu id="fi_sernrset" converter="#{serialNumberSetDTOConverter}" 
+			scrollHeight="350"
+			value="#{fieldPerfReport.selectedSerNrSet}">
+
+			<p:ajax process="@this" />
+			<f:selectItem itemLabel="" itemValue="#{null}" noSelectionOption="true" />
+			<f:selectItems value="#{fieldPerfReport.serNrSets}" var="serNrSetItem" 
+				itemLabel="#{serNrSetItem.code}" itemValue="#{serNrSetItem}" />
 		</p:selectOneMenu>
 
 
