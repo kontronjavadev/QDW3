@@ -9,6 +9,7 @@ import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
@@ -17,10 +18,14 @@ import org.primefaces.model.DualListModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.kontron.qdw.boundary.base.CustomerBoundaryService;
+import com.kontron.qdw.boundary.base.SupplierBoundaryService;
 import com.kontron.qdw.boundary.material.MaterialBoundaryService;
 import com.kontron.qdw.boundary.material.MaterialNumberSetBoundaryService;
 import com.kontron.qdw.boundary.material.SerialNumberSetBoundaryService;
 import com.kontron.qdw.boundary.service.RMATypeBoundaryService;
+import com.kontron.qdw.dto.base.CustomerDTO;
+import com.kontron.qdw.dto.base.SupplierDTO;
 import com.kontron.qdw.dto.material.MaterialListDTO;
 import com.kontron.qdw.dto.material.MaterialNumberSetDTO;
 import com.kontron.qdw.dto.material.MaterialSearchDTO;
@@ -59,6 +64,8 @@ public class FieldPerfReport extends SuperView implements Serializable {
     private final transient RMATypeBoundaryService rmaTypeService;
     private final transient MaterialNumberSetBoundaryService matNrSetService;
     private final transient SerialNumberSetBoundaryService serNrSetService;
+    private final transient CustomerBoundaryService custService;
+    private final transient SupplierBoundaryService suppService;
 
     private final UserSession userSession;
     private transient ResourceBundle bundle;
@@ -72,6 +79,8 @@ public class FieldPerfReport extends SuperView implements Serializable {
     private MaterialSearchDTO selectedObject;
 
     private List<String> matNrFilterList = new ArrayList<>();
+    private List<CustomerDTO> custFilterList = new ArrayList<>();
+    private List<SupplierDTO> suppFilterList = new ArrayList<>();
 
     private List<String> rmaTypes = new ArrayList<>();
     private List<String> selectedRmaTypes = new ArrayList<>();
@@ -92,12 +101,14 @@ public class FieldPerfReport extends SuperView implements Serializable {
         rmaTypeService = null;
         matNrSetService = null;
         serNrSetService = null;
+        custService = null;
+        suppService = null;
     }
 
     @Inject
     public FieldPerfReport(UserSession userSession, SavedQueryService queryManager,
             MaterialBoundaryService materialService, RMATypeBoundaryService rmaTypeService, MaterialNumberSetBoundaryService matNrSetService,
-            SerialNumberSetBoundaryService serNrSetService) {
+            SerialNumberSetBoundaryService serNrSetService, CustomerBoundaryService custService, SupplierBoundaryService suppService) {
         this.userSession = userSession;
         this.queryManager = queryManager;
 
@@ -105,6 +116,8 @@ public class FieldPerfReport extends SuperView implements Serializable {
         this.rmaTypeService = rmaTypeService;
         this.matNrSetService = matNrSetService;
         this.serNrSetService = serNrSetService;
+        this.custService = custService;
+        this.suppService = suppService;
     }
 
     public void initView() {
@@ -156,8 +169,7 @@ public class FieldPerfReport extends SuperView implements Serializable {
 
 
 
-    public void onClick() {
-    }
+    // public void onClick() { }
 
     public void onDoubleClick() {
         logger.debug("Handle double-click event");
@@ -250,6 +262,18 @@ public class FieldPerfReport extends SuperView implements Serializable {
         return results;
     }
 
+    public List<CustomerDTO> onCompleteCustomer(String query) {
+        try {
+            return custService.findCustomersExtend(query);
+        }
+        catch (final Exception e) {
+            logger.error("Error while searching for auto-complete items by using the entered text '{}'!", query, e);
+            return Collections.emptyList();
+        }
+    }
+
+
+
     public void saveNewQuery() {
         if (savedQueryName.isEmpty()) {
             MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_ERROR, SAVED_QUERY_EMPTY_NAME);
@@ -327,6 +351,14 @@ public class FieldPerfReport extends SuperView implements Serializable {
 
     public void setMatNrFilterList(List<String> matNrFilterList) {
         this.matNrFilterList = matNrFilterList;
+    }
+
+    public List<CustomerDTO> getCustFilterList() {
+        return custFilterList;
+    }
+
+    public List<SupplierDTO> getSuppFilterList() {
+        return suppFilterList;
     }
 
 

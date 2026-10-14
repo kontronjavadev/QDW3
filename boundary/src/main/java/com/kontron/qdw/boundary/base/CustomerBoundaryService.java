@@ -7,7 +7,11 @@ import com.kontron.qdw.dto.base.*;
 import com.kontron.qdw.domain.base.*;
 import jakarta.validation.ConstraintViolationException;
 import java.util.*;
+
+import org.apache.commons.lang3.StringUtils;
+
 import jakarta.inject.*;
+import jakarta.persistence.TypedQuery;
 import jakarta.ejb.*;
 import jakarta.annotation.security.*;
 import net.sourceforge.jbizmo.commons.annotation.Customized;
@@ -38,6 +42,121 @@ public class CustomerBoundaryService {
     public CustomerBoundaryService(CustomerRepository repository) {
         this.repository = repository;
     }
+
+    /**
+     * Search for customer objects
+     * @param filter
+     * @return a list of customer objects
+     * @throws GeneralSearchException if the search operation has failed
+     */
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public List<CustomerDTO> findCustomersExtend(String filter) {
+        // wenn kein Filtertext oder nur Wildcard angegeben, entfällt die Filterung und es wird ohne Filter gesucht
+        boolean useFilter = StringUtils.isNotEmpty(filter) && !filter.equals(WILDCARD);
+        String whereClause = "";
+        if (useFilter) {
+            whereClause = "where a.name like :name "
+                    + " or a.city like :city "
+                    + " or b.name like :countryname ";
+        }
+
+        String jpql = "select new " + CustomerDTO.class.getName() + " ("
+                + "  a.name,"
+                + "  a.street,"
+                + "  a.zipCode,"
+                + "  a.city,"
+                + "  a.internal,"
+                + "  a.code,"
+                + " a.shortText,"
+                + " a.comment,"
+                + " a.creationDate,"
+                + " a.version,"
+                + " a.lastUpdate,"
+                + "  b.code,"
+                + "  b.name "
+                + ") "
+                + "from Customer a "
+                + "join a.country b "
+                + whereClause
+                + "order by a.name ";
+
+
+        @SuppressWarnings("resource")
+        final TypedQuery<CustomerDTO> query = repository.getEntityManager()
+                .createQuery(jpql, CustomerDTO.class)
+                .setMaxResults(SMALL_LIST_SIZE);
+        if (useFilter) {
+            query.setParameter("name", filter + WILDCARD);
+            query.setParameter("city", filter + WILDCARD);
+            query.setParameter("countryname", filter + WILDCARD);
+        }
+
+
+        return query.getResultList();
+    }
+
+
+    /**
+     * Find customer by its ID
+     * @param code
+     * @return the customer object
+     */
+    @Generated
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public CustomerDTO findCustomerById(String code) {
+        return findCustomerById(code, true);
+    }
+
+    /**
+     * Find customer by its ID
+     * @param code
+     * @return the customer object
+     */
+    @Customized
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public CustomerDTO findCustomerByIdForSearch(String code) {
+        return findCustomerById(code, false);
+    }
+
+    /**
+     * Find customer by its ID
+     * @param code
+     * @return the customer object
+     */
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public CustomerDTO findCustomerById(String code, boolean mustExist) {
+        // Find persistent object
+        final Customer customer = repository.findById(code, mustExist);
+
+        final var dto = new CustomerDTO();
+        dto.setName(customer.getName());
+        dto.setStreet(customer.getStreet());
+        dto.setZipCode(customer.getZipCode());
+        dto.setCity(customer.getCity());
+        dto.setInternal(customer.isInternal());
+        dto.setCode(customer.getCode());
+        dto.setShortText(customer.getShortText());
+        dto.setComment(customer.getComment());
+        dto.setCreationDate(customer.getCreationDate());
+        dto.setVersion(customer.getVersion());
+        dto.setCountry(new CountryListDTO());
+        dto.getCountry().setCode(customer.getCountry().getCode());
+        dto.getCountry().setName(customer.getCountry().getName());
+
+        if (customer.getVerticalSector() != null) {
+            dto.setVerticalSector(new VerticalSectorListDTO());
+            dto.getVerticalSector().setCode(customer.getVerticalSector().getCode());
+        }
+
+        dto.setLastUpdate(customer.getLastUpdate());
+
+        return dto;
+    }
+
 
     /**
      * Search for customer objects
@@ -94,10 +213,12 @@ public class CustomerBoundaryService {
         newCustomer.setComment(object.getComment() != null ? object.getComment().trim() : null);
         newCustomer.setCountry(repository.getReference(Country.class, object.getCountry().getCode()));
 
-        if (object.getVerticalSector() == null || object.getVerticalSector().getCode().isEmpty())
+        if (object.getVerticalSector() == null || object.getVerticalSector().getCode().isEmpty()) {
             newCustomer.setVerticalSector(null);
-        else
+        }
+        else {
             newCustomer.setVerticalSector(repository.getReference(VerticalSector.class, object.getVerticalSector().getCode()));
+        }
 
 
         newCustomer = repository.persist(newCustomer, true, true, true);
@@ -131,10 +252,12 @@ public class CustomerBoundaryService {
         customer.setVersion(object.getVersion());
         customer.setCountry(repository.getReference(Country.class, object.getCountry().getCode()));
 
-        if (object.getVerticalSector() == null || object.getVerticalSector().getCode().isEmpty())
+        if (object.getVerticalSector() == null || object.getVerticalSector().getCode().isEmpty()) {
             customer.setVerticalSector(null);
-        else
+        }
+        else {
             customer.setVerticalSector(repository.getReference(VerticalSector.class, object.getVerticalSector().getCode()));
+        }
 
 
         repository.merge(customer, true, false);
@@ -266,43 +389,6 @@ public class CustomerBoundaryService {
         final var dto = new CustomerListDTO();
         dto.setCode(customer.getCode());
         dto.setName(customer.getName());
-
-        return dto;
-    }
-
-    /**
-     * Find customer by its ID
-     * @param code
-     * @return the customer object
-     */
-    @Generated
-    @PermitAll
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public CustomerDTO findCustomerById(String code) {
-        // Find persistent object
-        final Customer customer = repository.findById(code, true);
-
-        final var dto = new CustomerDTO();
-        dto.setName(customer.getName());
-        dto.setStreet(customer.getStreet());
-        dto.setZipCode(customer.getZipCode());
-        dto.setCity(customer.getCity());
-        dto.setInternal(customer.isInternal());
-        dto.setCode(customer.getCode());
-        dto.setShortText(customer.getShortText());
-        dto.setComment(customer.getComment());
-        dto.setCreationDate(customer.getCreationDate());
-        dto.setVersion(customer.getVersion());
-        dto.setCountry(new CountryListDTO());
-        dto.getCountry().setCode(customer.getCountry().getCode());
-        dto.getCountry().setName(customer.getCountry().getName());
-
-        if (customer.getVerticalSector() != null) {
-            dto.setVerticalSector(new VerticalSectorListDTO());
-            dto.getVerticalSector().setCode(customer.getVerticalSector().getCode());
-        }
-
-        dto.setLastUpdate(customer.getLastUpdate());
 
         return dto;
     }

@@ -117,6 +117,15 @@ public class CustomerDTO implements Serializable {
         this.lastUpdate = lastUpdate;
     }
 
+    public CustomerDTO(String name, String street, String zipCode, String city, boolean internal, String code,
+            String shortText, String comment, LocalDateTime creationDate, int version, LocalDateTime lastUpdate,
+            String countryCode, String countryName) {
+        this(name, street, zipCode, city, internal, code, shortText, comment, creationDate, version, lastUpdate);
+        this.country = new CountryListDTO(countryCode, countryName);
+    }
+
+
+
     /**
      * @return the name
      */
@@ -331,23 +340,28 @@ public class CustomerDTO implements Serializable {
     @Generated
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
+        }
 
-        if (obj == null)
+        if (obj == null) {
             return false;
+        }
 
-        if (getClass() != obj.getClass())
+        if (getClass() != obj.getClass()) {
             return false;
+        }
 
         final var dto = (CustomerDTO) obj;
 
         if (this.code == null) {
-            if (dto.getCode() != null)
+            if (dto.getCode() != null) {
                 return false;
+            }
         }
-        else if (!this.code.equals(dto.getCode()) && !this.name.equals(dto.getName()))
+        else if (!this.code.equals(dto.getCode()) && !this.name.equals(dto.getName())) {
             return false;
+        }
 
         return true;
     }

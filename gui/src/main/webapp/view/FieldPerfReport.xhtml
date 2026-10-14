@@ -282,12 +282,13 @@
 		<!-- Zeile 1: Label + Autocomplete (span 3) -->
 		<h:outputLabel styleClass="label-field-optional" for="fi_matnr" value="#{i18n.col_fieldperfreportview_materialnumber}" />
 		<p:autoComplete id="fi_matnr" styleClass="span-3-cols" multiple="true" 
-			minQueryLength="2" maxResults="15" 
+			minQueryLength="2" maxResults="20" 
 			value="#{fieldPerfReport.matNrFilterList}" completeMethod="#{fieldPerfReport.onCompleteMaterialNumber}">
 			<p:ajax event="change" process="@this" />
 			<p:ajax event="itemSelect" process="@this" />
 			<p:ajax event="itemUnselect" process="@this" />
 		</p:autoComplete>
+
 
 		<!-- Zeile 2: Label + CheckboxMenu (span 3) -->
 		<h:outputLabel styleClass="label-field-optional" for="fi_rmatype" value="#{i18n.col_fieldperfreportview_rmatype}" />
@@ -298,7 +299,31 @@
 			<f:selectItems value="#{fieldPerfReport.rmaTypes}" />
 		</p:selectCheckboxMenu>
 
-		<!-- Zeile 3: 4 Elemente (Label, Menu, Label, Menu) 
+
+		<!-- Label + CheckboxMenu (span 3) -->
+		<h:outputLabel styleClass="label-field-optional" for="fi_cust" value="#{i18n.col_fieldperfreportview_cust}" />
+		<p:autoComplete id="fi_cust" styleClass="span-3-cols" multiple="true" 
+			minQueryLength="2" maxResults="20" scrollHeight="350"
+			value="#{fieldPerfReport.custFilterList}" completeMethod="#{fieldPerfReport.onCompleteCustomer}"
+			var="customer" itemLabel="#{customer.code}" itemValue="#{customer}" 
+			converter="#{customerDTOConverter}" >
+
+			<!-- Spaltendefinition für das Dropdown -->
+			<p:column headerText="Name">
+				<h:outputText value="#{customer.name}" />
+			</p:column>
+
+			<p:column headerText="Adresse">
+				<h:outputText value="#{customer.street}, #{customer.zipCode} #{customer.city} (#{customer.country.name})" />
+			</p:column>
+
+			<p:ajax event="change" process="@this" />
+			<p:ajax event="itemSelect" process="@this" />
+			<p:ajax event="itemUnselect" process="@this" />
+		</p:autoComplete>
+
+
+		<!-- Zeile mit 2 Spalten: 4 Elemente (Label, Menu, Label, Menu) 
 			Das zweite Label rehält jeweils zusätzlich die styleClass "block-separator", um den Abstand zu vergrößern -->
 		<h:outputLabel styleClass="label-field-optional" for="fi_matnrset" value="#{i18n.col_fieldperfreportview_matnrset}" />
 		<p:selectOneMenu id="fi_matnrset" converter="#{materialNumberSetDTOConverter}" 
