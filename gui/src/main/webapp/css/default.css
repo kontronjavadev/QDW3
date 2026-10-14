@@ -79,18 +79,18 @@ body {
 
 body .ui-dialog .ui-dialog-titlebar,
 body .ui-dialog .ui-dialog-footer {
-    background: var(--paneldimmed);
+	background: var(--paneldimmed);
 	color: var(--text);
 }
 
 body .ui-dialog .ui-dialog-content {
-    background: var(--panel);
+	background: var(--panel);
 	color: var(--text);
 }
 
 
 body .ui-scrollpanel {
-    background: var(--paneldimmed);
+	background: var(--paneldimmed);
 	color: var(--text);
 }
 
@@ -103,7 +103,8 @@ body .navigator-scrollpanel > .ui-panel-content.ui-widget-content {
 	padding: 0rem;
 }
 
-.ui-widget,.ui-widget .ui-widget {
+.ui-widget,
+.ui-widget .ui-widget {
 	font-size: 100% !important;
 }
 
@@ -133,6 +134,30 @@ body.lov {
 
 .emphasize {
 	color: #8040a0 !important;
+}
+
+
+
+.custom-form-grid {
+	display: grid;
+	/* Spalten: Label (exakt so breit wie nötig) | Input (restlicher Platz) | Label | Input */
+	grid-template-columns: auto minmax(0, 1fr) auto minmax(0, 1fr);
+	/* Abstand: Vertikal 10px, Horizontal 20px (ersetzt leere Spalten oder Tooltip-Tricks) */
+	gap: 0.3rem 0.3rem;
+	align-items: center; /* Zentriert Label und Input vertikal zueinander */
+}
+
+.custom-form-grid .span-3-cols {
+	grid-column: span 3;
+}
+
+/* 
+ * Spezifischer Fix für p:autoComplete mit multiple="true".
+ * Auch in der ui-fluid ignoriert der innere UL-Container manchmal die 100%-Vorgabe.
+ */
+.custom-form-grid .ui-autocomplete-multiple-container {
+	width: 100%;
+	box-sizing: border-box;
 }
 
 
@@ -197,21 +222,24 @@ body .ui-button.ui-state-hover {
 	width: auto !important;
 }
 
-/* Textfeld in Dropdown-Menü */
-.ui-selectonemenu {
-	width: 10.85rem !important;
-	height: 1.6rem !important;
-}
-
 /* Dropdown Filter in Tabellen-Spalten; ggf. allg. .ui-datatable .ui-selectonemenu */
 .ui-datatable .ui-column-customfilter .ui-selectonemenu {
-    width: 100% !important;
-    min-width: unset !important;
+	width: 100% !important;
+	min-width: unset !important;
 }
 
 
+
+/* Textfeld in Dropdown-Menü im fluid-Umfeld mit maximaler Breite */
+body .ui-fluid .ui-selectonemenu {
+  width: auto !important;
+}
+
+/* Textfeld in Dropdown-Menü */
 body .ui-selectonemenu {
 	background: var(--panel);
+	height: 1.5rem;
+	width: 10.85rem;
 }
 
 body .ui-selectonemenu.ui-state-focus {
@@ -220,10 +248,12 @@ body .ui-selectonemenu.ui-state-focus {
 
 /* Text in Textfeld des Dropdown-Menü */
 body .ui-selectonemenu .ui-selectonemenu-label {
-	padding-top: 0.15rem;
+	padding: 0.15rem 0.3rem;
 	font-size: unset;
 	color: var(--text);
-    background: var(--inputfield);
+	background: var(--inputfield);
+	height: 0.5rem;
+	min-height: 100%;
 }
 
 body .ui-selectonemenu .ui-selectonemenu-trigger {
@@ -234,7 +264,7 @@ body .ui-selectonemenu .ui-selectonemenu-trigger {
 body .ui-selectonemenu-panel .ui-selectonemenu-items .ui-selectonemenu-item {
 	padding: 0.1rem .3rem;
 	color: var(--text);
-    background: var(--inputfield);
+	background: var(--inputfield);
 }
 
 body .ui-selectonemenu-panel .ui-selectonemenu-items .ui-selectonemenu-item.ui-state-highlight {
@@ -254,7 +284,7 @@ body .ui-selectonemenu-panel .ui-selectonemenu-items .ui-selectonemenu-item.ui-s
 body .ui-selectcheckboxmenu .ui-selectcheckboxmenu-label-container,
 body .ui-selectcheckboxmenu-panel .ui-selectcheckboxmenu-header,
 body .ui-selectcheckboxmenu-panel .ui-selectcheckboxmenu-items .ui-selectcheckboxmenu-item {
-	padding: .15rem .5rem;
+	padding: .15rem .3rem;
 	background: var(--inputfield);
 	color: var(--text);
 }
@@ -324,27 +354,6 @@ body .ui-menu .ui-menu-list .ui-menuitem.ui-menuitem-active > .ui-menuitem-link 
 body .ui-selectonemenu.ui-state-hover {
 	box-shadow: unset;
 	border-color: var(--activeborder);
-}
-
-
-
-/* Autocomplete Textfeld */
-.ui-autocomplete-panel {
-	min-width: fit-content !important;
-}
-
-.ui-autocomplete-panel .ui-autocomplete-items .ui-autocomplete-item {
-	white-space: nowrap !important;
-	padding: .15rem .3rem !important;
-}
-
-.ui-autocomplete-panel .ui-autocomplete-items .ui-autocomplete-item.ui-state-highlight {
-	background: var(--active) !important;
-	color: var(--text) !important;
-}
-
-.ui-autocomplete-input-large .ui-autocomplete-input {
-	width: 16.25rem;
 }
 
 
@@ -419,8 +428,8 @@ body .ui-paginator .ui-paginator-rpp-options {
 
 /* Select-one-button aktiviert / selektiert */
 .ui-selectonebutton > .ui-button.ui-state-active {
-	background: #6fa6d3 !important;
-	border: 1px solid #4a83b1 !important;
+	background: var(--activemarked) !important;
+	border: 1px solid var(--activeborder) !important;
 }
 
 /* Select-one-button Fokus bei mouse-down oder Tastatur-Navigation*/
@@ -429,8 +438,8 @@ body .ui-paginator .ui-paginator-rpp-options {
 .ui-selectonebutton > .ui-button.ui-state-focus,
 .ui-selectonebutton > .ui-button.ui-state-hover,
 .ui-selectonebutton > .ui-button.ui-state-active:hover {
-	background: #C9E5FC !important;
-	border: 1px solid #6fa6d3 !important;
+	background: var(--hover) !important;
+	border: 1px solid var(--hoverborder) !important;
 }
 
 
@@ -438,15 +447,15 @@ body .ui-paginator .ui-paginator-rpp-options {
 /* Select-one-Listbox */
 /* Der äußere Container wird zum Flex-Container. Breite und Höhe holt er sich aus deinem Inline-Style. */
 body .ui-selectonelistbox.flex-listbox {
-    display: flex;
-    flex-direction: column;
+	display: flex;
+	flex-direction: column;
 }
 
 /* Der innere Container nimmt den gesamten Restplatz ein. "!important" ist erforderlich, da PrimeFaces "style='height: 200px;'" direkt ins HTML rendert. */
 body .ui-selectonelistbox.flex-listbox .ui-selectlistbox-listcontainer {
-    flex: 1 1 auto;
-    height: auto !important; 
-    overflow-y: auto;
+	flex: 1 1 auto;
+	height: auto !important; 
+	overflow-y: auto;
 }
 
 body .ui-selectonelistbox .ui-selectlistbox-listcontainer .ui-selectlistbox-list .ui-selectlistbox-item.ui-state-highlight {
@@ -473,7 +482,7 @@ body .searchdialog-picklist .ui-picklist-list {
 }
 
 body .ui-picklist .ui-picklist-caption {	
-    background: var(--paneldimmed);
+	background: var(--paneldimmed);
 	color: var(--text);
 }
 
@@ -496,7 +505,7 @@ body .ui-picklist .ui-picklist-list .ui-picklist-item.ui-state-hover {
 
 body .ui-inputfield {
 	padding: .15rem .3rem;
-    background: var(--inputfield);
+	background: var(--inputfield);
 	color: var(--text);
 }
 
@@ -535,6 +544,27 @@ body .ui-inputfield[readonly] {
 	white-space: normal;
 	font-weight: bold;
 	color: #AB5252 !important;
+}
+
+
+
+/* Autocomplete Textfeld */
+.ui-autocomplete-panel {
+	min-width: fit-content !important;
+}
+
+.ui-autocomplete-panel .ui-autocomplete-items .ui-autocomplete-item {
+	white-space: nowrap !important;
+	padding: .15rem .3rem !important;
+}
+
+.ui-autocomplete-panel .ui-autocomplete-items .ui-autocomplete-item.ui-state-highlight {
+	background: var(--active) !important;
+	color: var(--text) !important;
+}
+
+.ui-autocomplete-input-large .ui-autocomplete-input {
+	width: 16.25rem;
 }
 
 
@@ -687,16 +717,16 @@ body .ui-datatable .ui-paginator {
 
 
 .viewScrollable .ui-datatable-scrollable-body {
-    /* Wie SizeServiceBean#viewWidth() und #viewHeight(),
-    jedoch muss die Höhe des Paginators und des Headers abgezogen werden.
-    Es werden 282px statt 209px abgezogen, in der Summe also 73px mehr.
-    Die Höhe als max-height, damit bei weniger beanspruchtem Platz kein Leerraum zwischen Tabellenende und Scrollbar entsteht.
-    */
+	/* Wie SizeServiceBean#viewWidth() und #viewHeight(),
+	jedoch muss die Höhe des Paginators und des Headers abgezogen werden.
+	Es werden 282px statt 209px abgezogen, in der Summe also 73px mehr.
+	Die Höhe als max-height, damit bei weniger beanspruchtem Platz kein Leerraum zwischen Tabellenende und Scrollbar entsteht.
+	*/
 
-    width: calc(100vw - 310px);
-    max-height: calc(100vh - 282px);
-    height: fit-content;
-    min-height: 32px;
+	width: calc(100vw - 310px);
+	max-height: calc(100vh - 282px);
+	height: fit-content;
+	min-height: 32px;
 }
 
 .viewScrollable .ui-datatable-scrollable-header,
@@ -706,23 +736,23 @@ body .ui-datatable .ui-paginator {
 
 
 .orderitemViewScrollable .ui-datatable-scrollable-body {
-    max-height: calc(100vh - 618px);
+	max-height: calc(100vh - 618px);
 }
 
 .prodinfosetPushViewScrollable .ui-datatable-scrollable-body {
-    max-height: calc(100vh - 374px);
+	max-height: calc(100vh - 374px);
 }
 
 .catalogItemViewScrollable .ui-datatable-scrollable-body {
-    max-height: calc(100vh - 315px);
+	max-height: calc(100vh - 315px);
 }
 
 
 .compareViewPanelScrollable .ui-datatable-scrollable-body {
-    width: calc(100vw - 330px);
-    max-height: calc((100vh - 466px)/2);
-    height: fit-content;
-    min-height: 32px;
+	width: calc(100vw - 330px);
+	max-height: calc((100vh - 466px)/2);
+	height: fit-content;
+	min-height: 32px;
 }
 
 .compareViewPanelScrollable .ui-datatable-scrollable-header,
@@ -742,7 +772,7 @@ Nachteil dieser Lösung: der obere Bereich hat eine fixe Höhe. Ist dort also ei
 Höhe,so entsteht bei kleineren Tabs zusätzlicher Raum zur unteren Tabelle.
 
 Nachteil ScrollPanel: Je nach Verewndung:
-Entweder: Wird die Tabelle stattdessen in ein ScrollPanel gepackt, so wird  die komplette Tabelle, inkl. Menü, Paginator und
+Entweder: Wird die Tabelle stattdessen in ein ScrollPanel gepackt, so wird die komplette Tabelle, inkl. Menü, Paginator und
 Titelzeile gescrollt und ein Paginator wäre nicht mittig zum angezeigen Bereich, sondern mittig zu gesamt bedarften Bereich.
 Letzteres kann noch akzeptabel sein, wenn die Tabelle in der Breite nicht weit über den sichtbaren Bereich hinaus geht.
 Oder: Die Scrollbar der Tabelle ist unten an der Tabelle und nicht unten am sichtbaren Ausschnitt.
@@ -753,15 +783,15 @@ styleClass="viewScrollable headerViewScrollable quoteDetailsViewScrollable"
 .headerViewScrollable .ui-menu.ui-menubar,
 .headerViewScrollable .ui-datatable-scrollable-header,
 .headerViewScrollable .ui-datatable-scrollable-body {
-    width: calc(100vw - 320px);
+	width: calc(100vw - 320px);
 }
 
 .quoteDetailsViewScrollable .ui-datatable-scrollable-body {
-    max-height: calc(100vh - 561px);
+	max-height: calc(100vh - 561px);
 }
 
 .quotedPricesViewScrollable .ui-datatable-scrollable-body {
-    max-height: calc(100vh - 564px);
+	max-height: calc(100vh - 564px);
 }
 
 
@@ -787,19 +817,19 @@ body .ui-datatable thead th.ui-state-focus {
 }
 
 body .ui-datatable thead th.ui-state-active {
-    background: var(--active);
-    color: var(--textonactive);
+	background: var(--active);
+	color: var(--textonactive);
 }
 
 body .ui-datatable thead th.ui-state-hover {
-    background: var(--panel);
-    color: var(--text);
+	background: var(--panel);
+	color: var(--text);
 	box-shadow: inset 0 0 0 0.15rem var(--hover);
 }
 
 body .ui-datatable thead th.ui-state-active.ui-state-hover {
-    background: var(--active);
-    color: var(--textonactive);
+	background: var(--active);
+	color: var(--textonactive);
 	box-shadow: inset 0 0 0 0.15rem var(--hover);
 }
 
@@ -1071,7 +1101,7 @@ body .ui-fileupload .ui-fileupload-content .ui-fileupload-files .ui-fileupload-r
 
 
 body .ui-datepicker {
-    background: var(--inputfield);
+	background: var(--inputfield);
 	color: var(--text);
 }
 
@@ -1081,7 +1111,7 @@ body .ui-datepicker .ui-datepicker-group {
 
 
 body .ui-datepicker .ui-datepicker-header {
-    background: var(--paneldimmed);
+	background: var(--paneldimmed);
 	color: var(--text);
 }
 
@@ -1110,7 +1140,7 @@ body .ui-datepicker .ui-datepicker-calendar td > span.ui-state-active {
 }
 
 body .ui-datepicker .ui-datepicker-calendar td > a:hover {
-    background: var(--hover);
+	background: var(--hover);
 	color: var(--text);
 }
 
@@ -1209,8 +1239,8 @@ body .ui-dialog.ui-confirm-dialog .ui-dialog-content {
 	display: table-cell;
 	vertical-align: top;
 	width: 280px;
-    max-width: 280px;
-    min-width: 280px;
+	max-width: 280px;
+	min-width: 280px;
 }
 
 .template-content {
