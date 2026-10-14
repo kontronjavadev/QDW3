@@ -160,6 +160,10 @@ body.lov {
 	box-sizing: border-box;
 }
 
+.custom-form-grid .block-separator {
+	margin-left: .3rem; /* Erweitert den Abstand zwischen linkem Input und rechtem Label an */
+}
+
 
 
 /* Schaltfläche Allgemein */

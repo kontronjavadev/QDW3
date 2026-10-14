@@ -298,7 +298,8 @@
 			<f:selectItems value="#{fieldPerfReport.rmaTypes}" />
 		</p:selectCheckboxMenu>
 
-		<!-- Zeile 3: 4 Elemente (Label, Menu, Label, Menu) -->
+		<!-- Zeile 3: 4 Elemente (Label, Menu, Label, Menu) 
+			Das zweite Label rehält jeweils zusätzlich die styleClass "block-separator", um den Abstand zu vergrößern -->
 		<h:outputLabel styleClass="label-field-optional" for="fi_matnrset" value="#{i18n.col_fieldperfreportview_matnrset}" />
 		<p:selectOneMenu id="fi_matnrset" converter="#{materialNumberSetDTOConverter}" 
 			scrollHeight="350" value="#{fieldPerfReport.selectedMatNrSet}">
@@ -308,7 +309,7 @@
 				itemLabel="#{matNrSetItem.label}" itemValue="#{matNrSetItem}" />
 		</p:selectOneMenu>
 
-		<h:outputLabel styleClass="label-field-optional" for="fi_sernrset" value="#{i18n.col_fieldperfreportview_sernrset}" />
+		<h:outputLabel styleClass="label-field-optional block-separator" for="fi_sernrset" value="#{i18n.col_fieldperfreportview_sernrset}" />
 		<p:selectOneMenu id="fi_sernrset" converter="#{serialNumberSetDTOConverter}" 
 			scrollHeight="350" value="#{fieldPerfReport.selectedSerNrSet}">
 			<p:ajax process="@this" />
