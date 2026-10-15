@@ -310,11 +310,14 @@
 
 			<!-- Spaltendefinition für das Dropdown -->
 			<p:column headerText="Name">
-				<h:outputText value="#{customer.name}" />
+				<h:outputText value="#{fieldPerfReport.highlightMatch(customer.name)}" escape="false" />
 			</p:column>
 
 			<p:column headerText="Adresse">
-				<h:outputText value="#{customer.street}, #{customer.zipCode} #{customer.city} (#{customer.country.name})" />
+				<h:outputText value="#{customer.street}, " />
+				<h:outputText value="#{customer.zipCode} " />
+				<h:outputText value="#{fieldPerfReport.highlightMatch(customer.city)} " escape="false" />
+				<h:outputText value="(#{fieldPerfReport.highlightMatch(customer.country.name)})" escape="false" />
 			</p:column>
 
 			<p:ajax event="change" process="@this" />

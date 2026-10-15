@@ -30,6 +30,7 @@
 	--reportmarkblue: #4a83b1;
 	--reportmarkred: #d86868;
 	--backgroundmarkgreen: yellowgreen;
+	--filtermark: #9dbed9;
 }
 @media (prefers-color-scheme: dark) {
 :root {
@@ -64,6 +65,7 @@
 	--reportmarkblue: #569fd9;
 	--reportmarkred: #ff9191;
 	--backgroundmarkgreen: forestgreen;
+	--filtermark: #f2b994;
 }
 }
 

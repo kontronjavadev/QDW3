@@ -12,6 +12,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.primefaces.model.DualListModel;
@@ -33,8 +34,6 @@ import com.kontron.qdw.dto.material.SerialNumberSetDTO;
 import com.kontron.qdw.dto.service.RMATypeListDTO;
 import com.kontron.qdw.service.SavedQueryService;
 import com.kontron.qdw.ui.UserSession;
-import com.kontron.qdw.ui.dialog.EditMaterialDialog;
-import com.kontron.qdw.ui.dialog.ViewMaterialDialog;
 import com.kontron.qdw.ui.view.util.SuperView;
 
 import jakarta.enterprise.context.SessionScoped;
@@ -76,7 +75,9 @@ public class FieldPerfReport extends SuperView implements Serializable {
     private String selectedSavedQuery;
 
     // private List<MaterialSearchDTO> materialsList = new ArrayList<>();
-    private MaterialSearchDTO selectedObject;
+    // private MaterialSearchDTO selectedObject;
+
+    private String currentCustomerFilter = "";
 
     private List<String> matNrFilterList = new ArrayList<>();
     private List<CustomerDTO> custFilterList = new ArrayList<>();
@@ -169,50 +170,6 @@ public class FieldPerfReport extends SuperView implements Serializable {
 
 
 
-    // public void onClick() { }
-
-    public void onDoubleClick() {
-        logger.debug("Handle double-click event");
-
-        if (userSession.redirectTo(getCurrentPageURL(), openEditMaterialDialog())) {
-            return;
-        }
-
-        userSession.redirectTo(getCurrentPageURL(), openViewMaterialDialog());
-    }
-
-    public String openViewMaterialDialog() {
-        var url = "";
-
-        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_SUPERUSER)) {
-            url = ViewMaterialDialog.PAGE_INIT_URL + selectedObject.getId();
-        }
-
-        return url;
-    }
-
-    public String openEditMaterialDialog() {
-        var url = "";
-
-        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_SUPERUSER)) {
-            url = EditMaterialDialog.PAGE_INIT_URL + selectedObject.getId();
-        }
-
-        return url;
-    }
-
-
-
-    public void refreshFormatSettings() {
-        searchObj.setDateFormat(userSession.getDateFormat());
-        searchObj.setDateTimeFormat(userSession.getDateTimeFormat());
-        searchObj.setNumberFormat(userSession.getNumberFormat());
-        searchObj.setDecimalSeparator(DecimalFormatSymbols.getInstance(userSession.getLocale()).getDecimalSeparator());
-        searchObj.setGroupingSeparator(DecimalFormatSymbols.getInstance(userSession.getLocale()).getGroupingSeparator());
-    }
-
-
-
     /** Diese Methode wird vom JavaScript via p:remoteCommand aufgerufen */
     public void handlePastedMaterials() {
         final var requestParams = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
@@ -263,6 +220,7 @@ public class FieldPerfReport extends SuperView implements Serializable {
     }
 
     public List<CustomerDTO> onCompleteCustomer(String filter) {
+        this.currentCustomerFilter = filter;
         try {
             return custService.findCustomersExtend(filter);
         }
@@ -270,6 +228,43 @@ public class FieldPerfReport extends SuperView implements Serializable {
             logger.error("Error while searching for auto-complete items by using the entered text '{}'!", filter, e);
             return Collections.emptyList();
         }
+    }
+
+    /**
+     * Sichert den Text gegen XSS ab und markiert den gefundenen Suchbegriff farblich.
+     */
+    public String highlightMatch(final String text) {
+        if (text == null) {
+            return "";
+        }
+
+        // 1. Zwingend: XSS-Schutz vorab. (Alternativ Apache Commons StringEscapeUtils nutzen)
+        final String safeText = text.replace("&", "&amp;")
+                .replace("<", "&lt;")
+                .replace(">", "&gt;")
+                .replace("\"", "&quot;")
+                .replace("'", "&#x27;");
+
+        if (currentCustomerFilter == null || currentCustomerFilter.isBlank()) {
+            return safeText;
+        }
+
+        // 2. Den Suchbegriff für den Regex escapen (falls der User nach "+" oder "*" sucht)
+        // und ebenfalls HTML-escapen, da wir ihn gegen den gesicherten 'safeText' matchen.
+        final String safeQuery = currentCustomerFilter.replace("&", "&amp;")
+                .replace("<", "&lt;")
+                .replace(">", "&gt;")
+                .replace("\"", "&quot;")
+                .replace("'", "&#x27;");
+
+        final String quotedQuery = Pattern.quote(safeQuery);
+
+        // 3. Regex-Replace:
+        // (?i) schaltet auf case-insensitive.
+        // Die Klammern um quotedQuery bilden eine Capture-Group.
+        // $1 referenziert den exakt gefundenen String im Zieltext (erhält den originalen Case).
+        return safeText.replaceAll("(?i)(" + quotedQuery + ")",
+                "<span style=\"background-color: var(--filtermark);\">$1</span>");
     }
 
 
@@ -332,18 +327,6 @@ public class FieldPerfReport extends SuperView implements Serializable {
     }
 
 
-
-    public MaterialSearchDTO getSelectedObject() {
-        return selectedObject;
-    }
-
-    public void setSelectedObject(MaterialSearchDTO selectedObject) {
-        this.selectedObject = selectedObject;
-    }
-
-    // public Collection<MaterialSearchDTO> getMaterialsList() {
-    // return materialsList;
-    // }
 
     public List<String> getMatNrFilterList() {
         return matNrFilterList;
@@ -450,6 +433,14 @@ public class FieldPerfReport extends SuperView implements Serializable {
 
 
 
+    public void refreshFormatSettings() {
+        searchObj.setDateFormat(userSession.getDateFormat());
+        searchObj.setDateTimeFormat(userSession.getDateTimeFormat());
+        searchObj.setNumberFormat(userSession.getNumberFormat());
+        searchObj.setDecimalSeparator(DecimalFormatSymbols.getInstance(userSession.getLocale()).getDecimalSeparator());
+        searchObj.setGroupingSeparator(DecimalFormatSymbols.getInstance(userSession.getLocale()).getGroupingSeparator());
+    }
+
     public void initSearchObject() {
         searchObj = new SearchDTO();
         int colOrderId = -1;
@@ -512,6 +503,56 @@ public class FieldPerfReport extends SuperView implements Serializable {
             }
         }
     }
+
+
+
+    // public void onClick() { }
+    //
+    // public void onDoubleClick() {
+    // logger.debug("Handle double-click event");
+    //
+    // if (userSession.redirectTo(getCurrentPageURL(), openEditMaterialDialog())) {
+    // return;
+    // }
+    //
+    // userSession.redirectTo(getCurrentPageURL(), openViewMaterialDialog());
+    // }
+    //
+    // public String openViewMaterialDialog() {
+    // var url = "";
+    //
+    // if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_SUPERUSER)) {
+    // url = ViewMaterialDialog.PAGE_INIT_URL + selectedObject.getId();
+    // }
+    //
+    // return url;
+    // }
+    //
+    // public String openEditMaterialDialog() {
+    // var url = "";
+    //
+    // if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_SUPERUSER)) {
+    // url = EditMaterialDialog.PAGE_INIT_URL + selectedObject.getId();
+    // }
+    //
+    // return url;
+    // }
+
+
+
+    // public MaterialSearchDTO getSelectedObject() {
+    // return selectedObject;
+    // }
+    //
+    // public void setSelectedObject(MaterialSearchDTO selectedObject) {
+    // this.selectedObject = selectedObject;
+    // }
+    //
+    // public Collection<MaterialSearchDTO> getMaterialsList() {
+    // return materialsList;
+    // }
+
+
 
     // public void fetchMaterials() {
     // logger.debug("Perform data fetch operation");
