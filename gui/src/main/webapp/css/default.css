@@ -597,6 +597,11 @@ body .ui-autocomplete-panel .ui-autocomplete-table td {
 	padding: .2rem .3rem;
 }
 
+/* Verhindert den Fettdruck durch das PrimeFaces-interne Highlighting */
+body .ui-autocomplete-panel .ui-autocomplete-query {
+	font-weight: inherit;
+}
+
 body .ui-autocomplete-input-large .ui-autocomplete-input {
 	width: 16.25rem;
 }

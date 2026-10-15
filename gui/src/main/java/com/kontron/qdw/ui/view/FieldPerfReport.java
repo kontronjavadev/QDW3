@@ -238,7 +238,7 @@ public class FieldPerfReport extends SuperView implements Serializable {
             return "";
         }
 
-        // 1. Zwingend: XSS-Schutz vorab. (Alternativ Apache Commons StringEscapeUtils nutzen)
+        // Zwingend: XSS-Schutz vorab. (Alternativ Apache Commons StringEscapeUtils nutzen)
         final String safeText = text.replace("&", "&amp;")
                 .replace("<", "&lt;")
                 .replace(">", "&gt;")
@@ -249,21 +249,40 @@ public class FieldPerfReport extends SuperView implements Serializable {
             return safeText;
         }
 
-        // 2. Den Suchbegriff für den Regex escapen (falls der User nach "+" oder "*" sucht)
+        // Führende und schließende % entfernen (auch mehrere wie "%%ab%")
+        String cleanQuery = currentCustomerFilter.replaceAll("^%+", "").replaceAll("%+$", "").trim();
+
+        if (cleanQuery.isBlank()) {
+            return safeText;
+        }
+
+
+        // Den Suchbegriff für den Regex escapen (falls der User nach "+" oder "*" sucht)
         // und ebenfalls HTML-escapen, da wir ihn gegen den gesicherten 'safeText' matchen.
-        final String safeQuery = currentCustomerFilter.replace("&", "&amp;")
+        cleanQuery = cleanQuery.replace("&", "&amp;")
                 .replace("<", "&lt;")
                 .replace(">", "&gt;")
                 .replace("\"", "&quot;")
                 .replace("'", "&#x27;");
 
-        final String quotedQuery = Pattern.quote(safeQuery);
+        // Suchstring an verbleibenden (inneren) % aufsplitten
+        final String[] parts = cleanQuery.split("%+");
+        final StringBuilder regexBuilder = new StringBuilder("(?i)(");
 
-        // 3. Regex-Replace:
+        for (int i = 0; i < parts.length; i++) {
+            regexBuilder.append(Pattern.quote(parts[i]));
+            // Zwischen den einzelnen Blöcken das Wildcard .*? (non-greedy) einfügen
+            if (i < parts.length - 1) {
+                regexBuilder.append(".*?");
+            }
+        }
+        regexBuilder.append(")");
+
+        // Regex-Replace mit der Capture-Group $1:
         // (?i) schaltet auf case-insensitive.
         // Die Klammern um quotedQuery bilden eine Capture-Group.
         // $1 referenziert den exakt gefundenen String im Zieltext (erhält den originalen Case).
-        return safeText.replaceAll("(?i)(" + quotedQuery + ")",
+        return safeText.replaceAll(regexBuilder.toString(),
                 "<span style=\"background-color: var(--filtermark);color: var(--textonactivemarked);\">$1</span>");
     }
 
