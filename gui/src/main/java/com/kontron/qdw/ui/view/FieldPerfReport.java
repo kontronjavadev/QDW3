@@ -264,7 +264,7 @@ public class FieldPerfReport extends SuperView implements Serializable {
         // Die Klammern um quotedQuery bilden eine Capture-Group.
         // $1 referenziert den exakt gefundenen String im Zieltext (erhält den originalen Case).
         return safeText.replaceAll("(?i)(" + quotedQuery + ")",
-                "<span style=\"background-color: var(--filtermark);\">$1</span>");
+                "<span style=\"background-color: var(--filtermark);color: var(--textonactivemarked);\">$1</span>");
     }
 
 
