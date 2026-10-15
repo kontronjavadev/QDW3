@@ -281,7 +281,7 @@
 	<div class="ui-fluid custom-form-grid">
 		<!-- Zeile 1: Label + Autocomplete (span 3) -->
 		<h:outputLabel styleClass="label-field-optional" for="fi_matnr" value="#{i18n.col_fieldperfreportview_materialnumber}" />
-		<p:autoComplete id="fi_matnr" styleClass="span-3-cols" multiple="true" 
+		<p:autoComplete id="fi_matnr" styleClass="span-3-cols" multiple="true" forceSelection="true" 
 			minQueryLength="2" maxResults="20" 
 			value="#{fieldPerfReport.matNrFilterList}" completeMethod="#{fieldPerfReport.onCompleteMaterialNumber}">
 			<p:ajax event="change" process="@this" />
@@ -302,8 +302,8 @@
 
 		<!-- Label + CheckboxMenu (span 3) -->
 		<h:outputLabel styleClass="label-field-optional" for="fi_cust" value="#{i18n.col_fieldperfreportview_cust}" />
-		<p:autoComplete id="fi_cust" styleClass="span-3-cols" multiple="true" 
-			minQueryLength="2" maxResults="20" scrollHeight="350"
+		<p:autoComplete id="fi_cust" styleClass="span-3-cols" multiple="true" forceSelection="true" 
+			minQueryLength="2" maxResults="50" scrollHeight="350"
 			value="#{fieldPerfReport.custFilterList}" completeMethod="#{fieldPerfReport.onCompleteCustomer}"
 			var="customer" itemLabel="#{customer.code}" itemValue="#{customer}" 
 			converter="#{customerDTOConverter}" >

@@ -598,6 +598,12 @@ body .ui-autocomplete .ui-autocomplete-multiple-container .ui-autocomplete-token
 	margin-top: -0.55rem;
 }
 
+body .ui-autocomplete-panel .ui-autocomplete-items .ui-autocomplete-item.ui-autocomplete-row > td,
+body .ui-autocomplete-panel .ui-autocomplete-table th,
+body .ui-autocomplete-panel .ui-autocomplete-table td {
+	padding: .2rem .3rem;
+}
+
 
 
 /* Checkbox */

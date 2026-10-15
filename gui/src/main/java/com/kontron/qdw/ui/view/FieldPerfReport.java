@@ -247,27 +247,27 @@ public class FieldPerfReport extends SuperView implements Serializable {
     }
 
 
-    public List<String> onCompleteMaterialNumber(String query) {
+    public List<String> onCompleteMaterialNumber(String filter) {
         final var results = new ArrayList<String>();
         try {
-            final Collection<MaterialListDTO> items = materialService.findMaterials(query + "%");
+            final Collection<MaterialListDTO> items = materialService.findMaterials(filter + "%");
             for (final MaterialListDTO item : items) {
                 results.add(item.getMaterialNumber());
             }
         }
         catch (final Exception e) {
-            logger.error("Error while searching for auto-complete items by using the entered text '{}'!", query, e);
+            logger.error("Error while searching for auto-complete items by using the entered text '{}'!", filter, e);
         }
 
         return results;
     }
 
-    public List<CustomerDTO> onCompleteCustomer(String query) {
+    public List<CustomerDTO> onCompleteCustomer(String filter) {
         try {
-            return custService.findCustomersExtend(query);
+            return custService.findCustomersExtend(filter);
         }
         catch (final Exception e) {
-            logger.error("Error while searching for auto-complete items by using the entered text '{}'!", query, e);
+            logger.error("Error while searching for auto-complete items by using the entered text '{}'!", filter, e);
             return Collections.emptyList();
         }
     }
@@ -357,8 +357,16 @@ public class FieldPerfReport extends SuperView implements Serializable {
         return custFilterList;
     }
 
+    public void setCustFilterList(List<CustomerDTO> custFilterList) {
+        this.custFilterList = custFilterList;
+    }
+
     public List<SupplierDTO> getSuppFilterList() {
         return suppFilterList;
+    }
+
+    public void setSuppFilterList(List<SupplierDTO> suppFilterList) {
+        this.suppFilterList = suppFilterList;
     }
 
 
