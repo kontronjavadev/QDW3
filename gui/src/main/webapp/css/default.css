@@ -144,8 +144,7 @@ body.lov {
 	display: grid;
 	/* Spalten: Label (exakt so breit wie nötig) | Input (restlicher Platz) | Label | Input */
 	grid-template-columns: auto minmax(0, 1fr) auto minmax(0, 1fr);
-	/* Abstand: Vertikal 10px, Horizontal 20px (ersetzt leere Spalten oder Tooltip-Tricks) */
-	gap: 0.3rem 0.3rem;
+	gap: 0.3rem 0.3rem; /* Abstand zwischen Zeilen und Spalten */
 	align-items: center; /* Zentriert Label und Input vertikal zueinander */
 }
 
@@ -228,91 +227,14 @@ body .ui-button.ui-state-hover {
 	width: auto !important;
 }
 
-/* Dropdown Filter in Tabellen-Spalten; ggf. allg. .ui-datatable .ui-selectonemenu */
-.ui-datatable .ui-column-customfilter .ui-selectonemenu {
-	width: 100% !important;
-	min-width: unset !important;
-}
 
 
 
-/* Textfeld in Dropdown-Menü im fluid-Umfeld mit maximaler Breite */
-body .ui-fluid .ui-selectonemenu {
-  width: auto !important;
-}
-
-/* Textfeld in Dropdown-Menü */
-body .ui-selectonemenu {
-	background: var(--panel);
-	height: 1.5rem;
-	width: 10.85rem;
-}
-
-body .ui-selectonemenu.ui-state-focus {
-	border-color: var(--activeborder);
-}
-
-/* Text in Textfeld des Dropdown-Menü */
-body .ui-selectonemenu .ui-selectonemenu-label {
-	padding: 0.15rem 0.3rem;
-	font-size: unset;
-	color: var(--text);
-	background: var(--inputfield);
-	height: 0.5rem;
-	min-height: 100%;
-}
-
-body .ui-selectonemenu .ui-selectonemenu-trigger {
-	width: 1.2rem;
-}
-
-/* Text in Aufklappliste des Dropdown-Menü */
-body .ui-selectonemenu-panel .ui-selectonemenu-items .ui-selectonemenu-item {
-	padding: 0.1rem .3rem;
-	color: var(--text);
-	background: var(--inputfield);
-}
-
-body .ui-selectonemenu-panel .ui-selectonemenu-items .ui-selectonemenu-item.ui-state-highlight {
-	color: var(--text);
-	background: var(--inputfield);
-	box-shadow: inset 0 0 0 0.2rem var(--active);
-}
-
-body .ui-selectonemenu-panel .ui-selectonemenu-items .ui-selectonemenu-item.ui-state-hover {
-	color: var(--text);
-	background: var(--inputfield);
-	box-shadow: inset 0 0 0 0.2rem var(--hover);
-}
 
 
 
-body .ui-selectcheckboxmenu .ui-selectcheckboxmenu-label-container,
-body .ui-selectcheckboxmenu-panel .ui-selectcheckboxmenu-header,
-body .ui-selectcheckboxmenu-panel .ui-selectcheckboxmenu-items .ui-selectcheckboxmenu-item {
-	padding: .15rem .3rem;
-	background: var(--inputfield);
-	color: var(--text);
-}
 
-body .ui-selectcheckboxmenu {
-	padding-right: 1.5rem;
-	background: var(--inputfield);
-	color: var(--text);
-	min-width: 5rem;
-}
 
-body .ui-selectcheckboxmenu.ui-state-focus {
-	border-color: var(--activeborder);
-}
-
-body .ui-selectcheckboxmenu-panel .ui-selectcheckboxmenu-items-wrapper {
-	padding: 0rem;
-}
-
-body .ui-selectcheckboxmenu-panel .ui-selectcheckboxmenu-items .ui-selectcheckboxmenu-item:hover {
-	box-shadow: inset 0 0 0 0.15rem var(--hover);
-}
 
 
 
@@ -356,19 +278,6 @@ body .ui-menu .ui-menu-list .ui-menuitem.ui-menuitem-active > .ui-menuitem-link 
 	box-shadow: unset;
 }
 
-.menuitem-selectone {
-	box-shadow: unset !important;
-}
-
-.menuitem-selectone .ui-icon-triangle-1-s:last-child {
-	margin-left: unset !important;
-	margin-right: 0.1rem !important
-}
-
-body .ui-selectonemenu.ui-state-hover {
-	box-shadow: unset;
-	border-color: var(--activeborder);
-}
 
 
 
@@ -552,219 +461,9 @@ body .ui-tabs .ui-tabs-nav li.ui-tabs-header.ui-tabs-outline {
 
 
 
-/* Tabelle */
-body .ui-datatable .ui-paginator {
-	padding: .1rem .3rem;
-}
 
 
-.viewScrollable .ui-datatable-scrollable-body {
-	/* Wie SizeServiceBean#viewWidth() und #viewHeight(),
-	jedoch muss die Höhe des Paginators und des Headers abgezogen werden.
-	Es werden 282px statt 209px abgezogen, in der Summe also 73px mehr.
-	Die Höhe als max-height, damit bei weniger beanspruchtem Platz kein Leerraum zwischen Tabellenende und Scrollbar entsteht.
-	*/
 
-	width: calc(100vw - 310px);
-	max-height: calc(100vh - 282px);
-	height: fit-content;
-	min-height: 32px;
-}
-
-.viewScrollable .ui-datatable-scrollable-header,
-.viewScrollable .ui-paginator.ui-paginator-top {
-	width: calc(100vw - 310px);
-}
-
-
-.orderitemViewScrollable .ui-datatable-scrollable-body {
-	max-height: calc(100vh - 618px);
-}
-
-.prodinfosetPushViewScrollable .ui-datatable-scrollable-body {
-	max-height: calc(100vh - 374px);
-}
-
-.catalogItemViewScrollable .ui-datatable-scrollable-body {
-	max-height: calc(100vh - 315px);
-}
-
-
-.compareViewPanelScrollable .ui-datatable-scrollable-body {
-	width: calc(100vw - 330px);
-	max-height: calc((100vh - 466px)/2);
-	height: fit-content;
-	min-height: 32px;
-}
-
-.compareViewPanelScrollable .ui-datatable-scrollable-header,
-.compareViewPanelScrollable .ui-paginator.ui-paginator-top {
-	width: calc(100vw - 330px);
-}
-
-.tabViewForcompareViewPanel {
-	height: calc(100vh - 233px);
-}
-
-
-/* Zusätzlicher Platz für Überschrift, wenn oben ein TabView ist und Tabelle eine eigene Überschrift bekommt.
-Verwendet in einem Panel, bei dem nur die Tabelle gezeigt wird und sonst keine weiteren Panels (in einer TabView).
-
-Nachteil dieser Lösung: der obere Bereich hat eine fixe Höhe. Ist dort also eine TabView mit Tabs unterschiedlicher 
-Höhe,so entsteht bei kleineren Tabs zusätzlicher Raum zur unteren Tabelle.
-
-Nachteil ScrollPanel: Je nach Verewndung:
-Entweder: Wird die Tabelle stattdessen in ein ScrollPanel gepackt, so wird die komplette Tabelle, inkl. Menü, Paginator und
-Titelzeile gescrollt und ein Paginator wäre nicht mittig zum angezeigen Bereich, sondern mittig zu gesamt bedarften Bereich.
-Letzteres kann noch akzeptabel sein, wenn die Tabelle in der Breite nicht weit über den sichtbaren Bereich hinaus geht.
-Oder: Die Scrollbar der Tabelle ist unten an der Tabelle und nicht unten am sichtbaren Ausschnitt.
-
-etwa:
-styleClass="viewScrollable headerViewScrollable quoteDetailsViewScrollable"
- */
-.headerViewScrollable .ui-menu.ui-menubar,
-.headerViewScrollable .ui-datatable-scrollable-header,
-.headerViewScrollable .ui-datatable-scrollable-body {
-	width: calc(100vw - 320px);
-}
-
-.quoteDetailsViewScrollable .ui-datatable-scrollable-body {
-	max-height: calc(100vh - 561px);
-}
-
-.quotedPricesViewScrollable .ui-datatable-scrollable-body {
-	max-height: calc(100vh - 564px);
-}
-
-
-.panelScrollable,
-.panelScrollable .ui-datatable-tablewrapper {
-	overflow: unset;
-}
-
-
-.ui-datatable-scrollable-theadclone {
-	visibility: collapse !important;
-}
-
-body .ui-datatable thead th {
-	color: var(--text);
-	background: var(--panel);
-	padding: .4em .4rem;
-}
-
-body .ui-datatable thead th.ui-sortable-column.ui-state-focus,
-body .ui-datatable thead th.ui-state-focus {
-	box-shadow: none;
-}
-
-body .ui-datatable thead th.ui-state-active {
-	background: var(--active);
-	color: var(--textonactive);
-}
-
-body .ui-datatable thead th.ui-state-hover {
-	background: var(--panel);
-	color: var(--text);
-	box-shadow: inset 0 0 0 0.15rem var(--hover);
-}
-
-body .ui-datatable thead th.ui-state-active.ui-state-hover {
-	background: var(--active);
-	color: var(--textonactive);
-	box-shadow: inset 0 0 0 0.15rem var(--hover);
-}
-
-
-.headerless.ui-datatable table thead tr {
-	display: none !important;
-}
-
-
-body .ui-datatable .ui-datatable-data > tr > td {
-	padding: .15rem .3rem;
-	white-space: normal;
-}
-
-
-.thnowrap > .ui-column-title,
-body .ui-datatable-data > tr > .tdnowrap {
-	white-space: nowrap !important;
-}
-
-
-.ui-tooltip {
-	width: max-content;
-	max-width: 400px;
-	white-space: pre-wrap;
-}
-
-/* blitzschneller Tooltip an Zellen und Spaltenköpfen mit pf-tooltip-target; siehe auch tplHead.xhtml */
-#instant-custom-tooltip {
-	position: absolute;
-	background-color: #333333;
-	color: #ffffff;
-	padding: 5px 10px;
-	border-radius: 4px;
-	font-size: 12px;
-	z-index: 999999; /* Immer ganz oben */
-	box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-	display: none; /* Standardmäßig unsichtbar */
-	pointer-events: none; /* Extrem wichtig gegen Flackern! */
-
-/* Zeilenumbruch: */
-	white-space: pre-wrap;
-	max-width: 400px; /* Ab 400 Pixel Breite bricht der Text automatisch um */
-	width: max-content;
-	word-wrap: break-word; /* Zerteilt auch extrem lange Wörter ohne Leerzeichen (z.B. lange IDs) */
-}
-
-#instant-custom-tooltip::after {
-	content: "";
-	position: absolute;
-	top: 100%; /* Klebt exakt an der unteren Kante des schwarzen Kastens */	
-	/* Schiebt es in die Mitte
-	left: 50%;
-	oder um 30px von links aus eingerückt
-	left: 30px;
-	*/
-	/* Wenn JS keinen Wert liefert, sind 30px der Standardwert */
-	left: var(--arrow-pos, 30px);
-	margin-left: -6px; /* Zentriert es exakt (Hälfte der 6px Rahmenbreite) */
-	border-width: 6px; /* Wie groß die Nase sein soll */
-	border-style: solid;
-	/* Der Trick: Oben schwarz, rechts/unten/links unsichtbar = Dreieck */
-	border-color: #333333 transparent transparent transparent; 
-}
-
-
-body .ui-datatable .ui-datatable-data > tr.ui-state-highlight {
-	background: unset;
-	color: var(--text);
-	box-shadow: inset 0 0 0 0.2rem var(--active);
-}
-
-body .ui-datatable .ui-datatable-data > tr.ui-state-hover {
-	background: unset;
-	color: var(--text);
-	box-shadow: inset 0 0 0 0.15rem var(--hover);
-}
-
-.ui-datatable-empty-message {
-	background: var(--panel) !important;
-	color: var(--text) !important;
-}
-
-.ui-datatable-even {
-	background: var(--panel) !important;
-	color: var(--text) !important;
-}
-
-/* alternierende Zeilenfarbe */
-.ui-datatable-odd {
-	background: var(--odd) !important;
-	color: var(--text) !important;
-}
 
 body .ui-panel .ui-panel-content {
 	padding: .4rem .4rem;
