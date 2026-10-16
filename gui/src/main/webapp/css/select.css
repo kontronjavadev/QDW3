@@ -1,0 +1,161 @@
+/* Checkbox */
+body .ui-chkbox .ui-chkbox-box {
+	background: var(--inputfield);
+}
+
+body .ui-chkbox .ui-chkbox-box.ui-state-active {
+	background: var(--active);
+	border-color: var(--activeborder);
+}
+
+body .ui-chkbox .ui-chkbox-box.ui-state-hover {
+	border-color: var(--hoverborder);
+}
+
+body .ui-chkbox .ui-chkbox-box.ui-state-active.ui-state-hover {
+	background: var(--hover);
+}
+
+body .ui-chkbox .ui-chkbox-box.ui-state-focus {
+	box-shadow: 0 0 0 .1rem var(--activeborder);
+}
+
+body .ui-chkbox-box.ui-state-disabled {
+	background: var(--disabled);
+}
+
+.selectall > .ui-chkbox-box {
+	border: 2px solid #333 !important;
+	border-width: 2px !important;
+}
+
+
+
+
+
+/* Radiobutton */
+body .ui-radiobutton .ui-radiobutton-box {
+	background: var(--inputfield);
+}
+
+body .ui-radiobutton .ui-radiobutton-box.ui-state-hover {
+	background: var(--inputfield);
+	border-color: var(--hoverborder);
+}
+
+
+body .ui-radiobutton .ui-radiobutton-box.ui-state-active {
+	background: var(--active);
+	color: var(--active);
+	border-color: var(--activeborder);
+}
+
+body .ui-radiobutton .ui-radiobutton-box.ui-state-active.ui-state-hover {
+	background: var(--hover);
+	border-color: var(--hoverborder);
+}
+
+
+body .ui-radiobutton .ui-radiobutton-box.ui-state-focus,
+body .ui-radiobutton .ui-radiobutton-box.ui-state-active.ui-state-focus {
+	box-shadow: 0 0 0 .1rem var(--activeborder);
+}
+
+body .ui-radiobutton .ui-radiobutton-box .ui-icon-bullet,
+body .ui-radiobutton .ui-radiobutton-box.ui-state-active .ui-icon-bullet {
+	background: var(--inputfield)
+}
+
+
+
+
+
+/* Select-one-Listbox: mehrzeilige Box mit Elementen, zu denen eines ausgeählt wird */
+/* Der äußere Container wird zum Flex-Container. Breite und Höhe holt er sich aus deinem Inline-Style. */
+body .ui-selectonelistbox.flex-listbox {
+	display: flex;
+	flex-direction: column;
+}
+
+/* Der innere Container nimmt den gesamten Restplatz ein. "!important" ist erforderlich, da PrimeFaces "style='height: 200px;'" direkt ins HTML rendert. */
+body .ui-selectonelistbox.flex-listbox .ui-selectlistbox-listcontainer {
+	flex: 1 1 auto;
+	height: auto !important; 
+	overflow-y: auto;
+}
+
+body .ui-selectonelistbox .ui-selectlistbox-listcontainer .ui-selectlistbox-list .ui-selectlistbox-item.ui-state-highlight {
+	background: unset;
+	color: var(--text);
+	box-shadow: inset 0 0 0 0.2rem var(--active);
+}
+
+body .ui-selectonelistbox .ui-selectlistbox-listcontainer .ui-selectlistbox-list .ui-selectlistbox-item.ui-state-hover {
+	background: unset;
+	color: var(--text);
+	box-shadow: inset 0 0 0 0.15rem var(--hover);
+}
+
+
+
+
+
+/* Zwei mehrzeilige Boxen mit Elementen und Aktionspfeilen in der Mitte, um eine Auswahl aus vorhandenen Optionen zu treffen, etwa Rollen für Benutzer */
+body .ui-picklist .ui-picklist-list {
+	background: var(--inputfield);
+}
+
+body .searchdialog-picklist .ui-picklist-list {
+	height:calc(100vh - 361px);
+	width: 360px;
+}
+
+body .ui-picklist .ui-picklist-caption {	
+	background: var(--paneldimmed);
+	color: var(--text);
+}
+
+body .ui-picklist .ui-picklist-list .ui-picklist-item {
+	padding: .15rem .3rem;
+	color: var(--text);
+}
+
+body .ui-picklist .ui-picklist-list .ui-picklist-item.ui-state-highlight {
+	background: var(--active);
+	color: var(--textonactive);
+}
+
+body .ui-picklist .ui-picklist-list .ui-picklist-item.ui-state-hover {
+	background: var(--hover);
+	color: var(--text);
+}
+
+
+
+
+
+/* Kann Auswahl in Form mehrerer Schaltflächen sein (p:selectOneButton), wird auch in p:selectManyButton oder p:selectBooleanButton verwendet.
+Ich kann keine Vorkommen finden. Möglicherweise eine Altlast. */
+/* Select-one-button */
+.ui-selectonebutton > .ui-button {
+	background: #EEE !important;
+	border: 1px solid #CCC !important;
+	margin-right: 0rem !important;
+}
+
+
+/* Select-one-button aktiviert / selektiert */
+.ui-selectonebutton > .ui-button.ui-state-active {
+	background: var(--activemarked) !important;
+	border: 1px solid var(--activeborder) !important;
+}
+
+/* Select-one-button Fokus bei mouse-down oder Tastatur-Navigation*/
+/* Select-one-button hover */
+/* Select-one-button hover bei selektiert */
+.ui-selectonebutton > .ui-button.ui-state-focus,
+.ui-selectonebutton > .ui-button.ui-state-hover,
+.ui-selectonebutton > .ui-button.ui-state-active:hover {
+	background: var(--hover) !important;
+	border: 1px solid var(--hoverborder) !important;
+}

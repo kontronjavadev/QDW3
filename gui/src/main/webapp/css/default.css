@@ -432,88 +432,15 @@ body .ui-paginator .ui-paginator-rpp-options {
 
 
 
-/* Select-one-button */
-.ui-selectonebutton > .ui-button {
-	background: #EEE !important;
-	border: 1px solid #CCC !important;
-	margin-right: 0rem !important;
-}
-
-
-/* Select-one-button aktiviert / selektiert */
-.ui-selectonebutton > .ui-button.ui-state-active {
-	background: var(--activemarked) !important;
-	border: 1px solid var(--activeborder) !important;
-}
-
-/* Select-one-button Fokus bei mouse-down oder Tastatur-Navigation*/
-/* Select-one-button hover */
-/* Select-one-button hover bei selektiert */
-.ui-selectonebutton > .ui-button.ui-state-focus,
-.ui-selectonebutton > .ui-button.ui-state-hover,
-.ui-selectonebutton > .ui-button.ui-state-active:hover {
-	background: var(--hover) !important;
-	border: 1px solid var(--hoverborder) !important;
-}
 
 
 
-/* Select-one-Listbox */
-/* Der äußere Container wird zum Flex-Container. Breite und Höhe holt er sich aus deinem Inline-Style. */
-body .ui-selectonelistbox.flex-listbox {
-	display: flex;
-	flex-direction: column;
-}
-
-/* Der innere Container nimmt den gesamten Restplatz ein. "!important" ist erforderlich, da PrimeFaces "style='height: 200px;'" direkt ins HTML rendert. */
-body .ui-selectonelistbox.flex-listbox .ui-selectlistbox-listcontainer {
-	flex: 1 1 auto;
-	height: auto !important; 
-	overflow-y: auto;
-}
-
-body .ui-selectonelistbox .ui-selectlistbox-listcontainer .ui-selectlistbox-list .ui-selectlistbox-item.ui-state-highlight {
-	background: unset;
-	color: var(--text);
-	box-shadow: inset 0 0 0 0.2rem var(--active);
-}
-
-body .ui-selectonelistbox .ui-selectlistbox-listcontainer .ui-selectlistbox-list .ui-selectlistbox-item.ui-state-hover {
-	background: unset;
-	color: var(--text);
-	box-shadow: inset 0 0 0 0.15rem var(--hover);
-}
 
 
 
-body .ui-picklist .ui-picklist-list {
-	background: var(--inputfield);
-}
 
-body .searchdialog-picklist .ui-picklist-list {
-	height:calc(100vh - 361px);
-	width: 360px;
-}
 
-body .ui-picklist .ui-picklist-caption {	
-	background: var(--paneldimmed);
-	color: var(--text);
-}
 
-body .ui-picklist .ui-picklist-list .ui-picklist-item {
-	padding: .15rem .3rem;
-	color: var(--text);
-}
-
-body .ui-picklist .ui-picklist-list .ui-picklist-item.ui-state-highlight {
-	background: var(--active);
-	color: var(--textonactive);
-}
-
-body .ui-picklist .ui-picklist-list .ui-picklist-item.ui-state-hover {
-	background: var(--hover);
-	color: var(--text);
-}
 
 
 
@@ -562,153 +489,20 @@ body .ui-inputfield[readonly] {
 
 
 
-/* Autocomplete Textfeld */
-body .ui-autocomplete-panel {
-	min-width: fit-content;
-}
-
-body .ui-autocomplete-panel .ui-autocomplete-items .ui-autocomplete-item {
-	white-space: nowrap;
-	padding: .15rem .3rem;
-	color: var(--text);
-	background: var(--inputfield);
-}
-
-body .ui-autocomplete-panel .ui-autocomplete-items .ui-autocomplete-item.ui-state-highlight,
-body .ui-autocomplete-panel .ui-autocomplete-items .ui-autocomplete-item.ui-state-highlight > td {
-	color: var(--textonactive);
-	background: var(--active);
-}
-
-body .ui-autocomplete-panel .ui-autocomplete-table td {
-	color: var(--text);
-	background: var(--inputfield);
-}
-
-body .ui-autocomplete-panel .ui-autocomplete-table th {
-	color: var(--text);
-	background: var(--panel);
-}
-
-body .ui-autocomplete-panel .ui-autocomplete-items .ui-autocomplete-item.ui-autocomplete-row > td,
-body .ui-autocomplete-panel .ui-autocomplete-table th,
-body .ui-autocomplete-panel .ui-autocomplete-table td {
-	padding: .2rem .3rem;
-}
-
-/* Verhindert den Fettdruck durch das PrimeFaces-interne Highlighting */
-body .ui-autocomplete-panel .ui-autocomplete-query {
-	font-weight: inherit;
-}
-
-body .ui-autocomplete-input-large .ui-autocomplete-input {
-	width: 16.25rem;
-}
-
-
-
-/** Autocomplete Inputfeld */
-body .ui-autocomplete-multiple {
-	width: auto;
-	min-width: 5rem;
-}
-
-body .ui-autocomplete .ui-autocomplete-multiple-container {
-	padding: 0rem .2rem;
-	width: auto;
-}
-
-body .ui-autocomplete .ui-autocomplete-multiple-container .ui-autocomplete-input-token {
-	padding: .2rem 0;
-	width: 2rem;
-}
-
-body .ui-autocomplete .ui-autocomplete-multiple-container .ui-autocomplete-input-token input {
-	color: var(--text);
-}
-
-body .ui-autocomplete .ui-autocomplete-multiple-container .ui-autocomplete-token {
-	padding: .1rem 0;
-	color: var(--textonactive);
-	background: var(--active);
-}
-
-body .ui-autocomplete .ui-autocomplete-multiple-container .ui-autocomplete-token .ui-autocomplete-token-label {
-	padding: 0 1.5rem 0 .3rem;
-}
-
-body .ui-autocomplete .ui-autocomplete-multiple-container .ui-autocomplete-token .ui-autocomplete-token-icon {
-	margin-top: -0.55rem;
-}
 
 
 
 
-/* Checkbox */
-body .ui-chkbox .ui-chkbox-box {
-	background: var(--inputfield);
-}
-
-body .ui-chkbox .ui-chkbox-box.ui-state-active {
-	background: var(--active);
-	border-color: var(--activeborder);
-}
-
-body .ui-chkbox .ui-chkbox-box.ui-state-hover {
-	border-color: var(--hoverborder);
-}
-
-body .ui-chkbox .ui-chkbox-box.ui-state-active.ui-state-hover {
-	background: var(--hover);
-}
-
-body .ui-chkbox .ui-chkbox-box.ui-state-focus {
-	box-shadow: 0 0 0 .1rem var(--activeborder);
-}
-
-body .ui-chkbox-box.ui-state-disabled {
-	background: var(--disabled);
-}
-
-.selectall > .ui-chkbox-box {
-	border: 2px solid #333 !important;
-	border-width: 2px !important;
-}
 
 
 
-/* Radiobutton */
-body .ui-radiobutton .ui-radiobutton-box {
-	background: var(--inputfield);
-}
-
-body .ui-radiobutton .ui-radiobutton-box.ui-state-hover {
-	background: var(--inputfield);
-	border-color: var(--hoverborder);
-}
 
 
-body .ui-radiobutton .ui-radiobutton-box.ui-state-active {
-	background: var(--active);
-	color: var(--active);
-	border-color: var(--activeborder);
-}
-
-body .ui-radiobutton .ui-radiobutton-box.ui-state-active.ui-state-hover {
-	background: var(--hover);
-	border-color: var(--hoverborder);
-}
 
 
-body .ui-radiobutton .ui-radiobutton-box.ui-state-focus,
-body .ui-radiobutton .ui-radiobutton-box.ui-state-active.ui-state-focus {
-	box-shadow: 0 0 0 .1rem var(--activeborder);
-}
 
-body .ui-radiobutton .ui-radiobutton-box .ui-icon-bullet,
-body .ui-radiobutton .ui-radiobutton-box.ui-state-active .ui-icon-bullet {
-	background: var(--inputfield)
-}
+
+
 
 
 body .ui-tabs .ui-tabs-panels .ui-tabs-panel {
@@ -1003,87 +797,11 @@ body .ui-panelgrid .ui-panelgrid-cell {
 }
 
 
-/* Nodes in Tree allgemein */
-body .ui-tree {
-	padding: .4rem .4rem;
-	background: var(--panel);
-	color: var(--text);
-	margin: 0.2rem 0 0 0;
-}
-
-body .ui-tree .ui-tree-container .ui-treenode {
-	background: var(--panel);
-	padding: 0rem;
-}
-
-body .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content {
-	color: var(--text);
-}
-
-body .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content .ui-treenode-label {
-	color: var(--text);
-	padding: .1rem .1rem;
-}
-
-body .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content a,
-.ui-treenode-content-link {
-	color: var(--text);
-	text-decoration-line: none;
-}
-
-body .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content .ui-treenode-leaf-icon {
-	width: 1rem;
-	height: 1rem;
-}
-
-body .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content .ui-tree-toggler {
-	height: 1rem;
-	line-height: 1rem;
-	margin: 0 0 0 0;
-}
 
 
 
-/* Nodes in Tree highlighted */
-body .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content.ui-state-highlight {
-	/* Hintergrundfarbe soll bei Selektion erhalten bleiben; andernfalls wären sämtliche aufgewählten Einträge Blau */ 
-	background: none;
-	box-shadow: inset 0 0 0 0.2rem var(--active);
-}
-
-/* Nodes in Tree hover */
-body .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content.ui-tree-selectable.ui-state-highlight:hover,
-body .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content.ui-tree-selectable:not(.ui-state-highlight):hover,
-body .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content.ui-tree-selectable:hover a,
-body .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content a:hover,
-.ui-treenode-content-link:hover {
-	background: none;
-	box-shadow: inset 0 0 0 0.15rem var(--hover);
-}
-
-/* Im Treenode angezeigter Text darf keine Umrandung erhalten */
-body .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content.ui-tree-selectable:not(.ui-state-highlight):hover .ui-treenode-label,
-body .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content.ui-tree-selectable.ui-state-highlight:hover .ui-treenode-label,
-body .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content.ui-tree-selectable:hover .ui-treenode-label {
-	background: none;
-	box-shadow: none;
-}
-
-/*	Im Treenode angezeigtes pi-icon bleibt Schwarz, wenn selektiert */
-body .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content.ui-state-highlight .ui-tree-toggler,
-body .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content.ui-state-highlight .ui-treenode-icon,
-body .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content.ui-tree-selectable:hover .ui-tree-toggler,
-body .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content.ui-tree-selectable:hover .ui-treenode-icon {
-	color: var(--text);
-}
 
 
-
-/*
-.disabledtext > :not(.ui-state-highlight) > .ui-treenode-label > span {
-	color: darkgray !important;
-}
-*/
 
 
 
@@ -1091,11 +809,6 @@ body .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content.ui-tree-selec
 /* CommandLink allgemein */
 .ui-commandlink {
 	color: var(--text) !important;
-}
-
-/* CommandLink in highlighted Node in Tree */
-.ui-treenode-content.ui-state-highlight .ui-commandlink {
-	color: var(--textonactive) !important;
 }
 
 
@@ -1232,10 +945,6 @@ body .ui-datepicker .ui-datepicker-buttonbar button.ui-state-active {
 
 
 
-.ui-tree-toggler ~ .ui-treenode-label
-{
-	cursor:pointer;
-}
 
 
 html .ui-state-disabled {

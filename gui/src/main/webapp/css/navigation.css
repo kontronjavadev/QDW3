@@ -1,0 +1,94 @@
+/* Nodes in Tree allgemein */
+body .ui-tree {
+	padding: .4rem .4rem;
+	background: var(--panel);
+	color: var(--text);
+	margin: 0.2rem 0 0 0;
+}
+
+body .ui-tree .ui-tree-container .ui-treenode {
+	background: var(--panel);
+	padding: 0rem;
+}
+
+body .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content {
+	color: var(--text);
+}
+
+body .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content .ui-treenode-label {
+	color: var(--text);
+	padding: .1rem .1rem;
+}
+
+body .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content a,
+.ui-treenode-content-link {
+	color: var(--text);
+	text-decoration-line: none;
+}
+
+body .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content .ui-treenode-leaf-icon {
+	width: 1rem;
+	height: 1rem;
+}
+
+body .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content .ui-tree-toggler {
+	height: 1rem;
+	line-height: 1rem;
+	margin: 0 0 0 0;
+}
+
+
+
+/* Nodes in Tree highlighted */
+body .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content.ui-state-highlight {
+	/* Hintergrundfarbe soll bei Selektion erhalten bleiben; andernfalls wären sämtliche aufgewählten Einträge Blau */ 
+	background: none;
+	box-shadow: inset 0 0 0 0.2rem var(--active);
+}
+
+/* Nodes in Tree hover */
+body .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content.ui-tree-selectable.ui-state-highlight:hover,
+body .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content.ui-tree-selectable:not(.ui-state-highlight):hover,
+body .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content.ui-tree-selectable:hover a,
+body .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content a:hover,
+.ui-treenode-content-link:hover {
+	background: none;
+	box-shadow: inset 0 0 0 0.15rem var(--hover);
+}
+
+/* Im Treenode angezeigter Text darf keine Umrandung erhalten */
+body .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content.ui-tree-selectable:not(.ui-state-highlight):hover .ui-treenode-label,
+body .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content.ui-tree-selectable.ui-state-highlight:hover .ui-treenode-label,
+body .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content.ui-tree-selectable:hover .ui-treenode-label {
+	background: none;
+	box-shadow: none;
+}
+
+/*	Im Treenode angezeigtes pi-icon bleibt Schwarz, wenn selektiert */
+body .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content.ui-state-highlight .ui-tree-toggler,
+body .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content.ui-state-highlight .ui-treenode-icon,
+body .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content.ui-tree-selectable:hover .ui-tree-toggler,
+body .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content.ui-tree-selectable:hover .ui-treenode-icon {
+	color: var(--text);
+}
+
+
+
+/*
+.disabledtext > :not(.ui-state-highlight) > .ui-treenode-label > span {
+	color: darkgray !important;
+}
+*/
+
+
+
+/* CommandLink in highlighted Node in Tree */
+.ui-treenode-content.ui-state-highlight .ui-commandlink {
+	color: var(--textonactive) !important;
+}
+
+
+
+.ui-tree-toggler ~ .ui-treenode-label {
+	cursor:pointer;
+}
