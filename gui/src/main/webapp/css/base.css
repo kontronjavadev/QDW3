@@ -91,6 +91,24 @@ body .ui-dialog .ui-dialog-content {
 }
 
 
+body .pi,
+body .ui-dialog.ui-confirm-dialog .ui-dialog-content > span.ui-icon,
+body .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content .ui-treenode-icon {
+	color: var(--text);
+}
+
+body .ui-widget .ui-icon.pi, .ui-icon.pi {
+	color: var(--textonactive);
+}
+
+body .ui-dialog.ui-confirm-dialog .ui-dialog-content {
+	padding: 1rem 1.5rem
+}
+
+
+
+
+
 body .ui-scrollpanel {
 	background: var(--paneldimmed);
 	color: var(--text);
@@ -104,6 +122,9 @@ body .navigator-scrollpanel {
 body .navigator-scrollpanel > .ui-panel-content.ui-widget-content {
 	padding: 0rem;
 }
+
+
+
 
 .ui-widget,
 .ui-widget .ui-widget {
@@ -134,12 +155,25 @@ body.lov {
 	font-weight: bold;
 }
 
+
+
+/* Hervorgehobener Text, etwa in Tabellenspalten, styleClass "emphasize" */
 .emphasize {
 	color: #8040a0 !important;
 }
 
+/* Warnhinweis (h:outputText), styleClass "ui-textfield-warn" */
+.textfield-warn {
+	white-space: normal;
+	font-weight: bold;
+	color: #AB5252 !important;
+}
 
 
+
+
+
+/* Flex-Grid für Dialoge, zweispaltig, je Label + Feld */
 .custom-form-grid {
 	display: grid;
 	/* Spalten: Label (exakt so breit wie nötig) | Input (restlicher Platz) | Label | Input */
@@ -167,7 +201,9 @@ body.lov {
 
 
 
-/* Schaltfläche Allgemein */
+
+
+/* Schaltfläche Normalzustand */
 .ui-button-text-only .ui-button-text {
 	padding: 0.2rem 0.6rem !important;
 }
@@ -176,7 +212,7 @@ body.lov {
 	padding: 0.2rem 0.6rem 0.2rem 1.8rem !important;
 }
 
-/* Schaltfläche allgemein Farbe */
+/* Schaltfläche Normalzustand Farbe */
 body .ui-button,
 body .ui-button.ui-state-active {
 	background: var(--active);
@@ -192,12 +228,13 @@ body .ui-button.ui-state-hover {
 
 
 
-/* Menü */
+/* Schaltflächen-Menü im Header ( mit oder ohne Text) */
 .template-header .ui-button-menue {
 	padding: 0.2rem 0.1rem 0.2rem 0.1rem !important;
 }
 
-/* Menü Schaltflächen allgemein */
+/* Spezial-Schaltflächen (die normalen sind identisch zu den oben mit ui-button definierten) */
+/* Normalzustand */
 .template-header .btn-orga {
 	background: #6f869a !important;
 	border: 1px solid #c3d8ec !important;
@@ -209,7 +246,7 @@ body .ui-button.ui-state-hover {
 	border: 1px solid #eea3a3 !important;
 }
 
-/* Menü Schaltfläche hover */
+/* hover */
 .template-header .btn-orga.ui-state-hover {
 	background: #acb8c2 !important;
 	border: 1px solid #97b9d9 !important;
@@ -222,19 +259,13 @@ body .ui-button.ui-state-hover {
 }
 
 
+
+
+
 .ui-contextmenu {
 	white-space: nowrap !important;
 	width: auto !important;
 }
-
-
-
-
-
-
-
-
-
 
 
 
@@ -281,139 +312,45 @@ body .ui-menu .ui-menu-list .ui-menuitem.ui-menuitem-active > .ui-menuitem-link 
 
 
 
-body .ui-paginator {
+
+/** Panel */
+body .ui-panel .ui-panel-content {
+	padding: .4rem .4rem;
+	background: var(--panel);
 	color: var(--text);
+}
+
+body .ui-panelgrid .ui-panelgrid-cell {
+	border: 0px;
+	padding: 0.14rem;
+}
+
+/* Panel ohne spezielle Einfärbung, styleClass "ui-backgroundpanel" */
+body .ui-backgroundpanel .ui-panel-content {
+	padding: unset;
+	border: unset;
+	background: unset;
+}
+
+/* Panel ohne Reiter, wenn es nur einen Block gibt. Stattdessen Überschrift im Stil eines Reiters. styleClass "ui-backgroundpanel" */
+body .ui-panelwithouttabs > .ui-panel-content {
 	background: var(--paneldimmed);
+	margin: 0 0 0.5rem 0;
 }
 
-body .ui-paginator .ui-paginator-first::before, 
-body .ui-paginator .ui-paginator-prev::before, 
-body .ui-paginator .ui-paginator-next::before, 
-body .ui-paginator .ui-paginator-last::before,
-body .ui-paginator .ui-paginator-first.ui-state-focus,
-body .ui-paginator .ui-paginator-prev.ui-state-focus,
-body .ui-paginator .ui-paginator-next.ui-state-focus,
-body .ui-paginator .ui-paginator-last.ui-state-focus,
-body .ui-paginator .ui-paginator-current,
-body .ui-paginator .ui-paginator-rpp-options,
-body .ui-paginator .ui-paginator-pages .ui-paginator-page {
-	background: unset;
-	color: var(--text);
-	box-shadow: none;
-}
-
-
-body .ui-paginator .ui-paginator-pages .ui-paginator-page.ui-state-active {
-	background: unset;
-	color: var(--text);
-	box-shadow: inset 0 0 0 0.15rem var(--active);
-}
-body .ui-paginator .ui-paginator-first.ui-state-active, 
-body .ui-paginator .ui-paginator-prev.ui-state-active, 
-body .ui-paginator .ui-paginator-next.ui-state-active, 
-body .ui-paginator .ui-paginator-last.ui-state-active
- {
-	background: unset;
-	color: var(--text);
-	box-shadow: inset 0 0 0 0.15rem var(--active);
-}
-
-
-body .ui-paginator .ui-paginator-pages .ui-paginator-page.ui-state-hover {
-	background: unset;
-	color: var(--text);
-	box-shadow: inset 0 0 0 0.15rem var(--hover);
-}
-body .ui-paginator .ui-paginator-first.ui-state-hover, 
-body .ui-paginator .ui-paginator-prev.ui-state-hover, 
-body .ui-paginator .ui-paginator-next.ui-state-hover, 
-body .ui-paginator .ui-paginator-last.ui-state-hover {
-	background: unset;
-	color: var(--text);
-	box-shadow: inset 0 0 0 0.15rem var(--hover);
-}
-
-
-body .ui-paginator .ui-paginator-current,
-body .ui-paginator .ui-paginator-rpp-options {
-	margin: 0.0rem .3rem 0.3rem 1rem;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-body .ui-inputfield {
-	padding: .15rem .3rem;
-	background: var(--inputfield);
-	color: var(--text);
-}
-
-body .ui-inputfield.ui-state-focus {
-	border-color: var(--activeborder);
-}
-
-body .ui-inputfield.ui-state-hover {
-	box-shadow: unset;
-	border-color: var(--activeborder);
-}
-
-
-.ui-wideautocomplete .ui-inputfield {
-	width: 20rem !important;
-}
-
-::-moz-selection { /* Code for Firefox */
-	color: var(--textonactive);
+body .ui-panelwithouttabs > .ui-panel-content .header-label {
 	background: var(--active);
-}
-
-::selection {
 	color: var(--textonactive);
-	background: var(--active);
-}
-
-body .ui-inputfield[readonly] {
-	background: var(--disabled);
-	/* #eff4fb (blasses, leicht schmutziges Blau, so wie alternierende Zeilenmarkierung in Tabellen) 
-	oder #ffffe1 (blasses Gelb, Original aus der App)
-	oder fffecc (satteres Gelb) */
-}
-
-.textfield-warn {
-	white-space: normal;
-	font-weight: bold;
-	color: #AB5252 !important;
+	font-size: unset;
+	padding: .2rem .4rem;
+	margin-left: -.2rem;
 }
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+/* Reiter bei Panels */
 body .ui-tabs .ui-tabs-panels .ui-tabs-panel {
 	background: var(--paneldimmed);
 	color: var(--text);
@@ -463,52 +400,12 @@ body .ui-tabs .ui-tabs-nav li.ui-tabs-header.ui-tabs-outline {
 
 
 
-
-
-body .ui-panel .ui-panel-content {
-	padding: .4rem .4rem;
-	background: var(--panel);
-	color: var(--text);
-}
-
-body .ui-backgroundpanel .ui-panel-content {
-	padding: unset;
-	border: unset;
-	background: unset;
-}
-
-body .ui-panelwithouttabs > .ui-panel-content {
-	background: var(--paneldimmed);
-	margin: 0 0 0.5rem 0;
-}
-
-body .ui-panelwithouttabs > .ui-panel-content .header-label {
-	background: var(--active);
-	color: var(--textonactive);
-	font-size: unset;
-	padding: .2rem .4rem;
-	margin-left: -.2rem;
-}
-
-body .ui-panelgrid .ui-panelgrid-cell {
-	border: 0px;
-	padding: 0.14rem;
-}
-
-
-
-
-
-
-
-
-
-
-
 /* CommandLink allgemein */
 .ui-commandlink {
 	color: var(--text) !important;
 }
+
+
 
 
 
@@ -540,130 +437,11 @@ body .ui-fileupload .ui-fileupload-content .ui-fileupload-files .ui-fileupload-r
 
 
 
-/* Calendar, Datepicker */
-.ui-calendar input.hasDatepicker {
-	height: 1.6rem !important;
-	width: 9.25rem !important;
-	/* 9.35 Textfeld + 1.6 Icon = 10.85 gesamt, so wie die Breite des Dropdown-Menüs */
-}
-
-.ui-calendar .ui-button.ui-button-icon-only {
-	width: 1.6rem !important;
-	height: 1.6rem !important;
-	top: .375rem !important;
-	padding: 0.11rem !important;
-	margin-top: -1rem !important;
-}
-
-.ui-calendar .ui-button.ui-button-icon-only .ui-icon-calendar {
-	margin-top: -0.625rem !important;
-}
-
-
-body .ui-datepicker {
-	background: var(--inputfield);
-	color: var(--text);
-}
-
-body .ui-datepicker .ui-datepicker-group {
-	padding: 0rem;
-}
-
-
-body .ui-datepicker .ui-datepicker-header {
-	background: var(--paneldimmed);
-	color: var(--text);
-}
-
-body .ui-datepicker .ui-datepicker-calendar td,
-body .ui-datepicker .ui-datepicker-calendar td > a {
-	padding: 0rem !important;
-	color: var(--text);
-}
-
-body .ui-datepicker .ui-datepicker-calendar td > a,
-body .ui-datepicker .ui-datepicker-calendar td > span {
-	width: 2rem;
-	height: 2rem;
-	line-height: 2rem;
-}
-
-
-body .ui-datepicker .ui-datepicker-calendar td > a:focus,
-body .ui-datepicker .ui-datepicker-calendar td > span:focus {
-	box-shadow: 0 0 0 .2rem var(--activeborder);
-}
-
-body .ui-datepicker .ui-datepicker-calendar td > a.ui-state-active,
-body .ui-datepicker .ui-datepicker-calendar td > span.ui-state-active {
-	background: var(--active);
-}
-
-body .ui-datepicker .ui-datepicker-calendar td > a:hover {
-	background: var(--hover);
-	color: var(--text);
-}
-
-
-/* Heutiger Tag, inaktiv (ein anderer Tag ist aktiv) */
-body .ui-datepicker .ui-datepicker-calendar td.ui-datepicker-today > a,
-body .ui-datepicker .ui-datepicker-calendar td.ui-datepicker-today > span,
-body .ui-datepicker .ui-datepicker-calendar td.ui-datepicker-current-day > a,
-body .ui-datepicker .ui-datepicker-calendar td.ui-datepicker-current-day > span {
-	background: var(--activemarked);
-	color: var(--textonactive);
-}
-
-/* Heutiger Tag, aktiv */
-body .ui-datepicker .ui-datepicker-calendar td.ui-datepicker-today > a.ui-state-active, 
-body .ui-datepicker .ui-datepicker-calendar td.ui-datepicker-today > span.ui-state-active, 
-body .ui-datepicker .ui-datepicker-calendar td.ui-datepicker-current-day > a.ui-state-active, 
-body .ui-datepicker .ui-datepicker-calendar td.ui-datepicker-current-day > span.ui-state-active {
-	background: var(--activemarked);
-	color: var(--textonactive);
-	border: 1px solid var(--activeborder);
-}
-
-body .ui-datepicker .ui-datepicker-calendar td.ui-datepicker-today > a:hover,
-body .ui-datepicker .ui-datepicker-calendar td.ui-datepicker-current-day > a:hover,
-body .ui-datepicker .ui-datepicker-buttonbar button:not(:disabled):hover {
-	background: var(--hover);
-	border: 1px solid var(--hoverborder);
-}
-
-
-body .ui-datepicker .ui-datepicker-buttonbar {
-	padding: 0rem;
-}
-
-body .ui-datepicker .ui-datepicker-buttonbar button,
-body .ui-datepicker .ui-datepicker-buttonbar button.ui-state-active {
-	background: var(--active);
-	border: 1px solid var(--activeborder);
-}
 
 
 
 
 
-html .ui-state-disabled {
-	pointer-events: all;
-}
-
-
-body .pi,
-body .ui-dialog.ui-confirm-dialog .ui-dialog-content > span.ui-icon,
-body .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content .ui-treenode-icon {
-	color: var(--text);
-}
-
-body .ui-widget .ui-icon.pi, .ui-icon.pi {
-	color: var(--textonactive);
-}
-
-body .ui-dialog.ui-confirm-dialog .ui-dialog-content {
-	padding: 1rem 1.5rem
-}
 
 
 .template-header {

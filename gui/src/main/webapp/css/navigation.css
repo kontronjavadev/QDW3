@@ -92,3 +92,7 @@ body .ui-tree .ui-tree-container .ui-treenode .ui-treenode-content.ui-tree-selec
 .ui-tree-toggler ~ .ui-treenode-label {
 	cursor:pointer;
 }
+
+html .ui-state-disabled {
+	pointer-events: all;
+}

@@ -1,3 +1,41 @@
+/* Eingabefeld */
+body .ui-inputfield {
+	padding: .15rem .3rem;
+	background: var(--inputfield);
+	color: var(--text);
+}
+
+body .ui-inputfield.ui-state-focus {
+	border-color: var(--activeborder);
+}
+
+body .ui-inputfield.ui-state-hover {
+	box-shadow: unset;
+	border-color: var(--activeborder);
+}
+
+body .ui-inputfield[readonly] {
+	background: var(--disabled);
+	/* #eff4fb (blasses, leicht schmutziges Blau, so wie alternierende Zeilenmarkierung in Tabellen) 
+	oder #ffffe1 (blasses Gelb, Original aus der App)
+	oder fffecc (satteres Gelb) */
+}
+
+/* markierter Text in Eingabefeld */
+::selection { /* Code für alle Browser gem. W3C */
+	color: var(--textonactive);
+	background: var(--active);
+}
+
+::-moz-selection { /* Code für Firefox vor Version 61 */
+	color: var(--textonactive);
+	background: var(--active);
+}
+
+
+
+
+
 /* Autocomplete Textfeld */
 body .ui-autocomplete-panel {
 	min-width: fit-content;
@@ -40,6 +78,13 @@ body .ui-autocomplete-panel .ui-autocomplete-query {
 body .ui-autocomplete-input-large .ui-autocomplete-input {
 	width: 16.25rem;
 }
+
+/* extrabreites Autocomplete-Eingabefeld, styleClass "ui-wideautocomplete" */
+.ui-wideautocomplete .ui-inputfield {
+	width: 20rem !important;
+}
+
+
 
 
 

@@ -1,0 +1,101 @@
+/* Calendar, Datepicker */
+.ui-calendar input.hasDatepicker {
+	height: 1.6rem !important;
+	width: 9.25rem !important;
+	/* 9.35 Textfeld + 1.6 Icon = 10.85 gesamt, so wie die Breite des Dropdown-Menüs */
+}
+
+.ui-calendar .ui-button.ui-button-icon-only {
+	width: 1.6rem !important;
+	height: 1.6rem !important;
+	top: .375rem !important;
+	padding: 0.11rem !important;
+	margin-top: -1rem !important;
+}
+
+.ui-calendar .ui-button.ui-button-icon-only .ui-icon-calendar {
+	margin-top: -0.625rem !important;
+}
+
+
+body .ui-datepicker {
+	background: var(--inputfield);
+	color: var(--text);
+}
+
+body .ui-datepicker .ui-datepicker-group {
+	padding: 0rem;
+}
+
+
+body .ui-datepicker .ui-datepicker-header {
+	background: var(--paneldimmed);
+	color: var(--text);
+}
+
+body .ui-datepicker .ui-datepicker-calendar td,
+body .ui-datepicker .ui-datepicker-calendar td > a {
+	padding: 0rem !important;
+	color: var(--text);
+}
+
+body .ui-datepicker .ui-datepicker-calendar td > a,
+body .ui-datepicker .ui-datepicker-calendar td > span {
+	width: 2rem;
+	height: 2rem;
+	line-height: 2rem;
+}
+
+
+body .ui-datepicker .ui-datepicker-calendar td > a:focus,
+body .ui-datepicker .ui-datepicker-calendar td > span:focus {
+	box-shadow: 0 0 0 .2rem var(--activeborder);
+}
+
+body .ui-datepicker .ui-datepicker-calendar td > a.ui-state-active,
+body .ui-datepicker .ui-datepicker-calendar td > span.ui-state-active {
+	background: var(--active);
+}
+
+body .ui-datepicker .ui-datepicker-calendar td > a:hover {
+	background: var(--hover);
+	color: var(--text);
+}
+
+
+/* Heutiger Tag, inaktiv (ein anderer Tag ist aktiv) */
+body .ui-datepicker .ui-datepicker-calendar td.ui-datepicker-today > a,
+body .ui-datepicker .ui-datepicker-calendar td.ui-datepicker-today > span,
+body .ui-datepicker .ui-datepicker-calendar td.ui-datepicker-current-day > a,
+body .ui-datepicker .ui-datepicker-calendar td.ui-datepicker-current-day > span {
+	background: var(--activemarked);
+	color: var(--textonactive);
+}
+
+/* Heutiger Tag, aktiv */
+body .ui-datepicker .ui-datepicker-calendar td.ui-datepicker-today > a.ui-state-active, 
+body .ui-datepicker .ui-datepicker-calendar td.ui-datepicker-today > span.ui-state-active, 
+body .ui-datepicker .ui-datepicker-calendar td.ui-datepicker-current-day > a.ui-state-active, 
+body .ui-datepicker .ui-datepicker-calendar td.ui-datepicker-current-day > span.ui-state-active {
+	background: var(--activemarked);
+	color: var(--textonactive);
+	border: 1px solid var(--activeborder);
+}
+
+body .ui-datepicker .ui-datepicker-calendar td.ui-datepicker-today > a:hover,
+body .ui-datepicker .ui-datepicker-calendar td.ui-datepicker-current-day > a:hover,
+body .ui-datepicker .ui-datepicker-buttonbar button:not(:disabled):hover {
+	background: var(--hover);
+	border: 1px solid var(--hoverborder);
+}
+
+
+body .ui-datepicker .ui-datepicker-buttonbar {
+	padding: 0rem;
+}
+
+body .ui-datepicker .ui-datepicker-buttonbar button,
+body .ui-datepicker .ui-datepicker-buttonbar button.ui-state-active {
+	background: var(--active);
+	border: 1px solid var(--activeborder);
+}

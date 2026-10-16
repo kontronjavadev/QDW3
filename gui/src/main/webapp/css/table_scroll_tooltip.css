@@ -90,6 +90,68 @@ body .ui-datatable .ui-datatable-data > tr.ui-state-hover {
 
 
 
+body .ui-paginator {
+	color: var(--text);
+	background: var(--paneldimmed);
+}
+
+body .ui-paginator .ui-paginator-first::before, 
+body .ui-paginator .ui-paginator-prev::before, 
+body .ui-paginator .ui-paginator-next::before, 
+body .ui-paginator .ui-paginator-last::before,
+body .ui-paginator .ui-paginator-first.ui-state-focus,
+body .ui-paginator .ui-paginator-prev.ui-state-focus,
+body .ui-paginator .ui-paginator-next.ui-state-focus,
+body .ui-paginator .ui-paginator-last.ui-state-focus,
+body .ui-paginator .ui-paginator-current,
+body .ui-paginator .ui-paginator-rpp-options,
+body .ui-paginator .ui-paginator-pages .ui-paginator-page {
+	background: unset;
+	color: var(--text);
+	box-shadow: none;
+}
+
+
+body .ui-paginator .ui-paginator-pages .ui-paginator-page.ui-state-active {
+	background: unset;
+	color: var(--text);
+	box-shadow: inset 0 0 0 0.15rem var(--active);
+}
+body .ui-paginator .ui-paginator-first.ui-state-active, 
+body .ui-paginator .ui-paginator-prev.ui-state-active, 
+body .ui-paginator .ui-paginator-next.ui-state-active, 
+body .ui-paginator .ui-paginator-last.ui-state-active
+ {
+	background: unset;
+	color: var(--text);
+	box-shadow: inset 0 0 0 0.15rem var(--active);
+}
+
+
+body .ui-paginator .ui-paginator-pages .ui-paginator-page.ui-state-hover {
+	background: unset;
+	color: var(--text);
+	box-shadow: inset 0 0 0 0.15rem var(--hover);
+}
+body .ui-paginator .ui-paginator-first.ui-state-hover, 
+body .ui-paginator .ui-paginator-prev.ui-state-hover, 
+body .ui-paginator .ui-paginator-next.ui-state-hover, 
+body .ui-paginator .ui-paginator-last.ui-state-hover {
+	background: unset;
+	color: var(--text);
+	box-shadow: inset 0 0 0 0.15rem var(--hover);
+}
+
+
+body .ui-paginator .ui-paginator-current,
+body .ui-paginator .ui-paginator-rpp-options {
+	margin: 0.0rem .3rem 0.3rem 1rem;
+}
+
+
+
+
+
 .viewScrollable .ui-datatable-scrollable-body {
 	/* Wie SizeServiceBean#viewWidth() und #viewHeight(),
 	jedoch muss die Höhe des Paginators und des Headers abgezogen werden.

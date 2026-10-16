@@ -19,11 +19,12 @@ oder der Titel richtet sich nach dem Content (<ui:define name="title"/> in jedem
 		<meta http-equiv="refresh" content="#{session.maxInactiveInterval};url=#{request.scheme}://#{request.serverName}:#{request.serverPort}#{request.contextPath}"/>
 		<meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
 
-		<link type="text/css" rel="stylesheet" href="#{request.contextPath}/css/default.css" />
+		<link type="text/css" rel="stylesheet" href="#{request.contextPath}/css/base.css" />
 		<link type="text/css" rel="stylesheet" href="#{request.contextPath}/css/navigation.css" />
 		<link type="text/css" rel="stylesheet" href="#{request.contextPath}/css/table_scroll_tooltip.css" />
-		<link type="text/css" rel="stylesheet" href="#{request.contextPath}/css/autocomplete.css" />
+		<link type="text/css" rel="stylesheet" href="#{request.contextPath}/css/input.css" />
 		<link type="text/css" rel="stylesheet" href="#{request.contextPath}/css/select.css" />
+		<link type="text/css" rel="stylesheet" href="#{request.contextPath}/css/calendar.css" />
 
 		<h:outputScript name="script/util.js" target="head" />
 		<h:outputScript name="script/extension.js" target="head" />
