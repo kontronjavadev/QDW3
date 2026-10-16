@@ -321,7 +321,7 @@
 			</p:column>
 
 			<p:ajax event="change" process="@this" />
-			<p:ajax event="itemSelect" process="@this" />
+			<p:ajax event="itemSelect" listener="#{fieldPerfReport.onCustomerSelect}" process="@this" />
 			<p:ajax event="itemUnselect" process="@this" />
 		</p:autoComplete>
 
@@ -397,6 +397,31 @@
 
 	<p:defaultCommand target=":form:cmdSearch" scope="dlgSearchInput" />
  -->
+
+
+
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    // JSF injiziert hier das serverseitige JSON-Objekt beim Rendern der Seite
+    const initialTooltips = #{fieldPerfReport.preloadedCustomerTooltipsJson};
+    
+    // Sucht alle Tokens des Customer-Feldes
+    document.querySelectorAll('[id$="fi_cust"] .ui-autocomplete-token-label').forEach(function(span) {
+        const code = span.textContent.trim();
+        
+        // Wenn für diesen Code ein Name im JSON existiert...
+        if (initialTooltips[code]) {
+            const token = span.parentElement;
+            
+            // ... machen wir das Token kompatibel zu deiner extension.js
+            token.classList.add('pf-tooltip-target');
+            token.setAttribute('data-title', initialTooltips[code]);
+        }
+    });
+});
+</script>
 
 </ui:define>
 </ui:composition>

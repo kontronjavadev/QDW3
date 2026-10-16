@@ -15,6 +15,8 @@ import java.util.ResourceBundle;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import org.primefaces.PrimeFaces;
+import org.primefaces.event.SelectEvent;
 import org.primefaces.model.DualListModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -203,7 +205,6 @@ public class FieldPerfReport extends SuperView implements Serializable {
         }
     }
 
-
     public List<String> onCompleteMaterialNumber(String filter) {
         final var results = new ArrayList<String>();
         try {
@@ -219,6 +220,7 @@ public class FieldPerfReport extends SuperView implements Serializable {
         return results;
     }
 
+
     public List<CustomerDTO> onCompleteCustomer(String filter) {
         this.currentCustomerFilter = filter;
         try {
@@ -229,6 +231,46 @@ public class FieldPerfReport extends SuperView implements Serializable {
             return Collections.emptyList();
         }
     }
+
+
+    public void onCustomerSelect(final SelectEvent<CustomerDTO> event) {
+        final CustomerDTO selected = event.getObject();
+
+        if (selected != null) {
+            // Maskiert einfache Anführungszeichen (z.B. bei "O'Connor")
+            final String safeName = selected.getName().replace("'", "\\'");
+
+            // Ruft die Funktion aus der extension.js auf.
+            // Parameter: 1. ID des Feldes, 2. Code (Label des Tokens), 3. Tooltip-Text (Name)
+            final String jsCall = String.format("addTooltipToToken('fi_cust', '%s', '%s');",
+                    selected.getCode(), safeName);
+
+            PrimeFaces.current().executeScript(jsCall);
+        }
+    }
+
+    public String getPreloadedCustomerTooltipsJson() {
+        if (custFilterList == null || custFilterList.isEmpty()) {
+            return "{}";
+        }
+
+        final StringBuilder json = new StringBuilder("{");
+        for (int i = 0; i < custFilterList.size(); i++) {
+            final CustomerDTO c = custFilterList.get(i);
+            // Für reines JSON maskieren
+            final String safeName = c.getName().replace("\\", "\\\\").replace("\"", "\\\"");
+
+            json.append("\"").append(c.getCode()).append("\": \"").append(safeName).append("\"");
+            if (i < custFilterList.size() - 1) {
+                json.append(", ");
+            }
+        }
+        json.append("}");
+
+        return json.toString();
+    }
+
+
 
     /**
      * Sichert den Text gegen XSS ab und markiert den gefundenen Suchbegriff farblich.

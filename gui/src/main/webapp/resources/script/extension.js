@@ -49,10 +49,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	// 2. Event Delegation: Wir lauschen global auf alle Maus-Bewegungen
 	document.addEventListener('mouseover', function(e) {
-		// Prüfen, ob das Element unter der Maus unsere Ziel-Klasse hat
-		if (e.target && e.target.classList && e.target.classList.contains('pf-tooltip-target')) {
-			const target = e.target;
+		// closest() sucht am Element selbst ODER wandert den DOM-Baum nach oben,
+		// bis es ein Element mit der Klasse findet.
+		const target = e.target ? e.target.closest('.pf-tooltip-target') : null;
 
+		if (target) {
 			// Text aus dem 'title'-Attribut holen. 
 			// Wir benennen es sofort in 'data-title' um, damit der träge, weiße Browser-Tooltip nicht mehr erscheint.
 			let text = target.getAttribute('title');
@@ -75,7 +76,8 @@ document.addEventListener('DOMContentLoaded', function() {
 			 // Wir prüfen das Element selbst (span) und vorsichtshalber die Zelle (td), 
 			// je nachdem, wo das CSS "overflow: hidden" genau greift.
 			const isHeader = target.closest('th') !== null;
-			let shouldShow = isHeader;
+			const isToken = target.classList.contains('ui-autocomplete-token');
+			let shouldShow = isHeader || isToken;
 			if (!shouldShow) {
 				const parentCell = target.closest('td') || target.parentElement;
 				shouldShow = (target.scrollWidth > target.offsetWidth) || 
@@ -123,7 +125,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	// 3. Wenn die Maus das Element verlässt, sofort verstecken
 	document.addEventListener('mouseout', function(e) {
-		if (e.target && e.target.classList && e.target.classList.contains('pf-tooltip-target')) {
+		const target = e.target ? e.target.closest('.pf-tooltip-target') : null;
+		// WICHTIG: Autocomplete-Mehrfachauswahl: Pille:
+		// Wenn wir von der Box auf den Text in der Box fahren, feuert der Browser 
+		// auch ein mouseout. Wir dürfen den Tooltip aber nur ausblenden, wenn die Maus
+		// unser gesamtes Token (inkl. Kinder) WIRKLICH verlässt.
+		if (target && (!e.relatedTarget || !target.contains(e.relatedTarget))) {
 			tooltip.style.display = 'none';
 		}
 	});
@@ -203,4 +210,25 @@ document.addEventListener("DOMContentLoaded", function() {
 	});
 });
 
+
+
+
+
+// Globale Hilfsfunktion für PrimeFaces Token-Tooltips bei Mehrfach-Autocomplete
+function addTooltipToToken(fieldId, tokenCode, tooltipText) {
+    setTimeout(function() {
+        document.querySelectorAll('[id$="' + fieldId + '"] .ui-autocomplete-token-label').forEach(function(span) {
+            if (span.textContent.trim() === tokenCode) {
+                var token = span.parentElement;
+                
+                // 1. Die Klasse hinzufügen, auf die dein Tooltip-Skript lauscht
+                token.classList.add('pf-tooltip-target');
+                
+                // 2. Den kompletten Namen direkt in data-title schreiben,
+                // damit der Browser-Standard-Tooltip garantiert nicht aufblitzt.
+                token.setAttribute('data-title', tooltipText);
+            }
+        });
+    }, 50);
+}
 
