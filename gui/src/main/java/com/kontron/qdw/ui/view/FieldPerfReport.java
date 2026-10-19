@@ -59,11 +59,14 @@ import net.sourceforge.jbizmo.commons.webclient.primefaces.util.MessageUtil;
 @SessionScoped
 public class FieldPerfReport extends SuperView implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 6078905084559392861L;
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final List<Integer> ANAL_INTERVALS = Arrays.asList(4, 6, 8, 12, 18, 24, 26, 72);
+    private static final List<Integer> RET_INTERVALS = Arrays.asList(4, 6, 8, 12, 18, 24, 26, 72);
 
     public static final String PAGE_URL = "/view/FieldPerfReport.jsf?faces-redirect=true";
     public static final String VIEW_ID = "com.kontron.qdw.ui.view.FieldPerfReport";
+
 
     private final transient SavedQueryService queryManager;
     private final transient MaterialBoundaryService materialService;
@@ -107,6 +110,10 @@ public class FieldPerfReport extends SuperView implements Serializable {
 
     private List<String> matClasses = new ArrayList<>();
     private List<String> selectedMatClasses = new ArrayList<>();
+
+    private Integer selectedAnalInterval;
+
+    private Integer selectedReturnInterval;
 
 
 
@@ -153,7 +160,7 @@ public class FieldPerfReport extends SuperView implements Serializable {
         }
 
 
-        formTitle = bundle.getString(FORM_MATERIALVIEW_TITLE);
+        formTitle = bundle.getString(FORM_FIELDPERFREPORT_TITLE);
 
         // Check if previous search exists!
         final SearchDTO lastSearch = queryManager.getLastQuery(userSession.getPrincipal().getId(), VIEW_ID);
@@ -552,6 +559,32 @@ public class FieldPerfReport extends SuperView implements Serializable {
     }
 
 
+    public List<Integer> getAnalIntervals() {
+        return ANAL_INTERVALS;
+    }
+
+    public Integer getSelectedAnalInterval() {
+        return selectedAnalInterval;
+    }
+
+    public void setSelectedAnalInterval(Integer selectedAnalInterval) {
+        this.selectedAnalInterval = selectedAnalInterval;
+    }
+
+
+    public List<Integer> getReturnIntervals() {
+        return RET_INTERVALS;
+    }
+
+    public Integer getSelectedReturnInterval() {
+        return selectedReturnInterval;
+    }
+
+    public void setSelectedReturnInterval(Integer selectedReturnInterval) {
+        this.selectedReturnInterval = selectedReturnInterval;
+    }
+
+
 
     public String getFormTitle() {
         return formTitle;
@@ -664,6 +697,25 @@ public class FieldPerfReport extends SuperView implements Serializable {
         }
     }
 
+
+    /*
+    public class Months {
+        final int months;
+    
+        public Months(int months) {
+            this.months = months;
+        }
+    
+        @Override
+        public String toString() {
+            return months + " " + bundle.getString(FIELDPERFREPORTVIEW_MONTHMENU_MONTHS);
+        }
+    
+        public int getMonths() {
+            return months;
+        }
+    }
+    */
 
 
     // public void onClick() { }

@@ -290,6 +290,7 @@
 		</p:autoComplete>
 
 
+
 		<!-- Zeile 2 mit 2 Spalten: 4 Elemente (Label, Menu, Label, Menu) 
 			Das zweite Label erhält jeweils zusätzlich die styleClass "block-separator", um den Abstand zu vergrößern -->
 		<h:outputLabel styleClass="label-field-optional" for="fi_matnrset" value="#{i18n.col_fieldperfreportview_matnrset}" />
@@ -311,6 +312,7 @@
 		</p:selectOneMenu>
 
 
+
 		<!-- Zeile 3: Label + CheckboxMenu (span 3) -->
 		<h:outputLabel styleClass="label-field-optional" for="fi_rmatype" value="#{i18n.col_fieldperfreportview_rmatype}" />
 		<p:selectCheckboxMenu id="fi_rmatype" styleClass="span-3-cols"
@@ -319,6 +321,7 @@
 			<p:ajax process="@this" />
 			<f:selectItems value="#{fieldPerfReport.rmaTypes}" />
 		</p:selectCheckboxMenu>
+
 
 
 		<!-- Label + Autocomplete (span 3) -->
@@ -347,6 +350,7 @@
 		</p:autoComplete>
 
 
+
 		<!-- Label + Autocomplete (span 3) -->
 		<h:outputLabel styleClass="label-field-optional" for="fi_supp" value="#{i18n.col_fieldperfreportview_supp}" />
 		<p:autoComplete id="fi_supp" styleClass="span-3-cols" multiple="true" forceSelection="true" 
@@ -373,6 +377,7 @@
 		</p:autoComplete>
 
 
+
 		<!-- Zeile mit 2 Spalten: 4 Elemente (Label, CheckboxMenu, Label, CheckboxMenu) -->
 		<h:outputLabel styleClass="label-field-optional" for="fi_mattype" value="#{i18n.col_fieldperfreportview_mattype}" />
 		<p:selectCheckboxMenu id="fi_mattype" 
@@ -389,6 +394,31 @@
 			<p:ajax process="@this" />
 			<f:selectItems value="#{fieldPerfReport.matClasses}" />
 		</p:selectCheckboxMenu>
+
+
+
+		<!-- Zeile mit 2 Spalten: 4 Elemente (Label, CheckboxMenu, Label, CheckboxMenu) -->
+		<h:outputLabel styleClass="label-field-optional" for="fi_analintv" value="#{i18n.col_fieldperfreportview_analintv}" />
+		<p:selectOneMenu id="fi_analintv" 
+			scrollHeight="350" value="#{fieldPerfReport.selectedAnalInterval}">
+			<p:ajax process="@this" />
+			<f:selectItem itemLabel="" itemValue="#{null}" noSelectionOption="true" />
+			<f:selectItems value="#{fieldPerfReport.analIntervals}" 
+				var="m" 
+				itemValue="#{m}" 
+				itemLabel="#{m} #{i18n.fieldperfreportview_monthmenu_months}" />
+		</p:selectOneMenu>
+
+		<h:outputLabel styleClass="label-field-optional block-separator" for="fi_retintv" value="#{i18n.col_fieldperfreportview_retintv}" />
+		<p:selectOneMenu id="fi_retintv" 
+			scrollHeight="350" value="#{fieldPerfReport.selectedReturnInterval}">
+			<p:ajax process="@this" />
+			<f:selectItem itemLabel="" itemValue="#{null}" noSelectionOption="true" />
+			<f:selectItems value="#{fieldPerfReport.returnIntervals}" 
+				var="m" 
+				itemValue="#{m}" 
+				itemLabel="#{m} #{i18n.fieldperfreportview_monthmenu_months}" />
+		</p:selectOneMenu>
 
 	</div>
 
