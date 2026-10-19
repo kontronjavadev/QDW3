@@ -93,8 +93,8 @@ public class SupplierDTO implements Serializable {
      * @param version
      */
     @Generated
-    public SupplierDTO(String name, String street, String zipCode, String city, String code, String shortText, String comment,
-            LocalDateTime creationDate, LocalDateTime lastUpdate, int version) {
+    public SupplierDTO(String name, String street, String zipCode, String city, String code,
+            String shortText, String comment, LocalDateTime creationDate, LocalDateTime lastUpdate, int version) {
         this.name = name;
         this.street = street;
         this.zipCode = zipCode;
@@ -106,6 +106,15 @@ public class SupplierDTO implements Serializable {
         this.lastUpdate = lastUpdate;
         this.version = version;
     }
+
+    public SupplierDTO(String name, String street, String zipCode, String city, String code,
+            String shortText, String comment, LocalDateTime creationDate, LocalDateTime lastUpdate, int version,
+            String countryCode, String countryName) {
+        this(name, street, zipCode, city, code, shortText, comment, creationDate, lastUpdate, version);
+        this.country = new CountryListDTO(countryCode, countryName);
+    }
+
+
 
     /**
      * @return the name
@@ -289,23 +298,28 @@ public class SupplierDTO implements Serializable {
     @Generated
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
+        }
 
-        if (obj == null)
+        if (obj == null) {
             return false;
+        }
 
-        if (getClass() != obj.getClass())
+        if (getClass() != obj.getClass()) {
             return false;
+        }
 
         final var dto = (SupplierDTO) obj;
 
         if (this.code == null) {
-            if (dto.getCode() != null)
+            if (dto.getCode() != null) {
                 return false;
+            }
         }
-        else if (!this.code.equals(dto.getCode()) && !this.name.equals(dto.getName()))
+        else if (!this.code.equals(dto.getCode()) && !this.name.equals(dto.getName())) {
             return false;
+        }
 
         return true;
     }

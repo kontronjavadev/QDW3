@@ -7,11 +7,16 @@ import com.kontron.qdw.dto.base.*;
 import com.kontron.qdw.domain.base.*;
 import jakarta.validation.ConstraintViolationException;
 import java.util.*;
+
+import org.apache.commons.lang3.StringUtils;
+
 import jakarta.inject.*;
+import jakarta.persistence.TypedQuery;
 import jakarta.ejb.*;
 import jakarta.annotation.security.*;
 import net.sourceforge.jbizmo.commons.repository.*;
 import net.sourceforge.jbizmo.commons.search.dto.*;
+import net.sourceforge.jbizmo.commons.annotation.Customized;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
 import static net.sourceforge.jbizmo.commons.jpa.AbstractRepository.SMALL_LIST_SIZE;
 
@@ -37,6 +42,113 @@ public class SupplierBoundaryService {
     public SupplierBoundaryService(SupplierRepository repository) {
         this.repository = repository;
     }
+
+
+
+    /**
+     * Search for supplier objects
+     * @param filter
+     * @return a list of supplier objects
+     * @throws GeneralSearchException if the search operation has failed
+     */
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public List<SupplierDTO> findSuppliersExtend(String filter) {
+        // wenn kein Filtertext oder nur Wildcard angegeben, entfällt die Filterung und es wird ohne Filter gesucht
+        boolean useFilter = StringUtils.isNotEmpty(filter) && !filter.equals(WILDCARD);
+        String whereClause = "";
+        if (useFilter) {
+            whereClause = "where a.name like :name "
+                    + " or a.city like :city "
+                    + " or b.name like :countryname ";
+        }
+
+        String jpql = "select new " + SupplierDTO.class.getName() + " ("
+                + "  a.name,"
+                + "  a.street,"
+                + "  a.zipCode,"
+                + "  a.city,"
+                + "  a.code,"
+                + "  a.shortText,"
+                + "  a.comment,"
+                + "  a.creationDate,"
+                + "  a.lastUpdate,"
+                + "  a.version,"
+                + "  b.code,"
+                + "  b.name "
+                + ") "
+                + "from Supplier a "
+                + "join a.country b "
+                + whereClause
+                + "order by a.name ";
+
+
+        @SuppressWarnings("resource")
+        final TypedQuery<SupplierDTO> query = repository.getEntityManager()
+                .createQuery(jpql, SupplierDTO.class)
+                .setMaxResults(SMALL_LIST_SIZE);
+        if (useFilter) {
+            query.setParameter("name", filter + WILDCARD);
+            query.setParameter("city", filter + WILDCARD);
+            query.setParameter("countryname", filter + WILDCARD);
+        }
+
+        return query.getResultList();
+    }
+
+    /**
+     * Find supplier by its ID
+     * @param code
+     * @return the supplier object
+     */
+    @Customized
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public SupplierDTO findSupplierById(String code) {
+        return findSupplierById(code, true);
+    }
+
+    /**
+     * Find supplier by its ID
+     * @param code
+     * @return the supplier object
+     */
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public SupplierDTO findSupplierByIdForSearch(String code) {
+        return findSupplierById(code, false);
+    }
+
+    /**
+     * Find supplier by its ID
+     * @param code
+     * @return the supplier object
+     */
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public SupplierDTO findSupplierById(String code, boolean mustExist) {
+        // Find persistent object
+        final Supplier supplier = repository.findById(code, mustExist);
+
+        final var dto = new SupplierDTO();
+        dto.setName(supplier.getName());
+        dto.setStreet(supplier.getStreet());
+        dto.setZipCode(supplier.getZipCode());
+        dto.setCity(supplier.getCity());
+        dto.setCode(supplier.getCode());
+        dto.setShortText(supplier.getShortText());
+        dto.setComment(supplier.getComment());
+        dto.setCreationDate(supplier.getCreationDate());
+        dto.setLastUpdate(supplier.getLastUpdate());
+        dto.setVersion(supplier.getVersion());
+        dto.setCountry(new CountryListDTO());
+        dto.getCountry().setCode(supplier.getCountry().getCode());
+        dto.getCountry().setName(supplier.getCountry().getName());
+
+        return dto;
+    }
+
+
 
     /**
      * Create new supplier
@@ -243,36 +355,6 @@ public class SupplierBoundaryService {
         final var dto = new SupplierListDTO();
         dto.setCode(supplier.getCode());
         dto.setName(supplier.getName());
-
-        return dto;
-    }
-
-    /**
-     * Find supplier by its ID
-     * @param code
-     * @return the supplier object
-     */
-    @Generated
-    @PermitAll
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public SupplierDTO findSupplierById(String code) {
-        // Find persistent object
-        final Supplier supplier = repository.findById(code, true);
-
-        final var dto = new SupplierDTO();
-        dto.setName(supplier.getName());
-        dto.setStreet(supplier.getStreet());
-        dto.setZipCode(supplier.getZipCode());
-        dto.setCity(supplier.getCity());
-        dto.setCode(supplier.getCode());
-        dto.setShortText(supplier.getShortText());
-        dto.setComment(supplier.getComment());
-        dto.setCreationDate(supplier.getCreationDate());
-        dto.setLastUpdate(supplier.getLastUpdate());
-        dto.setVersion(supplier.getVersion());
-        dto.setCountry(new CountryListDTO());
-        dto.getCountry().setCode(supplier.getCountry().getCode());
-        dto.getCountry().setName(supplier.getCountry().getName());
 
         return dto;
     }

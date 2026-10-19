@@ -305,23 +305,49 @@
 		<p:autoComplete id="fi_cust" styleClass="span-3-cols" multiple="true" forceSelection="true" 
 			minQueryLength="2" maxResults="50" scrollHeight="350"
 			value="#{fieldPerfReport.custFilterList}" completeMethod="#{fieldPerfReport.onCompleteCustomer}"
-			var="customer" itemLabel="#{customer.code}" itemValue="#{customer}" 
+			var="cust" itemLabel="#{cust.code}" itemValue="#{cust}" 
 			converter="#{customerDTOConverter}" >
 
 			<!-- Spaltendefinition für das Dropdown -->
 			<p:column headerText="Name">
-				<h:outputText value="#{fieldPerfReport.highlightMatch(customer.name)}" escape="false" />
+				<h:outputText value="#{fieldPerfReport.highlightMatchCust(cust.name)}" escape="false" />
 			</p:column>
 
 			<p:column headerText="Adresse">
-				<h:outputText value="#{customer.street}, " />
-				<h:outputText value="#{customer.zipCode} " />
-				<h:outputText value="#{fieldPerfReport.highlightMatch(customer.city)} " escape="false" />
-				<h:outputText value="(#{fieldPerfReport.highlightMatch(customer.country.name)})" escape="false" />
+				<h:outputText value="#{cust.street}, " />
+				<h:outputText value="#{cust.zipCode} " />
+				<h:outputText value="#{fieldPerfReport.highlightMatchCust(cust.city)} " escape="false" />
+				<h:outputText value="(#{fieldPerfReport.highlightMatchCust(cust.country.name)})" escape="false" />
 			</p:column>
 
 			<p:ajax event="change" process="@this" />
 			<p:ajax event="itemSelect" listener="#{fieldPerfReport.onCustomerSelect}" process="@this" />
+			<p:ajax event="itemUnselect" process="@this" />
+		</p:autoComplete>
+
+
+		<!-- Label + CheckboxMenu (span 3) -->
+		<h:outputLabel styleClass="label-field-optional" for="fi_supp" value="#{i18n.col_fieldperfreportview_supp}" />
+		<p:autoComplete id="fi_supp" styleClass="span-3-cols" multiple="true" forceSelection="true" 
+			minQueryLength="2" maxResults="50" scrollHeight="350"
+			value="#{fieldPerfReport.suppFilterList}" completeMethod="#{fieldPerfReport.onCompleteSupplier}"
+			var="supp" itemLabel="#{supp.code}" itemValue="#{supp}" 
+			converter="#{supplierDTOConverter}" >
+
+			<!-- Spaltendefinition für das Dropdown -->
+			<p:column headerText="Name">
+				<h:outputText value="#{fieldPerfReport.highlightMatchSupp(supp.name)}" escape="false" />
+			</p:column>
+
+			<p:column headerText="Adresse">
+				<h:outputText value="#{supp.street}, " />
+				<h:outputText value="#{supp.zipCode} " />
+				<h:outputText value="#{fieldPerfReport.highlightMatchSupp(supp.city)} " escape="false" />
+				<h:outputText value="(#{fieldPerfReport.highlightMatchSupp(supp.country.name)})" escape="false" />
+			</p:column>
+
+			<p:ajax event="change" process="@this" />
+			<p:ajax event="itemSelect" listener="#{fieldPerfReport.onSupplierSelect}" process="@this" />
 			<p:ajax event="itemUnselect" process="@this" />
 		</p:autoComplete>
 
@@ -404,22 +430,31 @@
 
 <script>
 document.addEventListener("DOMContentLoaded", function() {
-    // JSF injiziert hier das serverseitige JSON-Objekt beim Rendern der Seite
-    const initialTooltips = #{fieldPerfReport.preloadedCustomerTooltipsJson};
-    
-    // Sucht alle Tokens des Customer-Feldes
-    document.querySelectorAll('[id$="fi_cust"] .ui-autocomplete-token-label').forEach(function(span) {
-        const code = span.textContent.trim();
+	// 1. Lokale Hilfsfunktion definieren
+	function applyInitialTooltips(initialTooltips, fieldId) {
+		// Falls kein JSON übergeben wurde (leeres Objekt), direkt abbrechen
+		if (!initialTooltips || Object.keys(initialTooltips).length === 0) {
+			return;
+		}
         
-        // Wenn für diesen Code ein Name im JSON existiert...
-        if (initialTooltips[code]) {
-            const token = span.parentElement;
-            
-            // ... machen wir das Token kompatibel zu deiner extension.js
-            token.classList.add('pf-tooltip-target');
-            token.setAttribute('data-title', initialTooltips[code]);
-        }
-    });
+		// Sucht alle Tokens für das exakt übergebene Feld
+		document.querySelectorAll('[id$="' + fieldId + '"] .ui-autocomplete-token-label').forEach(function(span) {
+			const code = span.textContent.trim();
+
+			if (initialTooltips[code]) {
+				const token = span.parentElement;
+				token.classList.add('pf-tooltip-target');
+				token.setAttribute('data-title', initialTooltips[code]);
+			}
+		});
+	}
+
+	// 2. Funktion für Customers aufrufen. 
+	// JSF packt das JSON-Objekt beim Rendern direkt als ersten Parameter hinein.
+	applyInitialTooltips(#{fieldPerfReport.preloadedCustomerTooltipsJson}, 'fi_cust');
+
+	// 3. Funktion für Suppliers aufrufen
+	applyInitialTooltips(#{fieldPerfReport.preloadedSupplierTooltipsJson}, 'fi_supp');
 });
 </script>
 

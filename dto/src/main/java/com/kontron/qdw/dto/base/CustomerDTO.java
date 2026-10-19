@@ -102,8 +102,8 @@ public class CustomerDTO implements Serializable {
      * @param lastUpdate
      */
     @Generated
-    public CustomerDTO(String name, String street, String zipCode, String city, boolean internal, String code, String shortText, String comment,
-            LocalDateTime creationDate, int version, LocalDateTime lastUpdate) {
+    public CustomerDTO(String name, String street, String zipCode, String city, boolean internal, String code,
+            String shortText, String comment, LocalDateTime creationDate, int version, LocalDateTime lastUpdate) {
         this.name = name;
         this.street = street;
         this.zipCode = zipCode;

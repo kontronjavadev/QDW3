@@ -43,6 +43,8 @@ public class CustomerBoundaryService {
         this.repository = repository;
     }
 
+
+
     /**
      * Search for customer objects
      * @param filter
@@ -68,11 +70,11 @@ public class CustomerBoundaryService {
                 + "  a.city,"
                 + "  a.internal,"
                 + "  a.code,"
-                + " a.shortText,"
-                + " a.comment,"
-                + " a.creationDate,"
-                + " a.version,"
-                + " a.lastUpdate,"
+                + "  a.shortText,"
+                + "  a.comment,"
+                + "  a.creationDate,"
+                + "  a.version,"
+                + "  a.lastUpdate,"
                 + "  b.code,"
                 + "  b.name "
                 + ") "
@@ -92,9 +94,9 @@ public class CustomerBoundaryService {
             query.setParameter("countryname", filter + WILDCARD);
         }
 
-
         return query.getResultList();
     }
+
 
 
     /**
@@ -102,7 +104,7 @@ public class CustomerBoundaryService {
      * @param code
      * @return the customer object
      */
-    @Generated
+    @Customized
     @PermitAll
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public CustomerDTO findCustomerById(String code) {
@@ -114,7 +116,6 @@ public class CustomerBoundaryService {
      * @param code
      * @return the customer object
      */
-    @Customized
     @PermitAll
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public CustomerDTO findCustomerByIdForSearch(String code) {

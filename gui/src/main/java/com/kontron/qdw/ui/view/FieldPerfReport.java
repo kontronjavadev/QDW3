@@ -12,6 +12,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -79,7 +80,8 @@ public class FieldPerfReport extends SuperView implements Serializable {
     // private List<MaterialSearchDTO> materialsList = new ArrayList<>();
     // private MaterialSearchDTO selectedObject;
 
-    private String currentCustomerFilter = "";
+    private String currentCustFilter = "";
+    private String currentSuppFilter = "";
 
     private List<String> matNrFilterList = new ArrayList<>();
     private List<CustomerDTO> custFilterList = new ArrayList<>();
@@ -222,7 +224,7 @@ public class FieldPerfReport extends SuperView implements Serializable {
 
 
     public List<CustomerDTO> onCompleteCustomer(String filter) {
-        this.currentCustomerFilter = filter;
+        this.currentCustFilter = filter;
         try {
             return custService.findCustomersExtend(filter);
         }
@@ -232,36 +234,68 @@ public class FieldPerfReport extends SuperView implements Serializable {
         }
     }
 
-
-    public void onCustomerSelect(final SelectEvent<CustomerDTO> event) {
-        final CustomerDTO selected = event.getObject();
-
-        if (selected != null) {
-            // Maskiert einfache Anführungszeichen (z.B. bei "O'Connor")
-            final String safeName = selected.getName().replace("'", "\\'");
-
-            // Ruft die Funktion aus der extension.js auf.
-            // Parameter: 1. ID des Feldes, 2. Code (Label des Tokens), 3. Tooltip-Text (Name)
-            final String jsCall = String.format("addTooltipToToken('fi_cust', '%s', '%s');",
-                    selected.getCode(), safeName);
-
-            PrimeFaces.current().executeScript(jsCall);
+    public List<SupplierDTO> onCompleteSupplier(String filter) {
+        this.currentSuppFilter = filter;
+        try {
+            return suppService.findSuppliersExtend(filter);
+        }
+        catch (final Exception e) {
+            logger.error("Error while searching for auto-complete items by using the entered text '{}'!", filter, e);
+            return Collections.emptyList();
         }
     }
 
+
+    public void onCustomerSelect(final SelectEvent<CustomerDTO> event) {
+        if (event.getObject() == null) {
+            return;
+        }
+        final CustomerDTO selected = event.getObject();
+        addTooltip("fi_cust", selected.getCode(), selected.getName());
+    }
+
+    public void onSupplierSelect(final SelectEvent<SupplierDTO> event) {
+        if (event.getObject() == null) {
+            return;
+        }
+        final SupplierDTO selected = event.getObject();
+        addTooltip("fi_supp", selected.getCode(), selected.getName());
+    }
+
+    private void addTooltip(String elemName, String code, String name) {
+        // Maskiert einfache Anführungszeichen (z.B. bei "O'Connor")
+        final String safeName = name.replace("'", "\\'");
+
+        // Ruft die Funktion aus der extension.js auf.
+        // Parameter: 1. ID des Feldes, 2. Code (Label des Tokens), 3. Tooltip-Text (Name)
+        final String jsCall = String.format("addTooltipToToken('%s', '%s', '%s');", elemName, code, safeName);
+
+        PrimeFaces.current().executeScript(jsCall);
+    }
+
+
     public String getPreloadedCustomerTooltipsJson() {
-        if (custFilterList == null || custFilterList.isEmpty()) {
+        return getPreloadedTooltipsJson(custFilterList, CustomerDTO::getCode, CustomerDTO::getName);
+    }
+
+    public String getPreloadedSupplierTooltipsJson() {
+        return getPreloadedTooltipsJson(suppFilterList, SupplierDTO::getCode, SupplierDTO::getName);
+    }
+
+    private <DTO> String getPreloadedTooltipsJson(List<DTO> dtoFilterList,
+            Function<DTO, String> codeMapper, Function<DTO, String> nameMapper) {
+        if (dtoFilterList == null || dtoFilterList.isEmpty()) {
             return "{}";
         }
 
         final StringBuilder json = new StringBuilder("{");
-        for (int i = 0; i < custFilterList.size(); i++) {
-            final CustomerDTO c = custFilterList.get(i);
+        for (int i = 0; i < dtoFilterList.size(); i++) {
+            final DTO dto = dtoFilterList.get(i);
             // Für reines JSON maskieren
-            final String safeName = c.getName().replace("\\", "\\\\").replace("\"", "\\\"");
+            final String safeName = nameMapper.apply(dto).replace("\\", "\\\\").replace("\"", "\\\"");
 
-            json.append("\"").append(c.getCode()).append("\": \"").append(safeName).append("\"");
-            if (i < custFilterList.size() - 1) {
+            json.append("\"").append(codeMapper.apply(dto)).append("\": \"").append(safeName).append("\"");
+            if (i < dtoFilterList.size() - 1) {
                 json.append(", ");
             }
         }
@@ -275,7 +309,18 @@ public class FieldPerfReport extends SuperView implements Serializable {
     /**
      * Sichert den Text gegen XSS ab und markiert den gefundenen Suchbegriff farblich.
      */
-    public String highlightMatch(final String text) {
+    public String highlightMatchCust(final String text) {
+        return highlightMatch(text, currentCustFilter);
+    }
+
+    /**
+     * Sichert den Text gegen XSS ab und markiert den gefundenen Suchbegriff farblich.
+     */
+    public String highlightMatchSupp(final String text) {
+        return highlightMatch(text, currentSuppFilter);
+    }
+
+    private String highlightMatch(final String text, String currentFilter) {
         if (text == null) {
             return "";
         }
@@ -287,12 +332,12 @@ public class FieldPerfReport extends SuperView implements Serializable {
                 .replace("\"", "&quot;")
                 .replace("'", "&#x27;");
 
-        if (currentCustomerFilter == null || currentCustomerFilter.isBlank()) {
+        if (currentFilter == null || currentFilter.isBlank()) {
             return safeText;
         }
 
         // Führende und schließende % entfernen (auch mehrere wie "%%ab%")
-        String cleanQuery = currentCustomerFilter.replaceAll("^%+", "").replaceAll("%+$", "").trim();
+        String cleanQuery = currentFilter.replaceAll("^%+", "").replaceAll("%+$", "").trim();
 
         if (cleanQuery.isBlank()) {
             return safeText;
