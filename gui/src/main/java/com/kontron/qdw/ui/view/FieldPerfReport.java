@@ -25,14 +25,18 @@ import org.slf4j.LoggerFactory;
 import com.kontron.qdw.boundary.base.CustomerBoundaryService;
 import com.kontron.qdw.boundary.base.SupplierBoundaryService;
 import com.kontron.qdw.boundary.material.MaterialBoundaryService;
+import com.kontron.qdw.boundary.material.MaterialClassBoundaryService;
 import com.kontron.qdw.boundary.material.MaterialNumberSetBoundaryService;
+import com.kontron.qdw.boundary.material.MaterialTypeBoundaryService;
 import com.kontron.qdw.boundary.material.SerialNumberSetBoundaryService;
 import com.kontron.qdw.boundary.service.RMATypeBoundaryService;
 import com.kontron.qdw.dto.base.CustomerDTO;
 import com.kontron.qdw.dto.base.SupplierDTO;
+import com.kontron.qdw.dto.material.MaterialClassListDTO;
 import com.kontron.qdw.dto.material.MaterialListDTO;
 import com.kontron.qdw.dto.material.MaterialNumberSetDTO;
 import com.kontron.qdw.dto.material.MaterialSearchDTO;
+import com.kontron.qdw.dto.material.MaterialTypeListDTO;
 import com.kontron.qdw.dto.material.SerialNumberSetDTO;
 import com.kontron.qdw.dto.service.RMATypeListDTO;
 import com.kontron.qdw.service.SavedQueryService;
@@ -68,6 +72,8 @@ public class FieldPerfReport extends SuperView implements Serializable {
     private final transient SerialNumberSetBoundaryService serNrSetService;
     private final transient CustomerBoundaryService custService;
     private final transient SupplierBoundaryService suppService;
+    private final transient MaterialTypeBoundaryService matTypeService;
+    private final transient MaterialClassBoundaryService matClassService;
 
     private final UserSession userSession;
     private transient ResourceBundle bundle;
@@ -96,6 +102,12 @@ public class FieldPerfReport extends SuperView implements Serializable {
     private List<SerialNumberSetDTO> serNrSets = new ArrayList<>();
     private SerialNumberSetDTO selectedSerNrSet;
 
+    private List<String> matTypes = new ArrayList<>();
+    private List<String> selectedMatTypes = new ArrayList<>();
+
+    private List<String> matClasses = new ArrayList<>();
+    private List<String> selectedMatClasses = new ArrayList<>();
+
 
 
     public FieldPerfReport() {
@@ -108,12 +120,15 @@ public class FieldPerfReport extends SuperView implements Serializable {
         serNrSetService = null;
         custService = null;
         suppService = null;
+        matTypeService = null;
+        matClassService = null;
     }
 
     @Inject
     public FieldPerfReport(UserSession userSession, SavedQueryService queryManager,
             MaterialBoundaryService materialService, RMATypeBoundaryService rmaTypeService, MaterialNumberSetBoundaryService matNrSetService,
-            SerialNumberSetBoundaryService serNrSetService, CustomerBoundaryService custService, SupplierBoundaryService suppService) {
+            SerialNumberSetBoundaryService serNrSetService, CustomerBoundaryService custService, SupplierBoundaryService suppService,
+            MaterialTypeBoundaryService matTypeService, MaterialClassBoundaryService matClassService) {
         this.userSession = userSession;
         this.queryManager = queryManager;
 
@@ -123,6 +138,8 @@ public class FieldPerfReport extends SuperView implements Serializable {
         this.serNrSetService = serNrSetService;
         this.custService = custService;
         this.suppService = suppService;
+        this.matTypeService = matTypeService;
+        this.matClassService = matClassService;
     }
 
     public void initView() {
@@ -155,12 +172,21 @@ public class FieldPerfReport extends SuperView implements Serializable {
         initProperties();
         // fetchMaterials();
 
-        rmaTypes = rmaTypeService.findAllRMATypes().stream()
+        rmaTypes = rmaTypeService.findAll().stream()
                 .map(RMATypeListDTO::getCode)
                 .collect(Collectors.toList());
 
         matNrSets = matNrSetService.findAll();
         serNrSets = serNrSetService.findAll();
+
+        matTypes = matTypeService.findAll().stream()
+                .map(MaterialTypeListDTO::getCode)
+                .collect(Collectors.toList());
+
+        matClasses = matClassService.findAll().stream()
+                .map(MaterialClassListDTO::getCode)
+                .collect(Collectors.toList());
+
 
         logger.debug("View initialization finished");
     }
@@ -442,6 +468,7 @@ public class FieldPerfReport extends SuperView implements Serializable {
         this.matNrFilterList = matNrFilterList;
     }
 
+
     public List<CustomerDTO> getCustFilterList() {
         return custFilterList;
     }
@@ -449,6 +476,7 @@ public class FieldPerfReport extends SuperView implements Serializable {
     public void setCustFilterList(List<CustomerDTO> custFilterList) {
         this.custFilterList = custFilterList;
     }
+
 
     public List<SupplierDTO> getSuppFilterList() {
         return suppFilterList;
@@ -495,6 +523,32 @@ public class FieldPerfReport extends SuperView implements Serializable {
 
     public void setSelectedSerNrSet(SerialNumberSetDTO selectedSerNrSet) {
         this.selectedSerNrSet = selectedSerNrSet;
+    }
+
+
+    public List<String> getMatTypes() {
+        return matTypes;
+    }
+
+    public List<String> getSelectedMatTypes() {
+        return selectedMatTypes;
+    }
+
+    public void setSelectedMatTypes(List<String> selectedMatTypes) {
+        this.selectedMatTypes = selectedMatTypes;
+    }
+
+
+    public List<String> getMatClasses() {
+        return matClasses;
+    }
+
+    public List<String> getSelectedMatClasses() {
+        return selectedMatClasses;
+    }
+
+    public void setSelectedMatClasses(List<String> selectedMatClasses) {
+        this.selectedMatClasses = selectedMatClasses;
     }
 
 

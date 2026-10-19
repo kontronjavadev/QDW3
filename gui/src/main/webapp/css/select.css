@@ -163,6 +163,7 @@ body .ui-selectonemenu .ui-selectonemenu-label {
 
 body .ui-selectonemenu .ui-selectonemenu-trigger {
 	width: 1.2rem;
+	background: var(--inputfield);
 }
 
 /* Text in Aufklappliste des Dropdown-Menü */
@@ -228,6 +229,10 @@ body .ui-selectcheckboxmenu-panel .ui-selectcheckboxmenu-items-wrapper {
 
 body .ui-selectcheckboxmenu-panel .ui-selectcheckboxmenu-items .ui-selectcheckboxmenu-item:hover {
 	box-shadow: inset 0 0 0 0.15rem var(--hover);
+}
+
+body .ui-selectcheckboxmenu .ui-selectcheckboxmenu-trigger {
+	background: var(--inputfield);
 }
 
 

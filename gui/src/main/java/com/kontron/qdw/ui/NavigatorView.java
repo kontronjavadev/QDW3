@@ -84,7 +84,7 @@ public class NavigatorView implements Serializable {
         if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_USER_ADMINISTRATOR, ROLE_MAINTAINER)) {
             // Form group: Administration
             final var itemGroup0001 = new DefaultTreeNode<>(FOLDER_TYPE, new TreeNavigatorItem(bundle.getString(FG_TOP_ADMINISTRATION)), root);
-            itemGroup0001.setExpanded(false);
+            itemGroup0001.setExpanded(true);
 
             // User
             if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_USER_ADMINISTRATOR))

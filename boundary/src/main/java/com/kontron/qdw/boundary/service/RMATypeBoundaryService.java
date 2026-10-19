@@ -40,7 +40,7 @@ public class RMATypeBoundaryService {
 
     @PermitAll
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-    public List<RMATypeListDTO> findAllRMATypes() {
+    public List<RMATypeListDTO> findAll() {
         // Collect the select tokens of all fields that should be fetched
         final var selectTokens = new ArrayList<String>();
         selectTokens.add(RMATypeListDTO.SELECT_CODE);

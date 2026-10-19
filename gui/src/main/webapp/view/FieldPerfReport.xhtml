@@ -290,7 +290,28 @@
 		</p:autoComplete>
 
 
-		<!-- Zeile 2: Label + CheckboxMenu (span 3) -->
+		<!-- Zeile 2 mit 2 Spalten: 4 Elemente (Label, Menu, Label, Menu) 
+			Das zweite Label erhält jeweils zusätzlich die styleClass "block-separator", um den Abstand zu vergrößern -->
+		<h:outputLabel styleClass="label-field-optional" for="fi_matnrset" value="#{i18n.col_fieldperfreportview_matnrset}" />
+		<p:selectOneMenu id="fi_matnrset" converter="#{materialNumberSetDTOConverter}" 
+			scrollHeight="350" value="#{fieldPerfReport.selectedMatNrSet}">
+			<p:ajax process="@this" />
+			<f:selectItem itemLabel="" itemValue="#{null}" noSelectionOption="true" />
+			<f:selectItems value="#{fieldPerfReport.matNrSets}" var="matNrSetItem" 
+				itemLabel="#{matNrSetItem.label}" itemValue="#{matNrSetItem}" />
+		</p:selectOneMenu>
+
+		<h:outputLabel styleClass="label-field-optional block-separator" for="fi_sernrset" value="#{i18n.col_fieldperfreportview_sernrset}" />
+		<p:selectOneMenu id="fi_sernrset" converter="#{serialNumberSetDTOConverter}" 
+			scrollHeight="350" value="#{fieldPerfReport.selectedSerNrSet}">
+			<p:ajax process="@this" />
+			<f:selectItem itemLabel="" itemValue="#{null}" noSelectionOption="true" />
+			<f:selectItems value="#{fieldPerfReport.serNrSets}" var="serNrSetItem" 
+				itemLabel="#{serNrSetItem.code}" itemValue="#{serNrSetItem}" />
+		</p:selectOneMenu>
+
+
+		<!-- Zeile 3: Label + CheckboxMenu (span 3) -->
 		<h:outputLabel styleClass="label-field-optional" for="fi_rmatype" value="#{i18n.col_fieldperfreportview_rmatype}" />
 		<p:selectCheckboxMenu id="fi_rmatype" styleClass="span-3-cols"
 			updateLabel="true" scrollHeight="350"
@@ -300,7 +321,7 @@
 		</p:selectCheckboxMenu>
 
 
-		<!-- Label + CheckboxMenu (span 3) -->
+		<!-- Label + Autocomplete (span 3) -->
 		<h:outputLabel styleClass="label-field-optional" for="fi_cust" value="#{i18n.col_fieldperfreportview_cust}" />
 		<p:autoComplete id="fi_cust" styleClass="span-3-cols" multiple="true" forceSelection="true" 
 			minQueryLength="2" maxResults="50" scrollHeight="350"
@@ -326,7 +347,7 @@
 		</p:autoComplete>
 
 
-		<!-- Label + CheckboxMenu (span 3) -->
+		<!-- Label + Autocomplete (span 3) -->
 		<h:outputLabel styleClass="label-field-optional" for="fi_supp" value="#{i18n.col_fieldperfreportview_supp}" />
 		<p:autoComplete id="fi_supp" styleClass="span-3-cols" multiple="true" forceSelection="true" 
 			minQueryLength="2" maxResults="50" scrollHeight="350"
@@ -352,25 +373,22 @@
 		</p:autoComplete>
 
 
-		<!-- Zeile mit 2 Spalten: 4 Elemente (Label, Menu, Label, Menu) 
-			Das zweite Label rehält jeweils zusätzlich die styleClass "block-separator", um den Abstand zu vergrößern -->
-		<h:outputLabel styleClass="label-field-optional" for="fi_matnrset" value="#{i18n.col_fieldperfreportview_matnrset}" />
-		<p:selectOneMenu id="fi_matnrset" converter="#{materialNumberSetDTOConverter}" 
-			scrollHeight="350" value="#{fieldPerfReport.selectedMatNrSet}">
+		<!-- Zeile mit 2 Spalten: 4 Elemente (Label, CheckboxMenu, Label, CheckboxMenu) -->
+		<h:outputLabel styleClass="label-field-optional" for="fi_mattype" value="#{i18n.col_fieldperfreportview_mattype}" />
+		<p:selectCheckboxMenu id="fi_mattype" 
+			updateLabel="true" scrollHeight="350"
+			value="#{fieldPerfReport.selectedMatTypes}">
 			<p:ajax process="@this" />
-			<f:selectItem itemLabel="" itemValue="#{null}" noSelectionOption="true" />
-			<f:selectItems value="#{fieldPerfReport.matNrSets}" var="matNrSetItem" 
-				itemLabel="#{matNrSetItem.label}" itemValue="#{matNrSetItem}" />
-		</p:selectOneMenu>
+			<f:selectItems value="#{fieldPerfReport.matTypes}" />
+		</p:selectCheckboxMenu>
 
-		<h:outputLabel styleClass="label-field-optional block-separator" for="fi_sernrset" value="#{i18n.col_fieldperfreportview_sernrset}" />
-		<p:selectOneMenu id="fi_sernrset" converter="#{serialNumberSetDTOConverter}" 
-			scrollHeight="350" value="#{fieldPerfReport.selectedSerNrSet}">
+		<h:outputLabel styleClass="label-field-optional block-separator" for="fi_matclass" value="#{i18n.col_fieldperfreportview_matclass}" />
+		<p:selectCheckboxMenu id="fi_matclass" 
+			updateLabel="true" scrollHeight="350"
+			value="#{fieldPerfReport.selectedMatClasses}">
 			<p:ajax process="@this" />
-			<f:selectItem itemLabel="" itemValue="#{null}" noSelectionOption="true" />
-			<f:selectItems value="#{fieldPerfReport.serNrSets}" var="serNrSetItem" 
-				itemLabel="#{serNrSetItem.code}" itemValue="#{serNrSetItem}" />
-		</p:selectOneMenu>
+			<f:selectItems value="#{fieldPerfReport.matClasses}" />
+		</p:selectCheckboxMenu>
 
 	</div>
 
@@ -441,11 +459,11 @@ document.addEventListener("DOMContentLoaded", function() {
 		document.querySelectorAll('[id$="' + fieldId + '"] .ui-autocomplete-token-label').forEach(function(span) {
 			const code = span.textContent.trim();
 
-			if (initialTooltips[code]) {
-				const token = span.parentElement;
-				token.classList.add('pf-tooltip-target');
-				token.setAttribute('data-title', initialTooltips[code]);
-			}
+		if (initialTooltips[code]) {
+			const token = span.parentElement;
+			token.classList.add('pf-tooltip-target');
+			token.setAttribute('data-title', initialTooltips[code]);
+		}
 		});
 	}
 
