@@ -350,12 +350,12 @@ public class NavigatorView implements Serializable {
                         req.getContextPath() + "/view/EWSEntryView.jsf"), itemGroup0007);
         }
 
-        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_SUPERUSER)) {
+        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY, ROLE_SUPERUSER)) {
             // Form group: Special reports
             final var itemGroup0008 = new DefaultTreeNode<>(FOLDER_TYPE, new TreeNavigatorItem(bundle.getString(FG_TOP_SPECIAL_REPORTS)), root);
             itemGroup0008.setExpanded(true);
 
-            if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_SUPERUSER))
+            if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY, ROLE_SUPERUSER))
                 new DefaultTreeNode<>(CHART_TYPE,new TreeNavigatorItem(bundle.getString(FORM_FIELDPERFREPORT_TITLE), 
                         req.getContextPath() + "/view/FieldPerfReport.jsf"), itemGroup0008);
         }

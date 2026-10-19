@@ -13692,7 +13692,7 @@
       <domainAttribute href="package-serial.xmi#//@domainObjects.4/@attributes.2"/>
     </attributes>
   </net.sourceforge.jbizmo.model.dto:DTOBean>
-  <net.sourceforge.jbizmo.model.client:FormGroup name="Special reports" groupOrder="7" roles="/0/@roles.0 /0/@roles.2" project="/0"/>
+  <net.sourceforge.jbizmo.model.client:FormGroup name="Special reports" groupOrder="7" roles="/0/@roles.0 /0/@roles.1 /0/@roles.2" project="/0"/>
   <net.sourceforge.jbizmo.model.dto:DTOBean name="MaterialNumberSetDTO" comment="Instances of this class represent data transfer objects that are mapped to material number set domain objects" namespace="/110" standardConversion="true" createdManually="true">
     <domainObject href="package-material.xmi#//@domainObjects.6"/>
     <attributes name="id">
