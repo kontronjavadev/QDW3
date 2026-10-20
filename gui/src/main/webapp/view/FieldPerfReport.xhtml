@@ -243,8 +243,7 @@
 		</p:selectCheckboxMenu>
 
 		<h:outputLabel styleClass="label-field-optional block-separator" for="fi_start" value="#{i18n.col_fieldperfreportview_startdate}" />
-		<p:datePicker id="fi_start" 
-			styleClass="fluid-date-wrapper" panelStyleClass="fluid-date-panel" 
+		<p:datePicker id="fi_start" styleClass="fluid-date" 
 			value="#{fieldPerfReport.startDate}" 
 			pattern="#{userSession.dateFormat}" showButtonBar="true" showIcon="true" />
 
