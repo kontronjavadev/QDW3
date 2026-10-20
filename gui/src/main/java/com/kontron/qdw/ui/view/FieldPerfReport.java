@@ -93,9 +93,9 @@ public class FieldPerfReport extends SuperView implements Serializable {
     private String currentCustFilter = "";
     private String currentSuppFilter = "";
 
-    private List<String> matNrFilterList = new ArrayList<>();
-    private List<CustomerDTO> custFilterList = new ArrayList<>();
-    private List<SupplierDTO> suppFilterList = new ArrayList<>();
+    private List<String> matNrs = new ArrayList<>();
+    private List<CustomerDTO> customers = new ArrayList<>();
+    private List<SupplierDTO> supplier = new ArrayList<>();
 
     private List<String> rmaTypes = new ArrayList<>();
     private List<String> selectedRmaTypes = new ArrayList<>();
@@ -223,8 +223,8 @@ public class FieldPerfReport extends SuperView implements Serializable {
 
             // 2. Gültige Nummern der UI-Liste hinzufügen (falls noch nicht vorhanden)
             for (final String validNum : existingNumbers) {
-                if (!matNrFilterList.contains(validNum)) {
-                    matNrFilterList.add(validNum);
+                if (!matNrs.contains(validNum)) {
+                    matNrs.add(validNum);
                 }
             }
 
@@ -310,11 +310,11 @@ public class FieldPerfReport extends SuperView implements Serializable {
 
 
     public String getPreloadedCustomerTooltipsJson() {
-        return getPreloadedTooltipsJson(custFilterList, CustomerDTO::getCode, CustomerDTO::getName);
+        return getPreloadedTooltipsJson(customers, CustomerDTO::getCode, CustomerDTO::getName);
     }
 
     public String getPreloadedSupplierTooltipsJson() {
-        return getPreloadedTooltipsJson(suppFilterList, SupplierDTO::getCode, SupplierDTO::getName);
+        return getPreloadedTooltipsJson(supplier, SupplierDTO::getCode, SupplierDTO::getName);
     }
 
     private <DTO> String getPreloadedTooltipsJson(List<DTO> dtoFilterList,
@@ -469,30 +469,30 @@ public class FieldPerfReport extends SuperView implements Serializable {
 
 
 
-    public List<String> getMatNrFilterList() {
-        return matNrFilterList;
+    public List<String> getMatNrs() {
+        return matNrs;
     }
 
-    public void setMatNrFilterList(List<String> matNrFilterList) {
-        this.matNrFilterList = matNrFilterList;
-    }
-
-
-    public List<CustomerDTO> getCustFilterList() {
-        return custFilterList;
-    }
-
-    public void setCustFilterList(List<CustomerDTO> custFilterList) {
-        this.custFilterList = custFilterList;
+    public void setMatNrs(List<String> matNrs) {
+        this.matNrs = matNrs;
     }
 
 
-    public List<SupplierDTO> getSuppFilterList() {
-        return suppFilterList;
+    public List<CustomerDTO> getCustomers() {
+        return customers;
     }
 
-    public void setSuppFilterList(List<SupplierDTO> suppFilterList) {
-        this.suppFilterList = suppFilterList;
+    public void setCustomers(List<CustomerDTO> customers) {
+        this.customers = customers;
+    }
+
+
+    public List<SupplierDTO> getSupplier() {
+        return supplier;
+    }
+
+    public void setSupplier(List<SupplierDTO> supplier) {
+        this.supplier = supplier;
     }
 
 
