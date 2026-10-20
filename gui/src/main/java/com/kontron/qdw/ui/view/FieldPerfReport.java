@@ -6,7 +6,6 @@ import static com.kontron.qdw.ui.UserSession.*;
 import java.io.Serializable;
 import java.lang.invoke.MethodHandles;
 import java.text.DecimalFormatSymbols;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -35,13 +34,12 @@ import com.kontron.qdw.dto.base.CustomerDTO;
 import com.kontron.qdw.dto.base.SupplierDTO;
 import com.kontron.qdw.dto.material.MaterialClassListDTO;
 import com.kontron.qdw.dto.material.MaterialListDTO;
-import com.kontron.qdw.dto.material.MaterialNumberSetDTO;
 import com.kontron.qdw.dto.material.MaterialSearchDTO;
 import com.kontron.qdw.dto.material.MaterialTypeListDTO;
-import com.kontron.qdw.dto.material.SerialNumberSetDTO;
 import com.kontron.qdw.dto.service.RMATypeListDTO;
 import com.kontron.qdw.service.SavedQueryService;
 import com.kontron.qdw.ui.UserSession;
+import com.kontron.qdw.ui.util.FieldPerfReportSearchObject;
 import com.kontron.qdw.ui.view.util.SuperView;
 
 import jakarta.enterprise.context.SessionScoped;
@@ -62,8 +60,7 @@ public class FieldPerfReport extends SuperView implements Serializable {
 
     private static final long serialVersionUID = 6078905084559392861L;
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private static final List<Integer> ANAL_INTERVALS = Arrays.asList(4, 6, 8, 12, 18, 24, 26, 72);
-    private static final List<Integer> RET_INTERVALS = Arrays.asList(4, 6, 8, 12, 18, 24, 26, 72);
+    private static final List<Integer> MONTH_INTERVALS = Arrays.asList(4, 6, 8, 12, 18, 24, 26, 72);
 
     public static final String PAGE_URL = "/view/FieldPerfReport.jsf?faces-redirect=true";
     public static final String VIEW_ID = "com.kontron.qdw.ui.view.FieldPerfReport";
@@ -93,30 +90,7 @@ public class FieldPerfReport extends SuperView implements Serializable {
     private String currentCustFilter = "";
     private String currentSuppFilter = "";
 
-    private List<String> matNrs = new ArrayList<>();
-    private List<CustomerDTO> customers = new ArrayList<>();
-    private List<SupplierDTO> supplier = new ArrayList<>();
-
-    private List<String> rmaTypes = new ArrayList<>();
-    private List<String> selectedRmaTypes = new ArrayList<>();
-
-    private List<MaterialNumberSetDTO> matNrSets = new ArrayList<>();
-    private MaterialNumberSetDTO selectedMatNrSet;
-
-    private List<SerialNumberSetDTO> serNrSets = new ArrayList<>();
-    private SerialNumberSetDTO selectedSerNrSet;
-
-    private List<String> matTypes = new ArrayList<>();
-    private List<String> selectedMatTypes = new ArrayList<>();
-
-    private List<String> matClasses = new ArrayList<>();
-    private List<String> selectedMatClasses = new ArrayList<>();
-
-    private Integer selectedAnalInterval;
-
-    private Integer selectedReturnInterval;
-
-    private LocalDate startDate;
+    private FieldPerfReportSearchObject reportSearchObj = new FieldPerfReportSearchObject();
 
 
     public FieldPerfReport() {
@@ -181,20 +155,23 @@ public class FieldPerfReport extends SuperView implements Serializable {
         initProperties();
         // fetchMaterials();
 
-        rmaTypes = rmaTypeService.findAll().stream()
+        reportSearchObj.setRmaTypes(rmaTypeService.findAll().stream()
                 .map(RMATypeListDTO::getCode)
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()));
 
-        matNrSets = matNrSetService.findAll();
-        serNrSets = serNrSetService.findAll();
+        reportSearchObj.setMatNrSets(matNrSetService.findAll());
+        reportSearchObj.setSerNrSets(serNrSetService.findAll());
 
-        matTypes = matTypeService.findAll().stream()
+        reportSearchObj.setMatTypes(matTypeService.findAll().stream()
                 .map(MaterialTypeListDTO::getCode)
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()));
 
-        matClasses = matClassService.findAll().stream()
+        reportSearchObj.setMatClasses(matClassService.findAll().stream()
                 .map(MaterialClassListDTO::getCode)
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()));
+
+        reportSearchObj.setAnalInterval(MONTH_INTERVALS);
+        reportSearchObj.setReturnInterval(MONTH_INTERVALS);
 
 
         logger.debug("View initialization finished");
@@ -223,8 +200,8 @@ public class FieldPerfReport extends SuperView implements Serializable {
 
             // 2. Gültige Nummern der UI-Liste hinzufügen (falls noch nicht vorhanden)
             for (final String validNum : existingNumbers) {
-                if (!matNrs.contains(validNum)) {
-                    matNrs.add(validNum);
+                if (!reportSearchObj.getMatNrs().contains(validNum)) {
+                    reportSearchObj.getMatNrs().add(validNum);
                 }
             }
 
@@ -310,11 +287,11 @@ public class FieldPerfReport extends SuperView implements Serializable {
 
 
     public String getPreloadedCustomerTooltipsJson() {
-        return getPreloadedTooltipsJson(customers, CustomerDTO::getCode, CustomerDTO::getName);
+        return getPreloadedTooltipsJson(reportSearchObj.getCustomers(), CustomerDTO::getCode, CustomerDTO::getName);
     }
 
     public String getPreloadedSupplierTooltipsJson() {
-        return getPreloadedTooltipsJson(supplier, SupplierDTO::getCode, SupplierDTO::getName);
+        return getPreloadedTooltipsJson(reportSearchObj.getSupplier(), SupplierDTO::getCode, SupplierDTO::getName);
     }
 
     private <DTO> String getPreloadedTooltipsJson(List<DTO> dtoFilterList,
@@ -469,130 +446,12 @@ public class FieldPerfReport extends SuperView implements Serializable {
 
 
 
-    public List<String> getMatNrs() {
-        return matNrs;
+    public FieldPerfReportSearchObject getReportSearchObj() {
+        return reportSearchObj;
     }
 
-    public void setMatNrs(List<String> matNrs) {
-        this.matNrs = matNrs;
-    }
-
-
-    public List<CustomerDTO> getCustomers() {
-        return customers;
-    }
-
-    public void setCustomers(List<CustomerDTO> customers) {
-        this.customers = customers;
-    }
-
-
-    public List<SupplierDTO> getSupplier() {
-        return supplier;
-    }
-
-    public void setSupplier(List<SupplierDTO> supplier) {
-        this.supplier = supplier;
-    }
-
-
-    public List<String> getRmaTypes() {
-        return rmaTypes;
-    }
-
-    public List<String> getSelectedRmaTypes() {
-        return selectedRmaTypes;
-    }
-
-    public void setSelectedRmaTypes(List<String> selectedRmaTypes) {
-        this.selectedRmaTypes = selectedRmaTypes;
-    }
-
-
-    public List<MaterialNumberSetDTO> getMatNrSets() {
-        return matNrSets;
-    }
-
-    public MaterialNumberSetDTO getSelectedMatNrSet() {
-        return selectedMatNrSet;
-    }
-
-    public void setSelectedMatNrSet(MaterialNumberSetDTO selectedMatNrSet) {
-        this.selectedMatNrSet = selectedMatNrSet;
-    }
-
-
-    public List<SerialNumberSetDTO> getSerNrSets() {
-        return serNrSets;
-    }
-
-    public SerialNumberSetDTO getSelectedSerNrSet() {
-        return selectedSerNrSet;
-    }
-
-    public void setSelectedSerNrSet(SerialNumberSetDTO selectedSerNrSet) {
-        this.selectedSerNrSet = selectedSerNrSet;
-    }
-
-
-    public List<String> getMatTypes() {
-        return matTypes;
-    }
-
-    public List<String> getSelectedMatTypes() {
-        return selectedMatTypes;
-    }
-
-    public void setSelectedMatTypes(List<String> selectedMatTypes) {
-        this.selectedMatTypes = selectedMatTypes;
-    }
-
-
-    public List<String> getMatClasses() {
-        return matClasses;
-    }
-
-    public List<String> getSelectedMatClasses() {
-        return selectedMatClasses;
-    }
-
-    public void setSelectedMatClasses(List<String> selectedMatClasses) {
-        this.selectedMatClasses = selectedMatClasses;
-    }
-
-
-    public List<Integer> getAnalIntervals() {
-        return ANAL_INTERVALS;
-    }
-
-    public Integer getSelectedAnalInterval() {
-        return selectedAnalInterval;
-    }
-
-    public void setSelectedAnalInterval(Integer selectedAnalInterval) {
-        this.selectedAnalInterval = selectedAnalInterval;
-    }
-
-
-    public List<Integer> getReturnIntervals() {
-        return RET_INTERVALS;
-    }
-
-    public Integer getSelectedReturnInterval() {
-        return selectedReturnInterval;
-    }
-
-    public void setSelectedReturnInterval(Integer selectedReturnInterval) {
-        this.selectedReturnInterval = selectedReturnInterval;
-    }
-
-
-    public LocalDate getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(LocalDate startDate) {
-        this.startDate = startDate;
+    public void setReportSearchObj(FieldPerfReportSearchObject reportSearchObj) {
+        this.reportSearchObj = reportSearchObj;
     }
 
 
@@ -708,25 +567,6 @@ public class FieldPerfReport extends SuperView implements Serializable {
         }
     }
 
-
-    /*
-    public class Months {
-        final int months;
-    
-        public Months(int months) {
-            this.months = months;
-        }
-    
-        @Override
-        public String toString() {
-            return months + " " + bundle.getString(FIELDPERFREPORTVIEW_MONTHMENU_MONTHS);
-        }
-    
-        public int getMonths() {
-            return months;
-        }
-    }
-    */
 
 
     // public void onClick() { }

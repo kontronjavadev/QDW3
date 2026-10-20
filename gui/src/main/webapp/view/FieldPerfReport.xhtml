@@ -110,7 +110,7 @@
 				<h:outputLabel styleClass="label-field-optional" for="fi_matnr" value="#{i18n.col_fieldperfreportview_materialnumber}" />
 				<p:autoComplete id="fi_matnr" styleClass="span-3-cols" multiple="true" forceSelection="true" 
 					minQueryLength="2" maxResults="20" 
-					value="#{fieldPerfReport.matNrs}" completeMethod="#{fieldPerfReport.onCompleteMaterialNumber}">
+					value="#{fieldPerfReport.reportSearchObj.matNrs}" completeMethod="#{fieldPerfReport.onCompleteMaterialNumber}">
 					<p:ajax event="change" process="@this" />
 					<p:ajax event="itemSelect" process="@this" />
 					<p:ajax event="itemUnselect" process="@this" />
@@ -122,19 +122,19 @@
 					Das zweite Label erhält jeweils zusätzlich die styleClass "block-separator", um den Abstand zu vergrößern -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_matnrset" value="#{i18n.col_fieldperfreportview_matnrset}" />
 				<p:selectOneMenu id="fi_matnrset" converter="#{materialNumberSetDTOConverter}" 
-					scrollHeight="350" value="#{fieldPerfReport.selectedMatNrSet}">
+					scrollHeight="350" value="#{fieldPerfReport.reportSearchObj.selectedMatNrSet}">
 					<p:ajax process="@this" />
 					<f:selectItem itemLabel="" itemValue="#{null}" noSelectionOption="true" />
-					<f:selectItems value="#{fieldPerfReport.matNrSets}" var="matNrSetItem" 
+					<f:selectItems value="#{fieldPerfReport.reportSearchObj.matNrSets}" var="matNrSetItem" 
 						itemLabel="#{matNrSetItem.label}" itemValue="#{matNrSetItem}" />
 				</p:selectOneMenu>
 
 				<h:outputLabel styleClass="label-field-optional block-separator" for="fi_sernrset" value="#{i18n.col_fieldperfreportview_sernrset}" />
 				<p:selectOneMenu id="fi_sernrset" converter="#{serialNumberSetDTOConverter}" 
-					scrollHeight="350" value="#{fieldPerfReport.selectedSerNrSet}">
+					scrollHeight="350" value="#{fieldPerfReport.reportSearchObj.selectedSerNrSet}">
 					<p:ajax process="@this" />
 					<f:selectItem itemLabel="" itemValue="#{null}" noSelectionOption="true" />
-					<f:selectItems value="#{fieldPerfReport.serNrSets}" var="serNrSetItem" 
+					<f:selectItems value="#{fieldPerfReport.reportSearchObj.serNrSets}" var="serNrSetItem" 
 						itemLabel="#{serNrSetItem.code}" itemValue="#{serNrSetItem}" />
 				</p:selectOneMenu>
 
@@ -144,7 +144,7 @@
 				<h:outputLabel styleClass="label-field-optional" for="fi_cust" value="#{i18n.col_fieldperfreportview_cust}" />
 				<p:autoComplete id="fi_cust" multiple="true" forceSelection="true" 
 					minQueryLength="2" maxResults="50" scrollHeight="350"
-					value="#{fieldPerfReport.customers}" completeMethod="#{fieldPerfReport.onCompleteCustomer}"
+					value="#{fieldPerfReport.reportSearchObj.customers}" completeMethod="#{fieldPerfReport.onCompleteCustomer}"
 					var="cust" itemLabel="#{cust.code}" itemValue="#{cust}" 
 					converter="#{customerDTOConverter}" >
 
@@ -168,7 +168,7 @@
 				<h:outputLabel styleClass="label-field-optional block-separator" for="fi_supp" value="#{i18n.col_fieldperfreportview_supp}" />
 				<p:autoComplete id="fi_supp" multiple="true" forceSelection="true" 
 					minQueryLength="2" maxResults="50" scrollHeight="350"
-					value="#{fieldPerfReport.supplier}" completeMethod="#{fieldPerfReport.onCompleteSupplier}"
+					value="#{fieldPerfReport.reportSearchObj.supplier}" completeMethod="#{fieldPerfReport.onCompleteSupplier}"
 					var="supp" itemLabel="#{supp.code}" itemValue="#{supp}" 
 					converter="#{supplierDTOConverter}" >
 
@@ -195,17 +195,17 @@
 				<h:outputLabel styleClass="label-field-optional" for="fi_mattype" value="#{i18n.col_fieldperfreportview_mattype}" />
 				<p:selectCheckboxMenu id="fi_mattype" 
 					updateLabel="true" scrollHeight="350"
-					value="#{fieldPerfReport.selectedMatTypes}">
+					value="#{fieldPerfReport.reportSearchObj.selectedMatTypes}">
 					<p:ajax process="@this" />
-					<f:selectItems value="#{fieldPerfReport.matTypes}" />
+					<f:selectItems value="#{fieldPerfReport.reportSearchObj.matTypes}" />
 				</p:selectCheckboxMenu>
 
 				<h:outputLabel styleClass="label-field-optional block-separator" for="fi_matclass" value="#{i18n.col_fieldperfreportview_matclass}" />
 				<p:selectCheckboxMenu id="fi_matclass" 
 					updateLabel="true" scrollHeight="350"
-					value="#{fieldPerfReport.selectedMatClasses}">
+					value="#{fieldPerfReport.reportSearchObj.selectedMatClasses}">
 					<p:ajax process="@this" />
-					<f:selectItems value="#{fieldPerfReport.matClasses}" />
+					<f:selectItems value="#{fieldPerfReport.reportSearchObj.matClasses}" />
 				</p:selectCheckboxMenu>
 
 
@@ -213,10 +213,10 @@
 				<!-- Zeile mit 2 Spalten: 4 Elemente (Label, CheckboxMenu, Label, CheckboxMenu) -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_analintv" value="#{i18n.col_fieldperfreportview_analintv}" />
 				<p:selectOneMenu id="fi_analintv" 
-					scrollHeight="350" value="#{fieldPerfReport.selectedAnalInterval}">
+					scrollHeight="350" value="#{fieldPerfReport.reportSearchObj.selectedAnalInterval}">
 					<p:ajax process="@this" />
 					<f:selectItem itemLabel="" itemValue="#{null}" noSelectionOption="true" />
-					<f:selectItems value="#{fieldPerfReport.analIntervals}" 
+					<f:selectItems value="#{fieldPerfReport.reportSearchObj.analIntervals}" 
 						var="m" 
 						itemValue="#{m}" 
 						itemLabel="#{m} #{i18n.fieldperfreportview_monthmenu_months}" />
@@ -224,10 +224,10 @@
 
 				<h:outputLabel styleClass="label-field-optional block-separator" for="fi_retintv" value="#{i18n.col_fieldperfreportview_retintv}" />
 				<p:selectOneMenu id="fi_retintv" 
-					scrollHeight="350" value="#{fieldPerfReport.selectedReturnInterval}">
+					scrollHeight="350" value="#{fieldPerfReport.reportSearchObj.selectedReturnInterval}">
 					<p:ajax process="@this" />
 					<f:selectItem itemLabel="" itemValue="#{null}" noSelectionOption="true" />
-					<f:selectItems value="#{fieldPerfReport.returnIntervals}" 
+					<f:selectItems value="#{fieldPerfReport.reportSearchObj.returnIntervals}" 
 						var="m" 
 						itemValue="#{m}" 
 						itemLabel="#{m} #{i18n.fieldperfreportview_monthmenu_months}" />
@@ -239,15 +239,17 @@
 				<h:outputLabel styleClass="label-field-optional" for="fi_rmatype" value="#{i18n.col_fieldperfreportview_rmatype}" />
 				<p:selectCheckboxMenu id="fi_rmatype" 
 					updateLabel="true" scrollHeight="350"
-					value="#{fieldPerfReport.selectedRmaTypes}">
+					value="#{fieldPerfReport.reportSearchObj.selectedRmaTypes}">
 					<p:ajax process="@this" />
-					<f:selectItems value="#{fieldPerfReport.rmaTypes}" />
+					<f:selectItems value="#{fieldPerfReport.reportSearchObj.rmaTypes}" />
 				</p:selectCheckboxMenu>
 
 				<h:outputLabel styleClass="label-field-optional block-separator" for="fi_start" value="#{i18n.col_fieldperfreportview_startdate}" />
 				<p:datePicker id="fi_start" styleClass="fluid-date" 
-					value="#{fieldPerfReport.startDate}" 
-					pattern="#{userSession.dateFormat}" showButtonBar="true" showIcon="true" />
+					value="#{fieldPerfReport.reportSearchObj.startDate}" 
+					pattern="#{userSession.dateFormat}" showButtonBar="true" showIcon="true" >
+					<p:ajax process="@this" />
+				</p:datePicker>
 			</div>
 		</p:tab>
 
