@@ -6,6 +6,7 @@ import static com.kontron.qdw.ui.UserSession.*;
 import java.io.Serializable;
 import java.lang.invoke.MethodHandles;
 import java.text.DecimalFormatSymbols;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -115,6 +116,7 @@ public class FieldPerfReport extends SuperView implements Serializable {
 
     private Integer selectedReturnInterval;
 
+    private LocalDate startDate;
 
 
     public FieldPerfReport() {
@@ -582,6 +584,15 @@ public class FieldPerfReport extends SuperView implements Serializable {
 
     public void setSelectedReturnInterval(Integer selectedReturnInterval) {
         this.selectedReturnInterval = selectedReturnInterval;
+    }
+
+
+    public LocalDate getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
     }
 
 

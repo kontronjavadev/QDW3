@@ -30,181 +30,6 @@
 
 	<p:dialog height="auto" width="1000" header="#{i18n.search_input_dlg}" widgetVar="dlgSearchInput" id="dlgSearchInput" closeOnEscape="true" modal="true">
 		<p:tabView id="tabViewSearchInput" dynamic="false">
-			<p:tab title="#{i18n.search_input_filter}">
-			<p:scrollPanel style="width:100%; #{sizeServiceBean.searchFilterHeight()};" mode="native">
-			<h:panelGrid columns="5" cellpadding="3">
-				<h:outputText styleClass="label-field-mandatory" value="#{i18n.search_input_column}"/>
-				<h:outputText styleClass="label-field-mandatory" value="#{i18n.search_input_operator}"/>
-				<h:outputText styleClass="label-field-mandatory" value="#{i18n.search_input_sort}"/>
-				<h:outputText styleClass="label-field-mandatory" value="#{i18n.search_input_filter_input}"/>
-				<h:outputText styleClass="label-field-mandatory" value="#{i18n.search_input_and}"/>
-
-				<h:outputLabel styleClass="label-field-optional" for="fi_0" value="#{fieldPerfReport.searchObject.searchFields[0].colLabel}"/>
-				<p:selectOneMenu valueChangeListener="#{fieldPerfReport.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_0" value="#{fieldPerfReport.searchObject.searchFields[0].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
-					<f:selectItems update="b_0" value="#{fieldPerfReport.textOperators}" var="advInputItem0" itemValue="#{advInputItem0}" itemLabel="#{advInputItem0.description}"/>
-					<f:ajax render="p_0"/>
-				</p:selectOneMenu>
-				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_0" id="s_0" value="#{fieldPerfReport.searchObject.searchFields[0].sortOrder}">
-					<f:selectItems value="#{fieldPerfReport.sortOrderList}"/>
-				</p:selectOneMenu>
-				<p:autoComplete minQueryLength="2" maxResults="10" completeMethod="#{fieldPerfReport.onCompleteMaterialMaterialNumber}" id="fi_0" value="#{fieldPerfReport.searchObject.searchFields[0].stringCriterion}" size="30"/>
-				<h:panelGroup id="p_0">
-				<p:autoComplete minQueryLength="2" rendered="#{fieldPerfReport.searchObject.searchFields[0].between}" maxResults="10" completeMethod="#{fieldPerfReport.onCompleteMaterialMaterialNumber}" id="b_0" value="#{fieldPerfReport.searchObject.searchFields[0].stringBetweenCriterion}" size="30"/>
-				</h:panelGroup>
-
-				<h:outputLabel styleClass="label-field-optional" for="fi_1" value="#{fieldPerfReport.searchObject.searchFields[1].colLabel}"/>
-				<p:selectOneMenu valueChangeListener="#{fieldPerfReport.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_1" value="#{fieldPerfReport.searchObject.searchFields[1].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
-					<f:selectItems update="b_1" value="#{fieldPerfReport.textOperators}" var="advInputItem1" itemValue="#{advInputItem1}" itemLabel="#{advInputItem1.description}"/>
-					<f:ajax render="p_1"/>
-				</p:selectOneMenu>
-				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_1" id="s_1" value="#{fieldPerfReport.searchObject.searchFields[1].sortOrder}">
-					<f:selectItems value="#{fieldPerfReport.sortOrderList}"/>
-				</p:selectOneMenu>
-				<p:inputText id="fi_1" value="#{fieldPerfReport.searchObject.searchFields[1].stringCriterion}" size="30"/>
-				<h:panelGroup id="p_1">
-					<p:inputText id="b_1" rendered="#{fieldPerfReport.searchObject.searchFields[1].between}" value="#{fieldPerfReport.searchObject.searchFields[1].stringBetweenCriterion}" size="30"/>
-				</h:panelGroup>
-
-				<h:outputLabel styleClass="label-field-optional" for="fi_2" value="#{fieldPerfReport.searchObject.searchFields[2].colLabel}"/>
-				<p:selectOneMenu valueChangeListener="#{fieldPerfReport.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_2" value="#{fieldPerfReport.searchObject.searchFields[2].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
-					<f:selectItems update="b_2" value="#{fieldPerfReport.textOperators}" var="advInputItem2" itemValue="#{advInputItem2}" itemLabel="#{advInputItem2.description}"/>
-					<f:ajax render="p_2"/>
-				</p:selectOneMenu>
-				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_2" id="s_2" value="#{fieldPerfReport.searchObject.searchFields[2].sortOrder}">
-					<f:selectItems value="#{fieldPerfReport.sortOrderList}"/>
-				</p:selectOneMenu>
-				<p:inputText id="fi_2" value="#{fieldPerfReport.searchObject.searchFields[2].stringCriterion}" size="30"/>
-				<h:panelGroup id="p_2">
-					<p:inputText id="b_2" rendered="#{fieldPerfReport.searchObject.searchFields[2].between}" value="#{fieldPerfReport.searchObject.searchFields[2].stringBetweenCriterion}" size="30"/>
-				</h:panelGroup>
-
-				<h:outputLabel styleClass="label-field-optional" for="fi_3" value="#{fieldPerfReport.searchObject.searchFields[3].colLabel}"/>
-				<p:selectOneMenu valueChangeListener="#{fieldPerfReport.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_3" value="#{fieldPerfReport.searchObject.searchFields[3].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
-					<f:selectItems update="b_3" value="#{fieldPerfReport.textOperators}" var="advInputItem3" itemValue="#{advInputItem3}" itemLabel="#{advInputItem3.description}"/>
-					<f:ajax render="p_3"/>
-				</p:selectOneMenu>
-				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_3" id="s_3" value="#{fieldPerfReport.searchObject.searchFields[3].sortOrder}">
-					<f:selectItems value="#{fieldPerfReport.sortOrderList}"/>
-				</p:selectOneMenu>
-				<p:inputText id="fi_3" value="#{fieldPerfReport.searchObject.searchFields[3].stringCriterion}" size="30"/>
-				<h:panelGroup id="p_3">
-					<p:inputText id="b_3" rendered="#{fieldPerfReport.searchObject.searchFields[3].between}" value="#{fieldPerfReport.searchObject.searchFields[3].stringBetweenCriterion}" size="30"/>
-				</h:panelGroup>
-
-				<h:outputLabel styleClass="label-field-optional" for="fi_4" value="#{fieldPerfReport.searchObject.searchFields[4].colLabel}"/>
-				<p:selectOneMenu valueChangeListener="#{fieldPerfReport.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_4" value="#{fieldPerfReport.searchObject.searchFields[4].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
-					<f:selectItems update="b_4" value="#{fieldPerfReport.textOperators}" var="advInputItem4" itemValue="#{advInputItem4}" itemLabel="#{advInputItem4.description}"/>
-					<f:ajax render="p_4"/>
-				</p:selectOneMenu>
-				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_4" id="s_4" value="#{fieldPerfReport.searchObject.searchFields[4].sortOrder}">
-					<f:selectItems value="#{fieldPerfReport.sortOrderList}"/>
-				</p:selectOneMenu>
-				<p:inputText id="fi_4" value="#{fieldPerfReport.searchObject.searchFields[4].stringCriterion}" size="30"/>
-				<h:panelGroup id="p_4">
-					<p:inputText id="b_4" rendered="#{fieldPerfReport.searchObject.searchFields[4].between}" value="#{fieldPerfReport.searchObject.searchFields[4].stringBetweenCriterion}" size="30"/>
-				</h:panelGroup>
-
-				<h:outputLabel styleClass="label-field-optional" for="fi_5" value="#{fieldPerfReport.searchObject.searchFields[5].colLabel}"/>
-				<p:selectOneMenu valueChangeListener="#{fieldPerfReport.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_5" value="#{fieldPerfReport.searchObject.searchFields[5].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
-					<f:selectItems update="b_5" value="#{fieldPerfReport.textOperators}" var="advInputItem5" itemValue="#{advInputItem5}" itemLabel="#{advInputItem5.description}"/>
-					<f:ajax render="p_5"/>
-				</p:selectOneMenu>
-				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_5" id="s_5" value="#{fieldPerfReport.searchObject.searchFields[5].sortOrder}">
-					<f:selectItems value="#{fieldPerfReport.sortOrderList}"/>
-				</p:selectOneMenu>
-				<p:inputText id="fi_5" value="#{fieldPerfReport.searchObject.searchFields[5].stringCriterion}" size="30"/>
-				<h:panelGroup id="p_5">
-					<p:inputText id="b_5" rendered="#{fieldPerfReport.searchObject.searchFields[5].between}" value="#{fieldPerfReport.searchObject.searchFields[5].stringBetweenCriterion}" size="30"/>
-				</h:panelGroup>
-
-				<h:outputLabel styleClass="label-field-optional" for="fi_6" value="#{fieldPerfReport.searchObject.searchFields[6].colLabel}"/>
-				<p:selectOneMenu valueChangeListener="#{fieldPerfReport.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_6" value="#{fieldPerfReport.searchObject.searchFields[6].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
-					<f:selectItems update="b_6" value="#{fieldPerfReport.textOperators}" var="advInputItem6" itemValue="#{advInputItem6}" itemLabel="#{advInputItem6.description}"/>
-					<f:ajax render="p_6"/>
-				</p:selectOneMenu>
-				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_6" id="s_6" value="#{fieldPerfReport.searchObject.searchFields[6].sortOrder}">
-					<f:selectItems value="#{fieldPerfReport.sortOrderList}"/>
-				</p:selectOneMenu>
-				<p:inputText id="fi_6" value="#{fieldPerfReport.searchObject.searchFields[6].stringCriterion}" size="30"/>
-				<h:panelGroup id="p_6">
-					<p:inputText id="b_6" rendered="#{fieldPerfReport.searchObject.searchFields[6].between}" value="#{fieldPerfReport.searchObject.searchFields[6].stringBetweenCriterion}" size="30"/>
-				</h:panelGroup>
-
-				<h:outputLabel styleClass="label-field-optional" for="fi_7" value="#{fieldPerfReport.searchObject.searchFields[7].colLabel}"/>
-				<p:selectOneMenu valueChangeListener="#{fieldPerfReport.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_7" value="#{fieldPerfReport.searchObject.searchFields[7].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
-					<f:selectItems update="b_7" value="#{fieldPerfReport.numberOperators}" var="advInputItem7" itemValue="#{advInputItem7}" itemLabel="#{advInputItem7.description}"/>
-					<f:ajax render="p_7"/>
-				</p:selectOneMenu>
-				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_7" id="s_7" value="#{fieldPerfReport.searchObject.searchFields[7].sortOrder}">
-					<f:selectItems value="#{fieldPerfReport.sortOrderList}"/>
-				</p:selectOneMenu>
-				<p:inputText id="fi_7" value="#{fieldPerfReport.searchObject.searchFields[7].doubleCriterion}" size="30">
-					<f:convertNumber pattern="#{userSession.numberFormat}"/>
-				</p:inputText>
-				<h:panelGroup id="p_7">
-					<p:inputText id="b_7" rendered="#{fieldPerfReport.searchObject.searchFields[7].between}" value="#{fieldPerfReport.searchObject.searchFields[7].doubleBetweenCriterion}" size="30">
-					<f:convertNumber pattern="#{userSession.numberFormat}"/>
-				</p:inputText>
-				</h:panelGroup>
-
-				<h:outputLabel styleClass="label-field-optional" for="fc_8" value="#{fieldPerfReport.searchObject.searchFields[8].colLabel}"/>
-				<p:selectOneMenu valueChangeListener="#{fieldPerfReport.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_8" value="#{fieldPerfReport.searchObject.searchFields[8].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
-					<f:selectItems update="b_8" value="#{fieldPerfReport.boolOperators}" var="advInputItem8" itemValue="#{advInputItem8}" itemLabel="#{advInputItem8.description}"/>
-					<f:ajax render="p_8"/>
-				</p:selectOneMenu>
-				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_8" id="s_8" value="#{fieldPerfReport.searchObject.searchFields[8].sortOrder}">
-					<f:selectItems value="#{fieldPerfReport.sortOrderList}"/>
-				</p:selectOneMenu>
-				<p:selectOneMenu id="fc_8" value="#{fieldPerfReport.searchObject.searchFields[8].stringCriterion}">
-					<f:selectItem itemLabel="" itemValue=""/>
-					<f:selectItem itemLabel="true" itemValue="true"/>
-					<f:selectItem itemLabel="false" itemValue="false"/>
-				</p:selectOneMenu>
-				<h:panelGroup id="p_8"/>
-
-				<h:outputLabel styleClass="label-field-optional" for="fi_9" value="#{fieldPerfReport.searchObject.searchFields[9].colLabel}"/>
-				<p:selectOneMenu valueChangeListener="#{fieldPerfReport.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_9" value="#{fieldPerfReport.searchObject.searchFields[9].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
-					<f:selectItems update="b_9" value="#{fieldPerfReport.textOperators}" var="advInputItem9" itemValue="#{advInputItem9}" itemLabel="#{advInputItem9.description}"/>
-					<f:ajax render="p_9"/>
-				</p:selectOneMenu>
-				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_9" id="s_9" value="#{fieldPerfReport.searchObject.searchFields[9].sortOrder}">
-					<f:selectItems value="#{fieldPerfReport.sortOrderList}"/>
-				</p:selectOneMenu>
-				<p:inputText id="fi_9" value="#{fieldPerfReport.searchObject.searchFields[9].stringCriterion}" size="30"/>
-				<h:panelGroup id="p_9">
-					<p:inputText id="b_9" rendered="#{fieldPerfReport.searchObject.searchFields[9].between}" value="#{fieldPerfReport.searchObject.searchFields[9].stringBetweenCriterion}" size="30"/>
-				</h:panelGroup>
-
-				<h:outputLabel styleClass="label-field-optional" for="fi_10" value="#{fieldPerfReport.searchObject.searchFields[10].colLabel}"/>
-				<p:selectOneMenu valueChangeListener="#{fieldPerfReport.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_10" value="#{fieldPerfReport.searchObject.searchFields[10].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
-					<f:selectItems update="b_10" value="#{fieldPerfReport.dateOperators}" var="advInputItem10" itemValue="#{advInputItem10}" itemLabel="#{advInputItem10.description}"/>
-					<f:ajax render="p_10"/>
-				</p:selectOneMenu>
-				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_10" id="s_10" value="#{fieldPerfReport.searchObject.searchFields[10].sortOrder}">
-					<f:selectItems value="#{fieldPerfReport.sortOrderList}"/>
-				</p:selectOneMenu>
-				<p:datePicker id="fi_10" value="#{fieldPerfReport.searchObject.searchFields[10].dateCriterion}" pattern="#{userSession.dateTimeFormat}" size="20" showButtonBar="true" showIcon="true" showTime="true"/>
-				<h:panelGroup id="p_10">
-					<p:datePicker id="fb_10" value="#{fieldPerfReport.searchObject.searchFields[10].dateBetweenCriterion}" pattern="#{userSession.dateTimeFormat}" size="20" showButtonBar="true" showIcon="true" rendered="#{fieldPerfReport.searchObject.searchFields[10].between}" showTime="true"/>
-				</h:panelGroup>
-
-				<h:outputLabel styleClass="label-field-optional" for="fi_11" value="#{fieldPerfReport.searchObject.searchFields[11].colLabel}"/>
-				<p:selectOneMenu valueChangeListener="#{fieldPerfReport.onOperatorChanged}" style="width:150px;" styleClass="label-field-optional" id="o_11" value="#{fieldPerfReport.searchObject.searchFields[11].operator}" converter="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.SearchOperatorDTOConverter">
-					<f:selectItems update="b_11" value="#{fieldPerfReport.dateOperators}" var="advInputItem11" itemValue="#{advInputItem11}" itemLabel="#{advInputItem11.description}"/>
-					<f:ajax render="p_11"/>
-				</p:selectOneMenu>
-				<p:selectOneMenu styleClass="label-field-optional" widgetVar="st_11" id="s_11" value="#{fieldPerfReport.searchObject.searchFields[11].sortOrder}">
-					<f:selectItems value="#{fieldPerfReport.sortOrderList}"/>
-				</p:selectOneMenu>
-				<p:datePicker id="fi_11" value="#{fieldPerfReport.searchObject.searchFields[11].dateCriterion}" pattern="#{userSession.dateTimeFormat}" size="20" showButtonBar="true" showIcon="true" showTime="true"/>
-				<h:panelGroup id="p_11">
-					<p:datePicker id="fb_11" value="#{fieldPerfReport.searchObject.searchFields[11].dateBetweenCriterion}" pattern="#{userSession.dateTimeFormat}" size="20" showButtonBar="true" showIcon="true" rendered="#{fieldPerfReport.searchObject.searchFields[11].between}" showTime="true"/>
-				</h:panelGroup>
-
-			</h:panelGrid>
-			</p:scrollPanel>
-			</p:tab>
-
 			<p:tab title="#{i18n.search_input_saved_query_title}">
 				<h:panelGrid columns="1">
 					<h:outputLabel styleClass="label-field-mandatory" value="#{i18n.search_input_lbl_saved_query}"/>
@@ -279,7 +104,7 @@
 		update="fi_matnr growl" />
 
 	<div class="ui-fluid custom-form-grid">
-		<!-- Zeile 1: Label + Autocomplete (span 3) -->
+		<!-- Zeile 1: Label + Autocomplete (styleClass="span-3-cols") -->
 		<h:outputLabel styleClass="label-field-optional" for="fi_matnr" value="#{i18n.col_fieldperfreportview_materialnumber}" />
 		<p:autoComplete id="fi_matnr" styleClass="span-3-cols" multiple="true" forceSelection="true" 
 			minQueryLength="2" maxResults="20" 
@@ -313,20 +138,9 @@
 
 
 
-		<!-- Zeile 3: Label + CheckboxMenu (span 3) -->
-		<h:outputLabel styleClass="label-field-optional" for="fi_rmatype" value="#{i18n.col_fieldperfreportview_rmatype}" />
-		<p:selectCheckboxMenu id="fi_rmatype" styleClass="span-3-cols"
-			updateLabel="true" scrollHeight="350"
-			value="#{fieldPerfReport.selectedRmaTypes}">
-			<p:ajax process="@this" />
-			<f:selectItems value="#{fieldPerfReport.rmaTypes}" />
-		</p:selectCheckboxMenu>
-
-
-
-		<!-- Label + Autocomplete (span 3) -->
+		<!-- Zeile mit 2 Spalten: 4 Elemente (Label, Autocomplete, Label, Autocomplete) -->
 		<h:outputLabel styleClass="label-field-optional" for="fi_cust" value="#{i18n.col_fieldperfreportview_cust}" />
-		<p:autoComplete id="fi_cust" styleClass="span-3-cols" multiple="true" forceSelection="true" 
+		<p:autoComplete id="fi_cust" multiple="true" forceSelection="true" 
 			minQueryLength="2" maxResults="50" scrollHeight="350"
 			value="#{fieldPerfReport.custFilterList}" completeMethod="#{fieldPerfReport.onCompleteCustomer}"
 			var="cust" itemLabel="#{cust.code}" itemValue="#{cust}" 
@@ -349,11 +163,8 @@
 			<p:ajax event="itemUnselect" process="@this" />
 		</p:autoComplete>
 
-
-
-		<!-- Label + Autocomplete (span 3) -->
-		<h:outputLabel styleClass="label-field-optional" for="fi_supp" value="#{i18n.col_fieldperfreportview_supp}" />
-		<p:autoComplete id="fi_supp" styleClass="span-3-cols" multiple="true" forceSelection="true" 
+		<h:outputLabel styleClass="label-field-optional block-separator" for="fi_supp" value="#{i18n.col_fieldperfreportview_supp}" />
+		<p:autoComplete id="fi_supp" multiple="true" forceSelection="true" 
 			minQueryLength="2" maxResults="50" scrollHeight="350"
 			value="#{fieldPerfReport.suppFilterList}" completeMethod="#{fieldPerfReport.onCompleteSupplier}"
 			var="supp" itemLabel="#{supp.code}" itemValue="#{supp}" 
@@ -419,6 +230,23 @@
 				itemValue="#{m}" 
 				itemLabel="#{m} #{i18n.fieldperfreportview_monthmenu_months}" />
 		</p:selectOneMenu>
+
+
+
+		<!-- Zeile mit 2 Spalten: 4 Elemente (Label, CheckboxMenu, Label, DatePicker) -->
+		<h:outputLabel styleClass="label-field-optional" for="fi_rmatype" value="#{i18n.col_fieldperfreportview_rmatype}" />
+		<p:selectCheckboxMenu id="fi_rmatype" 
+			updateLabel="true" scrollHeight="350"
+			value="#{fieldPerfReport.selectedRmaTypes}">
+			<p:ajax process="@this" />
+			<f:selectItems value="#{fieldPerfReport.rmaTypes}" />
+		</p:selectCheckboxMenu>
+
+		<h:outputLabel styleClass="label-field-optional block-separator" for="fi_start" value="#{i18n.col_fieldperfreportview_startdate}" />
+		<p:datePicker id="fi_start" 
+			styleClass="fluid-date-wrapper" panelStyleClass="fluid-date-panel" 
+			value="#{fieldPerfReport.startDate}" 
+			pattern="#{userSession.dateFormat}" showButtonBar="true" showIcon="true" />
 
 	</div>
 

@@ -99,3 +99,43 @@ body .ui-datepicker .ui-datepicker-buttonbar button.ui-state-active {
 	background: var(--active);
 	border: 1px solid var(--activeborder);
 }
+
+
+
+
+
+/* 1. Wrapper als Flex-Container über die volle Spaltenbreite */
+body .ui-fluid .fluid-date-wrapper {
+    display: flex !important;
+    width: 100% !important;
+    align-items: stretch !important; /* Zwingt Input und Button auf die gleiche Höhe */
+}
+
+/* 2. Eingabefeld dehnt sich aus */
+body .ui-fluid .fluid-date-wrapper input {
+    flex: 1 1 auto !important;
+    width: 100% !important;
+    height: 1.6rem !important; /* Greift die Höhe aus deinem alten CSS auf */
+}
+
+/* 3. Button: Neutralisiert die alten negativen Margins und positioniert ihn sauber rechts */
+body .ui-fluid .fluid-date-wrapper .ui-button.ui-button-icon-only {
+    flex: 0 0 auto !important;
+    position: relative !important; /* Hebt alte absolute Positionierung auf */
+    width: 1.6rem !important; 
+    height: 1.6rem !important;
+    top: 0 !important;             /* Überschreibt top: .375rem aus calendar.css */
+    margin-top: 0 !important;      /* Überschreibt margin-top: -1rem aus calendar.css */
+    padding: 0 !important;
+}
+
+/* 4. Icon-Korrektur im Button zentrieren */
+body .ui-fluid .fluid-date-wrapper .ui-button.ui-button-icon-only .ui-icon-calendar {
+    margin-top: 0 !important;      /* Überschreibt margin-top: -0.625rem aus calendar.css */
+}
+
+/* 5. Kalender-Popup (Panel): Verhindert das Ausdehnen auf 100% Spaltenbreite */
+body .fluid-date-panel {
+    width: auto !important;
+    min-width: max-content !important;
+}
