@@ -31,6 +31,7 @@ import com.kontron.qdw.boundary.material.MaterialClassBoundaryService;
 import com.kontron.qdw.boundary.material.MaterialNumberSetBoundaryService;
 import com.kontron.qdw.boundary.material.MaterialTypeBoundaryService;
 import com.kontron.qdw.boundary.material.SerialNumberSetBoundaryService;
+import com.kontron.qdw.boundary.mv.MaterializedServiceMessageBoundaryService;
 import com.kontron.qdw.boundary.service.RMATypeBoundaryService;
 import com.kontron.qdw.dto.base.CustomerDTO;
 import com.kontron.qdw.dto.base.PlantSearchDTO;
@@ -80,6 +81,7 @@ public class FieldPerfReport extends SuperView implements Serializable {
     private final transient MaterialTypeBoundaryService matTypeService;
     private final transient MaterialClassBoundaryService matClassService;
     private final transient PlantBoundaryService plantService;
+    private final transient MaterializedServiceMessageBoundaryService servMsgService;
 
     private final UserSession userSession;
     private transient ResourceBundle bundle;
@@ -111,13 +113,15 @@ public class FieldPerfReport extends SuperView implements Serializable {
         matTypeService = null;
         matClassService = null;
         plantService = null;
+        servMsgService = null;
     }
 
     @Inject
     public FieldPerfReport(UserSession userSession, SavedQueryService queryManager,
             MaterialBoundaryService materialService, RMATypeBoundaryService rmaTypeService, MaterialNumberSetBoundaryService matNrSetService,
             SerialNumberSetBoundaryService serNrSetService, CustomerBoundaryService custService, SupplierBoundaryService suppService,
-            MaterialTypeBoundaryService matTypeService, MaterialClassBoundaryService matClassService, PlantBoundaryService plantService) {
+            MaterialTypeBoundaryService matTypeService, MaterialClassBoundaryService matClassService, PlantBoundaryService plantService,
+            MaterializedServiceMessageBoundaryService servMsgService) {
         this.userSession = userSession;
         this.queryManager = queryManager;
 
@@ -130,6 +134,7 @@ public class FieldPerfReport extends SuperView implements Serializable {
         this.matTypeService = matTypeService;
         this.matClassService = matClassService;
         this.plantService = plantService;
+        this.servMsgService = servMsgService;
     }
 
     public void initView() {
@@ -177,15 +182,18 @@ public class FieldPerfReport extends SuperView implements Serializable {
                 .map(MaterialClassListDTO::getCode)
                 .collect(Collectors.toList()));
 
-        reportSearchObj.setAnalInterval(MONTH_INTERVALS);
+        reportSearchObj.setAnalIntervals(MONTH_INTERVALS);
         reportSearchObj.setSelectedAnalInterval(PRESET_MONTH_IN_INTERVAL);
 
-        reportSearchObj.setReturnInterval(MONTH_INTERVALS);
+        reportSearchObj.setReturnIntervals(MONTH_INTERVALS);
         reportSearchObj.setSelectedReturnInterval(PRESET_MONTH_IN_INTERVAL);
 
         reportSearchObj.setStartDate(LocalDate.now().withDayOfMonth(1).withMonth(1).minusYears(2));
 
         reportSearchObj.setPlants(plantService.findAll());
+
+        reportSearchObj.setOrigins(servMsgService.extractOrigins());
+
 
         logger.debug("View initialization finished");
     }

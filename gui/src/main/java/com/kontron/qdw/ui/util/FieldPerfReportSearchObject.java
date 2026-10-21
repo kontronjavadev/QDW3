@@ -42,6 +42,9 @@ public class FieldPerfReportSearchObject {
     private List<PlantSearchDTO> plants = new ArrayList<>();
     private List<PlantSearchDTO> selectedPlants = new ArrayList<>();
 
+    private List<String> origins = new ArrayList<>();
+    private List<String> selectedOrigins = new ArrayList<>();
+
 
 
     public List<String> getMatNrs() {
@@ -168,7 +171,7 @@ public class FieldPerfReportSearchObject {
         return analIntervals;
     }
 
-    public void setAnalInterval(List<Integer> analIntervals) {
+    public void setAnalIntervals(List<Integer> analIntervals) {
         this.analIntervals = analIntervals;
     }
 
@@ -186,7 +189,7 @@ public class FieldPerfReportSearchObject {
         return returnIntervals;
     }
 
-    public void setReturnInterval(List<Integer> returnIntervals) {
+    public void setReturnIntervals(List<Integer> returnIntervals) {
         this.returnIntervals = returnIntervals;
     }
 
@@ -224,6 +227,24 @@ public class FieldPerfReportSearchObject {
 
     public void setSelectedPlants(List<PlantSearchDTO> selectedPlants) {
         this.selectedPlants = selectedPlants;
+    }
+
+
+
+    public List<String> getOrigins() {
+        return origins;
+    }
+
+    public void setOrigins(List<String> origins) {
+        this.origins = origins;
+    }
+
+    public List<String> getSelectedOrigins() {
+        return selectedOrigins;
+    }
+
+    public void setSelectedOrigins(List<String> selectedOrigins) {
+        this.selectedOrigins = selectedOrigins;
     }
 
 }

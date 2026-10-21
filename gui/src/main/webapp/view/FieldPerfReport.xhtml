@@ -258,9 +258,9 @@
 		<p:tab id="tabPanAdvanced" title="#{i18n.fieldperfreportview_pan_advanced}">
 			<div class="ui-fluid custom-form-grid">
 				<!-- Zeile mit 2 Spalten: 4 Elemente (Label, CheckboxMenu, Label, DatePicker) -->
-				<h:outputLabel styleClass="label-field-optional" for="fi_rmatype" value="#{i18n.col_fieldperfreportview_plant}" />
+				<h:outputLabel styleClass="label-field-optional" for="fi_plants" value="#{i18n.col_fieldperfreportview_plant}" />
 				<p:selectCheckboxMenu id="fi_plants" converter="#{plantSearchDTOConverter}" panelStyleClass="fluid-dropdown-panel" 
-					updateLabel="true" scrollHeight="350"
+					updateLabel="true" scrollHeight="350" 
 					value="#{fieldPerfReport.reportSearchObj.selectedPlants}" var="plant" >
 					<p:ajax process="@this" />
 
@@ -280,6 +280,27 @@
 						<h:outputText styleClass="pi #{plant.active ? 'pi-check' : ''}" 
 							style="display: inline-flex; align-items: center; justify-content: center; width: 1rem; height: 1rem; border: 1px solid var(--text); border-radius: 2px; font-size: 0.7rem; opacity: 0.65; 
 							#{plant.active ? 'background: var(--active); border-color: var(--activeborder); color: var(--textonactive);' : 'background: var(--inputfield); border-color: #a6a6a6; color: var(--text);'} " />
+					</p:column>
+				</p:selectCheckboxMenu>
+
+				<h:outputLabel styleClass="label-field-optional" for="fi_origin" value="#{i18n.col_fieldperfreportview_origin}" />
+				<p:selectCheckboxMenu id="fi_origin" panelStyleClass="fluid-dropdown-panel" 
+					updateLabel="true" scrollHeight="350" 
+					value="#{fieldPerfReport.reportSearchObj.selectedOrigins}" var="origin" >
+					<p:ajax process="@this" />
+
+					<!-- 1. Datenmodell & Label im geschlossenen Zustand -->
+					<!-- Wenn der Wert leer ist, wird "<not set>" als Text für das Eingabefeld verwendet -->
+					<f:selectItems value="#{fieldPerfReport.reportSearchObj.origins}"
+						var="itm" itemLabel="#{empty itm ? '&lt;' += i18n.col_fieldperfreportview_origin_empty += '&gt;' : itm}" itemValue="#{itm}" />
+
+					<!-- 2. Darstellung in der aufklappbaren Liste -->
+					<p:column>
+						<!-- A: Normale Strings -->
+						<h:outputText value="#{origin}" rendered="#{not empty origin}" />
+						
+						<!-- B: Der leere String (Placeholder-Look) -->
+						<h:outputText value="&lt;#{i18n.col_fieldperfreportview_origin_empty}&gt;" rendered="#{empty origin}" style="opacity: 0.5; font-style: italic;" />
 					</p:column>
 				</p:selectCheckboxMenu>
 

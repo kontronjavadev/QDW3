@@ -218,6 +218,10 @@ body .ui-selectcheckboxmenu-panel .ui-selectcheckboxmenu-items.ui-selectcheckbox
 	background: var(--panel);
 }
 
+body .ui-selectcheckboxmenu-panel .ui-selectcheckboxmenu-items .ui-selectcheckboxmenu-item.ui-selectcheckboxmenu-row > td {
+	padding: .15rem .3rem;
+}
+
 body .ui-selectcheckboxmenu {
 	padding-right: 1.5rem;
 	background: var(--inputfield);

@@ -1,12 +1,14 @@
 package com.kontron.qdw.boundary.mv;
 
 import java.util.*;
+
 import jakarta.validation.ConstraintViolationException;
 import com.kontron.qdw.domain.mv.*;
 import com.kontron.qdw.dto.mv.*;
 import com.kontron.qdw.repository.mv.*;
 import net.sourceforge.jbizmo.commons.search.exception.*;
 import jakarta.inject.*;
+import jakarta.persistence.TypedQuery;
 import jakarta.ejb.*;
 import jakarta.annotation.security.*;
 import net.sourceforge.jbizmo.commons.search.dto.*;
@@ -34,6 +36,21 @@ public class MaterializedServiceMessageBoundaryService {
     public MaterializedServiceMessageBoundaryService(MaterializedServiceMessageRepository repository) {
         this.repository = repository;
     }
+
+
+
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public List<String> extractOrigins() {
+        final String jpql = "select distinct m.origin from MaterializedServiceMessage m order by m.origin";
+        @SuppressWarnings("resource")
+        final TypedQuery<String> query = repository.getEntityManager()
+                .createQuery(jpql, String.class);
+
+        return query.getResultList();
+    }
+
+
 
     /**
      * Search for materialized service message objects
