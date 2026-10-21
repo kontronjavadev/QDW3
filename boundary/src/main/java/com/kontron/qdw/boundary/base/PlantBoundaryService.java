@@ -44,6 +44,14 @@ public class PlantBoundaryService {
     public List<PlantSearchDTO> findAll() {
         SearchDTO searchObj = new SearchDTO();
         searchObj.setMaxResult(DEFAULT_LIST_SIZE);
+
+        final var sortFieldActive = searchObj.addSearchField(PlantSearchDTO.SELECT_ACTIVE, SearchFieldDataTypeEnum.BOOLEAN);
+        sortFieldActive.setSortIndex(1);
+        sortFieldActive.setSortOrder(SortDirectionEnum.DESC);
+        final var sortFieldCode = searchObj.addSearchField(PlantSearchDTO.SELECT_CODE, SearchFieldDataTypeEnum.STRING);
+        sortFieldCode.setSortIndex(2);
+        sortFieldCode.setSortOrder(SortDirectionEnum.ASC);
+
         return searchAllPlants(searchObj);
     }
 
