@@ -206,10 +206,16 @@ body .ui-selectonemenu.ui-state-hover {
 /* Dropdown, Mehrfachauswahl mit Checkboxen */
 body .ui-selectcheckboxmenu .ui-selectcheckboxmenu-label-container,
 body .ui-selectcheckboxmenu-panel .ui-selectcheckboxmenu-header,
-body .ui-selectcheckboxmenu-panel .ui-selectcheckboxmenu-items .ui-selectcheckboxmenu-item {
+body .ui-selectcheckboxmenu-panel .ui-selectcheckboxmenu-items .ui-selectcheckboxmenu-item,
+body .ui-selectcheckboxmenu-panel .ui-selectcheckboxmenu-items .ui-selectcheckboxmenu-item.ui-selectcheckboxmenu-row {
 	padding: .15rem .3rem;
 	background: var(--inputfield);
 	color: var(--text);
+}
+
+body .ui-selectcheckboxmenu-panel .ui-selectcheckboxmenu-items.ui-selectcheckboxmenu-table > thead tr th {
+	color: var(--text);
+	background: var(--panel);
 }
 
 body .ui-selectcheckboxmenu {
@@ -233,6 +239,13 @@ body .ui-selectcheckboxmenu-panel .ui-selectcheckboxmenu-items .ui-selectcheckbo
 
 body .ui-selectcheckboxmenu .ui-selectcheckboxmenu-trigger {
 	background: var(--inputfield);
+}
+
+/* Macht das Dropdown-Panel flexibel, aber schützt es vor dem Kollabieren (panelStyleClass="fluid-dropdown-panel" am p:selectCheckboxMenu) */
+body .ui-selectcheckboxmenu-panel.fluid-dropdown-panel {
+    width: auto !important;   /* Überschreibt die von PrimeFaces JS hart gesetzte Breite */
+    min-width: 22rem;
+    max-width: 95vw;          /* Verhindert horizontales Scrollen auf sehr kleinen Bildschirmen */
 }
 
 

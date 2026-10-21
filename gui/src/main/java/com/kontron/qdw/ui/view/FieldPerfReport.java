@@ -6,6 +6,7 @@ import static com.kontron.qdw.ui.UserSession.*;
 import java.io.Serializable;
 import java.lang.invoke.MethodHandles;
 import java.text.DecimalFormatSymbols;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -23,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.kontron.qdw.boundary.base.CustomerBoundaryService;
+import com.kontron.qdw.boundary.base.PlantBoundaryService;
 import com.kontron.qdw.boundary.base.SupplierBoundaryService;
 import com.kontron.qdw.boundary.material.MaterialBoundaryService;
 import com.kontron.qdw.boundary.material.MaterialClassBoundaryService;
@@ -31,6 +33,7 @@ import com.kontron.qdw.boundary.material.MaterialTypeBoundaryService;
 import com.kontron.qdw.boundary.material.SerialNumberSetBoundaryService;
 import com.kontron.qdw.boundary.service.RMATypeBoundaryService;
 import com.kontron.qdw.dto.base.CustomerDTO;
+import com.kontron.qdw.dto.base.PlantSearchDTO;
 import com.kontron.qdw.dto.base.SupplierDTO;
 import com.kontron.qdw.dto.material.MaterialClassListDTO;
 import com.kontron.qdw.dto.material.MaterialListDTO;
@@ -60,7 +63,8 @@ public class FieldPerfReport extends SuperView implements Serializable {
 
     private static final long serialVersionUID = 6078905084559392861L;
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private static final List<Integer> MONTH_INTERVALS = Arrays.asList(4, 6, 8, 12, 18, 24, 26, 72);
+    private static final Integer PRESET_MONTH_IN_INTERVAL = 36;
+    private static final List<Integer> MONTH_INTERVALS = Arrays.asList(4, 6, 8, 12, 18, 24, PRESET_MONTH_IN_INTERVAL, 72);
 
     public static final String PAGE_URL = "/view/FieldPerfReport.jsf?faces-redirect=true";
     public static final String VIEW_ID = "com.kontron.qdw.ui.view.FieldPerfReport";
@@ -75,6 +79,7 @@ public class FieldPerfReport extends SuperView implements Serializable {
     private final transient SupplierBoundaryService suppService;
     private final transient MaterialTypeBoundaryService matTypeService;
     private final transient MaterialClassBoundaryService matClassService;
+    private final transient PlantBoundaryService plantService;
 
     private final UserSession userSession;
     private transient ResourceBundle bundle;
@@ -105,13 +110,14 @@ public class FieldPerfReport extends SuperView implements Serializable {
         suppService = null;
         matTypeService = null;
         matClassService = null;
+        plantService = null;
     }
 
     @Inject
     public FieldPerfReport(UserSession userSession, SavedQueryService queryManager,
             MaterialBoundaryService materialService, RMATypeBoundaryService rmaTypeService, MaterialNumberSetBoundaryService matNrSetService,
             SerialNumberSetBoundaryService serNrSetService, CustomerBoundaryService custService, SupplierBoundaryService suppService,
-            MaterialTypeBoundaryService matTypeService, MaterialClassBoundaryService matClassService) {
+            MaterialTypeBoundaryService matTypeService, MaterialClassBoundaryService matClassService, PlantBoundaryService plantService) {
         this.userSession = userSession;
         this.queryManager = queryManager;
 
@@ -123,6 +129,7 @@ public class FieldPerfReport extends SuperView implements Serializable {
         this.suppService = suppService;
         this.matTypeService = matTypeService;
         this.matClassService = matClassService;
+        this.plantService = plantService;
     }
 
     public void initView() {
@@ -171,8 +178,14 @@ public class FieldPerfReport extends SuperView implements Serializable {
                 .collect(Collectors.toList()));
 
         reportSearchObj.setAnalInterval(MONTH_INTERVALS);
-        reportSearchObj.setReturnInterval(MONTH_INTERVALS);
+        reportSearchObj.setSelectedAnalInterval(PRESET_MONTH_IN_INTERVAL);
 
+        reportSearchObj.setReturnInterval(MONTH_INTERVALS);
+        reportSearchObj.setSelectedReturnInterval(PRESET_MONTH_IN_INTERVAL);
+
+        reportSearchObj.setStartDate(LocalDate.now().withDayOfMonth(1).withMonth(1).minusYears(2));
+
+        reportSearchObj.setPlants(plantService.findAll());
 
         logger.debug("View initialization finished");
     }

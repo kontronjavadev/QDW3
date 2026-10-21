@@ -2,6 +2,7 @@ package com.kontron.qdw.boundary.base;
 
 import com.kontron.qdw.repository.base.*;
 import net.sourceforge.jbizmo.commons.search.exception.*;
+import static net.sourceforge.jbizmo.commons.jpa.AbstractRepository.DEFAULT_LIST_SIZE;
 import static net.sourceforge.jbizmo.commons.jpa.AbstractRepository.WILDCARD;
 import com.kontron.qdw.dto.base.*;
 import com.kontron.qdw.domain.base.*;
@@ -11,6 +12,7 @@ import jakarta.inject.*;
 import jakarta.ejb.*;
 import jakarta.annotation.security.*;
 import net.sourceforge.jbizmo.commons.search.dto.*;
+import net.sourceforge.jbizmo.commons.annotation.Customized;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
 import static net.sourceforge.jbizmo.commons.jpa.AbstractRepository.SMALL_LIST_SIZE;
 
@@ -35,6 +37,36 @@ public class PlantBoundaryService {
     @Generated
     public PlantBoundaryService(PlantRepository repository) {
         this.repository = repository;
+    }
+
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public List<PlantSearchDTO> findAll() {
+        SearchDTO searchObj = new SearchDTO();
+        searchObj.setMaxResult(DEFAULT_LIST_SIZE);
+        return searchAllPlants(searchObj);
+    }
+
+    /**
+     * @param code
+     * @return the plant object
+     */
+    @Customized
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public PlantSearchDTO findPlantByIdForSearch(String code) {
+        // Find persistent object
+        final Plant plant = repository.findById(code, false);
+
+        final var dto = new PlantSearchDTO();
+        dto.setCode(plant.getCode());
+        dto.setShortText(plant.getShortText());
+        dto.setComment(plant.getComment());
+        dto.setActive(plant.isActive());
+        dto.setCreationDate(plant.getCreationDate());
+        dto.setLastUpdate(plant.getLastUpdate());
+
+        return dto;
     }
 
     /**

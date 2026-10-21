@@ -256,6 +256,34 @@
 
 
 		<p:tab id="tabPanAdvanced" title="#{i18n.fieldperfreportview_pan_advanced}">
+			<div class="ui-fluid custom-form-grid">
+				<!-- Zeile mit 2 Spalten: 4 Elemente (Label, CheckboxMenu, Label, DatePicker) -->
+				<h:outputLabel styleClass="label-field-optional" for="fi_rmatype" value="#{i18n.col_fieldperfreportview_plant}" />
+				<p:selectCheckboxMenu id="fi_plants" converter="#{plantSearchDTOConverter}" panelStyleClass="fluid-dropdown-panel" 
+					updateLabel="true" scrollHeight="350"
+					value="#{fieldPerfReport.reportSearchObj.selectedPlants}" var="plant" >
+					<p:ajax process="@this" />
+
+					<!-- 1. DATEN-DEFINITION: Hier müssen itemLabel und itemValue hin! -->
+					<f:selectItems value="#{fieldPerfReport.reportSearchObj.plants}" 
+						var="itm" itemLabel="#{itm.code}" itemValue="#{itm}" />
+
+					<!-- 2. UI-DEFINITION: Nutzt das var="plant" aus der Hauptkomponente -->
+					<p:column headerText="Code" style="width: 20%;">
+						<h:outputText value="#{plant.code}" />
+					</p:column>
+					<p:column headerText="Short text" style="width: 70%;">
+						<h:outputText value="#{plant.shortText}" />
+					</p:column>
+ 					<!-- Simuliertes Icon statt echter Checkbox, damit der Zeilen-Klick nicht blockiert wird -->
+					<p:column headerText="Aktiv" style="width: 10%; text-align: center;">
+						<h:outputText styleClass="pi #{plant.active ? 'pi-check' : ''}" 
+							style="display: inline-flex; align-items: center; justify-content: center; width: 1rem; height: 1rem; border: 1px solid var(--text); border-radius: 2px; font-size: 0.7rem; opacity: 0.65; 
+							#{plant.active ? 'background: var(--active); border-color: var(--activeborder); color: var(--textonactive);' : 'background: var(--inputfield); border-color: #a6a6a6; color: var(--text);'} " />
+					</p:column>
+				</p:selectCheckboxMenu>
+
+			</div>
 		</p:tab>
 
 	</p:tabView>

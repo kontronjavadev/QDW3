@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.kontron.qdw.dto.base.CustomerDTO;
+import com.kontron.qdw.dto.base.PlantSearchDTO;
 import com.kontron.qdw.dto.base.SupplierDTO;
 import com.kontron.qdw.dto.material.MaterialNumberSetDTO;
 import com.kontron.qdw.dto.material.SerialNumberSetDTO;
@@ -30,13 +31,17 @@ public class FieldPerfReportSearchObject {
     private List<String> matClasses = new ArrayList<>();
     private List<String> selectedMatClasses = new ArrayList<>();
 
-    private List<Integer> analInterval;
+    private List<Integer> analIntervals;
     private Integer selectedAnalInterval;
 
-    private List<Integer> returnInterval;
+    private List<Integer> returnIntervals;
     private Integer selectedReturnInterval;
 
     private LocalDate startDate;
+
+    private List<PlantSearchDTO> plants = new ArrayList<>();
+    private List<PlantSearchDTO> selectedPlants = new ArrayList<>();
+
 
 
     public List<String> getMatNrs() {
@@ -48,6 +53,7 @@ public class FieldPerfReportSearchObject {
     }
 
 
+
     public List<CustomerDTO> getCustomers() {
         return customers;
     }
@@ -57,6 +63,7 @@ public class FieldPerfReportSearchObject {
     }
 
 
+
     public List<SupplierDTO> getSupplier() {
         return supplier;
     }
@@ -64,6 +71,7 @@ public class FieldPerfReportSearchObject {
     public void setSupplier(List<SupplierDTO> supplier) {
         this.supplier = supplier;
     }
+
 
 
     public List<String> getRmaTypes() {
@@ -83,6 +91,7 @@ public class FieldPerfReportSearchObject {
     }
 
 
+
     public List<MaterialNumberSetDTO> getMatNrSets() {
         return matNrSets;
     }
@@ -98,6 +107,7 @@ public class FieldPerfReportSearchObject {
     public void setSelectedMatNrSet(MaterialNumberSetDTO selectedMatNrSet) {
         this.selectedMatNrSet = selectedMatNrSet;
     }
+
 
 
     public List<SerialNumberSetDTO> getSerNrSets() {
@@ -117,6 +127,7 @@ public class FieldPerfReportSearchObject {
     }
 
 
+
     public List<String> getMatTypes() {
         return matTypes;
     }
@@ -132,6 +143,7 @@ public class FieldPerfReportSearchObject {
     public void setSelectedMatTypes(List<String> selectedMatTypes) {
         this.selectedMatTypes = selectedMatTypes;
     }
+
 
 
     public List<String> getMatClasses() {
@@ -151,12 +163,13 @@ public class FieldPerfReportSearchObject {
     }
 
 
+
     public List<Integer> getAnalIntervals() {
-        return analInterval;
+        return analIntervals;
     }
 
-    public void setAnalInterval(List<Integer> analInterval) {
-        this.analInterval = analInterval;
+    public void setAnalInterval(List<Integer> analIntervals) {
+        this.analIntervals = analIntervals;
     }
 
     public Integer getSelectedAnalInterval() {
@@ -168,12 +181,13 @@ public class FieldPerfReportSearchObject {
     }
 
 
+
     public List<Integer> getReturnIntervals() {
-        return returnInterval;
+        return returnIntervals;
     }
 
-    public void setReturnInterval(List<Integer> returnInterval) {
-        this.returnInterval = returnInterval;
+    public void setReturnInterval(List<Integer> returnIntervals) {
+        this.returnIntervals = returnIntervals;
     }
 
     public Integer getSelectedReturnInterval() {
@@ -185,6 +199,7 @@ public class FieldPerfReportSearchObject {
     }
 
 
+
     public LocalDate getStartDate() {
         return startDate;
     }
@@ -192,4 +207,23 @@ public class FieldPerfReportSearchObject {
     public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
     }
+
+
+
+    public List<PlantSearchDTO> getPlants() {
+        return plants;
+    }
+
+    public void setPlants(List<PlantSearchDTO> plants) {
+        this.plants = plants;
+    }
+
+    public List<PlantSearchDTO> getSelectedPlants() {
+        return selectedPlants;
+    }
+
+    public void setSelectedPlants(List<PlantSearchDTO> selectedPlants) {
+        this.selectedPlants = selectedPlants;
+    }
+
 }

@@ -2682,6 +2682,9 @@
     <boundaryMethods name="findPlants" comment="Search for plant objects" returnType="/214" returnTypeModifier="List" queryStatement="from Plant a" customStatement="" methodType="SEARCH_BY_FILTER" serviceMethod="/56/@repositoryMethods.0">
       <methodParameters name="filter" type="/0/@allSupportedTypes.12"/>
     </boundaryMethods>
+    <boundaryMethods name="findPlantByIdForSearch" comment="" returnType="/169" methodType="FIND_BY_ID" serviceMethod="/56/@repositoryMethods.0">
+      <methodParameters name="code" type="/0/@allSupportedTypes.12" hint=""/>
+    </boundaryMethods>
   </net.sourceforge.jbizmo.model.boundary:BoundaryBean>
   <net.sourceforge.jbizmo.model.client:Form name="EditPlantDialog" formGroup="/6" title="Edit plant" formPanels="/155 /156" dTO="/157" roles="/0/@roles.0">
     <actions name="actionUpdate" boundaryMethod="/153/@boundaryMethods.1" type="UPDATE"/>
