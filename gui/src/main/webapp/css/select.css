@@ -101,8 +101,30 @@ body .ui-selectonelistbox .ui-selectlistbox-listcontainer .ui-selectlistbox-list
 
 
 /* Zwei mehrzeilige Boxen mit Elementen und Aktionspfeilen in der Mitte, um eine Auswahl aus vorhandenen Optionen zu treffen, etwa Rollen für Benutzer */
+/*
+body .ui-picklist > div {
+	width: calc((100vw - 280px - 30px)/2 - 45px);
+*/
+/*
+	width: calc((100vw - 280px - 30px)/2 - 105px);
+*/
+	/* Breite Content / 2 - Breite Buttons */
+/*
+width: 100vw;
+}
+*/
+
+/*
+body .ui-picklist .ui-picklist-buttons {
+	width: auto;
+}
+*/
+
 body .ui-picklist .ui-picklist-list {
 	background: var(--inputfield);
+/*
+	width: auto;
+*/
 }
 
 body .searchdialog-picklist .ui-picklist-list {
