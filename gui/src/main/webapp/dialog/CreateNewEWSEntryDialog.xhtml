@@ -86,11 +86,14 @@
 			<h:outputLabel styleClass="label-field-mandatory" value="#{i18n.label_list_enter_filter}" for="listReceiversFilter"/>
 			<p:inputText id="listReceiversFilter" value="#{createNewEWSEntryDialog.receiversFilterCriterion}">
 			</p:inputText>
-			<p:commandButton value="#{i18n.command_filter}" process="listReceiversGroup" action="#{createNewEWSEntryDialog.filterReceivers}" update="listReceivers" id="listReceiversButton"/>
+			<p:commandButton id="listReceiversButton" icon="pi pi-filter" value="#{i18n.command_filter}" 
+				process="listReceiversGroup" action="#{createNewEWSEntryDialog.filterReceivers}" update="listReceivers" />
 		</h:panelGrid>
 
 		<h:outputLabel value="" for="listReceivers"/>
-		<p:pickList id="listReceivers" value="#{createNewEWSEntryDialog.receiversList}" converter="#{userListDTOConverter}" addLabel="#{i18n.pick_list_add}" addAllLabel="#{i18n.pick_list_add_all}" removeLabel="#{i18n.pick_list_remove}" removeAllLabel="#{i18n.pick_list_remove_all}" var="listReceiversItem" itemValue="#{listReceiversItem}" itemLabel="#{listReceiversItem.name}"/>
+		<p:pickList id="listReceivers" converter="#{userListDTOConverter}" value="#{createNewEWSEntryDialog.receiversList}" 
+			addLabel="#{i18n.pick_list_add}" addAllLabel="#{i18n.pick_list_add_all}" removeLabel="#{i18n.pick_list_remove}" removeAllLabel="#{i18n.pick_list_remove_all}" 
+			var="listReceiversItem" itemValue="#{listReceiversItem}" itemLabel="#{listReceiversItem.name}"/>
 		<p:tooltip for="listReceivers" value=""/>
 		</h:panelGroup>
 

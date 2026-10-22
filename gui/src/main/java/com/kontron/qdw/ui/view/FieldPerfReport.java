@@ -26,6 +26,7 @@ import com.kontron.qdw.boundary.service.RepairErrorCodeBoundaryService;
 import com.kontron.qdw.dto.base.*;
 import com.kontron.qdw.dto.material.*;
 import com.kontron.qdw.dto.service.RMATypeListDTO;
+import com.kontron.qdw.dto.service.RepairErrorCodeListDTO;
 import com.kontron.qdw.service.SavedQueryService;
 import com.kontron.qdw.ui.UserSession;
 import com.kontron.qdw.ui.util.DistributionType;
@@ -83,6 +84,10 @@ public class FieldPerfReport extends SuperView implements Serializable {
     private String currentSuppFilter = "";
 
     private FieldPerfReportSearchObject reportSearchObj = new FieldPerfReportSearchObject();
+
+    private DualListModel<RepairErrorCodeListDTO> errList;
+    private String errFilterCriterion;
+
 
 
     public FieldPerfReport() {
@@ -179,6 +184,8 @@ public class FieldPerfReport extends SuperView implements Serializable {
 
         reportSearchObj.setErrGrps(repErrorService.extractGroups());
 
+        errList = new DualListModel<>(new ArrayList<>(), reportSearchObj.getSelectedErr());
+
 
         // Voreinstellungen
         reportSearchObj.setSelectedAnalInterval(PRESET_MONTH_IN_INTERVAL);
@@ -259,6 +266,7 @@ public class FieldPerfReport extends SuperView implements Serializable {
     }
 
 
+
     public List<CustomerDTO> onCompleteCustomer(String filter) {
         this.currentCustFilter = filter;
         try {
@@ -280,6 +288,7 @@ public class FieldPerfReport extends SuperView implements Serializable {
             return Collections.emptyList();
         }
     }
+
 
 
     public void onCustomerSelect(final SelectEvent<CustomerDTO> event) {
@@ -308,6 +317,7 @@ public class FieldPerfReport extends SuperView implements Serializable {
 
         PrimeFaces.current().executeScript(jsCall);
     }
+
 
 
     public String getPreloadedCustomerTooltipsJson() {
@@ -411,6 +421,22 @@ public class FieldPerfReport extends SuperView implements Serializable {
 
 
 
+    public void filterErrs() {
+        errList = new DualListModel<>(Collections.emptyList(), errList.getTarget());
+
+        try {
+            final List<RepairErrorCodeListDTO> errSourceList = repErrorService.findRepairErrorCodes(errFilterCriterion);
+            errSourceList.removeAll(errList.getTarget());
+
+            errList = new DualListModel<>(errSourceList, errList.getTarget());
+        }
+        catch (final Exception e) {
+            logger.error("Error while fetching data for list field 'errList'!", e);
+        }
+    }
+
+
+
     public void saveNewQuery() {
         if (savedQueryName.isEmpty()) {
             MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_ERROR, SAVED_QUERY_EMPTY_NAME);
@@ -476,6 +502,25 @@ public class FieldPerfReport extends SuperView implements Serializable {
 
     public void setReportSearchObj(FieldPerfReportSearchObject reportSearchObj) {
         this.reportSearchObj = reportSearchObj;
+    }
+
+
+
+    public DualListModel<RepairErrorCodeListDTO> getErrList() {
+        return errList;
+    }
+
+    public void setErrList(DualListModel<RepairErrorCodeListDTO> errList) {
+        this.errList = errList;
+        reportSearchObj.setSelectedErr(errList.getTarget());
+    }
+
+    public String getErrFilterCriterion() {
+        return errFilterCriterion;
+    }
+
+    public void setErrFilterCriterion(String errFilterCriterion) {
+        this.errFilterCriterion = errFilterCriterion;
     }
 
 

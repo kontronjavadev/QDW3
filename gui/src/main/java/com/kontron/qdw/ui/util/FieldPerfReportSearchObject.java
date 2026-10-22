@@ -9,6 +9,7 @@ import com.kontron.qdw.dto.base.PlantSearchDTO;
 import com.kontron.qdw.dto.base.SupplierDTO;
 import com.kontron.qdw.dto.material.MaterialNumberSetDTO;
 import com.kontron.qdw.dto.material.SerialNumberSetDTO;
+import com.kontron.qdw.dto.service.RepairErrorCodeListDTO;
 
 public class FieldPerfReportSearchObject {
 
@@ -59,6 +60,8 @@ public class FieldPerfReportSearchObject {
 
     private List<String> errGrps = new ArrayList<>();
     private List<String> selectedErrGrps = new ArrayList<>();
+
+    private List<RepairErrorCodeListDTO> selectedErr = new ArrayList<>();
 
 
 
@@ -332,6 +335,16 @@ public class FieldPerfReportSearchObject {
 
     public void setSelectedErrGrps(List<String> selectedErrGrps) {
         this.selectedErrGrps = selectedErrGrps;
+    }
+
+
+
+    public List<RepairErrorCodeListDTO> getSelectedErr() {
+        return selectedErr;
+    }
+
+    public void setSelectedErr(List<RepairErrorCodeListDTO> selectedErr) {
+        this.selectedErr = selectedErr;
     }
 
 }
