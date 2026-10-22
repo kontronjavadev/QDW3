@@ -101,7 +101,7 @@
 	<p:remoteCommand name="processPastedMaterials"
 		action="#{fieldPerfReport.handlePastedMaterials}"
 		process="@this"
-		update="fi_matnr fi_pmatnr growl" />
+		update="tabview1:fi_matnr, tabview1:fi_pmatnr, growl" />
 
 	<p:tabView id="tabview1" dynamic="true" effect="fade" effectDuration="fast" style="flex: 0 0 auto;">
 		<p:tab id="tabPanBasic" title="#{i18n.fieldperfreportview_pan_basic}">
@@ -334,6 +334,7 @@
 					<p:ajax event="itemSelect" process="@this" />
 					<p:ajax event="itemUnselect" process="@this" />
 				</p:autoComplete>
+
 			</div>
 		</p:tab>
 

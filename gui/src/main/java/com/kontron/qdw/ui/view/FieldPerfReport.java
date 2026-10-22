@@ -197,6 +197,7 @@ public class FieldPerfReport extends SuperView implements Serializable {
     /** Diese Methode wird vom JavaScript via p:remoteCommand aufgerufen */
     public void handlePastedMaterials() {
         final var requestParams = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+        final String targetId = requestParams.get("targetFieldId");
         final String pastedTokensString = requestParams.get("pastedTokens");
 
         if (pastedTokensString != null && !pastedTokensString.isBlank()) {
@@ -207,9 +208,18 @@ public class FieldPerfReport extends SuperView implements Serializable {
             final List<String> existingNumbers = materialService.findExistingMaterialNumbers(incomingTokens);
 
             // 2. Gültige Nummern der UI-Liste hinzufügen (falls noch nicht vorhanden)
-            for (final String validNum : existingNumbers) {
-                if (!reportSearchObj.getMatNrs().contains(validNum)) {
-                    reportSearchObj.getMatNrs().add(validNum);
+            if (targetId.contains("fi_matnr")) { // form:tabview1:fi_matnr_input
+                for (final String validNum : existingNumbers) {
+                    if (!reportSearchObj.getMatNrs().contains(validNum)) {
+                        reportSearchObj.getMatNrs().add(validNum);
+                    }
+                }
+            }
+            else if (targetId.contains("fi_pmatnr")) { // form:tabview1:fi_pmatnr_input
+                for (final String validNum : existingNumbers) {
+                    if (!reportSearchObj.getpMatNrs().contains(validNum)) {
+                        reportSearchObj.getpMatNrs().add(validNum);
+                    }
                 }
             }
 
