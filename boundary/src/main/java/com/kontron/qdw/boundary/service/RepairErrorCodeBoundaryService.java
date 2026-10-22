@@ -8,6 +8,7 @@ import java.util.*;
 import jakarta.validation.ConstraintViolationException;
 import com.kontron.qdw.repository.service.*;
 import jakarta.inject.*;
+import jakarta.persistence.TypedQuery;
 import jakarta.ejb.*;
 import jakarta.annotation.security.*;
 import net.sourceforge.jbizmo.commons.search.dto.*;
@@ -36,6 +37,19 @@ public class RepairErrorCodeBoundaryService {
     @Generated
     public RepairErrorCodeBoundaryService(RepairErrorCodeRepository repository) {
         this.repository = repository;
+    }
+
+
+
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public List<String> extractGroups() {
+        final String jpql = "select distinct coalesce(m.groupName, '') as gname from RepairErrorCode m order by gname ";
+        @SuppressWarnings("resource")
+        final TypedQuery<String> query = repository.getEntityManager()
+                .createQuery(jpql, String.class);
+
+        return query.getResultList();
     }
 
     @PermitAll

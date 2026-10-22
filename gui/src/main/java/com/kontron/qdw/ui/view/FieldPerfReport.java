@@ -22,6 +22,7 @@ import com.kontron.qdw.boundary.base.*;
 import com.kontron.qdw.boundary.material.*;
 import com.kontron.qdw.boundary.mv.MaterializedServiceMessageBoundaryService;
 import com.kontron.qdw.boundary.service.RMATypeBoundaryService;
+import com.kontron.qdw.boundary.service.RepairErrorCodeBoundaryService;
 import com.kontron.qdw.dto.base.*;
 import com.kontron.qdw.dto.material.*;
 import com.kontron.qdw.dto.service.RMATypeListDTO;
@@ -65,6 +66,7 @@ public class FieldPerfReport extends SuperView implements Serializable {
     private final transient MaterialClassBoundaryService matClassService;
     private final transient PlantBoundaryService plantService;
     private final transient MaterializedServiceMessageBoundaryService servMsgService;
+    private final transient RepairErrorCodeBoundaryService repErrorService;
 
     private final UserSession userSession;
     private transient ResourceBundle bundle;
@@ -97,6 +99,7 @@ public class FieldPerfReport extends SuperView implements Serializable {
         matClassService = null;
         plantService = null;
         servMsgService = null;
+        repErrorService = null;
     }
 
     @Inject
@@ -104,7 +107,7 @@ public class FieldPerfReport extends SuperView implements Serializable {
             MaterialBoundaryService materialService, RMATypeBoundaryService rmaTypeService, MaterialNumberSetBoundaryService matNrSetService,
             SerialNumberSetBoundaryService serNrSetService, CustomerBoundaryService custService, SupplierBoundaryService suppService,
             MaterialTypeBoundaryService matTypeService, MaterialClassBoundaryService matClassService, PlantBoundaryService plantService,
-            MaterializedServiceMessageBoundaryService servMsgService) {
+            MaterializedServiceMessageBoundaryService servMsgService, RepairErrorCodeBoundaryService repErrorService) {
         this.userSession = userSession;
         this.queryManager = queryManager;
 
@@ -118,6 +121,7 @@ public class FieldPerfReport extends SuperView implements Serializable {
         this.matClassService = matClassService;
         this.plantService = plantService;
         this.servMsgService = servMsgService;
+        this.repErrorService = repErrorService;
     }
 
     public void initView() {
@@ -172,6 +176,8 @@ public class FieldPerfReport extends SuperView implements Serializable {
         reportSearchObj.setPlants(plantService.findAll());
 
         reportSearchObj.setOrigins(servMsgService.extractOrigins());
+
+        reportSearchObj.setErrGrps(repErrorService.extractGroups());
 
 
         // Voreinstellungen

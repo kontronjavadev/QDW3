@@ -288,7 +288,7 @@
 					<!-- 1. Datenmodell & Label im geschlossenen Zustand -->
 					<!-- Wenn der Wert leer ist, wird "<not set>" als Text für das Eingabefeld verwendet -->
 					<f:selectItems value="#{fieldPerfReport.reportSearchObj.origins}"
-						var="itm" itemLabel="#{empty itm ? '&lt;' += i18n.fieldperfreportview_originmenu_empty += '&gt;' : itm}" itemValue="#{itm}" />
+						var="itm" itemLabel="#{empty itm ? '&lt;' += i18n.fieldperfreportview_menuentry_empty += '&gt;' : itm}" itemValue="#{itm}" />
 
 					<!-- 2. Darstellung in der aufklappbaren Liste -->
 					<p:column>
@@ -296,7 +296,7 @@
 						<h:outputText value="#{origin}" rendered="#{not empty origin}" />
 						
 						<!-- B: Der leere String (Placeholder-Look) -->
-						<h:outputText value="&lt;#{i18n.fieldperfreportview_originmenu_empty}&gt;" rendered="#{empty origin}" style="opacity: 0.5; font-style: italic;" />
+						<h:outputText value="&lt;#{i18n.fieldperfreportview_menuentry_empty}&gt;" rendered="#{empty origin}" style="opacity: 0.5; font-style: italic;" />
 					</p:column>
 				</p:selectCheckboxMenu>
 
@@ -319,7 +319,7 @@
 
 				<!-- Label + InputText (styleClass="span-3-cols") -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_revno" value="#{i18n.col_fieldperfreportview_revno}" />
-				<p:inputText id="fi_revno" styleClass="span-3-cols" value="#{fieldPerfReport.reportSearchObj.revNos}" >
+				<p:inputText id="fi_revno" styleClass="span-3-cols" value="#{fieldPerfReport.reportSearchObj.revNo}" >
 					<p:ajax process="@this" />
 				</p:inputText>
 
@@ -334,6 +334,36 @@
 					<p:ajax event="itemSelect" process="@this" />
 					<p:ajax event="itemUnselect" process="@this" />
 				</p:autoComplete>
+
+
+
+				<!-- Zeile mit 2 Spalten: 4 Elemente (Label, InputText, Label, CheckboxMenu) -->
+				<h:outputLabel for="fi_defcmpt" value="#{i18n.col_fieldperfreportview_defcmpt}" />
+				<p:inputText id="fi_defcmpt" value="#{fieldPerfReport.reportSearchObj.defCmpt}" >
+					<p:ajax process="@this" />
+				</p:inputText>
+
+				<h:outputLabel styleClass="label-field-optional block-separator" for="fi_errgrp" value="#{i18n.col_fieldperfreportview_errgrp}" />
+				<p:selectCheckboxMenu id="fi_errgrp" panelStyleClass="fluid-dropdown-panel" 
+					updateLabel="true" scrollHeight="350" 
+					value="#{fieldPerfReport.reportSearchObj.selectedErrGrps}" var="errgrp" >
+					<p:ajax process="@this" />
+
+					<!-- 1. Datenmodell & Label im geschlossenen Zustand -->
+					<!-- Wenn der Wert leer ist, wird "<not set>" als Text für das Eingabefeld verwendet -->
+					<f:selectItems value="#{fieldPerfReport.reportSearchObj.errGrps}"
+						var="itm" itemLabel="#{empty itm ? '&lt;' += i18n.fieldperfreportview_menuentry_empty += '&gt;' : itm}" itemValue="#{itm}" />
+
+					<!-- 2. Darstellung in der aufklappbaren Liste -->
+					<p:column>
+						<!-- A: Normale Strings -->
+						<h:outputText value="#{errgrp}" rendered="#{not empty errgrp}" />
+						
+						<!-- B: Der leere String (Placeholder-Look) -->
+						<h:outputText value="&lt;#{i18n.fieldperfreportview_menuentry_empty}&gt;" rendered="#{empty errgrp}" style="opacity: 0.5; font-style: italic;" />
+					</p:column>
+				</p:selectCheckboxMenu>
+
 
 			</div>
 		</p:tab>

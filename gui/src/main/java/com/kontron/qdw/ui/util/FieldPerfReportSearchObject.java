@@ -51,9 +51,14 @@ public class FieldPerfReportSearchObject {
 
     private DistributionType selectedDistType;
 
-    private String revNos;
+    private String revNo;
 
     private List<String> pMatNrs = new ArrayList<>();
+
+    private String defCmpt;
+
+    private List<String> errGrps = new ArrayList<>();
+    private List<String> selectedErrGrps = new ArrayList<>();
 
 
 
@@ -283,12 +288,12 @@ public class FieldPerfReportSearchObject {
 
 
 
-    public String getRevNos() {
-        return revNos;
+    public String getRevNo() {
+        return revNo;
     }
 
-    public void setRevNos(String revNos) {
-        this.revNos = revNos;
+    public void setRevNo(String revNo) {
+        this.revNo = revNo;
     }
 
 
@@ -299,6 +304,34 @@ public class FieldPerfReportSearchObject {
 
     public void setpMatNrs(List<String> pMatNrs) {
         this.pMatNrs = pMatNrs;
+    }
+
+
+
+    public String getDefCmpt() {
+        return defCmpt;
+    }
+
+    public void setDefCmpt(String defCmpt) {
+        this.defCmpt = defCmpt;
+    }
+
+
+
+    public List<String> getErrGrps() {
+        return errGrps;
+    }
+
+    public void setErrGrps(List<String> errGrps) {
+        this.errGrps = errGrps;
+    }
+
+    public List<String> getSelectedErrGrps() {
+        return selectedErrGrps;
+    }
+
+    public void setSelectedErrGrps(List<String> selectedErrGrps) {
+        this.selectedErrGrps = selectedErrGrps;
     }
 
 }
