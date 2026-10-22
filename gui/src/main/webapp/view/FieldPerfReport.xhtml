@@ -101,13 +101,13 @@
 	<p:remoteCommand name="processPastedMaterials"
 		action="#{fieldPerfReport.handlePastedMaterials}"
 		process="@this"
-		update="fi_matnr growl" />
+		update="fi_matnr fi_pmatnr growl" />
 
 	<p:tabView id="tabview1" dynamic="true" effect="fade" effectDuration="fast" style="flex: 0 0 auto;">
 		<p:tab id="tabPanBasic" title="#{i18n.fieldperfreportview_pan_basic}">
 			<div class="ui-fluid custom-form-grid">
 				<!-- Zeile 1: Label + Autocomplete (styleClass="span-3-cols") -->
-				<h:outputLabel styleClass="label-field-optional" for="fi_matnr" value="#{i18n.col_fieldperfreportview_materialnumber}" />
+				<h:outputLabel styleClass="label-field-optional" for="fi_matnr" value="#{i18n.col_fieldperfreportview_matnr}" />
 				<p:autoComplete id="fi_matnr" styleClass="span-3-cols" multiple="true" forceSelection="true" 
 					minQueryLength="2" maxResults="20" 
 					value="#{fieldPerfReport.reportSearchObj.matNrs}" completeMethod="#{fieldPerfReport.onCompleteMaterialNumber}">
@@ -125,8 +125,8 @@
 					scrollHeight="350" value="#{fieldPerfReport.reportSearchObj.selectedMatNrSet}">
 					<p:ajax process="@this" />
 					<f:selectItem itemLabel="" itemValue="#{null}" noSelectionOption="true" />
-					<f:selectItems value="#{fieldPerfReport.reportSearchObj.matNrSets}" var="matNrSetItem" 
-						itemLabel="#{matNrSetItem.label}" itemValue="#{matNrSetItem}" />
+					<f:selectItems value="#{fieldPerfReport.reportSearchObj.matNrSets}" 
+						var="matNrSetItem" itemLabel="#{matNrSetItem.label}" itemValue="#{matNrSetItem}" />
 				</p:selectOneMenu>
 
 				<h:outputLabel styleClass="label-field-optional block-separator" for="fi_sernrset" value="#{i18n.col_fieldperfreportview_sernrset}" />
@@ -134,8 +134,8 @@
 					scrollHeight="350" value="#{fieldPerfReport.reportSearchObj.selectedSerNrSet}">
 					<p:ajax process="@this" />
 					<f:selectItem itemLabel="" itemValue="#{null}" noSelectionOption="true" />
-					<f:selectItems value="#{fieldPerfReport.reportSearchObj.serNrSets}" var="serNrSetItem" 
-						itemLabel="#{serNrSetItem.code}" itemValue="#{serNrSetItem}" />
+					<f:selectItems value="#{fieldPerfReport.reportSearchObj.serNrSets}" 
+						var="serNrSetItem" itemLabel="#{serNrSetItem.code}" itemValue="#{serNrSetItem}" />
 				</p:selectOneMenu>
 
 
@@ -217,9 +217,7 @@
 					<p:ajax process="@this" />
 					<f:selectItem itemLabel="" itemValue="#{null}" noSelectionOption="true" />
 					<f:selectItems value="#{fieldPerfReport.reportSearchObj.analIntervals}" 
-						var="m" 
-						itemValue="#{m}" 
-						itemLabel="#{m} #{i18n.fieldperfreportview_monthmenu_months}" />
+						var="m" itemLabel="#{m} #{i18n.fieldperfreportview_monthmenu_months}" itemValue="#{m}" />
 				</p:selectOneMenu>
 
 				<h:outputLabel styleClass="label-field-optional block-separator" for="fi_retintv" value="#{i18n.col_fieldperfreportview_retintv}" />
@@ -228,9 +226,7 @@
 					<p:ajax process="@this" />
 					<f:selectItem itemLabel="" itemValue="#{null}" noSelectionOption="true" />
 					<f:selectItems value="#{fieldPerfReport.reportSearchObj.returnIntervals}" 
-						var="m" 
-						itemValue="#{m}" 
-						itemLabel="#{m} #{i18n.fieldperfreportview_monthmenu_months}" />
+						var="m" itemLabel="#{m} #{i18n.fieldperfreportview_monthmenu_months}" itemValue="#{m}" />
 				</p:selectOneMenu>
 
 
@@ -257,7 +253,7 @@
 
 		<p:tab id="tabPanAdvanced" title="#{i18n.fieldperfreportview_pan_advanced}">
 			<div class="ui-fluid custom-form-grid">
-				<!-- Zeile mit 2 Spalten: 4 Elemente (Label, CheckboxMenu, Label, DatePicker) -->
+				<!-- Zeile mit 2 Spalten: 4 Elemente (Label, CheckboxMenu, Label, CheckboxMenu) -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_plants" value="#{i18n.col_fieldperfreportview_plant}" />
 				<p:selectCheckboxMenu id="fi_plants" converter="#{plantSearchDTOConverter}" panelStyleClass="fluid-dropdown-panel" 
 					updateLabel="true" scrollHeight="350" 
@@ -283,7 +279,7 @@
 					</p:column>
 				</p:selectCheckboxMenu>
 
-				<h:outputLabel styleClass="label-field-optional" for="fi_origin" value="#{i18n.col_fieldperfreportview_origin}" />
+				<h:outputLabel styleClass="label-field-optional block-separator" for="fi_origin" value="#{i18n.col_fieldperfreportview_origin}" />
 				<p:selectCheckboxMenu id="fi_origin" panelStyleClass="fluid-dropdown-panel" 
 					updateLabel="true" scrollHeight="350" 
 					value="#{fieldPerfReport.reportSearchObj.selectedOrigins}" var="origin" >
@@ -304,6 +300,40 @@
 					</p:column>
 				</p:selectCheckboxMenu>
 
+
+
+				<!-- Zeile mit 2 Spalten: 4 Elemente (Label, Checkbox, Label, Dropdown) -->
+				<h:outputLabel styleClass="label-field-optional" for="fi_epi" value="#{i18n.col_fieldperfreportview_epi}" />
+				<p:selectBooleanCheckbox id="fi_epi" value="#{fieldPerfReport.reportSearchObj.epidemic}" >
+					<p:ajax process="@this" />
+				</p:selectBooleanCheckbox>
+
+				<h:outputLabel styleClass="label-field-optional block-separator" for="fi_disttype" value="#{i18n.col_fieldperfreportview_disttype}" />
+				<p:selectOneMenu id="fi_disttype" 
+					scrollHeight="350" value="#{fieldPerfReport.reportSearchObj.selectedDistType}">
+					<p:ajax process="@this" />
+					<f:selectItems value="#{fieldPerfReport.reportSearchObj.distTypes}" />
+				</p:selectOneMenu>
+
+
+
+				<!-- Label + InputText (styleClass="span-3-cols") -->
+				<h:outputLabel styleClass="label-field-optional" for="fi_revno" value="#{i18n.col_fieldperfreportview_revno}" />
+				<p:inputText id="fi_revno" styleClass="span-3-cols" value="#{fieldPerfReport.reportSearchObj.revNos}" >
+					<p:ajax process="@this" />
+				</p:inputText>
+
+
+
+				<!-- Label + Autocomplete (styleClass="span-3-cols") -->
+				<h:outputLabel styleClass="label-field-optional" for="fi_pmatnr" value="#{i18n.col_fieldperfreportview_pmatnr}" />
+				<p:autoComplete id="fi_pmatnr" styleClass="span-3-cols" multiple="true" forceSelection="true" 
+					minQueryLength="2" maxResults="20" 
+					value="#{fieldPerfReport.reportSearchObj.pMatNrs}" completeMethod="#{fieldPerfReport.onCompleteMaterialNumber}">
+					<p:ajax event="change" process="@this" />
+					<p:ajax event="itemSelect" process="@this" />
+					<p:ajax event="itemUnselect" process="@this" />
+				</p:autoComplete>
 			</div>
 		</p:tab>
 

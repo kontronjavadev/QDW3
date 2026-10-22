@@ -13,7 +13,9 @@ import com.kontron.qdw.dto.material.SerialNumberSetDTO;
 public class FieldPerfReportSearchObject {
 
     private List<String> matNrs = new ArrayList<>();
+
     private List<CustomerDTO> customers = new ArrayList<>();
+
     private List<SupplierDTO> supplier = new ArrayList<>();
 
     private List<String> rmaTypes = new ArrayList<>();
@@ -44,6 +46,14 @@ public class FieldPerfReportSearchObject {
 
     private List<String> origins = new ArrayList<>();
     private List<String> selectedOrigins = new ArrayList<>();
+
+    private boolean epidemic;
+
+    private DistributionType selectedDistType;
+
+    private String revNos;
+
+    private List<String> pMatNrs = new ArrayList<>();
 
 
 
@@ -245,6 +255,50 @@ public class FieldPerfReportSearchObject {
 
     public void setSelectedOrigins(List<String> selectedOrigins) {
         this.selectedOrigins = selectedOrigins;
+    }
+
+
+
+    public boolean isEpidemic() {
+        return epidemic;
+    }
+
+    public void setEpidemic(boolean epidemic) {
+        this.epidemic = epidemic;
+    }
+
+
+
+    public DistributionType[] getDistTypes() {
+        return DistributionType.values();
+    }
+
+    public DistributionType getSelectedDistType() {
+        return selectedDistType;
+    }
+
+    public void setSelectedDistType(DistributionType selectedDistType) {
+        this.selectedDistType = selectedDistType;
+    }
+
+
+
+    public String getRevNos() {
+        return revNos;
+    }
+
+    public void setRevNos(String revNos) {
+        this.revNos = revNos;
+    }
+
+
+
+    public List<String> getpMatNrs() {
+        return pMatNrs;
+    }
+
+    public void setpMatNrs(List<String> pMatNrs) {
+        this.pMatNrs = pMatNrs;
     }
 
 }

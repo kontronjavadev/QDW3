@@ -27,6 +27,7 @@ import com.kontron.qdw.dto.material.*;
 import com.kontron.qdw.dto.service.RMATypeListDTO;
 import com.kontron.qdw.service.SavedQueryService;
 import com.kontron.qdw.ui.UserSession;
+import com.kontron.qdw.ui.util.DistributionType;
 import com.kontron.qdw.ui.util.FieldPerfReportSearchObject;
 import com.kontron.qdw.ui.view.util.SuperView;
 
@@ -165,16 +166,20 @@ public class FieldPerfReport extends SuperView implements Serializable {
                 .collect(Collectors.toList()));
 
         reportSearchObj.setAnalIntervals(MONTH_INTERVALS);
-        reportSearchObj.setSelectedAnalInterval(PRESET_MONTH_IN_INTERVAL);
 
         reportSearchObj.setReturnIntervals(MONTH_INTERVALS);
-        reportSearchObj.setSelectedReturnInterval(PRESET_MONTH_IN_INTERVAL);
-
-        reportSearchObj.setStartDate(LocalDate.now().withDayOfMonth(1).withMonth(1).minusYears(2));
 
         reportSearchObj.setPlants(plantService.findAll());
 
         reportSearchObj.setOrigins(servMsgService.extractOrigins());
+
+
+        // Voreinstellungen
+        reportSearchObj.setSelectedAnalInterval(PRESET_MONTH_IN_INTERVAL);
+        reportSearchObj.setSelectedReturnInterval(PRESET_MONTH_IN_INTERVAL);
+        reportSearchObj.setStartDate(LocalDate.now().withDayOfMonth(1).withMonth(1).minusYears(2));
+        reportSearchObj.setEpidemic(true);
+        reportSearchObj.setSelectedDistType(DistributionType.CUSTOMER);
 
 
         logger.debug("View initialization finished");
