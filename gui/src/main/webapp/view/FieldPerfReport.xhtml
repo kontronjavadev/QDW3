@@ -251,7 +251,7 @@
 
 
 
-		<p:tab id="tabPanAdvanced" title="#{i18n.fieldperfreportview_pan_advanced}">
+		<p:tab id="tabPanAdvanced1" title="#{i18n.fieldperfreportview_pan_advanced1}">
 			<div class="ui-fluid custom-form-grid">
 				<!-- Zeile mit 2 Spalten: 4 Elemente (Label, CheckboxMenu, Label, CheckboxMenu) -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_plants" value="#{i18n.col_fieldperfreportview_plant}" />
@@ -336,7 +336,13 @@
 				</p:autoComplete>
 
 
+			</div>
+		</p:tab>
 
+
+
+		<p:tab id="tabPanAdvanced2" title="#{i18n.fieldperfreportview_pan_advanced2}">
+			<div class="ui-fluid custom-form-grid">
 				<!-- Zeile mit 2 Spalten: 4 Elemente (Label, InputText, Label, CheckboxMenu) -->
 				<h:outputLabel for="fi_defcmpt" value="#{i18n.col_fieldperfreportview_defcmpt}" />
 				<p:inputText id="fi_defcmpt" value="#{fieldPerfReport.reportSearchObj.defCmpt}" >
@@ -367,6 +373,8 @@
 
 
 
+				<!-- komplexer Inhalt über zwei Zeilen: -->
+				<!-- Zeile mit 2 Spalten: 4 Elemente (Label, PanelGrid (bestehend aus InputText und Schaltfläche), 2 leere Label für die rechte Spalte) -->
 				<h:outputLabel styleClass="label-field-optional" for="listErrGroup" value="#{i18n.col_fieldperfreportview_err}" />
 				<h:panelGrid columns="2" id="listErrGroup" >
 					<p:inputText id="fi_errFilter" value="#{fieldPerfReport.errFilterCriterion}" />
@@ -379,15 +387,13 @@
 				<h:outputLabel/>
 
 
+				<!-- leeres Label (Text ist bereits in der vorherigen Zeile dargestellt) + Picklist (styleClass="span-3-cols") -->
 				<h:outputLabel/>
 				<p:pickList styleClass="span-3-cols fluid-picklist" id="fi_err" converter="#{repairErrorCodeListDTOConverter}" value="#{fieldPerfReport.errList}" 
 					addLabel="#{i18n.pick_list_add}" addAllLabel="#{i18n.pick_list_add_all}" removeLabel="#{i18n.pick_list_remove}" removeAllLabel="#{i18n.pick_list_remove_all}" 
 					var="itm" itemValue="#{itm}" itemLabel="#{itm.name}" >
 					<p:ajax process="@this" />
 				</p:pickList>
-
-
-
 			</div>
 		</p:tab>
 

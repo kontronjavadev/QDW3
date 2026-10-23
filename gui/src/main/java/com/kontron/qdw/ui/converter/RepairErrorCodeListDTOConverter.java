@@ -6,6 +6,7 @@ import jakarta.enterprise.context.*;
 import java.lang.invoke.*;
 import jakarta.faces.component.*;
 import jakarta.inject.*;
+import net.sourceforge.jbizmo.commons.annotation.Customized;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
 import jakarta.faces.convert.*;
 import com.kontron.qdw.boundary.service.*;
@@ -39,17 +40,15 @@ public class RepairErrorCodeListDTOConverter implements Converter<RepairErrorCod
         this.repairErrorCodeService = repairErrorCodeService;
     }
 
-    /* (non-Javadoc)
-     * @see jakarta.faces.convert.Converter#getAsObject(jakarta.faces.context.FacesContext, jakarta.faces.component.UIComponent, java.lang.String)
-     */
     @Override
-    @Generated
+    @Customized
     public RepairErrorCodeListDTO getAsObject(FacesContext facesContext, UIComponent component, String submittedValue) {
-        if (submittedValue == null || submittedValue.isEmpty() || submittedValue.equals(NON_BREAKING_SPACE))
+        if (submittedValue == null || submittedValue.isEmpty() || submittedValue.equals(NON_BREAKING_SPACE)) {
             return null;
+        }
 
         try {
-            return repairErrorCodeService.findRepairErrorCodes(submittedValue).stream().findFirst().orElse(null);
+            return repairErrorCodeService.findRepairErrorCodeByNameForConverter(submittedValue);
         }
         catch (final Exception e) {
             logger.error("Error while performing object conversion by using the provided input '{}'!", submittedValue, e);
@@ -58,14 +57,12 @@ public class RepairErrorCodeListDTOConverter implements Converter<RepairErrorCod
         return null;
     }
 
-    /* (non-Javadoc)
-     * @see jakarta.faces.convert.Converter#getAsString(jakarta.faces.context.FacesContext, jakarta.faces.component.UIComponent, java.lang.Object)
-     */
     @Override
     @Generated
     public String getAsString(FacesContext facesContext, UIComponent component, RepairErrorCodeListDTO value) {
-        if (value == null)
+        if (value == null) {
             return null;
+        }
 
         return value.getName();
     }

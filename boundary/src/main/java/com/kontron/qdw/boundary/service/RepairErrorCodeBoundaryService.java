@@ -5,6 +5,9 @@ import net.sourceforge.jbizmo.commons.search.exception.*;
 import static net.sourceforge.jbizmo.commons.jpa.AbstractRepository.WILDCARD;
 import com.kontron.qdw.dto.service.*;
 import java.util.*;
+
+import org.apache.commons.lang3.StringUtils;
+
 import jakarta.validation.ConstraintViolationException;
 import com.kontron.qdw.repository.service.*;
 import jakarta.inject.*;
@@ -13,8 +16,10 @@ import jakarta.ejb.*;
 import jakarta.annotation.security.*;
 import net.sourceforge.jbizmo.commons.search.dto.*;
 import net.sourceforge.jbizmo.commons.repository.*;
+import net.sourceforge.jbizmo.commons.annotation.Customized;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
 import static net.sourceforge.jbizmo.commons.jpa.AbstractRepository.SMALL_LIST_SIZE;
+import static net.sourceforge.jbizmo.commons.jpa.AbstractRepository.DEFAULT_LIST_SIZE;
 
 @Stateless
 public class RepairErrorCodeBoundaryService {
@@ -83,10 +88,41 @@ public class RepairErrorCodeBoundaryService {
      * @return a list of repair error code objects
      * @throws GeneralSearchException if the search operation has failed
      */
-    @Generated
+    @Customized
     @PermitAll
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public List<RepairErrorCodeListDTO> findRepairErrorCodes(String filter) {
+        // Collect the select tokens of all fields that should be fetched
+        final var selectTokens = new ArrayList<String>();
+        selectTokens.add(RepairErrorCodeListDTO.SELECT_CODE);
+        selectTokens.add(RepairErrorCodeListDTO.SELECT_NAME);
+
+        boolean needToFilter = StringUtils.isNotEmpty(filter) && !filter.equals(WILDCARD);
+        String whereClause = "";
+        if (needToFilter) {
+            // Die Namen haben üblicherweise das Schema <Code> - <Name> oder <Name>-<lfd. Kennzeichnung/Nr.>
+            // und wenn der Anwender nach dem Namen sucht, müsste er ein "%" vorne anstellen oder mit dem Code beginnen.
+            whereClause = "where " + RepairErrorCodeListDTO.SELECT_NAME + " like '" + filter + WILDCARD + "' "
+                    + "or " + RepairErrorCodeListDTO.SELECT_NAME + " like '% - " + filter + WILDCARD + "' ";
+        }
+
+        // Initialize the search object
+        final var searchObj = new SearchDTO();
+        searchObj.setExactFilterMatch(true);
+        searchObj.setCaseSensitive(true);
+        searchObj.setMaxResult(DEFAULT_LIST_SIZE);
+        searchObj.setFromClause("from RepairErrorCode a " + whereClause);
+
+        final var filterField = searchObj.addSearchField(RepairErrorCodeListDTO.SELECT_NAME, SearchFieldDataTypeEnum.STRING);
+        filterField.setSortIndex(1);
+        filterField.setSortOrder(SortDirectionEnum.ASC);
+
+        return repository.search(searchObj, RepairErrorCodeListDTO.class, selectTokens);
+    }
+
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public RepairErrorCodeListDTO findRepairErrorCodeByNameForConverter(String filter) {
         // Collect the select tokens of all fields that should be fetched
         final var selectTokens = new ArrayList<String>();
         selectTokens.add(RepairErrorCodeListDTO.SELECT_CODE);
@@ -99,14 +135,11 @@ public class RepairErrorCodeBoundaryService {
         searchObj.setMaxResult(SMALL_LIST_SIZE);
         searchObj.setFromClause("from RepairErrorCode a");
 
-        if (filter != null && !filter.isEmpty() && !filter.equals(WILDCARD)) {
-            final var filterField = searchObj.addSearchField(RepairErrorCodeListDTO.SELECT_NAME, SearchFieldDataTypeEnum.STRING);
-            filterField.setFilterCriteria(filter + WILDCARD);
-            filterField.setSortIndex(1);
-            filterField.setSortOrder(SortDirectionEnum.ASC);
-        }
+        final var filterField = searchObj.addSearchField(RepairErrorCodeListDTO.SELECT_NAME, SearchFieldDataTypeEnum.STRING);
+        filterField.setFilterCriteria(filter + WILDCARD);
 
-        return repository.search(searchObj, RepairErrorCodeListDTO.class, selectTokens);
+        List<RepairErrorCodeListDTO> result = repository.search(searchObj, RepairErrorCodeListDTO.class, selectTokens);
+        return result.stream().findFirst().orElse(null);
     }
 
     @PermitAll
