@@ -46,6 +46,50 @@ public class RepairErrorCodeListDTO implements Serializable {
         this.name = name;
     }
 
+
+
+    @Override
+    public String toString() {
+        return "RepairErrorCodeListDTO [code=" + code + ", name=" + name + "]";
+    }
+
+    @Generated
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (obj == null) {
+            return false;
+        }
+
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+
+        final var dto = (RepairErrorCodeListDTO) obj;
+
+        if (this.code == null) {
+            if (dto.getCode() != null) {
+                return false;
+            }
+        }
+        else if (!this.code.equals(dto.getCode()) && !this.name.equals(dto.getName())) {
+            return false;
+        }
+
+        return true;
+    }
+
+    @Generated
+    @Override
+    public int hashCode() {
+        return (code == null) ? 0 : code.hashCode();
+    }
+
+
+
     /**
      * @return the code
      */
@@ -76,42 +120,6 @@ public class RepairErrorCodeListDTO implements Serializable {
     @Generated
     public void setName(String name) {
         this.name = name;
-    }
-
-    /* (non-Javadoc)
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
-    @Generated
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-
-        if (obj == null)
-            return false;
-
-        if (getClass() != obj.getClass())
-            return false;
-
-        final var dto = (RepairErrorCodeListDTO) obj;
-
-        if (this.code == null) {
-            if (dto.getCode() != null)
-                return false;
-        }
-        else if (!this.code.equals(dto.getCode()) && !this.name.equals(dto.getName()))
-            return false;
-
-        return true;
-    }
-
-    /* (non-Javadoc)
-     * @see java.lang.Object#hashCode()
-     */
-    @Generated
-    @Override
-    public int hashCode() {
-        return (code == null) ? 0 : code.hashCode();
     }
 
 }

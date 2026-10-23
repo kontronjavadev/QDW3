@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 
 import org.primefaces.PrimeFaces;
 import org.primefaces.event.SelectEvent;
+import org.primefaces.event.TransferEvent;
 import org.primefaces.model.DualListModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -87,6 +88,7 @@ public class FieldPerfReport extends SuperView implements Serializable {
 
     private DualListModel<RepairErrorCodeListDTO> errList;
     private String errFilterCriterion;
+    private Map<String, RepairErrorCodeListDTO> errorCache = new HashMap<>();
 
 
 
@@ -422,17 +424,31 @@ public class FieldPerfReport extends SuperView implements Serializable {
 
 
     public void filterErrs() {
-        errList = new DualListModel<>(Collections.emptyList(), errList.getTarget());
-
         try {
             final List<RepairErrorCodeListDTO> errSourceList = repErrorService.findRepairErrorCodes(errFilterCriterion);
-            errSourceList.removeAll(errList.getTarget());
 
-            errList = new DualListModel<>(errSourceList, errList.getTarget());
+            errorCache.clear();
+            errorCache.putAll(errSourceList.stream()
+                    .collect(Collectors.toMap(RepairErrorCodeListDTO::getCode, Function.identity())));
+            errorCache.putAll(reportSearchObj.getSelectedErr().stream()
+                    .collect(Collectors.toMap(RepairErrorCodeListDTO::getCode, Function.identity())));
+
+            errSourceList.removeAll(reportSearchObj.getSelectedErr());
+            errList = new DualListModel<>(errSourceList, reportSearchObj.getSelectedErr());
         }
         catch (final Exception e) {
             logger.error("Error while fetching data for list field 'errList'!", e);
+            errList = new DualListModel<>(new ArrayList<>(), reportSearchObj.getSelectedErr());
         }
+    }
+
+    public void onPickListTransfer(TransferEvent event) {
+        reportSearchObj.setSelectedErr(new ArrayList<>(errList.getTarget())); // neue ArrayList, um Referenz-Probleme zu vermeiden
+    }
+
+    /** getAsObject() des Converters ruft diese Methode auf, um nicht für jeden Eintrag eine DB-Abfrage machen zu müssen. */
+    public RepairErrorCodeListDTO getErrDtoFromCache(String submittedValue) {
+        return errorCache.get(submittedValue);
     }
 
 
@@ -512,7 +528,6 @@ public class FieldPerfReport extends SuperView implements Serializable {
 
     public void setErrList(DualListModel<RepairErrorCodeListDTO> errList) {
         this.errList = errList;
-        reportSearchObj.setSelectedErr(errList.getTarget());
     }
 
     public String getErrFilterCriterion() {

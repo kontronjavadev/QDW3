@@ -389,10 +389,10 @@
 
 				<!-- leeres Label (Text ist bereits in der vorherigen Zeile dargestellt) + Picklist (styleClass="span-3-cols") -->
 				<h:outputLabel/>
-				<p:pickList styleClass="span-3-cols fluid-picklist" id="fi_err" converter="#{repairErrorCodeListDTOConverter}" value="#{fieldPerfReport.errList}" 
+				<p:pickList styleClass="span-3-cols fluid-picklist" id="fi_err" converter="#{repairErrorCodeListDTOFieldPerfReportConverter}" value="#{fieldPerfReport.errList}" 
 					addLabel="#{i18n.pick_list_add}" addAllLabel="#{i18n.pick_list_add_all}" removeLabel="#{i18n.pick_list_remove}" removeAllLabel="#{i18n.pick_list_remove_all}" 
 					var="itm" itemValue="#{itm}" itemLabel="#{itm.name}" >
-					<p:ajax process="@this" />
+					<p:ajax event="transfer" listener="#{fieldPerfReport.onPickListTransfer}" process="@this" />
 				</p:pickList>
 			</div>
 		</p:tab>

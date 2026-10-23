@@ -136,7 +136,7 @@ public class RepairErrorCodeBoundaryService {
         searchObj.setFromClause("from RepairErrorCode a");
 
         final var filterField = searchObj.addSearchField(RepairErrorCodeListDTO.SELECT_NAME, SearchFieldDataTypeEnum.STRING);
-        filterField.setFilterCriteria(filter + WILDCARD);
+        filterField.setFilterCriteria(filter);
 
         List<RepairErrorCodeListDTO> result = repository.search(searchObj, RepairErrorCodeListDTO.class, selectTokens);
         return result.stream().findFirst().orElse(null);
@@ -166,6 +166,8 @@ public class RepairErrorCodeBoundaryService {
 
         return repository.search(searchObj, RepairErrorCodeListDTO.class, selectTokens);
     }
+
+
 
     /**
      * Find repair error code by its ID

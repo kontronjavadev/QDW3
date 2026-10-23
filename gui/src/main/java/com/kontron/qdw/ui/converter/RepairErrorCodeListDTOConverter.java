@@ -1,5 +1,6 @@
 package com.kontron.qdw.ui.converter;
 
+import org.apache.commons.text.StringEscapeUtils;
 import org.slf4j.*;
 import jakarta.faces.context.*;
 import jakarta.enterprise.context.*;
@@ -47,11 +48,12 @@ public class RepairErrorCodeListDTOConverter implements Converter<RepairErrorCod
             return null;
         }
 
+        String unescaped = StringEscapeUtils.unescapeHtml4(submittedValue);
         try {
-            return repairErrorCodeService.findRepairErrorCodeByNameForConverter(submittedValue);
+            return repairErrorCodeService.findRepairErrorCodeByNameForConverter(unescaped);
         }
         catch (final Exception e) {
-            logger.error("Error while performing object conversion by using the provided input '{}'!", submittedValue, e);
+            logger.error("Error while performing object conversion by using the provided input '{}'!", unescaped, e);
         }
 
         return null;
