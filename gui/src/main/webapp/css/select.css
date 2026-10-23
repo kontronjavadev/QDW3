@@ -102,19 +102,6 @@ body .ui-selectonelistbox .ui-selectlistbox-listcontainer .ui-selectlistbox-list
 
 /* Zwei mehrzeilige Boxen mit Elementen und Aktionspfeilen in der Mitte, um eine Auswahl aus vorhandenen Optionen zu treffen, etwa Rollen für Benutzer */
 /*
-body .ui-picklist > div {
-	width: calc((100vw - 280px - 30px)/2 - 45px);
-*/
-/*
-	width: calc((100vw - 280px - 30px)/2 - 105px);
-*/
-	/* Breite Content / 2 - Breite Buttons */
-/*
-width: 100vw;
-}
-*/
-
-/*
 body .ui-picklist .ui-picklist-buttons {
 	width: auto;
 }
@@ -122,9 +109,6 @@ body .ui-picklist .ui-picklist-buttons {
 
 body .ui-picklist .ui-picklist-list {
 	background: var(--inputfield);
-/*
-	width: auto;
-*/
 }
 
 body .searchdialog-picklist .ui-picklist-list {
@@ -150,6 +134,45 @@ body .ui-picklist .ui-picklist-list .ui-picklist-item.ui-state-highlight {
 body .ui-picklist .ui-picklist-list .ui-picklist-item.ui-state-hover {
 	background: var(--hover);
 	color: var(--text);
+}
+
+
+/* <p:pickList styleClass="span-3-cols fluid-picklist" ...> ... </p:pickList>
+um source und target incht auf 200px zu begrenzen, sondern den Platz eines felx-Containers zu nutzen*/
+/* Die Wurzel der PickList als Flex-Container */
+body .ui-picklist.fluid-picklist {
+    display: flex !important;
+    width: 100% !important;  
+    align-items: stretch !important; /* Stretch sorgt dafür, dass beide Spalten gleich hoch werden */
+}
+
+/* Die Wrapper für Source und Target: wir sprechen exakt die Klasse 'ui-picklist-list-wrapper' an */
+body .ui-picklist.fluid-picklist > .ui-picklist-list-wrapper {
+    flex: 1 1 0 !important;  /* Zwingt beide Wrapper auf mathematisch exakt 50% des Restplatzes */
+    min-width: 0 !important; /* Verhindert das Ausbrechen des Grids bei langen Wörtern */
+    margin: 0 !important;
+}
+
+/* Die eigentlichen Listen (ul) in den Wrappern */
+body .ui-picklist.fluid-picklist .ui-picklist-list {
+    width: 100% !important;
+    box-sizing: border-box !important;
+    min-height: 15rem !important; /* VERHINDERT das Kollabieren, wenn die Liste leer ist! */
+}
+
+/* Die Button-Leiste in der Mitte */
+body .ui-picklist.fluid-picklist > .ui-picklist-buttons {
+    flex: 0 0 auto !important; /* Nimmt nur den exakten Platz der Buttons ein */
+    display: flex !important;
+    align-items: center !important; /* Zentriert die Buttons vertikal */
+    padding: 0 0.5rem !important;
+}
+
+/* Texte sicher abschneiden (optional, aber empfohlen für Grid-Stabilität) */
+body .ui-picklist.fluid-picklist .ui-picklist-list .ui-picklist-item {
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important; 
 }
 
 
