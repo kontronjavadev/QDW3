@@ -515,7 +515,7 @@ public class FieldPerfReport extends SuperView implements Serializable {
 
         logger.debug("Save new query");
 
-        queryManager.saveQuery(userSession.getPrincipal().getId(), VIEW_ID, savedQueryName, searchObj);
+        queryManager.saveQueryTyped(userSession.getPrincipal().getId(), VIEW_ID, savedQueryName, reportSearchObj);
         MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_INFO, SAVED_QUERY_NEW_SUCCESS, "", savedQueryName);
     }
 
@@ -551,12 +551,17 @@ public class FieldPerfReport extends SuperView implements Serializable {
             return;
         }
 
-        logger.debug("Run saved query");
+        logger.debug("Use saved query");
 
-        searchObj = queryManager.getSavedQuery(userSession.getPrincipal().getId(), VIEW_ID, selectedSavedQuery);
+        reportSearchObj = queryManager.getSavedQueryTyped(userSession.getPrincipal().getId(), VIEW_ID, selectedSavedQuery);
 
-        prepareAfterLoad();
-        // fetchMaterials();
+        selectedSavedQuery = null;
+    }
+
+    @Override
+    public void renameQuery() {
+        super.renameQuery();
+        selectedSavedQuery = null;
     }
 
 

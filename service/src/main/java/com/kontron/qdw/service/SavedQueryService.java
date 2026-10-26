@@ -29,6 +29,8 @@ public interface SavedQueryService {
     @Generated
     void saveQuery(long ownerId, String viewName, String title, SearchDTO query);
 
+    <T> void saveQueryTyped(long ownerId, String viewName, String title, T query);
+
     /**
      * Get saved query
      * @param ownerId
@@ -38,6 +40,8 @@ public interface SavedQueryService {
      */
     @Generated
     SearchDTO getSavedQuery(long ownerId, String viewName, String title);
+
+    <T> T getSavedQueryTyped(long ownerId, String viewName, String title);
 
     /**
      * Delete saved query

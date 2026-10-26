@@ -1,5 +1,6 @@
 package com.kontron.qdw.ui.util;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +12,9 @@ import com.kontron.qdw.dto.material.MaterialNumberSetDTO;
 import com.kontron.qdw.dto.material.SerialNumberSetDTO;
 import com.kontron.qdw.dto.service.RepairErrorCodeListDTO;
 
-public class FieldPerfReportSearchObject {
+public class FieldPerfReportSearchObject implements Serializable {
+
+    private static final long serialVersionUID = -5852150261873889386L;
 
     private List<String> matNrs = new ArrayList<>();
 

@@ -28,48 +28,7 @@
 
 	<p:growl id="growl" showDetail="true" skipDetailIfEqualsSummary="true" keepAlive="true" life="10000" />
 
-	<p:dialog height="auto" width="1000" header="#{i18n.fieldperfreportview_action_querymgmt_title}" widgetVar="dlgQueryMgmt" id="dlgQueryMgmt" closeOnEscape="true" modal="true">
-		<p:tabView id="tabViewSearchInput" dynamic="false">
-			<p:tab title="#{i18n.search_input_saved_query_title}">
-				<h:panelGrid columns="1">
-					<h:outputLabel styleClass="label-field-mandatory" value="#{i18n.search_input_lbl_saved_query}"/>
-					<p:selectOneListbox id="savedQueryList" value="#{fieldPerfReport.selectedSavedQuery}" style="#{sizeServiceBean.searchQueriesHeight()}; width:946px" styleClass="flex-listbox" >
-						<f:selectItems value="#{fieldPerfReport.savedQueries}"/>
-					</p:selectOneListbox>
-					<h:panelGrid columns="3">
-						<p:commandButton icon="pi pi-caret-right" value="#{i18n.search_input_run_saved_query}" action="#{fieldPerfReport.runSavedQuery}" ajax="false"/>
-						<p:commandButton icon="pi pi-pencil" value="#{i18n.search_input_rename_saved_query}" actionListener="#{fieldPerfReport.openRenameDialog}" ajax="true"/>
-						<p:commandButton icon="pi pi-eraser" value="#{i18n.search_input_delete_saved_query}" actionListener="#{fieldPerfReport.deleteSavedQuery}" update="savedQueryList" ajax="true"/>
-					</h:panelGrid>
-				</h:panelGrid>
-			</p:tab>
-		</p:tabView>
-	</p:dialog>
 
-<!-- Query rename dialog -->
-	<p:dialog widgetVar="dlgQeryRename" id="dlgQeryRename" modal="true" showEffect="fade" hideEffect="fade" focus="txtNewQueryName" closeOnEscape="true">
-		<f:facet name="header">
-			<i class="pi pi-pencil"/>
-			<h:outputText value="&#160;#{i18n.query_rename_title}"/>
-		</f:facet>
-
-		<h:panelGrid columns="3">
-			<h:outputLabel value="#{i18n.query_rename_newname} *:" for="txtNewQueryName" styleClass="label-field-mandatory"/>
-			<p:inputText id="txtNewQueryName" value="#{fieldPerfReport.newQueryName}"/>
-			<p:tooltip for="txtNewQueryName" value=""/>
-		</h:panelGrid>
-		<p/>
-
-		<f:facet name="footer">
-			<p:commandButton id="cmdRename" icon="pi pi-save" value="#{i18n.command_rename}" ajax="true" 
-				actionListener="#{fieldPerfReport.renameQuery()}"
-				update="tabViewSearchInput,growl" oncomplete="PF('dlgQeryRename').hide()"/>
-
-			<p:commandButton id="cmdCancel" icon="pi pi-times" value="#{i18n.command_cancel}" onclick="PF('dlgQeryRename').hide()" />
-
-			<p:defaultCommand target="cmdRename" scope="dlgQeryRename"/>
-		</f:facet>
-	</p:dialog>
 
 
 
@@ -461,18 +420,75 @@
 	</p:contextMenu>
 
 
-	<p:dialog header="#{i18n.search_input_dlg_save_query}" widgetVar="dlgSaveQuery" id="dlgSaveQuery" closeOnEscape="true" modal="true" height="100">
-		<h:panelGrid columns="3">
-			<h:outputLabel value="#{i18n.search_input_lbl_save_query}" styleClass="label-field-mandatory"/>
-			<p:inputText id="txtQueryName" value="#{fieldPerfReport.savedQueryName}">
-			</p:inputText>
-			<p:commandButton id="saveQuery" value="#{i18n.command_save}" action="#{fieldPerfReport.saveNewQuery}" ajax="false" onclick="PF('dlgSaveQuery').hide()"/>
-			<p:defaultCommand target="saveQuery" scope="dlgSaveQuery"/>
-		</h:panelGrid>
-	</p:dialog>
 
 	<p:defaultCommand target=":form:cmdSearch" scope="dlgSearchInput" />
  -->
+
+
+
+
+
+	<!-- Dialog, um Querys zu managen: Werte übernehmen, Query umbenennen, Query löschen -->
+	<p:dialog height="auto" width="1000" header="#{i18n.fieldperfreportview_action_querymgmt_title}" widgetVar="dlgQueryMgmt" id="dlgQueryMgmt" closeOnEscape="true" modal="true">
+		<p:tabView id="tabViewSearchInput" dynamic="false">
+			<p:tab title="#{i18n.search_input_saved_query_title}">
+				<h:panelGrid columns="1">
+					<h:outputLabel styleClass="label-field-mandatory" value="#{i18n.search_input_lbl_saved_query}"/>
+					<p:selectOneListbox id="savedQueryList" value="#{fieldPerfReport.selectedSavedQuery}" style="#{sizeServiceBean.searchQueriesHeight()}; width:946px" styleClass="flex-listbox" >
+						<f:selectItems value="#{fieldPerfReport.savedQueries}"/>
+						<p:ajax update="actionButtons" />
+					</p:selectOneListbox>
+					<h:panelGrid id="actionButtons" columns="3">
+						<p:commandButton icon="pi pi-caret-right" value="#{i18n.search_input_load_saved_query}" disabled="#{empty fieldPerfReport.selectedSavedQuery}"
+							action="#{fieldPerfReport.runSavedQuery}" ajax="true" resetValues="true" update=":form:tabview1" onclick="PF('dlgQueryMgmt').hide()" />
+						<p:commandButton icon="pi pi-pencil" value="#{i18n.search_input_rename_saved_query}" disabled="#{empty fieldPerfReport.selectedSavedQuery}"
+							action="#{fieldPerfReport.openRenameDialog}" ajax="true" resetValues="true" update="savedQueryList actionButtons" />
+						<p:commandButton icon="pi pi-eraser" value="#{i18n.search_input_delete_saved_query}" disabled="#{empty fieldPerfReport.selectedSavedQuery}"
+							action="#{fieldPerfReport.deleteSavedQuery}" ajax="true" resetValues="true" update="savedQueryList actionButtons" />
+					</h:panelGrid>
+				</h:panelGrid>
+			</p:tab>
+		</p:tabView>
+	</p:dialog>
+
+
+
+	<!-- Dialog, um Name der Query für Speicherung zu erfassen -->
+	<p:dialog header="#{i18n.search_input_dlg_save_query}" widgetVar="dlgSaveQuery" id="dlgSaveQuery" closeOnEscape="true" modal="true" height="100">
+		<h:panelGrid columns="3">
+			<h:outputLabel value="#{i18n.search_input_lbl_save_query}" styleClass="label-field-mandatory"/>
+			<p:inputText id="txtQueryName" value="#{fieldPerfReport.savedQueryName}" />
+
+			<p:commandButton id="saveQuery" value="#{i18n.command_save}" action="#{fieldPerfReport.saveNewQuery}" ajax="false" onclick="PF('dlgSaveQuery').hide()" />
+			<p:defaultCommand target="saveQuery" scope="dlgSaveQuery" />
+		</h:panelGrid>
+	</p:dialog>
+
+
+
+	<!-- Dialog, um neuen Name der Query für Umbenennung zu erfassen -->
+	<p:dialog widgetVar="dlgQeryRename" id="dlgQeryRename" modal="true" showEffect="fade" hideEffect="fade" focus="txtNewQueryName" closeOnEscape="true">
+		<f:facet name="header">
+			<i class="pi pi-pencil" />
+			<h:outputText value="&#160;#{i18n.query_rename_title}" />
+		</f:facet>
+
+		<h:panelGrid columns="3">
+			<h:outputLabel value="#{i18n.query_rename_newname} *:" for="txtNewQueryName" styleClass="label-field-mandatory" />
+			<p:inputText id="txtNewQueryName" value="#{fieldPerfReport.newQueryName}" />
+			<p:tooltip for="txtNewQueryName" value="" />
+		</h:panelGrid>
+		<p/>
+
+		<f:facet name="footer">
+			<p:commandButton id="cmdRename" icon="pi pi-save" value="#{i18n.command_rename}" ajax="true" 
+				actionListener="#{fieldPerfReport.renameQuery()}"
+				update="tabViewSearchInput,growl" oncomplete="PF('dlgQeryRename').hide()" />
+
+			<p:commandButton id="cmdCancel" icon="pi pi-times" value="#{i18n.command_cancel}" onclick="PF('dlgQeryRename').hide()" />
+			<p:defaultCommand target="cmdRename" scope="dlgQeryRename" />
+		</f:facet>
+	</p:dialog>
 
 
 
