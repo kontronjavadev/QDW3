@@ -19,27 +19,29 @@ public class SupplierDTOConverter implements Converter<SupplierDTO> {
     @Inject
     private SupplierBoundaryService supplierBoundary;
 
+    /** html -> java */
     @Override
-    public SupplierDTO getAsObject(FacesContext context, UIComponent component, String code) {
-        if (code == null || code.trim().isEmpty()) {
+    public SupplierDTO getAsObject(FacesContext context, UIComponent component, String htmlValue) {
+        if (htmlValue == null || htmlValue.isBlank()) {
             return null;
         }
 
         try {
             // Holt das vollständige Objekt anhand des Codes aus der Datenbank
-            return supplierBoundary.findSupplierByIdForSearch(code);
+            return supplierBoundary.findSupplierByIdForSearch(htmlValue);
         }
         catch (Exception e) {
             throw new ConverterException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "Fehler", "Fehler bei der Supplier-Konvertierung."), e);
         }
     }
 
+    /** java -> html */
     @Override
-    public String getAsString(FacesContext context, UIComponent component, SupplierDTO cust) {
-        if (cust == null) {
+    public String getAsString(FacesContext context, UIComponent component, SupplierDTO dto) {
+        if (dto == null || dto.getCode() == null) {
             return "";
         }
-        return cust.getCode();
+        return dto.getCode();
     }
 
 }

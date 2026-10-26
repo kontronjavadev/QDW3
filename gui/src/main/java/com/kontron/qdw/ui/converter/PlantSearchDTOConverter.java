@@ -19,27 +19,29 @@ public class PlantSearchDTOConverter implements Converter<PlantSearchDTO> {
     @Inject
     private PlantBoundaryService plantService;
 
+    /** html -> java */
     @Override
-    public PlantSearchDTO getAsObject(FacesContext context, UIComponent component, String code) {
-        if (code == null || code.trim().isEmpty()) {
+    public PlantSearchDTO getAsObject(FacesContext context, UIComponent component, String htmlValue) {
+        if (htmlValue == null || htmlValue.isBlank()) {
             return null;
         }
 
         try {
             // Holt das vollständige Objekt anhand des Codes aus der Datenbank
-            return plantService.findPlantByIdForSearch(code);
+            return plantService.findPlantByIdForSearch(htmlValue);
         }
         catch (Exception e) {
             throw new ConverterException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "Fehler", "Fehler bei der Plant-Konvertierung."), e);
         }
     }
 
+    /** java -> html */
     @Override
-    public String getAsString(FacesContext context, UIComponent component, PlantSearchDTO plant) {
-        if (plant == null) {
+    public String getAsString(FacesContext context, UIComponent component, PlantSearchDTO dto) {
+        if (dto == null || dto.getCode() == null) {
             return "";
         }
-        return plant.getCode();
+        return dto.getCode();
     }
 
 }

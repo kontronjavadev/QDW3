@@ -17,14 +17,15 @@ public class MaterialNumberSetDTOConverter implements Converter<MaterialNumberSe
     @Inject
     private MaterialNumberSetBoundaryService service;
 
+    /** html -> java */
     @Override
-    public MaterialNumberSetDTO getAsObject(FacesContext context, UIComponent component, String value) {
-        if (value == null || value.trim().isEmpty()) {
+    public MaterialNumberSetDTO getAsObject(FacesContext context, UIComponent component, String htmlValue) {
+        if (htmlValue == null || htmlValue.isBlank()) {
             return null;
         }
 
         try {
-            long id = Long.parseLong(value);
+            long id = Long.parseLong(htmlValue);
             // Lade das vollständige DTO anhand der ID, damit das Label nicht null ist
             return service.findById(id);
         }
@@ -33,12 +34,13 @@ public class MaterialNumberSetDTOConverter implements Converter<MaterialNumberSe
         }
     }
 
+    /** java -> html */
     @Override
-    public String getAsString(FacesContext context, UIComponent component, MaterialNumberSetDTO value) {
-        if (value == null) {
-            return null;
+    public String getAsString(FacesContext context, UIComponent component, MaterialNumberSetDTO dto) {
+        if (dto == null) {
+            return "";
         }
-        return String.valueOf(value.getId());
+        return String.valueOf(dto.getId());
     }
 
 }

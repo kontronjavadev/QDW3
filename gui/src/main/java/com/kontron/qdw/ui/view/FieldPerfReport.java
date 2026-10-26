@@ -233,6 +233,37 @@ public class FieldPerfReport extends SuperView implements Serializable {
         // fetchMaterials();
     }
 
+    public void executeReport() {
+        logger.debug("Perform reportexecution");
+
+        // TODO: ggf. Benutzereinstellungen für Ausgabe in xhtml relevant? Dann in reportSearchObj übernehmen.
+        refreshFormatSettings();
+        // setCountFilterDependent();
+
+        // try {
+        // materialsList = materialService.searchAllMaterials(searchObj);
+        //
+        // if (searchObj.isCount()) {
+        // if (materialsList.size() == searchObj.getMaxResult()) {
+        // countResult = materialService.countAllMaterials(searchObj);
+        // }
+        // else {
+        // countResult = materialsList.size();
+        // }
+        // }
+        //
+        // queryManager.saveQuery(userSession.getPrincipal().getId(), VIEW_ID, null, searchObj);
+        // }
+        // catch (final Exception e) {
+        // logger.error("Error while fetching data!", e);
+        //
+        // MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_ERROR, OPERATION_FETCH_FAIL, e);
+        // }
+        // finally {
+        // postSearch();
+        // }
+    }
+
 
 
     /** Diese Methode wird vom JavaScript via p:remoteCommand aufgerufen */

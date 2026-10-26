@@ -19,27 +19,29 @@ public class CustomerDTOConverter implements Converter<CustomerDTO> {
     @Inject
     private CustomerBoundaryService customerBoundary;
 
+    /** html -> java */
     @Override
-    public CustomerDTO getAsObject(FacesContext context, UIComponent component, String code) {
-        if (code == null || code.trim().isEmpty()) {
+    public CustomerDTO getAsObject(FacesContext context, UIComponent component, String htmlValue) {
+        if (htmlValue == null || htmlValue.isBlank()) {
             return null;
         }
 
         try {
             // Holt das vollständige Objekt anhand des Codes aus der Datenbank
-            return customerBoundary.findCustomerByIdForSearch(code);
+            return customerBoundary.findCustomerByIdForSearch(htmlValue);
         }
         catch (Exception e) {
             throw new ConverterException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "Fehler", "Fehler bei der Customer-Konvertierung."), e);
         }
     }
 
+    /** java -> html */
     @Override
-    public String getAsString(FacesContext context, UIComponent component, CustomerDTO cust) {
-        if (cust == null) {
+    public String getAsString(FacesContext context, UIComponent component, CustomerDTO dto) {
+        if (dto == null || dto.getCode() == null) {
             return "";
         }
-        return cust.getCode();
+        return dto.getCode();
     }
 
 }

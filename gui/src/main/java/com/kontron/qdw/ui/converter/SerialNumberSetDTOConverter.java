@@ -12,21 +12,23 @@ import jakarta.inject.Named;
 @RequestScoped
 public class SerialNumberSetDTOConverter implements Converter<SerialNumberSetDTO> {
 
+    /** html -> java */
     @Override
-    public SerialNumberSetDTO getAsObject(FacesContext context, UIComponent component, String value) {
-        if (value == null || value.trim().isEmpty()) {
+    public SerialNumberSetDTO getAsObject(FacesContext context, UIComponent component, String htmlValue) {
+        if (htmlValue == null || htmlValue.isBlank()) {
             return null;
         }
 
-        return new SerialNumberSetDTO(value);
+        return new SerialNumberSetDTO(htmlValue);
     }
 
+    /** java -> html */
     @Override
-    public String getAsString(FacesContext context, UIComponent component, SerialNumberSetDTO value) {
-        if (value == null) {
-            return null;
+    public String getAsString(FacesContext context, UIComponent component, SerialNumberSetDTO dto) {
+        if (dto == null || dto.getCode() == null) {
+            return "";
         }
-        return value.getCode();
+        return dto.getCode();
     }
 
 }

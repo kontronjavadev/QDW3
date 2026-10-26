@@ -32,12 +32,12 @@ public class RepairErrorCodeListDTOFieldPerfReportConverter implements Converter
 
     /** html -> java */
     @Override
-    public RepairErrorCodeListDTO getAsObject(FacesContext context, UIComponent component, String submittedValue) {
-        if (submittedValue == null || submittedValue.isEmpty() || submittedValue.equals(NON_BREAKING_SPACE)) {
+    public RepairErrorCodeListDTO getAsObject(FacesContext context, UIComponent component, String htmlValue) {
+        if (htmlValue == null || htmlValue.isEmpty() || htmlValue.equals(NON_BREAKING_SPACE)) {
             return null;
         }
 
-        return fieldPerfReport.getErrDtoFromCache(submittedValue);
+        return fieldPerfReport.getErrDtoFromCache(htmlValue);
     }
 
     /** java -> html */
