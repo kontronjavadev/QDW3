@@ -251,7 +251,7 @@
 
 
 
-		<p:tab id="tabPanAdvanced1" title="#{i18n.fieldperfreportview_pan_advanced1}">
+		<p:tab id="tabPanAdvanced" title="#{i18n.fieldperfreportview_pan_advanced}">
 			<div class="ui-fluid custom-form-grid">
 				<!-- Zeile mit 2 Spalten: 4 Elemente (Label, CheckboxMenu, Label, CheckboxMenu) -->
 				<h:outputLabel styleClass="label-field-optional" for="fi_plants" value="#{i18n.col_fieldperfreportview_plant}" />
@@ -336,12 +336,41 @@
 				</p:autoComplete>
 
 
+
+				<!-- Zeile mit 2 Spalten: 4 Elemente (Label, Dropdown, Label, InputText) -->
+				<h:outputLabel styleClass="label-field-optional" for="fi_qperdiod" value="#{i18n.col_fieldperfreportview_qperdiod}" />
+				<p:selectOneMenu id="fi_qperdiod" 
+					scrollHeight="350" value="#{fieldPerfReport.reportSearchObj.selectedQualityPeriod}">
+					<p:ajax process="@this" />
+					<f:selectItems value="#{fieldPerfReport.reportSearchObj.qualityPeriods}" 
+						var="m" itemLabel="#{m} #{i18n.fieldperfreportview_monthmenu_months}" itemValue="#{m}" />
+				</p:selectOneMenu>
+
+				<h:outputLabel styleClass="label-field-optional block-separator" for="fi_mathier" value="#{i18n.col_fieldperfreportview_mathier}" />
+				<p:inputText id="fi_mathier" value="#{fieldPerfReport.reportSearchObj.matHier}" >
+					<p:ajax process="@this" />
+				</p:inputText>
+
+
+
+				<!-- Zeile mit 2 Spalten: 4 Elemente (Label, InputText, Label, Dropdown) -->
+				<h:outputLabel styleClass="label-field-optional" for="fi_errid" value="#{i18n.col_fieldperfreportview_errid}" />
+				<p:inputText id="fi_errid" value="#{fieldPerfReport.reportSearchObj.errorId}" >
+					<p:ajax process="@this" />
+				</p:inputText>
+
+				<h:outputLabel styleClass="label-field-optional block-separator" for="fi_rmacnttype" value="#{i18n.col_fieldperfreportview_rmacnttype}" />
+				<p:selectOneMenu id="fi_rmacnttype" 
+					scrollHeight="350" value="#{fieldPerfReport.reportSearchObj.selectedRmaCntType}">
+					<p:ajax process="@this" />
+					<f:selectItems value="#{fieldPerfReport.reportSearchObj.rmaCntTypes}" />
+				</p:selectOneMenu>
 			</div>
 		</p:tab>
 
 
 
-		<p:tab id="tabPanAdvanced2" title="#{i18n.fieldperfreportview_pan_advanced2}">
+		<p:tab id="tabPanDefect" title="#{i18n.fieldperfreportview_pan_defect}">
 			<div class="ui-fluid custom-form-grid">
 				<!-- Zeile mit 2 Spalten: 4 Elemente (Label, InputText, Label, CheckboxMenu) -->
 				<h:outputLabel for="fi_defcmpt" value="#{i18n.col_fieldperfreportview_defcmpt}" />

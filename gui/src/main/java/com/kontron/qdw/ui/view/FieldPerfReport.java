@@ -11,7 +11,9 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
+import org.apache.commons.text.StringEscapeUtils;
 import org.primefaces.PrimeFaces;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.TransferEvent;
@@ -32,6 +34,7 @@ import com.kontron.qdw.service.SavedQueryService;
 import com.kontron.qdw.ui.UserSession;
 import com.kontron.qdw.ui.util.DistributionType;
 import com.kontron.qdw.ui.util.FieldPerfReportSearchObject;
+import com.kontron.qdw.ui.util.RMACountingType;
 import com.kontron.qdw.ui.view.util.SuperView;
 
 import jakarta.enterprise.context.SessionScoped;
@@ -50,8 +53,12 @@ public class FieldPerfReport extends SuperView implements Serializable {
 
     private static final long serialVersionUID = 6078905084559392861L;
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
     private static final Integer PRESET_MONTH_IN_INTERVAL = 36;
     private static final List<Integer> MONTH_INTERVALS = Arrays.asList(4, 6, 8, 12, 18, 24, PRESET_MONTH_IN_INTERVAL, 72);
+
+    private static final List<Integer> QULT_REL_PERIODS = IntStream.rangeClosed(1, 36).boxed().toList();
+    private static final Integer PRESET_QULT_REL_PERIOD = 12;
 
     public static final String PAGE_URL = "/view/FieldPerfReport.jsf?faces-redirect=true";
     public static final String VIEW_ID = "com.kontron.qdw.ui.view.FieldPerfReport";
@@ -188,13 +195,32 @@ public class FieldPerfReport extends SuperView implements Serializable {
 
         errList = new DualListModel<>(new ArrayList<>(), reportSearchObj.getSelectedErr());
 
+        reportSearchObj.setQualityPeriods(QULT_REL_PERIODS);
+
 
         // Voreinstellungen
-        reportSearchObj.setSelectedAnalInterval(PRESET_MONTH_IN_INTERVAL);
-        reportSearchObj.setSelectedReturnInterval(PRESET_MONTH_IN_INTERVAL);
-        reportSearchObj.setStartDate(LocalDate.now().withDayOfMonth(1).withMonth(1).minusYears(2));
-        reportSearchObj.setEpidemic(true);
-        reportSearchObj.setSelectedDistType(DistributionType.CUSTOMER);
+        if (reportSearchObj.getSelectedAnalInterval() == null) {
+            reportSearchObj.setSelectedAnalInterval(PRESET_MONTH_IN_INTERVAL);
+        }
+        if (reportSearchObj.getSelectedReturnInterval() == null) {
+            reportSearchObj.setSelectedReturnInterval(PRESET_MONTH_IN_INTERVAL);
+        }
+        if (reportSearchObj.getStartDate() == null) {
+            reportSearchObj.setStartDate(LocalDate.now().withDayOfMonth(1).withMonth(1).minusYears(2));
+        }
+        if (reportSearchObj.getEpidemic() == null) {
+            reportSearchObj.setEpidemic(true);
+        }
+        if (reportSearchObj.getSelectedDistType() == null) {
+            reportSearchObj.setSelectedDistType(DistributionType.CUSTOMER);
+        }
+        if (reportSearchObj.getSelectedQualityPeriod() == null) {
+            reportSearchObj.setSelectedQualityPeriod(PRESET_QULT_REL_PERIOD);
+        }
+        if (reportSearchObj.getSelectedRmaCntType() == null) {
+            reportSearchObj.setSelectedRmaCntType(RMACountingType.ALL_BY_ARRIVAL_DATE);
+        }
+
 
 
         logger.debug("View initialization finished");
@@ -373,12 +399,8 @@ public class FieldPerfReport extends SuperView implements Serializable {
             return "";
         }
 
-        // Zwingend: XSS-Schutz vorab. (Alternativ Apache Commons StringEscapeUtils nutzen)
-        final String safeText = text.replace("&", "&amp;")
-                .replace("<", "&lt;")
-                .replace(">", "&gt;")
-                .replace("\"", "&quot;")
-                .replace("'", "&#x27;");
+        // zwingend: XSS-Schutz vorab
+        final String safeText = StringEscapeUtils.escapeHtml4(text);
 
         if (currentFilter == null || currentFilter.isBlank()) {
             return safeText;
@@ -394,11 +416,7 @@ public class FieldPerfReport extends SuperView implements Serializable {
 
         // Den Suchbegriff für den Regex escapen (falls der User nach "+" oder "*" sucht)
         // und ebenfalls HTML-escapen, da wir ihn gegen den gesicherten 'safeText' matchen.
-        cleanQuery = cleanQuery.replace("&", "&amp;")
-                .replace("<", "&lt;")
-                .replace(">", "&gt;")
-                .replace("\"", "&quot;")
-                .replace("'", "&#x27;");
+        cleanQuery = StringEscapeUtils.escapeHtml4(cleanQuery);
 
         // Suchstring an verbleibenden (inneren) % aufsplitten
         final String[] parts = cleanQuery.split("%+");

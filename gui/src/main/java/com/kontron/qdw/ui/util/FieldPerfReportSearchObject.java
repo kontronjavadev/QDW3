@@ -48,7 +48,7 @@ public class FieldPerfReportSearchObject {
     private List<String> origins = new ArrayList<>();
     private List<String> selectedOrigins = new ArrayList<>();
 
-    private boolean epidemic;
+    private Boolean epidemic;
 
     private DistributionType selectedDistType;
 
@@ -62,6 +62,15 @@ public class FieldPerfReportSearchObject {
     private List<String> selectedErrGrps = new ArrayList<>();
 
     private List<RepairErrorCodeListDTO> selectedErr = new ArrayList<>();
+
+    private List<Integer> qualityPeriods;
+    private Integer selectedQualityPeriod;
+
+    private String matHier;
+
+    private String errorId;
+
+    private RMACountingType selectedRmaCntType;
 
 
 
@@ -267,11 +276,11 @@ public class FieldPerfReportSearchObject {
 
 
 
-    public boolean isEpidemic() {
+    public Boolean getEpidemic() {
         return epidemic;
     }
 
-    public void setEpidemic(boolean epidemic) {
+    public void setEpidemic(Boolean epidemic) {
         this.epidemic = epidemic;
     }
 
@@ -345,6 +354,58 @@ public class FieldPerfReportSearchObject {
 
     public void setSelectedErr(List<RepairErrorCodeListDTO> selectedErr) {
         this.selectedErr = selectedErr;
+    }
+
+
+
+    public List<Integer> getQualityPeriods() {
+        return qualityPeriods;
+    }
+
+    public void setQualityPeriods(List<Integer> qualityPeriods) {
+        this.qualityPeriods = qualityPeriods;
+    }
+
+    public Integer getSelectedQualityPeriod() {
+        return selectedQualityPeriod;
+    }
+
+    public void setSelectedQualityPeriod(Integer selectedQualityPeriod) {
+        this.selectedQualityPeriod = selectedQualityPeriod;
+    }
+
+
+
+    public String getMatHier() {
+        return matHier;
+    }
+
+    public void setMatHier(String matHier) {
+        this.matHier = matHier;
+    }
+
+
+
+    public String getErrorId() {
+        return errorId;
+    }
+
+    public void setErrorId(String errorId) {
+        this.errorId = errorId;
+    }
+
+
+
+    public RMACountingType[] getRmaCntTypes() {
+        return RMACountingType.values();
+    }
+
+    public RMACountingType getSelectedRmaCntType() {
+        return selectedRmaCntType;
+    }
+
+    public void setSelectedRmaCntType(RMACountingType selectedRmaCntType) {
+        this.selectedRmaCntType = selectedRmaCntType;
     }
 
 }
