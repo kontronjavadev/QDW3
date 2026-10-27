@@ -151,9 +151,10 @@ public class FieldPerfReport extends SuperView implements Serializable {
         if (reportSearchObj == null) {
             if (lastSearch != null) {
                 reportSearchObj = lastSearch;
+                initSearchObjectLists();
             }
             else {
-                initSearchObject();
+                resetSearchObject();
             }
         }
 
@@ -168,7 +169,9 @@ public class FieldPerfReport extends SuperView implements Serializable {
 
     @Override
     public void clearSearchObject() {
-        initSearchObject();
+        reportSearchObj = new FieldPerfReportSearchObject();
+        initSearchObjectLists();
+        presetSearchObjectLists();
     }
 
 
@@ -556,9 +559,7 @@ public class FieldPerfReport extends SuperView implements Serializable {
 
 
 
-    public void initSearchObject() {
-        reportSearchObj = new FieldPerfReportSearchObject();
-
+    private void initSearchObjectLists() {
         reportSearchObj.setRmaTypes(rmaTypeService.findAll().stream()
                 .map(RMATypeListDTO::getCode)
                 .collect(Collectors.toList()));
@@ -587,8 +588,9 @@ public class FieldPerfReport extends SuperView implements Serializable {
         errList = new DualListModel<>(new ArrayList<>(), reportSearchObj.getSelectedErr());
 
         reportSearchObj.setQualityPeriods(QULT_REL_PERIODS);
+    }
 
-
+    private void presetSearchObjectLists() {
         // Voreinstellungen
         if (reportSearchObj.getSelectedAnalInterval() == null) {
             reportSearchObj.setSelectedAnalInterval(PRESET_MONTH_IN_INTERVAL);
