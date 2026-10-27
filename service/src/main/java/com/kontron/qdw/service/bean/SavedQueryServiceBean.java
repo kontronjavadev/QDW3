@@ -42,14 +42,6 @@ public class SavedQueryServiceBean extends AbstractRepository<SavedQuery, Long> 
 
 
     @Override
-    @Generated
-    public SearchDTO getLastQuery(long ownerId, String viewName) {
-        return getSavedQuery(ownerId, viewName, null);
-    }
-
-
-
-    @Override
     @Customized
     public void saveQuery(long ownerId, String viewName, String title, SearchDTO query) {
         saveQueryTyped(ownerId, viewName, title, query);
@@ -99,6 +91,19 @@ public class SavedQueryServiceBean extends AbstractRepository<SavedQuery, Long> 
         savedQuery.setViewName(viewName);
 
         persist(savedQuery);
+    }
+
+
+
+    @Override
+    @Generated
+    public SearchDTO getLastQuery(long ownerId, String viewName) {
+        return getSavedQuery(ownerId, viewName, null);
+    }
+
+    @Override
+    public <T> T getLastQueryTyped(long ownerId, String viewName) {
+        return getSavedQueryTyped(ownerId, viewName, null);
     }
 
 

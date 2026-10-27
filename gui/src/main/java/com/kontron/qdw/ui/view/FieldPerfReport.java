@@ -5,7 +5,6 @@ import static com.kontron.qdw.ui.UserSession.*;
 
 import java.io.Serializable;
 import java.lang.invoke.MethodHandles;
-import java.text.DecimalFormatSymbols;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.function.Function;
@@ -43,8 +42,6 @@ import jakarta.faces.context.FacesContext;
 import jakarta.faces.model.SelectItem;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
-import net.sourceforge.jbizmo.commons.search.dto.*;
-import net.sourceforge.jbizmo.commons.webclient.primefaces.search.JSFSearchFieldDTO;
 import net.sourceforge.jbizmo.commons.webclient.primefaces.util.MessageUtil;
 
 @Named("fieldPerfReport")
@@ -85,13 +82,10 @@ public class FieldPerfReport extends SuperView implements Serializable {
     private String savedQueryName;
     private String selectedSavedQuery;
 
-    // private List<MaterialSearchDTO> materialsList = new ArrayList<>();
-    // private MaterialSearchDTO selectedObject;
-
     private String currentCustFilter = "";
     private String currentSuppFilter = "";
 
-    private FieldPerfReportSearchObject reportSearchObj = new FieldPerfReportSearchObject();
+    private FieldPerfReportSearchObject reportSearchObj;
 
     private DualListModel<RepairErrorCodeListDTO> errList;
     private String errFilterCriterion;
@@ -152,13 +146,11 @@ public class FieldPerfReport extends SuperView implements Serializable {
         formTitle = bundle.getString(FORM_FIELDPERFREPORT_TITLE);
 
         // Check if previous search exists!
-        // TODO: lastQuery mit reportSearchObj
-        // TODO: Handling --initProperties()--, resetSearchObject(), initSearchObject()
-        final SearchDTO lastSearch = queryManager.getLastQuery(userSession.getPrincipal().getId(), VIEW_ID);
+        final FieldPerfReportSearchObject lastSearch = queryManager.getLastQueryTyped(userSession.getPrincipal().getId(), VIEW_ID);
 
-        if (searchObj == null) {
+        if (reportSearchObj == null) {
             if (lastSearch != null) {
-                searchObj = lastSearch;
+                reportSearchObj = lastSearch;
             }
             else {
                 initSearchObject();
@@ -176,40 +168,22 @@ public class FieldPerfReport extends SuperView implements Serializable {
 
     @Override
     public void clearSearchObject() {
-        reportSearchObj = new FieldPerfReportSearchObject();
         initSearchObject();
     }
 
 
     public void executeReport() {
-        logger.debug("Perform reportexecution");
+        logger.debug("Perform report execution");
 
-        // TODO: ggf. Benutzereinstellungen für Ausgabe in xhtml relevant? Dann in reportSearchObj übernehmen.
-        refreshFormatSettings();
-        // setCountFilterDependent();
+        try {
+            // materialsList = materialService.searchAllMaterials(searchObj);
 
-        // try {
-        // materialsList = materialService.searchAllMaterials(searchObj);
-        //
-        // if (searchObj.isCount()) {
-        // if (materialsList.size() == searchObj.getMaxResult()) {
-        // countResult = materialService.countAllMaterials(searchObj);
-        // }
-        // else {
-        // countResult = materialsList.size();
-        // }
-        // }
-        //
-        // queryManager.saveQuery(userSession.getPrincipal().getId(), VIEW_ID, null, searchObj);
-        // }
-        // catch (final Exception e) {
-        // logger.error("Error while fetching data!", e);
-        //
-        // MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_ERROR, OPERATION_FETCH_FAIL, e);
-        // }
-        // finally {
-        // postSearch();
-        // }
+            queryManager.saveQueryTyped(userSession.getPrincipal().getId(), VIEW_ID, null, reportSearchObj);
+        }
+        catch (final Exception e) {
+            logger.error("Error while executing report!", e);
+            MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_ERROR, OPERATION_EXEC_REPORT_FAIL, e);
+        }
     }
 
 
@@ -582,15 +556,9 @@ public class FieldPerfReport extends SuperView implements Serializable {
 
 
 
-    public void refreshFormatSettings() {
-        searchObj.setDateFormat(userSession.getDateFormat());
-        searchObj.setDateTimeFormat(userSession.getDateTimeFormat());
-        searchObj.setNumberFormat(userSession.getNumberFormat());
-        searchObj.setDecimalSeparator(DecimalFormatSymbols.getInstance(userSession.getLocale()).getDecimalSeparator());
-        searchObj.setGroupingSeparator(DecimalFormatSymbols.getInstance(userSession.getLocale()).getGroupingSeparator());
-    }
-
     public void initSearchObject() {
+        reportSearchObj = new FieldPerfReportSearchObject();
+
         reportSearchObj.setRmaTypes(rmaTypeService.findAll().stream()
                 .map(RMATypeListDTO::getCode)
                 .collect(Collectors.toList()));
@@ -644,6 +612,16 @@ public class FieldPerfReport extends SuperView implements Serializable {
             reportSearchObj.setSelectedRmaCntType(RMACountingType.ALL_BY_ARRIVAL_DATE);
         }
     }
+
+
+
+    // public void refreshFormatSettings() {
+    // searchObj.setDateFormat(userSession.getDateFormat());
+    // searchObj.setDateTimeFormat(userSession.getDateTimeFormat());
+    // searchObj.setNumberFormat(userSession.getNumberFormat());
+    // searchObj.setDecimalSeparator(DecimalFormatSymbols.getInstance(userSession.getLocale()).getDecimalSeparator());
+    // searchObj.setGroupingSeparator(DecimalFormatSymbols.getInstance(userSession.getLocale()).getGroupingSeparator());
+    // }
 
 
 

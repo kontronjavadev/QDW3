@@ -19,6 +19,8 @@ public interface SavedQueryService {
     @Generated
     SearchDTO getLastQuery(long ownerId, String viewName);
 
+    <T> T getLastQueryTyped(long ownerId, String viewName);
+
     /**
      * Save query
      * @param ownerId
