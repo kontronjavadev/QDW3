@@ -103,7 +103,7 @@ public class MaterialRepository extends AbstractRepository<Material, Long> {
      * Diese Methode ist speziell für den SAP-Import (Material und BoM). Es wird im Bulk gesucht. Die zurückgegebene
      * Map beinhaltet SAP-Nummern als keys.
      * 
-     * @return Map mit den gesuchten keys und den gefundenen ManMat
+     * @return Map mit den gesuchten keys und den gefundenen Einträgen
      */
     public Map<String, Material> alternativelyFindByMaterialNumbers(Collection<String> materialNummern, boolean fetchRevisions) {
         String stmt = "select a "
@@ -128,7 +128,7 @@ public class MaterialRepository extends AbstractRepository<Material, Long> {
      * Map beinhaltet Material-Nummern als keys. Da ein Material zur Materialnummer eine andere SAP-Nummer haben könnte, würde dies mit der Schwester-Method nicht festgestellt,
      * da ein neuer Eintrag erzeugt würde.
      * 
-     * @return Map mit den gesuchten keys und den gefundenen ManMat
+     * @return Map mit den gesuchten keys und den gefundenen Einträgen
      */
     public Map<String, Material> findByMaterialNumbers(Collection<String> materialNummern, boolean fetchRevisions) {
         String stmt = "select a "
@@ -144,6 +144,23 @@ public class MaterialRepository extends AbstractRepository<Material, Long> {
         return resultList.stream()
                 .collect(Collectors.groupingBy(Material::getMaterialNumber,
                         Collectors.reducing(null, (first, second) -> first == null ? second : first)));
+    }
+
+    /**
+     * Finde Materialien nach Material-Nummern. Rückgabe ist hier schlicht die Ergebnisliste, im Gegensatz zu {@link #findByMaterialNumbers(Collection, boolean)}.
+     * 
+     * @return Liste der gefundenen Einträgen
+     */
+    public List<Material> findByMaterialNumbersPlain(Collection<String> materialNummern, boolean fetchRevisions) {
+        String stmt = "select a "
+                + "from Material a "
+                + (fetchRevisions ? "left join fetch a.revisions " : "")
+                + "where a.materialNumber in :paramMatNrn "
+                + "order by a.materialNumber, a.creationDate desc";
+        return em
+                .createQuery(stmt, Material.class)
+                .setParameter("paramMatNrn", materialNummern)
+                .getResultList();
     }
 
 
@@ -170,11 +187,13 @@ public class MaterialRepository extends AbstractRepository<Material, Long> {
     @Generated
     public Material merge(Material material, boolean performChecks, boolean performFlush) {
         // Perform unique key checks
-        if (performChecks && existsByIdAndMaterialNumber(material.getId(), material.getMaterialNumber()))
+        if (performChecks && existsByIdAndMaterialNumber(material.getId(), material.getMaterialNumber())) {
             throw new UniqueConstraintViolationException("Material with material number '" + material.getMaterialNumber() + "' already exists!");
+        }
 
-        if (performChecks && existsByIdAndSapNumber(material.getId(), material.getSapNumber()))
+        if (performChecks && existsByIdAndSapNumber(material.getId(), material.getSapNumber())) {
             throw new UniqueConstraintViolationException("Material with sap number '" + material.getSapNumber() + "' already exists!");
+        }
 
         return merge(material, performFlush);
     }
@@ -192,11 +211,13 @@ public class MaterialRepository extends AbstractRepository<Material, Long> {
     @Generated
     public Material persist(Material material, boolean performChecks, boolean performFlush, boolean performRefresh) {
         // Perform unique key checks
-        if (performChecks && existsByMaterialNumber(material.getMaterialNumber()))
+        if (performChecks && existsByMaterialNumber(material.getMaterialNumber())) {
             throw new UniqueConstraintViolationException("Material with material number '" + material.getMaterialNumber() + "' already exists!");
+        }
 
-        if (performChecks && existsBySapNumber(material.getSapNumber()))
+        if (performChecks && existsBySapNumber(material.getSapNumber())) {
             throw new UniqueConstraintViolationException("Material with sap number '" + material.getSapNumber() + "' already exists!");
+        }
 
         return persist(material, performFlush, performRefresh);
     }
@@ -259,8 +280,9 @@ public class MaterialRepository extends AbstractRepository<Material, Long> {
      */
     @Generated
     public boolean existsByMaterialNumber(String materialNumber) {
-        if (materialNumber == null)
+        if (materialNumber == null) {
             throw new IllegalArgumentException("Parameter \"materialNumber\" must not be null!");
+        }
 
         final TypedQuery<Long> query = em.createNamedQuery(Material.NQ_UK_EXISTS_BY_MATERIALNUMBER, Long.class);
         query.setParameter(PARAM_MATERIALNUMBER, materialNumber);
@@ -276,8 +298,9 @@ public class MaterialRepository extends AbstractRepository<Material, Long> {
      */
     @Generated
     public boolean existsByIdAndMaterialNumber(long id, String materialNumber) {
-        if (materialNumber == null)
+        if (materialNumber == null) {
             throw new IllegalArgumentException("Parameter \"materialNumber\" must not be null!");
+        }
 
         final TypedQuery<Long> query = em.createNamedQuery(Material.NQ_UK_EXISTS_BY_MATERIALNUMBER_AND_ID, Long.class);
         query.setFlushMode(FlushModeType.COMMIT);
@@ -313,8 +336,9 @@ public class MaterialRepository extends AbstractRepository<Material, Long> {
 
         final List<Material> resultList = query.getResultList();
 
-        if (resultList.size() <= 1)
+        if (resultList.size() <= 1) {
             return resultList.stream().findFirst().orElse(null);
+        }
 
         throw new IllegalStateException("Non unique result!");
     }
@@ -326,8 +350,9 @@ public class MaterialRepository extends AbstractRepository<Material, Long> {
      */
     @Generated
     public boolean existsBySapNumber(String sapNumber) {
-        if (sapNumber == null)
+        if (sapNumber == null) {
             throw new IllegalArgumentException("Parameter \"sapNumber\" must not be null!");
+        }
 
         final TypedQuery<Long> query = em.createNamedQuery(Material.NQ_UK_EXISTS_BY_SAPNUMBER, Long.class);
         query.setParameter(PARAM_SAPNUMBER, sapNumber);
@@ -343,8 +368,9 @@ public class MaterialRepository extends AbstractRepository<Material, Long> {
      */
     @Generated
     public boolean existsByIdAndSapNumber(long id, String sapNumber) {
-        if (sapNumber == null)
+        if (sapNumber == null) {
             throw new IllegalArgumentException("Parameter \"sapNumber\" must not be null!");
+        }
 
         final TypedQuery<Long> query = em.createNamedQuery(Material.NQ_UK_EXISTS_BY_SAPNUMBER_AND_ID, Long.class);
         query.setFlushMode(FlushModeType.COMMIT);
@@ -493,11 +519,12 @@ public class MaterialRepository extends AbstractRepository<Material, Long> {
     public void removeProductLineFromProductLines(long id, ProductLine productLine) {
         final Material bean = findById(id, true);
 
-        for (final ProductLine item : bean.getProductLines())
+        for (final ProductLine item : bean.getProductLines()) {
             if (productLine.getId() == item.getId()) {
                 bean.getProductLines().remove(item);
                 return;
             }
+        }
     }
 
     /**
@@ -511,9 +538,11 @@ public class MaterialRepository extends AbstractRepository<Material, Long> {
         final Material bean = findById(id, true);
 
         // Prevent duplicate entries
-        for (final ProductLine item : bean.getProductLines())
-            if (productLine.getId() == item.getId())
+        for (final ProductLine item : bean.getProductLines()) {
+            if (productLine.getId() == item.getId()) {
                 throw new DuplicateCollectionEntryException("Entry already exists in this collection!");
+            }
+        }
 
         bean.getProductLines().add(productLine);
     }

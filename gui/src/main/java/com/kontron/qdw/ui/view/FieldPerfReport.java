@@ -22,18 +22,16 @@ import org.slf4j.LoggerFactory;
 
 import com.kontron.qdw.boundary.base.*;
 import com.kontron.qdw.boundary.material.*;
+import com.kontron.qdw.boundary.mv.FieldPerfReportService;
 import com.kontron.qdw.boundary.mv.MaterializedServiceMessageBoundaryService;
 import com.kontron.qdw.boundary.service.RMATypeBoundaryService;
 import com.kontron.qdw.boundary.service.RepairErrorCodeBoundaryService;
 import com.kontron.qdw.dto.base.*;
 import com.kontron.qdw.dto.material.*;
-import com.kontron.qdw.dto.service.RMATypeListDTO;
-import com.kontron.qdw.dto.service.RepairErrorCodeListDTO;
+import com.kontron.qdw.dto.mv.*;
+import com.kontron.qdw.dto.service.*;
 import com.kontron.qdw.service.SavedQueryService;
 import com.kontron.qdw.ui.UserSession;
-import com.kontron.qdw.ui.util.DistributionType;
-import com.kontron.qdw.ui.util.FieldPerfReportSearchObject;
-import com.kontron.qdw.ui.util.RMACountingType;
 import com.kontron.qdw.ui.view.util.SuperView;
 
 import jakarta.enterprise.context.SessionScoped;
@@ -73,6 +71,7 @@ public class FieldPerfReport extends SuperView implements Serializable {
     private final transient PlantBoundaryService plantService;
     private final transient MaterializedServiceMessageBoundaryService servMsgService;
     private final transient RepairErrorCodeBoundaryService repErrorService;
+    private final transient FieldPerfReportService reportService;
 
     private final UserSession userSession;
     private transient ResourceBundle bundle;
@@ -108,6 +107,7 @@ public class FieldPerfReport extends SuperView implements Serializable {
         plantService = null;
         servMsgService = null;
         repErrorService = null;
+        reportService = null;
     }
 
     @Inject
@@ -115,7 +115,8 @@ public class FieldPerfReport extends SuperView implements Serializable {
             MaterialBoundaryService materialService, RMATypeBoundaryService rmaTypeService, MaterialNumberSetBoundaryService matNrSetService,
             SerialNumberSetBoundaryService serNrSetService, CustomerBoundaryService custService, SupplierBoundaryService suppService,
             MaterialTypeBoundaryService matTypeService, MaterialClassBoundaryService matClassService, PlantBoundaryService plantService,
-            MaterializedServiceMessageBoundaryService servMsgService, RepairErrorCodeBoundaryService repErrorService) {
+            MaterializedServiceMessageBoundaryService servMsgService, RepairErrorCodeBoundaryService repErrorService,
+            FieldPerfReportService reportService) {
         this.userSession = userSession;
         this.queryManager = queryManager;
 
@@ -130,6 +131,7 @@ public class FieldPerfReport extends SuperView implements Serializable {
         this.plantService = plantService;
         this.servMsgService = servMsgService;
         this.repErrorService = repErrorService;
+        this.reportService = reportService;
     }
 
     public void initView() {
@@ -138,7 +140,7 @@ public class FieldPerfReport extends SuperView implements Serializable {
         bundle = ResourceBundle.getBundle(DEFAULT_BUNDLE_NAME, userSession.getLocale());
 
         // Check if user is allowed to open this page!
-        if (!userSession.checkAuthorization(true, ROLE_ADMINISTRATOR, ROLE_SUPERUSER)) {
+        if (!userSession.checkAuthorization(true, ROLE_ADMINISTRATOR, ROLE_SUPERUSER, ROLE_READONLY)) {
             return;
         }
 
@@ -178,8 +180,20 @@ public class FieldPerfReport extends SuperView implements Serializable {
     public void executeReport() {
         logger.debug("Perform report execution");
 
+        if (!reportSearchObj.getMatNrs().isEmpty() && reportSearchObj.getSelectedMatNrSet() != null) {
+            MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_ERROR, FIELDPERFREPORTVIEW_REPORT_MATNR_FAIL);
+            return;
+        }
+
+        if (!reportSearchObj.getRevNo().isEmpty() &&
+                reportSearchObj.getMatNrs().isEmpty() && reportSearchObj.getSelectedMatNrSet() == null) {
+            MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_WARN, FIELDPERFREPORTVIEW_REPORT_REVNR_WARN);
+        }
+
         try {
             // materialsList = materialService.searchAllMaterials(searchObj);
+            HashMap<String, Long> shipPerMonth = reportService.getShipmentsPerMonth(reportSearchObj);
+
 
             queryManager.saveQueryTyped(userSession.getPrincipal().getId(), VIEW_ID, null, reportSearchObj);
         }

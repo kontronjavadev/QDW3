@@ -1193,4 +1193,6 @@ public interface TranslationKeys {
     String TRACEBOMIMPORTVIEW_RUNIMPORT = "tracebomimportview_runimport";
     String TRACEBOMIMPORTVIEW_RUNPROCESS = "tracebomimportview_runprocess";
     String FIELDPERFREPORTVIEW_MONTHMENU_MONTHS = "fieldperfreportview_monthmenu_months";
+    String FIELDPERFREPORTVIEW_REPORT_MATNR_FAIL = "fieldperfreportview_report_matnr_fail";
+    String FIELDPERFREPORTVIEW_REPORT_REVNR_WARN = "fieldperfreportview_report_revnr_warn";
 }

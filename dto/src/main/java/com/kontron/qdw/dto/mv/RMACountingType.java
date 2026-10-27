@@ -1,4 +1,4 @@
-package com.kontron.qdw.ui.util;
+package com.kontron.qdw.dto.mv;
 
 /**
  * Enumeration for evaluating serial number, that are not shipped to customer, but processed internally

@@ -1,4 +1,4 @@
-package com.kontron.qdw.ui.util;
+package com.kontron.qdw.dto.mv;
 
 import java.io.Serializable;
 import java.time.LocalDate;
