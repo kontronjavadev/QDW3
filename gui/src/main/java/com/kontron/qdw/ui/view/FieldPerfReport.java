@@ -152,76 +152,18 @@ public class FieldPerfReport extends SuperView implements Serializable {
         formTitle = bundle.getString(FORM_FIELDPERFREPORT_TITLE);
 
         // Check if previous search exists!
+        // TODO: lastQuery mit reportSearchObj
+        // TODO: Handling --initProperties()--, resetSearchObject(), initSearchObject()
         final SearchDTO lastSearch = queryManager.getLastQuery(userSession.getPrincipal().getId(), VIEW_ID);
 
         if (searchObj == null) {
             if (lastSearch != null) {
                 searchObj = lastSearch;
-
-                prepareAfterLoad();
             }
             else {
                 initSearchObject();
             }
         }
-
-        initProperties();
-        // fetchMaterials();
-
-        reportSearchObj.setRmaTypes(rmaTypeService.findAll().stream()
-                .map(RMATypeListDTO::getCode)
-                .collect(Collectors.toList()));
-
-        reportSearchObj.setMatNrSets(matNrSetService.findAll());
-        reportSearchObj.setSerNrSets(serNrSetService.findAll());
-
-        reportSearchObj.setMatTypes(matTypeService.findAll().stream()
-                .map(MaterialTypeListDTO::getCode)
-                .collect(Collectors.toList()));
-
-        reportSearchObj.setMatClasses(matClassService.findAll().stream()
-                .map(MaterialClassListDTO::getCode)
-                .collect(Collectors.toList()));
-
-        reportSearchObj.setAnalIntervals(MONTH_INTERVALS);
-
-        reportSearchObj.setReturnIntervals(MONTH_INTERVALS);
-
-        reportSearchObj.setPlants(plantService.findAll());
-
-        reportSearchObj.setOrigins(servMsgService.extractOrigins());
-
-        reportSearchObj.setErrGrps(repErrorService.extractGroups());
-
-        errList = new DualListModel<>(new ArrayList<>(), reportSearchObj.getSelectedErr());
-
-        reportSearchObj.setQualityPeriods(QULT_REL_PERIODS);
-
-
-        // Voreinstellungen
-        if (reportSearchObj.getSelectedAnalInterval() == null) {
-            reportSearchObj.setSelectedAnalInterval(PRESET_MONTH_IN_INTERVAL);
-        }
-        if (reportSearchObj.getSelectedReturnInterval() == null) {
-            reportSearchObj.setSelectedReturnInterval(PRESET_MONTH_IN_INTERVAL);
-        }
-        if (reportSearchObj.getStartDate() == null) {
-            reportSearchObj.setStartDate(LocalDate.now().withDayOfMonth(1).withMonth(1).minusYears(2));
-        }
-        if (reportSearchObj.getEpidemic() == null) {
-            reportSearchObj.setEpidemic(true);
-        }
-        if (reportSearchObj.getSelectedDistType() == null) {
-            reportSearchObj.setSelectedDistType(DistributionType.CUSTOMER);
-        }
-        if (reportSearchObj.getSelectedQualityPeriod() == null) {
-            reportSearchObj.setSelectedQualityPeriod(PRESET_QULT_REL_PERIOD);
-        }
-        if (reportSearchObj.getSelectedRmaCntType() == null) {
-            reportSearchObj.setSelectedRmaCntType(RMACountingType.ALL_BY_ARRIVAL_DATE);
-        }
-
-
 
         logger.debug("View initialization finished");
     }
@@ -229,9 +171,15 @@ public class FieldPerfReport extends SuperView implements Serializable {
 
     @Override
     public void resetSearchObject() {
-        initSearchObject();
-        // fetchMaterials();
+        clearSearchObject();
     }
+
+    @Override
+    public void clearSearchObject() {
+        reportSearchObj = new FieldPerfReportSearchObject();
+        initSearchObject();
+    }
+
 
     public void executeReport() {
         logger.debug("Perform reportexecution");
@@ -643,65 +591,57 @@ public class FieldPerfReport extends SuperView implements Serializable {
     }
 
     public void initSearchObject() {
-        searchObj = new SearchDTO();
-        int colOrderId = -1;
+        reportSearchObj.setRmaTypes(rmaTypeService.findAll().stream()
+                .map(RMATypeListDTO::getCode)
+                .collect(Collectors.toList()));
 
-        // Initialize search object
-        searchObj.setMaxResult(1000);
-        searchObj.setExactFilterMatch(true);
-        searchObj.setCaseSensitive(true);
-        searchObj.setCount(false);
+        reportSearchObj.setMatNrSets(matNrSetService.findAll());
+        reportSearchObj.setSerNrSets(serNrSetService.findAll());
 
-        refreshFormatSettings();
+        reportSearchObj.setMatTypes(matTypeService.findAll().stream()
+                .map(MaterialTypeListDTO::getCode)
+                .collect(Collectors.toList()));
 
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterialSearchDTO.SELECT_MATERIALNUMBER,
-                bundle.getString(COL_MATERIALVIEW_MATERIALNUMBER), SearchFieldDataTypeEnum.STRING, 150);
+        reportSearchObj.setMatClasses(matClassService.findAll().stream()
+                .map(MaterialClassListDTO::getCode)
+                .collect(Collectors.toList()));
 
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterialSearchDTO.SELECT_SAPNUMBER,
-                bundle.getString(COL_MATERIALVIEW_SAPNUMBER), SearchFieldDataTypeEnum.STRING, 150);
+        reportSearchObj.setAnalIntervals(MONTH_INTERVALS);
 
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterialSearchDTO.SELECT_MATERIALTYPECODE,
-                bundle.getString(COL_MATERIALVIEW_MATERIALTYPECODE), SearchFieldDataTypeEnum.STRING, 100);
+        reportSearchObj.setReturnIntervals(MONTH_INTERVALS);
 
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterialSearchDTO.SELECT_MATERIALCLASSCODE,
-                bundle.getString(COL_MATERIALVIEW_MATERIALCLASSCODE), SearchFieldDataTypeEnum.STRING, 100);
+        reportSearchObj.setPlants(plantService.findAll());
 
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterialSearchDTO.SELECT_MATERIALHIERARCHY,
-                bundle.getString(LBL_ATTR_MATERIAL_MATERIALHIERARCHY), SearchFieldDataTypeEnum.STRING, 150);
+        reportSearchObj.setOrigins(servMsgService.extractOrigins());
 
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterialSearchDTO.SELECT_SHORTTEXT,
-                bundle.getString(LBL_ATTR_MATERIAL_SHORTTEXT), SearchFieldDataTypeEnum.STRING, 250);
+        reportSearchObj.setErrGrps(repErrorService.extractGroups());
 
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterialSearchDTO.SELECT_OWNERLOCATIONCODE,
-                bundle.getString(COL_MATERIALVIEW_OWNERLOCATIONCODE), SearchFieldDataTypeEnum.STRING, 100);
+        errList = new DualListModel<>(new ArrayList<>(), reportSearchObj.getSelectedErr());
 
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterialSearchDTO.SELECT_FITVALUE,
-                bundle.getString(LBL_ATTR_MATERIAL_FITVALUE), SearchFieldDataTypeEnum.DOUBLE, 80);
-
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterialSearchDTO.SELECT_SEARCHSUBASSEMBLIES,
-                bundle.getString(COL_MATERIALVIEW_SEARCHSUBASSEMBLIES), SearchFieldDataTypeEnum.BOOLEAN, 100);
-
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterialSearchDTO.SELECT_COMMENT,
-                bundle.getString(LBL_ATTR_MATERIAL_COMMENT), SearchFieldDataTypeEnum.STRING, 250);
-
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterialSearchDTO.SELECT_CREATIONDATE,
-                bundle.getString(LBL_ATTR_ABSTRACTENTITYWITHID_CREATIONDATE), SearchFieldDataTypeEnum.LOCAL_DATE_TIME, 120);
+        reportSearchObj.setQualityPeriods(QULT_REL_PERIODS);
 
 
-        new JSFSearchFieldDTO(searchObj, ++colOrderId, MaterialSearchDTO.SELECT_LASTUPDATE,
-                bundle.getString(LBL_ATTR_ABSTRACTENTITYWITHID_LASTUPDATE), SearchFieldDataTypeEnum.LOCAL_DATE_TIME, 120);
-
-        visibleFields = new DualListModel<>();
-        visibleFields.setSource(new ArrayList<>());
-        visibleFields.setTarget(new ArrayList<>());
-
-        for (final SearchFieldDTO d : searchObj.getSearchFields()) {
-            if (!d.isVisible()) {
-                visibleFields.getSource().add(d);
-            }
-            else {
-                visibleFields.getTarget().add(d);
-            }
+        // Voreinstellungen
+        if (reportSearchObj.getSelectedAnalInterval() == null) {
+            reportSearchObj.setSelectedAnalInterval(PRESET_MONTH_IN_INTERVAL);
+        }
+        if (reportSearchObj.getSelectedReturnInterval() == null) {
+            reportSearchObj.setSelectedReturnInterval(PRESET_MONTH_IN_INTERVAL);
+        }
+        if (reportSearchObj.getStartDate() == null) {
+            reportSearchObj.setStartDate(LocalDate.now().withDayOfMonth(1).withMonth(1).minusYears(2));
+        }
+        if (reportSearchObj.getEpidemic() == null) {
+            reportSearchObj.setEpidemic(true);
+        }
+        if (reportSearchObj.getSelectedDistType() == null) {
+            reportSearchObj.setSelectedDistType(DistributionType.CUSTOMER);
+        }
+        if (reportSearchObj.getSelectedQualityPeriod() == null) {
+            reportSearchObj.setSelectedQualityPeriod(PRESET_QULT_REL_PERIOD);
+        }
+        if (reportSearchObj.getSelectedRmaCntType() == null) {
+            reportSearchObj.setSelectedRmaCntType(RMACountingType.ALL_BY_ARRIVAL_DATE);
         }
     }
 
@@ -737,60 +677,6 @@ public class FieldPerfReport extends SuperView implements Serializable {
     // }
     //
     // return url;
-    // }
-
-
-
-    // public MaterialSearchDTO getSelectedObject() {
-    // return selectedObject;
-    // }
-    //
-    // public void setSelectedObject(MaterialSearchDTO selectedObject) {
-    // this.selectedObject = selectedObject;
-    // }
-    //
-    // public Collection<MaterialSearchDTO> getMaterialsList() {
-    // return materialsList;
-    // }
-
-
-
-    // public void fetchMaterials() {
-    // logger.debug("Perform data fetch operation");
-    //
-    // try {
-    // preSearch();
-    // }
-    // catch (final SearchInputFieldValidationException e) {
-    // MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_INFO, SEARCH_INPUT_VALIDATION, "", e.getSearchFieldName());
-    // return;
-    // }
-    //
-    // refreshFormatSettings();
-    // setCountFilterDependent();
-    //
-    // try {
-    // materialsList = materialService.searchAllMaterials(searchObj);
-    //
-    // if (searchObj.isCount()) {
-    // if (materialsList.size() == searchObj.getMaxResult()) {
-    // countResult = materialService.countAllMaterials(searchObj);
-    // }
-    // else {
-    // countResult = materialsList.size();
-    // }
-    // }
-    //
-    // queryManager.saveQuery(userSession.getPrincipal().getId(), VIEW_ID, null, searchObj);
-    // }
-    // catch (final Exception e) {
-    // logger.error("Error while fetching data!", e);
-    //
-    // MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_ERROR, OPERATION_FETCH_FAIL, e);
-    // }
-    // finally {
-    // postSearch();
-    // }
     // }
 
 }
