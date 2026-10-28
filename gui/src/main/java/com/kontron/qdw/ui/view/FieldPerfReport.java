@@ -191,11 +191,11 @@ public class FieldPerfReport extends SuperView implements Serializable {
         }
 
         try {
+            queryManager.saveQueryTyped(userSession.getPrincipal().getId(), VIEW_ID, null, reportSearchObj);
+
             // materialsList = materialService.searchAllMaterials(searchObj);
             HashMap<String, Long> shipPerMonth = reportService.getShipmentsPerMonth(reportSearchObj);
-
-
-            queryManager.saveQueryTyped(userSession.getPrincipal().getId(), VIEW_ID, null, reportSearchObj);
+            System.out.println("hallo");
         }
         catch (final Exception e) {
             logger.error("Error while executing report!", e);

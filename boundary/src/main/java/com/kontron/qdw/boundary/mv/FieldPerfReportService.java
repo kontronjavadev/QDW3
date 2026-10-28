@@ -71,7 +71,7 @@ public class FieldPerfReportService {
             endMonth = endDate.getMonthValue();
             shipmentMap.put(String.format("%d-%d", endYear, endMonth), 0L);
 
-            endDate.plusMonths(1);
+            endDate = endDate.plusMonths(1);
         }
         tm1.stopMeasurement();
 
@@ -82,14 +82,14 @@ public class FieldPerfReportService {
                 System.out.println("\n" + tm);
 
                 StringBuilder queryStatement = new StringBuilder();
-                queryStatement.append("select count(a), FUNC('year', a.shipmentDate), FUNC('month', a.shipmentDate) ");
+                queryStatement.append("select count(a), function('year', a.shipmentDate), function('month', a.shipmentDate) ");
                 queryStatement.append("from MaterializedArrivalShipment a ");
 
                 queryStatement.append("where a.shipmentDate >= :startDate and a.shipmentDate < :endDate ");
 
                 // Add standard filter criteria
                 setupFilterCriteria(queryStatement, input, true, false);
-                queryStatement.append(" group by FUNC('year', a.shipmentDate), FUNC('month', a.shipmentDate) ");
+                queryStatement.append("group by function('year', a.shipmentDate), function('month', a.shipmentDate) ");
 
                 Query query = em.createQuery(queryStatement.toString());
                 query.setParameter("startDate", startDate);
@@ -149,14 +149,14 @@ public class FieldPerfReportService {
             TimeMeasurement tm3 = tm.createSubMeasurement("select MaterializedAssemblyShipment");
             System.out.println("\n" + tm);
             StringBuilder queryStatement = new StringBuilder();
-            queryStatement.append("select count(a), FUNC('year', a.shipmentDate), FUNC('month', a.shipmentDate) ");
+            queryStatement.append("select count(a), function('year', a.shipmentDate), function('month', a.shipmentDate) ");
             queryStatement.append("from MaterializedAssemblyShipment a ");
 
             queryStatement.append("where a.shipmentDate >= :startDate and a.shipmentDate < :endDate ");
 
             // Add standard filter criteria
             setupFilterCriteria(queryStatement, input, true, false);
-            queryStatement.append("group by FUNC('year', a.shipmentDate), FUNC('month', a.shipmentDate) ");
+            queryStatement.append("group by function('year', a.shipmentDate), function('month', a.shipmentDate) ");
 
             Query query = em.createQuery(queryStatement.toString());
             query.setParameter("startDate", startDate);
