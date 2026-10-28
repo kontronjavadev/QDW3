@@ -7,8 +7,10 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import org.apache.commons.collections4.Transformer;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Strings;
 
@@ -16,10 +18,15 @@ import com.kontron.qdw.domain.material.Material;
 import com.kontron.qdw.domain.material.MaterialNumberSet;
 import com.kontron.qdw.domain.material.SerialNumberSet;
 import com.kontron.qdw.domain.material.SerialNumberSetItem;
+import com.kontron.qdw.dto.base.CustomerDTO;
+import com.kontron.qdw.dto.base.PlantSearchDTO;
+import com.kontron.qdw.dto.base.SupplierDTO;
 import com.kontron.qdw.dto.material.MaterialClassSearchDTO;
 import com.kontron.qdw.dto.material.MaterialTypeSearchDTO;
 import com.kontron.qdw.dto.mv.DistributionType;
 import com.kontron.qdw.dto.mv.FieldPerfReportSearchObject;
+import com.kontron.qdw.dto.service.RepairErrorCodeListDTO;
+import com.kontron.qdw.repository.base.CustomerRepository;
 import com.kontron.qdw.repository.material.MaterialNumberSetRepository;
 import com.kontron.qdw.repository.material.MaterialRepository;
 import com.kontron.util.datetime.TimeMeasurement;
@@ -43,6 +50,7 @@ public class FieldPerfReportService {
     protected EntityManager em;
     @EJB
     private MaterialNumberSetRepository materialNumberSetRepo;
+    @EJB
     private MaterialRepository materialRepo;
 
 
@@ -75,6 +83,7 @@ public class FieldPerfReportService {
         }
         tm1.stopMeasurement();
 
+        // Abfrage zu Anzahl shipments je Monat/Jahr; je nachdem, welche Tabelle verwendet werden kann
         if (input.getSelectedDistType() == DistributionType.ALL || input.getSelectedDistType() == DistributionType.CUSTOMER) {
             if (!useShipmentQueryOnAggregatedLevel(input)) {
                 TimeMeasurement tm2 = tm.createSubMeasurement("select MaterializedArrivalShipment");
@@ -122,7 +131,7 @@ public class FieldPerfReportService {
                 // Add standard filter criteria
                 setupFilterCriteria(queryStatement, input, true, true);
 
-                queryStatement.append("group by a.year, a.month");
+                queryStatement.append("group by a.year, a.month ");
 
                 Query query = em.createQuery(queryStatement.toString());
 
@@ -143,6 +152,7 @@ public class FieldPerfReportService {
         } // end if (DistributionType.ALL || DistributionType.CUSTOMER)
 
 
+        // Abfrage zu Anzahl shipments je Monat/Jahr
         if (input.getSelectedDistType() == DistributionType.ALL || input.getSelectedDistType() == DistributionType.INTERNAL) {
             TimeMeasurement tm3 = tm.createSubMeasurement("select MaterializedAssemblyShipment");
             System.out.println("\n" + tm);
@@ -154,7 +164,7 @@ public class FieldPerfReportService {
 
             // Add standard filter criteria
             setupFilterCriteria(queryStatement, input, true, false);
-            queryStatement.append(" group by FUNC('year', a.shipmentDate), FUNC('month', a.shipmentDate) ");
+            queryStatement.append("group by FUNC('year', a.shipmentDate), FUNC('month', a.shipmentDate) ");
 
             Query query = em.createQuery(queryStatement.toString());
             query.setParameter("startDate", startDate);
@@ -185,6 +195,11 @@ public class FieldPerfReportService {
 
     /**
      * Add standard filter criteria for all queries this bean provides
+     * Aufrufe zu Tabellen:
+     * MaterializedArrivalShipment (arrival_shipment_mv)
+     * AggregatedShipmentArrival (aggregated_shipment_arrival_tab)
+     * MaterializedAssemblyShipment (assembly_shipment_mv)
+     * 
      * @param queryStatement
      * @param input
      * @param queryOnShipmentOnly a flag that indicates if further filter criteria should be added
@@ -214,14 +229,17 @@ public class FieldPerfReportService {
             materialClassAttribute = "a.materialRevision.material.materialType.code";
         }
 
+
+
         if (input.getSelectedDistType() == DistributionType.CUSTOMER) {
-            queryStatement.append(" and (").append(parentSerialObjectIdAttribute).append(" is null ")
+            queryStatement.append("and (").append(parentSerialObjectIdAttribute).append(" is null ")
                     .append("or ").append(parentSerialObjectIdAttribute).append(" <= 0) ");
         }
         else if (input.getSelectedDistType() == DistributionType.INTERNAL) {
-            queryStatement.append(" and (").append(parentSerialObjectIdAttribute).append(" is not null ")
+            queryStatement.append("and (").append(parentSerialObjectIdAttribute).append(" is not null ")
                     .append("and ").append(parentSerialObjectIdAttribute).append(" > 0) ");
         }
+
 
         // either material numbers or material number set are allowed - both does not make any sense
         if (!input.getMatNrs().isEmpty() && input.getSelectedMatNrSet() != null) {
@@ -245,14 +263,14 @@ public class FieldPerfReportService {
                     .collect(Collectors.toSet());
 
             // make SQL-String
-            queryStatement.append(" and ").append(materialAttribute);
+            queryStatement.append("and ").append(materialAttribute).append(" ");
             if (materialIds.isEmpty()) {
                 // Die angegebene Materialnummer wurde nicht gefunden, daher die Suche invalidieren,
                 // um entsprechend kein Ergebnis zu erhalten!
-                queryStatement.append(" = -1 ");
+                queryStatement.append("= -1 ");
             }
             else {
-                queryStatement.append(" in (").append(StringUtil.collectionToSqlWhereInString(materialIds, false)).append(") ");
+                queryStatement.append("in (").append(StringUtil.collectionToSqlWhereInString(materialIds, false)).append(") ");
             }
 
             // add revision filter if mentionend
@@ -263,103 +281,67 @@ public class FieldPerfReportService {
 
 
         if (!input.getpMatNrs().isEmpty()) {
-            List<Material> materials = materialRepo.findByMaterialNumbersPlain(input.getpMatNrs(), false);
-
-            queryStatement.append(" and ").append(parentMaterialAttribute);
-            if (materials.size() == 1) {
-                queryStatement.append(" = '").append(input.getpMatNrs()).append("' ");
-            }
-            else {
-                queryStatement.append(" in (");
-                queryStatement.append(StringUtil.collectionToSqlWhereInString(materials, new Transformer<Material, String>() {
-                    @Override
-                    public String transform(Material material) {
-                        return String.format("'%s'", material.getMaterialNumber());
-                    }
-                }));
-                queryStatement.append(") ");
-            }
+            queryStatement.append("and ").append(parentMaterialAttribute).append(" in (")
+                    .append(StringUtil.collectionToSqlWhereInString(input.getpMatNrs(), true)).append(") ");
         }
 
-
-        if (!input.getCustomer().isEmpty()) {
-            String filter = input.getCustomer();
-            final boolean not = StringUtils.startsWithIgnoreCase(filter, "NOT(");
-            if (not) {
-                filter = filter.substring(4);
-                filter = StringUtils.removeEnd(filter, ")");
-            }
-
-            Set<String> codes = customerCRUD.getCustomersByFilterCritera(filter);
-
-            queryStatement.append(" and ").append(customerAttribute);
-            if (not) {
-                if (codes.isEmpty()) {
-                    // Anwender hat offenbar Customer-Code direkt angegeben
-                    queryStatement.append(" <> '").append(filter).append("' ");
-                }
-                else {
-                    queryStatement.append(" not in (").append(StringUtil.collectionToSqlWhereInString(codes, true)).append(") ");
-                }
-            }
-            else {
-                if (codes.isEmpty()) {
-                    // Anwender hat offenbar Customer-Code direkt angegeben
-                    queryStatement.append(" = '").append(filter).append("' ");
-                }
-                else {
-                    queryStatement.append(" in (").append(StringUtil.collectionToSqlWhereInString(codes, true)).append(") ");
-                }
-            }
+        if (!input.getCustomers().isEmpty()) {
+            queryStatement.append("and ").append(customerAttribute).append(" in (")
+                    .append(StringUtil.collectionToSqlWhereInString(input.getCustomers(), CustomerDTO::getCode, true))
+                    .append(") ");
         }
-
 
         if (!input.getSupplier().isEmpty()) {
-            HashSet<String> codes = supplierCRUD.getSuppliersByFilterCritera(input.getSupplier());
-
-            queryStatement.append(" and ").append(supplierAttribute);
-            if (codes.size() == 0) {
-                // Anwender hat offenbar Supplier-Code angegeben
-                queryStatement.append(" = '").append(input.getSupplier()).append("' ");
-            }
-            else {
-                queryStatement.append(" in (").append(StringUtil.collectionToSqlWhereInString(codes, true)).append(") ");
-            }
+            queryStatement.append(" and ").append(supplierAttribute).append(" in (")
+                    .append(StringUtil.collectionToSqlWhereInString(input.getSupplier(), SupplierDTO::getCode, true))
+                    .append(") ");
         }
 
-
-        if (!input.getPlant().isEmpty()) {
-            queryStatement.append(parseCriterion(plantAttribute, input.getPlant()));
+        if (!input.getSelectedPlants().isEmpty()) {
+            queryStatement.append(" and ").append(plantAttribute).append(" in (")
+                    .append(StringUtil.collectionToSqlWhereInString(input.getSelectedPlants(), PlantSearchDTO::getCode, true))
+                    .append(") ");
         }
 
-
-        if (!input.getMaterialHierarchy().isEmpty()) {
-            queryStatement.append(parseCriterion("a.materialHierarchy", input.getMaterialHierarchy()));
+        if (!input.getMatHier().isEmpty()) {
+            queryStatement.append(parseCriterion("a.materialHierarchy", input.getMatHier()));
         }
 
 
         if (!queryOnShipmentOnly) {
             queryStatement.append(parseCriterion("a.errorId", input.getErrorId()));
-            queryStatement.append(parseCriterion("a.rmaType", input.getRmaType()));
-            queryStatement.append(parseCriterion("a.defectComponent", input.getDefectComponent()));
-            queryStatement.append(parseCriterion("a.errorCodeGroup", input.getErrorGroup()));
-            queryStatement.append(parseCriterion("a.origin", input.getFailureOrigin()));
+            queryStatement.append(parseCriterion("a.defectComponent", input.getDefCmpt()));
 
-            if (!input.isIncludeEpidemic()) {
+            queryStatement.append("and ").append("a.rmaType").append(" in (")
+                    .append(StringUtil.collectionToSqlWhereInString(input.getSelectedRmaTypes(), true))
+                    .append(") ");
+
+            queryStatement.append("and ").append("a.errorCodeGroup").append(" in (")
+                    .append(StringUtil.collectionToSqlWhereInString(input.getSelectedErrGrps(), true))
+                    .append(") ");
+
+            queryStatement.append("and ").append("a.origin").append(" in (")
+                    .append(StringUtil.collectionToSqlWhereInString(input.getOrigins(), true))
+                    .append(") ");
+
+            if (!input.getEpidemic()) {
                 queryStatement.append(" and a.epidemicFailure = false ");
             }
 
-            if (!input.isCMReport()) {
-                queryStatement.append(parseCriterion("a.errorCodeName", input.getErrorCode()));
-            }
-            else {
-                queryStatement
-                        .append("and a.errorCodeName in ('ZWW01-110 - Solder issue','ZWW01-105 - Defective component / hardware','ZWW02-201 - Assembly error') ");
-            }
+            // im Oiginal mit Bedingung, jedoch ist der Wert stets false, die Bedingung also stets erfüllt
+            // if (!input.isCMReport()) {
+            queryStatement.append(" and ").append("a.errorCodeName").append(" in (")
+                    .append(StringUtil.collectionToSqlWhereInString(input.getSelectedErr(), RepairErrorCodeListDTO::getName, true))
+                    .append(") ");
+            // }
+            // else {
+            // queryStatement
+            // .append("and a.errorCodeName in ('ZWW01-110 - Solder issue','ZWW01-105 - Defective component / hardware','ZWW02-201 - Assembly error') ");
+            // }
         }
 
 
-        if (!input.getSerialNumberSet().isEmpty()) {
+        if (input.getSelectedSerNrSet() != null) {
             List<SerialNumberSet> serialNumberSet = serialNumberSetCRUD.getSerialNumberSetsByFilterCriteria(input.getSerialNumberSet());
             List<String> serialNumbers = new ArrayList<>();
             for (SerialNumberSet sns : serialNumberSet) {
@@ -422,7 +404,7 @@ public class FieldPerfReportService {
         String[] items = filter.split(SearchService.TOKEN_DELIMITER_IN);
         StringBuilder queryFragment = new StringBuilder();
 
-        queryFragment.append(" and (");
+        queryFragment.append("and (");
         boolean isFirstItem = true;
 
         for (String item : items) {
