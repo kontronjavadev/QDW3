@@ -1,34 +1,25 @@
 package com.kontron.qdw.boundary.mv;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import org.apache.commons.collections4.Transformer;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Strings;
 
 import com.kontron.qdw.domain.material.Material;
-import com.kontron.qdw.domain.material.MaterialNumberSet;
-import com.kontron.qdw.domain.material.SerialNumberSet;
 import com.kontron.qdw.domain.material.SerialNumberSetItem;
 import com.kontron.qdw.dto.base.CustomerDTO;
 import com.kontron.qdw.dto.base.PlantSearchDTO;
 import com.kontron.qdw.dto.base.SupplierDTO;
-import com.kontron.qdw.dto.material.MaterialClassSearchDTO;
-import com.kontron.qdw.dto.material.MaterialTypeSearchDTO;
 import com.kontron.qdw.dto.mv.DistributionType;
 import com.kontron.qdw.dto.mv.FieldPerfReportSearchObject;
 import com.kontron.qdw.dto.service.RepairErrorCodeListDTO;
-import com.kontron.qdw.repository.base.CustomerRepository;
 import com.kontron.qdw.repository.material.MaterialNumberSetRepository;
 import com.kontron.qdw.repository.material.MaterialRepository;
+import com.kontron.qdw.repository.material.SerialNumberSetRepository;
 import com.kontron.util.datetime.TimeMeasurement;
 import com.kontron.util.text.StringUtil;
 
@@ -37,7 +28,6 @@ import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
-import jakarta.faces.application.FacesMessage;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
@@ -52,6 +42,8 @@ public class FieldPerfReportService {
     private MaterialNumberSetRepository materialNumberSetRepo;
     @EJB
     private MaterialRepository materialRepo;
+    @EJB
+    private SerialNumberSetRepository serNrSetRepo;
 
 
     @PermitAll
@@ -248,7 +240,6 @@ public class FieldPerfReportService {
 
         // eines der beiden ist gesetzt
         if (!input.getMatNrs().isEmpty() || input.getSelectedMatNrSet() != null) {
-            boolean not = false;
             List<Material> materials;
             if (input.getSelectedMatNrSet() != null) {
                 // es wurde ein Set an Materialnummern verwendet
@@ -340,41 +331,25 @@ public class FieldPerfReportService {
             // }
         }
 
-
         if (input.getSelectedSerNrSet() != null) {
-            List<SerialNumberSet> serialNumberSet = serialNumberSetCRUD.getSerialNumberSetsByFilterCriteria(input.getSerialNumberSet());
-            List<String> serialNumbers = new ArrayList<>();
-            for (SerialNumberSet sns : serialNumberSet) {
-                serialNumbers.addAll(CollectionUtils.collect(sns.getSerialNumbers(), new Transformer<SerialNumberSetItem, String>() {
-                    @Override
-                    public String transform(SerialNumberSetItem serialNumber) {
-                        return serialNumber.getSerialNumber();
-                    }
-                }));
-            }
+            List<SerialNumberSetItem> serNrSetItems = serNrSetRepo.getSerialNumbers(input.getSelectedSerNrSet().getCode());
+            List<String> serialNumbers = serNrSetItems.stream()
+                    .map(SerialNumberSetItem::getSerialNumber)
+                    .collect(Collectors.toList());
             queryStatement.append("and ").append(StringUtil.collectionToSqlLikeString(serialNumberAttribute, serialNumbers)).append(" ");
         }
 
-
-        if (CollectionUtils.isNotEmpty(input.getMaterialTypes())) {
+        if (!input.getSelectedMatTypes().isEmpty()) {
             queryStatement.append("and ").append(materialTypeAttribute).append(" in (")
-                    .append(StringUtil.collectionToSqlWhereInString(input.getMaterialTypes(), new Transformer<MaterialTypeSearchDTO, String>() {
-                        @Override
-                        public String transform(MaterialTypeSearchDTO matType) {
-                            return String.format("'%s'", matType.getCode());
-                        }
-                    })).append(") ");
+                    .append(StringUtil.collectionToSqlWhereInString(input.getSelectedMatTypes(), true))
+                    .append(") ");
         }
 
 
-        if (CollectionUtils.isNotEmpty(input.getMaterialClasses())) {
+        if (!input.getSelectedMatClasses().isEmpty()) {
             queryStatement.append("and ").append(materialClassAttribute).append(" in (")
-                    .append(StringUtil.collectionToSqlWhereInString(input.getMaterialClasses(), new Transformer<MaterialClassSearchDTO, String>() {
-                        @Override
-                        public String transform(MaterialClassSearchDTO matClass) {
-                            return String.format("'%s'", matClass.getCode());
-                        }
-                    })).append(") ");
+                    .append(StringUtil.collectionToSqlWhereInString(input.getSelectedMatClasses(), true))
+                    .append(") ");
         }
     }
 
