@@ -48,9 +48,6 @@ public class FieldPerfReportService {
         int endMonth = endDate.getMonthValue();
 
         // initialize result map
-        TimeMeasurement tm1 = tm.createSubMeasurement("for input.getAnalysisInterval()");
-        System.out.println("\n" + tm);
-
         // shipmentMap je Monat mit 0 initialisieren
         HashMap<String, Long> shipmentMap = new HashMap<String, Long>();
         for (int l = 0; l < input.getSelectedAnalInterval(); l++) {
@@ -60,13 +57,11 @@ public class FieldPerfReportService {
 
             endDate = endDate.plusMonths(1);
         }
-        tm1.stopMeasurement();
 
         // Abfrage zu Anzahl shipments je Monat/Jahr; je nachdem, welche Tabelle verwendet werden kann
         if (input.getSelectedDistType() == DistributionType.ALL || input.getSelectedDistType() == DistributionType.CUSTOMER) {
             if (!useShipmentQueryOnAggregatedLevel(input)) {
                 TimeMeasurement tm2 = tm.createSubMeasurement("select MaterializedArrivalShipment");
-                System.out.println("\n" + tm);
 
                 StringBuilder queryStatement = new StringBuilder();
                 queryStatement.append("select count(a), extract(year from a.shipmentDate), extract(month from a.shipmentDate) ");
@@ -83,8 +78,6 @@ public class FieldPerfReportService {
                 query.setParameter("endDate", endDate);
                 List<Object[]> result = query.getResultList();
 
-                TimeMeasurement tm2_1 = tm2.createSubMeasurement("for result.iterator()");
-                System.out.println("\n" + tm);
                 for (Iterator<Object[]> iter = result.iterator(); iter.hasNext();) {
                     Object[] values = iter.next();
                     long shipments = ((Number) values[0]).longValue();
@@ -93,12 +86,10 @@ public class FieldPerfReportService {
 
                     shipmentMap.put(String.format("%d-%d", shipmentYear, shipmentMonth), shipments);
                 }
-                tm2_1.stopMeasurement();
                 tm2.stopMeasurement();
             }
             else {
                 TimeMeasurement tm2 = tm.createSubMeasurement("select AggregatedShipmentArrival");
-                System.out.println("\n" + tm);
                 /*************** NEW AGGREGATED IMPLEMENTATION **************************/
 
                 StringBuilder queryStatement = new StringBuilder();
@@ -115,8 +106,6 @@ public class FieldPerfReportService {
                 TypedQuery<Object[]> query = em.createQuery(queryStatement.toString(), Object[].class);
 
                 List<Object[]> result = query.getResultList();
-                TimeMeasurement tm2_1 = tm2.createSubMeasurement("for result.iterator()");
-                System.out.println("\n" + tm);
                 for (Iterator<Object[]> iter = result.iterator(); iter.hasNext();) {
                     Object[] values = iter.next();
                     Long shipments = ((Number) values[0]).longValue();
@@ -125,7 +114,6 @@ public class FieldPerfReportService {
                     shipmentMap.put(shipmentPeriod, shipments);
                 }
                 /*************** NEW AGGREGATED IMPLEMENTATION **************************/
-                tm2_1.stopMeasurement();
                 tm2.stopMeasurement();
             }
         } // end if (DistributionType.ALL || DistributionType.CUSTOMER)
@@ -134,7 +122,6 @@ public class FieldPerfReportService {
         // Abfrage zu Anzahl shipments je Monat/Jahr
         if (input.getSelectedDistType() == DistributionType.ALL || input.getSelectedDistType() == DistributionType.INTERNAL) {
             TimeMeasurement tm3 = tm.createSubMeasurement("select MaterializedAssemblyShipment");
-            System.out.println("\n" + tm);
             StringBuilder queryStatement = new StringBuilder();
             queryStatement.append("select count(a), extract(year from a.shipmentDate), extract(month from a.shipmentDate) ");
             queryStatement.append("from MaterializedAssemblyShipment a ");
@@ -150,8 +137,6 @@ public class FieldPerfReportService {
             query.setParameter("endDate", endDate);
             List<Object[]> result = query.getResultList();
 
-            TimeMeasurement tm3_1 = tm3.createSubMeasurement("for result.iterator()");
-            System.out.println("\n" + tm);
             for (Iterator<Object[]> iter = result.iterator(); iter.hasNext();) {
                 Object[] values = iter.next();
                 long shipments = ((Number) values[0]).longValue();
@@ -161,7 +146,6 @@ public class FieldPerfReportService {
                 String shipmentPeriod = String.format("%d-%d", shipmentYear, shipmentMonth);
                 shipmentMap.put(shipmentPeriod, shipments + shipmentMap.get(shipmentPeriod));
             }
-            tm3_1.stopMeasurement();
             tm3.stopMeasurement();
         } // end if (DistributionType.ALL || DistributionType.INTERNAL)
 
@@ -231,11 +215,11 @@ public class FieldPerfReportService {
          */
 
         TimeMeasurement tm1 = tm.createSubMeasurement("select MaterializedServiceMessage");
-        System.out.println("\n" + tm);
         StringBuilder queryStatement = new StringBuilder();
-        queryStatement.append("select count(a) as cnt, ");
+        String repairperiod = String.format("concat(extract(year from %s), '-', extract(month from %s)) ", rmaDate, rmaDate);
 
-        queryStatement.append(String.format("concat(extract(year from %s), '-', extract(month from %s)) as repairperiod ", rmaDate, rmaDate));
+        queryStatement.append("select count(a) as cnt, ");
+        queryStatement.append(repairperiod).append("as repairperiod ");
         queryStatement.append("from MaterializedServiceMessage a ");
 
         queryStatement.append(String.format("where %s >= :firstRepairPeriodStart ", rmaDate));
@@ -257,9 +241,7 @@ public class FieldPerfReportService {
             queryStatement.append("and a.internalShipmentDate is not null ");
         }
 
-        queryStatement.append(String.format(
-                "group by extract(year from %s), extract(month from %s), extract(year from a.customerShipmentDate), extract(month from a.customerShipmentDate) ",
-                rmaDate, rmaDate));
+        queryStatement.append("group by " + repairperiod);
 
         TypedQuery<Object[]> query = em.createQuery(queryStatement.toString(), Object[].class)
                 .setParameter("firstRepairPeriodStart", firstRepairPeriodStart)
@@ -271,17 +253,14 @@ public class FieldPerfReportService {
 
 
         List<Object[]> result = query.getResultList();
-        TimeMeasurement tm1_1 = tm1.createSubMeasurement("for result.iterator()");
-        System.out.println("\n" + tm);
         for (Iterator<Object[]> i = result.iterator(); i.hasNext();) {
             Object[] values = i.next();
             long cnt = ((Number) values[0]).longValue();
-            String repairperiod = (String) values[1];
+            String iterRepairperiod = (String) values[1];
 
-            returnValuesMap.put(repairperiod, returnValuesMap.get(repairperiod) + cnt);
+            returnValuesMap.put(iterRepairperiod, cnt);
         }
 
-        tm1_1.stopMeasurement();
         tm1.stopMeasurement();
         tm.stopMeasurement();
         System.out.println("end getLastYearReturn()\n" + tm);
@@ -410,17 +389,23 @@ public class FieldPerfReportService {
             queryStatement.append(parseCriterion("a.errorId", input.getErrorId()));
             queryStatement.append(parseCriterion("a.defectComponent", input.getDefCmpt()));
 
-            queryStatement.append("and ").append("a.rmaType").append(" in (")
-                    .append(StringUtil.collectionToSqlWhereInString(input.getSelectedRmaTypes(), true))
-                    .append(") ");
+            if (!input.getSelectedRmaTypes().isEmpty()) {
+                queryStatement.append("and ").append("a.rmaType").append(" in (")
+                        .append(StringUtil.collectionToSqlWhereInString(input.getSelectedRmaTypes(), true))
+                        .append(") ");
+            }
 
-            queryStatement.append("and ").append("a.errorCodeGroup").append(" in (")
-                    .append(StringUtil.collectionToSqlWhereInString(input.getSelectedErrGrps(), true))
-                    .append(") ");
+            if (!input.getSelectedErrGrps().isEmpty()) {
+                queryStatement.append("and ").append("a.errorCodeGroup").append(" in (")
+                        .append(StringUtil.collectionToSqlWhereInString(input.getSelectedErrGrps(), true))
+                        .append(") ");
+            }
 
-            queryStatement.append("and ").append("a.origin").append(" in (")
-                    .append(StringUtil.collectionToSqlWhereInString(input.getOrigins(), true))
-                    .append(") ");
+            if (!input.getSelectedOrigins().isEmpty()) {
+                queryStatement.append("and ").append("a.origin").append(" in (")
+                        .append(StringUtil.collectionToSqlWhereInString(input.getSelectedOrigins(), true))
+                        .append(") ");
+            }
 
             if (!input.getEpidemic()) {
                 queryStatement.append(" and a.epidemicFailure = false ");
@@ -428,14 +413,17 @@ public class FieldPerfReportService {
 
             // im Oiginal mit Bedingung, jedoch ist der Wert stets false, die Bedingung also stets erfüllt
             // if (!input.isCMReport()) {
-            queryStatement.append(" and ").append("a.errorCodeName").append(" in (")
-                    .append(StringUtil.collectionToSqlWhereInString(input.getSelectedErr(), RepairErrorCodeListDTO::getName, true))
-                    .append(") ");
+            // queryStatement.append(parseCriterion("a.errorCodeName", input.getErrorCode()));
             // }
             // else {
             // queryStatement
             // .append("and a.errorCodeName in ('ZWW01-110 - Solder issue','ZWW01-105 - Defective component / hardware','ZWW02-201 - Assembly error') ");
             // }
+            if (!input.getSelectedErr().isEmpty()) {
+                queryStatement.append(" and ").append("a.errorCodeName").append(" in (")
+                        .append(StringUtil.collectionToSqlWhereInString(input.getSelectedErr(), RepairErrorCodeListDTO::getName, true))
+                        .append(") ");
+            }
         }
 
         if (input.getSelectedSerNrSet() != null) {
@@ -469,7 +457,7 @@ public class FieldPerfReportService {
      */
     private String parseCriterion(String name, String filter) {
         if (filter.isEmpty()) {
-            return " ";
+            return "";
         }
 
         boolean not = false;

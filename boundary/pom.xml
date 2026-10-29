@@ -20,7 +20,7 @@
 			<scope>provided</scope>
 		</dependency>
 
-        <!-- jbizmo -->
+		<!-- jbizmo -->
 		<dependency>
 			<groupId>net.sourceforge.jbizmo</groupId>
 			<artifactId>jbizmo-commons-jakartaee</artifactId>
@@ -30,7 +30,7 @@
 
 
 
-        <!-- usual foreign dependencies -->
+		<!-- usual foreign dependencies -->
         <dependency>
             <groupId>com.kontron</groupId>
             <artifactId>utils</artifactId>
@@ -38,7 +38,7 @@
 
 
 
-		<!-- ither dependencied -->
+		<!-- other dependencied -->
 		<dependency>
 		    <groupId>com.sap.conn.jco</groupId>
 		    <artifactId>sapjco3</artifactId>
@@ -47,7 +47,7 @@
 
 
 
-        <!-- sister projects -->
+		<!-- sister projects -->
 		<dependency>
 			<groupId>com.kontron.qdw</groupId>
 			<artifactId>qdw-domain</artifactId>

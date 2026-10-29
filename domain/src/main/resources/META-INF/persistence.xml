@@ -18,6 +18,20 @@
 			<property name="hibernate.jdbc.batch_size" value="1000"/>
 			<property name="hibernate.order_inserts" value="true"/>
 			<property name="hibernate.order_updates" value="true"/>
+
+
+			<property name="org.hibernate.SQL" value="DEBUG"/>
+			<property name="org.hibernate.orm.jdbc.bind" value="TRACE"/>
+<!-- 
+Nutzt nur etwas, wenn gleichzeitig in der standalone.xml unter <subsystem xmlns="urn:jboss:domain:logging:8.0">:
+<logger category="org.hibernate.SQL">
+	<level name="DEBUG"/>
+</logger>
+<logger category="org.hibernate.orm.jdbc.bind">
+	<level name="TRACE"/>
+</logger>
+steht
+ -->
 		</properties>
 	</persistence-unit>
 </persistence>
