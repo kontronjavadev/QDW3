@@ -1,36 +1,23 @@
 package com.kontron.qdw.boundary.mv;
 
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.Strings;
 
 import com.kontron.qdw.domain.material.Material;
 import com.kontron.qdw.domain.material.SerialNumberSetItem;
-import com.kontron.qdw.dto.base.CustomerDTO;
-import com.kontron.qdw.dto.base.PlantSearchDTO;
-import com.kontron.qdw.dto.base.SupplierDTO;
-import com.kontron.qdw.dto.mv.DistributionType;
-import com.kontron.qdw.dto.mv.FieldPerfReportSearchObject;
+import com.kontron.qdw.dto.base.*;
+import com.kontron.qdw.dto.mv.*;
 import com.kontron.qdw.dto.service.RepairErrorCodeListDTO;
-import com.kontron.qdw.repository.material.MaterialNumberSetRepository;
-import com.kontron.qdw.repository.material.MaterialRepository;
-import com.kontron.qdw.repository.material.SerialNumberSetRepository;
+import com.kontron.qdw.repository.material.*;
 import com.kontron.util.datetime.TimeMeasurement;
 import com.kontron.util.text.StringUtil;
 
 import jakarta.annotation.security.PermitAll;
-import jakarta.ejb.EJB;
-import jakarta.ejb.Stateless;
-import jakarta.ejb.TransactionAttribute;
-import jakarta.ejb.TransactionAttributeType;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.Query;
+import jakarta.ejb.*;
+import jakarta.persistence.*;
 import net.sourceforge.jbizmo.commons.search.SearchService;
 
 @Stateless
@@ -82,27 +69,27 @@ public class FieldPerfReportService {
                 System.out.println("\n" + tm);
 
                 StringBuilder queryStatement = new StringBuilder();
-                queryStatement.append("select count(a), function('year', a.shipmentDate), function('month', a.shipmentDate) ");
+                queryStatement.append("select count(a), extract(year from a.shipmentDate), extract(month from a.shipmentDate) ");
                 queryStatement.append("from MaterializedArrivalShipment a ");
 
                 queryStatement.append("where a.shipmentDate >= :startDate and a.shipmentDate < :endDate ");
 
                 // Add standard filter criteria
                 setupFilterCriteria(queryStatement, input, true, false);
-                queryStatement.append("group by function('year', a.shipmentDate), function('month', a.shipmentDate) ");
+                queryStatement.append("group by extract(year from a.shipmentDate), extract(month from a.shipmentDate) ");
 
-                Query query = em.createQuery(queryStatement.toString());
+                TypedQuery<Object[]> query = em.createQuery(queryStatement.toString(), Object[].class);
                 query.setParameter("startDate", startDate);
                 query.setParameter("endDate", endDate);
-                List<?> result = query.getResultList();
+                List<Object[]> result = query.getResultList();
 
                 TimeMeasurement tm2_1 = tm2.createSubMeasurement("for result.iterator()");
                 System.out.println("\n" + tm);
-                for (Iterator<?> iter = result.iterator(); iter.hasNext();) {
-                    Object[] values = (Object[]) iter.next();
-                    long shipments = (Long) values[0];
-                    int shipmentYear = (Integer) values[1];
-                    int shipmentMonth = (Integer) values[2];
+                for (Iterator<Object[]> iter = result.iterator(); iter.hasNext();) {
+                    Object[] values = iter.next();
+                    long shipments = ((Number) values[0]).longValue();
+                    int shipmentYear = ((Number) values[1]).intValue();
+                    int shipmentMonth = ((Number) values[2]).intValue();
 
                     shipmentMap.put(String.format("%d-%d", shipmentYear, shipmentMonth), shipments);
                 }
@@ -125,14 +112,14 @@ public class FieldPerfReportService {
 
                 queryStatement.append("group by a.year, a.month ");
 
-                Query query = em.createQuery(queryStatement.toString());
+                TypedQuery<Object[]> query = em.createQuery(queryStatement.toString(), Object[].class);
 
-                List<?> result = query.getResultList();
+                List<Object[]> result = query.getResultList();
                 TimeMeasurement tm2_1 = tm2.createSubMeasurement("for result.iterator()");
                 System.out.println("\n" + tm);
-                for (Iterator<?> iter = result.iterator(); iter.hasNext();) {
-                    Object[] values = (Object[]) iter.next();
-                    Long shipments = (Long) values[0];
+                for (Iterator<Object[]> iter = result.iterator(); iter.hasNext();) {
+                    Object[] values = iter.next();
+                    Long shipments = ((Number) values[0]).longValue();
                     String shipmentPeriod = (String) values[1];
 
                     shipmentMap.put(shipmentPeriod, shipments);
@@ -149,29 +136,29 @@ public class FieldPerfReportService {
             TimeMeasurement tm3 = tm.createSubMeasurement("select MaterializedAssemblyShipment");
             System.out.println("\n" + tm);
             StringBuilder queryStatement = new StringBuilder();
-            queryStatement.append("select count(a), function('year', a.shipmentDate), function('month', a.shipmentDate) ");
+            queryStatement.append("select count(a), extract(year from a.shipmentDate), extract(month from a.shipmentDate) ");
             queryStatement.append("from MaterializedAssemblyShipment a ");
 
             queryStatement.append("where a.shipmentDate >= :startDate and a.shipmentDate < :endDate ");
 
             // Add standard filter criteria
             setupFilterCriteria(queryStatement, input, true, false);
-            queryStatement.append("group by function('year', a.shipmentDate), function('month', a.shipmentDate) ");
+            queryStatement.append("group by extract(year from a.shipmentDate), extract(month from a.shipmentDate) ");
 
-            Query query = em.createQuery(queryStatement.toString());
+            TypedQuery<Object[]> query = em.createQuery(queryStatement.toString(), Object[].class);
             query.setParameter("startDate", startDate);
             query.setParameter("endDate", endDate);
-            List<?> result = query.getResultList();
+            List<Object[]> result = query.getResultList();
 
             TimeMeasurement tm3_1 = tm3.createSubMeasurement("for result.iterator()");
             System.out.println("\n" + tm);
-            for (Iterator<?> iter = result.iterator(); iter.hasNext();) {
-                Object[] values = (Object[]) iter.next();
-                long shipments = (Long) values[0];
-                int shipmentYear = (Integer) values[1];
-                int shipmentMonth = (Integer) values[2];
-                String shipmentPeriod = String.format("%d-%d", shipmentYear, shipmentMonth);
+            for (Iterator<Object[]> iter = result.iterator(); iter.hasNext();) {
+                Object[] values = iter.next();
+                long shipments = ((Number) values[0]).longValue();
+                int shipmentYear = ((Number) values[1]).intValue();
+                int shipmentMonth = ((Number) values[2]).intValue();
 
+                String shipmentPeriod = String.format("%d-%d", shipmentYear, shipmentMonth);
                 shipmentMap.put(shipmentPeriod, shipments + shipmentMap.get(shipmentPeriod));
             }
             tm3_1.stopMeasurement();
@@ -185,12 +172,132 @@ public class FieldPerfReportService {
 
 
 
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public HashMap<String, Long> getLastYearReturn(FieldPerfReportSearchObject input) {
+        System.out.println("start getLastYearReturn()");
+        TimeMeasurement tm = new TimeMeasurement("getLastYearReturn()");
+
+        String rmaDate;
+        if (input.getSelectedRmaCntType() == RMACountingType.CLOSED_BY_ARRIVAL_DATE
+                || input.getSelectedRmaCntType() == RMACountingType.ALL_BY_ARRIVAL_DATE) {
+            rmaDate = "a.internalArrivalDate";
+        }
+        else {
+            rmaDate = "a.internalShipmentDate";
+        }
+
+        HashMap<String, Long> returnValuesMap = new HashMap<String, Long>();
+        // shipmentMap je Monat mit 0 initialisieren
+        LocalDate period = input.getStartDate();
+        for (int p = 0; p < input.getSelectedAnalInterval() + input.getSelectedReturnInterval() - 1; p++) {
+            int periodYear = period.getYear();
+            int periodMonth = period.getMonthValue();
+            returnValuesMap.put(String.format("%d-%d", periodYear, periodMonth), 0L);
+
+            period = period.plusMonths(1);
+        }
+
+
+
+        LocalDate firstRepairPeriodStart = input.getStartDate();
+
+        LocalDate lastRepairPeriodEnd = input.getStartDate().plusMonths(input.getSelectedAnalInterval() + input.getSelectedReturnInterval() - 1);
+
+        LocalDate firstCustomerShipDateStart = input.getStartDate().minusMonths(input.getSelectedQualityPeriod() - 1);
+
+        LocalDate lastCustomerShipDateEnd = input.getStartDate().plusMonths(input.getSelectedAnalInterval() + input.getSelectedReturnInterval() - 1);
+
+
+        /*
+        Beispiel:
+        // select repairperiod, sum(cnt) cnt
+        // from (
+            select count(*) as cnt,
+                concat(year(a.internal_arrival_date), '-', month(a.internal_arrival_date)) repairperiod
+            from service_message_mv a
+            where a.internal_arrival_date >= '2013-01-01'
+            and a.internal_arrival_date < '2018-12-01'
+            and a.cust_ship_date >= '2012-02-01'
+            and a.cust_ship_date < '2018-12-01'
+            and a.internal_shipment_date is not null
+            and year(a.cust_ship_date) * 12 + month(a.cust_ship_date) >
+                year(a.internal_arrival_date) * 12 + month(a.internal_arrival_date) - 12
+            and year(a.cust_ship_date) * 12 + month(a.cust_ship_date) <=
+                year(a.internal_arrival_date) * 12 + month(a.internal_arrival_date)
+            group by year(a.internal_arrival_date), month(a.internal_arrival_date), year(a.cust_ship_date), month(a.cust_ship_date)
+        // ) matrix
+        // group by repairperiod;
+         */
+
+        TimeMeasurement tm1 = tm.createSubMeasurement("select MaterializedServiceMessage");
+        System.out.println("\n" + tm);
+        StringBuilder queryStatement = new StringBuilder();
+        queryStatement.append("select count(a) as cnt, ");
+
+        queryStatement.append(String.format("concat(extract(year from %s), '-', extract(month from %s)) as repairperiod ", rmaDate, rmaDate));
+        queryStatement.append("from MaterializedServiceMessage a ");
+
+        queryStatement.append(String.format("where %s >= :firstRepairPeriodStart ", rmaDate));
+        queryStatement.append(String.format("and %s < :lastRepairPeriodEnd ", rmaDate));
+        queryStatement.append("and a.customerShipmentDate >= :firstCustomerShipDateStart ");
+        queryStatement.append("and a.customerShipmentDate < :lastCustomerShipDateEnd ");
+
+        // customerShipmentDate (nach Jahr und Monat) zwischen betrachteten Zeitraum des rmaDate, also <selectedQRelevantPeriod> Monate in der Vergangenheit
+        queryStatement.append("and extract(year from a.customerShipmentDate) * 12 + extract(month from a.customerShipmentDate) > ");
+        queryStatement.append(String.format("extract(year from %s) * 12 + extract(month from %s) - :selectedQRelevantPeriod ", rmaDate, rmaDate));
+
+        queryStatement.append("and extract(year from a.customerShipmentDate) * 12 + extract(month from a.customerShipmentDate) <= ");
+        queryStatement.append(String.format("extract(year from %s) * 12 + extract(month from %s) ", rmaDate, rmaDate));
+
+        // Add standard filter criteria
+        setupFilterCriteria(queryStatement, input, false, false);
+
+        if (input.getSelectedRmaCntType() == RMACountingType.CLOSED_BY_ARRIVAL_DATE) {
+            queryStatement.append("and a.internalShipmentDate is not null ");
+        }
+
+        queryStatement.append(String.format(
+                "group by extract(year from %s), extract(month from %s), extract(year from a.customerShipmentDate), extract(month from a.customerShipmentDate) ",
+                rmaDate, rmaDate));
+
+        TypedQuery<Object[]> query = em.createQuery(queryStatement.toString(), Object[].class)
+                .setParameter("firstRepairPeriodStart", firstRepairPeriodStart)
+                .setParameter("lastRepairPeriodEnd", lastRepairPeriodEnd)
+                .setParameter("firstCustomerShipDateStart", firstCustomerShipDateStart)
+                .setParameter("lastCustomerShipDateEnd", lastCustomerShipDateEnd)
+                .setParameter("selectedQRelevantPeriod", input.getSelectedQualityPeriod());
+
+
+
+        List<Object[]> result = query.getResultList();
+        TimeMeasurement tm1_1 = tm1.createSubMeasurement("for result.iterator()");
+        System.out.println("\n" + tm);
+        for (Iterator<Object[]> i = result.iterator(); i.hasNext();) {
+            Object[] values = i.next();
+            long cnt = ((Number) values[0]).longValue();
+            String repairperiod = (String) values[1];
+
+            returnValuesMap.put(repairperiod, returnValuesMap.get(repairperiod) + cnt);
+        }
+
+        tm1_1.stopMeasurement();
+        tm1.stopMeasurement();
+        tm.stopMeasurement();
+        System.out.println("end getLastYearReturn()\n" + tm);
+        return returnValuesMap;
+    }
+
+
+
     /**
      * Add standard filter criteria for all queries this bean provides
-     * Aufrufe zu Tabellen:
-     * MaterializedArrivalShipment (arrival_shipment_mv)
-     * AggregatedShipmentArrival (aggregated_shipment_arrival_tab)
-     * MaterializedAssemblyShipment (assembly_shipment_mv)
+     * Aufrufe zu Tabellen von getShipmentsPerMonth():
+     * - MaterializedArrivalShipment (arrival_shipment_mv)
+     * - AggregatedShipmentArrival (aggregated_shipment_arrival_tab)
+     * - MaterializedAssemblyShipment (assembly_shipment_mv)
+     * von getLastYearReturn():
+     * - MaterializedServiceMessage (service_message_mv)
      * 
      * @param queryStatement
      * @param input
