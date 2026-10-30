@@ -20,9 +20,11 @@
 			<property name="hibernate.order_updates" value="true"/>
 
 
+<!-- 
+SQL-Logging
 			<property name="org.hibernate.SQL" value="DEBUG"/>
 			<property name="org.hibernate.orm.jdbc.bind" value="TRACE"/>
-<!-- 
+
 Nutzt nur etwas, wenn gleichzeitig in der standalone.xml unter <subsystem xmlns="urn:jboss:domain:logging:8.0">:
 <logger category="org.hibernate.SQL">
 	<level name="DEBUG"/>
@@ -30,7 +32,7 @@ Nutzt nur etwas, wenn gleichzeitig in der standalone.xml unter <subsystem xmlns=
 <logger category="org.hibernate.orm.jdbc.bind">
 	<level name="TRACE"/>
 </logger>
-steht
+steht. Aber wir haben jetzt p6spy, das sehr viel besser ist und mit der aktuellen Konfiguration auf die lokale Umgebung beschränkt ist.
  -->
 		</properties>
 	</persistence-unit>
