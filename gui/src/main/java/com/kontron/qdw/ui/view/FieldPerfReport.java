@@ -195,6 +195,9 @@ public class FieldPerfReport extends SuperView implements Serializable {
 
             HashMap<String, Long> shipPerMonth = reportService.getShipmentsPerMonth(reportSearchObj);
             HashMap<String, Long> lastYearReturn = reportService.getLastYearReturn(reportSearchObj);
+            HashMap<String, Long> qRelevantReturn = reportService.getFirstYearReturn(reportSearchObj);
+            HashMap<String, HashMap<String, Long>> returnData = reportService.getReturnValuesOfAnalysisInterval(reportSearchObj);
+
             System.out.println("hallo");
         }
         catch (final Exception e) {

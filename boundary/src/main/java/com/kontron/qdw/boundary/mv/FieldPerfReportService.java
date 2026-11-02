@@ -1,10 +1,13 @@
 package com.kontron.qdw.boundary.mv;
 
+import java.lang.invoke.MethodHandles;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.Strings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.kontron.qdw.domain.material.Material;
 import com.kontron.qdw.domain.material.SerialNumberSetItem;
@@ -23,6 +26,8 @@ import net.sourceforge.jbizmo.commons.search.SearchService;
 @Stateless
 public class FieldPerfReportService {
 
+    private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
     @PersistenceContext
     protected EntityManager em;
     @EJB
@@ -36,7 +41,7 @@ public class FieldPerfReportService {
     @PermitAll
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public HashMap<String, Long> getShipmentsPerMonth(FieldPerfReportSearchObject input) {
-        System.out.println("start getShipmentsPerMonth()");
+        logger.info("start getShipmentsPerMonth()");
         TimeMeasurement tm = new TimeMeasurement("getShipmentsPerMonth()");
 
         LocalDate startDate = input.getStartDate();
@@ -150,7 +155,7 @@ public class FieldPerfReportService {
         } // end if (DistributionType.ALL || DistributionType.INTERNAL)
 
         tm.stopMeasurement();
-        System.out.println("end getShipmentsPerMonth()\n" + tm);
+        logger.info("end getShipmentsPerMonth()\n" + tm);
         return shipmentMap;
     }
 
@@ -159,7 +164,7 @@ public class FieldPerfReportService {
     @PermitAll
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public HashMap<String, Long> getLastYearReturn(FieldPerfReportSearchObject input) {
-        System.out.println("start getLastYearReturn()");
+        logger.info("start getLastYearReturn()");
         TimeMeasurement tm = new TimeMeasurement("getLastYearReturn()");
 
         String rmaDate;
@@ -172,14 +177,12 @@ public class FieldPerfReportService {
         }
 
         HashMap<String, Long> returnValuesMap = new HashMap<String, Long>();
-        // shipmentMap je Monat mit 0 initialisieren
-        LocalDate period = input.getStartDate();
+        // returnValuesMap je Monat mit 0 initialisieren
         for (int p = 0; p < input.getSelectedAnalInterval() + input.getSelectedReturnInterval() - 1; p++) {
+            LocalDate period = input.getStartDate().plusMonths(p);
             int periodYear = period.getYear();
             int periodMonth = period.getMonthValue();
             returnValuesMap.put(String.format("%d-%d", periodYear, periodMonth), 0L);
-
-            period = period.plusMonths(1);
         }
 
 
@@ -216,10 +219,10 @@ public class FieldPerfReportService {
 
         TimeMeasurement tm1 = tm.createSubMeasurement("select MaterializedServiceMessage");
         StringBuilder queryStatement = new StringBuilder();
-        String repairperiod = String.format("concat(extract(year from %s), '-', extract(month from %s)) ", rmaDate, rmaDate);
+        String repairPeriod = String.format("concat(extract(year from %s), '-', extract(month from %s)) ", rmaDate, rmaDate);
 
         queryStatement.append("select count(a) as cnt, ");
-        queryStatement.append(repairperiod).append("as repairperiod ");
+        queryStatement.append(repairPeriod).append("as repairperiod ");
         queryStatement.append("from MaterializedServiceMessage a ");
 
         queryStatement.append(String.format("where %s >= :firstRepairPeriodStart ", rmaDate));
@@ -241,7 +244,7 @@ public class FieldPerfReportService {
             queryStatement.append("and a.internalShipmentDate is not null ");
         }
 
-        queryStatement.append("group by " + repairperiod);
+        queryStatement.append("group by ").append(repairPeriod);
 
         TypedQuery<Object[]> query = em.createQuery(queryStatement.toString(), Object[].class)
                 .setParameter("firstRepairPeriodStart", firstRepairPeriodStart)
@@ -256,15 +259,224 @@ public class FieldPerfReportService {
         for (Iterator<Object[]> i = result.iterator(); i.hasNext();) {
             Object[] values = i.next();
             long cnt = ((Number) values[0]).longValue();
-            String iterRepairperiod = (String) values[1];
+            String iterRepairPeriod = (String) values[1];
 
-            returnValuesMap.put(iterRepairperiod, cnt);
+            returnValuesMap.put(iterRepairPeriod, cnt);
         }
 
         tm1.stopMeasurement();
         tm.stopMeasurement();
-        System.out.println("end getLastYearReturn()\n" + tm);
+        logger.info("end getLastYearReturn()\n" + tm);
         return returnValuesMap;
+    }
+
+
+
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public HashMap<String, Long> getFirstYearReturn(FieldPerfReportSearchObject input) {
+        logger.info("start getFirstYearReturn()");
+        TimeMeasurement tm = new TimeMeasurement("getFirstYearReturn()");
+
+        String rmaDate;
+        if (input.getSelectedRmaCntType() == RMACountingType.CLOSED_BY_ARRIVAL_DATE
+                || input.getSelectedRmaCntType() == RMACountingType.ALL_BY_ARRIVAL_DATE) {
+            rmaDate = "a.internalArrivalDate";
+        }
+        else {
+            rmaDate = "a.internalShipmentDate";
+        }
+
+        HashMap<String, Long> returnValuesMap = new HashMap<String, Long>();
+        // returnValuesMap je Monat mit 0 initialisieren
+        for (int p = 0; p < input.getSelectedAnalInterval(); p++) {
+            LocalDate period = input.getStartDate().plusMonths(p);
+            int periodYear = period.getYear();
+            int periodMonth = period.getMonthValue();
+            returnValuesMap.put(String.format("%d-%d", periodYear, periodMonth), 0L);
+        }
+
+
+
+        LocalDate firstCustomerShipDateStart = input.getStartDate();
+
+        LocalDate lastCustomerShipDateEnd = input.getStartDate().plusMonths(input.getSelectedAnalInterval());
+
+        LocalDate firstRepairPeriodStart = input.getStartDate();
+
+        LocalDate lastRepairPeriodEnd = input.getStartDate().plusMonths(input.getSelectedQualityPeriod() + input.getSelectedAnalInterval() - 1);
+
+
+        /*
+        Beispiel:
+        // select shipperiod, sum(cnt) cnt
+        // from (
+            select count(*) as cnt,
+                concat(year(a.cust_ship_date), '-', month(a.cust_ship_date)) repairperiod
+            from service_message_mv a
+            where a.internal_arrival_date >= '2013-01-01'
+            and a.internal_arrival_date < '2014-04-01'
+            and a.cust_ship_date >= '2013-01-01'
+            and a.cust_ship_date < '2013-05-01'
+            and a.internal_shipment_date is not null
+            and year(a.internal_arrival_date) * 12 + month(a.internal_arrival_date) >=
+                year(a.cust_ship_date) * 12 + month(a.cust_ship_date)
+            and year(a.internal_arrival_date) * 12 + month(a.internal_arrival_date) <=
+                year(a.cust_ship_date) * 12 + month(a.cust_ship_date) + 12
+            group by year(a.internal_arrival_date), month(a.internal_arrival_date), year(a.cust_ship_date), month(a.cust_ship_date)
+        // ) matrix
+        // group by shipperiod;
+         */
+
+        TimeMeasurement tm1 = tm.createSubMeasurement("select MaterializedServiceMessage");
+        StringBuilder queryStatement = new StringBuilder();
+        String shipPeriod = "concat(extract(year from a.customerShipmentDate), '-', extract(month from a.customerShipmentDate)) ";
+
+        queryStatement.append("select count(a) as cnt, ");
+        queryStatement.append(shipPeriod + "as shipperiod ");
+        queryStatement.append("from MaterializedServiceMessage a ");
+
+        queryStatement.append(String.format("where %s >= :firstRepairPeriodStart ", rmaDate));
+        queryStatement.append(String.format("and %s < :lastRepairPeriodEnd ", rmaDate));
+        queryStatement.append("and a.customerShipmentDate >= :firstCustomerShipDateStart ");
+        queryStatement.append("and a.customerShipmentDate < :lastCustomerShipDateEnd ");
+
+        queryStatement.append(String.format("and extract(year from %s) * 12 + extract(month from %s) >= ", rmaDate, rmaDate));
+        queryStatement.append("extract(year from a.customerShipmentDate) * 12 + extract(month from a.customerShipmentDate) ");
+
+        queryStatement.append(String.format("and extract(year from %s) * 12 + extract(month from %s) < ", rmaDate, rmaDate));
+        queryStatement
+                .append("extract(year from a.customerShipmentDate) * 12 + extract(month from a.customerShipmentDate) + :selectedQRelevantPeriod ");
+
+        // Add standard filter criteria
+        setupFilterCriteria(queryStatement, input, false, false);
+        if (input.getSelectedRmaCntType() == RMACountingType.CLOSED_BY_ARRIVAL_DATE) {
+            queryStatement.append("and a.internalShipmentDate is not null ");
+        }
+        queryStatement.append("group by ").append(shipPeriod);
+
+
+        TypedQuery<Object[]> query = em.createQuery(queryStatement.toString(), Object[].class)
+                .setParameter("firstRepairPeriodStart", firstRepairPeriodStart)
+                .setParameter("lastRepairPeriodEnd", lastRepairPeriodEnd)
+                .setParameter("firstCustomerShipDateStart", firstCustomerShipDateStart)
+                .setParameter("lastCustomerShipDateEnd", lastCustomerShipDateEnd)
+                .setParameter("selectedQRelevantPeriod", input.getSelectedQualityPeriod());
+
+
+        List<Object[]> result = query.getResultList();
+        for (Iterator<Object[]> i = result.iterator(); i.hasNext();) {
+            Object[] values = i.next();
+            long cnt = ((Number) values[0]).longValue();
+            String iterShipPeriod = (String) values[1];
+
+            returnValuesMap.put(iterShipPeriod, returnValuesMap.get(iterShipPeriod) + cnt);
+        }
+
+        tm1.stopMeasurement();
+        tm.stopMeasurement();
+        logger.info("end getFirstYearReturn()\n" + tm);
+        return returnValuesMap;
+    }
+
+
+
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public HashMap<String, HashMap<String, Long>> getReturnValuesOfAnalysisInterval(FieldPerfReportSearchObject input) {
+        logger.info("start getReturnValuesOfAnalysisInterval()");
+        TimeMeasurement tm = new TimeMeasurement("getReturnValuesOfAnalysisInterval()");
+
+        String rmaDate;
+        if (input.getSelectedRmaCntType() == RMACountingType.CLOSED_BY_ARRIVAL_DATE
+                || input.getSelectedRmaCntType() == RMACountingType.ALL_BY_ARRIVAL_DATE) {
+            rmaDate = "a.internalArrivalDate";
+        }
+        else {
+            rmaDate = "a.internalShipmentDate";
+        }
+
+        HashMap<String, HashMap<String, Long>> returnMap = new HashMap<String, HashMap<String, Long>>();
+        // returnValuesMap je Analyse-Monat mit Map Return-Monaten mit Anzahl 0 initialisieren
+        for (int ap = 0; ap < input.getSelectedAnalInterval(); ap++) {
+            LocalDate analysisPeriod = input.getStartDate().plusMonths(ap);
+            int analysisPeriodYear = analysisPeriod.getYear();
+            int analysisPeriodMonth = analysisPeriod.getMonthValue();
+
+            HashMap<String, Long> returnValuesMap = new HashMap<String, Long>();
+            returnMap.put(String.format("%d-%d", analysisPeriodYear, analysisPeriodMonth), returnValuesMap);
+
+            for (int rp = 0; rp < input.getSelectedReturnInterval(); rp++) {
+                LocalDate returnPeriod = analysisPeriod.plusMonths(rp);
+                int returnPeriodYear = returnPeriod.getYear();
+                int returnPeriodMonth = returnPeriod.getMonthValue();
+                returnValuesMap.put(String.format("%d-%d", returnPeriodYear, returnPeriodMonth), 0L);
+            }
+        }
+
+        LocalDate firstRepairPeriodStart = input.getStartDate();
+
+        LocalDate lastRepairPeriodEnd = input.getStartDate().plusMonths(input.getSelectedReturnInterval() + input.getSelectedAnalInterval() - 1);
+
+        LocalDate firstShipDateStart = input.getStartDate();
+
+        LocalDate lastShipDateEnd = input.getStartDate().plusMonths(input.getSelectedAnalInterval());
+
+
+
+        TimeMeasurement tm1 = tm.createSubMeasurement("select MaterializedArrivalShipment");
+        StringBuilder queryStatement = new StringBuilder();
+        String shipPeriod = "concat(extract(year from a.customerShipmentDate), '-', extract(month from a.customerShipmentDate)) ";
+        String repairPeriod = String.format("concat(extract(year from %s), '-', extract(month from %s)) ", rmaDate, rmaDate);
+
+        queryStatement.append("select count(a) as cnt, ");
+        queryStatement.append(shipPeriod + "as shipperiod, ");
+        queryStatement.append(repairPeriod).append("as repairperiod ");
+        queryStatement.append("from MaterializedServiceMessage a ");
+
+        queryStatement.append(String.format("where %s >= :firstRepairPeriodStart ", rmaDate));
+        queryStatement.append(String.format("and %s < :lastRepairPeriodEnd ", rmaDate));
+        queryStatement.append("and a.customerShipmentDate >= :firstShipDateStart  ");
+        queryStatement.append("and a.customerShipmentDate < :lastShipDateEnd ");
+
+        queryStatement.append(String.format("and extract(year from %s) * 12 + extract(month from %s) >= ", rmaDate, rmaDate));
+        queryStatement.append("extract(year from a.customerShipmentDate) * 12 + extract(month from a.customerShipmentDate) ");
+
+        queryStatement.append(String.format("and extract(year from %s) * 12 + extract(month from %s) < ", rmaDate, rmaDate));
+        queryStatement.append("extract(year from a.customerShipmentDate) * 12 + extract(month from a.customerShipmentDate) + :returnInterval ");
+
+        // Add standard filter criteria
+        setupFilterCriteria(queryStatement, input, false, false);
+        if (input.getSelectedRmaCntType() == RMACountingType.CLOSED_BY_ARRIVAL_DATE) {
+            queryStatement.append(" and a.internalShipmentDate is not null ");
+        }
+
+        queryStatement.append("group by ").append(shipPeriod).append(", ").append(repairPeriod);
+
+
+        TypedQuery<Object[]> query = em.createQuery(queryStatement.toString(), Object[].class)
+                .setParameter("firstRepairPeriodStart", firstRepairPeriodStart)
+                .setParameter("lastRepairPeriodEnd", lastRepairPeriodEnd)
+                .setParameter("firstShipDateStart", firstShipDateStart)
+                .setParameter("lastShipDateEnd", lastShipDateEnd)
+                .setParameter("returnInterval", input.getSelectedReturnInterval());
+
+        List<Object[]> result = query.getResultList();
+        for (Iterator<Object[]> i = result.iterator(); i.hasNext();) {
+            Object[] values = i.next();
+            long cnt = ((Number) values[0]).longValue();
+            String iterShipPeriod = (String) values[1];
+            String iterRepairPeriod = (String) values[2];
+
+            HashMap<String, Long> returnValuesMap = returnMap.get(iterShipPeriod);
+            returnValuesMap.put(iterRepairPeriod, returnValuesMap.get(iterRepairPeriod) + cnt);
+        }
+
+
+        tm1.stopMeasurement();
+        tm.stopMeasurement();
+        logger.info("end getReturnValuesOfAnalysisInterval()\n" + tm);
+        return returnMap;
     }
 
 
@@ -275,7 +487,7 @@ public class FieldPerfReportService {
      * - MaterializedArrivalShipment (arrival_shipment_mv)
      * - AggregatedShipmentArrival (aggregated_shipment_arrival_tab)
      * - MaterializedAssemblyShipment (assembly_shipment_mv)
-     * von getLastYearReturn():
+     * von getLastYearReturn(), getFirstYearReturn():
      * - MaterializedServiceMessage (service_message_mv)
      * 
      * @param queryStatement
