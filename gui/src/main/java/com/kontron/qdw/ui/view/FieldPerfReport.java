@@ -5,8 +5,11 @@ import static com.kontron.qdw.ui.UserSession.*;
 
 import java.io.Serializable;
 import java.lang.invoke.MethodHandles;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.Map.Entry;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -26,10 +29,12 @@ import com.kontron.qdw.boundary.mv.FieldPerfReportService;
 import com.kontron.qdw.boundary.mv.MaterializedServiceMessageBoundaryService;
 import com.kontron.qdw.boundary.service.RMATypeBoundaryService;
 import com.kontron.qdw.boundary.service.RepairErrorCodeBoundaryService;
-import com.kontron.qdw.dto.base.*;
+import com.kontron.qdw.dto.base.CustomerDTO;
+import com.kontron.qdw.dto.base.SupplierDTO;
 import com.kontron.qdw.dto.material.*;
 import com.kontron.qdw.dto.mv.*;
-import com.kontron.qdw.dto.service.*;
+import com.kontron.qdw.dto.service.RMATypeListDTO;
+import com.kontron.qdw.dto.service.RepairErrorCodeListDTO;
 import com.kontron.qdw.service.SavedQueryService;
 import com.kontron.qdw.ui.UserSession;
 import com.kontron.qdw.ui.view.util.SuperView;
@@ -57,6 +62,15 @@ public class FieldPerfReport extends SuperView implements Serializable {
 
     public static final String PAGE_URL = "/view/FieldPerfReport.jsf?faces-redirect=true";
     public static final String VIEW_ID = "com.kontron.qdw.ui.view.FieldPerfReport";
+
+
+    public static final String SHIPMENT_MONTH_LABEL = "Ship. month";
+    public static final String SHIPMENT_LABEL = "Shipments";
+    public static final String SUM_LABEL = "Sum";
+    public static final String RATIO_LABEL = "Ratio";
+    public static final String Q_RELEVANT_LABEL = "Q-relevant period";
+    public static final String Q_RELEVANT_RATIO_LABEL = "Q-relevant ratio";
+    private final DecimalFormat decimalFormat = new DecimalFormat("0.00");
 
 
     private final transient SavedQueryService queryManager;
@@ -89,6 +103,8 @@ public class FieldPerfReport extends SuperView implements Serializable {
     private DualListModel<RepairErrorCodeListDTO> errList;
     private String errFilterCriterion;
     private Map<String, RepairErrorCodeListDTO> errorCache = new HashMap<>();
+
+    private List<FieldPerfReportResultDTO> report;
 
 
 
@@ -198,12 +214,195 @@ public class FieldPerfReport extends SuperView implements Serializable {
             HashMap<String, Long> qRelevantReturn = reportService.getFirstYearReturn(reportSearchObj);
             HashMap<String, HashMap<String, Long>> returnData = reportService.getReturnValuesOfAnalysisInterval(reportSearchObj);
 
+            // List<OrderItemSearchDTO> orderItemsList =
+            // report = converter.convert(orderItemsList);
+            List<String[]> _report = formatResult(reportSearchObj, returnData, shipPerMonth, qRelevantReturn, lastYearReturn);
+
             System.out.println("hallo");
         }
         catch (final Exception e) {
             logger.error("Error while executing report!", e);
             MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_ERROR, OPERATION_EXEC_REPORT_FAIL, e);
         }
+    }
+
+
+
+    private List<String[]> formatResult(FieldPerfReportSearchObject input, HashMap<String, HashMap<String, Long>> values,
+            HashMap<String, Long> shipments, HashMap<String, Long> qRelevantReturn, HashMap<String, Long> lastYearReturn) {
+        List<String[]> out = new Vector<String[]>();
+        int year = input.getStartDate().getYear();
+        int month = input.getStartDate().getMonthValue();
+        int colIndex = 1;
+        int colSize = input.getSelectedAnalInterval() + 2;
+
+
+        // Zeile 1: Überschriften
+        String[] head = new String[colSize];
+        // Überschrift Spalte 1
+        head[0] = SHIPMENT_MONTH_LABEL;
+
+        // Monate hinzufügen
+        for (colIndex = 1; colIndex <= input.getSelectedAnalInterval(); colIndex++) {
+            head[colIndex] = year + "-" + month;
+
+            if (month == 12) {
+                month = 1;
+                year++;
+            }
+            else {
+                month++;
+            }
+        }
+
+        // Überschrift letzte Spalte
+        head[colIndex] = Q_RELEVANT_LABEL;
+        out.add(head);
+
+
+
+        // Zeile 2: shipments
+        String[] ships = new String[colSize];
+        // Zeilenbezeichnung in Spalte 1
+        ships[0] = SHIPMENT_LABEL;
+
+        // Shipments hinzufügen
+        for (colIndex = 1; colIndex <= input.getSelectedAnalInterval(); colIndex++) {
+            if (shipments.containsKey(head[colIndex])) {
+                ships[colIndex] = Long.toString(shipments.get(head[colIndex]));
+            }
+            else {
+                ships[colIndex] = "";
+            }
+        }
+
+        // die letzte Spalte bleibt in dieser Zeile leer
+        ships[colIndex] = "";
+        out.add(ships);
+
+
+
+        // In den folgenden Zeilen kommen die Einzelergebnisse der Rücksendungen
+        year = input.getStartDate().getYear();
+        month = input.getStartDate().getMonthValue();
+        HashMap<String, String[]> dataMap = new HashMap<>();
+
+        long sumAll = 0;
+
+        for (int i = 0; i < (input.getSelectedAnalInterval() + input.getSelectedReturnInterval() - 1); i++) {
+            String[] data = new String[colSize];
+            // Zeilenbezeichnung in Spalte 1
+            data[0] = year + "-" + month;
+
+            // zunächst alle Inhalte der restlichen Zeile löschen
+            for (colIndex = 1; colIndex <= input.getSelectedAnalInterval(); colIndex++) {
+                data[colIndex] = "";
+            }
+
+            // TODO: ist das die letzte Spalte???
+            // wenn es zu dem Monat dieser Zeile einen Eintrag gibt, den Wert übernehmen
+            if (lastYearReturn.containsKey(data[0])) {
+                data[colIndex] = Long.toString(lastYearReturn.get(data[0]));
+                sumAll += lastYearReturn.get(data[0]);
+            }
+            else {
+                data[colIndex] = "";
+            }
+
+            dataMap.put(data[0], data);
+
+            if (month == 12) {
+                month = 1;
+                year++;
+            }
+            else {
+                month++;
+            }
+        }
+
+        // Report-Daten als Matrix einfügen
+        // über alle Spalten
+        for (colIndex = 1; colIndex <= input.getSelectedAnalInterval(); colIndex++) {
+            String spaltenMonat = head[colIndex];
+            if (!values.containsKey(spaltenMonat)) {
+                continue;
+            }
+
+            HashMap<String, Long> frame = values.get(spaltenMonat);
+
+            // über alle Zeilen
+            for (Entry<String, Long> e : frame.entrySet()) {
+                if (dataMap.containsKey(e.getKey())) {
+                    dataMap.get(e.getKey())[colIndex] = Long.toString(e.getValue());
+                }
+            }
+        }
+
+
+
+        // Zusammenfassungen
+        Collection<String[]> col = new ArrayList<String[]>();
+        for (String[] s : dataMap.values()) {
+            col.add(s);
+        }
+
+        Collections.sort((ArrayList<String[]>) col, new FieldPerformanceComparator());
+
+        for (String[] s : col) {
+            out.add(s);
+        }
+
+        // Add aggregated rows
+        String[] sum = new String[colSize];
+        sum[0] = SUM_LABEL;
+        String[] ratio = new String[colSize];
+        ratio[0] = RATIO_LABEL;
+        String[] qRelevantPeriod = new String[colSize];
+        qRelevantPeriod[0] = Q_RELEVANT_LABEL;
+        String[] qRelevantRatio = new String[colSize];
+        qRelevantRatio[0] = Q_RELEVANT_RATIO_LABEL;
+
+        for (colIndex = 1; colIndex <= input.getSelectedAnalInterval(); colIndex++) {
+            long s = 0;
+
+            for (int i = 2; i < out.size(); i++) {
+                String[] row = out.get(i);
+                if (!row[colIndex].equals("")) {
+                    s += Long.parseLong(row[colIndex]);
+                }
+            }
+
+            sum[colIndex] = Long.toString(s);
+
+            double rat = 0;
+            if (!out.get(1)[colIndex].equals("") && !out.get(1)[colIndex].equals("0")) {
+                rat = 100.0 * s / Double.parseDouble(out.get(1)[colIndex]);
+            }
+
+            ratio[colIndex] = decimalFormat.format(rat) + " %";
+            rat = 0;
+            if (qRelevantReturn.containsKey(head[colIndex])) {
+                qRelevantPeriod[colIndex] = Long.toString(qRelevantReturn.get(head[colIndex]));
+            }
+            else {
+                qRelevantPeriod[colIndex] = "0";
+            }
+
+            if (!out.get(1)[colIndex].equals("") && !out.get(1)[colIndex].equals("0")) {
+                rat = 100.0 * Double.parseDouble(qRelevantPeriod[colIndex]) / Double.parseDouble(out.get(1)[colIndex]);
+            }
+
+            qRelevantRatio[colIndex] = decimalFormat.format(rat) + " %";
+
+        }
+        sum[colIndex] = Long.toString(sumAll);
+
+        out.add(sum);
+        out.add(ratio);
+        out.add(qRelevantPeriod);
+        out.add(qRelevantRatio);
+
+        return out;
     }
 
 
@@ -536,6 +735,12 @@ public class FieldPerfReport extends SuperView implements Serializable {
 
 
 
+    public List<FieldPerfReportResultDTO> getReport() {
+        return report;
+    }
+
+
+
     public String getFormTitle() {
         return formTitle;
     }
@@ -629,6 +834,26 @@ public class FieldPerfReport extends SuperView implements Serializable {
         }
         if (reportSearchObj.getSelectedRmaCntType() == null) {
             reportSearchObj.setSelectedRmaCntType(RMACountingType.ALL_BY_ARRIVAL_DATE);
+        }
+    }
+
+
+
+    private class FieldPerformanceComparator implements Comparator<String[]> {
+        @Override
+        public int compare(String[] a, String[] b) {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM");
+
+            try {
+                Date value1 = dateFormat.parse(a[0]);
+                Date value2 = dateFormat.parse(b[0]);
+
+                return value1.compareTo(value2);
+            }
+            catch (Throwable e) {
+                // Do nothing!
+                return -1;
+            }
         }
     }
 
