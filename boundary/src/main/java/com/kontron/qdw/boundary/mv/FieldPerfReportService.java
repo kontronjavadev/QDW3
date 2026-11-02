@@ -13,6 +13,7 @@ import com.kontron.qdw.domain.material.Material;
 import com.kontron.qdw.domain.material.SerialNumberSetItem;
 import com.kontron.qdw.dto.base.*;
 import com.kontron.qdw.dto.mv.*;
+import com.kontron.qdw.dto.mv.report.FieldPerfReportSearchObject;
 import com.kontron.qdw.dto.service.RepairErrorCodeListDTO;
 import com.kontron.qdw.repository.material.*;
 import com.kontron.util.datetime.TimeMeasurement;

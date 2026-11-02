@@ -1,4 +1,4 @@
-package com.kontron.qdw.dto.mv;
+package com.kontron.qdw.dto.mv.report;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -10,11 +10,13 @@ import com.kontron.qdw.dto.base.PlantSearchDTO;
 import com.kontron.qdw.dto.base.SupplierDTO;
 import com.kontron.qdw.dto.material.MaterialNumberSetDTO;
 import com.kontron.qdw.dto.material.SerialNumberSetDTO;
+import com.kontron.qdw.dto.mv.DistributionType;
+import com.kontron.qdw.dto.mv.RMACountingType;
 import com.kontron.qdw.dto.service.RepairErrorCodeListDTO;
 
 public class FieldPerfReportSearchObject implements Serializable {
 
-    private static final long serialVersionUID = -5852150261873889386L;
+    private static final long serialVersionUID = -5931248672752786567L;
 
     private List<String> matNrs = new ArrayList<>();
 
