@@ -273,8 +273,8 @@ public class FieldPerfReport extends SuperView implements Serializable {
 
         // Shipments hinzufügen
         for (colIndex = 1; colIndex <= input.getSelectedAnalInterval(); colIndex++) {
-            if (shipments.containsKey(head[colIndex])) {
-                ships[colIndex] = new ReportDataCell(Long.toString(shipments.get(head[colIndex])));
+            if (shipments.containsKey(head[colIndex].getLabel())) {
+                ships[colIndex] = new ReportDataCell(Long.toString(shipments.get(head[colIndex].getLabel())));
             }
             else {
                 ships[colIndex] = new ReportDataCell("");
@@ -307,8 +307,8 @@ public class FieldPerfReport extends SuperView implements Serializable {
             // TODO: ist das die letzte Spalte???
             // wenn es zu dem Monat dieser Zeile einen Eintrag gibt, den Wert übernehmen
             if (lastYearReturn.containsKey(data[0].getLabel())) {
-                data[colIndex] = new ReportLastDataCell(Long.toString(lastYearReturn.get(data[0])));
-                sumAll += lastYearReturn.get(data[0]);
+                data[colIndex] = new ReportLastDataCell(Long.toString(lastYearReturn.get(data[0].getLabel())));
+                sumAll += lastYearReturn.get(data[0].getLabel());
             }
             else {
                 data[colIndex] = new ReportLastDataCell("");

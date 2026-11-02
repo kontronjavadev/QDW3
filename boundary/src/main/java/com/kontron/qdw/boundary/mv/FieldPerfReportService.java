@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +13,8 @@ import org.slf4j.LoggerFactory;
 import com.kontron.qdw.domain.material.Material;
 import com.kontron.qdw.domain.material.SerialNumberSetItem;
 import com.kontron.qdw.dto.base.*;
-import com.kontron.qdw.dto.mv.*;
+import com.kontron.qdw.dto.mv.DistributionType;
+import com.kontron.qdw.dto.mv.RMACountingType;
 import com.kontron.qdw.dto.mv.report.FieldPerfReportSearchObject;
 import com.kontron.qdw.dto.service.RepairErrorCodeListDTO;
 import com.kontron.qdw.repository.material.*;
@@ -564,7 +566,7 @@ public class FieldPerfReportService {
             }
 
             // add revision filter if mentionend
-            if (!input.getRevNo().isEmpty()) {
+            if (StringUtils.isNotEmpty(input.getRevNo())) {
                 queryStatement.append(parseCriterion(revisionAttribute, input.getRevNo()));
             }
         }
@@ -593,7 +595,7 @@ public class FieldPerfReportService {
                     .append(") ");
         }
 
-        if (!input.getMatHier().isEmpty()) {
+        if (StringUtils.isNotEmpty(input.getMatHier())) {
             queryStatement.append(parseCriterion("a.materialHierarchy", input.getMatHier()));
         }
 
@@ -669,7 +671,7 @@ public class FieldPerfReportService {
      * @return jpql-Schnipsel für diesen Teil der Filterung
      */
     private String parseCriterion(String name, String filter) {
-        if (filter.isEmpty()) {
+        if (StringUtils.isEmpty(filter)) {
             return "";
         }
 
@@ -740,7 +742,7 @@ public class FieldPerfReportService {
         }
 
         // ... Material hierarchy zur Filterung angegeben ist
-        if (!input.getMatHier().isEmpty()) {
+        if (StringUtils.isNotEmpty(input.getMatHier())) {
             return false;
         }
 
