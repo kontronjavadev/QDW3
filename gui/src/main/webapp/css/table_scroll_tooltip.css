@@ -41,10 +41,6 @@ body .ui-datatable thead th.ui-state-active.ui-state-hover {
 }
 
 
-body .ui-datatable.headerless thead {
-	display: none;
-}
-
 
 body .ui-datatable .ui-datatable-data > tr > td {
 	padding: .15rem .3rem;
@@ -163,6 +159,20 @@ body .ui-paginator .ui-paginator-rpp-options {
 	max-height: calc(100vh - 282px);
 	height: fit-content;
 	min-height: 32px;
+}
+
+/* Headerless: Header-Container auf 0 Pixel stauchen und Inhalt abschneiden
+Das sind tatsächlich zwei einzelne Tabellen. Würde der header aber mit "display: none;" ausgeblendet,
+so lieferte er für jede Spalte eine Breite von 0px, die auf die zweite Tabelle übertragen würden
+und die ganze Berechnung zerstörten. Die Tabelle würde so lediglich noch den verfügbaren Platz einnehmen.
+ */
+body .ui-datatable.viewScrollable.headerless .ui-datatable-scrollable-header {
+	height: 0 !important;
+	min-height: 0 !important;
+	border: none !important;
+	padding: 0 !important;
+	margin: 0 !important;
+	overflow: hidden !important;
 }
 
 .viewScrollable .ui-datatable-scrollable-header,

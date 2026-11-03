@@ -35,7 +35,14 @@
 
 	<p:menubar>
 		<p:submenu icon="pi pi-file" label="#{i18n.mnu_file}" id="panData_mniFile">
-			<p:menuitem value="#{i18n.fieldperfreportview_action_querymgmt}" ajax="true" icon="pi pi-database" id="panData_mniQeryManag" onclick="PF('dlgQueryMgmt').show()"/>
+			<p:menuitem value="#{i18n.fieldperfreportview_action_querymgmt}" 
+				ajax="true" 
+				icon="pi pi-database" 
+				id="panData_mniQeryManag" 
+				action="#{fieldPerfReport.prepareQueryDialog}"
+				update="dlgQueryMgmt"
+				resetValues="true"
+				oncomplete="PF('dlgQueryMgmt').show()"/>
 			<p:menuitem value="#{i18n.search_input_dlg_save_query}" icon="pi pi-save" onclick="PF('dlgSaveQuery').show()"/>
 		</p:submenu>
 		<p:submenu icon="pi pi-print" label="#{i18n.mnu_export}">
@@ -390,18 +397,17 @@
 
 <!-- 
 		rows="#{fieldPerfReport.numberRows}"
-		
 		selection="#{fieldPerfReport.selectedObject}"
  -->
  <!-- 
 style="#{reportPanelItem.textStyleOtherCols}" styleClass="pf-tooltip-target"
   -->
 	<p:dataTable id="panData" var="reportRow" 
-		selectionMode="single" selectionTextDisabled="false" showHeader="false" 
+		selectionTextDisabled="false" allowUnsorting="true" resizeMode="expand" resizableColumns="true" 
+		selectionMode="single" multiViewState="true" 
 		loadingMessage="#{i18n.action_fetch_data}"
-		value="#{fieldPerfReport.report}"
-        scrollable="true" styleClass="viewScrollable headerless" allowUnsorting="true" 
-        rowKey="#{reportRow[0].label}" multiViewState="true" >
+		value="#{fieldPerfReport.report}" scrollable="true" styleClass="viewScrollable headerless" 
+        rowKey="#{reportRow[0].label}" >
 
 		<p:columns value="#{fieldPerfReport.columnIndices}" var="colIdx" width="#{fieldPerfReport.getColumnWidth(colIdx)}" >
 			<h:outputText value="#{reportRow[colIdx].label}" />

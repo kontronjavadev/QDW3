@@ -902,6 +902,10 @@ public class FieldPerfReport extends SuperView implements Serializable {
         selectedSavedQuery = null;
     }
 
+    public void prepareQueryDialog() {
+        this.selectedSavedQuery = null;
+    }
+
 
 
     public FieldPerfReportSearchObject getReportSearchObj() {
