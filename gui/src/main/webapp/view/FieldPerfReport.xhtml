@@ -3,6 +3,7 @@
 	xmlns:h="jakarta.faces.html"
 	xmlns:f="jakarta.faces.core"
 	xmlns:p="http://primefaces.org/ui"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
 	template="/templates/ui.xhtml">
 
 <f:metadata>
@@ -389,17 +390,23 @@
 
 <!-- 
 		rows="#{fieldPerfReport.numberRows}"
-		rowKey="#{viewItem.id}" multiViewState="true" 
+		
 		selection="#{fieldPerfReport.selectedObject}"
  -->
  <!-- 
-	<p:dataTable id="panData" var="reportItem" 
-		selectionMode="single" selectionTextDisabled="false"
+style="#{reportPanelItem.textStyleOtherCols}" styleClass="pf-tooltip-target"
+  -->
+	<p:dataTable id="panData" var="reportRow" 
+		selectionMode="single" selectionTextDisabled="false" showHeader="false" 
 		loadingMessage="#{i18n.action_fetch_data}"
 		value="#{fieldPerfReport.report}"
-        scrollable="true" styleClass="viewScrollable" allowUnsorting="true" >
+        scrollable="true" styleClass="viewScrollable headerless" allowUnsorting="true" 
+        rowKey="#{reportRow[0].label}" multiViewState="true" >
+
+		<p:columns value="#{fieldPerfReport.columnIndices}" var="colIdx" width="#{fieldPerfReport.getColumnWidth(colIdx)}" >
+			<h:outputText value="#{reportRow[colIdx].label}" />
+		</p:columns>
 	</p:dataTable>
-  -->
 
 
 

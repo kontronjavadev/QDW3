@@ -41,8 +41,8 @@ body .ui-datatable thead th.ui-state-active.ui-state-hover {
 }
 
 
-.headerless.ui-datatable table thead tr {
-	display: none !important;
+body .ui-datatable.headerless thead {
+	display: none;
 }
 
 

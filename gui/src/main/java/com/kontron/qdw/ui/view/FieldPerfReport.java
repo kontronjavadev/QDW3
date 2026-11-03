@@ -231,7 +231,21 @@ public class FieldPerfReport extends SuperView implements Serializable {
         }
     }
 
+    public List<Integer> getColumnIndices() {
+        if (report == null || report.isEmpty()) {
+            return List.of();
+        }
 
+        // IntStream von 0 bis Array-Länge der ersten Zeile
+        return IntStream.range(0, report.getFirst().length).boxed().toList();
+    }
+
+    public int getColumnWidth(int colIdx) {
+        if (report != null && !report.isEmpty() && report.getFirst().length > colIdx) {
+            return report.getFirst()[colIdx].getWidth();
+        }
+        return 100; // Fallback
+    }
 
     private List<FieldPerfReportResultDTO[]> formatResult(FieldPerfReportSearchObject input, HashMap<String, HashMap<String, Long>> values,
             HashMap<String, Long> shipments, HashMap<String, Long> qRelevantReturn, HashMap<String, Long> lastYearReturn) {
@@ -245,11 +259,11 @@ public class FieldPerfReport extends SuperView implements Serializable {
         // Zeile 1: Überschriften
         FieldPerfReportResultDTO[] head = new FieldPerfReportResultDTO[colSize];
         // Überschrift Spalte 1
-        head[0] = new ReportColRowHeader(SHIPMENT_MONTH_LABEL);
+        head[0] = new ReportFirstColHeader(SHIPMENT_MONTH_LABEL);
 
         // Monate hinzufügen
         for (colIndex = 1; colIndex <= input.getSelectedAnalInterval(); colIndex++) {
-            head[colIndex] = new ReportColRowHeader(year + "-" + month);
+            head[colIndex] = new ReportHeader(year + "-" + month);
 
             if (month == 12) {
                 month = 1;
@@ -269,7 +283,7 @@ public class FieldPerfReport extends SuperView implements Serializable {
         // Zeile 2: shipments
         FieldPerfReportResultDTO[] ships = new FieldPerfReportResultDTO[colSize];
         // Zeilenbezeichnung in Spalte 1
-        ships[0] = new ReportColRowHeader(SHIPMENT_LABEL);
+        ships[0] = new ReportFirstColHeader(SHIPMENT_LABEL);
 
         // Shipments hinzufügen
         for (colIndex = 1; colIndex <= input.getSelectedAnalInterval(); colIndex++) {
@@ -297,15 +311,14 @@ public class FieldPerfReport extends SuperView implements Serializable {
         for (int i = 0; i < (input.getSelectedAnalInterval() + input.getSelectedReturnInterval() - 1); i++) {
             FieldPerfReportResultDTO[] data = new FieldPerfReportResultDTO[colSize];
             // Zeilenbezeichnung in Spalte 1
-            data[0] = new ReportDataCell(year + "-" + month);
+            data[0] = new ReportFirstColHeader(year + "-" + month);
 
             // zunächst alle Inhalte der restlichen Zeile löschen
             for (colIndex = 1; colIndex <= input.getSelectedAnalInterval(); colIndex++) {
                 data[colIndex] = new ReportDataCell("");
             }
 
-            // TODO: ist das die letzte Spalte???
-            // wenn es zu dem Monat dieser Zeile einen Eintrag gibt, den Wert übernehmen
+            // Letzte Spalte
             if (lastYearReturn.containsKey(data[0].getLabel())) {
                 data[colIndex] = new ReportLastDataCell(Long.toString(lastYearReturn.get(data[0].getLabel())));
                 sumAll += lastYearReturn.get(data[0].getLabel());

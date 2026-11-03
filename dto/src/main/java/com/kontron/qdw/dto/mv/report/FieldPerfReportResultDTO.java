@@ -29,11 +29,13 @@ public class FieldPerfReportResultDTO implements Serializable {
         }
     }
 
-    private String label;
+    private final String label;
+    private final int width;
 
 
-    public FieldPerfReportResultDTO(String label) {
+    public FieldPerfReportResultDTO(String label, int width) {
         this.label = label;
+        this.width = width;
     }
 
 
@@ -49,10 +51,9 @@ public class FieldPerfReportResultDTO implements Serializable {
         return label;
     }
 
-    public void setLabel(String label) {
-        this.label = label;
+    public int getWidth() {
+        return width;
     }
-
 
     //
     // public String getTextStyleColLabel() {

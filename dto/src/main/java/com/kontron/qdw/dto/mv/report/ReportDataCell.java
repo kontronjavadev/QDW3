@@ -7,7 +7,7 @@ public class ReportDataCell extends FieldPerfReportResultDTO implements Serializ
     private static final long serialVersionUID = 1L;
 
     public ReportDataCell(String label) {
-        super(label);
+        super(label, 80);
     }
 
 }
