@@ -412,6 +412,7 @@ value="#{fieldPerfReport.reportData}" styleClass="... headerless"
  -->
 	<p:dataTable id="panData" var="reportRow" 
 		selectionTextDisabled="false" allowUnsorting="true" resizeMode="expand" resizableColumns="true" 
+		selection="#{fieldPerfReport.selectedObject}"
 		selectionMode="single" multiViewState="true" 
 		loadingMessage="#{i18n.action_fetch_data}"
 		value="#{fieldPerfReport.reportData}" scrollable="true" styleClass="viewScrollable fieldPerfReportScrollable" 

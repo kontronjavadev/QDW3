@@ -4,11 +4,11 @@ import java.io.Serializable;
 
 public class FieldPerfReportResultDTO implements Serializable {
 
-    private static final long serialVersionUID = 406308907180690L;
+    private static final long serialVersionUID = 1L;
 
     protected static final String TEXTSTYLE_DEFAULT = "color: var(--text);";
     protected static final String TEXTSTYLE_HEADER = "color: var(--reportmarkblue);";
-    protected static final String TEXTSTYLE_LAST_COLUMN = "color: var(--reportmarkred);";
+    protected static final String TEXTSTYLE_SUMMARY = "color: var(--reportmarkred);";
 
     protected static final String TEXTSTYLE_BOLD = "font-weight:bold;";
     protected static final String TEXTSTYLE_ALIGN_RIGHT = "float:right;";

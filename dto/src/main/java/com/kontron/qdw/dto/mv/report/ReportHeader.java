@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class ReportHeader extends FieldPerfReportResultDTO implements Serializable {
 
-    private static final long serialVersionUID = -3349396019739218990L;
+    private static final long serialVersionUID = 1L;
 
 
     public ReportHeader(String label) {

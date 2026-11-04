@@ -109,6 +109,7 @@ public class FieldPerfReport extends SuperView implements Serializable {
 
     private List<FieldPerfReportResultDTO[]> reportData;
     private FieldPerfReportResultDTO[] reportHeader;
+    private FieldPerfReportResultDTO selectedObject;
 
 
 
@@ -774,6 +775,14 @@ public class FieldPerfReport extends SuperView implements Serializable {
 
     public FieldPerfReportResultDTO[] getReportHeader() {
         return reportHeader;
+    }
+
+    public FieldPerfReportResultDTO getSelectedObject() {
+        return selectedObject;
+    }
+
+    public void setSelectedObject(FieldPerfReportResultDTO selectedObject) {
+        this.selectedObject = selectedObject;
     }
 
 

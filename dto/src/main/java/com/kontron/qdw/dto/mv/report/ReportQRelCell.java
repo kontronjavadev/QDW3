@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class ReportQRelCell extends FieldPerfReportResultDTO implements Serializable {
 
-    private static final long serialVersionUID = 5754777517447368362L;
+    private static final long serialVersionUID = 1L;
 
     protected static final String TEXTSTYLE_Q_REL = "color: var(--reportmarkgreen);";
 

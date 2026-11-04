@@ -4,10 +4,10 @@ import java.io.Serializable;
 
 public class ReportLastColHeader extends ReportHeader implements Serializable {
 
-    private static final long serialVersionUID = 3842399789448828611L;
+    private static final long serialVersionUID = 1L;
 
     public ReportLastColHeader(String label) {
-        super(label, WIDE_CELL_WIDTH, TEXTSTYLE_LAST_COLUMN + TEXTSTYLE_BOLD);
+        super(label, WIDE_CELL_WIDTH, TEXTSTYLE_SUMMARY + TEXTSTYLE_BOLD);
     }
 
 }
