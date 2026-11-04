@@ -41,6 +41,7 @@ import com.kontron.qdw.dto.service.RepairErrorCodeListDTO;
 import com.kontron.qdw.service.SavedQueryService;
 import com.kontron.qdw.ui.UserSession;
 import com.kontron.qdw.ui.view.util.SuperView;
+import com.kontron.util.text.StringUtil;
 
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.faces.application.FacesMessage;
@@ -109,7 +110,7 @@ public class FieldPerfReport extends SuperView implements Serializable {
 
     private List<FieldPerfReportResultDTO[]> reportData;
     private FieldPerfReportResultDTO[] reportHeader;
-    private FieldPerfReportResultDTO selectedObject;
+    private FieldPerfReportResultDTO[] selectedObject;
 
 
 
@@ -777,11 +778,12 @@ public class FieldPerfReport extends SuperView implements Serializable {
         return reportHeader;
     }
 
-    public FieldPerfReportResultDTO getSelectedObject() {
+    public FieldPerfReportResultDTO[] getSelectedObject() {
         return selectedObject;
     }
 
-    public void setSelectedObject(FieldPerfReportResultDTO selectedObject) {
+    public void setSelectedObject(FieldPerfReportResultDTO[] selectedObject) {
+        System.out.println("setSelectedObject: " + reportRowToString(selectedObject));
         this.selectedObject = selectedObject;
     }
 
@@ -823,6 +825,24 @@ public class FieldPerfReport extends SuperView implements Serializable {
     @Override
     protected String getViewName() {
         return VIEW_ID;
+    }
+
+
+
+    /**
+     * Handle single click event: set selection to reselect after switching to another view and back to this view.
+     */
+    public void onClick() {
+        // System.out.println("onClick: " + reportRowToString(getSelectedObject()));
+        // onClickId(reportData, MaterialSearchDTO::getId, this::setSelectedObject);
+    }
+
+    private String reportRowToString(FieldPerfReportResultDTO[] reportRow) {
+        return reportRow == null
+                ? "null"
+                : Arrays.stream(reportRow)
+                        .map(FieldPerfReportResultDTO::getLabel)
+                        .collect(Collectors.joining(","));
     }
 
 

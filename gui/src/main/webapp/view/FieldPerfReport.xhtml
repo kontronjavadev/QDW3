@@ -405,10 +405,6 @@ value="#{fieldPerfReport.reportData}" styleClass="... headerless"
 + Methode getReportData(), das eine subList ohne den ersten Eintrag zurück gibt
 + f:facet in p:columns, das die Titelzeile aus der ersten Zeile des originalen Reports holt.
 + .fieldPerfReportScrollable .ui-datatable-scrollable-body {max-height: calc(100vh - 408px);}
-
-
-		rows="#{fieldPerfReport.numberRows}"
-		selection="#{fieldPerfReport.selectedObject}"
  -->
 	<p:dataTable id="panData" var="reportRow" 
 		selectionTextDisabled="false" allowUnsorting="true" resizeMode="expand" resizableColumns="true" 
@@ -417,6 +413,7 @@ value="#{fieldPerfReport.reportData}" styleClass="... headerless"
 		loadingMessage="#{i18n.action_fetch_data}"
 		value="#{fieldPerfReport.reportData}" scrollable="true" styleClass="viewScrollable fieldPerfReportScrollable" 
         rowKey="#{reportRow[0].label}" >
+		<p:ajax event="rowSelect" listener="#{fieldPerfReport.onClick}"/>
 
 		<p:columns value="#{fieldPerfReport.columnIndices}" var="colIdx" width="#{fieldPerfReport.getColumnWidth(colIdx)}" >
 
