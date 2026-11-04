@@ -14,7 +14,7 @@ public class FieldPerfReportResultDTO implements Serializable {
     protected static final String TEXTSTYLE_ALIGN_RIGHT = "float:right;";
 
     protected static int DATA_CELL_WIDTH = 60;
-    protected static int WIDE_CELL_WIDTH = 120;
+    protected static int WIDE_CELL_WIDTH = 95;
 
     private final String label;
     private final int width;

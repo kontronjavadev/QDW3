@@ -67,12 +67,12 @@ public class FieldPerfReport extends SuperView implements Serializable {
     public static final String VIEW_ID = "com.kontron.qdw.ui.view.FieldPerfReport";
 
 
-    public static final String SHIPMENT_MONTH_LABEL = "Ship. month";
+    public static final String SHIPMENT_MONTH_LABEL = "Shipt. month";
     public static final String SHIPMENT_LABEL = "Shipments";
     public static final String SUM_LABEL = "Sum";
     public static final String RATIO_LABEL = "Ratio";
-    public static final String Q_RELEVANT_LABEL = "Q-relevant period";
-    public static final String Q_RELEVANT_RATIO_LABEL = "Q-relevant ratio";
+    public static final String Q_RELEVANT_LABEL = "Q-rel. period";
+    public static final String Q_RELEVANT_RATIO_LABEL = "Q-rel. ratio";
     private final DecimalFormat decimalFormat = new DecimalFormat("0.00");
 
 
@@ -107,7 +107,8 @@ public class FieldPerfReport extends SuperView implements Serializable {
     private String errFilterCriterion;
     private Map<String, RepairErrorCodeListDTO> errorCache = new HashMap<>();
 
-    private List<FieldPerfReportResultDTO[]> report;
+    private List<FieldPerfReportResultDTO[]> reportData;
+    private FieldPerfReportResultDTO[] reportHeader;
 
 
 
@@ -217,7 +218,8 @@ public class FieldPerfReport extends SuperView implements Serializable {
             HashMap<String, Long> qRelevantReturn = reportService.getFirstYearReturn(reportSearchObj);
             HashMap<String, HashMap<String, Long>> returnData = reportService.getReturnValuesOfAnalysisInterval(reportSearchObj);
 
-            report = formatResult(reportSearchObj, returnData, shipPerMonth, qRelevantReturn, lastYearReturn);
+            reportData = formatResult(reportSearchObj, returnData, shipPerMonth, qRelevantReturn, lastYearReturn);
+            reportHeader = reportData.remove(0);
         }
         catch (final Exception e) {
             logger.error("Error while executing report!", e);
@@ -226,17 +228,17 @@ public class FieldPerfReport extends SuperView implements Serializable {
     }
 
     public List<Integer> getColumnIndices() {
-        if (report == null || report.isEmpty()) {
+        if (reportHeader == null) {
             return List.of();
         }
 
         // IntStream von 0 bis Array-Länge der ersten Zeile
-        return IntStream.range(0, report.getFirst().length).boxed().toList();
+        return IntStream.range(0, reportHeader.length).boxed().toList();
     }
 
     public int getColumnWidth(int colIdx) {
-        if (report != null && !report.isEmpty() && report.getFirst().length > colIdx) {
-            return report.getFirst()[colIdx].getWidth();
+        if (reportHeader != null && reportHeader.length > colIdx) {
+            return reportHeader[colIdx].getWidth();
         }
         return 100; // Fallback
     }
@@ -766,8 +768,12 @@ public class FieldPerfReport extends SuperView implements Serializable {
 
 
 
-    public List<FieldPerfReportResultDTO[]> getReport() {
-        return report;
+    public List<FieldPerfReportResultDTO[]> getReportData() {
+        return reportData;
+    }
+
+    public FieldPerfReportResultDTO[] getReportHeader() {
+        return reportHeader;
     }
 
 

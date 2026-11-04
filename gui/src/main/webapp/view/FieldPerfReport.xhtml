@@ -396,6 +396,17 @@
 
 
 <!-- 
+entweder alle Zeilen ohne extra header anzeigen:
+value="#{fieldPerfReport.report}" styleClass="... headerless"
++ .fieldPerfReportScrollable .ui-datatable-scrollable-body {max-height: calc(100vh - 408px);}
+
+oder die erste Zeile ist der header:
+value="#{fieldPerfReport.reportData}" styleClass="... headerless"
++ Methode getReportData(), das eine subList ohne den ersten Eintrag zurück gibt
++ f:facet in p:columns, das die Titelzeile aus der ersten Zeile des originalen Reports holt.
++ .fieldPerfReportScrollable .ui-datatable-scrollable-body {max-height: calc(100vh - 408px);}
+
+
 		rows="#{fieldPerfReport.numberRows}"
 		selection="#{fieldPerfReport.selectedObject}"
  -->
@@ -403,10 +414,15 @@
 		selectionTextDisabled="false" allowUnsorting="true" resizeMode="expand" resizableColumns="true" 
 		selectionMode="single" multiViewState="true" 
 		loadingMessage="#{i18n.action_fetch_data}"
-		value="#{fieldPerfReport.report}" scrollable="true" styleClass="viewScrollable fieldPerfReportScrollable headerless" 
+		value="#{fieldPerfReport.reportData}" scrollable="true" styleClass="viewScrollable fieldPerfReportScrollable" 
         rowKey="#{reportRow[0].label}" >
 
 		<p:columns value="#{fieldPerfReport.columnIndices}" var="colIdx" width="#{fieldPerfReport.getColumnWidth(colIdx)}" >
+
+			<f:facet name="header">
+				<h:outputText value="#{fieldPerfReport.reportHeader[colIdx].label}" style="#{fieldPerfReport.reportHeader[colIdx].textStyle}" />
+			</f:facet>
+
 			<h:outputText value="#{reportRow[colIdx].label}" style="#{reportRow[colIdx].textStyle}" />
 		</p:columns>
 	</p:dataTable>

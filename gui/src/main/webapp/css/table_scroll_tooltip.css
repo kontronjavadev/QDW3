@@ -195,7 +195,7 @@ body .ui-datatable.viewScrollable.headerless .ui-datatable-scrollable-header {
 }
 
 .fieldPerfReportScrollable .ui-datatable-scrollable-body {
-	max-height: calc(100vh - 408px);
+	max-height: calc(100vh - 442px);
 }
 
 
