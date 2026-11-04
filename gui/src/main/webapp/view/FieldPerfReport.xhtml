@@ -208,7 +208,7 @@
 				<h:outputLabel styleClass="label-field-optional block-separator" for="fi_start" value="#{i18n.col_fieldperfreportview_startdate}" />
 				<p:datePicker id="fi_start" styleClass="fluid-date" 
 					value="#{fieldPerfReport.reportSearchObj.startDate}" 
-					pattern="#{userSession.dateFormat}" showButtonBar="true" showIcon="true" >
+					pattern="#{userSession.dateFormat}" showButtonBar="true" showIcon="true" yearNavigator="true" monthNavigator="true" >
 					<p:ajax process="@this" />
 				</p:datePicker>
 			</div>
@@ -406,7 +406,7 @@ style="#{reportPanelItem.textStyleOtherCols}" styleClass="pf-tooltip-target"
 		selectionTextDisabled="false" allowUnsorting="true" resizeMode="expand" resizableColumns="true" 
 		selectionMode="single" multiViewState="true" 
 		loadingMessage="#{i18n.action_fetch_data}"
-		value="#{fieldPerfReport.report}" scrollable="true" styleClass="viewScrollable headerless" 
+		value="#{fieldPerfReport.report}" scrollable="true" styleClass="viewScrollable fieldPerfReportScrollable headerless" 
         rowKey="#{reportRow[0].label}" >
 
 		<p:columns value="#{fieldPerfReport.columnIndices}" var="colIdx" width="#{fieldPerfReport.getColumnWidth(colIdx)}" >
@@ -419,9 +419,9 @@ style="#{reportPanelItem.textStyleOtherCols}" styleClass="pf-tooltip-target"
 
 
 
-	<p/>
 
 <!-- 
+	<p/>
 	<h:outputText styleClass="label-field-mandatory" value="#{i18n.result_total_number_records} #{fieldPerfReport.materialsList.size()}"/>
  -->	
 

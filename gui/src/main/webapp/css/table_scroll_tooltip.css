@@ -181,6 +181,7 @@ body .ui-datatable.viewScrollable.headerless .ui-datatable-scrollable-header {
 }
 
 
+/* "Ableitungen". Verwendung: styleClass="viewScrollable orderitemViewScrollable" */
 .orderitemViewScrollable .ui-datatable-scrollable-body {
 	max-height: calc(100vh - 618px);
 }
@@ -191,6 +192,10 @@ body .ui-datatable.viewScrollable.headerless .ui-datatable-scrollable-header {
 
 .catalogItemViewScrollable .ui-datatable-scrollable-body {
 	max-height: calc(100vh - 315px);
+}
+
+.fieldPerfReportScrollable .ui-datatable-scrollable-body {
+	max-height: calc(100vh - 408px);
 }
 
 

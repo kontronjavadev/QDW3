@@ -359,17 +359,23 @@ public class FieldPerfReport extends SuperView implements Serializable {
 
 
         // Zusammenfassungen
-        // Collection<String[]> col = new ArrayList<String[]>();
-        // for (String[] s : dataMap.values()) {
-        // col.add(s);
+        // Collection<FieldPerfReportResultDTO[]> rows = new ArrayList<>();
+        // for (FieldPerfReportResultDTO[] s : dataMap.values()) {
+        // rows.add(s);
         // }
         //
-        // Collections.sort((ArrayList<String[]>) col, new FieldPerformanceComparator());
+        // Collections.sort((List<FieldPerfReportResultDTO[]>) rows, new FieldPerformanceComparator());
         //
-        // for (String[] s : col) {
+        // for (FieldPerfReportResultDTO[] s : rows) {
         // out.add(s);
         // }
-        //
+
+
+        dataMap.values().stream()
+                .sorted(new FieldPerformanceComparator())
+                .forEach(out::add);
+
+
         // // Add aggregated rows
         // String[] sum = new String[colSize];
         // sum[0] = SUM_LABEL;
@@ -543,7 +549,7 @@ public class FieldPerfReport extends SuperView implements Serializable {
             col.add(s);
         }
 
-        Collections.sort((ArrayList<String[]>) col, new FieldPerformanceComparator());
+        Collections.sort((ArrayList<String[]>) col, new ___FieldPerformanceComparator());
 
         for (String[] s : col) {
             out.add(s);
@@ -1040,7 +1046,27 @@ public class FieldPerfReport extends SuperView implements Serializable {
 
 
 
-    private class FieldPerformanceComparator implements Comparator<String[]> {
+    private class FieldPerformanceComparator implements Comparator<FieldPerfReportResultDTO[]> {
+        @Override
+        public int compare(FieldPerfReportResultDTO[] a, FieldPerfReportResultDTO[] b) {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM");
+
+            try {
+                Date value1 = dateFormat.parse(a[0].getLabel());
+                Date value2 = dateFormat.parse(b[0].getLabel());
+
+                return value1.compareTo(value2);
+            }
+            catch (Throwable e) {
+                // Do nothing!
+                return -1;
+            }
+        }
+    }
+
+
+
+    private class ___FieldPerformanceComparator implements Comparator<String[]> {
         @Override
         public int compare(String[] a, String[] b) {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM");
