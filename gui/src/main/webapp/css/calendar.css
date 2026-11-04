@@ -117,6 +117,13 @@ body div.ui-datepicker .ui-datepicker-header {
     color: var(--text) !important;
 }
 
+/* Monat-Auswahlmenü, Jahr-Schalter */
+body .ui-datepicker .ui-datepicker-title select,
+body .ui-datepicker .ui-datepicker-title .ui-datepicker-year {
+	color: var(--textnativemenue);
+	background: var(--backgroundnativemenue);
+}
+
 /* Navigations-Pfeile im Header */
 body .ui-datepicker-panel .ui-datepicker-header a,
 body .ui-datepicker-panel .ui-datepicker-header button,

@@ -31,6 +31,9 @@
 	--reportmarkred: #d86868;
 	--backgroundmarkgreen: yellowgreen;
 	--filtermark: #9dbed9;
+
+	--textnativemenue: #333;
+	--backgroundnativemenue: #fafafa;
 }
 @media (prefers-color-scheme: dark) {
 :root {
@@ -66,6 +69,9 @@
 	--reportmarkred: #ff9191;
 	--backgroundmarkgreen: forestgreen;
 	--filtermark: #f2b994;
+
+	--textnativemenue: #eee;
+	--backgroundnativemenue: #999;
 }
 }
 
