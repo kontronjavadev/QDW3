@@ -252,8 +252,11 @@ public class FieldPerfReport extends SuperView implements Serializable {
         List<FieldPerfReportResultDTO[]> out = new ArrayList<>();
         int year = input.getStartDate().getYear();
         int month = input.getStartDate().getMonthValue();
-        int colIndex = 1;
+
         int colSize = input.getSelectedAnalInterval() + 2;
+        int lastColIdx = colSize - 1;
+        int shipmentRow = 1;
+        int fstDataRow = shipmentRow + 1;
 
 
         // Zeile 1: Überschriften
@@ -262,8 +265,8 @@ public class FieldPerfReport extends SuperView implements Serializable {
         head[0] = new ReportFirstColHeader(SHIPMENT_MONTH_LABEL);
 
         // Monate hinzufügen
-        for (colIndex = 1; colIndex <= input.getSelectedAnalInterval(); colIndex++) {
-            head[colIndex] = new ReportHeader(year + "-" + month);
+        for (int colIdx = 1; colIdx <= input.getSelectedAnalInterval(); colIdx++) {
+            head[colIdx] = new ReportHeader(year + "-" + month);
 
             if (month == 12) {
                 month = 1;
@@ -274,8 +277,8 @@ public class FieldPerfReport extends SuperView implements Serializable {
             }
         }
 
-        // Überschrift letzte Spalte
-        head[colIndex] = new ReportLastColHeader(Q_RELEVANT_LABEL);
+        // letzte Spalte: Überschrift
+        head[lastColIdx] = new ReportLastColHeader(Q_RELEVANT_LABEL);
         out.add(head);
 
 
@@ -286,17 +289,17 @@ public class FieldPerfReport extends SuperView implements Serializable {
         ships[0] = new ReportFirstColHeader(SHIPMENT_LABEL);
 
         // Shipments hinzufügen
-        for (colIndex = 1; colIndex <= input.getSelectedAnalInterval(); colIndex++) {
-            if (shipments.containsKey(head[colIndex].getLabel())) {
-                ships[colIndex] = new ReportDataCell(Long.toString(shipments.get(head[colIndex].getLabel())));
+        for (int colIdx = 1; colIdx <= input.getSelectedAnalInterval(); colIdx++) {
+            if (shipments.containsKey(head[colIdx].getLabel())) {
+                ships[colIdx] = new ReportDataCell(Long.toString(shipments.get(head[colIdx].getLabel())));
             }
             else {
-                ships[colIndex] = new ReportDataCell("");
+                ships[colIdx] = new ReportDataCell("");
             }
         }
 
         // die letzte Spalte bleibt in dieser Zeile leer
-        ships[colIndex] = new ReportLastDataCell("");
+        ships[lastColIdx] = new ReportLastColCell("");
         out.add(ships);
 
 
@@ -314,17 +317,17 @@ public class FieldPerfReport extends SuperView implements Serializable {
             data[0] = new ReportFirstColHeader(year + "-" + month);
 
             // zunächst alle Inhalte der restlichen Zeile löschen
-            for (colIndex = 1; colIndex <= input.getSelectedAnalInterval(); colIndex++) {
-                data[colIndex] = new ReportDataCell("");
+            for (int colIdx = 1; colIdx <= input.getSelectedAnalInterval(); colIdx++) {
+                data[colIdx] = new ReportDataCell("");
             }
 
-            // Letzte Spalte
+            // letzte Spalte
             if (lastYearReturn.containsKey(data[0].getLabel())) {
-                data[colIndex] = new ReportLastDataCell(Long.toString(lastYearReturn.get(data[0].getLabel())));
+                data[lastColIdx] = new ReportLastColCell(Long.toString(lastYearReturn.get(data[0].getLabel())));
                 sumAll += lastYearReturn.get(data[0].getLabel());
             }
             else {
-                data[colIndex] = new ReportLastDataCell("");
+                data[lastColIdx] = new ReportLastColCell("");
             }
 
             dataMap.put(data[0].getLabel(), data);
@@ -340,8 +343,8 @@ public class FieldPerfReport extends SuperView implements Serializable {
 
         // Report-Daten als Matrix einfügen
         // über alle Spalten
-        for (colIndex = 1; colIndex <= input.getSelectedAnalInterval(); colIndex++) {
-            String spaltenMonat = head[colIndex].getLabel();
+        for (int colIdx = 1; colIdx <= input.getSelectedAnalInterval(); colIdx++) {
+            String spaltenMonat = head[colIdx].getLabel();
             if (!values.containsKey(spaltenMonat)) {
                 continue;
             }
@@ -351,75 +354,80 @@ public class FieldPerfReport extends SuperView implements Serializable {
             // über alle Zeilen
             for (Entry<String, Long> e : frame.entrySet()) {
                 if (dataMap.containsKey(e.getKey())) {
-                    dataMap.get(e.getKey())[colIndex] = new ReportDataCell(Long.toString(e.getValue()));
+                    dataMap.get(e.getKey())[colIdx] = new ReportDataCell(Long.toString(e.getValue()));
                 }
             }
         }
-
-
-
-        // Zusammenfassungen
-        // Collection<FieldPerfReportResultDTO[]> rows = new ArrayList<>();
-        // for (FieldPerfReportResultDTO[] s : dataMap.values()) {
-        // rows.add(s);
-        // }
-        //
-        // Collections.sort((List<FieldPerfReportResultDTO[]>) rows, new FieldPerformanceComparator());
-        //
-        // for (FieldPerfReportResultDTO[] s : rows) {
-        // out.add(s);
-        // }
-
 
         dataMap.values().stream()
                 .sorted(new FieldPerformanceComparator())
                 .forEach(out::add);
 
 
-        // // Add aggregated rows
-        // String[] sum = new String[colSize];
-        // sum[0] = SUM_LABEL;
-        // String[] ratio = new String[colSize];
-        // ratio[0] = RATIO_LABEL;
-        // String[] qRelevantPeriod = new String[colSize];
-        // qRelevantPeriod[0] = Q_RELEVANT_LABEL;
-        // String[] qRelevantRatio = new String[colSize];
-        // qRelevantRatio[0] = Q_RELEVANT_RATIO_LABEL;
-        //
-        // for (colIndex = 1; colIndex <= input.getSelectedAnalInterval(); colIndex++) {
-        // long s = 0;
-        //
-        // for (int i = 2; i < out.size(); i++) {
-        // String[] row = out.get(i);
-        // if (!row[colIndex].equals("")) {
-        // s += Long.parseLong(row[colIndex]);
-        // }
-        // }
-        //
-        // sum[colIndex] = Long.toString(s);
-        //
-        // double rat = 0;
-        // if (!out.get(1)[colIndex].equals("") && !out.get(1)[colIndex].equals("0")) {
-        // rat = 100.0 * s / Double.parseDouble(out.get(1)[colIndex]);
-        // }
-        //
-        // ratio[colIndex] = decimalFormat.format(rat) + " %";
-        // rat = 0;
-        // if (qRelevantReturn.containsKey(head[colIndex])) {
-        // qRelevantPeriod[colIndex] = Long.toString(qRelevantReturn.get(head[colIndex]));
-        // }
-        // else {
-        // qRelevantPeriod[colIndex] = "0";
-        // }
-        //
-        // if (!out.get(1)[colIndex].equals("") && !out.get(1)[colIndex].equals("0")) {
-        // rat = 100.0 * Double.parseDouble(qRelevantPeriod[colIndex]) / Double.parseDouble(out.get(1)[colIndex]);
-        // }
-        //
-        // qRelevantRatio[colIndex] = decimalFormat.format(rat) + " %";
-        //
-        // }
-        // sum[colIndex] = Long.toString(sumAll);
+
+        // Die letzten 4 Zeilen: Zusammenfassungen
+
+
+        // Add aggregated rows
+        FieldPerfReportResultDTO[] sum = new FieldPerfReportResultDTO[colSize];
+        FieldPerfReportResultDTO[] ratio = new FieldPerfReportResultDTO[colSize];
+        FieldPerfReportResultDTO[] qRelevantPeriod = new FieldPerfReportResultDTO[colSize];
+        FieldPerfReportResultDTO[] qRelevantRatio = new FieldPerfReportResultDTO[colSize];
+
+        // Zeilenbezeichnungen in Spalte 1
+        sum[0] = new ReportFirstColHeader(SUM_LABEL);
+        ratio[0] = new ReportFirstColHeader(RATIO_LABEL);
+        qRelevantPeriod[0] = new ReportFirstColHeader(Q_RELEVANT_LABEL);
+        qRelevantRatio[0] = new ReportFirstColHeader(Q_RELEVANT_RATIO_LABEL);
+
+
+        // über alle Daten-Spalten gehen (ohne erste und letzte) und je Spalte die Summe über alle Zeilen bilden
+        for (int colIdx = 1; colIdx <= input.getSelectedAnalInterval(); colIdx++) {
+            long s = 0;
+
+            // die ersten beiden Spalten sind Überschrift und Shipments, also bei der 3. starten
+            for (int rowIdx = fstDataRow; rowIdx < out.size(); rowIdx++) {
+                FieldPerfReportResultDTO[] row = out.get(rowIdx);
+                if (!row[colIdx].getLabel().equals("")) {
+                    s += Long.parseLong(row[colIdx].getLabel());
+                }
+            }
+
+            sum[colIdx] = new ReportSumRatioCell(Long.toString(s));
+
+
+            String numberShipmentsStr = out.get(shipmentRow)[colIdx].getLabel();
+            Double numberShipments = (!numberShipmentsStr.equals("") && !numberShipmentsStr.equals("0"))
+                    ? Double.parseDouble(numberShipmentsStr)
+                    : null;
+
+
+            // ratio berechnen, falls es shipments (zweite Zeile) gibt
+            double rat = 0;
+            if (numberShipments != null) {
+                rat = 100.0 * s / numberShipments;
+            }
+
+            ratio[colIdx] = new ReportSumRatioCell(decimalFormat.format(rat) + " %");
+
+
+            // Q-relevant period und ratio berechnen
+            if (qRelevantReturn.containsKey(head[colIdx].getLabel())) {
+                qRelevantPeriod[colIdx] = new ReportQRelCell(Long.toString(qRelevantReturn.get(head[colIdx].getLabel())));
+            }
+            else {
+                qRelevantPeriod[colIdx] = new ReportQRelCell("0");
+            }
+
+            double qRelRat = 0;
+            if (numberShipments != null) {
+                qRelRat = 100.0 * Double.parseDouble(qRelevantPeriod[colIdx].getLabel()) / numberShipments;
+            }
+
+            qRelevantRatio[colIdx] = new ReportQRelCell(decimalFormat.format(qRelRat) + " %");
+
+        }
+        // sum[colIdx] = Long.toString(sumAll);
         //
         // out.add(sum);
         // out.add(ratio);
@@ -568,8 +576,8 @@ public class FieldPerfReport extends SuperView implements Serializable {
         for (colIndex = 1; colIndex <= input.getSelectedAnalInterval(); colIndex++) {
             long s = 0;
 
-            for (int i = 2; i < out.size(); i++) {
-                String[] row = out.get(i);
+            for (int rowIdx = 2; rowIdx < out.size(); rowIdx++) {
+                String[] row = out.get(rowIdx);
                 if (!row[colIndex].equals("")) {
                     s += Long.parseLong(row[colIndex]);
                 }

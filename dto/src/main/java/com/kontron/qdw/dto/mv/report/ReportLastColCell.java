@@ -2,11 +2,11 @@ package com.kontron.qdw.dto.mv.report;
 
 import java.io.Serializable;
 
-public class ReportLastDataCell extends FieldPerfReportResultDTO implements Serializable {
+public class ReportLastColCell extends FieldPerfReportResultDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public ReportLastDataCell(String label) {
+    public ReportLastColCell(String label) {
         super(label, 80);
     }
 
