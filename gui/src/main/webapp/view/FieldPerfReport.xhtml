@@ -399,9 +399,6 @@
 		rows="#{fieldPerfReport.numberRows}"
 		selection="#{fieldPerfReport.selectedObject}"
  -->
- <!-- 
-style="#{reportPanelItem.textStyleOtherCols}" styleClass="pf-tooltip-target"
-  -->
 	<p:dataTable id="panData" var="reportRow" 
 		selectionTextDisabled="false" allowUnsorting="true" resizeMode="expand" resizableColumns="true" 
 		selectionMode="single" multiViewState="true" 
@@ -410,7 +407,7 @@ style="#{reportPanelItem.textStyleOtherCols}" styleClass="pf-tooltip-target"
         rowKey="#{reportRow[0].label}" >
 
 		<p:columns value="#{fieldPerfReport.columnIndices}" var="colIdx" width="#{fieldPerfReport.getColumnWidth(colIdx)}" >
-			<h:outputText value="#{reportRow[colIdx].label}" />
+			<h:outputText value="#{reportRow[colIdx].label}" style="#{reportRow[colIdx].textStyle}" />
 		</p:columns>
 	</p:dataTable>
 

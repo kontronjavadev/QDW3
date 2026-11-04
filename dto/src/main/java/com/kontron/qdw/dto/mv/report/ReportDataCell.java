@@ -4,10 +4,10 @@ import java.io.Serializable;
 
 public class ReportDataCell extends FieldPerfReportResultDTO implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 395595382004968226L;
 
     public ReportDataCell(String label) {
-        super(label, 80);
+        super(label, DATA_CELL_WIDTH, TEXTSTYLE_DEFAULT + TEXTSTYLE_ALIGN_RIGHT);
     }
 
 }
