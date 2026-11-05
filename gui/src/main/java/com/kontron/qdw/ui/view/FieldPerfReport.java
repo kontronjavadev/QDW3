@@ -41,7 +41,6 @@ import com.kontron.qdw.dto.service.RepairErrorCodeListDTO;
 import com.kontron.qdw.service.SavedQueryService;
 import com.kontron.qdw.ui.UserSession;
 import com.kontron.qdw.ui.view.util.SuperView;
-import com.kontron.util.text.StringUtil;
 
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.faces.application.FacesMessage;
@@ -789,6 +788,30 @@ public class FieldPerfReport extends SuperView implements Serializable {
 
 
 
+    public void onCellClick(int rowIndex, int colIndex) {
+        logger.info("Zelle geklickt - Spalte {}, Zeile{}", colIndex, rowIndex);
+        FieldPerfReportResultDTO colHeader = reportHeader[colIndex];
+        FieldPerfReportResultDTO rowHeader = reportData.get(rowIndex)[0];
+        logger.info("Koondinaten Spalte {}, Zeile {}", colHeader, rowHeader);
+
+        // gewählte Zelle
+        FieldPerfReportResultDTO clickedCell = reportData.get(rowIndex)[colIndex];
+        logger.info("gewählte Zelle: {}", clickedCell);
+
+        selectedObject = reportData.get(rowIndex);
+        System.out.println("selectedObject: " + reportRowToString(selectedObject));
+    }
+
+    private String reportRowToString(FieldPerfReportResultDTO[] reportRow) {
+        return reportRow == null
+                ? "null"
+                : Arrays.stream(reportRow)
+                        .map(FieldPerfReportResultDTO::getLabel)
+                        .collect(Collectors.joining(","));
+    }
+
+
+
     public String getFormTitle() {
         return formTitle;
     }
@@ -825,24 +848,6 @@ public class FieldPerfReport extends SuperView implements Serializable {
     @Override
     protected String getViewName() {
         return VIEW_ID;
-    }
-
-
-
-    /**
-     * Handle single click event: set selection to reselect after switching to another view and back to this view.
-     */
-    public void onClick() {
-        // System.out.println("onClick: " + reportRowToString(getSelectedObject()));
-        // onClickId(reportData, MaterialSearchDTO::getId, this::setSelectedObject);
-    }
-
-    private String reportRowToString(FieldPerfReportResultDTO[] reportRow) {
-        return reportRow == null
-                ? "null"
-                : Arrays.stream(reportRow)
-                        .map(FieldPerfReportResultDTO::getLabel)
-                        .collect(Collectors.joining(","));
     }
 
 

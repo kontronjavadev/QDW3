@@ -180,7 +180,6 @@
 				<p:selectOneMenu id="fi_analintv" 
 					scrollHeight="350" value="#{fieldPerfReport.reportSearchObj.selectedAnalInterval}">
 					<p:ajax process="@this" />
-					<f:selectItem itemLabel="" itemValue="#{null}" noSelectionOption="true" />
 					<f:selectItems value="#{fieldPerfReport.reportSearchObj.analIntervals}" 
 						var="m" itemLabel="#{m} #{i18n.fieldperfreportview_monthmenu_months}" itemValue="#{m}" />
 				</p:selectOneMenu>
@@ -189,7 +188,6 @@
 				<p:selectOneMenu id="fi_retintv" 
 					scrollHeight="350" value="#{fieldPerfReport.reportSearchObj.selectedReturnInterval}">
 					<p:ajax process="@this" />
-					<f:selectItem itemLabel="" itemValue="#{null}" noSelectionOption="true" />
 					<f:selectItems value="#{fieldPerfReport.reportSearchObj.returnIntervals}" 
 						var="m" itemLabel="#{m} #{i18n.fieldperfreportview_monthmenu_months}" itemValue="#{m}" />
 				</p:selectOneMenu>
@@ -406,22 +404,25 @@ value="#{fieldPerfReport.reportData}" styleClass="... headerless"
 + f:facet in p:columns, das die Titelzeile aus der ersten Zeile des originalen Reports holt.
 + .fieldPerfReportScrollable .ui-datatable-scrollable-body {max-height: calc(100vh - 408px);}
  -->
-	<p:dataTable id="panData" var="reportRow" 
+	<p:dataTable id="panData" var="reportRow" rowIndexVar="rowIdx" 
 		selectionTextDisabled="false" allowUnsorting="true" resizeMode="expand" resizableColumns="true" 
 		selection="#{fieldPerfReport.selectedObject}"
 		selectionMode="single" multiViewState="true" 
 		loadingMessage="#{i18n.action_fetch_data}"
 		value="#{fieldPerfReport.reportData}" scrollable="true" styleClass="viewScrollable fieldPerfReportScrollable" 
-        rowKey="#{reportRow[0].label}" >
-		<p:ajax event="rowSelect" listener="#{fieldPerfReport.onClick}"/>
+		rowKey="#{reportRow[0].label}" >
 
-		<p:columns value="#{fieldPerfReport.columnIndices}" var="colIdx" width="#{fieldPerfReport.getColumnWidth(colIdx)}" >
-
+		<p:columns value="#{fieldPerfReport.columnIndices}" var="colIdx" styleClass="clickable-td" 
+			width="#{fieldPerfReport.getColumnWidth(colIdx)}" >
 			<f:facet name="header">
 				<h:outputText value="#{fieldPerfReport.reportHeader[colIdx].label}" style="#{fieldPerfReport.reportHeader[colIdx].textStyle}" />
 			</f:facet>
 
-			<h:outputText value="#{reportRow[colIdx].label}" style="#{reportRow[colIdx].textStyle}" />
+			<p:commandLink action="#{fieldPerfReport.onCellClick(rowIdx, colIdx)}" 
+				process="@this" update=":form:panData" 
+				style="display:block; width:100%; height:100%; min-height: 1.4rem; box-sizing: border-box; padding: 0.15rem 0.3rem; text-decoration:none; color:inherit;">
+				<h:outputText value="#{reportRow[colIdx].label}" style="#{reportRow[colIdx].textStyle}" />
+			</p:commandLink>
 		</p:columns>
 	</p:dataTable>
 

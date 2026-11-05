@@ -257,6 +257,14 @@ styleClass="viewScrollable headerViewScrollable quoteDetailsViewScrollable"
 }
 
 
+/* Zwingt die PrimeFaces-Zelle, ihren Innenabstand aufzugeben, um ein Event nicht nur bei Klick auf Text zu feuern,
+sondern den Auslösebereich auf die komplette Zelle zu erweitern.
+<p:columns styleClass="clickable-td"> */
+body .ui-datatable.fieldPerfReportScrollable tbody td.clickable-td {
+	padding: 0 !important;
+}
+
+
 
 
 
