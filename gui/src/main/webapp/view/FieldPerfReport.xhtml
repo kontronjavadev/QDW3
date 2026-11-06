@@ -406,21 +406,34 @@ value="#{fieldPerfReport.reportData}" styleClass="... headerless"
  -->
 	<p:dataTable id="panData" var="reportRow" rowIndexVar="rowIdx" 
 		selectionTextDisabled="false" allowUnsorting="true" resizeMode="expand" resizableColumns="true" 
-		selection="#{fieldPerfReport.selectedObject}"
-		selectionMode="single" multiViewState="true" 
+		selection="#{fieldPerfReport.selectedObject}" selectionMode="single" multiViewState="true" 
 		loadingMessage="#{i18n.action_fetch_data}"
-		value="#{fieldPerfReport.reportData}" scrollable="true" styleClass="viewScrollable fieldPerfReportScrollable" 
+		value="#{fieldPerfReport.reportData}" scrollable="true" frozenColumns="1" styleClass="viewScrollable fieldPerfReportScrollable" 
 		rowKey="#{reportRow[0].label}" >
 
-		<p:columns value="#{fieldPerfReport.columnIndices}" var="colIdx" styleClass="clickable-td" 
-			width="#{fieldPerfReport.getColumnWidth(colIdx)}" >
+		<!-- 1. Die statische, fixierte Spalte (Index 0) -->
+		<p:column styleClass="clickable-td" width="#{fieldPerfReport.getColumnWidth(0)}" >
+			<f:facet name="header">
+				<h:outputText value="#{fieldPerfReport.reportHeader[0].label}" style="#{fieldPerfReport.reportHeader[0].textStyle}" />
+			</f:facet>
+
+			<p:commandLink action="#{fieldPerfReport.onCellClick(rowIdx, 0)}" 
+				process="@this" 
+				style="display:block; width:100%; height:100%; min-height: 1.4rem; box-sizing: border-box; padding: 0.15rem 0.3rem; text-decoration:none; color:inherit;" >
+				<h:outputText value="#{reportRow[0].label}" style="#{reportRow[0].textStyle}" />
+			</p:commandLink>
+		</p:column>
+
+		<!-- 2. Die scrollbaren, dynamischen Spalten (ab Index 1) -->
+		<p:columns value="#{fieldPerfReport.columnIndices}" var="colIdx" 
+			styleClass="clickable-td" width="#{fieldPerfReport.getColumnWidth(colIdx)}" >
 			<f:facet name="header">
 				<h:outputText value="#{fieldPerfReport.reportHeader[colIdx].label}" style="#{fieldPerfReport.reportHeader[colIdx].textStyle}" />
 			</f:facet>
 
 			<p:commandLink action="#{fieldPerfReport.onCellClick(rowIdx, colIdx)}" 
 				process="@this" update=":form:panData" 
-				style="display:block; width:100%; height:100%; min-height: 1.4rem; box-sizing: border-box; padding: 0.15rem 0.3rem; text-decoration:none; color:inherit;">
+				style="display:block; width:100%; height:100%; min-height: 1.4rem; box-sizing: border-box; padding: 0.15rem 0.3rem; text-decoration:none; color:inherit;" >
 				<h:outputText value="#{reportRow[colIdx].label}" style="#{reportRow[colIdx].textStyle}" />
 			</p:commandLink>
 		</p:columns>

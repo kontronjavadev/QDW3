@@ -233,8 +233,9 @@ public class FieldPerfReport extends SuperView implements Serializable {
             return List.of();
         }
 
-        // IntStream von 0 bis Array-Länge der ersten Zeile
-        return IntStream.range(0, reportHeader.length).boxed().toList();
+        // IntStream von 1 (ohne der ersten (0.) Spalte) bis Array-Länge der ersten Zeile,
+        // da die Spalte 0 fixiert ist und ein separates p:column hat.
+        return IntStream.range(1, reportHeader.length).boxed().toList();
     }
 
     public int getColumnWidth(int colIdx) {

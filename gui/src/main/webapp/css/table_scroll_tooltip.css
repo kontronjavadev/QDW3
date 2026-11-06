@@ -148,18 +148,110 @@ body .ui-paginator .ui-paginator-rpp-options {
 
 
 
-.viewScrollable .ui-datatable-scrollable-body {
-	/* Wie SizeServiceBean#viewWidth() und #viewHeight(),
-	jedoch muss die Höhe des Paginators und des Headers abgezogen werden.
-	Es werden 282px statt 209px abgezogen, in der Summe also 73px mehr.
-	Die Höhe als max-height, damit bei weniger beanspruchtem Platz kein Leerraum zwischen Tabellenende und Scrollbar entsteht.
-	*/
 
-	width: calc(100vw - 310px);
-	max-height: calc(100vh - 282px);
-	height: fit-content;
-	min-height: 32px;
+
+
+
+/* =========================================================================
+   1. GEMEINSAME REGELN (Für ALLE viewScrollable Tabellen)
+========================================================================= */
+
+/* Äußeren Container strikt begrenzen, damit die Tabelle intern scrollt 
+   und NICHT das ganze Browserfenster dehnt */
+body div.ui-datatable.viewScrollable {
+	width: calc(100vw - 310px) !important;
+	max-width: calc(100vw - 310px) !important;
 }
+
+/* Vertikale Höhen synchron halten und Standard-Scrollbars aktivieren */
+body div.ui-datatable.viewScrollable .ui-datatable-scrollable-body {
+	max-height: calc(100vh - 282px) !important;
+	height: auto !important;
+	min-height: 32px !important;
+	overflow-x: auto !important; 
+	overflow-y: auto !important;
+}
+
+body div.ui-datatable.fieldPerfReportScrollable .ui-datatable-scrollable-body {
+	max-height: calc(100vh - 442px) !important;
+}
+
+
+/* =========================================================================
+   2. SPEZIAL-REGELN (NUR für Tabellen MIT fixierten Spalten)
+========================================================================= */
+
+/* Container darf nicht scrollen, da die Flex-Elemente das übernehmen */
+body div.ui-datatable.viewScrollable.ui-datatable-frozencolumn {
+	overflow: hidden !important;
+}
+
+/* Flex-Container für die äußere Struktur */
+body div.ui-datatable.viewScrollable.ui-datatable-frozencolumn > table.ui-datatable-fs,
+body div.ui-datatable.viewScrollable.ui-datatable-frozencolumn > table.ui-datatable-fs > tbody {
+	display: block !important;
+	width: 100% !important;
+}
+
+body div.ui-datatable.viewScrollable.ui-datatable-frozencolumn > table.ui-datatable-fs > tbody > tr {
+	display: flex !important;
+	width: 100% !important;
+	flex-wrap: nowrap !important;
+}
+
+/* Linke Spalte exakt fixieren */
+body div.ui-datatable.viewScrollable.ui-datatable-frozencolumn .ui-datatable-frozenlayout-left {
+	display: block !important;
+	flex: 0 0 95px !important;
+	width: 95px !important;
+	max-width: 95px !important;
+	padding: 0 !important;
+}
+
+/* Rechte Spalte füllt den Rest */
+body div.ui-datatable.viewScrollable.ui-datatable-frozencolumn .ui-datatable-frozenlayout-right {
+	display: block !important;
+	flex: 1 1 0 !important;
+	min-width: 0 !important;
+	width: calc(100% - 95px) !important;
+	padding: 0 !important;
+	overflow: hidden !important;
+}
+
+body div.ui-datatable.viewScrollable.ui-datatable-frozencolumn .ui-datatable-frozenlayout-right > .ui-datatable-scrollable-container {
+	width: 100% !important;
+	max-width: 100% !important;
+	display: block !important;
+}
+
+/* Tabellen auf EXAKT die Summe ihrer Spaltenbreiten zwingen (verhindert Flackern) */
+body div.ui-datatable.viewScrollable.ui-datatable-frozencolumn .ui-datatable-scrollable-header table,
+body div.ui-datatable.viewScrollable.ui-datatable-frozencolumn .ui-datatable-scrollable-body table {
+	table-layout: fixed !important;
+	width: max-content !important; 
+}
+
+/* Links: Scrollbars strikt ausblenden (Inhalt wird per PrimeFaces JS synchronisiert) */
+body div.ui-datatable.viewScrollable.ui-datatable-frozencolumn .ui-datatable-frozenlayout-left .ui-datatable-scrollable-body {
+	overflow-x: hidden !important;
+	overflow-y: hidden !important; 
+}
+
+
+
+
+
+
+
+
+body div.ui-datatable.fieldPerfReportScrollable .ui-datatable-scrollable-body {
+	max-height: calc(100vh - 442px) !important;
+}
+
+
+
+
+
 
 /* Headerless: Header-Container auf 0 Pixel stauchen und Inhalt abschneiden
 Das sind tatsächlich zwei einzelne Tabellen. Würde der header aber mit "display: none;" ausgeblendet,
@@ -174,6 +266,7 @@ body .ui-datatable.viewScrollable.headerless .ui-datatable-scrollable-header {
 	margin: 0 !important;
 	overflow: hidden !important;
 }
+
 
 .viewScrollable .ui-datatable-scrollable-header,
 .viewScrollable .ui-paginator.ui-paginator-top {
@@ -194,9 +287,11 @@ body .ui-datatable.viewScrollable.headerless .ui-datatable-scrollable-header {
 	max-height: calc(100vh - 315px);
 }
 
+/*
 .fieldPerfReportScrollable .ui-datatable-scrollable-body {
 	max-height: calc(100vh - 442px);
 }
+*/
 
 
 .compareViewPanelScrollable .ui-datatable-scrollable-body {
