@@ -486,7 +486,8 @@ body .ui-fileupload .ui-fileupload-content .ui-fileupload-files .ui-fileupload-r
 .template-content {
 	display: table-cell;
 	vertical-align: top;
-	width: calc(100vw - 280px - 30px); /* -Navigator -3x border */
+	width: calc(100vw - 280px - 30px); /* -Navigator -30px border */
+	max-width: calc(100vw - 280px - 30px); /* <-- VERHINDERT DAS AUSDEHNEN DES BROWSERFENSTERS */
 	height: calc(100vh - 105px);
 	padding: 0px 0px 0px 10px;
 	/* Die 10px links ist der Abstand zur "Navigatorleiste". Mit dem Rahmen kommen 10px um alles. */

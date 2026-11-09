@@ -7,7 +7,7 @@ public class ReportLastColCell extends FieldPerfReportResultDTO implements Seria
     private static final long serialVersionUID = 1L;
 
     public ReportLastColCell(String label) {
-        super(label, DATA_CELL_WIDTH, TEXTSTYLE_SUMMARY + TEXTSTYLE_ALIGN_RIGHT);
+        super(label, DATA_CELL_WIDTH, TEXTSTYLE_SUMMARY + TEXTSTYLE_BOLD + TEXTSTYLE_ALIGN_RIGHT);
     }
 
 }

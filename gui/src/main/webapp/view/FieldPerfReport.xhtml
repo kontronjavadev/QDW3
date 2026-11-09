@@ -405,39 +405,43 @@ value="#{fieldPerfReport.reportData}" styleClass="... headerless"
 + .fieldPerfReportScrollable .ui-datatable-scrollable-body {max-height: calc(100vh - 408px);}
  -->
 	<p:dataTable id="panData" var="reportRow" rowIndexVar="rowIdx" 
-		selectionTextDisabled="false" allowUnsorting="true" resizeMode="expand" resizableColumns="true" 
+		selectionTextDisabled="false" allowUnsorting="true" resizeMode="expand" 
 		selection="#{fieldPerfReport.selectedObject}" selectionMode="single" multiViewState="true" 
-		loadingMessage="#{i18n.action_fetch_data}"
+		loadingMessage="#{i18n.action_fetch_data}" rendered="#{not empty fieldPerfReport.reportData}" 
 		value="#{fieldPerfReport.reportData}" scrollable="true" frozenColumns="1" styleClass="viewScrollable fieldPerfReportScrollable" 
 		rowKey="#{reportRow[0].label}" >
 
-		<!-- 1. Die statische, fixierte Spalte (Index 0) - bleibt fix bei ihrer Breite -->
-		<p:column styleClass="clickable-td" width="#{fieldPerfReport.getColumnWidth(0)}" 
-			style="min-width: #{fieldPerfReport.getColumnWidth(0)}px; max-width: #{fieldPerfReport.getColumnWidth(0)}px;" >
+		<!-- 1. Die statische, fixierte Spalte (Index 0) -->
+		<p:column styleClass="clickable-td" 
+			style="width: #{fieldPerfReport.getColumnWidth(0)}px;min-width: #{fieldPerfReport.getColumnWidth(0)}px;" >
 			<f:facet name="header">
 				<h:outputText value="#{fieldPerfReport.reportHeader[0].label}" style="#{fieldPerfReport.reportHeader[0].textStyle}" />
 			</f:facet>
 
-			<p:commandLink action="#{fieldPerfReport.onCellClick(rowIdx, 0)}" 
-				process="@this" styleClass="cell-click-link" >
+			<p:commandLink action="#{fieldPerfReport.onCellClick(rowIdx, 0)}" update=":form:panData" 
+				process="@this" styleClass="cell-click-link" 
+				style="#{reportRow[0].cellStyle}" >
 				<h:outputText value="#{reportRow[0].label}" style="#{reportRow[0].textStyle}" />
 			</p:commandLink>
 		</p:column>
 
 		<!-- 2. Die scrollbaren, dynamischen Spalten (ab Index 1) - wachsen bei Platz mit, schrumpfen aber nie unter min-width -->
 		<p:columns value="#{fieldPerfReport.columnIndices}" var="colIdx" 
-			styleClass="clickable-td" width="#{fieldPerfReport.getColumnWidth(colIdx)}" 
-			style="min-width: #{fieldPerfReport.getColumnWidth(colIdx)}px;" >
+			styleClass="clickable-td" 
+			style="width: #{fieldPerfReport.getColumnWidth(colIdx)}px;min-width: #{fieldPerfReport.getColumnWidth(colIdx)}px;" >
 			<f:facet name="header">
 				<h:outputText value="#{fieldPerfReport.reportHeader[colIdx].label}" style="#{fieldPerfReport.reportHeader[colIdx].textStyle}" />
 			</f:facet>
 
-			<p:commandLink action="#{fieldPerfReport.onCellClick(rowIdx, colIdx)}" 
-				process="@this" update=":form:panData" styleClass="cell-click-link" >
+			<p:commandLink action="#{fieldPerfReport.onCellClick(rowIdx, colIdx)}" update=":form:panData" 
+				process="@this" styleClass="cell-click-link" 
+				style="#{reportRow[colIdx].cellStyle}" >
 				<h:outputText value="#{reportRow[colIdx].label}" style="#{reportRow[colIdx].textStyle}" />
 			</p:commandLink>
 		</p:columns>
 	</p:dataTable>
+	
+	<h:outputText rendered="#{empty fieldPerfReport.reportData}" value="#{i18n.operation_fetch_no_data}" />
 
 
 

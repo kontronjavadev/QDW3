@@ -1,3 +1,32 @@
+/* Erklärung box-shadow:
+ 
+box-shadow: [inset] [offset-x] [offset-y] [blur-radius] [spread-radius] [color];
+
+inset (optionaler Schalter, keine Wertangabe, nur Angabe oder Weglassung des Schlüsselworts selbst):
+Wird dieses Schlüsselwort vorangestellt, wandert der Schatten von außen nach innen (wie eine Prägung oder ein innerer Rand).
+Ohne inset wirft das Element einen klassischen Schatten nach außen.
+
+offset-x (Zahlenwert plus Einheit, etwa 2px):
+Die horizontale Verschiebung des Schattens. Ein positiver Wert schiebt ihn nach rechts, ein negativer nach links (0 = mittig).
+
+offset-y (Zahlenwert plus Einheit, etwa 2px):
+Die vertikale Verschiebung. Ein positiver Wert schiebt ihn nach unten, ein negativer nach oben (0 = mittig).
+
+blur-radius (Zahlenwert plus Einheit, etwa 28x):
+Die Unschärfe bzw. der Verlauf des Schattens. Je größer der Wert, desto weicher und verwaschener (und damit größer) wird der Halo-Effekt. Bei 0 ist der Schatten eine exakte, harte Kopie des Elements.
+
+spread-radius (Zahlenwert plus Einheit, etwa 2px):
+Die Ausbreitung. Positive Werte lassen den Schatten in alle Richtungen wachsen (größer als das Element), negative Werte lassen ihn schrumpfen. Bei 0 hat er exakt die Maße des Elements plus Blur.
+
+Farbe (var(--active) oder #FF77AA (bzw. #F7A)):
+Die Farbe des Schattens, dynamisch über die CSS-Variable gesteuert.
+*/
+
+
+/* =========================================================================
+   1. TABELLEN: GRUNDLAGEN
+========================================================================= */
+
 /* Dropdown Filter in Tabellen-Spalten; ggf. allg. .ui-datatable .ui-selectonemenu */
 .ui-datatable .ui-column-customfilter .ui-selectonemenu {
 	width: 100% !important;
@@ -86,6 +115,10 @@ body .ui-datatable .ui-datatable-data > tr.ui-state-hover {
 
 
 
+/* =========================================================================
+   2. TABELLEN: PAGINATOR
+========================================================================= */
+
 body .ui-paginator {
 	color: var(--text);
 	background: var(--paneldimmed);
@@ -148,12 +181,8 @@ body .ui-paginator .ui-paginator-rpp-options {
 
 
 
-
-
-
-
 /* =========================================================================
-   1. GEMEINSAME REGELN (Für ALLE viewScrollable Tabellen)
+   3a. TABELLEN: SCROLLING: GEMEINSAME REGELN (Für ALLE viewScrollable Tabellen)
 ========================================================================= */
 
 .viewScrollable {
@@ -182,8 +211,10 @@ body .ui-paginator .ui-paginator-rpp-options {
 
 
 
+
+
 /* =========================================================================
-   2. SPEZIAL-REGELN (NUR für Tabellen MIT fixierten Spalten)
+   3b. TABELLEN: SCROLLING: SPEZIAL-REGELN (NUR für Tabellen MIT fixierten Spalten)
 ========================================================================= */
 
 body div.ui-datatable.viewScrollable.ui-datatable-frozencolumn {
@@ -318,8 +349,10 @@ body .ui-datatable.fieldPerfReportScrollable tbody td.clickable-td > a.cell-clic
 
 
 
+
+
 /* =========================================================================
-   3. HEADERLESS & ABLEITUNGEN
+   3c. TABELLEN: SCROLLING: HEADERLESS & ABLEITUNGEN
 ========================================================================= */
 
 /* Headerless: Header-Container auf 0 Pixel stauchen und Inhalt abschneiden
@@ -335,7 +368,6 @@ body .ui-datatable.viewScrollable.headerless .ui-datatable-scrollable-header {
 	margin: 0 !important;
 	overflow: hidden !important;
 }
-
 
 
 /* "Ableitungen". Verwendung: styleClass="viewScrollable orderitemViewScrollable" */
@@ -424,6 +456,43 @@ body .ui-datatable.fieldPerfReportScrollable tbody td.clickable-td {
 
 
 
+
+/* ============================================================================
+   4. TABELLEN: DURCHGEHENDER HOVER- & SELEKTIONS-RAHMEN FÜR FROZEN COLUMNS
+============================================================================ */
+
+/* Linke Hälfte der Zeile: Rahmen oben, unten, links – RECHTS OFFEN */
+body div.ui-datatable.viewScrollable.ui-datatable-frozencolumn td.ui-datatable-frozenlayout-left .ui-datatable-data > tr.ui-state-hover {
+	box-shadow: inset 0.15rem 0 0 0 var(--hover), inset 0 0.15rem 0 0 var(--hover), inset 0 -0.15rem 0 0 var(--hover) !important;
+}
+
+body div.ui-datatable.viewScrollable.ui-datatable-frozencolumn td.ui-datatable-frozenlayout-left .ui-datatable-data > tr.ui-state-highlight {
+	box-shadow: inset 0.2rem 0 0 0 var(--active), inset 0 0.2rem 0 0 var(--active), inset 0 -0.2rem 0 0 var(--active) !important;
+}
+
+/* Rechte Hälfte der Zeile: Rahmen oben, unten, rechts – LINKS OFFEN */
+body div.ui-datatable.viewScrollable.ui-datatable-frozencolumn td.ui-datatable-frozenlayout-right .ui-datatable-data > tr.ui-state-hover {
+	box-shadow: inset -0.15rem 0 0 0 var(--hover), inset 0 0.15rem 0 0 var(--hover), inset 0 -0.15rem 0 0 var(--hover) !important;
+}
+
+body div.ui-datatable.viewScrollable.ui-datatable-frozencolumn td.ui-datatable-frozenlayout-right .ui-datatable-data > tr.ui-state-highlight {
+	box-shadow: inset -0.2rem 0 0 0 var(--active), inset 0 0.2rem 0 0 var(--active), inset 0 -0.2rem 0 0 var(--active) !important;
+}
+
+/* Keine Hervorhebung für fieldPerfReportScrollable. Das wird anders gelöst */
+body .ui-datatable.fieldPerfReportScrollable .ui-datatable-data > tr.ui-state-highlight,
+body div.ui-datatable.viewScrollable.fieldPerfReportScrollable.ui-datatable-frozencolumn td.ui-datatable-frozenlayout-left .ui-datatable-data > tr.ui-state-highlight,
+body div.ui-datatable.viewScrollable.fieldPerfReportScrollable.ui-datatable-frozencolumn td.ui-datatable-frozenlayout-right .ui-datatable-data > tr.ui-state-highlight {
+	box-shadow: none !important;
+}
+
+
+
+
+
+/* =========================================================================
+   5. TOOLTIPS SPALTEN UND ZELLEN
+========================================================================= */
 
 .ui-tooltip {
 	width: max-content;

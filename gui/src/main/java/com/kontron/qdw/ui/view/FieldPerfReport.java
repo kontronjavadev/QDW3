@@ -107,7 +107,7 @@ public class FieldPerfReport extends SuperView implements Serializable {
     private String errFilterCriterion;
     private Map<String, RepairErrorCodeListDTO> errorCache = new HashMap<>();
 
-    private List<FieldPerfReportResultDTO[]> reportData;
+    private List<FieldPerfReportResultDTO[]> reportData; // List an Zeilen, bestehend aus Array zu Spalten
     private FieldPerfReportResultDTO[] reportHeader;
     private FieldPerfReportResultDTO[] selectedObject;
 
@@ -427,6 +427,9 @@ public class FieldPerfReport extends SuperView implements Serializable {
 
         // letzte Spalte
         sum[lastColIdx] = new ReportLastColCell(Long.toString(sumAll));
+        ratio[lastColIdx] = new ReportLastColHeader("");
+        qRelevantPeriod[lastColIdx] = new ReportLastColHeader("");
+        qRelevantRatio[lastColIdx] = new ReportLastColHeader("");
 
         out.add(sum);
         out.add(ratio);
@@ -790,7 +793,23 @@ public class FieldPerfReport extends SuperView implements Serializable {
 
 
     public void onCellClick(int rowIndex, int colIndex) {
-        logger.info("Zelle geklickt - Spalte {}, Zeile{}", colIndex, rowIndex);
+        logger.info("Zelle geklickt - Spalte {}, Zeile {}", colIndex, rowIndex);
+
+        // Selections-Markierung löschen
+        Arrays.stream(reportHeader)
+                .forEach(dto -> {
+                    dto.setHighlight(false);
+                    dto.setRowcolHighlight(false);
+                });
+        reportData.stream()
+                .flatMap(Arrays::stream)
+                .forEach(dto -> {
+                    dto.setHighlight(false);
+                    dto.setRowcolHighlight(false);
+                });
+
+
+        // Identifikation
         FieldPerfReportResultDTO colHeader = reportHeader[colIndex];
         FieldPerfReportResultDTO rowHeader = reportData.get(rowIndex)[0];
         logger.info("Koondinaten Spalte {}, Zeile {}", colHeader, rowHeader);
@@ -798,6 +817,18 @@ public class FieldPerfReport extends SuperView implements Serializable {
         // gewählte Zelle
         FieldPerfReportResultDTO clickedCell = reportData.get(rowIndex)[colIndex];
         logger.info("gewählte Zelle: {}", clickedCell);
+
+
+        // Selections-Markierung hinzufügen
+        // alle Zellen derselbe Reihe markieren
+        Arrays.stream(reportData.get(rowIndex))
+                .forEach(dto -> dto.setRowcolHighlight(true));
+        // alle Zellen derselbe Spalte markieren
+        reportData.stream()
+                .forEach(row -> row[colIndex].setRowcolHighlight(true));
+
+        // zusätzlich die Zelle selbst markieren
+        clickedCell.setHighlight(true);
 
         selectedObject = reportData.get(rowIndex);
         System.out.println("selectedObject: " + reportRowToString(selectedObject));
