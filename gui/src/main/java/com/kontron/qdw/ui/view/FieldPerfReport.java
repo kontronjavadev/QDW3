@@ -822,8 +822,8 @@ public class FieldPerfReport extends SuperView implements Serializable {
                 .map(row -> row[colIndex])
                 .forEach(FieldPerfReportResultDTO::setHighlightLR);
 
-        // die Zelle selbst wieder von Markierung befeien, da sie inmitten des Kreuzes sitzt
-        clickedCell.clearHighlights();
+        // die Zelle selbst wieder von Markierung befeien und nur die Ecken bemalen
+        clickedCell.setHighlightSelected();
 
         // Die Enden der Reihe markieren
         reportData.get(rowIndex)[0].setHighlightL();

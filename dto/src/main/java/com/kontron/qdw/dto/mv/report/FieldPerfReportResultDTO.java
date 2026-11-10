@@ -16,9 +16,13 @@ public class FieldPerfReportResultDTO implements Serializable {
     protected static final String TEXTSTYLE_ALIGN_RIGHT = "float:right;";
 
 
-
     protected static final String TEXTSTYLE_CELL_HIGHLIGHT_PRE = "box-shadow: ";
-    protected static final String TEXTSTYLE_CELL_HIGHLIGHT_POST = " !important;";
+    protected static final String TEXTSTYLE_CELL_CORNERS_IMG_PRE = "background-image: ";
+    protected static final String TEXTSTYLE_CELL_CORNERS_POS_PRE = "background-position: ";
+    protected static final String TEXTSTYLE_CELL_CORNERS_SIZE_PRE = "background-size: ";
+
+    protected static final String TEXTSTYLE_CELL_POST = " !important;";
+
 
     // ein harter Rahmen plus ein weiches Glühen
     protected static final String TEXTSTYLE_CELL_HIGHLIGHT_T = "inset 0 2px 0 0 var(--active), inset 0 5px 4px -3px var(--active)";
@@ -26,7 +30,25 @@ public class FieldPerfReportResultDTO implements Serializable {
     protected static final String TEXTSTYLE_CELL_HIGHLIGHT_L = "inset 2px 0 0 0 var(--active), inset 5px 0 4px -3px var(--active)";
     protected static final String TEXTSTYLE_CELL_HIGHLIGHT_R = "inset -2px 0 0 0 var(--active), inset -5px 0 4px -3px var(--active)";
 
-    protected static final String TEXTSTYLE_CELL_HIGHLIGHT_TRANSITION = "transition: box-shadow 0.3s ease-in-out !important;";
+
+    protected static final String TEXTSTYLE_CELL_CORNERS_NOREPEAT = " background-repeat: no-repeat";
+    protected static final String TEXTSTYLE_CELL_CORNER_SIZE = "100% 100%, 2px 2px, 2px 2px";
+
+    // Top-Left (TL)
+    protected static final String TEXTSTYLE_CELL_CORNER_IMG_TL = "radial-gradient(circle at 0 0, var(--active), transparent 5px), linear-gradient(var(--active), var(--active)), linear-gradient(var(--active), var(--active))";
+    protected static final String TEXTSTYLE_CELL_CORNER_POS_TL = "top left, top left, top left";
+
+    // Top-Right (TR)
+    protected static final String TEXTSTYLE_CELL_CORNER_IMG_TR = "radial-gradient(circle at 100% 0, var(--active), transparent 5px), linear-gradient(var(--active), var(--active)), linear-gradient(var(--active), var(--active))";
+    protected static final String TEXTSTYLE_CELL_CORNER_POS_TR = "top right, top right, top right";
+
+    // Bottom-Left (BL)
+    protected static final String TEXTSTYLE_CELL_CORNER_IMG_BL = "radial-gradient(circle at 0 100%, var(--active), transparent 5px), linear-gradient(var(--active), var(--active)), linear-gradient(var(--active), var(--active))";
+    protected static final String TEXTSTYLE_CELL_CORNER_POS_BL = "bottom left, bottom left, bottom left";
+
+    // Bottom-Right (BR)
+    protected static final String TEXTSTYLE_CELL_CORNER_IMG_BR = "radial-gradient(circle at 100% 100%, var(--active), transparent 5px), linear-gradient(var(--active), var(--active)), linear-gradient(var(--active), var(--active))";
+    protected static final String TEXTSTYLE_CELL_CORNER_POS_BR = "bottom right, bottom right, bottom right";
 
 
 
@@ -41,6 +63,7 @@ public class FieldPerfReportResultDTO implements Serializable {
     private boolean highlightB = false;
     private boolean highlightL = false;
     private boolean highlightR = false;
+    private boolean highlightSelected = false;
 
 
     public FieldPerfReportResultDTO(String label, int width, String textStyle) {
@@ -61,6 +84,7 @@ public class FieldPerfReportResultDTO implements Serializable {
         highlightB = false;
         highlightL = false;
         highlightR = false;
+        highlightSelected = false;
     }
 
 
@@ -109,6 +133,10 @@ public class FieldPerfReportResultDTO implements Serializable {
         highlightR = true;
     }
 
+    public void setHighlightSelected() {
+        clearHighlights();
+        highlightSelected = true;
+    }
 
 
     public String getLabel() {
@@ -124,9 +152,11 @@ public class FieldPerfReportResultDTO implements Serializable {
     }
 
     public String getCellStyle() {
-        if (!highlightT && !highlightB && !highlightL && !highlightR) {
+        if (!highlightT && !highlightB && !highlightL && !highlightR && !highlightSelected) {
             return "";
         }
+
+        StringBuilder style = new StringBuilder();
 
         List<String> boxShadows = new ArrayList<>();
         if (highlightT) {
@@ -141,7 +171,65 @@ public class FieldPerfReportResultDTO implements Serializable {
         if (highlightR) {
             boxShadows.add(TEXTSTYLE_CELL_HIGHLIGHT_R);
         }
-        return TEXTSTYLE_CELL_HIGHLIGHT_PRE + String.join(",", boxShadows) + TEXTSTYLE_CELL_HIGHLIGHT_POST;
+
+        if (!boxShadows.isEmpty()) {
+            style.append(TEXTSTYLE_CELL_HIGHLIGHT_PRE)
+                    .append(String.join(",", boxShadows))
+                    .append(TEXTSTYLE_CELL_POST);
+        }
+
+        if (highlightSelected) {
+            List<String> cornerImg = new ArrayList<>();
+            List<String> cornerPos = new ArrayList<>();
+            List<String> cornerSize = new ArrayList<>();
+
+            // Oben Links
+            if (!highlightT && !highlightL) {
+                cornerImg.add(TEXTSTYLE_CELL_CORNER_IMG_TL);
+                cornerPos.add(TEXTSTYLE_CELL_CORNER_POS_TL);
+                cornerSize.add(TEXTSTYLE_CELL_CORNER_SIZE);
+            }
+            // Oben Rechts
+            if (!highlightT && !highlightR) {
+                cornerImg.add(TEXTSTYLE_CELL_CORNER_IMG_TR);
+                cornerPos.add(TEXTSTYLE_CELL_CORNER_POS_TR);
+                cornerSize.add(TEXTSTYLE_CELL_CORNER_SIZE);
+            }
+            // Unten Links
+            if (!highlightB && !highlightL) {
+                cornerImg.add(TEXTSTYLE_CELL_CORNER_IMG_BL);
+                cornerPos.add(TEXTSTYLE_CELL_CORNER_POS_BL);
+                cornerSize.add(TEXTSTYLE_CELL_CORNER_SIZE);
+            }
+            // Unten Rechts
+            if (!highlightB && !highlightR) {
+                cornerImg.add(TEXTSTYLE_CELL_CORNER_IMG_BR);
+                cornerPos.add(TEXTSTYLE_CELL_CORNER_POS_BR);
+                cornerSize.add(TEXTSTYLE_CELL_CORNER_SIZE);
+            }
+
+            if (!cornerImg.isEmpty()) {
+                style.append(TEXTSTYLE_CELL_CORNERS_IMG_PRE)
+                        .append(String.join(",", cornerImg))
+                        .append(TEXTSTYLE_CELL_POST)
+
+                        .append(" ")
+                        .append(TEXTSTYLE_CELL_CORNERS_POS_PRE)
+                        .append(String.join(",", cornerPos))
+                        .append(TEXTSTYLE_CELL_POST)
+
+                        .append(" ")
+                        .append(TEXTSTYLE_CELL_CORNERS_SIZE_PRE)
+                        .append(String.join(",", cornerSize))
+                        .append(TEXTSTYLE_CELL_POST)
+
+                        .append(" ")
+                        .append(TEXTSTYLE_CELL_CORNERS_NOREPEAT)
+                        .append(TEXTSTYLE_CELL_POST);
+            }
+        }
+
+        return style.toString();
     }
 
 }
