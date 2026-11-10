@@ -12,7 +12,7 @@ Die horizontale Verschiebung des Schattens. Ein positiver Wert schiebt ihn nach 
 offset-y (Zahlenwert plus Einheit, etwa 2px):
 Die vertikale Verschiebung. Ein positiver Wert schiebt ihn nach unten, ein negativer nach oben (0 = mittig).
 
-blur-radius (Zahlenwert plus Einheit, etwa 28x):
+blur-radius (Zahlenwert plus Einheit, etwa 8x):
 Die Unschärfe bzw. der Verlauf des Schattens. Je größer der Wert, desto weicher und verwaschener (und damit größer) wird der Halo-Effekt. Bei 0 ist der Schatten eine exakte, harte Kopie des Elements.
 
 spread-radius (Zahlenwert plus Einheit, etwa 2px):
@@ -20,6 +20,40 @@ Die Ausbreitung. Positive Werte lassen den Schatten in alle Richtungen wachsen (
 
 Farbe (var(--active) oder #FF77AA (bzw. #F7A)):
 Die Farbe des Schattens, dynamisch über die CSS-Variable gesteuert.
+
+====================
+
+Beispiel für nach innen gerichtetes Glühen:
+box-shadow: inset 0 0 6px 2px var(--active)
+
+nur oben: box-shadow: inset 0 6px 4px 2px var(--active)
+(Y-Versatz nach unten, damit der Schatten von oben nach innen fällt,
+und negativer Spread, damit er sich an den Seiten nicht um die Ecke biegt)
+Nur Unten: box-shadow: inset 0 -6px 4px -2px var(--active)
+Nur Links: box-shadow: inset 6px 0 4px -2px var(--active)
+Nur Rechts: box-shadow: inset -6px 0 4px -2px var(--active)
+
+Kombimiert oben und unten: box-shadow: inset 0 6px 4px -2px var(--active), inset 0 -6px 4px -2px var(--active);
+
+=========================================================================
+
+transition: [eigenschaft] [dauer] [zeitverlauf] [verzögerung];
+
+Eigenschaft (Werteliste {"background-color", "outline", "all"}):
+Du bestimmst, welche CSS-Eigenschaft animiert werden soll. Wenn du all schreibst, wird alles animiert, was sich ändert. Es ist aber performanter, die konkreten Eigenschaften zu nennen (z. B. background-color 0.2s, outline 0.2s).
+
+Dauer (Zahlenwert plus Einheit, etwa 0.2s oder 200ms):
+Wie lange der Übergang dauern soll. 0.2s (200 Millisekunden) ist ideal für UI-Interaktionen – schnell genug, dass es sich direkt anfühlt, aber langsam genug, dass das Auge den weichen Übergang wahrnimmt.
+
+Zeitverlauf / Timing-Function (Werteliste {"ease", "linear", "ease-in-out"}):
+Bestimmt die Beschleunigungskurve:
+    ease (Standard): Startet langsam, wird in der Mitte schneller und bremst am Ende sanft ab (wirkt am natürlichsten).
+    linear: Läuft von Anfang bis Ende absolut gleichmäßig durch.
+    ease-in-out: Startet und endet sehr weich.
+
+Verzögerung (optional, Zahlenwert plus Einheit, etwa 0.2s):
+Wird meist weggelassen (oder auf 0s belassen), damit die Animation sofort beim Klick startet.
+
 */
 
 

@@ -414,7 +414,7 @@ value="#{fieldPerfReport.reportData}" styleClass="... headerless"
 		<!-- 1. Die statische, fixierte Spalte (Index 0) -->
 		<p:column styleClass="clickable-td" 
 			style="width: #{fieldPerfReport.getColumnWidth(0)}px;min-width: #{fieldPerfReport.getColumnWidth(0)}px;" >
-			<f:facet name="header">
+			<f:facet name="header" style="#{reportHeader[0].cellStyle}" >
 				<h:outputText value="#{fieldPerfReport.reportHeader[0].label}" style="#{fieldPerfReport.reportHeader[0].textStyle}" />
 			</f:facet>
 
@@ -429,7 +429,7 @@ value="#{fieldPerfReport.reportData}" styleClass="... headerless"
 		<p:columns value="#{fieldPerfReport.columnIndices}" var="colIdx" 
 			styleClass="clickable-td" 
 			style="width: #{fieldPerfReport.getColumnWidth(colIdx)}px;min-width: #{fieldPerfReport.getColumnWidth(colIdx)}px;" >
-			<f:facet name="header">
+			<f:facet name="header" style="#{reportHeader[colIdx].cellStyle}" >
 				<h:outputText value="#{fieldPerfReport.reportHeader[colIdx].label}" style="#{fieldPerfReport.reportHeader[colIdx].textStyle}" />
 			</f:facet>
 

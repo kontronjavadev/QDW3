@@ -797,16 +797,10 @@ public class FieldPerfReport extends SuperView implements Serializable {
 
         // Selections-Markierung löschen
         Arrays.stream(reportHeader)
-                .forEach(dto -> {
-                    dto.setHighlight(false);
-                    dto.setRowcolHighlight(false);
-                });
+                .forEach(FieldPerfReportResultDTO::clearHighlights);
         reportData.stream()
                 .flatMap(Arrays::stream)
-                .forEach(dto -> {
-                    dto.setHighlight(false);
-                    dto.setRowcolHighlight(false);
-                });
+                .forEach(FieldPerfReportResultDTO::clearHighlights);
 
 
         // Identifikation
@@ -822,13 +816,23 @@ public class FieldPerfReport extends SuperView implements Serializable {
         // Selections-Markierung hinzufügen
         // alle Zellen derselbe Reihe markieren
         Arrays.stream(reportData.get(rowIndex))
-                .forEach(dto -> dto.setRowcolHighlight(true));
+                .forEach(FieldPerfReportResultDTO::setHighlightTB);
         // alle Zellen derselbe Spalte markieren
         reportData.stream()
-                .forEach(row -> row[colIndex].setRowcolHighlight(true));
+                .map(row -> row[colIndex])
+                .forEach(FieldPerfReportResultDTO::setHighlightLR);
 
-        // zusätzlich die Zelle selbst markieren
-        clickedCell.setHighlight(true);
+        // die Zelle selbst wieder von Markierung befeien, da sie inmitten des Kreuzes sitzt
+        clickedCell.clearHighlights();
+
+        // Die Enden der Reihe markieren
+        reportData.get(rowIndex)[0].setHighlightL();
+        reportData.get(rowIndex)[reportData.get(rowIndex).length - 1].setHighlightR();
+
+        // Die Enden der Spalte markieren
+        reportData.getFirst()[colIndex].setHighlightT();
+        reportData.getLast()[colIndex].setHighlightB();
+
 
         selectedObject = reportData.get(rowIndex);
         System.out.println("selectedObject: " + reportRowToString(selectedObject));
