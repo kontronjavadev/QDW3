@@ -22,32 +22,54 @@ public class FieldPerfReportResultDTO implements Serializable {
     protected static final String TEXTSTYLE_CELL_CORNERS_SIZE_PRE = "background-size: ";
 
     protected static final String TEXTSTYLE_CELL_POST = " !important;";
+    protected static final String FRAME_COL = "var(--activemarked)";
+
+
+    private static final String BRD_THK = "2px"; // border thinkness
+    private static final String M_BRD_THK = "-" + BRD_THK;
+
+    private static final String BLUR_OFFSET = "4px";
+    private static final String M_BLUR_OFFSET = "-" + BLUR_OFFSET;
+
+    private static final String BLUR = "4px"; // blur radius
+    private static final String SPREAD = "-2px"; // spread radius
+
+    private static final String CORNER_BLUR = "5px"; // blur radius
+
+    private static final String HIGHLIGHT_PATTERN = "inset %s %s 0 0 " + FRAME_COL + ", " // Rahmen
+            + "inset %s %s " + BLUR + " " + SPREAD + " " + FRAME_COL; // Glimmen
+
+    private static final String CORNER_IMG_PATTERN = "radial-gradient(circle at %s %s, " + FRAME_COL + ", transparent " + CORNER_BLUR + "), "
+            + "linear-gradient(" + FRAME_COL + ", " + FRAME_COL + "), "
+            + "linear-gradient(" + FRAME_COL + ", " + FRAME_COL + ")";
+
 
 
     // ein harter Rahmen plus ein weiches Glühen
-    protected static final String TEXTSTYLE_CELL_HIGHLIGHT_T = "inset 0 2px 0 0 var(--active), inset 0 5px 4px -3px var(--active)";
-    protected static final String TEXTSTYLE_CELL_HIGHLIGHT_B = "inset 0 -2px 0 0 var(--active), inset 0 -5px 4px -3px var(--active)";
-    protected static final String TEXTSTYLE_CELL_HIGHLIGHT_L = "inset 2px 0 0 0 var(--active), inset 5px 0 4px -3px var(--active)";
-    protected static final String TEXTSTYLE_CELL_HIGHLIGHT_R = "inset -2px 0 0 0 var(--active), inset -5px 0 4px -3px var(--active)";
+    protected static final String TEXTSTYLE_CELL_HIGHLIGHT_T = String.format(HIGHLIGHT_PATTERN, "0", BRD_THK, "0", BLUR_OFFSET);
+    protected static final String TEXTSTYLE_CELL_HIGHLIGHT_B = String.format(HIGHLIGHT_PATTERN, "0", M_BRD_THK, "0", M_BLUR_OFFSET);
+    protected static final String TEXTSTYLE_CELL_HIGHLIGHT_L = String.format(HIGHLIGHT_PATTERN, BRD_THK, "0", BLUR_OFFSET, "0");
+    protected static final String TEXTSTYLE_CELL_HIGHLIGHT_R = String.format(HIGHLIGHT_PATTERN, M_BRD_THK, "0", M_BLUR_OFFSET, "0");
 
 
     protected static final String TEXTSTYLE_CELL_CORNERS_NOREPEAT = " background-repeat: no-repeat";
-    protected static final String TEXTSTYLE_CELL_CORNER_SIZE = "100% 100%, 2px 2px, 2px 2px";
+    protected static final String TEXTSTYLE_CELL_CORNER_SIZE = "100% 100%, " + BRD_THK + " " + BRD_THK + ", " + BRD_THK + " " + BRD_THK;
+
 
     // Top-Left (TL)
-    protected static final String TEXTSTYLE_CELL_CORNER_IMG_TL = "radial-gradient(circle at 0 0, var(--active), transparent 5px), linear-gradient(var(--active), var(--active)), linear-gradient(var(--active), var(--active))";
+    protected static final String TEXTSTYLE_CELL_CORNER_IMG_TL = String.format(CORNER_IMG_PATTERN, "0", "0");
     protected static final String TEXTSTYLE_CELL_CORNER_POS_TL = "top left, top left, top left";
 
     // Top-Right (TR)
-    protected static final String TEXTSTYLE_CELL_CORNER_IMG_TR = "radial-gradient(circle at 100% 0, var(--active), transparent 5px), linear-gradient(var(--active), var(--active)), linear-gradient(var(--active), var(--active))";
+    protected static final String TEXTSTYLE_CELL_CORNER_IMG_TR = String.format(CORNER_IMG_PATTERN, "100%", "0");
     protected static final String TEXTSTYLE_CELL_CORNER_POS_TR = "top right, top right, top right";
 
     // Bottom-Left (BL)
-    protected static final String TEXTSTYLE_CELL_CORNER_IMG_BL = "radial-gradient(circle at 0 100%, var(--active), transparent 5px), linear-gradient(var(--active), var(--active)), linear-gradient(var(--active), var(--active))";
+    protected static final String TEXTSTYLE_CELL_CORNER_IMG_BL = String.format(CORNER_IMG_PATTERN, "0", "100%");
     protected static final String TEXTSTYLE_CELL_CORNER_POS_BL = "bottom left, bottom left, bottom left";
 
     // Bottom-Right (BR)
-    protected static final String TEXTSTYLE_CELL_CORNER_IMG_BR = "radial-gradient(circle at 100% 100%, var(--active), transparent 5px), linear-gradient(var(--active), var(--active)), linear-gradient(var(--active), var(--active))";
+    protected static final String TEXTSTYLE_CELL_CORNER_IMG_BR = String.format(CORNER_IMG_PATTERN, "100%", "100%");
     protected static final String TEXTSTYLE_CELL_CORNER_POS_BR = "bottom right, bottom right, bottom right";
 
 
@@ -210,17 +232,17 @@ public class FieldPerfReportResultDTO implements Serializable {
 
             if (!cornerImg.isEmpty()) {
                 style.append(TEXTSTYLE_CELL_CORNERS_IMG_PRE)
-                        .append(String.join(",", cornerImg))
+                        .append(String.join(", ", cornerImg))
                         .append(TEXTSTYLE_CELL_POST)
 
                         .append(" ")
                         .append(TEXTSTYLE_CELL_CORNERS_POS_PRE)
-                        .append(String.join(",", cornerPos))
+                        .append(String.join(", ", cornerPos))
                         .append(TEXTSTYLE_CELL_POST)
 
                         .append(" ")
                         .append(TEXTSTYLE_CELL_CORNERS_SIZE_PRE)
-                        .append(String.join(",", cornerSize))
+                        .append(String.join(", ", cornerSize))
                         .append(TEXTSTYLE_CELL_POST)
 
                         .append(" ")
