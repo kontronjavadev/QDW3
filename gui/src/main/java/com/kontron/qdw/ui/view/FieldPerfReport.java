@@ -879,6 +879,36 @@ public class FieldPerfReport extends SuperView implements Serializable {
 
 
 
+    public void showDetails() {
+        FieldPerfReportResultDTO rowHeader = reportData.get(lastRowIndex)[0];
+        FieldPerfReportResultDTO colHeader = reportHeader[lastColIndex];
+
+        logger.info("showDetails() zu (x) supp arrival {} und (y) repair arrival {}", colHeader.getLabel(), rowHeader.getLabel());
+    }
+
+    public void appendDetails() {
+        FieldPerfReportResultDTO rowHeader = reportData.get(lastRowIndex)[0];
+        FieldPerfReportResultDTO colHeader = reportHeader[lastColIndex];
+
+        logger.info("appendDetails() von (x) supp arrival {} und (y) repair arrival {}", colHeader.getLabel(), rowHeader.getLabel());
+    }
+
+    public void abc() {
+        FieldPerfReportResultDTO rowHeader = reportData.get(lastRowIndex)[0];
+        FieldPerfReportResultDTO colHeader = reportHeader[lastColIndex];
+
+        logger.info("abc() von (x) supp arrival {} und (y) repair arrival {}", colHeader.getLabel(), rowHeader.getLabel());
+    }
+
+    public void partanalysis() {
+        FieldPerfReportResultDTO rowHeader = reportData.get(lastRowIndex)[0];
+        FieldPerfReportResultDTO colHeader = reportHeader[lastColIndex];
+
+        logger.info("partanalysis() von (x) supp arrival {} und (y) repair arrival {}", colHeader.getLabel(), rowHeader.getLabel());
+    }
+
+
+
     public String getFormTitle() {
         return formTitle;
     }

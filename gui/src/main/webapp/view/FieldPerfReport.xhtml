@@ -413,6 +413,7 @@
 				process="@this :form:currentSelectionTimestamp" 
 				update=":form:panData" 
 				onclick="document.getElementById('form:currentSelectionTimestamp').value = Date.now();"
+				oncontextmenu="this.click();"
 				styleClass="cell-click-link" style="#{reportRow[0].cellStyle}" >
 				<h:outputText value="#{reportRow[0].label}" style="#{reportRow[0].textStyle}" />
 			</p:commandLink>
@@ -430,6 +431,7 @@
 				process="@this :form:currentSelectionTimestamp" 
 				update=":form:panData" 
 				onclick="document.getElementById('form:currentSelectionTimestamp').value = Date.now();"
+				oncontextmenu="this.click();"
 				styleClass="cell-click-link" style="#{reportRow[colIdx].cellStyle}" >
 				<h:outputText value="#{reportRow[colIdx].label}" style="#{reportRow[colIdx].textStyle}" />
 			</p:commandLink>
@@ -444,12 +446,6 @@
 
 
 
-<!-- 
-	<p/>
-	<h:outputText styleClass="label-field-mandatory" value="#{i18n.result_total_number_records} #{fieldPerfReport.materialsList.size()}"/>
- -->	
-
-
 
 <!--Kontextmenü mit Möglichkeit, eine Zelle oder eine Zeile zu kopieren -->
 
@@ -458,24 +454,45 @@
 	<h:inputHidden id="rowCsv" value="#{fieldPerfReport.rowCsv}" />
 
 	<p:contextMenu for="panData" beforeShow="updateContextData(event)" >
-		<p:menuitem value="#{i18n.action_edit}" ajax="true" icon="pi pi-pencil" id="panData_mniUpdate" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;SUPERUSER')}" action="#{fieldPerfReport.openEditMaterialDialog}">
+		<p:menuitem ...>
 			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{fieldPerfReport.currentPageURL}"/>
 		</p:menuitem>
-		<p:menuitem value="#{i18n.action_view}" ajax="true" icon="pi pi-file" id="panData_mniView" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;SUPERUSER')}" action="#{fieldPerfReport.openViewMaterialDialog}">
-			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{fieldPerfReport.currentPageURL}"/>
-		</p:menuitem>
-		<p:menuitem value="#{i18n.action_refresh}" ajax="false" type="push" icon="pi pi-refresh" id="panData_mniRefresh" actionListener="#{fieldPerfReport.fetchMaterials}"/>
+	</p:contextMenu>
+ -->
 
-		<p:separator/>
+	<p:contextMenu for="panData" >
+		<p:menuitem id="panData_mniShowDetails" icon="pi pi-eye" value="#{i18n.fieldperfreportview_action_showdetails}" 
+			action="#{fieldPerfReport.showDetails}" ajax="true" 
+			rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;SUPERUSER')}" />
 
-		<p:menuitem value="#{i18n.ctxmenu_copy_cell}" actionListener="#{fieldPerfReport.copyCellToClipboard}" icon="pi pi-copy" update="@none"/>
-		<p:menuitem value="#{i18n.ctxmenu_copy_row}" actionListener="#{fieldPerfReport.copyRowToClipboard}" icon="pi pi-copy" update="@none"/>
+		<p:menuitem id="panData_mniAppendDetails" icon="pi pi-eye" value="#{i18n.fieldperfreportview_action_appenddetails}" 
+			action="#{fieldPerfReport.appendDetails}" ajax="true" 
+			rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;SUPERUSER')}" />
+
+		<p:menuitem id="panData_mniABC" icon="pi pi-chart-bar" value="#{i18n.fieldperfreportview_action_abc}" 
+			action="#{fieldPerfReport.abc}" ajax="true" 
+			rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;SUPERUSER')}" />
+
+		<p:menuitem id="panData_mniPartanalysis" icon="pi pi-chart-bar" value="#{i18n.fieldperfreportview_action_partanalysis}" 
+			action="#{fieldPerfReport.partanalysis}" ajax="true" 
+			rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;SUPERUSER')}" />
 	</p:contextMenu>
 
 
 
-	<p:defaultCommand target=":form:cmdSearch" scope="dlgSearchInput" />
+
+<!-- 
+für ABC und Part: pi-chart-bar -->
+
+
+<!-- 
+		<p:separator/>
+
+		<p:menuitem value="#{i18n.ctxmenu_copy_cell}" actionListener="#{fieldPerfReport.copyCellToClipboard}" icon="pi pi-copy" update="@none"/>
+		<p:menuitem value="#{i18n.ctxmenu_copy_row}" actionListener="#{fieldPerfReport.copyRowToClipboard}" icon="pi pi-copy" update="@none"/>
  -->
+
+
 
 
 
