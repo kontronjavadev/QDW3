@@ -252,8 +252,8 @@ body .ui-paginator .ui-paginator-rpp-options {
 ========================================================================= */
 
 body div.ui-datatable.viewScrollable.ui-datatable-frozencolumn {
-	width: calc(100vw - 310px) !important;
-	max-width: calc(100vw - 310px) !important;
+	width: calc(100vw - 325px) !important;
+	max-width: calc(100vw - 325px) !important;
 	overflow: hidden !important;
 }
 
@@ -262,7 +262,6 @@ body div.ui-datatable.viewScrollable.ui-datatable-frozencolumn > table.ui-datata
 	display: table !important;
 	width: 100% !important;
 	table-layout: auto !important;
-	border-collapse: collapse !important;
 }
 
 body div.ui-datatable.viewScrollable.ui-datatable-frozencolumn > table.ui-datatable-fs > tbody {
@@ -418,7 +417,7 @@ body .ui-datatable.viewScrollable.headerless .ui-datatable-scrollable-header {
 }
 
 .fieldPerfReportScrollable .ui-datatable-scrollable-body {
-	max-height: calc(100vh - 442px);
+	max-height: calc(100vh - 474px);
 }
 
 

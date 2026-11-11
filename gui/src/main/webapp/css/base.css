@@ -360,9 +360,15 @@ body .ui-panelwithouttabs > .ui-panel-content .header-label {
 body .ui-tabs .ui-tabs-panels .ui-tabs-panel {
 	background: var(--paneldimmed);
 	color: var(--text);
-	padding: .4rem .4rem;
+	padding: .3rem .3rem;
 	margin: 0 0 0.5rem 0;
 }
+
+/* Letztes tabView auf Seite -> kein Leerraum am Ende des Panels. Verwendung: <p:tabView styleClass="no-margin-last-tab" ...> */
+body .ui-tabs.no-margin-last-tab .ui-tabs-panels > .ui-tabs-panel:last-child {
+	margin: 0rem;
+}
+
 
 body .ui-tabs .ui-tabs-nav li.ui-tabs-header,
 body .ui-tabs .ui-tabs-nav li.ui-tabs-header a {
