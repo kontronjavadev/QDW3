@@ -365,7 +365,7 @@ body .ui-tabs .ui-tabs-panels .ui-tabs-panel {
 }
 
 /* Letztes tabView auf Seite -> kein Leerraum am Ende des Panels. Verwendung: <p:tabView styleClass="no-margin-last-tab" ...> */
-body .ui-tabs.no-margin-last-tab .ui-tabs-panels > .ui-tabs-panel:last-child {
+body .ui-tabs.no-margin-last-tab > .ui-tabs-panels > .ui-tabs-panel {
 	margin: 0rem;
 }
 
