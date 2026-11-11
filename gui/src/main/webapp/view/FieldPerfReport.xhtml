@@ -393,17 +393,8 @@
 
 
 
-<!-- 
-entweder alle Zeilen ohne extra header anzeigen:
-value="#{fieldPerfReport.report}" styleClass="... headerless"
-+ .fieldPerfReportScrollable .ui-datatable-scrollable-body {max-height: calc(100vh - 408px);}
+	<h:inputHidden id="currentSelectionTimestamp" value="#{fieldPerfReport.currentSelectionTimestamp}" />
 
-oder die erste Zeile ist der header:
-value="#{fieldPerfReport.reportData}" styleClass="... headerless"
-+ Methode getReportData(), das eine subList ohne den ersten Eintrag zurück gibt
-+ f:facet in p:columns, das die Titelzeile aus der ersten Zeile des originalen Reports holt.
-+ .fieldPerfReportScrollable .ui-datatable-scrollable-body {max-height: calc(100vh - 408px);}
- -->
 	<p:dataTable id="panData" var="reportRow" rowIndexVar="rowIdx" 
 		selectionTextDisabled="false" allowUnsorting="true" resizeMode="expand" 
 		selection="#{fieldPerfReport.selectedObject}" selectionMode="single" multiViewState="true" 
@@ -418,9 +409,11 @@ value="#{fieldPerfReport.reportData}" styleClass="... headerless"
 				<h:outputText value="#{fieldPerfReport.reportHeader[0].label}" style="#{fieldPerfReport.reportHeader[0].textStyle}" />
 			</f:facet>
 
-			<p:commandLink action="#{fieldPerfReport.onCellClick(rowIdx, 0)}" update=":form:panData" 
-				process="@this" styleClass="cell-click-link" 
-				style="#{reportRow[0].cellStyle}" >
+			<p:commandLink action="#{fieldPerfReport.onCellClick(rowIdx, 0)}" 
+				process="@this :form:currentSelectionTimestamp" 
+				update=":form:panData" 
+				onclick="document.getElementById('form:currentSelectionTimestamp').value = Date.now();"
+				styleClass="cell-click-link" style="#{reportRow[0].cellStyle}" >
 				<h:outputText value="#{reportRow[0].label}" style="#{reportRow[0].textStyle}" />
 			</p:commandLink>
 		</p:column>
@@ -433,9 +426,11 @@ value="#{fieldPerfReport.reportData}" styleClass="... headerless"
 				<h:outputText value="#{fieldPerfReport.reportHeader[colIdx].label}" style="#{fieldPerfReport.reportHeader[colIdx].textStyle}" />
 			</f:facet>
 
-			<p:commandLink action="#{fieldPerfReport.onCellClick(rowIdx, colIdx)}" update=":form:panData" 
-				process="@this" styleClass="cell-click-link" 
-				style="#{reportRow[colIdx].cellStyle}" >
+			<p:commandLink action="#{fieldPerfReport.onCellClick(rowIdx, colIdx)}" 
+				process="@this :form:currentSelectionTimestamp" 
+				update=":form:panData" 
+				onclick="document.getElementById('form:currentSelectionTimestamp').value = Date.now();"
+				styleClass="cell-click-link" style="#{reportRow[colIdx].cellStyle}" >
 				<h:outputText value="#{reportRow[colIdx].label}" style="#{reportRow[colIdx].textStyle}" />
 			</p:commandLink>
 		</p:columns>

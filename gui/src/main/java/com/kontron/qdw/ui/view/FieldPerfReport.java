@@ -75,6 +75,8 @@ public class FieldPerfReport extends SuperView implements Serializable {
     public static final String Q_RELEVANT_RATIO_LABEL = "Q-rel. ratio";
     private final DecimalFormat decimalFormat = new DecimalFormat("0.00");
 
+    private static final long DOUBLE_CLICK_THRESHOLD_MS = 350L;
+
 
     private final transient SavedQueryService queryManager;
     private final transient MaterialBoundaryService materialService;
@@ -110,6 +112,13 @@ public class FieldPerfReport extends SuperView implements Serializable {
     private List<FieldPerfReportResultDTO[]> reportData; // List an Zeilen, bestehend aus Array zu Spalten
     private FieldPerfReportResultDTO[] reportHeader;
     private FieldPerfReportResultDTO[] selectedObject;
+
+    // hidden field für Zeitpunkt der Selektion
+    private long currentSelectionTimestamp = 0L;
+    // Daten der letzte Selektion, um prüfen zu können, ob es ein Doppelklick war
+    private int lastRowIndex = -1;
+    private int lastColIndex = -1;
+    private long lastSelectionTimestamp = 0L;
 
 
 
@@ -793,7 +802,24 @@ public class FieldPerfReport extends SuperView implements Serializable {
 
 
     public void onCellClick(int rowIndex, int colIndex) {
+        // war es ein Doppelklick?
+        if (rowIndex == lastRowIndex && colIndex == lastColIndex
+                && (currentSelectionTimestamp - lastSelectionTimestamp) <= DOUBLE_CLICK_THRESHOLD_MS) {
+            // Zeitstempel zurücksetzen, damit ein 3. Klick nicht sofort wieder als Doppelklick zählt
+            lastSelectionTimestamp = 0L;
+
+            onCellDoubleClick(rowIndex, colIndex);
+            return;
+        }
+
         logger.info("Zelle geklickt - Spalte {}, Zeile {}", colIndex, rowIndex);
+
+        // Status für den nächsten Klick merken
+        lastRowIndex = rowIndex;
+        lastColIndex = colIndex;
+        lastSelectionTimestamp = currentSelectionTimestamp;
+
+
 
         // Selections-Markierung löschen
         Arrays.stream(reportHeader)
@@ -803,14 +829,14 @@ public class FieldPerfReport extends SuperView implements Serializable {
                 .forEach(FieldPerfReportResultDTO::clearHighlights);
 
 
-        // Identifikation
-        FieldPerfReportResultDTO colHeader = reportHeader[colIndex];
-        FieldPerfReportResultDTO rowHeader = reportData.get(rowIndex)[0];
-        logger.info("Koondinaten Spalte {}, Zeile {}", colHeader, rowHeader);
+        // Identifikation der Datumskoordinaten
+        // FieldPerfReportResultDTO colHeader = reportHeader[colIndex];
+        // FieldPerfReportResultDTO rowHeader = reportData.get(rowIndex)[0];
+        // logger.info("Koondinaten Spalte {}, Zeile {}", colHeader, rowHeader);
 
         // gewählte Zelle
         FieldPerfReportResultDTO clickedCell = reportData.get(rowIndex)[colIndex];
-        logger.info("gewählte Zelle: {}", clickedCell);
+        logger.trace("gewählte Zelle: {}", clickedCell);
 
 
         // Selections-Markierung hinzufügen
@@ -835,7 +861,12 @@ public class FieldPerfReport extends SuperView implements Serializable {
 
 
         selectedObject = reportData.get(rowIndex);
-        System.out.println("selectedObject: " + reportRowToString(selectedObject));
+        logger.trace("selectedObject: {}", reportRowToString(selectedObject));
+    }
+
+
+    public void onCellDoubleClick(int rowIndex, int colIndex) {
+        logger.info("Doppelklick auf Zelle - Spalte {}, Zeile {}", colIndex, rowIndex);
     }
 
     private String reportRowToString(FieldPerfReportResultDTO[] reportRow) {
@@ -884,6 +915,14 @@ public class FieldPerfReport extends SuperView implements Serializable {
     @Override
     protected String getViewName() {
         return VIEW_ID;
+    }
+
+    public long getCurrentSelectionTimestamp() {
+        return currentSelectionTimestamp;
+    }
+
+    public void setCurrentSelectionTimestamp(long currentSelectionTimestamp) {
+        this.currentSelectionTimestamp = currentSelectionTimestamp;
     }
 
 
