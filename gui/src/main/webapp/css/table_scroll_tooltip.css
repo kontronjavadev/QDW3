@@ -377,15 +377,17 @@ body div.ui-datatable.viewScrollable.ui-datatable-frozencolumn tbody td.clickabl
 	box-sizing: border-box !important;
 }
 
-/* Links: Scrollbars ausblenden */
+/* Links: Vertikale Scrollbar ausblenden, aber horizontalen Scrollbar-Raum (unsichtbar) synchron zur rechten Seite reservieren */
 body div.ui-datatable.viewScrollable.ui-datatable-frozencolumn td.ui-datatable-frozenlayout-left .ui-datatable-scrollable-body {
-	overflow-x: hidden !important;
+	overflow-x: scroll !important;
 	overflow-y: hidden !important;
+	margin-bottom: 0 !important; /* Unterbindet fehlerhafte Inline-Korrekturen von PrimeFaces */
+	scrollbar-color: transparent transparent !important; /* Reserviert den Platz unten, macht den Balken aber unsichtbar */
 }
 
-/* Rechts: Scrollbars aktivieren + scrollbar-gutter hält Header und Body bei Skalierung synchron */
+/* Rechts: Vertikal bei Bedarf scrollen, horizontalen Raum unten dauerhaft synchron zur linken Seite reservieren */
 body div.ui-datatable.viewScrollable.ui-datatable-frozencolumn td.ui-datatable-frozenlayout-right .ui-datatable-scrollable-body {
-	overflow-x: auto !important;
+	overflow-x: scroll !important;
 	overflow-y: auto !important;
 }
 
