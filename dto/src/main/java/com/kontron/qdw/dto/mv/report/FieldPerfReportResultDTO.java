@@ -1,8 +1,8 @@
 package com.kontron.qdw.dto.mv.report;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class FieldPerfReportResultDTO implements Serializable {
 
@@ -100,6 +100,15 @@ public class FieldPerfReportResultDTO implements Serializable {
     public String toString() {
         return label;
     }
+
+    public static String reportArrayToString(FieldPerfReportResultDTO[] reportRow) {
+        return reportRow == null
+                ? "null"
+                : Arrays.stream(reportRow)
+                        .map(FieldPerfReportResultDTO::getLabel)
+                        .collect(Collectors.joining(","));
+    }
+
 
     public void clearHighlights() {
         highlightT = false;

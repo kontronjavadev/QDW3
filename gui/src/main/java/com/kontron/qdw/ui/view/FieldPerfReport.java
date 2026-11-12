@@ -116,8 +116,8 @@ public class FieldPerfReport extends SuperView implements Serializable {
     // hidden field für Zeitpunkt der Selektion
     private long currentSelectionTimestamp = 0L;
     // Daten der letzte Selektion, um prüfen zu können, ob es ein Doppelklick war
-    private int lastRowIndex = -1;
-    private int lastColIndex = -1;
+    private int lastSelectedRowIndex = -1;
+    private int lastSelectedColIndex = -1;
     private long lastSelectionTimestamp = 0L;
 
 
@@ -446,6 +446,20 @@ public class FieldPerfReport extends SuperView implements Serializable {
         out.add(qRelevantRatio);
 
         return out;
+    }
+
+
+
+    private void executeDetail() {
+        if (!isDetailPossible(lastSelectedRowIndex, lastSelectedColIndex)) {
+            return;
+        }
+        FieldPerfReportResultDTO clickedCell = reportData.get(lastSelectedRowIndex)[lastSelectedColIndex];
+        FieldPerfReportResultDTO rowHeader = reportData.get(lastSelectedRowIndex)[0];
+        FieldPerfReportResultDTO colHeader = reportHeader[lastSelectedColIndex];
+
+        logger.info("Perform details execution for (x) supplier arrival (shipped) {} and (y) repair arrival (returned) {}",
+                colHeader.getLabel(), rowHeader.getLabel());
     }
 
 
@@ -795,7 +809,6 @@ public class FieldPerfReport extends SuperView implements Serializable {
     }
 
     public void setSelectedObject(FieldPerfReportResultDTO[] selectedObject) {
-        System.out.println("setSelectedObject: " + reportRowToString(selectedObject));
         this.selectedObject = selectedObject;
     }
 
@@ -803,7 +816,7 @@ public class FieldPerfReport extends SuperView implements Serializable {
 
     public void onCellClick(int rowIndex, int colIndex) {
         // war es ein Doppelklick?
-        if (rowIndex == lastRowIndex && colIndex == lastColIndex
+        if (rowIndex == lastSelectedRowIndex && colIndex == lastSelectedColIndex
                 && (currentSelectionTimestamp - lastSelectionTimestamp) <= DOUBLE_CLICK_THRESHOLD_MS) {
             // Zeitstempel zurücksetzen, damit ein 3. Klick nicht sofort wieder als Doppelklick zählt
             lastSelectionTimestamp = 0L;
@@ -815,8 +828,8 @@ public class FieldPerfReport extends SuperView implements Serializable {
         logger.info("Zelle geklickt - Spalte {}, Zeile {}", colIndex, rowIndex);
 
         // Status für den nächsten Klick merken
-        lastRowIndex = rowIndex;
-        lastColIndex = colIndex;
+        lastSelectedRowIndex = rowIndex;
+        lastSelectedColIndex = colIndex;
         lastSelectionTimestamp = currentSelectionTimestamp;
 
 
@@ -861,48 +874,73 @@ public class FieldPerfReport extends SuperView implements Serializable {
 
 
         selectedObject = reportData.get(rowIndex);
-        logger.trace("selectedObject: {}", reportRowToString(selectedObject));
+        logger.trace("selectedObject: {}", FieldPerfReportResultDTO.reportArrayToString(selectedObject));
     }
-
 
     public void onCellDoubleClick(int rowIndex, int colIndex) {
         logger.info("Doppelklick auf Zelle - Spalte {}, Zeile {}", colIndex, rowIndex);
+        showDetails();
     }
 
-    private String reportRowToString(FieldPerfReportResultDTO[] reportRow) {
-        return reportRow == null
-                ? "null"
-                : Arrays.stream(reportRow)
-                        .map(FieldPerfReportResultDTO::getLabel)
-                        .collect(Collectors.joining(","));
+
+    public boolean isDetailPossible(int rowIndex, int colIndex) {
+        if (rowIndex <= 0 || colIndex <= 0) {
+            // keine Auswahl oder Zeilenüberschrift oder Shipments-Zeile gewählt (Spaltenüberschrift ist nicht anwählbar)
+            return false;
+        }
+        if (rowIndex > reportData.size() - 3) {
+            // eine der letzten drei Zeilen gewählt. Details ist nur bis Zeile "sum" verfügbar.
+            return false;
+        }
+        FieldPerfReportResultDTO clickedCell = reportData.get(rowIndex)[colIndex];
+        if (StringUtils.isEmpty(clickedCell.getLabel())) {
+            // in der Zelle steht nichts. Zelle ist also außerhalb des analysierbaren Bereichs. Details nicht möglich.
+            return false;
+        }
+        return true;
     }
 
 
 
     public void showDetails() {
-        FieldPerfReportResultDTO rowHeader = reportData.get(lastRowIndex)[0];
-        FieldPerfReportResultDTO colHeader = reportHeader[lastColIndex];
+        if (!isDetailPossible(lastSelectedRowIndex, lastSelectedColIndex)) {
+            return;
+        }
+        FieldPerfReportResultDTO rowHeader = reportData.get(lastSelectedRowIndex)[0];
+        FieldPerfReportResultDTO colHeader = reportHeader[lastSelectedColIndex];
 
-        logger.info("showDetails() zu (x) supp arrival {} und (y) repair arrival {}", colHeader.getLabel(), rowHeader.getLabel());
+        logger.info("showDetails() zu (x) supplier arrival (shipped) {} und (y) repair arrival (returned) {}",
+                colHeader.getLabel(), rowHeader.getLabel());
+        executeDetail();
     }
 
     public void appendDetails() {
-        FieldPerfReportResultDTO rowHeader = reportData.get(lastRowIndex)[0];
-        FieldPerfReportResultDTO colHeader = reportHeader[lastColIndex];
+        if (!isDetailPossible(lastSelectedRowIndex, lastSelectedColIndex)) {
+            return;
+        }
+        FieldPerfReportResultDTO rowHeader = reportData.get(lastSelectedRowIndex)[0];
+        FieldPerfReportResultDTO colHeader = reportHeader[lastSelectedColIndex];
 
         logger.info("appendDetails() von (x) supp arrival {} und (y) repair arrival {}", colHeader.getLabel(), rowHeader.getLabel());
+        executeDetail();
     }
 
     public void abc() {
-        FieldPerfReportResultDTO rowHeader = reportData.get(lastRowIndex)[0];
-        FieldPerfReportResultDTO colHeader = reportHeader[lastColIndex];
+        if (!isDetailPossible(lastSelectedRowIndex, lastSelectedColIndex)) {
+            return;
+        }
+        FieldPerfReportResultDTO rowHeader = reportData.get(lastSelectedRowIndex)[0];
+        FieldPerfReportResultDTO colHeader = reportHeader[lastSelectedColIndex];
 
         logger.info("abc() von (x) supp arrival {} und (y) repair arrival {}", colHeader.getLabel(), rowHeader.getLabel());
     }
 
     public void partanalysis() {
-        FieldPerfReportResultDTO rowHeader = reportData.get(lastRowIndex)[0];
-        FieldPerfReportResultDTO colHeader = reportHeader[lastColIndex];
+        if (!isDetailPossible(lastSelectedRowIndex, lastSelectedColIndex)) {
+            return;
+        }
+        FieldPerfReportResultDTO rowHeader = reportData.get(lastSelectedRowIndex)[0];
+        FieldPerfReportResultDTO colHeader = reportHeader[lastSelectedColIndex];
 
         logger.info("partanalysis() von (x) supp arrival {} und (y) repair arrival {}", colHeader.getLabel(), rowHeader.getLabel());
     }
