@@ -219,6 +219,26 @@ body .ui-paginator .ui-paginator-rpp-options {
    3a. TABELLEN: SCROLLING: GEMEINSAME REGELN (Für ALLE viewScrollable Tabellen)
 ========================================================================= */
 
+/* Für alle scrollbaren PrimeFaces-Tabellen */
+body .ui-datatable-scrollable .ui-datatable-scrollable-header,
+body .ui-datatable-scrollable .ui-datatable-scrollable-body {
+	scrollbar-width: thin;
+}
+/* Für Tabellen ohne fixierte Spalten und für beweglichen Spalten rechts bei Tabellen mit fixierten Spalten */
+body .ui-datatable-scrollable:not(.ui-datatable-frozencolumn) .ui-datatable-scrollable-header,
+body .ui-datatable-scrollable:not(.ui-datatable-frozencolumn) .ui-datatable-scrollable-body,
+body .ui-datatable-frozencolumn td.ui-datatable-frozenlayout-right .ui-datatable-scrollable-header,
+body .ui-datatable-frozencolumn td.ui-datatable-frozenlayout-right .ui-datatable-scrollable-body {
+	scrollbar-gutter: stable;
+}
+/* Für fixierte Spalten Scrollbar ausblenden */
+body .ui-datatable-frozencolumn td.ui-datatable-frozenlayout-left .ui-datatable-scrollable-header,
+body .ui-datatable-frozencolumn td.ui-datatable-frozenlayout-left .ui-datatable-scrollable-body {
+	scrollbar-gutter: auto !important;
+}
+
+
+
 .viewScrollable {
 	width: calc(100vw - 310px);
 	max-width: calc(100vw - 310px);
@@ -252,8 +272,8 @@ body .ui-paginator .ui-paginator-rpp-options {
 ========================================================================= */
 
 body div.ui-datatable.viewScrollable.ui-datatable-frozencolumn {
-	width: calc(100vw - 325px) !important;
-	max-width: calc(100vw - 325px) !important;
+	width: calc(100vw - 328px) !important;
+	max-width: calc(100vw - 328px) !important;
 	overflow: hidden !important;
 }
 
@@ -417,7 +437,7 @@ body .ui-datatable.viewScrollable.headerless .ui-datatable-scrollable-header {
 }
 
 .fieldPerfReportScrollable .ui-datatable-scrollable-body {
-	max-height: calc(100vh - 474px);
+	max-height: calc(100vh - 475px);
 }
 
 
