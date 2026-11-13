@@ -395,6 +395,12 @@
 
 	<h:inputHidden id="currentSelectionTimestamp" value="#{fieldPerfReport.currentSelectionTimestamp}" />
 
+	<p:remoteCommand name="rcSelectCellAndDraw" 
+		action="#{fieldPerfReport.onCellRightClick}" 
+		process="@this" 
+		update=":form:tabview2:panData" 
+		oncomplete="PF('panData_ctxMenuWidget').show(lastContextMenuEvent);" />
+
 	<p:tabView id="tabview2" dynamic="true" effect="fade" effectDuration="fast" styleClass="no-margin-last-tab" >
 
 		<p:tab id="tabPanData" title="#{i18n.fieldperfreportview_tabpan_data}" >
@@ -416,8 +422,9 @@
 						process="@this :form:currentSelectionTimestamp" 
 						update=":form:tabview2:panData" 
 						onclick="document.getElementById('form:currentSelectionTimestamp').value = Date.now();"
-						oncontextmenu="toggleMenuDetails(#{fieldPerfReport.isDetailPossible(rowIdx, 0)}); this.click();"
+						oncontextmenu="onCellContextMenu(event, #{rowIdx}, 0, #{fieldPerfReport.isDetailPossible(rowIdx, 0)});"
 						styleClass="cell-click-link" style="#{reportRow[0].cellStyle}" >
+
 						<h:outputText value="#{reportRow[0].label}" style="#{reportRow[0].textStyle}" />
 					</p:commandLink>
 				</p:column>
@@ -434,8 +441,9 @@
 						process="@this :form:currentSelectionTimestamp" 
 						update=":form:tabview2:panData" 
 						onclick="document.getElementById('form:currentSelectionTimestamp').value = Date.now();"
-						oncontextmenu="toggleMenuDetails(#{fieldPerfReport.isDetailPossible(rowIdx, colIdx)}); this.click();"
+						oncontextmenu="onCellContextMenu(event, #{rowIdx}, #{colIdx}, #{fieldPerfReport.isDetailPossible(rowIdx, colIdx)});"
 						styleClass="cell-click-link" style="#{reportRow[colIdx].cellStyle}" >
+
 						<h:outputText value="#{reportRow[colIdx].label}" style="#{reportRow[colIdx].textStyle}" />
 					</p:commandLink>
 				</p:columns>
@@ -513,7 +521,7 @@
 	</p:contextMenu>
  -->
 
-	<p:contextMenu for=":form:tabview2:panData" id="panData_mn" >
+	<p:contextMenu id="panData_ctxMenu" widgetVar="panData_ctxMenuWidget" >
 		<p:menuitem id="panData_mniShowDetails" icon="pi pi-eye" value="#{i18n.fieldperfreportview_action_showdetails}" 
 			action="#{fieldPerfReport.showDetails}" ajax="true" 
 			rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;SUPERUSER')}" />
@@ -527,7 +535,7 @@
 			rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;SUPERUSER')}" />
 
 		<p:menuitem id="panData_mniPartanalysis" icon="pi pi-chart-bar" value="#{i18n.fieldperfreportview_action_partanalysis}" 
-			action="#{fieldPerfReport.partanalysis}" ajax="true" 
+			action="#{fieldPerfReport.partAnalysis}" ajax="true" 
 			rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;SUPERUSER')}" />
 	</p:contextMenu>
 
@@ -646,10 +654,33 @@ document.addEventListener("DOMContentLoaded", function() {
 	applyInitialTooltips(#{fieldPerfReport.preloadedSupplierTooltipsJson}, 'fi_supp');
 });
 
+
+
+var lastContextMenuEvent = null;
+
+function onCellContextMenu(event, rIdx, cIdx, isPossible) {
+	// 1. Verhindert das Standard-Rechtsklick-Menü des Browsers
+	event.preventDefault(); 
+
+	// 2: Verhindert, dass der Rechtsklick bis zum 'document' aufsteigt 
+	// und das PrimeFaces-Menü zu früh automatisch triggert!
+	event.stopPropagation();
+
+	// 3. Das Event (inklusive exakter X/Y Mauskoordinaten) für später merken
+	lastContextMenuEvent = event; 
+
+	// 4. Menüeinträge clientseitig toggeln (wie zuvor)
+	toggleMenuDetails(isPossible);
+
+	// 5. Das Update der Tabelle serverseitig auslösen
+	rcSelectCellAndDraw([
+		{name: 'rowIdx', value: rIdx},
+		{name: 'colIdx', value: cIdx}
+	]);
+}
+
 function toggleMenuDetails(isPossible) {
-	// Die IDs der Menu-Items (Doppelpunkte für jQuery mit \\ escapen)
 	var $items = $('#form\\:panData_mniShowDetails, #form\\:panData_mniAppendDetails, #form\\:panData_mniABC, #form\\:panData_mniPartanalysis');
-	
 	if (isPossible) {
 		$items.removeClass('ui-state-disabled');
 	} else {

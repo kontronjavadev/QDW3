@@ -882,13 +882,24 @@ public class FieldPerfReport extends SuperView implements Serializable {
         showDetails();
     }
 
+    public void onCellRightClick() {
+        Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+        String rParam = params.get("rowIdx"); // aus xhtml
+        String cParam = params.get("colIdx"); // aus xhtml
+
+        if (rParam != null && cParam != null) {
+            int rIdx = Integer.parseInt(rParam);
+            int cIdx = Integer.parseInt(cParam);
+            onCellClick(rIdx, cIdx);
+        }
+    }
 
     public boolean isDetailPossible(int rowIndex, int colIndex) {
         if (rowIndex <= 0 || colIndex <= 0) {
             // keine Auswahl oder Zeilenüberschrift oder Shipments-Zeile gewählt (Spaltenüberschrift ist nicht anwählbar)
             return false;
         }
-        if (rowIndex > reportData.size() - 3) {
+        if (rowIndex > reportData.size() - 1 - 3) {
             // eine der letzten drei Zeilen gewählt. Details ist nur bis Zeile "sum" verfügbar.
             return false;
         }
@@ -935,14 +946,14 @@ public class FieldPerfReport extends SuperView implements Serializable {
         logger.info("abc() von (x) supp arrival {} und (y) repair arrival {}", colHeader.getLabel(), rowHeader.getLabel());
     }
 
-    public void partanalysis() {
+    public void partAnalysis() {
         if (!isDetailPossible(lastSelectedRowIndex, lastSelectedColIndex)) {
             return;
         }
         FieldPerfReportResultDTO rowHeader = reportData.get(lastSelectedRowIndex)[0];
         FieldPerfReportResultDTO colHeader = reportHeader[lastSelectedColIndex];
 
-        logger.info("partanalysis() von (x) supp arrival {} und (y) repair arrival {}", colHeader.getLabel(), rowHeader.getLabel());
+        logger.info("partAnalysis() von (x) supp arrival {} und (y) repair arrival {}", colHeader.getLabel(), rowHeader.getLabel());
     }
 
 
