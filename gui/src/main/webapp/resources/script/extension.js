@@ -3,7 +3,7 @@
 function updateContextData(event, formPrefix = 'form', varPrefix = '') {
 // Für eingebettete Panels ist das formPrefix form:tabView2 und wenn ein Dialog mehrere Panels eingebettet hat, gibt es einen Konflikt mit gleichen
 // Variablennamen. Daher müssen die Variablen einen Präfix (oder Postfix) haben, um eindeutig zu sein. Diesen gbt man ebenfalls an.
-	const target = event?.originalEvent?.target;
+	const target = event.target;
 	if (!target) return;
 
 	const cell = target.closest('td');

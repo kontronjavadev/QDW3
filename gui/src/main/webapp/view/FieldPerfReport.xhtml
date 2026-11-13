@@ -405,7 +405,7 @@
 
 		<p:tab id="tabPanData" title="#{i18n.fieldperfreportview_tabpan_data}" >
 			<p:dataTable id="panData" var="reportRow" rowIndexVar="rowIdx" 
-				selectionTextDisabled="false" allowUnsorting="true" resizeMode="expand" 
+				selectionTextDisabled="true" allowUnsorting="true" resizeMode="expand" 
 				selection="#{fieldPerfReport.selectedObject}" selectionMode="single" multiViewState="true" 
 				loadingMessage="#{i18n.action_fetch_data}" rendered="#{not empty fieldPerfReport.reportData}" 
 				value="#{fieldPerfReport.reportData}" scrollable="true" frozenColumns="1" styleClass="viewScrollable fieldPerfReportScrollable" 
@@ -509,16 +509,12 @@
 
 <!--Kontextmenü mit Möglichkeit, eine Zelle oder eine Zeile zu kopieren -->
 
-<!-- 
 	<h:inputHidden id="datacellText" value="#{fieldPerfReport.cellText}" />
 	<h:inputHidden id="datarowCsv" value="#{fieldPerfReport.rowCsv}" />
 
-	<p:contextMenu for="panData" beforeShow="updateContextData(event)" >
-	<p:contextMenu for="panData" beforeShow="updateContextData(event, ':form:tabview2:panData', 'data')" >
-		<p:menuitem ...>
-			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{fieldPerfReport.currentPageURL}"/>
-		</p:menuitem>
-	</p:contextMenu>
+<!-- 
+Werte für die Kopier-Erweiterung nicht hier mit "beforeShow()" auslesen und puffern,
+sondern in der Funktion "onCellContextMenu()", bevor der DOM-Baum vernichtet wird und die Werte nicht mehr da sind.
  -->
 
 	<p:contextMenu id="panData_ctxMenu" widgetVar="panData_ctxMenuWidget" >
@@ -537,23 +533,13 @@
 		<p:menuitem id="panData_mniPartanalysis" icon="pi pi-chart-bar" value="#{i18n.fieldperfreportview_action_partanalysis}" 
 			action="#{fieldPerfReport.partAnalysis}" ajax="true" 
 			rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;SUPERUSER')}" />
-	</p:contextMenu>
 
 
-
-
-<!-- 
-für ABC und Part: pi-chart-bar -->
-
-
-<!-- 
 		<p:separator/>
 
 		<p:menuitem value="#{i18n.ctxmenu_copy_cell}" actionListener="#{fieldPerfReport.copyCellToClipboard}" icon="pi pi-copy" update="@none"/>
 		<p:menuitem value="#{i18n.ctxmenu_copy_row}" actionListener="#{fieldPerfReport.copyRowToClipboard}" icon="pi pi-copy" update="@none"/>
- -->
-
-
+	</p:contextMenu>
 
 
 
@@ -666,13 +652,16 @@ function onCellContextMenu(event, rIdx, cIdx, isPossible) {
 	// und das PrimeFaces-Menü zu früh automatisch triggert!
 	event.stopPropagation();
 
-	// 3. Das Event (inklusive exakter X/Y Mauskoordinaten) für später merken
+	// 3.: Das Event (inklusive exakter X/Y Mauskoordinaten) für später merken
 	lastContextMenuEvent = event; 
 
-	// 4. Menüeinträge clientseitig toggeln (wie zuvor)
+	// 4.: DOM noch intakt: Werte für die Kopier-Erweiterung auslesen und puffern
+	updateContextData(event, 'form', 'data');
+
+	// 5.: Menüeinträge clientseitig toggeln (wie zuvor)
 	toggleMenuDetails(isPossible);
 
-	// 5. Das Update der Tabelle serverseitig auslösen
+	// 6.: Das Update der Tabelle serverseitig auslösen
 	rcSelectCellAndDraw([
 		{name: 'rowIdx', value: rIdx},
 		{name: 'colIdx', value: cIdx}
