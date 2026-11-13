@@ -420,7 +420,7 @@
 
 					<p:commandLink action="#{fieldPerfReport.onCellClick(rowIdx, 0)}" 
 						process="@this :form:currentSelectionTimestamp" 
-						update=":form:tabview2:panData" 
+						update=":form:tabview2:panData form:growl" 
 						onclick="document.getElementById('form:currentSelectionTimestamp').value = Date.now();"
 						oncontextmenu="onCellContextMenu(event, #{rowIdx}, 0, #{fieldPerfReport.isDetailPossible(rowIdx, 0)});"
 						styleClass="cell-click-link" style="#{reportRow[0].cellStyle}" >
@@ -439,7 +439,7 @@
 
 					<p:commandLink action="#{fieldPerfReport.onCellClick(rowIdx, colIdx)}" 
 						process="@this :form:currentSelectionTimestamp" 
-						update=":form:tabview2:panData" 
+						update=":form:tabview2:panData form:growl" 
 						onclick="document.getElementById('form:currentSelectionTimestamp').value = Date.now();"
 						oncontextmenu="onCellContextMenu(event, #{rowIdx}, #{colIdx}, #{fieldPerfReport.isDetailPossible(rowIdx, colIdx)});"
 						styleClass="cell-click-link" style="#{reportRow[colIdx].cellStyle}" >
@@ -519,19 +519,19 @@ sondern in der Funktion "onCellContextMenu()", bevor der DOM-Baum vernichtet wir
 
 	<p:contextMenu id="panData_ctxMenu" widgetVar="panData_ctxMenuWidget" >
 		<p:menuitem id="panData_mniShowDetails" icon="pi pi-eye" value="#{i18n.fieldperfreportview_action_showdetails}" 
-			action="#{fieldPerfReport.showDetails}" ajax="true" 
+			action="#{fieldPerfReport.showDetails}" ajax="true" update="growl" 
 			rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;SUPERUSER')}" />
 
 		<p:menuitem id="panData_mniAppendDetails" icon="pi pi-eye" value="#{i18n.fieldperfreportview_action_appenddetails}" 
-			action="#{fieldPerfReport.appendDetails}" ajax="true" 
+			action="#{fieldPerfReport.appendDetails}" ajax="true" update="growl" 
 			rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;SUPERUSER')}" />
 
 		<p:menuitem id="panData_mniABC" icon="pi pi-chart-bar" value="#{i18n.fieldperfreportview_action_abc}" 
-			action="#{fieldPerfReport.abc}" ajax="true" 
+			action="#{fieldPerfReport.abc}" ajax="true" update="growl" 
 			rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;SUPERUSER')}" />
 
 		<p:menuitem id="panData_mniPartanalysis" icon="pi pi-chart-bar" value="#{i18n.fieldperfreportview_action_partanalysis}" 
-			action="#{fieldPerfReport.partAnalysis}" ajax="true" 
+			action="#{fieldPerfReport.partAnalysis}" ajax="true" update="growl" 
 			rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;SUPERUSER')}" />
 
 

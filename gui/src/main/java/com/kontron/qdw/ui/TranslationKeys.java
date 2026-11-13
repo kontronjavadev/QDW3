@@ -1195,4 +1195,11 @@ public interface TranslationKeys {
     String FIELDPERFREPORTVIEW_MONTHMENU_MONTHS = "fieldperfreportview_monthmenu_months";
     String FIELDPERFREPORTVIEW_REPORT_MATNR_FAIL = "fieldperfreportview_report_matnr_fail";
     String FIELDPERFREPORTVIEW_REPORT_REVNR_WARN = "fieldperfreportview_report_revnr_warn";
+    String FIELDPERFREPORTVIEW_COL_QREL_PERIOD = "fieldperfreportview_col_qrel_period";
+    String FIELDPERFREPORTVIEW_ROW_SHIPTMONTH = "fieldperfreportview_row_shiptmonth";
+    String FIELDPERFREPORTVIEW_ROW_SHIPMENTS = "fieldperfreportview_row_shipments";
+    String FIELDPERFREPORTVIEW_ROW_SUM = "fieldperfreportview_row_sum";
+    String FIELDPERFREPORTVIEW_ROW_RATIO = "fieldperfreportview_row_ratio";
+    String FIELDPERFREPORTVIEW_ROW_QREL_PERIOD = "fieldperfreportview_row_qrel_period";
+    String FIELDPERFREPORTVIEW_ROW_QREL_RATIO = "fieldperfreportview_row_qrel_ratio";
 }

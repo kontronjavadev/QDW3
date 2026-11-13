@@ -77,6 +77,10 @@ public class FieldPerfReportSearchObject implements Serializable {
 
     private RMACountingType selectedRmaCntType;
 
+    // Erweiterung für Details
+    private LocalDate shipDate = null;
+    private LocalDate returnDate = null;
+
 
 
     public List<String> getMatNrs() {
@@ -411,6 +415,24 @@ public class FieldPerfReportSearchObject implements Serializable {
 
     public void setSelectedRmaCntType(RMACountingType selectedRmaCntType) {
         this.selectedRmaCntType = selectedRmaCntType;
+    }
+
+
+
+    public LocalDate getShipDate() {
+        return shipDate;
+    }
+
+    public void setShipDate(LocalDate shipDate) {
+        this.shipDate = shipDate;
+    }
+
+    public LocalDate getReturnDate() {
+        return returnDate;
+    }
+
+    public void setReturnDate(LocalDate returnDate) {
+        this.returnDate = returnDate;
     }
 
 }
