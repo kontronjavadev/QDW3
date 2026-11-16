@@ -105,7 +105,7 @@ public class FieldPerfReport extends SuperView implements Serializable {
 
     private List<FieldPerfReportResultDTO[]> reportData; // List an Zeilen, bestehend aus Array zu Spalten
     private FieldPerfReportResultDTO[] reportHeader;
-    private FieldPerfReportResultDTO[] selectedObject;
+    private FieldPerfReportResultDTO[] selectedReport;
 
     // hidden field für Zeitpunkt der Selektion
     private long currentSelectionTimestamp = 0L;
@@ -115,6 +115,7 @@ public class FieldPerfReport extends SuperView implements Serializable {
     private long lastSelectionTimestamp = 0L;
 
     private List<MaterializedServiceMessageSearchDTO> details = new ArrayList<>();
+    private MaterializedServiceMessageSearchDTO selectedDetail;
 
 
 
@@ -240,30 +241,24 @@ public class FieldPerfReport extends SuperView implements Serializable {
         if (!isDetailPossible(lastSelectedRowIndex, lastSelectedColIndex)) {
             return Collections.emptyList();
         }
-        String returnValue = reportHeader[lastSelectedColIndex].getLabel(); // colHeader: repair arrival (returned)
-        String shipValue = reportData.get(lastSelectedRowIndex)[0].getLabel(); // rowHeader: supplier arrival (shipped)
+        String shipValue = reportHeader[lastSelectedColIndex].getLabel(); // rowHeader: supplier arrival (shipped)
+        String returnValue = reportData.get(lastSelectedRowIndex)[0].getLabel(); // colHeader: repair arrival (returned)
 
         logger.info("Perform details execution for (x) supplier arrival (shipped) {} and (y) repair arrival (returned) {}",
-                returnValue, shipValue);
+                shipValue, returnValue);
 
         boolean qrelCol = shipValue.equals(bundle.getString(FIELDPERFREPORTVIEW_COL_QREL_PERIOD));
         boolean sumRow = returnValue.equals(bundle.getString(FIELDPERFREPORTVIEW_ROW_SUM));
-        LocalDate shipDate;
-        LocalDate returnDate;
+        LocalDate shipDate = null;
+        LocalDate returnDate = null;
         try {
             if (!qrelCol) {
                 String[] s = shipValue.split("-");
                 shipDate = LocalDate.of(Integer.parseInt(s[0]), Integer.parseInt(s[1]), 1);
             }
-            else {
-                shipDate = null;
-            }
             if (!sumRow) {
                 String[] s = returnValue.split("-");
                 returnDate = LocalDate.of(Integer.parseInt(s[0]), Integer.parseInt(s[1]), 1);
-            }
-            else {
-                returnDate = null;
             }
         }
         catch (NumberFormatException | DateTimeException e) {
@@ -277,14 +272,12 @@ public class FieldPerfReport extends SuperView implements Serializable {
         reportSearchObj.setReturnDate(returnDate);
 
 
-        // if (qrelCol && sumRow) {
-        // return reportService.getAllDetailData(reportSearchObj);
-        // }
-        // else {
-        // return reportService.getFieldPerformanceReportDetailData(reportSearchObj);
-        // }
-
-        return Collections.emptyList();
+        if (qrelCol && sumRow) {
+            return reportService.getAllDetailData(reportSearchObj);
+        }
+        else {
+            return reportService.getFieldPerformanceReportDetailData(reportSearchObj);
+        }
     }
 
 
@@ -544,8 +537,8 @@ public class FieldPerfReport extends SuperView implements Serializable {
         reportData.getLast()[colIndex].setHighlightB();
 
 
-        selectedObject = reportData.get(rowIndex);
-        logger.trace("selectedObject: {}", FieldPerfReportResultDTO.reportArrayToString(selectedObject));
+        selectedReport = reportData.get(rowIndex);
+        logger.trace("selectedReport: {}", FieldPerfReportResultDTO.reportArrayToString(selectedReport));
     }
 
     public void onCellDoubleClick(int rowIndex, int colIndex) {
@@ -989,12 +982,12 @@ public class FieldPerfReport extends SuperView implements Serializable {
         return reportHeader;
     }
 
-    public FieldPerfReportResultDTO[] getSelectedObject() {
-        return selectedObject;
+    public FieldPerfReportResultDTO[] getSelectedReport() {
+        return selectedReport;
     }
 
-    public void setSelectedObject(FieldPerfReportResultDTO[] selectedObject) {
-        this.selectedObject = selectedObject;
+    public void setSelectedReport(FieldPerfReportResultDTO[] selectedReport) {
+        this.selectedReport = selectedReport;
     }
 
 
@@ -1005,6 +998,14 @@ public class FieldPerfReport extends SuperView implements Serializable {
 
     public void setDetails(List<MaterializedServiceMessageSearchDTO> details) {
         this.details = details;
+    }
+
+    public MaterializedServiceMessageSearchDTO getSelectedDetail() {
+        return selectedDetail;
+    }
+
+    public void setSelectedDetail(MaterializedServiceMessageSearchDTO selectedDetail) {
+        this.selectedDetail = selectedDetail;
     }
 
 

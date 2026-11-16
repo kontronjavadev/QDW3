@@ -13,8 +13,7 @@ import org.slf4j.LoggerFactory;
 import com.kontron.qdw.domain.material.Material;
 import com.kontron.qdw.domain.material.SerialNumberSetItem;
 import com.kontron.qdw.dto.base.*;
-import com.kontron.qdw.dto.mv.DistributionType;
-import com.kontron.qdw.dto.mv.RMACountingType;
+import com.kontron.qdw.dto.mv.*;
 import com.kontron.qdw.dto.mv.report.FieldPerfReportSearchObject;
 import com.kontron.qdw.dto.service.RepairErrorCodeListDTO;
 import com.kontron.qdw.repository.material.*;
@@ -30,6 +29,10 @@ import net.sourceforge.jbizmo.commons.search.SearchService;
 public class FieldPerfReportService {
 
     private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
+    private enum DateEnumeration {
+        REPAIR_START, REPAIR_END, SHIPMENT_START, SHIPMENT_END
+    }
 
     @PersistenceContext
     protected EntityManager em;
@@ -484,6 +487,65 @@ public class FieldPerfReportService {
 
 
 
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public List<MaterializedServiceMessageSearchDTO> getAllDetailData(FieldPerfReportSearchObject input) {
+        LocalDate startShipDate = input.getStartDate().minusMonths(input.getSelectedQualityPeriod() - 1);
+        LocalDate endShipDate = input.getStartDate().plusMonths(1);
+
+        LocalDate startRepairDate = input.getStartDate();
+        LocalDate endRepairDate = input.getStartDate().plusMonths(1);
+
+
+        List<MaterializedServiceMessageSearchDTO> repairs = new ArrayList<>();
+
+        // Iterate over all analysis periods
+        for (int k = 0; k < (input.getSelectedAnalInterval() + input.getSelectedReturnInterval() - 1); k++) {
+            List<MaterializedServiceMessageSearchDTO> stepDetail = performReturnReportDetailStep(input,
+                    startShipDate, endShipDate, startRepairDate, endRepairDate);
+            repairs.addAll(stepDetail);
+
+            startShipDate = startShipDate.plusMonths(1);
+            endShipDate = endShipDate.plusMonths(1);
+
+            startRepairDate = startRepairDate.plusMonths(1);
+            endRepairDate = endRepairDate.plusMonths(1);
+        }
+
+        return repairs;
+    }
+
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public List<MaterializedServiceMessageSearchDTO> getFieldPerformanceReportDetailData(FieldPerfReportSearchObject input) {
+        LocalDate startShipDate = calculateDate(input, DateEnumeration.SHIPMENT_START);
+        LocalDate endShipDate = calculateDate(input, DateEnumeration.SHIPMENT_END);
+        LocalDate startRepairDate = calculateDate(input, DateEnumeration.REPAIR_START);
+        LocalDate endRepairDate = calculateDate(input, DateEnumeration.REPAIR_END);
+
+        if (input.getReturnDate() == null && input.getShipDate() == null) {
+            List<MaterializedServiceMessageSearchDTO> repairs = new ArrayList<MaterializedServiceMessageSearchDTO>();
+
+            for (int k = 0; k < input.getSelectedAnalInterval(); k++) {
+                List<MaterializedServiceMessageSearchDTO> stepDetail = performReturnReportDetailStep(input,
+                        startShipDate, endShipDate, startRepairDate, endRepairDate);
+                repairs.addAll(stepDetail);
+
+                startShipDate = startShipDate.plusMonths(1);
+                endShipDate = endShipDate.plusMonths(1);
+
+                startRepairDate = startRepairDate.plusMonths(1);
+                endRepairDate = endRepairDate.plusMonths(1);
+            }
+
+            return repairs;
+        }
+
+        return performReturnReportDetailStep(input, startShipDate, endShipDate, startRepairDate, endRepairDate);
+    }
+
+
+
     /**
      * Add standard filter criteria for all queries this bean provides
      * Aufrufe zu Tabellen von getShipmentsPerMonth():
@@ -730,7 +792,7 @@ public class FieldPerfReportService {
      */
     private boolean useShipmentQueryOnAggregatedLevel(FieldPerfReportSearchObject input) {
         // Die Abfrage kann nicht auf die bereits aggregierte Tabelle angewandt werden,
-        // sondern es wird die materialized view rangezigen, wenn...
+        // sondern es wird die materialized view rangezogen, wenn...
         // ... nicht DistributionTpe "ALL" zur Filterung angegeben ist
         if (input.getSelectedDistType() != DistributionType.ALL) {
             return false;
@@ -753,6 +815,197 @@ public class FieldPerfReportService {
 
         // Andernfalls kann die Abfrage auf die aggregierte materialized view angewandt werden.
         return true;
+    }
+
+
+
+    private List<MaterializedServiceMessageSearchDTO> performReturnReportDetailStep(FieldPerfReportSearchObject input,
+            LocalDate startShipDate, LocalDate endShipDate, LocalDate startRepairDate, LocalDate endRepairDate) {
+        String rmaDate;
+        if (input.getSelectedRmaCntType() == RMACountingType.CLOSED_BY_ARRIVAL_DATE
+                || input.getSelectedRmaCntType() == RMACountingType.ALL_BY_ARRIVAL_DATE) {
+            rmaDate = "a.internalArrivalDate";
+        }
+        else {
+            rmaDate = "a.internalShipmentDate";
+        }
+
+        StringBuilder queryStatement = new StringBuilder("select distinct ").append(getMaterializedServiceMessageSearchDTOConstructor())
+                .append(" from MaterializedServiceMessage a ");
+
+        queryStatement.append("where ").append(rmaDate).append(" >= :startRepairDate and ").append(rmaDate).append(" < :endRepairDate ");
+        if (input.getSelectedRmaCntType() == RMACountingType.CLOSED_BY_ARRIVAL_DATE) {
+            queryStatement.append("and a.internalShipmentDate is not null ");
+        }
+
+        queryStatement.append("and a.customerShipmentDate >= :startShipDate and a.customerShipmentDate < :endShipDate ");
+
+        // Add standard filter criteria
+        setupFilterCriteria(queryStatement, input, false, false);
+
+        TypedQuery<MaterializedServiceMessageSearchDTO> query = em.createQuery(queryStatement.toString(), MaterializedServiceMessageSearchDTO.class);
+        query.setParameter("startRepairDate", startRepairDate);
+        query.setParameter("endRepairDate", endRepairDate);
+        query.setParameter("startShipDate", startShipDate);
+        query.setParameter("endShipDate", endShipDate);
+
+        return query.getResultList();
+    }
+
+    private String getMaterializedServiceMessageSearchDTOConstructor() {
+        StringBuilder statementBuilder = new StringBuilder();
+
+        statementBuilder.append("new MaterializedServiceMessageSearchDTO");
+        statementBuilder.append("(").append(MaterializedServiceMessageSearchDTO.SELECT_SERVICEORDER);
+        statementBuilder.append(",").append(MaterializedServiceMessageSearchDTO.SELECT_SERVICEORDERTYPE);
+        statementBuilder.append(",").append(MaterializedServiceMessageSearchDTO.SELECT_RMATYPE);
+        statementBuilder.append(",").append(MaterializedServiceMessageSearchDTO.SELECT_SERVICENAME);
+
+        statementBuilder.append(",").append(MaterializedServiceMessageSearchDTO.SELECT_TASKNAME);
+        statementBuilder.append(",").append(MaterializedServiceMessageSearchDTO.SELECT_STATENAME);
+        statementBuilder.append(",").append(MaterializedServiceMessageSearchDTO.SELECT_INTERNALARRIVALDATE);
+        statementBuilder.append(",").append(MaterializedServiceMessageSearchDTO.SELECT_INTERNALSHIPMENTDATE);
+        statementBuilder.append(",").append(MaterializedServiceMessageSearchDTO.SELECT_BASICSTARTDATE);
+
+        statementBuilder.append(",").append(MaterializedServiceMessageSearchDTO.SELECT_BASICENDDATE);
+        statementBuilder.append(",").append(MaterializedServiceMessageSearchDTO.SELECT_DESIGNATOR);
+        statementBuilder.append(",").append(MaterializedServiceMessageSearchDTO.SELECT_DEFECTCOMPONENT);
+        statementBuilder.append(",").append(MaterializedServiceMessageSearchDTO.SELECT_ANALYSISTEXT);
+        statementBuilder.append(",").append(MaterializedServiceMessageSearchDTO.SELECT_INTERNALREPORT);
+        statementBuilder.append(",").append(MaterializedServiceMessageSearchDTO.SELECT_EXTERNALREPORT);
+
+        statementBuilder.append(",").append(MaterializedServiceMessageSearchDTO.SELECT_CUSTOMERREPORT);
+        statementBuilder.append(",").append(MaterializedServiceMessageSearchDTO.SELECT_EPIDEMICFAILURE);
+        statementBuilder.append(",").append(MaterializedServiceMessageSearchDTO.SELECT_ERRORID);
+        statementBuilder.append(",").append(MaterializedServiceMessageSearchDTO.SELECT_ORIGIN);
+        statementBuilder.append(",").append(MaterializedServiceMessageSearchDTO.SELECT_CUSTOMERFAILURE);
+        statementBuilder.append(",").append(MaterializedServiceMessageSearchDTO.SELECT_CUSTOMERCODE);
+
+        statementBuilder.append(",").append(MaterializedServiceMessageSearchDTO.SELECT_CUSTOMERNAME);
+        statementBuilder.append(",").append(MaterializedServiceMessageSearchDTO.SELECT_CUSTOMERGROUP);
+        statementBuilder.append(",").append(MaterializedServiceMessageSearchDTO.SELECT_COUNTRYCODE);
+        statementBuilder.append(",").append(MaterializedServiceMessageSearchDTO.SELECT_COUNTRYNAME);
+        statementBuilder.append(",").append(MaterializedServiceMessageSearchDTO.SELECT_SUPPLIERCODE);
+        statementBuilder.append(",").append(MaterializedServiceMessageSearchDTO.SELECT_SUPPLIERNAME);
+
+        statementBuilder.append(",").append(MaterializedServiceMessageSearchDTO.SELECT_SUPPLIERARRIVALDATE);
+        statementBuilder.append(",").append(MaterializedServiceMessageSearchDTO.SELECT_CUSTOMERSHIPMENTDATE);
+        statementBuilder.append(",").append(MaterializedServiceMessageSearchDTO.SELECT_FAULTANALYSISCODE);
+        statementBuilder.append(",").append(MaterializedServiceMessageSearchDTO.SELECT_ERRORCODENAME);
+
+        statementBuilder.append(",").append(MaterializedServiceMessageSearchDTO.SELECT_EXTERNALSUPPLIERCODE);
+        statementBuilder.append(",").append(MaterializedServiceMessageSearchDTO.SELECT_EXTERNALSUPPLIERNAME);
+        statementBuilder.append(",").append(MaterializedServiceMessageSearchDTO.SELECT_DELIVERYNOTENUMBER);
+        statementBuilder.append(",").append(MaterializedServiceMessageSearchDTO.SELECT_ERRORCODEGROUP);
+        statementBuilder.append(",").append(MaterializedServiceMessageSearchDTO.SELECT_SYMPTOMSHORTTEXT);
+
+        statementBuilder.append(",").append(MaterializedServiceMessageSearchDTO.SELECT_REPAIRTASKSHORTTEXT);
+        statementBuilder.append(",").append(MaterializedServiceMessageSearchDTO.SELECT_REPAIRDESCRIPTION);
+        statementBuilder.append(",").append(MaterializedServiceMessageSearchDTO.SELECT_OWNERLOCATION);
+        statementBuilder.append(",").append(MaterializedServiceMessageSearchDTO.SELECT_ERRORSHORTTEXT);
+        statementBuilder.append(",").append(MaterializedServiceMessageSearchDTO.SELECT_ID);
+        statementBuilder.append(",").append(MaterializedServiceMessageSearchDTO.SELECT_MESERIALOBJECTID);
+
+        statementBuilder.append(",").append(MaterializedServiceMessageSearchDTO.SELECT_PARENTSERIALOBJECTID);
+        statementBuilder.append(",").append(MaterializedServiceMessageSearchDTO.SELECT_SERIALNUMBER);
+        statementBuilder.append(",").append(MaterializedServiceMessageSearchDTO.SELECT_PARENTSERIALNUMBER);
+        statementBuilder.append(",").append(MaterializedServiceMessageSearchDTO.SELECT_MATERIALNUMBER);
+        statementBuilder.append(",").append(MaterializedServiceMessageSearchDTO.SELECT_PARENTMATERIALNUMBER);
+
+        statementBuilder.append(",").append(MaterializedServiceMessageSearchDTO.SELECT_MATERIALTYPE);
+        statementBuilder.append(",").append(MaterializedServiceMessageSearchDTO.SELECT_PARENTMATERIALTYPE);
+        statementBuilder.append(",").append(MaterializedServiceMessageSearchDTO.SELECT_MATERIALSHORTTEXT);
+        statementBuilder.append(",").append(MaterializedServiceMessageSearchDTO.SELECT_PARENTMATERIALSHORTTEXT);
+        statementBuilder.append(",").append(MaterializedServiceMessageSearchDTO.SELECT_SAPNUMBER);
+
+        statementBuilder.append(",").append(MaterializedServiceMessageSearchDTO.SELECT_PARENTSAPNUMBER);
+        statementBuilder.append(",").append(MaterializedServiceMessageSearchDTO.SELECT_MATERIALHIERARCHY);
+        statementBuilder.append(",").append(MaterializedServiceMessageSearchDTO.SELECT_PARENTMATERIALHIERARCHY);
+        statementBuilder.append(",").append(MaterializedServiceMessageSearchDTO.SELECT_REVISIONID);
+        statementBuilder.append(",").append(MaterializedServiceMessageSearchDTO.SELECT_PARENTREVISIONID);
+
+        statementBuilder.append(",").append(MaterializedServiceMessageSearchDTO.SELECT_REVISIONNUMBER);
+        statementBuilder.append(",").append(MaterializedServiceMessageSearchDTO.SELECT_PARENTREVISIONNUMBER);
+        statementBuilder.append(",").append(MaterializedServiceMessageSearchDTO.SELECT_ASSEMBLYDATE);
+        statementBuilder.append(",").append(MaterializedServiceMessageSearchDTO.SELECT_ASSEMBLYPO);
+        statementBuilder.append(",").append(MaterializedServiceMessageSearchDTO.SELECT_PLANT);
+
+        statementBuilder.append(",null,0,0");
+        // statementBuilder.append(",").append(MaterializedServiceMessageSearchDTO.SELECT_MATERIALMATERIALNUMBER);
+        // statementBuilder.append(",").append(MaterializedServiceMessageSearchDTO.SELECT_SERIALOBJECTID);
+        // statementBuilder.append(",").append(MaterializedServiceMessageSearchDTO.SELECT_MATERIALID);
+        statementBuilder.append(")");
+
+        return statementBuilder.toString();
+    }
+
+    /**
+     * Calculate date value by given input and selected interval boundary
+     * @param input Such-DTO mit allen nötigen Daten
+     * @param date Typ des erfragten Datums
+     * @return a date value to be used within queries
+     */
+    private LocalDate calculateDate(FieldPerfReportSearchObject input, DateEnumeration date) {
+        if (input.getReturnDate() != null && input.getShipDate() != null) {
+            switch (date){
+            case SHIPMENT_START:
+                return input.getShipDate();
+            case SHIPMENT_END:
+                return input.getShipDate().plusMonths(1);
+            case REPAIR_START:
+                return input.getReturnDate();
+            case REPAIR_END:
+                return input.getReturnDate().plusMonths(1);
+            default:
+                return null;
+            }
+
+        }
+        else if (input.getReturnDate() != null && input.getShipDate() == null) {
+            switch (date){
+            case SHIPMENT_START:
+                return input.getReturnDate().plusMonths(-11);
+            case SHIPMENT_END:
+                return input.getReturnDate().plusMonths(1);
+            case REPAIR_START:
+                return input.getReturnDate();
+            case REPAIR_END:
+                return input.getReturnDate().plusMonths(1);
+            default:
+                return null;
+            }
+
+        }
+        else if (input.getReturnDate() == null && input.getShipDate() != null) {
+            switch (date){
+            case SHIPMENT_START:
+                return input.getShipDate();
+            case SHIPMENT_END:
+                return input.getShipDate().plusMonths(1);
+            case REPAIR_START:
+                return input.getShipDate();
+            case REPAIR_END:
+                return input.getShipDate().plusMonths(input.getSelectedReturnInterval());
+            default:
+                return null;
+            }
+
+        }
+        else {
+            switch (date){
+            case SHIPMENT_START:
+                return input.getStartDate();
+            case SHIPMENT_END:
+                return input.getStartDate().plusMonths(1);
+            case REPAIR_START:
+                return input.getStartDate();
+            case REPAIR_END:
+                return input.getStartDate().plusMonths(input.getSelectedReturnInterval());
+            default:
+                return null;
+            }
+
+        }
     }
 
 }

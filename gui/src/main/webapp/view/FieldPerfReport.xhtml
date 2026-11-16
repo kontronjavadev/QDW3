@@ -405,8 +405,8 @@
 
 		<p:tab id="tabPanData" title="#{i18n.fieldperfreportview_tabpan_data}" >
 			<p:dataTable id="panData" var="reportRow" rowIndexVar="rowIdx" 
-				selectionTextDisabled="true" allowUnsorting="true" resizeMode="expand" 
-				selection="#{fieldPerfReport.selectedObject}" selectionMode="single" multiViewState="true" 
+				selectionTextDisabled="true" allowUnsorting="false" resizeMode="expand" 
+				selection="#{fieldPerfReport.selectedReport}" selectionMode="single" multiViewState="true" 
 				loadingMessage="#{i18n.action_fetch_data}" rendered="#{not empty fieldPerfReport.reportData}" 
 				value="#{fieldPerfReport.reportData}" scrollable="true" frozenColumns="1" styleClass="viewScrollable fieldPerfReportScrollable" 
 				rowKey="#{reportRow[0].label}" >
@@ -420,7 +420,7 @@
 
 					<p:commandLink action="#{fieldPerfReport.onCellClick(rowIdx, 0)}" 
 						process="@this :form:currentSelectionTimestamp" 
-						update=":form:tabview2:panData form:growl" 
+						update=":form:tabview2:panData :form:tabview2:panDetails form:growl" 
 						onclick="document.getElementById('form:currentSelectionTimestamp').value = Date.now();"
 						oncontextmenu="onCellContextMenu(event, #{rowIdx}, 0, #{fieldPerfReport.isDetailPossible(rowIdx, 0)});"
 						styleClass="cell-click-link" style="#{reportRow[0].cellStyle}" >
@@ -439,7 +439,7 @@
 
 					<p:commandLink action="#{fieldPerfReport.onCellClick(rowIdx, colIdx)}" 
 						process="@this :form:currentSelectionTimestamp" 
-						update=":form:tabview2:panData form:growl" 
+						update=":form:tabview2:panData :form:tabview2:panDetails form:growl" 
 						onclick="document.getElementById('form:currentSelectionTimestamp').value = Date.now();"
 						oncontextmenu="onCellContextMenu(event, #{rowIdx}, #{colIdx}, #{fieldPerfReport.isDetailPossible(rowIdx, colIdx)});"
 						styleClass="cell-click-link" style="#{reportRow[colIdx].cellStyle}" >
@@ -452,52 +452,39 @@
 			<h:outputText rendered="#{empty fieldPerfReport.reportData}" value="#{i18n.operation_fetch_no_data}" />
 		</p:tab>
 
-<!-- 
 		<p:tab id="tabPanDetails" title="#{i18n.fieldperfreportview_tabpan_details}" >
-			<p:dataTable id="panDetails" var="reportRow" rowIndexVar="rowIdx" 
+			<p:dataTable id="panDetails" var="detailRow" rowIndexVar="rowIdx" 
 				selectionTextDisabled="false" allowUnsorting="true" resizeMode="expand" 
-				selection="#{fieldPerfReport.selectedObject}" selectionMode="single" multiViewState="true" 
-				loadingMessage="#{i18n.action_fetch_data}" rendered="#{not empty fieldPerfReport.reportData}" 
-				value="#{fieldPerfReport.reportData}" scrollable="true" frozenColumns="1" styleClass="viewScrollable fieldPerfReportScrollable" 
-				rowKey="#{reportRow[0].label}" >
+				selection="#{fieldPerfReport.selectedDetail}" selectionMode="single" multiViewState="true" 
+				loadingMessage="#{i18n.action_fetch_data}" 
+				value="#{fieldPerfReport.details}" scrollable="true" styleClass="viewScrollable fieldPerfReportScrollable" 
+				rowKey="#{detailRow.id}" >
 
-				<p:column styleClass="clickable-td" 
-					style="width: #{fieldPerfReport.getColumnWidth(0)}px;min-width: #{fieldPerfReport.getColumnWidth(0)}px;" >
-					<f:facet name="header" >
-						<h:outputText value="#{fieldPerfReport.reportHeader[0].label}" style="#{fieldPerfReport.reportHeader[0].textStyle}" />
+				<p:column sortBy="#{detailRow.id}" width="120" >
+					<f:facet name="header">
+						<h:outputText value="#{i18n.col_materializedservicemessageview_id}"/>
 					</f:facet>
-
-					<p:commandLink action="#{fieldPerfReport.onCellClick(rowIdx, 0)}" 
-						process="@this :form:currentSelectionTimestamp" 
-						update=":form:tabview2:panData" 
-						onclick="document.getElementById('form:currentSelectionTimestamp').value = Date.now();"
-						oncontextmenu="this.click();"
-						styleClass="cell-click-link" style="#{reportRow[0].cellStyle}" >
-						<h:outputText value="#{reportRow[0].label}" style="#{reportRow[0].textStyle}" />
-					</p:commandLink>
+					<h:outputText value="#{detailRow.id}" />
 				</p:column>
 
-				<p:columns value="#{fieldPerfReport.columnIndices}" var="colIdx" 
-					styleClass="clickable-td" 
-					style="width: #{fieldPerfReport.getColumnWidth(colIdx)}px;min-width: #{fieldPerfReport.getColumnWidth(colIdx)}px;" >
-					<f:facet name="header" >
-						<h:outputText value="#{fieldPerfReport.reportHeader[colIdx].label}" style="#{fieldPerfReport.reportHeader[colIdx].textStyle}" />
+				<p:column sortBy="#{detailRow.plant}" width="80" >
+					<f:facet name="header">
+						<h:outputText value="#{i18n.lbl_attr_materializedentitiy_plant}"/>
 					</f:facet>
+					<h:outputText value="#{detailRow.plant}" />
+				</p:column>
 
-					<p:commandLink action="#{fieldPerfReport.onCellClick(rowIdx, colIdx)}" 
-						process="@this :form:currentSelectionTimestamp" 
-						update=":form:tabview2:panData" 
-						onclick="document.getElementById('form:currentSelectionTimestamp').value = Date.now();"
-						oncontextmenu="this.click();"
-						styleClass="cell-click-link" style="#{reportRow[colIdx].cellStyle}" >
-						<h:outputText value="#{reportRow[colIdx].label}" style="#{reportRow[colIdx].textStyle}" />
-					</p:commandLink>
-				</p:columns>
+				<p:column sortBy="#{detailRow.serviceOrder}" width="120" >
+					<f:facet name="header">
+						<h:outputText value="#{i18n.col_materializedservicemessageview_serviceorder}"/>
+					</f:facet>
+					<h:outputText value="#{detailRow.serviceOrder}" />
+				</p:column>
+
 			</p:dataTable>
 
 			<h:outputText rendered="#{empty fieldPerfReport.reportData}" value="#{i18n.operation_fetch_no_data}" />
 		</p:tab>
- -->
 	</p:tabView>
 
 
