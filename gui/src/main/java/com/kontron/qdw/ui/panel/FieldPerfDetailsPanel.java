@@ -11,6 +11,7 @@ import java.util.*;
 import java.util.function.Supplier;
 
 import org.apache.commons.lang3.StringUtils;
+import org.primefaces.PrimeFaces;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -85,7 +86,11 @@ public class FieldPerfDetailsPanel extends CopyClipboard implements Serializable
             return;
         }
         logger.info("showDetails() zu (x, y): {}, {}", rowIndex, colIndex);
+
         details = executeDetail(rowIndex, colIndex);
+
+        // weist den Browser an, sofort auf den Details-Tab (Index 1) zu wechseln
+        PrimeFaces.current().executeScript("PF('tabview2Widget').select(1);");
     }
 
     public void appendDetails(int rowIndex, int colIndex) {
@@ -93,6 +98,7 @@ public class FieldPerfDetailsPanel extends CopyClipboard implements Serializable
             return;
         }
         logger.info("appendDetails() zu (x, y): {}, {}", rowIndex, colIndex);
+
         details = new ArrayList<>(details);
         details.addAll(executeDetail(rowIndex, colIndex));
     }

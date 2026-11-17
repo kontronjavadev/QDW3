@@ -393,7 +393,7 @@
 
 
 
-	<p:tabView id="tabview2" dynamic="true" effect="fade" effectDuration="fast" styleClass="no-margin-last-tab" >
+	<p:tabView id="tabview2" widgetVar="tabview2Widget" dynamic="true" effect="fade" effectDuration="fast" styleClass="no-margin-last-tab" >
 
 		<p:tab id="tabPanData" title="#{i18n.fieldperfreportview_tabpan_data}" >
 			<p:dataTable id="panData" var="reportRow" rowIndexVar="rowIdx" 
@@ -412,7 +412,7 @@
 
 					<p:commandLink action="#{fieldPerfReport.onCellClick(rowIdx, 0)}" 
 						process="@this :form:currentSelectionTimestamp" 
-						update=":form:tabview2 form:growl" 
+						update=":form:tabview2:panData :form:tabview2:panDetails :form:tabview2:panDetailsSummary form:growl" 
 						onclick="document.getElementById('form:currentSelectionTimestamp').value = Date.now();"
 						oncontextmenu="onCellContextMenu(event, #{rowIdx}, 0);"
 						styleClass="cell-click-link" style="#{reportRow[0].cellStyle}" >
@@ -431,7 +431,7 @@
 
 					<p:commandLink action="#{fieldPerfReport.onCellClick(rowIdx, colIdx)}" 
 						process="@this :form:currentSelectionTimestamp" 
-						update=":form:tabview2 form:growl" 
+						update=":form:tabview2:panData :form:tabview2:panDetails :form:tabview2:panDetailsSummary form:growl" 
 						onclick="document.getElementById('form:currentSelectionTimestamp').value = Date.now();"
 						oncontextmenu="onCellContextMenu(event, #{rowIdx}, #{colIdx});"
 						styleClass="cell-click-link" style="#{reportRow[colIdx].cellStyle}" >
@@ -472,19 +472,19 @@ sondern in der Funktion "onCellContextMenu()", bevor der DOM-Baum vernichtet wir
 
 	<p:contextMenu id="panData_ctxMenu" widgetVar="panData_ctxMenuWidget" for="dummyMenuTarget" >
 		<p:menuitem id="panData_mniShowDetails" icon="pi pi-eye" value="#{i18n.fieldperfreportview_action_showdetails}" 
-			action="#{fieldPerfReport.showDetails}" ajax="true" update=":form:tabview2 growl" 
+			action="#{fieldPerfReport.showDetails}" ajax="true" update=":form:tabview2:panDetails :form:tabview2:panDetailsSummary growl" 
 			rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;SUPERUSER')}" />
 
 		<p:menuitem id="panData_mniAppendDetails" icon="pi pi-eye" value="#{i18n.fieldperfreportview_action_appenddetails}" 
-			action="#{fieldPerfReport.appendDetails}" ajax="true" update=":form:tabview2 growl" 
+			action="#{fieldPerfReport.appendDetails}" ajax="true" update=":form:tabview2:panDetails :form:tabview2:panDetailsSummary growl" 
 			rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;SUPERUSER')}" />
 
 		<p:menuitem id="panData_mniABC" icon="pi pi-chart-bar" value="#{i18n.fieldperfreportview_action_abc}" 
-			action="#{fieldPerfReport.abc}" ajax="true" update=":form:tabview2 growl" 
+			action="#{fieldPerfReport.abc}" ajax="true" update="growl" 
 			rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;SUPERUSER')}" />
 
 		<p:menuitem id="panData_mniPartanalysis" icon="pi pi-chart-bar" value="#{i18n.fieldperfreportview_action_partanalysis}" 
-			action="#{fieldPerfReport.partAnalysis}" ajax="true" update=":form:tabview2 growl" 
+			action="#{fieldPerfReport.partAnalysis}" ajax="true" update="growl" 
 			rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;SUPERUSER')}" />
 
 
