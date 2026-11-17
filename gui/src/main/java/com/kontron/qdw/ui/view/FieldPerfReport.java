@@ -7,7 +7,6 @@ import java.io.Serializable;
 import java.lang.invoke.MethodHandles;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.Map.Entry;
@@ -34,12 +33,14 @@ import com.kontron.qdw.boundary.service.RepairErrorCodeBoundaryService;
 import com.kontron.qdw.dto.base.CustomerDTO;
 import com.kontron.qdw.dto.base.SupplierDTO;
 import com.kontron.qdw.dto.material.*;
-import com.kontron.qdw.dto.mv.*;
+import com.kontron.qdw.dto.mv.DistributionType;
+import com.kontron.qdw.dto.mv.RMACountingType;
 import com.kontron.qdw.dto.mv.report.*;
 import com.kontron.qdw.dto.service.RMATypeListDTO;
 import com.kontron.qdw.dto.service.RepairErrorCodeListDTO;
 import com.kontron.qdw.service.SavedQueryService;
 import com.kontron.qdw.ui.UserSession;
+import com.kontron.qdw.ui.panel.FieldPerfDetailsPanel;
 import com.kontron.qdw.ui.view.util.SuperView;
 
 import jakarta.enterprise.context.SessionScoped;
@@ -86,6 +87,8 @@ public class FieldPerfReport extends SuperView implements Serializable {
     private final transient RepairErrorCodeBoundaryService repErrorService;
     private final transient FieldPerfReportService reportService;
 
+    private final transient FieldPerfDetailsPanel detailsPanel;
+
     private final UserSession userSession;
     private transient ResourceBundle bundle;
     private String formTitle = "";
@@ -103,8 +106,8 @@ public class FieldPerfReport extends SuperView implements Serializable {
     private String errFilterCriterion;
     private Map<String, RepairErrorCodeListDTO> errorCache = new HashMap<>();
 
-    private List<FieldPerfReportResultDTO[]> reportData; // List an Zeilen, bestehend aus Array zu Spalten
     private FieldPerfReportResultDTO[] reportHeader;
+    private List<FieldPerfReportResultDTO[]> reportData; // List an Zeilen, bestehend aus Array zu Spalten
     private FieldPerfReportResultDTO[] selectedReport;
 
     // hidden field für Zeitpunkt der Selektion
@@ -114,8 +117,8 @@ public class FieldPerfReport extends SuperView implements Serializable {
     private int lastSelectedColIndex = -1;
     private long lastSelectionTimestamp = 0L;
 
-    private List<MaterializedServiceMessageSearchDTO> details = new ArrayList<>();
-    private MaterializedServiceMessageSearchDTO selectedDetail;
+    // private List<MaterializedServiceMessageSearchDTO> details = new ArrayList<>();
+    // private MaterializedServiceMessageSearchDTO selectedDetail;
 
 
 
@@ -135,6 +138,7 @@ public class FieldPerfReport extends SuperView implements Serializable {
         servMsgService = null;
         repErrorService = null;
         reportService = null;
+        detailsPanel = null;
     }
 
     @Inject
@@ -143,7 +147,8 @@ public class FieldPerfReport extends SuperView implements Serializable {
             SerialNumberSetBoundaryService serNrSetService, CustomerBoundaryService custService, SupplierBoundaryService suppService,
             MaterialTypeBoundaryService matTypeService, MaterialClassBoundaryService matClassService, PlantBoundaryService plantService,
             MaterializedServiceMessageBoundaryService servMsgService, RepairErrorCodeBoundaryService repErrorService,
-            FieldPerfReportService reportService) {
+            FieldPerfReportService reportService,
+            FieldPerfDetailsPanel detailsPanel) {
         this.userSession = userSession;
         this.queryManager = queryManager;
 
@@ -159,6 +164,7 @@ public class FieldPerfReport extends SuperView implements Serializable {
         this.servMsgService = servMsgService;
         this.repErrorService = repErrorService;
         this.reportService = reportService;
+        this.detailsPanel = detailsPanel;
     }
 
     public void initView() {
@@ -186,6 +192,13 @@ public class FieldPerfReport extends SuperView implements Serializable {
                 resetSearchObject();
             }
         }
+
+
+        // detailsPanel.setSelectedObjectId(selectedObjectId);
+        // detailsPanel.setCurrentPageURL(EditMaterialDialog.PAGE_INIT_URL + selectedObjectId);
+        // detailsPanel.setReadOnly(false);
+        detailsPanel.initView(this::getReportSearchObj, this::getReportHeader, this::getReportData);
+
 
         logger.debug("View initialization finished");
     }
@@ -237,48 +250,48 @@ public class FieldPerfReport extends SuperView implements Serializable {
 
 
 
-    private List<MaterializedServiceMessageSearchDTO> executeDetail() {
-        if (!isDetailPossible(lastSelectedRowIndex, lastSelectedColIndex)) {
-            return Collections.emptyList();
-        }
-        String shipValue = reportHeader[lastSelectedColIndex].getLabel(); // rowHeader: supplier arrival (shipped)
-        String returnValue = reportData.get(lastSelectedRowIndex)[0].getLabel(); // colHeader: repair arrival (returned)
-
-        logger.info("Perform details execution for (x) supplier arrival (shipped) {} and (y) repair arrival (returned) {}",
-                shipValue, returnValue);
-
-        boolean qrelCol = shipValue.equals(bundle.getString(FIELDPERFREPORTVIEW_COL_QREL_PERIOD));
-        boolean sumRow = returnValue.equals(bundle.getString(FIELDPERFREPORTVIEW_ROW_SUM));
-        LocalDate shipDate = null;
-        LocalDate returnDate = null;
-        try {
-            if (!qrelCol) {
-                String[] s = shipValue.split("-");
-                shipDate = LocalDate.of(Integer.parseInt(s[0]), Integer.parseInt(s[1]), 1);
-            }
-            if (!sumRow) {
-                String[] s = returnValue.split("-");
-                returnDate = LocalDate.of(Integer.parseInt(s[0]), Integer.parseInt(s[1]), 1);
-            }
-        }
-        catch (NumberFormatException | DateTimeException e) {
-            MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_ERROR, OPERATION_EXEC_REPORT_FAIL, e);
-            return Collections.emptyList();
-        }
-
-        logger.debug("returnDate: {}, shipDate: {}", returnDate, shipDate);
-
-        reportSearchObj.setShipDate(shipDate);
-        reportSearchObj.setReturnDate(returnDate);
-
-
-        if (qrelCol && sumRow) {
-            return reportService.getAllDetailData(reportSearchObj);
-        }
-        else {
-            return reportService.getFieldPerformanceReportDetailData(reportSearchObj);
-        }
-    }
+    // private List<MaterializedServiceMessageSearchDTO> executeDetail() {
+    // if (!isDetailPossible(lastSelectedRowIndex, lastSelectedColIndex)) {
+    // return Collections.emptyList();
+    // }
+    // String shipValue = reportHeader[lastSelectedColIndex].getLabel(); // rowHeader: supplier arrival (shipped)
+    // String returnValue = reportData.get(lastSelectedRowIndex)[0].getLabel(); // colHeader: repair arrival (returned)
+    //
+    // logger.info("Perform details execution for (x) supplier arrival (shipped) {} and (y) repair arrival (returned) {}",
+    // shipValue, returnValue);
+    //
+    // boolean qrelCol = shipValue.equals(bundle.getString(FIELDPERFREPORTVIEW_COL_QREL_PERIOD));
+    // boolean sumRow = returnValue.equals(bundle.getString(FIELDPERFREPORTVIEW_ROW_SUM));
+    // LocalDate shipDate = null;
+    // LocalDate returnDate = null;
+    // try {
+    // if (!qrelCol) {
+    // String[] s = shipValue.split("-");
+    // shipDate = LocalDate.of(Integer.parseInt(s[0]), Integer.parseInt(s[1]), 1);
+    // }
+    // if (!sumRow) {
+    // String[] s = returnValue.split("-");
+    // returnDate = LocalDate.of(Integer.parseInt(s[0]), Integer.parseInt(s[1]), 1);
+    // }
+    // }
+    // catch (NumberFormatException | DateTimeException e) {
+    // MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_ERROR, OPERATION_EXEC_REPORT_FAIL, e);
+    // return Collections.emptyList();
+    // }
+    //
+    // logger.debug("returnDate: {}, shipDate: {}", returnDate, shipDate);
+    //
+    // reportSearchObj.setShipDate(shipDate);
+    // reportSearchObj.setReturnDate(returnDate);
+    //
+    //
+    // if (qrelCol && sumRow) {
+    // return reportService.getAllDetailData(reportSearchObj);
+    // }
+    // else {
+    // return reportService.getFieldPerformanceReportDetailData(reportSearchObj);
+    // }
+    // }
 
 
 
@@ -558,48 +571,61 @@ public class FieldPerfReport extends SuperView implements Serializable {
         }
     }
 
+    // public boolean isDetailPossible(int rowIndex, int colIndex) {
+    // if (rowIndex <= 0 || colIndex <= 0) {
+    // // keine Auswahl oder Zeilenüberschrift oder Shipments-Zeile gewählt (Spaltenüberschrift ist nicht anwählbar)
+    // return false;
+    // }
+    // if (rowIndex > reportData.size() - 1 - 3) {
+    // // eine der letzten drei Zeilen gewählt. Details ist nur bis Zeile "sum" verfügbar.
+    // return false;
+    // }
+    // FieldPerfReportResultDTO clickedCell = reportData.get(rowIndex)[colIndex];
+    // if (StringUtils.isEmpty(clickedCell.getLabel())) {
+    // // in der Zelle steht nichts. Zelle ist also außerhalb des analysierbaren Bereichs. Details nicht möglich.
+    // return false;
+    // }
+    // return true;
+    // }
+
     public boolean isDetailPossible(int rowIndex, int colIndex) {
-        if (rowIndex <= 0 || colIndex <= 0) {
-            // keine Auswahl oder Zeilenüberschrift oder Shipments-Zeile gewählt (Spaltenüberschrift ist nicht anwählbar)
-            return false;
-        }
-        if (rowIndex > reportData.size() - 1 - 3) {
-            // eine der letzten drei Zeilen gewählt. Details ist nur bis Zeile "sum" verfügbar.
-            return false;
-        }
-        FieldPerfReportResultDTO clickedCell = reportData.get(rowIndex)[colIndex];
-        if (StringUtils.isEmpty(clickedCell.getLabel())) {
-            // in der Zelle steht nichts. Zelle ist also außerhalb des analysierbaren Bereichs. Details nicht möglich.
-            return false;
-        }
-        return true;
+        return detailsPanel.isDetailPossible(lastSelectedRowIndex, lastSelectedColIndex);
     }
 
 
 
-    public void showDetails() {
-        if (!isDetailPossible(lastSelectedRowIndex, lastSelectedColIndex)) {
-            return;
-        }
-        FieldPerfReportResultDTO rowHeader = reportData.get(lastSelectedRowIndex)[0];
-        FieldPerfReportResultDTO colHeader = reportHeader[lastSelectedColIndex];
+    // public void showDetails() {
+    // if (!isDetailPossible(lastSelectedRowIndex, lastSelectedColIndex)) {
+    // return;
+    // }
+    // FieldPerfReportResultDTO rowHeader = reportData.get(lastSelectedRowIndex)[0];
+    // FieldPerfReportResultDTO colHeader = reportHeader[lastSelectedColIndex];
+    //
+    // logger.info("showDetails() zu (x) supplier arrival (shipped) {} und (y) repair arrival (returned) {}",
+    // colHeader.getLabel(), rowHeader.getLabel());
+    // details = executeDetail();
+    // }
+    //
+    // public void appendDetails() {
+    // if (!isDetailPossible(lastSelectedRowIndex, lastSelectedColIndex)) {
+    // return;
+    // }
+    // FieldPerfReportResultDTO rowHeader = reportData.get(lastSelectedRowIndex)[0];
+    // FieldPerfReportResultDTO colHeader = reportHeader[lastSelectedColIndex];
+    //
+    // logger.info("appendDetails() von (x) supp arrival {} und (y) repair arrival {}", colHeader.getLabel(), rowHeader.getLabel());
+    // details = new ArrayList<>(details);
+    // details.addAll(executeDetail());
+    // }
 
-        logger.info("showDetails() zu (x) supplier arrival (shipped) {} und (y) repair arrival (returned) {}",
-                colHeader.getLabel(), rowHeader.getLabel());
-        details = executeDetail();
+    public void showDetails() {
+        detailsPanel.showDetails(lastSelectedRowIndex, lastSelectedColIndex);
     }
 
     public void appendDetails() {
-        if (!isDetailPossible(lastSelectedRowIndex, lastSelectedColIndex)) {
-            return;
-        }
-        FieldPerfReportResultDTO rowHeader = reportData.get(lastSelectedRowIndex)[0];
-        FieldPerfReportResultDTO colHeader = reportHeader[lastSelectedColIndex];
-
-        logger.info("appendDetails() von (x) supp arrival {} und (y) repair arrival {}", colHeader.getLabel(), rowHeader.getLabel());
-        details = new ArrayList<>(details);
-        details.addAll(executeDetail());
+        detailsPanel.appendDetails(lastSelectedRowIndex, lastSelectedColIndex);
     }
+
 
     public void abc() {
         if (!isDetailPossible(lastSelectedRowIndex, lastSelectedColIndex)) {
@@ -992,21 +1018,21 @@ public class FieldPerfReport extends SuperView implements Serializable {
 
 
 
-    public List<MaterializedServiceMessageSearchDTO> getDetails() {
-        return details;
-    }
-
-    public void setDetails(List<MaterializedServiceMessageSearchDTO> details) {
-        this.details = details;
-    }
-
-    public MaterializedServiceMessageSearchDTO getSelectedDetail() {
-        return selectedDetail;
-    }
-
-    public void setSelectedDetail(MaterializedServiceMessageSearchDTO selectedDetail) {
-        this.selectedDetail = selectedDetail;
-    }
+    // public List<MaterializedServiceMessageSearchDTO> getDetails() {
+    // return details;
+    // }
+    //
+    // public void setDetails(List<MaterializedServiceMessageSearchDTO> details) {
+    // this.details = details;
+    // }
+    //
+    // public MaterializedServiceMessageSearchDTO getSelectedDetail() {
+    // return selectedDetail;
+    // }
+    //
+    // public void setSelectedDetail(MaterializedServiceMessageSearchDTO selectedDetail) {
+    // this.selectedDetail = selectedDetail;
+    // }
 
 
 

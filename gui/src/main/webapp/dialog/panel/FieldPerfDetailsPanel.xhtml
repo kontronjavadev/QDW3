@@ -1,0 +1,490 @@
+<ui:composition xmlns="https://jakarta.ee/xml/ns/jakartaee"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:h="jakarta.faces.html"
+	xmlns:f="jakarta.faces.core"
+	xmlns:p="http://primefaces.org/ui">
+
+	<p:dataTable id="panDetails" var="detailRow" rowIndexVar="rowIdx" 
+		selectionTextDisabled="false" allowUnsorting="true" resizeMode="expand" resizableColumns="true" 
+		selection="#{fieldPerfDetailsPanel.selectedDetail}" selectionMode="single" multiViewState="true" 
+		loadingMessage="#{i18n.action_fetch_data}" 
+		value="#{fieldPerfDetailsPanel.details}" scrollable="true" styleClass="viewScrollable fieldPerfReportSummaryScrollable" 
+		rowKey="#{detailRow.id}" >
+
+		<p:column sortBy="#{detailRow.id}" width="120" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedservicemessageview_id}"/>
+			</f:facet>
+			<h:outputText value="#{detailRow.id}" />
+		</p:column>
+
+		<p:column sortBy="#{detailRow.plant}" width="80" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_materializedentitiy_plant}"/>
+			</f:facet>
+			<h:outputText value="#{detailRow.plant}" />
+		</p:column>
+
+		<p:column sortBy="#{detailRow.serviceOrder}" width="120" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedservicemessageview_serviceorder}"/>
+			</f:facet>
+			<h:outputText value="#{detailRow.serviceOrder}" />
+		</p:column>
+
+		<p:column sortBy="#{detailRow.serviceOrderType}" width="80" 
+			exportHeaderValue="#{i18n.lbl_attr_serviceordertype_tooltip}" class="thnowrap" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedservicemessageview_serviceordertype}" title="#{i18n.lbl_attr_serviceordertype_tooltip}" styleClass="pf-tooltip-target" />
+			</f:facet>
+			<h:outputText value="#{fieldPerfDetailsPanel.translateServiceOrderType(detailRow.serviceOrderType)}"/>
+		</p:column>
+
+		<p:column sortBy="#{detailRow.countryName}" width="150" 
+			exportValue="#{detailRow.countryName}" class="tdnowrap" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedservicemessageview_countryname}"/>
+			</f:facet>
+			<h:outputText value="#{detailRow.countryName}" styleClass="pf-tooltip-target" />
+		</p:column>
+
+		<p:column sortBy="#{detailRow.customerName}" width="200" 
+			exportValue="#{detailRow.customerName}" class="tdnowrap" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedservicemessageview_customername}"/>
+			</f:facet>
+			<h:outputText value="#{detailRow.customerName}" styleClass="pf-tooltip-target" />
+		</p:column>
+
+		<p:column sortBy="#{detailRow.externalSupplierName}" width="150" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedservicemessageview_externalsuppliername}"/>
+			</f:facet>
+			<h:outputText value="#{detailRow.externalSupplierName}" />
+		</p:column>
+
+		<p:column sortBy="#{detailRow.supplierName}" width="200" 
+			exportValue="#{detailRow.supplierName}" class="tdnowrap" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedservicemessageview_suppliername}"/>
+			</f:facet>
+			<h:outputText value="#{detailRow.supplierName}" styleClass="pf-tooltip-target" />
+		</p:column>
+
+		<p:column sortBy="#{detailRow.serialNumber}" width="150" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedservicemessageview_serialnumber}"/>
+			</f:facet>
+			<h:outputText value="#{detailRow.serialNumber}" />
+		</p:column>
+
+		<p:column sortBy="#{detailRow.parentSerialNumber}" width="150" 
+			exportHeaderValue="#{i18n.lbl_attr_parentserialnumber_tooltip}" class="thnowrap" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedservicemessageview_parentserialnumber}" title="#{i18n.lbl_attr_parentserialnumber_tooltip}" styleClass="pf-tooltip-target" />
+			</f:facet>
+			<h:outputText value="#{detailRow.parentSerialNumber}" />
+		</p:column>
+
+		<p:column sortBy="#{detailRow.materialNumber}" width="150" 
+			exportValue="#{detailRow.materialNumber}" class="tdnowrap" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_materializedentitiy_materialnumber}"/>
+			</f:facet>
+			<h:outputText value="#{detailRow.materialNumber}" styleClass="pf-tooltip-target" />
+		</p:column>
+
+		<p:column sortBy="#{detailRow.sapNumber}" width="150" 
+			exportValue="#{detailRow.sapNumber}" class="tdnowrap" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedservicemessageview_sapnumber}"/>
+			</f:facet>
+			<h:outputText value="#{detailRow.sapNumber}" styleClass="pf-tooltip-target" />
+		</p:column>
+
+		<p:column sortBy="#{detailRow.materialType}" width="80" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedservicemessageview_materialtype}"/>
+			</f:facet>
+			<h:outputText value="#{detailRow.materialType}" />
+		</p:column>
+
+		<p:column sortBy="#{detailRow.materialShortText}" width="250" 
+			exportValue="#{detailRow.materialShortText}" class="tdnowrap" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_materializedentitiy_materialshorttext}"/>
+			</f:facet>
+			<h:outputText value="#{detailRow.materialShortText}" styleClass="pf-tooltip-target" />
+		</p:column>
+
+		<p:column sortBy="#{detailRow.materialHierarchy}" width="150" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_materializedentitiy_materialhierarchy}"/>
+			</f:facet>
+			<h:outputText value="#{detailRow.materialHierarchy}" />
+		</p:column>
+
+		<p:column sortBy="#{detailRow.revisionNumber}" width="100" 
+			exportValue="#{detailRow.revisionNumber}" class="tdnowrap" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_materializedentitiy_revisionnumber}"/>
+			</f:facet>
+			<h:outputText value="#{detailRow.revisionNumber}" styleClass="pf-tooltip-target" />
+		</p:column>
+
+		<p:column sortBy="#{detailRow.ownerLocation}" width="100" 
+			exportHeaderValue="#{i18n.lbl_attr_ownerlocation_tooltip}" class="thnowrap" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedservicemessageview_ownerlocation}" title="#{i18n.lbl_attr_ownerlocation_tooltip}" styleClass="pf-tooltip-target" />
+			</f:facet>
+			<h:outputText value="#{detailRow.ownerLocation}" />
+		</p:column>
+
+		<p:column sortBy="#{detailRow.parentMaterialNumber}" width="150" 
+			exportValue="#{detailRow.parentMaterialNumber}" exportHeaderValue="#{i18n.lbl_attr_parentmaterialnumber_tooltip}" class="thnowrap tdnowrap" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedservicemessageview_parentmaterialnumber}" title="#{i18n.lbl_attr_parentmaterialnumber_tooltip}" styleClass="pf-tooltip-target" />
+			</f:facet>
+			<h:outputText value="#{detailRow.parentMaterialNumber}" styleClass="pf-tooltip-target" />
+		</p:column>
+
+		<p:column sortBy="#{detailRow.parentSapNumber}" width="150" 
+			exportValue="#{detailRow.parentSapNumber}" exportHeaderValue="#{i18n.lbl_attr_parentsapnumber_tooltip}" class="thnowrap tdnowrap" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedservicemessageview_parentsapnumber}" title="#{i18n.lbl_attr_parentsapnumber_tooltip}" styleClass="pf-tooltip-target" />
+			</f:facet>
+			<h:outputText value="#{detailRow.parentSapNumber}" styleClass="pf-tooltip-target" />
+		</p:column>
+
+		<p:column sortBy="#{detailRow.parentMaterialType}" width="80" 
+			exportHeaderValue="#{i18n.lbl_attr_parentmaterialtype_tooltip}" class="thnowrap" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedservicemessageview_parentmaterialtype}" title="#{i18n.lbl_attr_parentmaterialtype_tooltip}" styleClass="pf-tooltip-target" />
+			</f:facet>
+			<h:outputText value="#{detailRow.parentMaterialType}" />
+		</p:column>
+
+		<p:column sortBy="#{detailRow.parentMaterialShortText}" width="250" 
+			exportValue="#{detailRow.parentMaterialShortText}" class="tdnowrap" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_materializedentitiy_parentmaterialshorttext}"/>
+			</f:facet>
+			<h:outputText value="#{detailRow.parentMaterialShortText}" styleClass="pf-tooltip-target" />
+		</p:column>
+
+		<p:column sortBy="#{detailRow.parentMaterialHierarchy}" width="150" 
+			exportHeaderValue="#{i18n.lbl_attr_parentmaterialhierarchy_tooltip}" class="thnowrap" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedservicemessageview_parentmaterialhierarchy}" title="#{i18n.lbl_attr_parentmaterialhierarchy_tooltip}" styleClass="pf-tooltip-target" />
+			</f:facet>
+			<h:outputText value="#{detailRow.parentMaterialHierarchy}" />
+		</p:column>
+
+		<p:column sortBy="#{detailRow.parentRevisionNumber}" width="100" 
+			exportValue="#{detailRow.parentRevisionNumber}" exportHeaderValue="#{i18n.lbl_attr_parentrevisionnumber_tooltip}" class="thnowrap tdnowrap" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedservicemessageview_parentrevisionnumber}" title="#{i18n.lbl_attr_parentrevisionnumber_tooltip}" styleClass="pf-tooltip-target" />
+			</f:facet>
+			<h:outputText value="#{detailRow.parentRevisionNumber}" styleClass="pf-tooltip-target" />
+		</p:column>
+
+		<p:column sortBy="#{detailRow.rmaType}" width="80" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedservicemessageview_rmatype}"/>
+			</f:facet>
+			<h:outputText value="#{detailRow.rmaType}" />
+		</p:column>
+
+		<p:column sortBy="#{detailRow.faultAnalysisCode}" width="120" 
+			exportValue="#{detailRow.faultAnalysisCode}" class="tdnowrap" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedservicemessageview_faultanalysiscode}"/>
+			</f:facet>
+			<h:outputText value="#{detailRow.faultAnalysisCode}" styleClass="pf-tooltip-target" />
+		</p:column>
+
+		<p:column sortBy="#{detailRow.symptomShortText}" width="250" 
+			exportValue="#{detailRow.symptomShortText}" class="tdnowrap" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_materializedservicemessage_symptomshorttext}"/>
+			</f:facet>
+			<h:outputText value="#{detailRow.symptomShortText}" styleClass="pf-tooltip-target" />
+		</p:column>
+
+		<p:column sortBy="#{detailRow.serviceName}" width="100" 
+			exportValue="#{detailRow.serviceName}" class="tdnowrap" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_materializedservicemessage_servicename}"/>
+			</f:facet>
+			<h:outputText value="#{detailRow.serviceName}" styleClass="pf-tooltip-target" />
+		</p:column>
+
+		<p:column sortBy="#{detailRow.errorCodeGroup}" width="150" 
+			exportValue="#{detailRow.errorCodeGroup}" class="tdnowrap" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedservicemessageview_errorcodegroup}"/>
+			</f:facet>
+			<h:outputText value="#{detailRow.errorCodeGroup}" styleClass="pf-tooltip-target" />
+		</p:column>
+
+		<p:column sortBy="#{detailRow.errorCodeName}" width="150" 
+			exportValue="#{detailRow.errorCodeName}" class="tdnowrap" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedservicemessageview_errorcodename}"/>
+			</f:facet>
+			<h:outputText value="#{detailRow.errorCodeName}" styleClass="pf-tooltip-target" />
+		</p:column>
+
+		<p:column sortBy="#{detailRow.errorShortText}" width="250" 
+			exportValue="#{detailRow.errorShortText}" class="tdnowrap" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedservicemessageview_errorshorttext}"/>
+			</f:facet>
+			<h:outputText value="#{detailRow.errorShortText}" styleClass="pf-tooltip-target" />
+		</p:column>
+
+		<p:column sortBy="#{detailRow.taskName}" width="120" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedservicemessageview_taskname}"/>
+			</f:facet>
+			<h:outputText value="#{detailRow.taskName}" />
+		</p:column>
+
+		<p:column sortBy="#{detailRow.repairTaskShortText}" width="250" 
+			exportValue="#{detailRow.repairTaskShortText}" class="tdnowrap" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_materializedservicemessage_repairtaskshorttext}"/>
+			</f:facet>
+			<h:outputText value="#{detailRow.repairTaskShortText}" styleClass="pf-tooltip-target" />
+		</p:column>
+
+		<p:column sortBy="#{detailRow.stateName}" width="120" 
+			exportValue="#{detailRow.stateName}" class="tdnowrap" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedservicemessageview_statename}"/>
+			</f:facet>
+			<h:outputText value="#{detailRow.stateName}" styleClass="pf-tooltip-target" />
+		</p:column>
+
+		<p:column sortBy="#{detailRow.internalArrivalDate}" width="110" 
+			exportHeaderValue="#{i18n.lbl_attr_repairarrivaldate_tooltip}" class="thnowrap" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedservicemessageview_internalarrivaldate}" title="#{i18n.lbl_attr_repairarrivaldate_tooltip}" styleClass="pf-tooltip-target" />
+			</f:facet>
+			<h:outputText value="#{detailRow.internalArrivalDate}">
+				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateConverter"/>
+				<f:attribute name="pattern" value="#{userSession.dateFormat}"/>
+				<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{detailRow.internalShipmentDate}" width="110" 
+			exportHeaderValue="#{i18n.lbl_attr_repairshipmentdate_tooltip}" class="thnowrap" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedservicemessageview_internalshipmentdate}" title="#{i18n.lbl_attr_repairshipmentdate_tooltip}" styleClass="pf-tooltip-target" />
+			</f:facet>
+			<h:outputText value="#{detailRow.internalShipmentDate}">
+				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateConverter"/>
+				<f:attribute name="pattern" value="#{userSession.dateFormat}"/>
+				<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{detailRow.basicStartDate}" width="110" 
+			exportHeaderValue="#{i18n.lbl_attr_basicstartdate_tooltip}" class="thnowrap" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedservicemessageview_basicstartdate}" title="#{i18n.lbl_attr_basicstartdate_tooltip}" styleClass="pf-tooltip-target" />
+			</f:facet>
+			<h:outputText value="#{detailRow.basicStartDate}">
+				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateConverter"/>
+				<f:attribute name="pattern" value="#{userSession.dateFormat}"/>
+				<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{detailRow.basicEndDate}" width="100" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_materializedservicemessage_basicenddate}" />
+			</f:facet>
+			<h:outputText value="#{detailRow.basicEndDate}">
+				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateConverter"/>
+				<f:attribute name="pattern" value="#{userSession.dateFormat}"/>
+				<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{detailRow.designator}" width="100" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_materializedservicemessage_designator}"/>
+			</f:facet>
+			<h:outputText value="#{detailRow.designator}" />
+		</p:column>
+
+		<p:column sortBy="#{detailRow.defectComponent}" width="120" 
+			exportValue="#{detailRow.defectComponent}" class="tdnowrap" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_materializedservicemessage_defectcomponent}"/>
+			</f:facet>
+			<h:outputText value="#{detailRow.defectComponent}" styleClass="pf-tooltip-target" />
+		</p:column>
+
+		<p:column sortBy="#{detailRow.analysisText}" width="250" 
+			exportValue="#{detailRow.analysisText}" class="tdnowrap" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_materializedservicemessage_analysistext}"/>
+			</f:facet>
+			<h:outputText value="#{detailRow.analysisText}" styleClass="pf-tooltip-target" />
+		</p:column>
+
+		<p:column sortBy="#{detailRow.internalReport}" width="250" 
+			exportValue="#{detailRow.internalReport}" class="tdnowrap" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_materializedservicemessage_internalreport}"/>
+			</f:facet>
+			<h:outputText value="#{detailRow.internalReport}" styleClass="pf-tooltip-target" />
+		</p:column>
+
+		<p:column sortBy="#{detailRow.externalReport}" width="250" 
+			exportValue="#{detailRow.externalReport}" class="tdnowrap" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_materializedservicemessage_externalreport}"/>
+			</f:facet>
+			<h:outputText value="#{detailRow.externalReport}" styleClass="pf-tooltip-target" />
+		</p:column>
+
+		<p:column sortBy="#{detailRow.customerReport}" width="150" 
+			exportValue="#{detailRow.customerReport}" class="tdnowrap" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_materializedservicemessage_customerreport}"/>
+			</f:facet>
+			<h:outputText value="#{detailRow.customerReport}" styleClass="pf-tooltip-target" />
+		</p:column>
+
+		<p:column sortBy="#{detailRow.epidemicFailure}" width="80" 
+			exportHeaderValue="#{i18n.lbl_attr_epidemicfailure_tooltip}" class="thnowrap" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedservicemessageview_epidemicfailure}" title="#{i18n.lbl_attr_epidemicfailure_tooltip}" styleClass="pf-tooltip-target" />
+			</f:facet>
+			<p:selectBooleanCheckbox value="#{detailRow.epidemicFailure}" disabled="true" />
+		</p:column>
+
+		<p:column sortBy="#{detailRow.errorId}" width="100" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_materializedservicemessage_errorid}"/>
+			</f:facet>
+			<h:outputText value="#{detailRow.errorId}" />
+		</p:column>
+
+		<p:column sortBy="#{detailRow.origin}" width="100" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_materializedservicemessage_origin}"/>
+			</f:facet>
+			<h:outputText value="#{detailRow.origin}" />
+		</p:column>
+
+		<p:column sortBy="#{detailRow.customerFailure}" width="80" 
+			exportHeaderValue="#{i18n.lbl_attr_customerfailure_tooltip}" class="thnowrap" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedservicemessageview_customerfailure}" title="#{i18n.lbl_attr_customerfailure_tooltip}" styleClass="pf-tooltip-target" />
+			</f:facet>
+			<p:selectBooleanCheckbox value="#{detailRow.customerFailure}" disabled="true" />
+		</p:column>
+
+		<p:column sortBy="#{detailRow.customerGroup}" width="120" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_materializedservicemessage_customergroup}"/>
+			</f:facet>
+			<h:outputText value="#{detailRow.customerGroup}" />
+		</p:column>
+
+		<p:column sortBy="#{detailRow.supplierArrivalDate}" width="100" 
+			exportHeaderValue="#{i18n.col_materializedservicemessageview_supplierarrivaldate_tooltip}" class="thnowrap" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedservicemessageview_supplierarrivaldate}" title="#{i18n.col_materializedservicemessageview_supplierarrivaldate_tooltip}" styleClass="pf-tooltip-target" />
+			</f:facet>
+			<h:outputText value="#{detailRow.supplierArrivalDate}">
+				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateConverter"/>
+				<f:attribute name="pattern" value="#{userSession.dateFormat}"/>
+				<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{detailRow.customerShipmentDate}" width="110" 
+			exportHeaderValue="#{i18n.col_materializedservicemessageview_customershipmentdate_tooltip}" class="thnowrap" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedservicemessageview_customershipmentdate}" title="#{i18n.col_materializedservicemessageview_customershipmentdate_tooltip}" styleClass="pf-tooltip-target" />
+			</f:facet>
+			<h:outputText value="#{detailRow.customerShipmentDate}">
+				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateConverter"/>
+				<f:attribute name="pattern" value="#{userSession.dateFormat}"/>
+				<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{detailRow.deliveryNoteNumber}" width="100" 
+			exportHeaderValue="#{i18n.lbl_attr_deliverynotenumber_tooltip}" class="thnowrap" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedservicemessageview_deliverynotenumber}" title="#{i18n.lbl_attr_deliverynotenumber_tooltip}" styleClass="pf-tooltip-target" />
+			</f:facet>
+			<h:outputText value="#{detailRow.deliveryNoteNumber}" />
+		</p:column>
+
+		<p:column sortBy="#{detailRow.repairDescription}" width="150" 
+			exportValue="#{detailRow.repairDescription}" class="tdnowrap" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_materializedservicemessage_repairdescription}"/>
+			</f:facet>
+			<h:outputText value="#{detailRow.repairDescription}" styleClass="pf-tooltip-target" />
+		</p:column>
+
+		<p:column sortBy="#{detailRow.assemblyDate}" width="80" 
+			exportHeaderValue="#{i18n.lbl_attr_assemblydate_tooltip}" class="thnowrap" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedservicemessageview_assemblydate}" title="#{i18n.lbl_attr_assemblydate_tooltip}" styleClass="pf-tooltip-target" />
+			</f:facet>
+			<h:outputText value="#{detailRow.assemblyDate}">
+				<f:converter converterId="net.sourceforge.jbizmo.commons.webclient.primefaces.converter.LocalDateConverter"/>
+				<f:attribute name="pattern" value="#{userSession.dateFormat}"/>
+				<f:attribute name="timeZone" value="#{userSession.timeZone}"/>
+			</h:outputText>
+		</p:column>
+
+		<p:column sortBy="#{detailRow.assemblyPO}" width="100" 
+			exportHeaderValue="#{i18n.lbl_attr_assemblypo_tooltip}" class="thnowrap" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedservicemessageview_assemblypo}" title="#{i18n.lbl_attr_assemblypo_tooltip}" styleClass="pf-tooltip-target" />
+			</f:facet>
+			<h:outputText value="#{detailRow.assemblyPO}" />
+		</p:column>
+
+	</p:dataTable>
+	<p/>
+
+	<h:outputText styleClass="label-field-mandatory" value="#{i18n.result_total_number_records} #{fieldPerfDetailsPanel.details.size()}"/>
+
+
+
+<!--Kontextmenü mit Möglichkeit, eine Zelle oder eine Zeile zu kopieren -->
+<!-- 
+	<h:inputHidden id="matrevcellText" value="#{materialRevisionsPanel.cellText}" />
+	<h:inputHidden id="matrevrowCsv" value="#{materialRevisionsPanel.rowCsv}" />
+
+	<p:contextMenu for="gridMaterialRevisionsPanel" beforeShow="updateContextData(event, 'form:tabview2', 'matrev')" >
+		<p:menuitem value="#{i18n.action_delete}" ajax="true" icon="pi pi-trash" id="gridMaterialRevisionsPanel_mniDelete" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR') and not materialRevisionsPanel.readOnly}" onclick="PF('deleteConfirmRevisions').show()"/>
+		<p:menuitem value="#{i18n.action_edit}" ajax="true" icon="pi pi-pencil" id="gridMaterialRevisionsPanel_mniUpdate" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR') and not materialRevisionsPanel.readOnly}" action="#{materialRevisionsPanel.openEditMaterialRevisionDialog}">
+			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{materialRevisionsPanel.currentPageURL}"/>
+		</p:menuitem>
+		<p:menuitem value="#{i18n.action_view}" ajax="true" icon="pi pi-file" id="gridMaterialRevisionsPanel_mniView" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;SUPERUSER')}" action="#{materialRevisionsPanel.openViewMaterialRevisionDialog}">
+			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{materialRevisionsPanel.currentPageURL}"/>
+		</p:menuitem>
+		<p:menuitem value="#{i18n.action_copy}" ajax="true" icon="pi pi-copy" id="gridMaterialRevisionsPanel_mniCopy" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR') and not materialRevisionsPanel.readOnly}" onclick="PF('copyConfirmRevisions').show()"/>
+		<p:menuitem value="#{i18n.action_refresh}" ajax="false" type="push" icon="pi pi-refresh" id="gridMaterialRevisionsPanel_mniRefresh" actionListener="#{materialRevisionsPanel.fetchRevisions}"/>
+
+		<p:separator/>
+
+		<p:menuitem value="#{i18n.ctxmenu_copy_cell}" actionListener="#{materialRevisionsPanel.copyCellToClipboard}" icon="pi pi-copy" update="@none"/>
+		<p:menuitem value="#{i18n.ctxmenu_copy_row}" actionListener="#{materialRevisionsPanel.copyRowToClipboard}" icon="pi pi-copy" update="@none"/>
+	</p:contextMenu>
+ -->
+
+</ui:composition>

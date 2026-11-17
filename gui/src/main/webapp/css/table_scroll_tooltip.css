@@ -111,6 +111,7 @@ body .ui-datatable .ui-datatable-data > tr > td {
 }
 
 
+th.thnowrap,
 .thnowrap > .ui-column-title,
 body .ui-datatable-data > tr > .tdnowrap {
 	white-space: nowrap !important;

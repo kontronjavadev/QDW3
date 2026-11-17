@@ -453,6 +453,8 @@
 		</p:tab>
 
 		<p:tab id="tabPanDetails" title="#{i18n.fieldperfreportview_tabpan_details}" >
+			<ui:include src="../dialog/panel/FieldPerfDetailsPanel.xhtml"/>
+<!-- 
 			<p:dataTable id="panDetails" var="detailRow" rowIndexVar="rowIdx" 
 				selectionTextDisabled="false" allowUnsorting="true" resizeMode="expand" 
 				selection="#{fieldPerfReport.selectedDetail}" selectionMode="single" multiViewState="true" 
@@ -484,6 +486,7 @@
 			</p:dataTable>
 
 			<h:outputText rendered="#{empty fieldPerfReport.reportData}" value="#{i18n.operation_fetch_no_data}" />
+ -->
 		</p:tab>
 	</p:tabView>
 
