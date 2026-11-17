@@ -393,14 +393,6 @@
 
 
 
-	<h:inputHidden id="currentSelectionTimestamp" value="#{fieldPerfReport.currentSelectionTimestamp}" />
-
-	<p:remoteCommand name="rcSelectCellAndDraw" 
-		action="#{fieldPerfReport.onCellRightClick}" 
-		process="@this" 
-		update=":form:tabview2:panData" 
-		oncomplete="PF('panData_ctxMenuWidget').show(lastContextMenuEvent);" />
-
 	<p:tabView id="tabview2" dynamic="true" effect="fade" effectDuration="fast" styleClass="no-margin-last-tab" >
 
 		<p:tab id="tabPanData" title="#{i18n.fieldperfreportview_tabpan_data}" >
@@ -422,7 +414,7 @@
 						process="@this :form:currentSelectionTimestamp" 
 						update=":form:tabview2:panData :form:tabview2:panDetails :form:tabview2:panDetailsSummary form:growl" 
 						onclick="document.getElementById('form:currentSelectionTimestamp').value = Date.now();"
-						oncontextmenu="onCellContextMenu(event, #{rowIdx}, 0, #{fieldPerfReport.isDetailPossible(rowIdx, 0)});"
+						oncontextmenu="onCellContextMenu(event, #{rowIdx}, 0);"
 						styleClass="cell-click-link" style="#{reportRow[0].cellStyle}" >
 
 						<h:outputText value="#{reportRow[0].label}" style="#{reportRow[0].textStyle}" />
@@ -441,7 +433,7 @@
 						process="@this :form:currentSelectionTimestamp" 
 						update=":form:tabview2:panData :form:tabview2:panDetails :form:tabview2:panDetailsSummary form:growl" 
 						onclick="document.getElementById('form:currentSelectionTimestamp').value = Date.now();"
-						oncontextmenu="onCellContextMenu(event, #{rowIdx}, #{colIdx}, #{fieldPerfReport.isDetailPossible(rowIdx, colIdx)});"
+						oncontextmenu="onCellContextMenu(event, #{rowIdx}, #{colIdx});"
 						styleClass="cell-click-link" style="#{reportRow[colIdx].cellStyle}" >
 
 						<h:outputText value="#{reportRow[colIdx].label}" style="#{reportRow[colIdx].textStyle}" />
@@ -454,42 +446,13 @@
 
 		<p:tab id="tabPanDetails" title="#{i18n.fieldperfreportview_tabpan_details}" >
 			<ui:include src="../dialog/panel/FieldPerfDetailsPanel.xhtml"/>
-<!-- 
-			<p:dataTable id="panDetails" var="detailRow" rowIndexVar="rowIdx" 
-				selectionTextDisabled="false" allowUnsorting="true" resizeMode="expand" 
-				selection="#{fieldPerfReport.selectedDetail}" selectionMode="single" multiViewState="true" 
-				loadingMessage="#{i18n.action_fetch_data}" 
-				value="#{fieldPerfReport.details}" scrollable="true" styleClass="viewScrollable fieldPerfReportScrollable" 
-				rowKey="#{detailRow.id}" >
-
-				<p:column sortBy="#{detailRow.id}" width="120" >
-					<f:facet name="header">
-						<h:outputText value="#{i18n.col_materializedservicemessageview_id}"/>
-					</f:facet>
-					<h:outputText value="#{detailRow.id}" />
-				</p:column>
-
-				<p:column sortBy="#{detailRow.plant}" width="80" >
-					<f:facet name="header">
-						<h:outputText value="#{i18n.lbl_attr_materializedentitiy_plant}"/>
-					</f:facet>
-					<h:outputText value="#{detailRow.plant}" />
-				</p:column>
-
-				<p:column sortBy="#{detailRow.serviceOrder}" width="120" >
-					<f:facet name="header">
-						<h:outputText value="#{i18n.col_materializedservicemessageview_serviceorder}"/>
-					</f:facet>
-					<h:outputText value="#{detailRow.serviceOrder}" />
-				</p:column>
-
-			</p:dataTable>
-
-			<h:outputText rendered="#{empty fieldPerfReport.reportData}" value="#{i18n.operation_fetch_no_data}" />
- -->
 		</p:tab>
 	</p:tabView>
 
+<!-- Ziel für das Kontextmenü, das ohne "for=..." überall auf der Seite gelten würde.
+Es soll aber nur für die Tabelle "panData" gelten, wo es aber über die Funktion "onCellContextMenu"
+und dem Kommando "rcSelectCellAndDraw" kontrolliert eingeschaltet wird, sobald der Request an die Bean durch ist. -->
+<h:panelGroup id="dummyMenuTarget" style="display:none;" />
 
 
 
@@ -507,7 +470,7 @@ Werte für die Kopier-Erweiterung nicht hier mit "beforeShow()" auslesen und puf
 sondern in der Funktion "onCellContextMenu()", bevor der DOM-Baum vernichtet wird und die Werte nicht mehr da sind.
  -->
 
-	<p:contextMenu id="panData_ctxMenu" widgetVar="panData_ctxMenuWidget" >
+	<p:contextMenu id="panData_ctxMenu" widgetVar="panData_ctxMenuWidget" for="dummyMenuTarget" >
 		<p:menuitem id="panData_mniShowDetails" icon="pi pi-eye" value="#{i18n.fieldperfreportview_action_showdetails}" 
 			action="#{fieldPerfReport.showDetails}" ajax="true" update=":form:tabview2:panDetails :form:tabview2:panDetailsSummary growl" 
 			rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;SUPERUSER')}" />
@@ -601,7 +564,16 @@ sondern in der Funktion "onCellContextMenu()", bevor der DOM-Baum vernichtet wir
 
 
 
+	<h:inputHidden id="currentSelectionTimestamp" value="#{fieldPerfReport.currentSelectionTimestamp}" />
+
+	<p:remoteCommand name="rcSelectCellAndDraw" 
+		action="#{fieldPerfReport.onCellRightClick}" 
+		process="@this" 
+		update=":form:tabview2:panData" 
+		oncomplete="onRightClickComplete(xhr, status, args);" />
+
 <script>
+//<![CDATA[
 document.addEventListener("DOMContentLoaded", function() {
 	// 1. Lokale Hilfsfunktion definieren
 	function applyInitialTooltips(initialTooltips, fieldId) {
@@ -634,7 +606,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 var lastContextMenuEvent = null;
 
-function onCellContextMenu(event, rIdx, cIdx, isPossible) {
+function onCellContextMenu(event, rIdx, cIdx) {
 	// 1. Verhindert das Standard-Rechtsklick-Menü des Browsers
 	event.preventDefault(); 
 
@@ -649,13 +621,24 @@ function onCellContextMenu(event, rIdx, cIdx, isPossible) {
 	updateContextData(event, 'form', 'data');
 
 	// 5.: Menüeinträge clientseitig toggeln (wie zuvor)
-	toggleMenuDetails(isPossible);
+	// toggleMenuDetails(isPossible);
 
 	// 6.: Das Update der Tabelle serverseitig auslösen
 	rcSelectCellAndDraw([
 		{name: 'rowIdx', value: rIdx},
 		{name: 'colIdx', value: cIdx}
 	]);
+}
+
+// Wird vom RemoteCommand aufgerufen, sobald der Server geantwortet hat
+function onRightClickComplete(xhr, status, args) {
+	if (args && args.isPossible !== undefined) {
+		// 1. Menüeinträge basierend auf der ECHTZEIT-Antwort vom Server toggeln
+		toggleMenuDetails(args.isPossible);
+
+		// 2. Das Kontextmenü einblenden
+		PF('panData_ctxMenuWidget').show(lastContextMenuEvent);
+	}
 }
 
 function toggleMenuDetails(isPossible) {
@@ -666,6 +649,7 @@ function toggleMenuDetails(isPossible) {
 		$items.addClass('ui-state-disabled');
 	}
 }
+//]]>
 </script>
 
 </ui:define>

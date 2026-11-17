@@ -568,6 +568,9 @@ public class FieldPerfReport extends SuperView implements Serializable {
             int rIdx = Integer.parseInt(rParam);
             int cIdx = Integer.parseInt(cParam);
             onCellClick(rIdx, cIdx);
+            // dem JavaScript in Echtzeit mitteilen, ob Details für DIESE Zelle möglich sind
+            boolean possible = isDetailPossible(rIdx, cIdx);
+            PrimeFaces.current().ajax().addCallbackParam("isPossible", possible);
         }
     }
 
