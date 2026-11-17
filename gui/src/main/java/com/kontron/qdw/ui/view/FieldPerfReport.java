@@ -567,7 +567,14 @@ public class FieldPerfReport extends SuperView implements Serializable {
         if (rParam != null && cParam != null) {
             int rIdx = Integer.parseInt(rParam);
             int cIdx = Integer.parseInt(cParam);
+
+            // Verhindert radikal, dass dieser Rechtsklick als zweiter Klick
+            // eines Doppelklicks gewertet wird, falls man kurz zuvor links geklickt hat.
+            lastSelectionTimestamp = 0L;
+
+            // Farbkreuz und normale Selektionslogik ausführen
             onCellClick(rIdx, cIdx);
+
             // dem JavaScript in Echtzeit mitteilen, ob Details für DIESE Zelle möglich sind
             boolean possible = isDetailPossible(rIdx, cIdx);
             PrimeFaces.current().ajax().addCallbackParam("isPossible", possible);
