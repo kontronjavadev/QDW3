@@ -219,28 +219,8 @@ body .ui-paginator .ui-paginator-rpp-options {
    3a. TABELLEN: SCROLLING: GEMEINSAME REGELN (Für ALLE viewScrollable Tabellen)
 ========================================================================= */
 
-/* Für alle scrollbaren PrimeFaces-Tabellen */
-body .ui-datatable-scrollable .ui-datatable-scrollable-header,
-body .ui-datatable-scrollable .ui-datatable-scrollable-body {
-	scrollbar-width: thin;
-}
-/* Für Tabellen ohne fixierte Spalten und für beweglichen Spalten rechts bei Tabellen mit fixierten Spalten */
-body .ui-datatable-scrollable:not(.ui-datatable-frozencolumn) .ui-datatable-scrollable-header,
-body .ui-datatable-scrollable:not(.ui-datatable-frozencolumn) .ui-datatable-scrollable-body,
-body .ui-datatable-frozencolumn td.ui-datatable-frozenlayout-right .ui-datatable-scrollable-header,
-body .ui-datatable-frozencolumn td.ui-datatable-frozenlayout-right .ui-datatable-scrollable-body {
-	scrollbar-gutter: stable;
-}
-/* Für fixierte Spalten Scrollbar ausblenden */
-body .ui-datatable-frozencolumn td.ui-datatable-frozenlayout-left .ui-datatable-scrollable-header,
-body .ui-datatable-frozencolumn td.ui-datatable-frozenlayout-left .ui-datatable-scrollable-body {
-	scrollbar-gutter: auto !important;
-}
-
-
-
 .viewScrollable {
-	width: calc(100vw - 310px);
+	width: 100%;
 	max-width: calc(100vw - 310px);
 }
 
@@ -250,7 +230,8 @@ body .ui-datatable-frozencolumn td.ui-datatable-frozenlayout-left .ui-datatable-
 	Es werden 282px statt 209px abgezogen, in der Summe also 73px mehr.
 	Die Höhe als max-height, damit bei weniger beanspruchtem Platz kein Leerraum zwischen Tabellenende und Scrollbar entsteht.
 	*/
-	width: calc(100vw - 310px);
+	width: 100%;
+	max-width: calc(100vw - 310px);
 	max-height: calc(100vh - 282px);
 	height: fit-content;
 	min-height: 32px;
@@ -260,7 +241,8 @@ body .ui-datatable-frozencolumn td.ui-datatable-frozenlayout-left .ui-datatable-
 
 .viewScrollable .ui-datatable-scrollable-header,
 .viewScrollable .ui-paginator.ui-paginator-top {
-	width: calc(100vw - 310px);
+	width: 100%;
+	max-width: calc(100vw - 310px);
 }
 
 
@@ -270,6 +252,22 @@ body .ui-datatable-frozencolumn td.ui-datatable-frozenlayout-left .ui-datatable-
 /* =========================================================================
    3b. TABELLEN: SCROLLING: SPEZIAL-REGELN (NUR für Tabellen MIT fixierten Spalten)
 ========================================================================= */
+
+/* NEU: Scrollbar-Anpassungen exklusiv auf Tabellen mit fixierter Spalte isolieren */
+body div.ui-datatable.viewScrollable.ui-datatable-frozencolumn .ui-datatable-scrollable-header,
+body div.ui-datatable.viewScrollable.ui-datatable-frozencolumn .ui-datatable-scrollable-body {
+	scrollbar-width: thin;
+}
+
+body div.ui-datatable.viewScrollable.ui-datatable-frozencolumn td.ui-datatable-frozenlayout-right .ui-datatable-scrollable-header,
+body div.ui-datatable.viewScrollable.ui-datatable-frozencolumn td.ui-datatable-frozenlayout-right .ui-datatable-scrollable-body {
+	scrollbar-gutter: stable;
+}
+
+body div.ui-datatable.viewScrollable.ui-datatable-frozencolumn td.ui-datatable-frozenlayout-left .ui-datatable-scrollable-header,
+body div.ui-datatable.viewScrollable.ui-datatable-frozencolumn td.ui-datatable-frozenlayout-left .ui-datatable-scrollable-body {
+	scrollbar-gutter: auto !important;
+}
 
 body div.ui-datatable.viewScrollable.ui-datatable-frozencolumn {
 	width: calc(100vw - 328px) !important;
@@ -391,6 +389,36 @@ body div.ui-datatable.viewScrollable.ui-datatable-frozencolumn td.ui-datatable-f
 	overflow-y: auto !important;
 }
 
+/* Chrome/Edge: Scrollbar-Maße (8px entspricht "thin") und transparente Spur für Frozen-Tabellen.
+   WICHTIG: Sobald ::-webkit-scrollbar genutzt wird, ignoriert Chrome scrollbar-width: thin auf diesem Element. */
+body div.ui-datatable.viewScrollable.ui-datatable-frozencolumn .ui-datatable-scrollable-header::-webkit-scrollbar,
+body div.ui-datatable.viewScrollable.ui-datatable-frozencolumn .ui-datatable-scrollable-body::-webkit-scrollbar {
+	width: 8px;
+	height: 8px;
+	background: transparent;
+}
+
+body div.ui-datatable.viewScrollable.ui-datatable-frozencolumn .ui-datatable-scrollable-header::-webkit-scrollbar-track,
+body div.ui-datatable.viewScrollable.ui-datatable-frozencolumn .ui-datatable-scrollable-body::-webkit-scrollbar-track,
+body div.ui-datatable.viewScrollable.ui-datatable-frozencolumn .ui-datatable-scrollable-body::-webkit-scrollbar-corner {
+	background: transparent;
+}
+
+/* Chrome/Edge: Links ist auch der Thumb immer komplett unsichtbar (verhindert den grauen Balken) */
+body div.ui-datatable.viewScrollable.ui-datatable-frozencolumn td.ui-datatable-frozenlayout-left .ui-datatable-scrollable-body::-webkit-scrollbar-thumb {
+	background: transparent;
+}
+
+/* Chrome/Edge: Rechts erscheint nur der Thumb, und zwar automatisch nur dann, wenn tatsächlich gescrollt werden kann */
+body div.ui-datatable.viewScrollable.ui-datatable-frozencolumn td.ui-datatable-frozenlayout-right .ui-datatable-scrollable-body::-webkit-scrollbar-thumb {
+	background-color: rgba(128, 128, 128, 0.5);
+	border-radius: 4px;
+}
+
+body div.ui-datatable.viewScrollable.ui-datatable-frozencolumn td.ui-datatable-frozenlayout-right .ui-datatable-scrollable-body::-webkit-scrollbar-thumb:hover {
+	background-color: rgba(128, 128, 128, 0.8);
+}
+
 /* Klickbarer Link in den Zellen: 0.4rem horizontales Padding (synchron zum th-Header!), damit Header und Body identisch breit sind */
 body .ui-datatable.fieldPerfReportScrollable tbody td.clickable-td > a.cell-click-link {
 	display: block;
@@ -440,6 +468,10 @@ body .ui-datatable.viewScrollable.headerless .ui-datatable-scrollable-header {
 
 .fieldPerfReportScrollable .ui-datatable-scrollable-body {
 	max-height: calc(100vh - 475px);
+}
+
+.fieldPerfReportSummaryScrollable .ui-datatable-scrollable-body {
+	max-height: calc(100vh - 509px);
 }
 
 
