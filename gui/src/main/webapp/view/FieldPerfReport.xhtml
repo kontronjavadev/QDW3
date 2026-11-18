@@ -392,7 +392,8 @@
 
 
 
-	<p:tabView id="tabview2" widgetVar="tabview2Widget" dynamic="true" effect="fade" effectDuration="fast" styleClass="no-margin-last-tab" >
+	<p:tabView id="tabview2" widgetVar="tabview2Widget" activeIndex="#{fieldPerfReport.tabIndex}" 
+		dynamic="true" effect="fade" effectDuration="fast" styleClass="no-margin-last-tab" >
 
 		<p:tab id="tabPanData" title="#{i18n.fieldperfreportview_tabpan_data}" >
 			<p:dataTable id="panData" var="reportRow" rowIndexVar="rowIdx" 

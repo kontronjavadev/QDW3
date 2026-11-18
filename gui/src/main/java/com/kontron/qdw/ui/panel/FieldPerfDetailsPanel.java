@@ -8,6 +8,7 @@ import java.lang.invoke.MethodHandles;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.function.IntConsumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -48,6 +49,7 @@ public class FieldPerfDetailsPanel extends CopyClipboard implements Serializable
     private Supplier<FieldPerfReportSearchObject> searchObjSupp;
     private Supplier<FieldPerfReportResultDTO[]> reportHeaderSupp;
     private Supplier<List<FieldPerfReportResultDTO[]>> reportDataSupp;
+    private IntConsumer tabIndexCons;
 
     private List<MaterializedServiceMessageSearchDTO> details = new ArrayList<>();
     private MaterializedServiceMessageSearchDTO selectedDetail;
@@ -69,7 +71,8 @@ public class FieldPerfDetailsPanel extends CopyClipboard implements Serializable
 
     public void initView(Supplier<FieldPerfReportSearchObject> searchObjSupp,
             Supplier<FieldPerfReportResultDTO[]> reportHeaderSupp,
-            Supplier<List<FieldPerfReportResultDTO[]>> reportDataSupp) {
+            Supplier<List<FieldPerfReportResultDTO[]>> reportDataSupp,
+            IntConsumer tabIndexCons) {
         logger.debug("Initialize grid panel");
 
         bundle = ResourceBundle.getBundle(DEFAULT_BUNDLE_NAME, userSession.getLocale());
@@ -77,6 +80,7 @@ public class FieldPerfDetailsPanel extends CopyClipboard implements Serializable
         this.searchObjSupp = searchObjSupp;
         this.reportHeaderSupp = reportHeaderSupp;
         this.reportDataSupp = reportDataSupp;
+        this.tabIndexCons = tabIndexCons;
 
         logger.debug("Grid panel initialization finished");
     }
@@ -98,6 +102,7 @@ public class FieldPerfDetailsPanel extends CopyClipboard implements Serializable
 
         // weist den Browser an, sofort auf den Details-Tab (Index 1) zu wechseln
         PrimeFaces.current().executeScript("PF('tabview2Widget').select(1);");
+        tabIndexCons.accept(1);
     }
 
     public void appendDetails(int rowIndex, int colIndex) {

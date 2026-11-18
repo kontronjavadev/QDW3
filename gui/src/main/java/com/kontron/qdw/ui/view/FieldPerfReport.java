@@ -117,6 +117,8 @@ public class FieldPerfReport extends SuperView implements Serializable {
     private int lastSelectedColIndex = -1;
     private long lastSelectionTimestamp = 0L;
 
+    private int tabIndex = 0;
+
 
 
     public FieldPerfReport() {
@@ -191,7 +193,7 @@ public class FieldPerfReport extends SuperView implements Serializable {
         }
 
         detailsPanel.setCurrentPageURL(FieldPerfReport.PAGE_URL);
-        detailsPanel.initView(this::getReportSearchObj, this::getReportHeader, this::getReportData);
+        detailsPanel.initView(this::getReportSearchObj, this::getReportHeader, this::getReportData, this::setTabIndex);
 
         logger.debug("View initialization finished");
     }
@@ -980,6 +982,14 @@ public class FieldPerfReport extends SuperView implements Serializable {
 
     public void setCurrentSelectionTimestamp(long currentSelectionTimestamp) {
         this.currentSelectionTimestamp = currentSelectionTimestamp;
+    }
+
+    public int getTabIndex() {
+        return tabIndex;
+    }
+
+    public void setTabIndex(int tabIndex) {
+        this.tabIndex = tabIndex;
     }
 
 
