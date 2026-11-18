@@ -465,26 +465,17 @@
 
 
 <!--Kontextmenü mit Möglichkeit, eine Zelle oder eine Zeile zu kopieren -->
+	<h:inputHidden id="detailscellText" value="#{fieldPerfDetailsPanel.cellText}" />
+	<h:inputHidden id="detailsrowCsv" value="#{fieldPerfDetailsPanel.rowCsv}" />
+
+	<p:contextMenu for="gridFieldPerfDetailsPanel" beforeShow="updateContextData(event, 'form:tabview2', 'details')" >
+
 <!-- 
-	<h:inputHidden id="matrevcellText" value="#{materialRevisionsPanel.cellText}" />
-	<h:inputHidden id="matrevrowCsv" value="#{materialRevisionsPanel.rowCsv}" />
-
-	<p:contextMenu for="gridMaterialRevisionsPanel" beforeShow="updateContextData(event, 'form:tabview2', 'matrev')" >
-		<p:menuitem value="#{i18n.action_delete}" ajax="true" icon="pi pi-trash" id="gridMaterialRevisionsPanel_mniDelete" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR') and not materialRevisionsPanel.readOnly}" onclick="PF('deleteConfirmRevisions').show()"/>
-		<p:menuitem value="#{i18n.action_edit}" ajax="true" icon="pi pi-pencil" id="gridMaterialRevisionsPanel_mniUpdate" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR') and not materialRevisionsPanel.readOnly}" action="#{materialRevisionsPanel.openEditMaterialRevisionDialog}">
-			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{materialRevisionsPanel.currentPageURL}"/>
-		</p:menuitem>
-		<p:menuitem value="#{i18n.action_view}" ajax="true" icon="pi pi-file" id="gridMaterialRevisionsPanel_mniView" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;READONLY;SUPERUSER')}" action="#{materialRevisionsPanel.openViewMaterialRevisionDialog}">
-			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{materialRevisionsPanel.currentPageURL}"/>
-		</p:menuitem>
-		<p:menuitem value="#{i18n.action_copy}" ajax="true" icon="pi pi-copy" id="gridMaterialRevisionsPanel_mniCopy" rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR') and not materialRevisionsPanel.readOnly}" onclick="PF('copyConfirmRevisions').show()"/>
-		<p:menuitem value="#{i18n.action_refresh}" ajax="false" type="push" icon="pi pi-refresh" id="gridMaterialRevisionsPanel_mniRefresh" actionListener="#{materialRevisionsPanel.fetchRevisions}"/>
-
 		<p:separator/>
-
-		<p:menuitem value="#{i18n.ctxmenu_copy_cell}" actionListener="#{materialRevisionsPanel.copyCellToClipboard}" icon="pi pi-copy" update="@none"/>
-		<p:menuitem value="#{i18n.ctxmenu_copy_row}" actionListener="#{materialRevisionsPanel.copyRowToClipboard}" icon="pi pi-copy" update="@none"/>
-	</p:contextMenu>
  -->
+
+		<p:menuitem value="#{i18n.ctxmenu_copy_cell}" actionListener="#{fieldPerfDetailsPanel.copyCellToClipboard}" icon="pi pi-copy" update="@none"/>
+		<p:menuitem value="#{i18n.ctxmenu_copy_row}" actionListener="#{fieldPerfDetailsPanel.copyRowToClipboard}" icon="pi pi-copy" update="@none"/>
+	</p:contextMenu>
 
 </ui:composition>
