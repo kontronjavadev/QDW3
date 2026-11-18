@@ -238,6 +238,7 @@ public class FieldPerfReport extends SuperView implements Serializable {
 
             reportData = formatResult(reportSearchObj, returnData, shipPerMonth, qRelevantReturn, lastYearReturn);
             reportHeader = reportData.remove(0);
+            detailsPanel.reset();
         }
         catch (final Exception e) {
             logger.error("Error while executing report!", e);

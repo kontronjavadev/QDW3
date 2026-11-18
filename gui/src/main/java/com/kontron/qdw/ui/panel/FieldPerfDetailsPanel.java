@@ -9,6 +9,7 @@ import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.primefaces.PrimeFaces;
@@ -74,9 +75,13 @@ public class FieldPerfDetailsPanel extends CopyClipboard implements Serializable
         this.searchObjSupp = searchObjSupp;
         this.reportHeaderSupp = reportHeaderSupp;
         this.reportDataSupp = reportDataSupp;
-        // fetchRevisions();
 
         logger.debug("Grid panel initialization finished");
+    }
+
+    public void reset() {
+        details = new ArrayList<>();
+        selectedDetail = null;
     }
 
 
@@ -99,8 +104,14 @@ public class FieldPerfDetailsPanel extends CopyClipboard implements Serializable
         }
         logger.info("appendDetails() zu (x, y): {}, {}", rowIndex, colIndex);
 
-        details = new ArrayList<>(details);
-        details.addAll(executeDetail(rowIndex, colIndex));
+        details = new ArrayList<>(details); // neue Instanz erzeugen, um Update-Probleme zu vermeiden
+        Set<Long> collectedIds = details.stream()
+                .map(MaterializedServiceMessageSearchDTO::getId)
+                .collect(Collectors.toSet());
+        List<MaterializedServiceMessageSearchDTO> additionalMsgDtos = executeDetail(rowIndex, colIndex).stream()
+                .filter(msg -> !collectedIds.contains(msg.getId()))
+                .collect(Collectors.toList());
+        details.addAll(additionalMsgDtos);
     }
 
 
