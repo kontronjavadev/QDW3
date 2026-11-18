@@ -10,6 +10,7 @@
 		loadingMessage="#{i18n.action_fetch_data}" 
 		value="#{fieldPerfDetailsPanel.details}" scrollable="true" styleClass="viewScrollable fieldPerfReportSummaryScrollable" 
 		rowKey="#{detailRow.id}" >
+		<p:ajax event="rowDblselect" listener="#{fieldPerfDetailsPanel.onDoubleClick}" />
 
 		<p:column sortBy="#{detailRow.id}" width="120" >
 			<f:facet name="header">
@@ -468,11 +469,22 @@
 	<h:inputHidden id="detailscellText" value="#{fieldPerfDetailsPanel.cellText}" />
 	<h:inputHidden id="detailsrowCsv" value="#{fieldPerfDetailsPanel.rowCsv}" />
 
-	<p:contextMenu for="gridFieldPerfDetailsPanel" beforeShow="updateContextData(event, 'form:tabview2', 'details')" >
+	<p:contextMenu for="panDetails" beforeShow="updateContextData(event, 'form:tabview2', 'details')" >
 
-<!-- 
+		<p:menuitem value="#{i18n.form_viewservicemessagedialog_title}" ajax="true" icon="pi pi-file" id="gridFieldPerfDetailsPanel_mniMsgView" 
+			rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;SUPERUSER')}" 
+			action="#{fieldPerfDetailsPanel.openViewServiceMessageDialog}">
+			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{fieldPerfDetailsPanel.currentPageURL}"/>
+		</p:menuitem>
+
+		<p:menuitem value="#{i18n.form_viewserviceorderdialog_title}" ajax="true" icon="pi pi-file" id="gridFieldPerfDetailsPanel_mniRmaView" 
+			rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;SUPERUSER')}" 
+			action="#{fieldPerfDetailsPanel.openViewServiceOrderDialog}">
+			<f:setPropertyActionListener target="#{userSession.lastPage}" value="#{fieldPerfDetailsPanel.currentPageURL}"/>
+		</p:menuitem>
+
+
 		<p:separator/>
- -->
 
 		<p:menuitem value="#{i18n.ctxmenu_copy_cell}" actionListener="#{fieldPerfDetailsPanel.copyCellToClipboard}" icon="pi pi-copy" update="@none"/>
 		<p:menuitem value="#{i18n.ctxmenu_copy_row}" actionListener="#{fieldPerfDetailsPanel.copyRowToClipboard}" icon="pi pi-copy" update="@none"/>

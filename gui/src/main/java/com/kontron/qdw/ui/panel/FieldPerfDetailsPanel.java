@@ -1,7 +1,7 @@
 package com.kontron.qdw.ui.panel;
 
 import static com.kontron.qdw.ui.TranslationKeys.*;
-import static com.kontron.qdw.ui.UserSession.DEFAULT_BUNDLE_NAME;
+import static com.kontron.qdw.ui.UserSession.*;
 
 import java.io.Serializable;
 import java.lang.invoke.MethodHandles;
@@ -22,16 +22,18 @@ import com.kontron.qdw.dto.mv.MaterializedServiceMessageSearchDTO;
 import com.kontron.qdw.dto.mv.report.FieldPerfReportResultDTO;
 import com.kontron.qdw.dto.mv.report.FieldPerfReportSearchObject;
 import com.kontron.qdw.ui.UserSession;
+import com.kontron.qdw.ui.dialog.ViewServiceMessageDialog;
+import com.kontron.qdw.ui.dialog.ViewServiceOrderDialog;
 import com.kontron.qdw.ui.view.util.CopyClipboard;
 
+import jakarta.enterprise.context.SessionScoped;
 import jakarta.faces.application.FacesMessage;
-import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import net.sourceforge.jbizmo.commons.webclient.primefaces.util.MessageUtil;
 
 @Named("fieldPerfDetailsPanel")
-@ViewScoped
+@SessionScoped
 public class FieldPerfDetailsPanel extends CopyClipboard implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -178,27 +180,34 @@ public class FieldPerfDetailsPanel extends CopyClipboard implements Serializable
 
 
 
-    // /**
-    // * Event that will be fired if user performs a double-click on a grid row
-    // */
-    // public void onRevisionsGridDoubleClick() {
-    // logger.debug("Handle double-click event");
-    // userSession.redirectTo(getCurrentPageURL(), openViewMaterialRevisionDialog());
-    // }
-    //
-    // /**
-    // * Open dialog
-    // * @return the navigation target
-    // */
-    // public String openViewMaterialRevisionDialog() {
-    // var url = "";
-    //
-    // if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_READONLY, ROLE_SUPERUSER)) {
-    // url = ViewMaterialRevisionDialog.PAGE_INIT_URL + selItemOfRevisions.getId();
-    // }
-    //
-    // return url;
-    // }
+    /**
+     * Event that will be fired if user performs a double-click on a grid row
+     */
+    public void onDoubleClick() {
+        logger.debug("Handle double-click event");
+        userSession.redirectTo(getCurrentPageURL(), openViewServiceMessageDialog());
+    }
+
+    /**
+     * @return the navigation target
+     */
+    public String openViewServiceMessageDialog() {
+        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_SUPERUSER)) {
+            return ViewServiceMessageDialog.PAGE_INIT_URL + selectedDetail.getId();
+        }
+        return "";
+    }
+
+    /**
+     * @return the navigation target
+     */
+    public String openViewServiceOrderDialog() {
+        if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_SUPERUSER)) {
+            return ViewServiceOrderDialog.PAGE_INIT_URL
+                    + java.net.URLEncoder.encode(selectedDetail.getServiceOrder(), java.nio.charset.StandardCharsets.UTF_8);
+        }
+        return "";
+    }
 
 
 

@@ -190,12 +190,8 @@ public class FieldPerfReport extends SuperView implements Serializable {
             }
         }
 
-
-        // detailsPanel.setSelectedObjectId(selectedObjectId);
-        // detailsPanel.setCurrentPageURL(EditMaterialDialog.PAGE_INIT_URL + selectedObjectId);
-        // detailsPanel.setReadOnly(false);
+        detailsPanel.setCurrentPageURL(FieldPerfReport.PAGE_URL);
         detailsPanel.initView(this::getReportSearchObj, this::getReportHeader, this::getReportData);
-
 
         logger.debug("View initialization finished");
     }
