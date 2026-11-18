@@ -70,7 +70,7 @@ public class FieldPerfReport extends SuperView implements Serializable {
 
     private final DecimalFormat decimalFormat = new DecimalFormat("0.00");
 
-    private static final long DOUBLE_CLICK_THRESHOLD_MS = 350L;
+    private static final long DOUBLE_CLICK_THRESHOLD_MS = 400L;
 
 
     private final transient SavedQueryService queryManager;
@@ -116,9 +116,6 @@ public class FieldPerfReport extends SuperView implements Serializable {
     private int lastSelectedRowIndex = -1;
     private int lastSelectedColIndex = -1;
     private long lastSelectionTimestamp = 0L;
-
-    // private List<MaterializedServiceMessageSearchDTO> details = new ArrayList<>();
-    // private MaterializedServiceMessageSearchDTO selectedDetail;
 
 
 
@@ -247,51 +244,6 @@ public class FieldPerfReport extends SuperView implements Serializable {
             MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_ERROR, OPERATION_EXEC_REPORT_FAIL, e);
         }
     }
-
-
-
-    // private List<MaterializedServiceMessageSearchDTO> executeDetail() {
-    // if (!isDetailPossible(lastSelectedRowIndex, lastSelectedColIndex)) {
-    // return Collections.emptyList();
-    // }
-    // String shipValue = reportHeader[lastSelectedColIndex].getLabel(); // rowHeader: supplier arrival (shipped)
-    // String returnValue = reportData.get(lastSelectedRowIndex)[0].getLabel(); // colHeader: repair arrival (returned)
-    //
-    // logger.info("Perform details execution for (x) supplier arrival (shipped) {} and (y) repair arrival (returned) {}",
-    // shipValue, returnValue);
-    //
-    // boolean qrelCol = shipValue.equals(bundle.getString(FIELDPERFREPORTVIEW_COL_QREL_PERIOD));
-    // boolean sumRow = returnValue.equals(bundle.getString(FIELDPERFREPORTVIEW_ROW_SUM));
-    // LocalDate shipDate = null;
-    // LocalDate returnDate = null;
-    // try {
-    // if (!qrelCol) {
-    // String[] s = shipValue.split("-");
-    // shipDate = LocalDate.of(Integer.parseInt(s[0]), Integer.parseInt(s[1]), 1);
-    // }
-    // if (!sumRow) {
-    // String[] s = returnValue.split("-");
-    // returnDate = LocalDate.of(Integer.parseInt(s[0]), Integer.parseInt(s[1]), 1);
-    // }
-    // }
-    // catch (NumberFormatException | DateTimeException e) {
-    // MessageUtil.sendFacesMessage(bundle, FacesMessage.SEVERITY_ERROR, OPERATION_EXEC_REPORT_FAIL, e);
-    // return Collections.emptyList();
-    // }
-    //
-    // logger.debug("returnDate: {}, shipDate: {}", returnDate, shipDate);
-    //
-    // reportSearchObj.setShipDate(shipDate);
-    // reportSearchObj.setReturnDate(returnDate);
-    //
-    //
-    // if (qrelCol && sumRow) {
-    // return reportService.getAllDetailData(reportSearchObj);
-    // }
-    // else {
-    // return reportService.getFieldPerformanceReportDetailData(reportSearchObj);
-    // }
-    // }
 
 
 
@@ -581,52 +533,11 @@ public class FieldPerfReport extends SuperView implements Serializable {
         }
     }
 
-    // public boolean isDetailPossible(int rowIndex, int colIndex) {
-    // if (rowIndex <= 0 || colIndex <= 0) {
-    // // keine Auswahl oder Zeilenüberschrift oder Shipments-Zeile gewählt (Spaltenüberschrift ist nicht anwählbar)
-    // return false;
-    // }
-    // if (rowIndex > reportData.size() - 1 - 3) {
-    // // eine der letzten drei Zeilen gewählt. Details ist nur bis Zeile "sum" verfügbar.
-    // return false;
-    // }
-    // FieldPerfReportResultDTO clickedCell = reportData.get(rowIndex)[colIndex];
-    // if (StringUtils.isEmpty(clickedCell.getLabel())) {
-    // // in der Zelle steht nichts. Zelle ist also außerhalb des analysierbaren Bereichs. Details nicht möglich.
-    // return false;
-    // }
-    // return true;
-    // }
-
     public boolean isDetailPossible(int rowIndex, int colIndex) {
         return detailsPanel.isDetailPossible(lastSelectedRowIndex, lastSelectedColIndex);
     }
 
 
-
-    // public void showDetails() {
-    // if (!isDetailPossible(lastSelectedRowIndex, lastSelectedColIndex)) {
-    // return;
-    // }
-    // FieldPerfReportResultDTO rowHeader = reportData.get(lastSelectedRowIndex)[0];
-    // FieldPerfReportResultDTO colHeader = reportHeader[lastSelectedColIndex];
-    //
-    // logger.info("showDetails() zu (x) supplier arrival (shipped) {} und (y) repair arrival (returned) {}",
-    // colHeader.getLabel(), rowHeader.getLabel());
-    // details = executeDetail();
-    // }
-    //
-    // public void appendDetails() {
-    // if (!isDetailPossible(lastSelectedRowIndex, lastSelectedColIndex)) {
-    // return;
-    // }
-    // FieldPerfReportResultDTO rowHeader = reportData.get(lastSelectedRowIndex)[0];
-    // FieldPerfReportResultDTO colHeader = reportHeader[lastSelectedColIndex];
-    //
-    // logger.info("appendDetails() von (x) supp arrival {} und (y) repair arrival {}", colHeader.getLabel(), rowHeader.getLabel());
-    // details = new ArrayList<>(details);
-    // details.addAll(executeDetail());
-    // }
 
     public void showDetails() {
         detailsPanel.showDetails(lastSelectedRowIndex, lastSelectedColIndex);
@@ -1025,24 +936,6 @@ public class FieldPerfReport extends SuperView implements Serializable {
     public void setSelectedReport(FieldPerfReportResultDTO[] selectedReport) {
         this.selectedReport = selectedReport;
     }
-
-
-
-    // public List<MaterializedServiceMessageSearchDTO> getDetails() {
-    // return details;
-    // }
-    //
-    // public void setDetails(List<MaterializedServiceMessageSearchDTO> details) {
-    // this.details = details;
-    // }
-    //
-    // public MaterializedServiceMessageSearchDTO getSelectedDetail() {
-    // return selectedDetail;
-    // }
-    //
-    // public void setSelectedDetail(MaterializedServiceMessageSearchDTO selectedDetail) {
-    // this.selectedDetail = selectedDetail;
-    // }
 
 
 

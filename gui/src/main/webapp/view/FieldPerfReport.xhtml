@@ -69,6 +69,7 @@
 		update="tabview1:fi_matnr, tabview1:fi_pmatnr, growl" />
 
 	<p:tabView id="tabview1" dynamic="true" effect="fade" effectDuration="fast" style="flex: 0 0 auto;">
+
 		<p:tab id="tabPanBasic" title="#{i18n.fieldperfreportview_pan_basic}">
 			<div class="ui-fluid custom-form-grid">
 				<!-- Zeile 1: Label + Autocomplete (styleClass="span-3-cols") -->
@@ -213,7 +214,6 @@
 		</p:tab>
 
 
-
 		<p:tab id="tabPanAdvanced" title="#{i18n.fieldperfreportview_pan_advanced}">
 			<div class="ui-fluid custom-form-grid">
 				<!-- Zeile mit 2 Spalten: 4 Elemente (Label, CheckboxMenu, Label, CheckboxMenu) -->
@@ -332,7 +332,6 @@
 		</p:tab>
 
 
-
 		<p:tab id="tabPanDefect" title="#{i18n.fieldperfreportview_pan_defect}">
 			<div class="ui-fluid custom-form-grid">
 				<!-- Zeile mit 2 Spalten: 4 Elemente (Label, InputText, Label, CheckboxMenu) -->
@@ -444,9 +443,11 @@
 			<h:outputText rendered="#{empty fieldPerfReport.reportData}" value="#{i18n.operation_fetch_no_data}" />
 		</p:tab>
 
+
 		<p:tab id="tabPanDetails" title="#{i18n.fieldperfreportview_tabpan_details}" >
 			<ui:include src="../dialog/panel/FieldPerfDetailsPanel.xhtml"/>
 		</p:tab>
+
 	</p:tabView>
 
 <!-- Ziel für das Kontextmenü, das ohne "for=..." überall auf der Seite gelten würde.
@@ -621,7 +622,7 @@ function onCellContextMenu(event, rIdx, cIdx) {
 	document.getElementById('form:currentSelectionTimestamp').value = Date.now();
 	
 	// 5.: DOM noch intakt: Werte für die Kopier-Erweiterung auslesen und puffern
-	updateContextData(event, 'form', 'data');
+	updateContextData(event, 'form', 'data', true);
 
 	// 6.: Das Update der Tabelle serverseitig auslösen
 	rcSelectCellAndDraw([

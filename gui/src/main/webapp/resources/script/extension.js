@@ -1,6 +1,6 @@
 
 // Copy & Paste für Zell- und Zeileninhalte einer Tabelle
-function updateContextData(event, formPrefix = 'form', varPrefix = '') {
+function updateContextData(event, formPrefix = 'form', varPrefix = '', hasFrozenCols = false) {
 // Für eingebettete Panels ist das formPrefix form:tabView2 und wenn ein Dialog mehrere Panels eingebettet hat, gibt es einen Konflikt mit gleichen
 // Variablennamen. Daher müssen die Variablen einen Präfix (oder Postfix) haben, um eindeutig zu sein. Diesen gbt man ebenfalls an.
 	const target = event.target;
@@ -14,10 +14,42 @@ function updateContextData(event, formPrefix = 'form', varPrefix = '') {
 	const cellValue = getCellValue(cell);
 
 	// CSV-Zeile
-	const rowCsv = Array.from(row.children)
-		.map(getCellValue)
-		.map(val => '"' + val.replace(/"/g, '""') + '"'
-	).join(',');
+	let rowCsv;
+	if (hasFrozenCols) {
+		// Gesamte Zeile (Frozen + Scrollable) ermitteln
+		let allCells = [];
+		const rowIndex = row.getAttribute('data-ri');
+
+		if (rowIndex !== null) {
+			// Sucht den Hauptcontainer der PrimeFaces-Tabelle
+			const dataTable = row.closest('.ui-datatable');
+			if (dataTable) {
+				// Findet BEIDE Zeilen-Hälften (links und rechts) über den Row-Index.
+				// Da PrimeFaces sie im DOM von links nach rechts aufbaut, stimmt auch die Reihenfolge im Array automatisch.
+				const matchingRows = dataTable.querySelectorAll('tr[data-ri="' + rowIndex + '"]');
+				matchingRows.forEach(matchedRow => {
+					allCells = allCells.concat(Array.from(matchedRow.children));
+				});
+			} else {
+				allCells = Array.from(row.children);
+			}
+		} else {
+			// Fallback für Header/Footer oder Tabellen ohne data-ri
+			allCells = Array.from(row.children);
+		}
+
+		// CSV-Zeile aus den zusammengeführten Zellen bauen
+		rowCsv = allCells
+			.map(getCellValue)
+			.map(val => '"' + val.replace(/"/g, '""') + '"')
+			.join(',');
+	}
+	else{
+		rowCsv = Array.from(row.children)
+			.map(getCellValue)
+			.map(val => '"' + val.replace(/"/g, '""') + '"')
+			.join(',');
+	}
 
 	// Nutze JSF-spezifische ID-Namen
 	document.querySelector('[name="' + formPrefix + ':' + varPrefix + 'cellText"]').value = cellValue;
