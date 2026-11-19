@@ -571,11 +571,11 @@ public class FieldPerfReport extends SuperView implements Serializable {
     }
 
 
-    public void abc() {
+    public void showCauses() {
         causesPanel.showCauses(lastSelectedRowIndex, lastSelectedColIndex);
     }
 
-    public void partAnalysis() {
+    public void showPartAnalysis() {
         if (!isDetailPossible(lastSelectedRowIndex, lastSelectedColIndex)) {
             return;
         }

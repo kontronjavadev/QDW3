@@ -449,6 +449,11 @@
 			<ui:include src="../dialog/panel/FieldPerfDetailsPanel.xhtml"/>
 		</p:tab>
 
+
+		<p:tab id="tabPanCauses" title="#{i18n.fieldperfreportview_tabpan_causes}" >
+			<ui:include src="../dialog/panel/FieldPerfCausesPanel.xhtml"/>
+		</p:tab>
+
 	</p:tabView>
 
 <!-- Ziel für das Kontextmenü, das ohne "for=..." überall auf der Seite gelten würde.
@@ -481,12 +486,13 @@ sondern in der Funktion "onCellContextMenu()", bevor der DOM-Baum vernichtet wir
 			action="#{fieldPerfReport.appendDetails}" ajax="true" update=":form:tabview2:panDetails :form:tabview2:panDetailsSummary growl" 
 			rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;SUPERUSER')}" />
 
-		<p:menuitem id="panData_mniABC" icon="pi pi-chart-bar" value="#{i18n.fieldperfreportview_action_abc}" 
-			action="#{fieldPerfReport.abc}" ajax="true" update="growl" 
+		<p:menuitem id="panData_mniCauses" icon="pi pi-chart-bar" value="#{i18n.fieldperfreportview_action_causes}" 
+			action="#{fieldPerfReport.showCauses}" ajax="true" update=":form:tabview2:panCauses :form:tabview2:panCausesSummary growl" 
 			rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;SUPERUSER')}" />
 
+<!-- update-tag nicht vergessen! -->
 		<p:menuitem id="panData_mniPartanalysis" icon="pi pi-chart-bar" value="#{i18n.fieldperfreportview_action_partanalysis}" 
-			action="#{fieldPerfReport.partAnalysis}" ajax="true" update="growl" 
+			action="#{fieldPerfReport.showPartAnalysis}" ajax="true" update="growl" 
 			rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;SUPERUSER')}" />
 
 
@@ -644,7 +650,7 @@ function onRightClickComplete(xhr, status, args) {
 }
 
 function toggleMenuDetails(isPossible) {
-	var $items = $('#form\\:panData_mniShowDetails, #form\\:panData_mniAppendDetails, #form\\:panData_mniABC, #form\\:panData_mniPartanalysis');
+	var $items = $('#form\\:panData_mniShowDetails, #form\\:panData_mniAppendDetails, #form\\:panData_mniCauses, #form\\:panData_mniPartanalysis');
 	if (isPossible) {
 		$items.removeClass('ui-state-disabled');
 	} else {

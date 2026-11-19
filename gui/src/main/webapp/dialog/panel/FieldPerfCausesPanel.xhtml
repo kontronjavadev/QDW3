@@ -9,27 +9,21 @@
 		selection="#{fieldPerfCausesPanel.selectedCause}" selectionMode="single" multiViewState="true" 
 		loadingMessage="#{i18n.action_fetch_data}" 
 		value="#{fieldPerfCausesPanel.causes}" scrollable="true" styleClass="viewScrollable fieldPerfReportSummaryScrollable" 
-		rowKey="#{causeRow.id}" >
+		rowKey="#{causeRow.cause}" >
 
-		<p:column sortBy="#{causeRow.id}" width="120" >
+		<p:column sortBy="#{causeRow.cause}" width="250" 
+			exportValue="#{repairErrorCodeViewItem.name}" class="tdnowrap" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materializedservicemessageview_id}"/>
+				<h:outputText value="#{i18n.col_fieldperfreportview_causes_causename}"/>
 			</f:facet>
-			<h:outputText value="#{causeRow.id}" />
+			<h:outputText value="#{causeRow.cause}" styleClass="pf-tooltip-target" />
 		</p:column>
 
-		<p:column sortBy="#{causeRow.plant}" width="80" >
+		<p:column sortBy="#{causeRow.cnt}" width="80" >
 			<f:facet name="header">
-				<h:outputText value="#{i18n.lbl_attr_materializedentitiy_plant}"/>
+				<h:outputText value="#{i18n.col_fieldperfreportview_causes_cnt}"/>
 			</f:facet>
-			<h:outputText value="#{causeRow.plant}" />
-		</p:column>
-
-		<p:column sortBy="#{causeRow.serviceOrder}" width="120" >
-			<f:facet name="header">
-				<h:outputText value="#{i18n.col_materializedservicemessageview_serviceorder}"/>
-			</f:facet>
-			<h:outputText value="#{causeRow.serviceOrder}" />
+			<h:outputText value="#{causeRow.cnt}" />
 		</p:column>
 
 	</p:dataTable>
