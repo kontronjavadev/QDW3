@@ -1,0 +1,51 @@
+<ui:composition xmlns="https://jakarta.ee/xml/ns/jakartaee"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:h="jakarta.faces.html"
+	xmlns:f="jakarta.faces.core"
+	xmlns:p="http://primefaces.org/ui">
+
+	<p:dataTable id="panCauses" var="causeRow" rowIndexVar="rowIdx" 
+		selectionTextDisabled="false" allowUnsorting="true" resizeMode="expand" resizableColumns="true" 
+		selection="#{fieldPerfCausesPanel.selectedCause}" selectionMode="single" multiViewState="true" 
+		loadingMessage="#{i18n.action_fetch_data}" 
+		value="#{fieldPerfCausesPanel.causes}" scrollable="true" styleClass="viewScrollable fieldPerfReportSummaryScrollable" 
+		rowKey="#{causeRow.id}" >
+
+		<p:column sortBy="#{causeRow.id}" width="120" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedservicemessageview_id}"/>
+			</f:facet>
+			<h:outputText value="#{causeRow.id}" />
+		</p:column>
+
+		<p:column sortBy="#{causeRow.plant}" width="80" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.lbl_attr_materializedentitiy_plant}"/>
+			</f:facet>
+			<h:outputText value="#{causeRow.plant}" />
+		</p:column>
+
+		<p:column sortBy="#{causeRow.serviceOrder}" width="120" >
+			<f:facet name="header">
+				<h:outputText value="#{i18n.col_materializedservicemessageview_serviceorder}"/>
+			</f:facet>
+			<h:outputText value="#{causeRow.serviceOrder}" />
+		</p:column>
+
+	</p:dataTable>
+	<p/>
+
+	<h:outputText id="panCausesSummary" styleClass="label-field-mandatory" value="#{i18n.result_total_number_records} #{fieldPerfCausesPanel.causes.size()}"/>
+
+
+
+<!--Kontextmenü mit Möglichkeit, eine Zelle oder eine Zeile zu kopieren -->
+	<h:inputHidden id="causescellText" value="#{fieldPerfCausesPanel.cellText}" />
+	<h:inputHidden id="causesrowCsv" value="#{fieldPerfCausesPanel.rowCsv}" />
+
+	<p:contextMenu for="panCauses" beforeShow="updateContextData(event, 'form:tabview2', 'causes')" >
+		<p:menuitem value="#{i18n.ctxmenu_copy_cell}" actionListener="#{fieldPerfCausesPanel.copyCellToClipboard}" icon="pi pi-copy" update="@none"/>
+		<p:menuitem value="#{i18n.ctxmenu_copy_row}" actionListener="#{fieldPerfCausesPanel.copyRowToClipboard}" icon="pi pi-copy" update="@none"/>
+	</p:contextMenu>
+
+</ui:composition>

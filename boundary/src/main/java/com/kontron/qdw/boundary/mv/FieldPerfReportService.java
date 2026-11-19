@@ -14,6 +14,7 @@ import com.kontron.qdw.domain.material.Material;
 import com.kontron.qdw.domain.material.SerialNumberSetItem;
 import com.kontron.qdw.dto.base.*;
 import com.kontron.qdw.dto.mv.*;
+import com.kontron.qdw.dto.mv.report.FieldPerfReportCauseResultRecord;
 import com.kontron.qdw.dto.mv.report.FieldPerfReportSearchObject;
 import com.kontron.qdw.dto.service.RepairErrorCodeListDTO;
 import com.kontron.qdw.repository.material.*;
@@ -43,6 +44,11 @@ public class FieldPerfReportService {
     @EJB
     private SerialNumberSetRepository serNrSetRepo;
 
+
+
+    /* ***************** *
+     * Report Hauptseite *
+     * ***************** */
 
     @PermitAll
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
@@ -166,7 +172,6 @@ public class FieldPerfReportService {
     }
 
 
-
     @PermitAll
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public HashMap<String, Long> getLastYearReturn(FieldPerfReportSearchObject input) {
@@ -277,7 +282,6 @@ public class FieldPerfReportService {
     }
 
 
-
     @PermitAll
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public HashMap<String, Long> getFirstYearReturn(FieldPerfReportSearchObject input) {
@@ -386,7 +390,6 @@ public class FieldPerfReportService {
     }
 
 
-
     @PermitAll
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public HashMap<String, HashMap<String, Long>> getReturnValuesOfAnalysisInterval(FieldPerfReportSearchObject input) {
@@ -487,6 +490,10 @@ public class FieldPerfReportService {
 
 
 
+    /* ****************** *
+     * Report Detailseite *
+     * ****************** */
+
     @PermitAll
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public List<MaterializedServiceMessageSearchDTO> getAllDetailData(FieldPerfReportSearchObject input) {
@@ -501,7 +508,7 @@ public class FieldPerfReportService {
 
         // Iterate over all analysis periods
         for (int k = 0; k < (input.getSelectedAnalInterval() + input.getSelectedReturnInterval() - 1); k++) {
-            List<MaterializedServiceMessageSearchDTO> stepDetail = performReturnReportDetailStep(input,
+            List<MaterializedServiceMessageSearchDTO> stepDetail = performDetailStep(input,
                     startShipDate, endShipDate, startRepairDate, endRepairDate);
             repairs.addAll(stepDetail);
 
@@ -520,6 +527,7 @@ public class FieldPerfReportService {
     public List<MaterializedServiceMessageSearchDTO> getFieldPerformanceReportDetailData(FieldPerfReportSearchObject input) {
         LocalDate startShipDate = calculateDate(input, DateEnumeration.SHIPMENT_START);
         LocalDate endShipDate = calculateDate(input, DateEnumeration.SHIPMENT_END);
+
         LocalDate startRepairDate = calculateDate(input, DateEnumeration.REPAIR_START);
         LocalDate endRepairDate = calculateDate(input, DateEnumeration.REPAIR_END);
 
@@ -527,7 +535,7 @@ public class FieldPerfReportService {
             List<MaterializedServiceMessageSearchDTO> repairs = new ArrayList<MaterializedServiceMessageSearchDTO>();
 
             for (int k = 0; k < input.getSelectedAnalInterval(); k++) {
-                List<MaterializedServiceMessageSearchDTO> stepDetail = performReturnReportDetailStep(input,
+                List<MaterializedServiceMessageSearchDTO> stepDetail = performDetailStep(input,
                         startShipDate, endShipDate, startRepairDate, endRepairDate);
                 repairs.addAll(stepDetail);
 
@@ -541,10 +549,75 @@ public class FieldPerfReportService {
             return repairs;
         }
 
-        return performReturnReportDetailStep(input, startShipDate, endShipDate, startRepairDate, endRepairDate);
+        return performDetailStep(input, startShipDate, endShipDate, startRepairDate, endRepairDate);
     }
 
 
+
+    /* ******************* *
+     * Report Causes-Seite *
+     * ******************* */
+
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public List<FieldPerfReportCauseResultRecord> getAllErrorCodes(FieldPerfReportSearchObject input) {
+        LocalDate startShipDate = input.getStartDate().minusMonths(input.getSelectedQualityPeriod() - 1);
+        LocalDate endShipDate = input.getStartDate().plusMonths(1);
+
+        LocalDate startRepairDate = input.getStartDate();
+        LocalDate endRepairDate = input.getStartDate().plusMonths(1);
+
+
+        Map<String, Integer> returnValuesMap = new HashMap<>();
+
+        for (int k = 0; k < (input.getSelectedAnalInterval() + input.getSelectedReturnInterval() - 1); k++) {
+            Map<String, Integer> tempMap = performErrorCodeStep(input, startShipDate, endShipDate, startRepairDate, endRepairDate);
+            tempMap.forEach((key, value) -> returnValuesMap.merge(key, value, Integer::sum));
+
+            startShipDate = startShipDate.plusMonths(1);
+            endShipDate = endShipDate.plusMonths(1);
+
+            startRepairDate = startRepairDate.plusMonths(1);
+            endRepairDate = endRepairDate.plusMonths(1);
+        }
+
+        return convertToRecordList(returnValuesMap);
+    }
+
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public List<FieldPerfReportCauseResultRecord> getErrorCodeReport(FieldPerfReportSearchObject input) {
+        LocalDate startShipDate = calculateDate(input, DateEnumeration.SHIPMENT_START);
+        LocalDate endShipDate = calculateDate(input, DateEnumeration.SHIPMENT_END);
+
+        LocalDate startRepairDate = calculateDate(input, DateEnumeration.REPAIR_START);
+        LocalDate endRepairDate = calculateDate(input, DateEnumeration.REPAIR_END);
+
+        if (input.getReturnDate() == null && input.getShipDate() == null) {
+            Map<String, Integer> returnValuesMap = new HashMap<>();
+
+            for (int k = 0; k < input.getSelectedAnalInterval(); k++) {
+                Map<String, Integer> tempMap = performErrorCodeStep(input, startShipDate, endShipDate, startRepairDate, endRepairDate);
+                tempMap.forEach((key, value) -> returnValuesMap.merge(key, value, Integer::sum));
+
+                startShipDate = startShipDate.plusMonths(1);
+                endShipDate = endShipDate.plusMonths(1);
+
+                startRepairDate = startRepairDate.plusMonths(1);
+                endRepairDate = endRepairDate.plusMonths(1);
+            }
+
+            return convertToRecordList(returnValuesMap);
+        }
+
+        return convertToRecordList(performErrorCodeStep(input, startShipDate, endShipDate, startRepairDate, endRepairDate));
+    }
+
+
+
+    /* ************* *
+     * Hilfsmethoden *
+     * ************* */
 
     /**
      * Add standard filter criteria for all queries this bean provides
@@ -726,7 +799,6 @@ public class FieldPerfReportService {
     }
 
 
-
     /**
      * @param name Name des jpql-Attributs, etwa "a.id"
      * @param filter Suchkriterium
@@ -786,7 +858,6 @@ public class FieldPerfReportService {
     }
 
 
-
     /**
      * @return <code>true</code> wenn die Abfrage auf die aggregierte materialized view angewandt werden kann, sonst <code>false</code>
      */
@@ -819,7 +890,7 @@ public class FieldPerfReportService {
 
 
 
-    private List<MaterializedServiceMessageSearchDTO> performReturnReportDetailStep(FieldPerfReportSearchObject input,
+    private List<MaterializedServiceMessageSearchDTO> performDetailStep(FieldPerfReportSearchObject input,
             LocalDate startShipDate, LocalDate endShipDate, LocalDate startRepairDate, LocalDate endRepairDate) {
         String rmaDate;
         if (input.getSelectedRmaCntType() == RMACountingType.CLOSED_BY_ARRIVAL_DATE
@@ -844,10 +915,10 @@ public class FieldPerfReportService {
         setupFilterCriteria(queryStatement, input, false, false);
 
         TypedQuery<MaterializedServiceMessageSearchDTO> query = em.createQuery(queryStatement.toString(), MaterializedServiceMessageSearchDTO.class);
-        query.setParameter("startRepairDate", startRepairDate);
-        query.setParameter("endRepairDate", endRepairDate);
         query.setParameter("startShipDate", startShipDate);
         query.setParameter("endShipDate", endShipDate);
+        query.setParameter("startRepairDate", startRepairDate);
+        query.setParameter("endRepairDate", endRepairDate);
 
         return query.getResultList();
     }
@@ -938,6 +1009,60 @@ public class FieldPerfReportService {
 
         return statementBuilder.toString();
     }
+
+
+
+    private Map<String, Integer> performErrorCodeStep(FieldPerfReportSearchObject input,
+            LocalDate startShipDate, LocalDate endShipDate, LocalDate startRepairDate, LocalDate endRepairDate) {
+        String rmaDate;
+        if (input.getSelectedRmaCntType() == RMACountingType.CLOSED_BY_ARRIVAL_DATE
+                || input.getSelectedRmaCntType() == RMACountingType.ALL_BY_ARRIVAL_DATE) {
+            rmaDate = "a.internalArrivalDate";
+        }
+        else {
+            rmaDate = "a.internalShipmentDate";
+        }
+
+        // HashMap<String, Long> returnValuesMap = new HashMap<String, Long>();
+
+        StringBuilder queryStatement = new StringBuilder("select a.errorCodeName, count(a) from MaterializedServiceMessage a ");
+        queryStatement.append("where ").append(rmaDate).append(" >= :startRepairDate and ").append(rmaDate).append(" < :endRepairDate ");
+
+        if (input.getSelectedRmaCntType() == RMACountingType.CLOSED_BY_ARRIVAL_DATE) {
+            queryStatement.append(" and a.internalShipmentDate is not null ");
+        }
+
+        queryStatement.append("and a.customerShipmentDate >= :startShipDate and a.customerShipmentDate < :endShipDate ");
+
+        // Add standard filter criteria
+        setupFilterCriteria(queryStatement, input, false, false);
+
+        queryStatement.append("group by a.errorCodeName ");
+
+        TypedQuery<Object[]> query = em.createQuery(queryStatement.toString(), Object[].class);
+        query.setParameter("startShipDate", startShipDate);
+        query.setParameter("endShipDate", endShipDate);
+        query.setParameter("startRepairDate", startRepairDate);
+        query.setParameter("endRepairDate", endRepairDate);
+
+        List<Object[]> result = query.getResultList();
+        Map<String, Integer> returnValuesMap = new HashMap<>();
+        result.stream()
+                .forEach(values -> {
+                    String errorCode = (String) values[0];
+                    int counter = ((Number) values[1]).intValue();
+                    returnValuesMap.put(errorCode, counter);
+                });
+
+        return returnValuesMap;
+    }
+
+    private List<FieldPerfReportCauseResultRecord> convertToRecordList(Map<String, Integer> map) {
+        return map.entrySet().stream()
+                .map(entry -> new FieldPerfReportCauseResultRecord(entry.getKey(), entry.getValue()))
+                .collect(Collectors.toList());
+    }
+
 
     /**
      * Calculate date value by given input and selected interval boundary

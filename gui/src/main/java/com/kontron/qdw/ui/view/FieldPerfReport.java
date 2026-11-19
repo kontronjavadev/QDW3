@@ -40,6 +40,7 @@ import com.kontron.qdw.dto.service.RMATypeListDTO;
 import com.kontron.qdw.dto.service.RepairErrorCodeListDTO;
 import com.kontron.qdw.service.SavedQueryService;
 import com.kontron.qdw.ui.UserSession;
+import com.kontron.qdw.ui.panel.FieldPerfCausesPanel;
 import com.kontron.qdw.ui.panel.FieldPerfDetailsPanel;
 import com.kontron.qdw.ui.view.util.SuperView;
 
@@ -85,9 +86,12 @@ public class FieldPerfReport extends SuperView implements Serializable {
     private final transient PlantBoundaryService plantService;
     private final transient MaterializedServiceMessageBoundaryService servMsgService;
     private final transient RepairErrorCodeBoundaryService repErrorService;
+
     private final transient FieldPerfReportService reportService;
 
     private final transient FieldPerfDetailsPanel detailsPanel;
+    private final transient FieldPerfCausesPanel causesPanel;
+
 
     private final UserSession userSession;
     private transient ResourceBundle bundle;
@@ -138,6 +142,7 @@ public class FieldPerfReport extends SuperView implements Serializable {
         repErrorService = null;
         reportService = null;
         detailsPanel = null;
+        causesPanel = null;
     }
 
     @Inject
@@ -147,7 +152,7 @@ public class FieldPerfReport extends SuperView implements Serializable {
             MaterialTypeBoundaryService matTypeService, MaterialClassBoundaryService matClassService, PlantBoundaryService plantService,
             MaterializedServiceMessageBoundaryService servMsgService, RepairErrorCodeBoundaryService repErrorService,
             FieldPerfReportService reportService,
-            FieldPerfDetailsPanel detailsPanel) {
+            FieldPerfDetailsPanel detailsPanel, FieldPerfCausesPanel causesPanel) {
         this.userSession = userSession;
         this.queryManager = queryManager;
 
@@ -164,6 +169,7 @@ public class FieldPerfReport extends SuperView implements Serializable {
         this.repErrorService = repErrorService;
         this.reportService = reportService;
         this.detailsPanel = detailsPanel;
+        this.causesPanel = causesPanel;
     }
 
     public void initView() {
@@ -193,7 +199,11 @@ public class FieldPerfReport extends SuperView implements Serializable {
         }
 
         detailsPanel.setCurrentPageURL(FieldPerfReport.PAGE_URL);
-        detailsPanel.initView(this::getReportSearchObj, this::getReportHeader, this::getReportData, this::setTabIndex);
+        detailsPanel.initView(this::getReportSearchObj, this::getReportHeader, this::getReportData,
+                (r, c) -> isDetailPossible(r, c), this::setTabIndex);
+
+        causesPanel.initView(this::getReportSearchObj, this::getReportHeader, this::getReportData,
+                (r, c) -> isDetailPossible(r, c), this::setTabIndex);
 
         logger.debug("View initialization finished");
     }
@@ -237,6 +247,7 @@ public class FieldPerfReport extends SuperView implements Serializable {
             reportData = formatResult(reportSearchObj, returnData, shipPerMonth, qRelevantReturn, lastYearReturn);
             reportHeader = reportData.remove(0);
             detailsPanel.reset();
+            causesPanel.reset();
         }
         catch (final Exception e) {
             logger.error("Error while executing report!", e);
@@ -471,8 +482,8 @@ public class FieldPerfReport extends SuperView implements Serializable {
 
 
         // Identifikation der Datumskoordinaten
-        // FieldPerfReportResultDTO colHeader = reportHeader[colIndex];
-        // FieldPerfReportResultDTO rowHeader = reportData.get(rowIndex)[0];
+        // FieldPerfReportResultDTO colHeader = reportHeader[colIndex]; // Spaltenüberschriften
+        // FieldPerfReportResultDTO rowHeader = reportData.get(rowIndex)[0]; // Zeilenbeschriftungen
         // logger.info("Koondinaten Spalte {}, Zeile {}", colHeader, rowHeader);
 
         // gewählte Zelle
@@ -533,7 +544,20 @@ public class FieldPerfReport extends SuperView implements Serializable {
     }
 
     public boolean isDetailPossible(int rowIndex, int colIndex) {
-        return detailsPanel.isDetailPossible(lastSelectedRowIndex, lastSelectedColIndex);
+        if (rowIndex <= 0 || colIndex <= 0) {
+            // keine Auswahl oder Zeilenüberschrift oder Shipments-Zeile gewählt (Spaltenüberschrift ist nicht anwählbar)
+            return false;
+        }
+        if (rowIndex > reportData.size() - 1 - 3) {
+            // eine der letzten drei Zeilen gewählt. Details ist nur bis Zeile "sum" verfügbar.
+            return false;
+        }
+        FieldPerfReportResultDTO clickedCell = reportData.get(rowIndex)[colIndex];
+        if (StringUtils.isEmpty(clickedCell.getLabel())) {
+            // in der Zelle steht nichts. Zelle ist also außerhalb des analysierbaren Bereichs. Details nicht möglich.
+            return false;
+        }
+        return true;
     }
 
 
@@ -548,21 +572,15 @@ public class FieldPerfReport extends SuperView implements Serializable {
 
 
     public void abc() {
-        if (!isDetailPossible(lastSelectedRowIndex, lastSelectedColIndex)) {
-            return;
-        }
-        FieldPerfReportResultDTO rowHeader = reportData.get(lastSelectedRowIndex)[0];
-        FieldPerfReportResultDTO colHeader = reportHeader[lastSelectedColIndex];
-
-        logger.info("abc() von (x) supp arrival {} und (y) repair arrival {}", colHeader.getLabel(), rowHeader.getLabel());
+        causesPanel.showCauses(lastSelectedRowIndex, lastSelectedColIndex);
     }
 
     public void partAnalysis() {
         if (!isDetailPossible(lastSelectedRowIndex, lastSelectedColIndex)) {
             return;
         }
-        FieldPerfReportResultDTO rowHeader = reportData.get(lastSelectedRowIndex)[0];
         FieldPerfReportResultDTO colHeader = reportHeader[lastSelectedColIndex];
+        FieldPerfReportResultDTO rowHeader = reportData.get(lastSelectedRowIndex)[0];
 
         logger.info("partAnalysis() von (x) supp arrival {} und (y) repair arrival {}", colHeader.getLabel(), rowHeader.getLabel());
     }

@@ -8,11 +8,9 @@ import java.lang.invoke.MethodHandles;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.util.*;
-import java.util.function.IntConsumer;
-import java.util.function.Supplier;
+import java.util.function.*;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.StringUtils;
 import org.primefaces.PrimeFaces;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,10 +43,10 @@ public class FieldPerfDetailsPanel extends CopyClipboard implements Serializable
     private final transient FieldPerfReportService reportService;
 
     private String currentPageURL;
-    // private long selectedObjectId;
     private Supplier<FieldPerfReportSearchObject> searchObjSupp;
     private Supplier<FieldPerfReportResultDTO[]> reportHeaderSupp;
     private Supplier<List<FieldPerfReportResultDTO[]>> reportDataSupp;
+    private BiFunction<Integer, Integer, Boolean> detailPossible;
     private IntConsumer tabIndexCons;
 
     private List<MaterializedServiceMessageSearchDTO> details = new ArrayList<>();
@@ -72,6 +70,7 @@ public class FieldPerfDetailsPanel extends CopyClipboard implements Serializable
     public void initView(Supplier<FieldPerfReportSearchObject> searchObjSupp,
             Supplier<FieldPerfReportResultDTO[]> reportHeaderSupp,
             Supplier<List<FieldPerfReportResultDTO[]>> reportDataSupp,
+            BiFunction<Integer, Integer, Boolean> detailPossible,
             IntConsumer tabIndexCons) {
         logger.debug("Initialize grid panel");
 
@@ -80,6 +79,7 @@ public class FieldPerfDetailsPanel extends CopyClipboard implements Serializable
         this.searchObjSupp = searchObjSupp;
         this.reportHeaderSupp = reportHeaderSupp;
         this.reportDataSupp = reportDataSupp;
+        this.detailPossible = detailPossible;
         this.tabIndexCons = tabIndexCons;
 
         logger.debug("Grid panel initialization finished");
@@ -93,7 +93,7 @@ public class FieldPerfDetailsPanel extends CopyClipboard implements Serializable
 
 
     public void showDetails(int rowIndex, int colIndex) {
-        if (!isDetailPossible(rowIndex, colIndex)) {
+        if (!detailPossible.apply(rowIndex, colIndex)) {
             return;
         }
         logger.info("showDetails() zu (x, y): {}, {}", rowIndex, colIndex);
@@ -106,7 +106,7 @@ public class FieldPerfDetailsPanel extends CopyClipboard implements Serializable
     }
 
     public void appendDetails(int rowIndex, int colIndex) {
-        if (!isDetailPossible(rowIndex, colIndex)) {
+        if (!detailPossible.apply(rowIndex, colIndex)) {
             return;
         }
         logger.info("appendDetails() zu (x, y): {}, {}", rowIndex, colIndex);
@@ -124,11 +124,11 @@ public class FieldPerfDetailsPanel extends CopyClipboard implements Serializable
 
 
     private List<MaterializedServiceMessageSearchDTO> executeDetail(int rowIndex, int colIndex) {
-        if (!isDetailPossible(rowIndex, colIndex)) {
+        if (!detailPossible.apply(rowIndex, colIndex)) {
             return Collections.emptyList();
         }
-        String shipValue = reportHeaderSupp.get()[colIndex].getLabel(); // rowHeader: supplier arrival (shipped)
-        String returnValue = reportDataSupp.get().get(rowIndex)[0].getLabel(); // colHeader: repair arrival (returned)
+        String shipValue = reportHeaderSupp.get()[colIndex].getLabel(); // colHeader, Spaltenüberschriften: supplier arrival (shipped)
+        String returnValue = reportDataSupp.get().get(rowIndex)[0].getLabel(); // rowHeader, Zeilenbeschriftungen: repair arrival (returned)
 
         logger.info("Perform details execution for (x) supplier arrival (shipped) {} and (y) repair arrival (returned) {}",
                 shipValue, returnValue);
@@ -164,23 +164,6 @@ public class FieldPerfDetailsPanel extends CopyClipboard implements Serializable
         else {
             return reportService.getFieldPerformanceReportDetailData(searchObjSupp.get());
         }
-    }
-
-    public boolean isDetailPossible(int rowIndex, int colIndex) {
-        if (rowIndex <= 0 || colIndex <= 0) {
-            // keine Auswahl oder Zeilenüberschrift oder Shipments-Zeile gewählt (Spaltenüberschrift ist nicht anwählbar)
-            return false;
-        }
-        if (rowIndex > reportDataSupp.get().size() - 1 - 3) {
-            // eine der letzten drei Zeilen gewählt. Details ist nur bis Zeile "sum" verfügbar.
-            return false;
-        }
-        FieldPerfReportResultDTO clickedCell = reportDataSupp.get().get(rowIndex)[colIndex];
-        if (StringUtils.isEmpty(clickedCell.getLabel())) {
-            // in der Zelle steht nichts. Zelle ist also außerhalb des analysierbaren Bereichs. Details nicht möglich.
-            return false;
-        }
-        return true;
     }
 
 
