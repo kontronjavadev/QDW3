@@ -453,14 +453,14 @@ public class FieldPerfReport extends SuperView implements Serializable {
 
 
 
-    public void onCellClick(int rowIndex, int colIndex) {
+    public void _____onCellClick(int rowIndex, int colIndex) {
         // war es ein Doppelklick?
         if (rowIndex == lastSelectedRowIndex && colIndex == lastSelectedColIndex
                 && (currentSelectionTimestamp - lastSelectionTimestamp) <= DOUBLE_CLICK_THRESHOLD_MS) {
             // Zeitstempel zurücksetzen, damit ein 3. Klick nicht sofort wieder als Doppelklick zählt
             lastSelectionTimestamp = 0L;
 
-            onCellDoubleClick(rowIndex, colIndex);
+            _____onCellDoubleClick(rowIndex, colIndex);
             return;
         }
 
@@ -516,13 +516,13 @@ public class FieldPerfReport extends SuperView implements Serializable {
         logger.trace("selectedReport: {}", FieldPerfReportResultDTO.reportArrayToString(selectedReport));
     }
 
-    public void onCellDoubleClick(int rowIndex, int colIndex) {
+    public void _____onCellDoubleClick(int rowIndex, int colIndex) {
         logger.info("Doppelklick auf Zelle - Spalte {}, Zeile {}", colIndex, rowIndex);
         showDetails();
         PrimeFaces.current().ajax().update("form:tabview2:panDetails", "form:tabview2:panDetailsSummary");
     }
 
-    public void onCellRightClick() {
+    public void _____onCellRightClick() {
         Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
         String rParam = params.get("rowIdx"); // aus xhtml
         String cParam = params.get("colIdx"); // aus xhtml
@@ -536,13 +536,54 @@ public class FieldPerfReport extends SuperView implements Serializable {
             lastSelectionTimestamp = 0L;
 
             // Farbkreuz und normale Selektionslogik ausführen
-            onCellClick(rIdx, cIdx);
+            _____onCellClick(rIdx, cIdx);
 
             // dem JavaScript in Echtzeit mitteilen, ob Details für DIESE Zelle möglich sind
             boolean possible = isDetailPossible(rIdx, cIdx);
             PrimeFaces.current().ajax().addCallbackParam("isPossible", possible);
         }
     }
+
+    public void onCellDoubleClickRemote() {
+        Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+        String rParam = params.get("rowIdx"); // aus xhtml
+        String cParam = params.get("colIdx"); // aus xhtml
+
+        if (rParam != null && cParam != null) {
+            int rIdx = Integer.parseInt(rParam);
+            int cIdx = Integer.parseInt(cParam);
+
+            logger.info("Doppelklick auf Zelle - Spalte {}, Zeile {}", cIdx, rIdx);
+            updateSelection(rIdx, cIdx);
+            showDetails();
+        }
+    }
+
+    public void onCellRightClick() {
+        Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+        String rParam = params.get("rowIdx"); // aus xhtml
+        String cParam = params.get("colIdx"); // aus xhtml
+
+        if (rParam != null && cParam != null) {
+            int rIdx = Integer.parseInt(rParam);
+            int cIdx = Integer.parseInt(cParam);
+
+            updateSelection(rIdx, cIdx);
+
+            // dem JavaScript in Echtzeit mitteilen, ob Details für DIESE Zelle möglich sind
+            boolean possible = isDetailPossible(rIdx, cIdx);
+            PrimeFaces.current().ajax().addCallbackParam("isPossible", possible);
+        }
+    }
+
+    private void updateSelection(int rowIndex, int colIndex) {
+        lastSelectedRowIndex = rowIndex;
+        lastSelectedColIndex = colIndex;
+        selectedReport = reportData.get(rowIndex);
+        logger.trace("selectedReport: {}", FieldPerfReportResultDTO.reportArrayToString(selectedReport));
+    }
+
+
 
     public boolean isDetailPossible(int rowIndex, int colIndex) {
         if (rowIndex <= 0 || colIndex <= 0) {

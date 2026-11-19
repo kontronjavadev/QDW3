@@ -410,15 +410,15 @@
 						<h:outputText value="#{fieldPerfReport.reportHeader[0].label}" style="#{fieldPerfReport.reportHeader[0].textStyle}" />
 					</f:facet>
 
-					<p:commandLink action="#{fieldPerfReport.onCellClick(rowIdx, 0)}" 
-						process="@this :form:currentSelectionTimestamp" 
-						update=":form:tabview2:panData :form:growl" 
-						onclick="document.getElementById('form:currentSelectionTimestamp').value = Date.now();"
+					<a href="#"
+						data-r="#{rowIdx}" data-c="0"
+						onclick="onCellLeftClick(event, #{rowIdx}, 0); return false;"
+						ondblclick="onCellDoubleClick(event, #{rowIdx}, 0); return false;"
 						oncontextmenu="onCellContextMenu(event, #{rowIdx}, 0);"
-						styleClass="cell-click-link" style="#{reportRow[0].cellStyle}" >
+						class="ui-commandlink ui-widget cell-click-link" style="#{reportRow[0].cellStyle}" >
 
 						<h:outputText value="#{reportRow[0].label}" style="#{reportRow[0].textStyle}" />
-					</p:commandLink>
+					</a>
 				</p:column>
 
 				<!-- 2. Die scrollbaren, dynamischen Spalten (ab Index 1) - wachsen bei Platz mit, schrumpfen aber nie unter min-width -->
@@ -429,15 +429,15 @@
 						<h:outputText value="#{fieldPerfReport.reportHeader[colIdx].label}" style="#{fieldPerfReport.reportHeader[colIdx].textStyle}" />
 					</f:facet>
 
-					<p:commandLink action="#{fieldPerfReport.onCellClick(rowIdx, colIdx)}" 
-						process="@this :form:currentSelectionTimestamp" 
-						update=":form:tabview2:panData :form:growl" 
-						onclick="document.getElementById('form:currentSelectionTimestamp').value = Date.now();"
+					<a href="#"
+						data-r="#{rowIdx}" data-c="#{colIdx}"
+						onclick="onCellLeftClick(event, #{rowIdx}, #{colIdx}); return false;"
+						ondblclick="onCellDoubleClick(event, #{rowIdx}, #{colIdx}); return false;"
 						oncontextmenu="onCellContextMenu(event, #{rowIdx}, #{colIdx});"
-						styleClass="cell-click-link" style="#{reportRow[colIdx].cellStyle}" >
+						class="ui-commandlink ui-widget cell-click-link" style="#{reportRow[colIdx].cellStyle}" >
 
 						<h:outputText value="#{reportRow[colIdx].label}" style="#{reportRow[colIdx].textStyle}" />
-					</p:commandLink>
+					</a>
 				</p:columns>
 			</p:dataTable>
 
@@ -574,10 +574,15 @@ sondern in der Funktion "onCellContextMenu()", bevor der DOM-Baum vernichtet wir
 
 	<h:inputHidden id="currentSelectionTimestamp" value="#{fieldPerfReport.currentSelectionTimestamp}" />
 
+	<p:remoteCommand name="rcCellDoubleClick" 
+		action="#{fieldPerfReport.onCellDoubleClickRemote}" 
+		process="@this" 
+		update=":form:tabview2:panDetails :form:tabview2:panDetailsSummary :form:growl" />
+
 	<p:remoteCommand name="rcSelectCellAndDraw" 
 		action="#{fieldPerfReport.onCellRightClick}" 
-		process="@this :form:currentSelectionTimestamp" 
-		update=":form:tabview2:panData" 
+		process="@this" 
+		update="@none" 
 		oncomplete="onRightClickComplete(xhr, status, args);" />
 
 <script>
@@ -614,6 +619,59 @@ document.addEventListener("DOMContentLoaded", function() {
 
 var lastContextMenuEvent = null;
 
+function highlightCrosshair(rIdx, cIdx) {
+	const table = document.getElementById('form:tabview2:panData');
+	if (!table) return;
+
+	// Nur bisher markierte Zellen zurücksetzen
+	table.querySelectorAll('.hl-active, .hl-selected').forEach(function(el) {
+		el.classList.remove('hl-active', 'hl-row', 'hl-col', 'hl-end-l', 'hl-end-r', 'hl-end-t', 'hl-end-b', 'hl-selected');
+	});
+
+	const rowCells = table.querySelectorAll('a.cell-click-link[data-r="' + rIdx + '"]');
+	const colCells = table.querySelectorAll('a.cell-click-link[data-c="' + cIdx + '"]');
+
+	// Zeile markieren + linkes/rechtes Ende
+	rowCells.forEach(function(el) {
+		el.classList.add('hl-active', 'hl-row');
+	});
+	if (rowCells.length > 0) {
+		rowCells[0].classList.add('hl-end-l');
+		rowCells[rowCells.length - 1].classList.add('hl-end-r');
+	}
+
+	// Spalte markieren + oberes/unteres Ende
+	colCells.forEach(function(el) {
+		el.classList.add('hl-active', 'hl-col');
+	});
+	if (colCells.length > 0) {
+		colCells[0].classList.add('hl-end-t');
+		colCells[colCells.length - 1].classList.add('hl-end-b');
+	}
+
+	// Angeklickte Zelle selbst hervorheben
+	const clickedCell = table.querySelector('a.cell-click-link[data-r="' + rIdx + '"][data-c="' + cIdx + '"]');
+	if (clickedCell) {
+		clickedCell.classList.remove('hl-active', 'hl-row', 'hl-col', 'hl-end-l', 'hl-end-r', 'hl-end-t', 'hl-end-b');
+		clickedCell.classList.add('hl-selected');
+	}
+}
+
+function onCellLeftClick(event, rIdx, cIdx) {
+	event.preventDefault();
+	highlightCrosshair(rIdx, cIdx);
+}
+
+function onCellDoubleClick(event, rIdx, cIdx) {
+	event.preventDefault();
+	highlightCrosshair(rIdx, cIdx);
+
+	rcCellDoubleClick([
+		{name: 'rowIdx', value: rIdx},
+		{name: 'colIdx', value: cIdx}
+	]);
+}
+
 function onCellContextMenu(event, rIdx, cIdx) {
 	// 1. Verhindert das Standard-Rechtsklick-Menü des Browsers
 	event.preventDefault(); 
@@ -625,18 +683,20 @@ function onCellContextMenu(event, rIdx, cIdx) {
 	// 3.: Das Event (inklusive exakter X/Y Mauskoordinaten) für später merken
 	lastContextMenuEvent = event; 
 
-	// 4.: Den aktuellen Zeitstempel für den Rechtsklick setzen
-	document.getElementById('form:currentSelectionTimestamp').value = Date.now();
-	
-	// 5.: DOM noch intakt: Werte für die Kopier-Erweiterung auslesen und puffern
+	// 4.: Fadenkreuz sofort clientseitig zeichnen
+	highlightCrosshair(rIdx, cIdx);
+
+	// 5.: Werte für die Kopier-Erweiterung auslesen und puffern
 	updateContextData(event, 'form', 'data', true);
 
-	// 6.: Das Update der Tabelle serverseitig auslösen
+	// 6.: Koordinaten an Bean senden und isPossible abfragen (ohne DOM-Update)
 	rcSelectCellAndDraw([
 		{name: 'rowIdx', value: rIdx},
 		{name: 'colIdx', value: cIdx}
 	]);
 }
+
+
 
 // Wird vom RemoteCommand aufgerufen, sobald der Server geantwortet hat
 function onRightClickComplete(xhr, status, args) {

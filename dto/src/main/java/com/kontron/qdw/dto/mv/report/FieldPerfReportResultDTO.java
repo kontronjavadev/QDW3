@@ -183,6 +183,10 @@ public class FieldPerfReportResultDTO implements Serializable {
     }
 
     public String getCellStyle() {
+        return "";
+    }
+
+    public String _____getCellStyle() {
         if (!highlightT && !highlightB && !highlightL && !highlightR && !highlightSelected) {
             return "";
         }
