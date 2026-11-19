@@ -412,7 +412,7 @@
 
 					<p:commandLink action="#{fieldPerfReport.onCellClick(rowIdx, 0)}" 
 						process="@this :form:currentSelectionTimestamp" 
-						update=":form:tabview2:panData :form:tabview2:panDetails :form:tabview2:panDetailsSummary form:growl" 
+						update=":form:tabview2:panData :form:growl" 
 						onclick="document.getElementById('form:currentSelectionTimestamp').value = Date.now();"
 						oncontextmenu="onCellContextMenu(event, #{rowIdx}, 0);"
 						styleClass="cell-click-link" style="#{reportRow[0].cellStyle}" >
@@ -431,7 +431,7 @@
 
 					<p:commandLink action="#{fieldPerfReport.onCellClick(rowIdx, colIdx)}" 
 						process="@this :form:currentSelectionTimestamp" 
-						update=":form:tabview2:panData :form:tabview2:panDetails :form:tabview2:panDetailsSummary form:growl" 
+						update=":form:tabview2:panData :form:growl" 
 						onclick="document.getElementById('form:currentSelectionTimestamp').value = Date.now();"
 						oncontextmenu="onCellContextMenu(event, #{rowIdx}, #{colIdx});"
 						styleClass="cell-click-link" style="#{reportRow[colIdx].cellStyle}" >

@@ -9,21 +9,21 @@
 		selection="#{fieldPerfCausesPanel.selectedCause}" selectionMode="single" multiViewState="true" 
 		loadingMessage="#{i18n.action_fetch_data}" 
 		value="#{fieldPerfCausesPanel.causes}" scrollable="true" styleClass="viewScrollable fieldPerfReportSummaryScrollable" 
-		rowKey="#{causeRow.cause}" >
+		rowKey="#{causeRow.cause()}" >
 
-		<p:column sortBy="#{causeRow.cause}" width="250" 
-			exportValue="#{repairErrorCodeViewItem.name}" class="tdnowrap" >
+		<p:column sortBy="#{causeRow.cause()}" width="250" 
+			exportValue="#{causeRow.cause()}" class="tdnowrap" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_fieldperfreportview_causes_causename}"/>
 			</f:facet>
-			<h:outputText value="#{causeRow.cause}" styleClass="pf-tooltip-target" />
+			<h:outputText value="#{causeRow.cause()}" styleClass="pf-tooltip-target" />
 		</p:column>
 
-		<p:column sortBy="#{causeRow.cnt}" width="80" >
+		<p:column sortBy="#{causeRow.cnt()}" width="80" >
 			<f:facet name="header">
 				<h:outputText value="#{i18n.col_fieldperfreportview_causes_cnt}"/>
 			</f:facet>
-			<h:outputText value="#{causeRow.cnt}" />
+			<h:outputText value="#{causeRow.cnt()}" />
 		</p:column>
 
 	</p:dataTable>

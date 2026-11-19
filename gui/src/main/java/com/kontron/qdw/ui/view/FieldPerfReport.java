@@ -519,6 +519,7 @@ public class FieldPerfReport extends SuperView implements Serializable {
     public void onCellDoubleClick(int rowIndex, int colIndex) {
         logger.info("Doppelklick auf Zelle - Spalte {}, Zeile {}", colIndex, rowIndex);
         showDetails();
+        PrimeFaces.current().ajax().update("form:tabview2:panDetails", "form:tabview2:panDetailsSummary");
     }
 
     public void onCellRightClick() {
