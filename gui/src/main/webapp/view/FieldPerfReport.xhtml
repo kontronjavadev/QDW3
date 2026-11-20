@@ -46,11 +46,17 @@
 			<p:menuitem value="#{i18n.search_input_dlg_save_query}" icon="pi pi-save" onclick="PF('dlgSaveQuery').show()"/>
 		</p:submenu>
 		<p:submenu icon="pi pi-print" label="#{i18n.mnu_export}">
-			<p:menuitem value="#{i18n.action_export_xls}" ajax="false" icon="pi pi-file-excel">
-				<p:dataExporter type="xlsxstream" target="panData" fileName="MaterialList"/>
+			<p:menuitem value="#{i18n.action_export_xls}: #{i18n.fieldperfreportview_tabpan_data}" ajax="false" icon="pi pi-file-excel">
+				<p:dataExporter type="xlsxstream" target=":form:tabview2:panData" fileName="FieldPerfReport_Matrix"/>
 			</p:menuitem>
-			<p:menuitem value="#{i18n.action_export_pdf}" ajax="false" icon="pi pi-file-pdf">
-				<p:dataExporter type="pdf" target="panData" fileName="MaterialList"/>
+			<p:menuitem value="#{i18n.action_export_xls}: #{i18n.fieldperfreportview_tabpan_details}" ajax="false" icon="pi pi-file-excel">
+				<p:dataExporter type="xlsxstream" target=":form:tabview2:panDetails" fileName="FieldPerfReport_Details"/>
+			</p:menuitem>
+			<p:menuitem value="#{i18n.action_export_xls}: #{i18n.fieldperfreportview_tabpan_causes}" ajax="false" icon="pi pi-file-excel">
+				<p:dataExporter type="xlsxstream" target=":form:tabview2:panCauses" fileName="FieldPerfReport_Causes"/>
+			</p:menuitem>
+			<p:menuitem value="#{i18n.action_export_xls}: #{i18n.fieldperfreportview_tabpan_parts}" ajax="false" icon="pi pi-file-excel">
+				<p:dataExporter type="xlsxstream" target=":form:tabview2:panParts" fileName="FieldPerfReport_Parts"/>
 			</p:menuitem>
 		</p:submenu>
 
