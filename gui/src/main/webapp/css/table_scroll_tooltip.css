@@ -621,7 +621,8 @@ body .ui-datatable.fieldPerfReportScrollable tbody td.clickable-td > a.cell-clic
 	--hl-cbl: var(--activemarked);
 	--hl-cbr: var(--activemarked);
 
-	background-color: color-mix(in srgb, var(--activemarked) 50%, transparent);
+	backdrop-filter: brightness(var(--hl-selected-brightness, 1));
+	background-color: var(--hl-selected-bg);
 	background-image:
 		radial-gradient(circle at 0 0, var(--hl-ctl), transparent 5px),
 		linear-gradient(var(--hl-ctl), var(--hl-ctl)),

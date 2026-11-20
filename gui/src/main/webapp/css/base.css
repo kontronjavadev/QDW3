@@ -1,4 +1,6 @@
 :root {
+/* LIGHT mode*/
+	color-scheme: light dark;
 	--page: #efefef;
 	/* blaustichiger: #d6e5f4 */
 	--pageedge: #acc7e3;
@@ -34,9 +36,13 @@
 
 	--textnativemenue: #333;
 	--backgroundnativemenue: #fafafa;
+
+	--hl-selected-brightness: 0.90; /* Untergrund um 10 % abdunkeln */
+	--hl-selected-bg: color-mix(in oklch, color-mix(in oklch, var(--activemarked) 90%, black) 40%, transparent);
 }
 @media (prefers-color-scheme: dark) {
 :root {
+/* DARK mode*/
 	--page: #444;
 	/* blaustichiger: #384850 */
 	--pageedge: #335b7a;
@@ -72,6 +78,9 @@
 
 	--textnativemenue: #eee;
 	--backgroundnativemenue: #999;
+
+	--hl-selected-brightness: 1.30; /* Untergrund um 30 % aufhellen */
+	--hl-selected-bg: color-mix(in oklch, color-mix(in oklch, var(--activemarked) 90%, white) 25%, transparent);
 }
 }
 

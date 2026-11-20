@@ -415,7 +415,7 @@
 						onclick="onCellLeftClick(event, #{rowIdx}, 0); return false;"
 						ondblclick="onCellDoubleClick(event, #{rowIdx}, 0); return false;"
 						oncontextmenu="onCellContextMenu(event, #{rowIdx}, 0);"
-						class="ui-commandlink ui-widget cell-click-link" style="#{reportRow[0].cellStyle}" >
+						class="ui-commandlink ui-widget cell-click-link" >
 
 						<h:outputText value="#{reportRow[0].label}" style="#{reportRow[0].textStyle}" />
 					</a>
@@ -434,7 +434,7 @@
 						onclick="onCellLeftClick(event, #{rowIdx}, #{colIdx}); return false;"
 						ondblclick="onCellDoubleClick(event, #{rowIdx}, #{colIdx}); return false;"
 						oncontextmenu="onCellContextMenu(event, #{rowIdx}, #{colIdx});"
-						class="ui-commandlink ui-widget cell-click-link" style="#{reportRow[colIdx].cellStyle}" >
+						class="ui-commandlink ui-widget cell-click-link" >
 
 						<h:outputText value="#{reportRow[colIdx].label}" style="#{reportRow[colIdx].textStyle}" />
 					</a>
