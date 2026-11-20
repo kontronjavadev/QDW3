@@ -1060,7 +1060,7 @@ public class FieldPerfReportService {
     private List<FieldPerfReportCauseResultRecord> convertToRecordList(Map<String, Integer> map) {
         return map.entrySet().stream()
                 .map(entry -> new FieldPerfReportCauseResultRecord(entry.getKey(), entry.getValue()))
-                .sorted(Comparator.comparing(FieldPerfReportCauseResultRecord::cause))
+                .sorted(Comparator.comparing(FieldPerfReportCauseResultRecord::cause, Comparator.nullsLast(Comparator.naturalOrder())))
                 .collect(Collectors.toList());
     }
 
