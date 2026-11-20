@@ -621,7 +621,7 @@ body .ui-datatable.fieldPerfReportScrollable tbody td.clickable-td > a.cell-clic
 	--hl-cbl: var(--activemarked);
 	--hl-cbr: var(--activemarked);
 
-	backdrop-filter: brightness(var(--hl-selected-brightness, 1));
+	backdrop-filter: brightness(var(--hl-selected-brightness, 1)); /* 1 ist Fallbackwert (100%) */
 	background-color: var(--hl-selected-bg);
 	background-image:
 		radial-gradient(circle at 0 0, var(--hl-ctl), transparent 5px),
