@@ -71,7 +71,6 @@ public class FieldPerfReport extends SuperView implements Serializable {
 
     private final DecimalFormat decimalFormat = new DecimalFormat("0.00");
 
-    private static final long DOUBLE_CLICK_THRESHOLD_MS = 400L;
 
 
     private final transient SavedQueryService queryManager;
@@ -112,14 +111,11 @@ public class FieldPerfReport extends SuperView implements Serializable {
 
     private FieldPerfReportResultDTO[] reportHeader;
     private List<FieldPerfReportResultDTO[]> reportData; // List an Zeilen, bestehend aus Array zu Spalten
-    private FieldPerfReportResultDTO[] selectedReport;
+    private FieldPerfReportResultDTO[] selectedReport; // gewählte Zeile
 
-    // hidden field für Zeitpunkt der Selektion
-    private long currentSelectionTimestamp = 0L;
-    // Daten der letzte Selektion, um prüfen zu können, ob es ein Doppelklick war
-    private int lastSelectedRowIndex = -1;
-    private int lastSelectedColIndex = -1;
-    private long lastSelectionTimestamp = 0L;
+    // Koordinaten der letzte Selektion, per JS über updateSelection() oder lokale Aufrufer übermittelt
+    private int selectedRowIndex = -1;
+    private int selectedColIndex = -1;
 
     private int tabIndex = 0;
 
@@ -453,97 +449,6 @@ public class FieldPerfReport extends SuperView implements Serializable {
 
 
 
-    public void _____onCellClick(int rowIndex, int colIndex) {
-        // war es ein Doppelklick?
-        if (rowIndex == lastSelectedRowIndex && colIndex == lastSelectedColIndex
-                && (currentSelectionTimestamp - lastSelectionTimestamp) <= DOUBLE_CLICK_THRESHOLD_MS) {
-            // Zeitstempel zurücksetzen, damit ein 3. Klick nicht sofort wieder als Doppelklick zählt
-            lastSelectionTimestamp = 0L;
-
-            _____onCellDoubleClick(rowIndex, colIndex);
-            return;
-        }
-
-        logger.info("Zelle geklickt - Spalte {}, Zeile {}", colIndex, rowIndex);
-
-        // Status für den nächsten Klick merken
-        lastSelectedRowIndex = rowIndex;
-        lastSelectedColIndex = colIndex;
-        lastSelectionTimestamp = currentSelectionTimestamp;
-
-
-
-        // Selections-Markierung löschen
-        Arrays.stream(reportHeader)
-                .forEach(FieldPerfReportResultDTO::clearHighlights);
-        reportData.stream()
-                .flatMap(Arrays::stream)
-                .forEach(FieldPerfReportResultDTO::clearHighlights);
-
-
-        // Identifikation der Datumskoordinaten
-        // FieldPerfReportResultDTO colHeader = reportHeader[colIndex]; // Spaltenüberschriften
-        // FieldPerfReportResultDTO rowHeader = reportData.get(rowIndex)[0]; // Zeilenbeschriftungen
-        // logger.info("Koondinaten Spalte {}, Zeile {}", colHeader, rowHeader);
-
-        // gewählte Zelle
-        FieldPerfReportResultDTO clickedCell = reportData.get(rowIndex)[colIndex];
-        logger.trace("gewählte Zelle: {}", clickedCell);
-
-
-        // Selections-Markierung hinzufügen
-        // alle Zellen derselbe Reihe markieren
-        Arrays.stream(reportData.get(rowIndex))
-                .forEach(FieldPerfReportResultDTO::setHighlightTB);
-        // alle Zellen derselbe Spalte markieren
-        reportData.stream()
-                .map(row -> row[colIndex])
-                .forEach(FieldPerfReportResultDTO::setHighlightLR);
-
-        // die Zelle selbst wieder von Markierung befeien und nur die Ecken bemalen
-        clickedCell.setHighlightSelected();
-
-        // Die Enden der Reihe markieren
-        reportData.get(rowIndex)[0].setHighlightL();
-        reportData.get(rowIndex)[reportData.get(rowIndex).length - 1].setHighlightR();
-
-        // Die Enden der Spalte markieren
-        reportData.getFirst()[colIndex].setHighlightT();
-        reportData.getLast()[colIndex].setHighlightB();
-
-
-        selectedReport = reportData.get(rowIndex);
-        logger.trace("selectedReport: {}", FieldPerfReportResultDTO.reportArrayToString(selectedReport));
-    }
-
-    public void _____onCellDoubleClick(int rowIndex, int colIndex) {
-        logger.info("Doppelklick auf Zelle - Spalte {}, Zeile {}", colIndex, rowIndex);
-        showDetails();
-        PrimeFaces.current().ajax().update("form:tabview2:panDetails", "form:tabview2:panDetailsSummary");
-    }
-
-    public void _____onCellRightClick() {
-        Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
-        String rParam = params.get("rowIdx"); // aus xhtml
-        String cParam = params.get("colIdx"); // aus xhtml
-
-        if (rParam != null && cParam != null) {
-            int rIdx = Integer.parseInt(rParam);
-            int cIdx = Integer.parseInt(cParam);
-
-            // Verhindert radikal, dass dieser Rechtsklick als zweiter Klick
-            // eines Doppelklicks gewertet wird, falls man kurz zuvor links geklickt hat.
-            lastSelectionTimestamp = 0L;
-
-            // Farbkreuz und normale Selektionslogik ausführen
-            _____onCellClick(rIdx, cIdx);
-
-            // dem JavaScript in Echtzeit mitteilen, ob Details für DIESE Zelle möglich sind
-            boolean possible = isDetailPossible(rIdx, cIdx);
-            PrimeFaces.current().ajax().addCallbackParam("isPossible", possible);
-        }
-    }
-
     public void onCellDoubleClickRemote() {
         Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
         String rParam = params.get("rowIdx"); // aus xhtml
@@ -577,8 +482,8 @@ public class FieldPerfReport extends SuperView implements Serializable {
     }
 
     private void updateSelection(int rowIndex, int colIndex) {
-        lastSelectedRowIndex = rowIndex;
-        lastSelectedColIndex = colIndex;
+        selectedRowIndex = rowIndex;
+        selectedColIndex = colIndex;
         selectedReport = reportData.get(rowIndex);
         logger.trace("selectedReport: {}", FieldPerfReportResultDTO.reportArrayToString(selectedReport));
     }
@@ -605,24 +510,24 @@ public class FieldPerfReport extends SuperView implements Serializable {
 
 
     public void showDetails() {
-        detailsPanel.showDetails(lastSelectedRowIndex, lastSelectedColIndex);
+        detailsPanel.showDetails(selectedRowIndex, selectedColIndex);
     }
 
     public void appendDetails() {
-        detailsPanel.appendDetails(lastSelectedRowIndex, lastSelectedColIndex);
+        detailsPanel.appendDetails(selectedRowIndex, selectedColIndex);
     }
 
 
     public void showCauses() {
-        causesPanel.showCauses(lastSelectedRowIndex, lastSelectedColIndex);
+        causesPanel.showCauses(selectedRowIndex, selectedColIndex);
     }
 
     public void showPartAnalysis() {
-        if (!isDetailPossible(lastSelectedRowIndex, lastSelectedColIndex)) {
+        if (!isDetailPossible(selectedRowIndex, selectedColIndex)) {
             return;
         }
-        FieldPerfReportResultDTO colHeader = reportHeader[lastSelectedColIndex];
-        FieldPerfReportResultDTO rowHeader = reportData.get(lastSelectedRowIndex)[0];
+        FieldPerfReportResultDTO colHeader = reportHeader[selectedColIndex];
+        FieldPerfReportResultDTO rowHeader = reportData.get(selectedRowIndex)[0];
 
         logger.info("partAnalysis() von (x) supp arrival {} und (y) repair arrival {}", colHeader.getLabel(), rowHeader.getLabel());
     }
@@ -1036,14 +941,6 @@ public class FieldPerfReport extends SuperView implements Serializable {
         return VIEW_ID;
     }
 
-    public long getCurrentSelectionTimestamp() {
-        return currentSelectionTimestamp;
-    }
-
-    public void setCurrentSelectionTimestamp(long currentSelectionTimestamp) {
-        this.currentSelectionTimestamp = currentSelectionTimestamp;
-    }
-
     public int getTabIndex() {
         return tabIndex;
     }
@@ -1129,49 +1026,5 @@ public class FieldPerfReport extends SuperView implements Serializable {
             }
         }
     }
-
-
-
-    // public void refreshFormatSettings() {
-    // searchObj.setDateFormat(userSession.getDateFormat());
-    // searchObj.setDateTimeFormat(userSession.getDateTimeFormat());
-    // searchObj.setNumberFormat(userSession.getNumberFormat());
-    // searchObj.setDecimalSeparator(DecimalFormatSymbols.getInstance(userSession.getLocale()).getDecimalSeparator());
-    // searchObj.setGroupingSeparator(DecimalFormatSymbols.getInstance(userSession.getLocale()).getGroupingSeparator());
-    // }
-
-
-
-    // public void onClick() { }
-    //
-    // public void onDoubleClick() {
-    // logger.debug("Handle double-click event");
-    //
-    // if (userSession.redirectTo(getCurrentPageURL(), openEditMaterialDialog())) {
-    // return;
-    // }
-    //
-    // userSession.redirectTo(getCurrentPageURL(), openViewMaterialDialog());
-    // }
-    //
-    // public String openViewMaterialDialog() {
-    // var url = "";
-    //
-    // if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_SUPERUSER)) {
-    // url = ViewMaterialDialog.PAGE_INIT_URL + selectedObject.getId();
-    // }
-    //
-    // return url;
-    // }
-    //
-    // public String openEditMaterialDialog() {
-    // var url = "";
-    //
-    // if (userSession.checkAuthorization(false, ROLE_ADMINISTRATOR, ROLE_SUPERUSER)) {
-    // url = EditMaterialDialog.PAGE_INIT_URL + selectedObject.getId();
-    // }
-    //
-    // return url;
-    // }
 
 }

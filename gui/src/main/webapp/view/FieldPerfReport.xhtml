@@ -572,8 +572,6 @@ sondern in der Funktion "onCellContextMenu()", bevor der DOM-Baum vernichtet wir
 
 
 
-	<h:inputHidden id="currentSelectionTimestamp" value="#{fieldPerfReport.currentSelectionTimestamp}" />
-
 	<p:remoteCommand name="rcCellDoubleClick" 
 		action="#{fieldPerfReport.onCellDoubleClickRemote}" 
 		process="@this" 
@@ -619,44 +617,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
 var lastContextMenuEvent = null;
 
-function highlightCrosshair(rIdx, cIdx) {
-	const table = document.getElementById('form:tabview2:panData');
-	if (!table) return;
-
-	// Nur bisher markierte Zellen zurücksetzen
-	table.querySelectorAll('.hl-active, .hl-selected').forEach(function(el) {
-		el.classList.remove('hl-active', 'hl-row', 'hl-col', 'hl-end-l', 'hl-end-r', 'hl-end-t', 'hl-end-b', 'hl-selected');
-	});
-
-	const rowCells = table.querySelectorAll('a.cell-click-link[data-r="' + rIdx + '"]');
-	const colCells = table.querySelectorAll('a.cell-click-link[data-c="' + cIdx + '"]');
-
-	// Zeile markieren + linkes/rechtes Ende
-	rowCells.forEach(function(el) {
-		el.classList.add('hl-active', 'hl-row');
-	});
-	if (rowCells.length > 0) {
-		rowCells[0].classList.add('hl-end-l');
-		rowCells[rowCells.length - 1].classList.add('hl-end-r');
-	}
-
-	// Spalte markieren + oberes/unteres Ende
-	colCells.forEach(function(el) {
-		el.classList.add('hl-active', 'hl-col');
-	});
-	if (colCells.length > 0) {
-		colCells[0].classList.add('hl-end-t');
-		colCells[colCells.length - 1].classList.add('hl-end-b');
-	}
-
-	// Angeklickte Zelle selbst hervorheben
-	const clickedCell = table.querySelector('a.cell-click-link[data-r="' + rIdx + '"][data-c="' + cIdx + '"]');
-	if (clickedCell) {
-		clickedCell.classList.remove('hl-active', 'hl-row', 'hl-col', 'hl-end-l', 'hl-end-r', 'hl-end-t', 'hl-end-b');
-		clickedCell.classList.add('hl-selected');
-	}
-}
-
 function onCellLeftClick(event, rIdx, cIdx) {
 	event.preventDefault();
 	highlightCrosshair(rIdx, cIdx);
@@ -671,6 +631,46 @@ function onCellDoubleClick(event, rIdx, cIdx) {
 		{name: 'colIdx', value: cIdx}
 	]);
 }
+
+function highlightCrosshair(rIdx, cIdx) {
+	const table = document.getElementById('form:tabview2:panData');
+	if (!table) return;
+
+	// Nur bisher markierte Zellen zurücksetzen
+	table.querySelectorAll('.hl-active, .hl-selected').forEach(function(el) {
+		el.classList.remove('hl-active', 'hl-row', 'hl-col', 'hl-end-l', 'hl-end-r', 'hl-end-t', 'hl-end-b', 'hl-selected');
+	});
+
+	const rowCells = table.querySelectorAll('a.cell-click-link[data-r="' + rIdx + '"]');
+	const colCells = table.querySelectorAll('a.cell-click-link[data-c="' + cIdx + '"]');
+
+	// Zeile (oben/unten) und Spalte (links/rechts) markieren
+	rowCells.forEach(function(el) {
+		el.classList.add('hl-active', 'hl-row');
+	});
+	colCells.forEach(function(el) {
+		el.classList.add('hl-active', 'hl-col');
+	});
+
+	// Gewählte Zelle von den Kreuz-Rahmen befreien (Kreuzung bleibt offen)
+	const clickedCell = table.querySelector('a.cell-click-link[data-r="' + rIdx + '"][data-c="' + cIdx + '"]');
+	if (clickedCell) {
+		clickedCell.classList.remove('hl-row', 'hl-col');
+		clickedCell.classList.add('hl-selected');
+	}
+
+	// Enden der Reihe und Spalte markieren (gilt auch für clickedCell am Tabellenrand -> T-/L-Form)
+	if (rowCells.length > 0) {
+		rowCells[0].classList.add('hl-end-l');
+		rowCells[rowCells.length - 1].classList.add('hl-end-r');
+	}
+	if (colCells.length > 0) {
+		colCells[0].classList.add('hl-end-t');
+		colCells[colCells.length - 1].classList.add('hl-end-b');
+	}
+}
+
+
 
 function onCellContextMenu(event, rIdx, cIdx) {
 	// 1. Verhindert das Standard-Rechtsklick-Menü des Browsers
@@ -695,8 +695,6 @@ function onCellContextMenu(event, rIdx, cIdx) {
 		{name: 'colIdx', value: cIdx}
 	]);
 }
-
-
 
 // Wird vom RemoteCommand aufgerufen, sobald der Server geantwortet hat
 function onRightClickComplete(xhr, status, args) {

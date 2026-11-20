@@ -576,34 +576,93 @@ body div.ui-datatable.viewScrollable.fieldPerfReportScrollable.ui-datatable-froz
 	box-shadow: none !important;
 }
 
-/* Fadenkreuz-Markierung (clientseitig per JS gesetzt) */
+
+
+/* Fadenkreuz-Markierung (clientseitig per JS gesetzt)
+Nomenklatur:
+"hl" = "highlight", "t, b, l, r" = top, bottom, left, right"
+"c" = "corner", "tl, br, ..." = "top-left, bottom-right, ..."
+-> "hl-ctl" = "highlight corner top-left"
+*/
 body .ui-datatable.fieldPerfReportScrollable tbody td.clickable-td > a.cell-click-link.hl-active {
+	--hl-col: var(--activemarked);
+	--hl-edge-t: inset 0 2px 0 0 var(--hl-col), inset 0 4px 4px -2px var(--hl-col);
+	--hl-edge-b: inset 0 -2px 0 0 var(--hl-col), inset 0 -4px 4px -2px var(--hl-col);
+	--hl-edge-l: inset 2px 0 0 0 var(--hl-col), inset 4px 0 4px -2px var(--hl-col);
+	--hl-edge-r: inset -2px 0 0 0 var(--hl-col), inset -4px 0 4px -2px var(--hl-col);
+	--hl-none: inset 0 0 0 0 transparent;
+
 	box-shadow:
-		inset 0 var(--hl-t, 0px) 0 0 var(--active),
-		inset 0 var(--hl-b, 0px) 0 0 var(--active),
-		inset var(--hl-l, 0px) 0 0 0 var(--active),
-		inset var(--hl-r, 0px) 0 0 0 var(--active);
+		var(--hl-t, var(--hl-none)),
+		var(--hl-b, var(--hl-none)),
+		var(--hl-l, var(--hl-none)),
+		var(--hl-r, var(--hl-none)) !important;
 }
 
 body .ui-datatable.fieldPerfReportScrollable tbody td.clickable-td > a.cell-click-link.hl-row {
-	--hl-t: 2px;
-	--hl-b: -2px;
+	--hl-t: var(--hl-edge-t);
+	--hl-b: var(--hl-edge-b);
 }
 
 body .ui-datatable.fieldPerfReportScrollable tbody td.clickable-td > a.cell-click-link.hl-col {
-	--hl-l: 2px;
-	--hl-r: -2px;
+	--hl-l: var(--hl-edge-l);
+	--hl-r: var(--hl-edge-r);
 }
 
-body .ui-datatable.fieldPerfReportScrollable tbody td.clickable-td > a.cell-click-link.hl-end-l { --hl-l: 2px; }
-body .ui-datatable.fieldPerfReportScrollable tbody td.clickable-td > a.cell-click-link.hl-end-r { --hl-r: -2px; }
-body .ui-datatable.fieldPerfReportScrollable tbody td.clickable-td > a.cell-click-link.hl-end-t { --hl-t: 2px; }
-body .ui-datatable.fieldPerfReportScrollable tbody td.clickable-td > a.cell-click-link.hl-end-b { --hl-b: -2px; }
+body .ui-datatable.fieldPerfReportScrollable tbody td.clickable-td > a.cell-click-link.hl-end-t { --hl-t: var(--hl-edge-t); }
+body .ui-datatable.fieldPerfReportScrollable tbody td.clickable-td > a.cell-click-link.hl-end-b { --hl-b: var(--hl-edge-b); }
+body .ui-datatable.fieldPerfReportScrollable tbody td.clickable-td > a.cell-click-link.hl-end-l { --hl-l: var(--hl-edge-l); }
+body .ui-datatable.fieldPerfReportScrollable tbody td.clickable-td > a.cell-click-link.hl-end-r { --hl-r: var(--hl-edge-r); }
 
-/* Ausgewählte Zelle selbst */
+/* Ausgewählte Zelle: offene Kreuzung mit Ecken + Hintergrundfärbung */
 body .ui-datatable.fieldPerfReportScrollable tbody td.clickable-td > a.cell-click-link.hl-selected {
-	box-shadow: inset 0 0 0 2px var(--active);
-	background-color: color-mix(in srgb, var(--active) 18%, transparent);
+	--hl-ctl: var(--activemarked);
+	--hl-ctr: var(--activemarked);
+	--hl-cbl: var(--activemarked);
+	--hl-cbr: var(--activemarked);
+
+	background-color: color-mix(in srgb, var(--activemarked) 50%, transparent);
+	background-image:
+		radial-gradient(circle at 0 0, var(--hl-ctl), transparent 5px),
+		linear-gradient(var(--hl-ctl), var(--hl-ctl)),
+		radial-gradient(circle at 100% 0, var(--hl-ctr), transparent 5px),
+		linear-gradient(var(--hl-ctr), var(--hl-ctr)),
+		radial-gradient(circle at 0 100%, var(--hl-cbl), transparent 5px),
+		linear-gradient(var(--hl-cbl), var(--hl-cbl)),
+		radial-gradient(circle at 100% 100%, var(--hl-cbr), transparent 5px),
+		linear-gradient(var(--hl-cbr), var(--hl-cbr)) !important;
+	background-position:
+		top left, top left,
+		top right, top right,
+		bottom left, bottom left,
+		bottom right, bottom right !important;
+	background-size:
+		100% 100%, 2px 2px,
+		100% 100%, 2px 2px,
+		100% 100%, 2px 2px,
+		100% 100%, 2px 2px !important;
+	background-repeat: no-repeat !important;
+}
+
+/* Ecken ausblenden, sobald die gewählte Zelle an einem Tabellenrand liegt (T- / L-Form) */
+body .ui-datatable.fieldPerfReportScrollable tbody td.clickable-td > a.cell-click-link.hl-selected.hl-end-t {
+	--hl-ctl: transparent;
+	--hl-ctr: transparent;
+}
+
+body .ui-datatable.fieldPerfReportScrollable tbody td.clickable-td > a.cell-click-link.hl-selected.hl-end-b {
+	--hl-cbl: transparent;
+	--hl-cbr: transparent;
+}
+
+body .ui-datatable.fieldPerfReportScrollable tbody td.clickable-td > a.cell-click-link.hl-selected.hl-end-l {
+	--hl-ctl: transparent;
+	--hl-cbl: transparent;
+}
+
+body .ui-datatable.fieldPerfReportScrollable tbody td.clickable-td > a.cell-click-link.hl-selected.hl-end-r {
+	--hl-ctr: transparent;
+	--hl-cbr: transparent;
 }
 
 
