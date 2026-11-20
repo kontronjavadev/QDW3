@@ -40,8 +40,7 @@ import com.kontron.qdw.dto.service.RMATypeListDTO;
 import com.kontron.qdw.dto.service.RepairErrorCodeListDTO;
 import com.kontron.qdw.service.SavedQueryService;
 import com.kontron.qdw.ui.UserSession;
-import com.kontron.qdw.ui.panel.FieldPerfCausesPanel;
-import com.kontron.qdw.ui.panel.FieldPerfDetailsPanel;
+import com.kontron.qdw.ui.panel.*;
 import com.kontron.qdw.ui.view.util.SuperView;
 
 import jakarta.enterprise.context.SessionScoped;
@@ -72,7 +71,6 @@ public class FieldPerfReport extends SuperView implements Serializable {
     private final DecimalFormat decimalFormat = new DecimalFormat("0.00");
 
 
-
     private final transient SavedQueryService queryManager;
     private final transient MaterialBoundaryService materialService;
     private final transient RMATypeBoundaryService rmaTypeService;
@@ -90,6 +88,7 @@ public class FieldPerfReport extends SuperView implements Serializable {
 
     private final transient FieldPerfDetailsPanel detailsPanel;
     private final transient FieldPerfCausesPanel causesPanel;
+    private final transient FieldPerfPartsPanel partsPanel;
 
 
     private final UserSession userSession;
@@ -136,9 +135,12 @@ public class FieldPerfReport extends SuperView implements Serializable {
         plantService = null;
         servMsgService = null;
         repErrorService = null;
+
         reportService = null;
+
         detailsPanel = null;
         causesPanel = null;
+        partsPanel = null;
     }
 
     @Inject
@@ -148,7 +150,7 @@ public class FieldPerfReport extends SuperView implements Serializable {
             MaterialTypeBoundaryService matTypeService, MaterialClassBoundaryService matClassService, PlantBoundaryService plantService,
             MaterializedServiceMessageBoundaryService servMsgService, RepairErrorCodeBoundaryService repErrorService,
             FieldPerfReportService reportService,
-            FieldPerfDetailsPanel detailsPanel, FieldPerfCausesPanel causesPanel) {
+            FieldPerfDetailsPanel detailsPanel, FieldPerfCausesPanel causesPanel, FieldPerfPartsPanel partsPanel) {
         this.userSession = userSession;
         this.queryManager = queryManager;
 
@@ -163,9 +165,12 @@ public class FieldPerfReport extends SuperView implements Serializable {
         this.plantService = plantService;
         this.servMsgService = servMsgService;
         this.repErrorService = repErrorService;
+
         this.reportService = reportService;
+
         this.detailsPanel = detailsPanel;
         this.causesPanel = causesPanel;
+        this.partsPanel = partsPanel;
     }
 
     public void initView() {
@@ -199,6 +204,9 @@ public class FieldPerfReport extends SuperView implements Serializable {
                 (r, c) -> isDetailPossible(r, c), this::setTabIndex);
 
         causesPanel.initView(this::getReportSearchObj, this::getReportHeader, this::getReportData,
+                (r, c) -> isDetailPossible(r, c), this::setTabIndex);
+
+        partsPanel.initView(this::getReportSearchObj, this::getReportHeader, this::getReportData,
                 (r, c) -> isDetailPossible(r, c), this::setTabIndex);
 
         logger.debug("View initialization finished");
@@ -244,6 +252,7 @@ public class FieldPerfReport extends SuperView implements Serializable {
             reportHeader = reportData.remove(0);
             detailsPanel.reset();
             causesPanel.reset();
+            partsPanel.reset();
         }
         catch (final Exception e) {
             logger.error("Error while executing report!", e);
@@ -522,14 +531,8 @@ public class FieldPerfReport extends SuperView implements Serializable {
         causesPanel.showCauses(selectedRowIndex, selectedColIndex);
     }
 
-    public void showPartAnalysis() {
-        if (!isDetailPossible(selectedRowIndex, selectedColIndex)) {
-            return;
-        }
-        FieldPerfReportResultDTO colHeader = reportHeader[selectedColIndex];
-        FieldPerfReportResultDTO rowHeader = reportData.get(selectedRowIndex)[0];
-
-        logger.info("partAnalysis() von (x) supp arrival {} und (y) repair arrival {}", colHeader.getLabel(), rowHeader.getLabel());
+    public void showParts() {
+        partsPanel.showParts(selectedRowIndex, selectedColIndex);
     }
 
 

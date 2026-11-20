@@ -1,0 +1,45 @@
+<ui:composition xmlns="https://jakarta.ee/xml/ns/jakartaee"
+	xmlns:ui="jakarta.faces.facelets"
+	xmlns:h="jakarta.faces.html"
+	xmlns:f="jakarta.faces.core"
+	xmlns:p="http://primefaces.org/ui">
+
+	<p:dataTable id="panParts" var="partRow" rowIndexVar="rowIdx" 
+		selectionTextDisabled="false" allowUnsorting="true" resizeMode="expand" resizableColumns="true" 
+		selection="#{fieldPerfPartsPanel.selectedPart}" selectionMode="single" multiViewState="true" 
+		loadingMessage="#{i18n.action_fetch_data}" 
+		value="#{fieldPerfPartsPanel.parts}" scrollable="true" styleClass="viewScrollable fieldPerfReportSummaryScrollable" 
+		rowKey="#{partRow.materialNumber}" >
+
+		<p:column sortBy="#{partRow.materialNumber}" width="250" 
+			exportValue="#{partRow.materialNumber}" class="tdnowrap" >
+			<f:facet name="header">
+				<h:outputText value="materialNumber"/>
+			</f:facet>
+			<h:outputText value="#{partRow.materialNumber}" styleClass="pf-tooltip-target" />
+		</p:column>
+
+		<p:column sortBy="#{partRow.cnt}" width="80" >
+			<f:facet name="header">
+				<h:outputText value="Count"/>
+			</f:facet>
+			<h:outputText value="#{partRow.cnt}" />
+		</p:column>
+
+	</p:dataTable>
+	<p/>
+
+	<h:outputText id="panPartsSummary" styleClass="label-field-mandatory" value="#{i18n.result_total_number_records} #{fieldPerfPartsPanel.parts.size()}"/>
+
+
+
+<!--Kontextmenü mit Möglichkeit, eine Zelle oder eine Zeile zu kopieren -->
+	<h:inputHidden id="partscellText" value="#{fieldPerfPartsPanel.cellText}" />
+	<h:inputHidden id="partsrowCsv" value="#{fieldPerfPartsPanel.rowCsv}" />
+
+	<p:contextMenu for="panParts" beforeShow="updateContextData(event, 'form:tabview2', 'parts')" >
+		<p:menuitem value="#{i18n.ctxmenu_copy_cell}" actionListener="#{fieldPerfPartsPanel.copyCellToClipboard}" icon="pi pi-copy" update="@none"/>
+		<p:menuitem value="#{i18n.ctxmenu_copy_row}" actionListener="#{fieldPerfPartsPanel.copyRowToClipboard}" icon="pi pi-copy" update="@none"/>
+	</p:contextMenu>
+
+</ui:composition>

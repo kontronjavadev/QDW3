@@ -93,7 +93,7 @@ public class FieldPerfCausesPanel extends CopyClipboard implements Serializable 
 
         causes = executeCauses(rowIndex, colIndex);
 
-        // weist den Browser an, sofort auf den Causes-Tab (Index 1) zu wechseln
+        // weist den Browser an, sofort auf den Causes-Tab (Index 2) zu wechseln
         PrimeFaces.current().executeScript("PF('tabview2Widget').select(2);");
         tabIndexCons.accept(2);
     }
@@ -134,8 +134,6 @@ public class FieldPerfCausesPanel extends CopyClipboard implements Serializable 
         searchObjSupp.get().setShipDate(shipDate);
         searchObjSupp.get().setReturnDate(returnDate);
 
-        // Rückgabewert Map<String, Long>, der dann in eine List<String[]> gewandelt wird.
-        // besser vielleicht List<Record<String, Int>>?
         if (qrelCol && sumRow) {
             return reportService.getAllErrorCodes(searchObjSupp.get());
         }

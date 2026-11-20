@@ -454,6 +454,11 @@
 			<ui:include src="../dialog/panel/FieldPerfCausesPanel.xhtml"/>
 		</p:tab>
 
+
+		<p:tab id="tabPanParts" title="#{i18n.fieldperfreportview_tabpan_parts}" >
+			<ui:include src="../dialog/panel/FieldPerfPartsPanel.xhtml"/>
+		</p:tab>
+
 	</p:tabView>
 
 <!-- Ziel für das Kontextmenü, das ohne "for=..." überall auf der Seite gelten würde.
@@ -491,8 +496,8 @@ sondern in der Funktion "onCellContextMenu()", bevor der DOM-Baum vernichtet wir
 			rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;SUPERUSER')}" />
 
 <!-- update-tag nicht vergessen! -->
-		<p:menuitem id="panData_mniPartanalysis" icon="pi pi-chart-bar" value="#{i18n.fieldperfreportview_action_partanalysis}" 
-			action="#{fieldPerfReport.showPartAnalysis}" ajax="true" update="growl" 
+		<p:menuitem id="panData_mniParts" icon="pi pi-chart-bar" value="#{i18n.fieldperfreportview_action_parts}" 
+			action="#{fieldPerfReport.showParts}" ajax="true" update=":form:tabview2:panParts :form:tabview2:panPartsSummary growl" 
 			rendered="#{userSession.checkAuthorizationString('ADMINISTRATOR;SUPERUSER')}" />
 
 
@@ -708,7 +713,7 @@ function onRightClickComplete(xhr, status, args) {
 }
 
 function toggleMenuDetails(isPossible) {
-	var $items = $('#form\\:panData_mniShowDetails, #form\\:panData_mniAppendDetails, #form\\:panData_mniCauses, #form\\:panData_mniPartanalysis');
+	var $items = $('#form\\:panData_mniShowDetails, #form\\:panData_mniAppendDetails, #form\\:panData_mniCauses, #form\\:panData_mniParts');
 	if (isPossible) {
 		$items.removeClass('ui-state-disabled');
 	} else {

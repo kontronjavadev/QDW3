@@ -3,6 +3,7 @@ package com.kontron.qdw.boundary.mv;
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
@@ -10,13 +11,16 @@ import org.apache.commons.lang3.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.kontron.qdw.boundary.service.X2MessageBoundaryService;
+import com.kontron.qdw.boundary.util.Constants;
 import com.kontron.qdw.domain.material.Material;
 import com.kontron.qdw.domain.material.SerialNumberSetItem;
+import com.kontron.qdw.domain.mv.MaterializedServiceMessage;
 import com.kontron.qdw.dto.base.*;
 import com.kontron.qdw.dto.mv.*;
-import com.kontron.qdw.dto.mv.report.FieldPerfReportCauseResultRecord;
-import com.kontron.qdw.dto.mv.report.FieldPerfReportSearchObject;
+import com.kontron.qdw.dto.mv.report.*;
 import com.kontron.qdw.dto.service.RepairErrorCodeListDTO;
+import com.kontron.qdw.dto.service.X2MessageSearchDTO;
 import com.kontron.qdw.repository.material.*;
 import com.kontron.util.datetime.TimeMeasurement;
 import com.kontron.util.text.StringUtil;
@@ -24,7 +28,10 @@ import com.kontron.util.text.StringUtil;
 import jakarta.annotation.security.PermitAll;
 import jakarta.ejb.*;
 import jakarta.persistence.*;
+import net.sourceforge.jbizmo.commons.property.PropertyService;
 import net.sourceforge.jbizmo.commons.search.SearchService;
+import net.sourceforge.jbizmo.commons.search.dto.SearchDTO;
+import net.sourceforge.jbizmo.commons.search.exception.GeneralSearchException;
 
 @Stateless
 public class FieldPerfReportService {
@@ -43,6 +50,8 @@ public class FieldPerfReportService {
     private MaterialRepository materialRepo;
     @EJB
     private SerialNumberSetRepository serNrSetRepo;
+    @EJB
+    private X2MessageBoundaryService x2Service;
 
 
 
@@ -615,6 +624,91 @@ public class FieldPerfReportService {
 
 
 
+    /* ******************* *
+     * Report Causes-Seite *
+     * ******************* */
+
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public List<FieldPerfReportPartResultDTO> getAllErrorPositions(FieldPerfReportSearchObject input) {
+        Map<Long, X2MessageSearchDTO> x2MsgsPerId;
+        try {
+            List<X2MessageSearchDTO> x2Messages = x2Service.searchAllX2Messages(new SearchDTO()); // rd. 5000 Einträge
+            x2MsgsPerId = x2Messages.stream()
+                    .filter(msg -> msg.getDefectComponent() != null)
+                    .collect(Collectors.toMap(X2MessageSearchDTO::getServiceMessageId, Function.identity()));
+        }
+        catch (GeneralSearchException e) {
+            logger.error("Error getting all x2 messages", e);
+            return Collections.emptyList();
+        }
+
+        LocalDate startShipDate = input.getStartDate().minusMonths(input.getSelectedQualityPeriod() - 1);
+        LocalDate endShipDate = input.getStartDate().plusMonths(1);
+
+        LocalDate startRepairDate = input.getStartDate();
+        LocalDate endRepairDate = input.getStartDate().plusMonths(1);
+
+
+        Map<String, FieldPerfReportPartResultDTO> collectedResultsPerMatNr = new HashMap<>();
+
+        for (int k = 0; k < (input.getSelectedAnalInterval() + input.getSelectedReturnInterval() - 1); k++) {
+            performErrorPositionStep(collectedResultsPerMatNr, x2MsgsPerId, input, startShipDate, endShipDate, startRepairDate, endRepairDate);
+
+            startShipDate = startShipDate.plusMonths(1);
+            endShipDate = endShipDate.plusMonths(1);
+
+            startRepairDate = startRepairDate.plusMonths(1);
+            endRepairDate = endRepairDate.plusMonths(1);
+        }
+
+        return convertToSortedList(collectedResultsPerMatNr);
+    }
+
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public List<FieldPerfReportPartResultDTO> getErrorPositionReport(FieldPerfReportSearchObject input) {
+        Map<Long, X2MessageSearchDTO> x2MsgsPerId;
+        try {
+            List<X2MessageSearchDTO> x2Messages = x2Service.searchAllX2Messages(new SearchDTO()); // rd. 5000 Einträge
+            x2MsgsPerId = x2Messages.stream()
+                    .filter(msg -> msg.getDefectComponent() != null)
+                    .collect(Collectors.toMap(X2MessageSearchDTO::getServiceMessageId, Function.identity()));
+        }
+        catch (GeneralSearchException e) {
+            logger.error("Error getting all x2 messages", e);
+            return Collections.emptyList();
+        }
+
+        LocalDate startShipDate = calculateDate(input, DateEnumeration.SHIPMENT_START);
+        LocalDate endShipDate = calculateDate(input, DateEnumeration.SHIPMENT_END);
+        LocalDate startRepairDate = calculateDate(input, DateEnumeration.REPAIR_START);
+        LocalDate endRepairDate = calculateDate(input, DateEnumeration.REPAIR_END);
+
+
+        Map<String, FieldPerfReportPartResultDTO> collectedResultsPerMatNr = new HashMap<>();
+
+        if (input.getReturnDate() == null && input.getShipDate() == null) {
+            for (int k = 0; k < input.getSelectedAnalInterval(); k++) {
+                performErrorPositionStep(collectedResultsPerMatNr, x2MsgsPerId, input, startShipDate, endShipDate, startRepairDate, endRepairDate);
+
+                startShipDate = startShipDate.plusMonths(1);
+                endShipDate = endShipDate.plusMonths(1);
+
+                startRepairDate = startRepairDate.plusMonths(1);
+                endRepairDate = endRepairDate.plusMonths(1);
+            }
+
+            return convertToSortedList(collectedResultsPerMatNr);
+        }
+
+        performErrorPositionStep(collectedResultsPerMatNr, x2MsgsPerId, input, startShipDate, endShipDate, startRepairDate, endRepairDate);
+
+        return convertToSortedList(collectedResultsPerMatNr);
+    }
+
+
+
     /* ************* *
      * Hilfsmethoden *
      * ************* */
@@ -1023,8 +1117,6 @@ public class FieldPerfReportService {
             rmaDate = "a.internalShipmentDate";
         }
 
-        // HashMap<String, Long> returnValuesMap = new HashMap<String, Long>();
-
         StringBuilder queryStatement = new StringBuilder("select a.errorCodeName, count(a) from MaterializedServiceMessage a ");
         queryStatement.append("where ").append(rmaDate).append(" >= :startRepairDate and ").append(rmaDate).append(" < :endRepairDate ");
 
@@ -1061,6 +1153,64 @@ public class FieldPerfReportService {
         return map.entrySet().stream()
                 .map(entry -> new FieldPerfReportCauseResultRecord(entry.getKey(), entry.getValue()))
                 .sorted(Comparator.comparing(FieldPerfReportCauseResultRecord::cause, Comparator.nullsLast(Comparator.naturalOrder())))
+                .collect(Collectors.toList());
+    }
+
+
+
+    private void performErrorPositionStep(Map<String, FieldPerfReportPartResultDTO> collectedResultsPerMatNr,
+            Map<Long, X2MessageSearchDTO> x2MsgsPerId,
+            FieldPerfReportSearchObject input, LocalDate startShipDate, LocalDate endShipDate, LocalDate startRepairDate, LocalDate endRepairDate) {
+        String rmaDate;
+        if (input.getSelectedRmaCntType() == RMACountingType.CLOSED_BY_ARRIVAL_DATE
+                || input.getSelectedRmaCntType() == RMACountingType.ALL_BY_ARRIVAL_DATE) {
+            rmaDate = "a.internalArrivalDate";
+        }
+        else {
+            rmaDate = "a.internalShipmentDate";
+        }
+
+        String errorCode = new PropertyService().getStringProperty(Constants.PROP_FIT_ERROR_CODE_NAME);
+
+        StringBuilder queryStatement = new StringBuilder("select a from MaterializedServiceMessage a ");
+        queryStatement.append("where ").append(rmaDate).append(" >= :startRepairDate and ").append(rmaDate).append(" < :endRepairDate ");
+
+        if (input.getSelectedRmaCntType() == RMACountingType.CLOSED_BY_ARRIVAL_DATE) {
+            queryStatement.append(" and a.internalShipmentDate is not null ");
+        }
+
+        queryStatement.append("and a.customerShipmentDate >= :startShipDate and a.customerShipmentDate < :endShipDate ");
+        queryStatement.append("and a.errorCodeName = '").append(errorCode).append("' ");
+
+        // Add standard filter criteria
+        setupFilterCriteria(queryStatement, input, false, false);
+
+        TypedQuery<MaterializedServiceMessage> query = em.createQuery(queryStatement.toString(), MaterializedServiceMessage.class);
+        query.setParameter("startShipDate", startShipDate);
+        query.setParameter("endShipDate", endShipDate);
+        query.setParameter("startRepairDate", startRepairDate);
+        query.setParameter("endRepairDate", endRepairDate);
+
+        for (MaterializedServiceMessage msg : query.getResultList()) {
+            // MaterializedServiceMessage.getDefectComponent() ist Materialnummer
+            FieldPerfReportPartResultDTO reportItem = collectedResultsPerMatNr.computeIfAbsent(
+                    msg.getDefectComponent(), FieldPerfReportPartResultDTO::new);
+            reportItem.raiseCnt();
+
+
+            X2MessageSearchDTO x2 = x2MsgsPerId.get(msg.getId());
+            if (x2 != null) {
+                // X2MessageSearchDTO.getDefectComponent() ist Materialnummer
+                FieldPerfReportPartResultDTO subItem = reportItem.getSubItemsPerMatNr().computeIfAbsent(
+                        x2.getDefectComponent(), FieldPerfReportPartResultDTO::new);
+                subItem.raiseCnt();
+            }
+        }
+    }
+
+    private List<FieldPerfReportPartResultDTO> convertToSortedList(Map<String, FieldPerfReportPartResultDTO> map) {
+        return map.values().stream()
+                .sorted(Comparator.comparing(FieldPerfReportPartResultDTO::getMaterialNumber, Comparator.nullsLast(Comparator.naturalOrder())))
                 .collect(Collectors.toList());
     }
 

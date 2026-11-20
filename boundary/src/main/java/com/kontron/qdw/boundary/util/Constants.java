@@ -106,6 +106,9 @@ public final class Constants {
     public static final String UTF_8 = CHARSET_UTF_8.name();
     public static final String ASCII = CHARSET_ASCII.name();
 
+    public static final String PROP_FIT_ERROR_CODE_NAME = "fit_error_code_name";
+
+
     /**
      * Ein User_Administrator darf keine Testaccounts anlegen oder ändern (etwa aktivieren)
      */
