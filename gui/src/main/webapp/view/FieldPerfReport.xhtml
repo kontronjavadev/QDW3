@@ -410,7 +410,7 @@
 				rowKey="#{reportRow[0].label}" >
 
 				<!-- 1. Die statische, fixierte Spalte (Index 0) -->
-				<p:column styleClass="clickable-td" 
+				<p:column styleClass="clickable-td" exportValue="#{reportRow[0].label}" 
 					style="width: #{fieldPerfReport.getColumnWidth(0)}px;min-width: #{fieldPerfReport.getColumnWidth(0)}px;" >
 					<f:facet name="header" >
 						<h:outputText value="#{fieldPerfReport.reportHeader[0].label}" style="#{fieldPerfReport.reportHeader[0].textStyle}" />
@@ -429,7 +429,7 @@
 
 				<!-- 2. Die scrollbaren, dynamischen Spalten (ab Index 1) - wachsen bei Platz mit, schrumpfen aber nie unter min-width -->
 				<p:columns value="#{fieldPerfReport.columnIndices}" var="colIdx" 
-					styleClass="clickable-td" 
+					styleClass="clickable-td" exportValue="#{reportRow[colIdx].label}" 
 					style="width: #{fieldPerfReport.getColumnWidth(colIdx)}px;min-width: #{fieldPerfReport.getColumnWidth(colIdx)}px;" >
 					<f:facet name="header" >
 						<h:outputText value="#{fieldPerfReport.reportHeader[colIdx].label}" style="#{fieldPerfReport.reportHeader[colIdx].textStyle}" />
