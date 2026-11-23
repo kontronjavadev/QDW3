@@ -422,7 +422,7 @@ public class FieldPerfReport extends SuperView implements Serializable {
                 rat = 100.0 * s / numberShipments;
             }
 
-            ratio[colIdx] = new ReportSumRatioCell(decimalFormat.format(rat) + " %");
+            ratio[colIdx] = new ReportSumRatioCell(decimalFormat.format(rat) + "%");
 
 
             // Q-relevant period und ratio berechnen
@@ -438,7 +438,7 @@ public class FieldPerfReport extends SuperView implements Serializable {
                 qRelRat = 100.0 * Double.parseDouble(qRelevantPeriod[colIdx].getLabel()) / numberShipments;
             }
 
-            qRelevantRatio[colIdx] = new ReportQRelCell(decimalFormat.format(qRelRat) + " %");
+            qRelevantRatio[colIdx] = new ReportQRelCell(decimalFormat.format(qRelRat) + "%");
 
         }
 
