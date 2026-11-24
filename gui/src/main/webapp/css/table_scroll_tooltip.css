@@ -47,9 +47,9 @@ Wie lange der Übergang dauern soll. 0.2s (200 Millisekunden) ist ideal für UI-
 
 Zeitverlauf / Timing-Function (Werteliste {"ease", "linear", "ease-in-out"}):
 Bestimmt die Beschleunigungskurve:
-    ease (Standard): Startet langsam, wird in der Mitte schneller und bremst am Ende sanft ab (wirkt am natürlichsten).
-    linear: Läuft von Anfang bis Ende absolut gleichmäßig durch.
-    ease-in-out: Startet und endet sehr weich.
+	ease (Standard): Startet langsam, wird in der Mitte schneller und bremst am Ende sanft ab (wirkt am natürlichsten).
+	linear: Läuft von Anfang bis Ende absolut gleichmäßig durch.
+	ease-in-out: Startet und endet sehr weich.
 
 Verzögerung (optional, Zahlenwert plus Einheit, etwa 0.2s):
 Wird meist weggelassen (oder auf 0s belassen), damit die Animation sofort beim Klick startet.

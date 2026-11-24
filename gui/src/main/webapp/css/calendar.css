@@ -4,117 +4,124 @@
 
 /* --------------------------------------------------------------------------
    1. EINGABE-ZEILE (Standard für bestehende Suchdialoge)
-      Tag-Einschränkung 'span': Greift NUR auf das Input+Button Konstrukt!
+	  Tag-Einschränkung 'span': Greift NUR auf das Input+Button Konstrukt!
    -------------------------------------------------------------------------- */
 span.ui-datepicker:not(.fluid-date),
 span.ui-calendar:not(.fluid-date) {
-    display: inline-flex !important;
-    align-items: center !important;
-    vertical-align: middle !important;
-    width: 10.85rem !important; 
-    height: 1.6rem !important;
-    box-sizing: border-box !important;
+	display: inline-flex !important;
+	align-items: center !important;
+	vertical-align: middle !important;
+	width: 10.85rem !important; 
+	height: 1.6rem !important;
+	box-sizing: border-box !important;
 }
 
 /* Eingabefeld: Exakt 9.25rem x 1.6rem */
 span.ui-datepicker:not(.fluid-date) > input,
 span.ui-calendar:not(.fluid-date) > input {
-    width: 9.25rem !important;
-    height: 1.6rem !important;
-    min-height: 0 !important;
-    max-height: 1.6rem !important;
-    flex: 0 0 9.25rem !important;
-    margin: 0 !important;
-    padding-top: 0 !important;
-    padding-bottom: 0 !important;
-    box-sizing: border-box !important;
+	width: 9.25rem !important;
+	height: 1.6rem !important;
+	min-height: 0 !important;
+	max-height: 1.6rem !important;
+	flex: 0 0 9.25rem !important;
+	margin: 0 !important;
+	padding-top: 0 !important;
+	padding-bottom: 0 !important;
+	box-sizing: border-box !important;
 }
 
 /* Schaltfläche neben dem Input: Exakt 1.6rem x 1.6rem quadratisch */
 span.ui-datepicker > .ui-button,
 span.ui-calendar > .ui-button,
 .ui-datepicker-trigger {
-    width: 1.6rem !important;
-    height: 1.6rem !important;
-    min-height: 0 !important;
-    max-height: 1.6rem !important;
-    margin: 0 !important; 
-    padding: 0 !important;
-    box-sizing: border-box !important;
-    position: relative !important; /* Wichtig für die Icon-Zentrierung */
-    display: block !important;
+	width: 1.6rem !important;
+	height: 1.6rem !important;
+	min-height: 0 !important;
+	max-height: 1.6rem !important;
+	margin: 0 !important; 
+	padding: 0 !important;
+	box-sizing: border-box !important;
+	position: relative !important; /* Wichtig für die Icon-Zentrierung */
+	display: block !important;
 }
 
 /* Icon zentrieren: Absolut in der Mitte (Sicherste Methode für PrimeFaces) */
 span.ui-datepicker > .ui-button .ui-icon,
 span.ui-calendar > .ui-button .ui-icon,
 .ui-datepicker-trigger .ui-icon {
-    position: absolute !important;
-    top: 50% !important;
-    left: 50% !important;
-    transform: translate(-50%, -50%) !important;
-    margin: 0 !important;
+	position: absolute !important;
+	top: 50% !important;
+	left: 50% !important;
+	transform: translate(-50%, -50%) !important;
+	margin: 0 !important;
 }
 
 
 /* --------------------------------------------------------------------------
    2. SPEZIAL-VERHALTEN (Für neues Flex-Grid)
-      Aktiv durch styleClass="fluid-date"
+	  Aktiv durch styleClass="fluid-date"
    -------------------------------------------------------------------------- */
 body .ui-fluid span.ui-datepicker.fluid-date,
 body .ui-fluid span.ui-calendar.fluid-date {
-    display: flex !important;
-    align-items: center !important;
-    width: 100% !important;
-    height: 1.6rem !important;
-    box-sizing: border-box !important;
+	display: flex !important;
+	align-items: center !important;
+	width: 100% !important;
+	height: 1.6rem !important;
+	box-sizing: border-box !important;
 }
 
 body .ui-fluid span.ui-datepicker.fluid-date > input,
 body .ui-fluid span.ui-calendar.fluid-date > input {
-    width: 100% !important;
-    flex: 1 1 auto !important;
-    height: 1.6rem !important;
-    min-height: 0 !important;
-    max-height: 1.6rem !important;
-    margin: 0 !important;
-    padding-top: 0 !important;
-    padding-bottom: 0 !important;
-    box-sizing: border-box !important;
+	width: 100% !important;
+	flex: 1 1 auto !important;
+	height: 1.6rem !important;
+	min-height: 0 !important;
+	max-height: 1.6rem !important;
+	margin: 0 !important;
+	padding-top: 0 !important;
+	padding-bottom: 0 !important;
+	box-sizing: border-box !important;
 }
 
 body .ui-fluid span.ui-datepicker.fluid-date > .ui-button,
 body .ui-fluid span.ui-calendar.fluid-date > .ui-button {
-    flex: 0 0 1.6rem !important;
+	flex: 0 0 1.6rem !important;
 }
 
 
 /* --------------------------------------------------------------------------
    3. POPUP-KALENDERDIALOG (Tag-Einschränkung 'div')
-      Display/Positionierung wird komplett PrimeFaces überlassen!
+	  Display/Positionierung wird komplett PrimeFaces überlassen!
    -------------------------------------------------------------------------- */
+/* Abstand Monat/Jahr-Auswahl zu Kalenderblatt und Kalenderblatt zu Zeitauswahl */
+body .ui-datepicker .ui-datepicker-calendar {
+	margin: 0.7rem 0 0.2rem 0;
+}
+
 /* Breite hart fixieren - auch gegen den Zwang von .ui-fluid */
 body .ui-datepicker-panel,
 body div.ui-datepicker,
 body .ui-fluid .ui-datepicker-panel,
 body .ui-fluid div.ui-datepicker {
-    background: var(--inputfield) !important;
-    color: var(--text) !important;
-    width: 18rem !important;
-    min-width: 18rem !important;
-    max-width: 18rem !important;
-    box-sizing: border-box !important;
+	background: var(--inputfield) !important;
+	color: var(--text) !important;
+	width: 16rem !important;
+	min-width: 16rem !important;
+	max-width: 18rem !important;
+	box-sizing: border-box !important;
 }
 
 body .ui-datepicker-panel .ui-datepicker-group,
 body div.ui-datepicker .ui-datepicker-group {
-    padding: 0rem !important;
+	padding: 0rem !important;
 }
 
 body .ui-datepicker-panel .ui-datepicker-header,
-body div.ui-datepicker .ui-datepicker-header {
-    background: var(--paneldimmed) !important;
-    color: var(--text) !important;
+body div.ui-datepicker .ui-datepicker-header,
+body .ui-datepicker .ui-datepicker-title span.ui-datepicker-year,
+body .ui-datepicker .ui-datepicker-title span.ui-datepicker-month {
+	background: var(--paneldimmed) !important;
+	color: var(--text) !important;
 }
 
 /* Monat-Auswahlmenü, Jahr-Schalter */
@@ -124,12 +131,23 @@ body .ui-datepicker .ui-datepicker-title .ui-datepicker-year {
 	background: var(--backgroundnativemenue);
 }
 
+/* Pfeile Jahr-Schalter */
+input.ui-datepicker-year {
+	/* Macht die Pfeile hell, da für den dark mode schwarz verwendet wird, was absolut nicht passt */
+	color-scheme: light;
+}
+
 /* Navigations-Pfeile im Header */
 body .ui-datepicker-panel .ui-datepicker-header a,
 body .ui-datepicker-panel .ui-datepicker-header button,
 body div.ui-datepicker .ui-datepicker-header a,
 body div.ui-datepicker .ui-datepicker-header button {
-    color: var(--text) !important;
+	color: var(--text) !important;
+}
+
+/* Tage-Überschriften */
+body .ui-datepicker .ui-datepicker-calendar th {
+	padding: .2rem;
 }
 
 /* Kalender-Tage Tabelle */
@@ -137,20 +155,20 @@ body .ui-datepicker-panel .ui-datepicker-calendar td,
 body .ui-datepicker-panel .ui-datepicker-calendar td > a,
 body div.ui-datepicker .ui-datepicker-calendar td,
 body div.ui-datepicker .ui-datepicker-calendar td > a {
-    padding: 0rem !important;
-    color: var(--text) !important;
+	padding: 0rem !important;
+	color: var(--text) !important;
 }
 
 body .ui-datepicker-panel .ui-datepicker-calendar td > a,
 body .ui-datepicker-panel .ui-datepicker-calendar td > span,
 body div.ui-datepicker .ui-datepicker-calendar td > a,
 body div.ui-datepicker .ui-datepicker-calendar td > span {
-    width: 2rem !important;
-    height: 2rem !important;
-    line-height: 2rem !important;
-    text-align: center !important;
-    display: inline-block !important;
-    box-sizing: border-box !important;
+	width: 1.5rem !important;
+	height: 1.5rem !important;
+	line-height: 1.5rem !important;
+	text-align: center !important;
+	display: inline-block !important;
+	box-sizing: border-box !important;
 }
 
 /* Focus State */
@@ -158,7 +176,7 @@ body .ui-datepicker-panel .ui-datepicker-calendar td > a:focus,
 body .ui-datepicker-panel .ui-datepicker-calendar td > span:focus,
 body div.ui-datepicker .ui-datepicker-calendar td > a:focus,
 body div.ui-datepicker .ui-datepicker-calendar td > span:focus {
-    box-shadow: 0 0 0 .2rem var(--activeborder) !important;
+	box-shadow: 0 0 0 .2rem var(--activeborder) !important;
 }
 
 /* Aktiver Tag */
@@ -166,15 +184,16 @@ body .ui-datepicker-panel .ui-datepicker-calendar td > a.ui-state-active,
 body .ui-datepicker-panel .ui-datepicker-calendar td > span.ui-state-active,
 body div.ui-datepicker .ui-datepicker-calendar td > a.ui-state-active,
 body div.ui-datepicker .ui-datepicker-calendar td > span.ui-state-active {
-    background: var(--active) !important;
-    color: var(--text) !important;
+	background: var(--activemarked) !important;
+	color: var(--textonactive) !important;
+	box-shadow: inset 0 0 0 2px var(--activeborder) !important;
 }
 
 /* Hover auf normale Tage */
 body .ui-datepicker-panel .ui-datepicker-calendar td > a:hover,
 body div.ui-datepicker .ui-datepicker-calendar td > a:hover {
-    background: var(--hover) !important;
-    color: var(--text) !important;
+	background: var(--hover) !important;
+	color: var(--text) !important;
 }
 
 /* Heutiger Tag (inaktiv) */
@@ -186,8 +205,8 @@ body div.ui-datepicker .ui-datepicker-calendar td.ui-datepicker-today > a,
 body div.ui-datepicker .ui-datepicker-calendar td.ui-datepicker-today > span,
 body div.ui-datepicker .ui-datepicker-calendar td.ui-datepicker-current-day > a,
 body div.ui-datepicker .ui-datepicker-calendar td.ui-datepicker-current-day > span {
-    background: var(--activemarked) !important;
-    color: var(--textonactive) !important;
+	background: var(--activemarked) !important;
+	color: var(--textonactive) !important;
 }
 
 /* Heutiger Tag (aktiv ausgewählt) */
@@ -199,9 +218,9 @@ body div.ui-datepicker .ui-datepicker-calendar td.ui-datepicker-today > a.ui-sta
 body div.ui-datepicker .ui-datepicker-calendar td.ui-datepicker-today > span.ui-state-active, 
 body div.ui-datepicker .ui-datepicker-calendar td.ui-datepicker-current-day > a.ui-state-active, 
 body div.ui-datepicker .ui-datepicker-calendar td.ui-datepicker-current-day > span.ui-state-active {
-    background: var(--activemarked) !important;
-    color: var(--textonactive) !important;
-    border: 1px solid var(--activeborder) !important;
+	background: var(--activemarked) !important;
+	color: var(--textonactive) !important;
+	box-shadow: inset 0 0 0 2px var(--activeborder) !important;
 }
 
 /* Hover auf heutigen/aktiven Tag */
@@ -209,29 +228,29 @@ body .ui-datepicker-panel .ui-datepicker-calendar td.ui-datepicker-today > a:hov
 body .ui-datepicker-panel .ui-datepicker-calendar td.ui-datepicker-current-day > a:hover,
 body div.ui-datepicker .ui-datepicker-calendar td.ui-datepicker-today > a:hover,
 body div.ui-datepicker .ui-datepicker-calendar td.ui-datepicker-current-day > a:hover {
-    background: var(--hover) !important;
-    border: 1px solid var(--hoverborder) !important;
+	background: var(--hover) !important;
+	box-shadow: inset 0 0 0 2px var(--hoverborder) !important;
 }
 
 /* ButtonBar unten (Heute / Löschen Buttons) */
 body .ui-datepicker-panel .ui-datepicker-buttonbar,
 body div.ui-datepicker .ui-datepicker-buttonbar {
-    padding: 0rem !important;
+	padding: 0rem !important;
 }
 
 body .ui-datepicker-panel .ui-datepicker-buttonbar button,
 body .ui-datepicker-panel .ui-datepicker-buttonbar button.ui-state-active,
 body div.ui-datepicker .ui-datepicker-buttonbar button,
 body div.ui-datepicker .ui-datepicker-buttonbar button.ui-state-active {
-    background: var(--active) !important;
-    color: var(--textonactive) !important;
-    border: 1px solid var(--activeborder) !important;
-    height: auto !important;
-    padding: 0.2rem 0.5rem !important;
+	background: var(--active) !important;
+	color: var(--textonactive) !important;
+	box-shadow: inset 0 0 0 1px var(--activeborder) !important;
+	height: auto !important;
+	padding: 0.2rem 0.5rem !important;
 }
 
 body .ui-datepicker-panel .ui-datepicker-buttonbar button:not(:disabled):hover,
 body div.ui-datepicker .ui-datepicker-buttonbar button:not(:disabled):hover {
-    background: var(--hover) !important;
-    border: 1px solid var(--hoverborder) !important;
+	background: var(--hover) !important;
+	box-shadow: inset 0 0 0 1px var(--hoverborder) !important;
 }
