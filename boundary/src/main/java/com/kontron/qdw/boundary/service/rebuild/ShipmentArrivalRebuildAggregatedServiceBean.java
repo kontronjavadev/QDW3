@@ -135,11 +135,12 @@ public class ShipmentArrivalRebuildAggregatedServiceBean implements TaskCall {
 
     private void execAddIndices(TaskNodeLog ownTask) {
         TaskLeafLog subTsk = ownTask.createNewSubTaskLeaf("create indices");
-        String indexCommand = "ALTER TABLE aggregated_shipment_arrival_tab ADD INDEX ";
+        String indexCommand = "alter table aggregated_shipment_arrival_tab add index ";
 
         logger.info("create index 1");
         StringBuilder sql = new StringBuilder();
-        sql.append(indexCommand).append("IN_AGSA_YEAR_MONTH(year, month)");
+        // kombinierter Index für schnellere Abfrage bei field performance report
+        sql.append(indexCommand).append("idx_agg_shipt_arrival_matrev_year_month (material_revision, year, month)");
         em.createNativeQuery(sql.toString()).executeUpdate();
 
         logger.info("create index 2");

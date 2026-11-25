@@ -57,7 +57,7 @@ public class ShipmentArrivalRebuildMaterializedFullServiceBean extends AbstractS
     private void execAddIndices(TaskNodeLog ownTask) {
         TaskLeafLog subTsk = ownTask.createNewSubTaskLeaf("create indices");
         logger.info("create indices");
-        String indexCommand = "ALTER TABLE arrival_shipment_mv_new "
+        String indexCommand = "alter table arrival_shipment_mv_new "
                 + "add index IN_AS_ID(id)"
                 + ", add index IN_AS_SNR_ID (serial_object_id)"
                 + ", add index IN_AS_PSNR_ID (parent_serial_object_id)"
@@ -90,12 +90,15 @@ public class ShipmentArrivalRebuildMaterializedFullServiceBean extends AbstractS
                 + ", add index IN_AS_PLANT (plant)"
                 + ", add index IN_AS_SHIP_MT (shipment_movement_type)"
                 + ", add index IN_AS_ARR_MT (arrival_movement_type)"
-                // + ", add index IN_AS_CUST_ORDER (customer_order_number)"// stattdessen erweiterten Index ganz unten nehmen
+                // + ", add index IN_AS_CUST_ORDER (customer_order_number)" // stattdessen erweiterten Index unten nehmen
                 + ", add index IN_AS_PURCH_ORDER (purchase_order_number)"
                 + ", add index IN_AS_ARR_ID (arrival_id)"
-                + ", add index IN_AS_MATERIAL (material)"
+                // + ", add index IN_AS_MATERIAL (material)" // stattdessen erweiterten Index unten nehmen
                 + ", add index IN_AS_SNR (serial_object)"
-                + ", add index idx_arrvshipt_custordernr_sernr_id_shiptmvttype (customer_order_number, serial_number, id, shipment_movement_type)";
+                // kombinierter Index für schnelleren (Neu-)Aufbau (delta oder full) der Tabelle
+                + ", add index idx_arrvshipt_custordernr_sernr_id_shiptmvttype (customer_order_number, serial_number, id, shipment_movement_type)"
+                // kombinierter Index für schnellere Abfrage bei field performance report
+                + ", add index idx_arrvshipt_mat_shiptdate (material, shipment_date)";
 
         em.createNativeQuery(indexCommand).executeUpdate();
         subTsk.finishTaskWithSuccess();

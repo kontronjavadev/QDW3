@@ -54,6 +54,14 @@ public class FieldPerfReportService {
     private X2MessageBoundaryService x2Service;
 
 
+    /*
+     * Bei Abfrage mit Materialniummer like:
+     * where m.id in (...) or m.material_number like '%xyz%'
+     * Dann ermittelt MySql erst die Material-Ids zum like in einer eigenen Abfrage
+     * und kann danach den Index auf (material, datum) nutzen.
+     */
+
+
 
     /* ***************** *
      * Report Hauptseite *
@@ -187,14 +195,7 @@ public class FieldPerfReportService {
         logger.info("start getLastYearReturn()");
         TimeMeasurement tm = new TimeMeasurement("getLastYearReturn()");
 
-        String rmaDate;
-        if (input.getSelectedRmaCntType() == RMACountingType.CLOSED_BY_ARRIVAL_DATE
-                || input.getSelectedRmaCntType() == RMACountingType.ALL_BY_ARRIVAL_DATE) {
-            rmaDate = "a.internalArrivalDate";
-        }
-        else {
-            rmaDate = "a.internalShipmentDate";
-        }
+        String rmaDate = rmaDate(input);
 
         HashMap<String, Long> returnValuesMap = new HashMap<String, Long>();
         // returnValuesMap je Monat mit 0 initialisieren
@@ -297,14 +298,7 @@ public class FieldPerfReportService {
         logger.info("start getFirstYearReturn()");
         TimeMeasurement tm = new TimeMeasurement("getFirstYearReturn()");
 
-        String rmaDate;
-        if (input.getSelectedRmaCntType() == RMACountingType.CLOSED_BY_ARRIVAL_DATE
-                || input.getSelectedRmaCntType() == RMACountingType.ALL_BY_ARRIVAL_DATE) {
-            rmaDate = "a.internalArrivalDate";
-        }
-        else {
-            rmaDate = "a.internalShipmentDate";
-        }
+        String rmaDate = rmaDate(input);
 
         HashMap<String, Long> returnValuesMap = new HashMap<String, Long>();
         // returnValuesMap je Monat mit 0 initialisieren
@@ -405,14 +399,7 @@ public class FieldPerfReportService {
         logger.info("start getReturnValuesOfAnalysisInterval()");
         TimeMeasurement tm = new TimeMeasurement("getReturnValuesOfAnalysisInterval()");
 
-        String rmaDate;
-        if (input.getSelectedRmaCntType() == RMACountingType.CLOSED_BY_ARRIVAL_DATE
-                || input.getSelectedRmaCntType() == RMACountingType.ALL_BY_ARRIVAL_DATE) {
-            rmaDate = "a.internalArrivalDate";
-        }
-        else {
-            rmaDate = "a.internalShipmentDate";
-        }
+        String rmaDate = rmaDate(input);
 
         HashMap<String, HashMap<String, Long>> returnMap = new HashMap<String, HashMap<String, Long>>();
         // returnValuesMap je Analyse-Monat mit Map Return-Monaten mit Anzahl 0 initialisieren
@@ -986,14 +973,7 @@ public class FieldPerfReportService {
 
     private List<MaterializedServiceMessageSearchDTO> performDetailStep(FieldPerfReportSearchObject input,
             LocalDate startShipDate, LocalDate endShipDate, LocalDate startRepairDate, LocalDate endRepairDate) {
-        String rmaDate;
-        if (input.getSelectedRmaCntType() == RMACountingType.CLOSED_BY_ARRIVAL_DATE
-                || input.getSelectedRmaCntType() == RMACountingType.ALL_BY_ARRIVAL_DATE) {
-            rmaDate = "a.internalArrivalDate";
-        }
-        else {
-            rmaDate = "a.internalShipmentDate";
-        }
+        String rmaDate = rmaDate(input);
 
         StringBuilder queryStatement = new StringBuilder("select distinct ").append(getMaterializedServiceMessageSearchDTOConstructor())
                 .append(" from MaterializedServiceMessage a ");
@@ -1108,14 +1088,7 @@ public class FieldPerfReportService {
 
     private Map<String, Integer> performErrorCodeStep(FieldPerfReportSearchObject input,
             LocalDate startShipDate, LocalDate endShipDate, LocalDate startRepairDate, LocalDate endRepairDate) {
-        String rmaDate;
-        if (input.getSelectedRmaCntType() == RMACountingType.CLOSED_BY_ARRIVAL_DATE
-                || input.getSelectedRmaCntType() == RMACountingType.ALL_BY_ARRIVAL_DATE) {
-            rmaDate = "a.internalArrivalDate";
-        }
-        else {
-            rmaDate = "a.internalShipmentDate";
-        }
+        String rmaDate = rmaDate(input);
 
         StringBuilder queryStatement = new StringBuilder("select a.errorCodeName, count(a) from MaterializedServiceMessage a ");
         queryStatement.append("where ").append(rmaDate).append(" >= :startRepairDate and ").append(rmaDate).append(" < :endRepairDate ");
@@ -1161,14 +1134,7 @@ public class FieldPerfReportService {
     private void performErrorPositionStep(Map<String, FieldPerfReportPartResultDTO> collectedResultsPerMatNr,
             Map<Long, X2MessageSearchDTO> x2MsgsPerId,
             FieldPerfReportSearchObject input, LocalDate startShipDate, LocalDate endShipDate, LocalDate startRepairDate, LocalDate endRepairDate) {
-        String rmaDate;
-        if (input.getSelectedRmaCntType() == RMACountingType.CLOSED_BY_ARRIVAL_DATE
-                || input.getSelectedRmaCntType() == RMACountingType.ALL_BY_ARRIVAL_DATE) {
-            rmaDate = "a.internalArrivalDate";
-        }
-        else {
-            rmaDate = "a.internalShipmentDate";
-        }
+        String rmaDate = rmaDate(input);
 
         String errorCode = new PropertyService().getStringProperty(Constants.PROP_FIT_ERROR_CODE_NAME);
 
@@ -1282,6 +1248,18 @@ public class FieldPerfReportService {
             }
 
         }
+    }
+
+    private String rmaDate(FieldPerfReportSearchObject input) {
+        String rmaDate;
+        if (input.getSelectedRmaCntType() == RMACountingType.CLOSED_BY_ARRIVAL_DATE
+                || input.getSelectedRmaCntType() == RMACountingType.ALL_BY_ARRIVAL_DATE) {
+            rmaDate = "a.internalArrivalDate";
+        }
+        else {
+            rmaDate = "a.internalShipmentDate";
+        }
+        return rmaDate;
     }
 
 }

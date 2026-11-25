@@ -55,7 +55,7 @@ public class SvcMsgRebuildMaterializedFullServiceBean extends AbstractSvcMsgRebu
     private void execAddIndices(TaskNodeLog ownTask) {
         TaskLeafLog subTsk = ownTask.createNewSubTaskLeaf("create indices");
         logger.info("create indices");
-        String indexCommand = "ALTER TABLE service_message_mv_new "
+        String indexCommand = "alter table service_message_mv_new "
                 + "add index IN_SM_ID (id)"
                 + ", add index IN_SM_SNR_ID (serial_object_id)"
                 + ", add index IN_SM_PSNR_ID (parent_serial_object_id)"
@@ -104,12 +104,15 @@ public class SvcMsgRebuildMaterializedFullServiceBean extends AbstractSvcMsgRebu
                 + ", add index IN_SM_EXT_SUP_NAME (external_supplier_name)"
                 + ", add index IN_SM_DEL_NOTE_NO (delivery_note_number)"
                 + ", add index IN_SM_SERV_ORDER_TYPE (service_order_type)"
-                + ", add index IN_SM_MATERIAL (material)"
+                // + ", add index IN_SM_MATERIAL (material)" // stattdessen erweiterten Index unten nehmen
                 + ", add index IN_SM_SNR (serial_object)"
                 + ", add index IN_SM_SUP_ADATE (sup_arrival_date)"
                 + ", add index IN_SM_CUST_SDATE (cust_ship_date)"
                 + ", add index IN_SM_SUP_CODE (supplier_code)"
-                + ", add index IN_SM_SUP_NAME (supplier_name)";
+                + ", add index IN_SM_SUP_NAME (supplier_name)"
+                // kombinierte Indices für schnellere Abfrage bei field performance report
+                + ", add index idx_svc_msg_mat_arrdate_custshiptdate(material, internal_arrival_date, cust_ship_date)"
+                + ", add index idx_svc_msg_mat_intdate_custshiptdate(material, internal_shipment_date, cust_ship_date)";
 
         em.createNativeQuery(indexCommand).executeUpdate();
         subTsk.finishTaskWithSuccess();
