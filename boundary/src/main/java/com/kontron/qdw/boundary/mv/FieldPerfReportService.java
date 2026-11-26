@@ -3,9 +3,9 @@ package com.kontron.qdw.boundary.mv;
 import java.lang.invoke.MethodHandles;
 import java.time.LocalDate;
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Strings;
 import org.slf4j.Logger;
@@ -591,12 +591,13 @@ public class FieldPerfReportService {
     @PermitAll
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public List<FieldPerfReportPartResultDTO> getAllErrorPositions(FieldPerfReportSearchObject input) {
-        Map<Long, X2MessageSearchDTO> x2MsgsPerSvcMsgId;
+        Map<Long, List<X2MessageSearchDTO>> x2MsgsPerSvcMsgId;
         try {
-            List<X2MessageSearchDTO> x2Messages = x2Service.searchAllX2Messages(new SearchDTO()); // rd. 5000 Einträge
+            SearchDTO searchObj = new SearchDTO();
+            searchObj.setMaxResult(50000);
+            List<X2MessageSearchDTO> x2Messages = x2Service.searchAllX2Messages(searchObj); // rd. 5000 Einträge
             x2MsgsPerSvcMsgId = x2Messages.stream()
-                    .filter(msg -> msg.getDefectComponent() != null)
-                    .collect(Collectors.toMap(X2MessageSearchDTO::getServiceMessageId, Function.identity()));
+                    .collect(Collectors.groupingBy(X2MessageSearchDTO::getServiceMessageId));
         }
         catch (GeneralSearchException e) {
             logger.error("Error getting all x2 messages", e);
@@ -628,12 +629,13 @@ public class FieldPerfReportService {
     @PermitAll
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public List<FieldPerfReportPartResultDTO> getErrorPositionReport(FieldPerfReportSearchObject input) {
-        Map<Long, X2MessageSearchDTO> x2MsgsPerSvcMsgId;
+        Map<Long, List<X2MessageSearchDTO>> x2MsgsPerSvcMsgId;
         try {
-            List<X2MessageSearchDTO> x2Messages = x2Service.searchAllX2Messages(new SearchDTO()); // rd. 5000 Einträge
+            SearchDTO searchObj = new SearchDTO();
+            searchObj.setMaxResult(50000);
+            List<X2MessageSearchDTO> x2Messages = x2Service.searchAllX2Messages(searchObj); // rd. 5000 Einträge
             x2MsgsPerSvcMsgId = x2Messages.stream()
-                    .filter(msg -> msg.getDefectComponent() != null)
-                    .collect(Collectors.toMap(X2MessageSearchDTO::getServiceMessageId, Function.identity()));
+                    .collect(Collectors.groupingBy(X2MessageSearchDTO::getServiceMessageId));
         }
         catch (GeneralSearchException e) {
             logger.error("Error getting all x2 messages", e);
@@ -1164,7 +1166,7 @@ public class FieldPerfReportService {
 
 
     private void performErrorPositionStep(Map<String, FieldPerfReportPartResultDTO> collectedResultsPerMatNr,
-            Map<Long, X2MessageSearchDTO> x2MsgsPerSvcMsgId,
+            Map<Long, List<X2MessageSearchDTO>> x2MsgsPerSvcMsgId,
             FieldPerfReportSearchObject input, LocalDate startShipDate, LocalDate endShipDate, LocalDate startRepairDate, LocalDate endRepairDate) {
         String rmaDate = rmaDate(input);
 
@@ -1196,12 +1198,14 @@ public class FieldPerfReportService {
             reportItem.raiseCnt();
 
 
-            X2MessageSearchDTO x2 = x2MsgsPerSvcMsgId.get(msg.getId());
-            if (x2 != null) {
+            List<X2MessageSearchDTO> x2s = x2MsgsPerSvcMsgId.get(msg.getId());
+            if (CollectionUtils.isNotEmpty(x2s)) {
                 // X2MessageSearchDTO.getDefectComponent() ist Materialnummer
-                FieldPerfReportPartResultDTO subItem = reportItem.getSubItemsPerMatNr().computeIfAbsent(
-                        x2.getDefectComponent(), FieldPerfReportPartResultDTO::new);
-                subItem.raiseCnt();
+                for (X2MessageSearchDTO x2 : x2s) {
+                    FieldPerfReportPartResultDTO subItem = reportItem.getSubItemsPerMatNr().computeIfAbsent(
+                            x2.getDefectComponent(), FieldPerfReportPartResultDTO::new);
+                    subItem.raiseCnt();
+                }
             }
         }
     }
