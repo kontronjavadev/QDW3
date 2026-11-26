@@ -253,6 +253,10 @@ public class FieldPerfReport extends SuperView implements Serializable {
             detailsPanel.reset();
             causesPanel.reset();
             partsPanel.reset();
+
+            // weist den Browser an, sofort auf den Haupt-Tab (Index 0) zu wechseln
+            PrimeFaces.current().executeScript("PF('tabview2Widget').select(0);");
+            tabIndex = 0;
         }
         catch (final Exception e) {
             logger.error("Error while executing report!", e);
