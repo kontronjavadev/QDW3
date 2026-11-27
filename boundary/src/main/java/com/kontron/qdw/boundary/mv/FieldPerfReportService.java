@@ -20,7 +20,7 @@ import com.kontron.qdw.dto.base.*;
 import com.kontron.qdw.dto.mv.*;
 import com.kontron.qdw.dto.mv.report.*;
 import com.kontron.qdw.dto.service.RepairErrorCodeListDTO;
-import com.kontron.qdw.dto.service.X2MessageSearchDTO;
+import com.kontron.qdw.dto.service.X2MessageFieldPerfReportDTO;
 import com.kontron.qdw.repository.material.*;
 import com.kontron.util.datetime.TimeMeasurement;
 import com.kontron.util.text.StringUtil;
@@ -30,7 +30,6 @@ import jakarta.ejb.*;
 import jakarta.persistence.*;
 import net.sourceforge.jbizmo.commons.property.PropertyService;
 import net.sourceforge.jbizmo.commons.search.SearchService;
-import net.sourceforge.jbizmo.commons.search.dto.SearchDTO;
 import net.sourceforge.jbizmo.commons.search.exception.GeneralSearchException;
 
 @Stateless
@@ -55,7 +54,7 @@ public class FieldPerfReportService {
 
 
     /*
-     * Bei Abfrage mit Materialniummer like:
+     * Bei Abfrage mit Materialnummer like:
      * where m.id in (...) or m.material_number like '%xyz%'
      * Dann ermittelt MySql erst die Material-Ids zum like in einer eigenen Abfrage
      * und kann danach den Index auf (material, datum) nutzen.
@@ -584,20 +583,18 @@ public class FieldPerfReportService {
 
 
 
-    /* ******************* *
-     * Report Causes-Seite *
-     * ******************* */
+    /* ************************ *
+     * Report Partanalyse-Seite *
+     * ************************ */
 
     @PermitAll
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public List<FieldPerfReportPartResultDTO> getAllErrorPositions(FieldPerfReportSearchObject input) {
-        Map<Long, List<X2MessageSearchDTO>> x2MsgsPerSvcMsgId;
+        Map<Long, List<X2MessageFieldPerfReportDTO>> x2MsgsPerSvcMsgId;
         try {
-            SearchDTO searchObj = new SearchDTO();
-            searchObj.setMaxResult(50000);
-            List<X2MessageSearchDTO> x2Messages = x2Service.searchAllX2Messages(searchObj); // rd. 5000 Einträge
+            List<X2MessageFieldPerfReportDTO> x2Messages = x2Service.findAllX2MessagesForFieldPerfReport(); // rd. 5000 Einträge
             x2MsgsPerSvcMsgId = x2Messages.stream()
-                    .collect(Collectors.groupingBy(X2MessageSearchDTO::getServiceMessageId));
+                    .collect(Collectors.groupingBy(X2MessageFieldPerfReportDTO::getServiceMessageId));
         }
         catch (GeneralSearchException e) {
             logger.error("Error getting all x2 messages", e);
@@ -629,13 +626,11 @@ public class FieldPerfReportService {
     @PermitAll
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public List<FieldPerfReportPartResultDTO> getErrorPositionReport(FieldPerfReportSearchObject input) {
-        Map<Long, List<X2MessageSearchDTO>> x2MsgsPerSvcMsgId;
+        Map<Long, List<X2MessageFieldPerfReportDTO>> x2MsgsPerSvcMsgId;
         try {
-            SearchDTO searchObj = new SearchDTO();
-            searchObj.setMaxResult(50000);
-            List<X2MessageSearchDTO> x2Messages = x2Service.searchAllX2Messages(searchObj); // rd. 5000 Einträge
+            List<X2MessageFieldPerfReportDTO> x2Messages = x2Service.findAllX2MessagesForFieldPerfReport(); // rd. 5000 Einträge
             x2MsgsPerSvcMsgId = x2Messages.stream()
-                    .collect(Collectors.groupingBy(X2MessageSearchDTO::getServiceMessageId));
+                    .collect(Collectors.groupingBy(X2MessageFieldPerfReportDTO::getServiceMessageId));
         }
         catch (GeneralSearchException e) {
             logger.error("Error getting all x2 messages", e);
@@ -1166,7 +1161,7 @@ public class FieldPerfReportService {
 
 
     private void performErrorPositionStep(Map<String, FieldPerfReportPartResultDTO> collectedResultsPerMatNr,
-            Map<Long, List<X2MessageSearchDTO>> x2MsgsPerSvcMsgId,
+            Map<Long, List<X2MessageFieldPerfReportDTO>> x2MsgsPerSvcMsgId,
             FieldPerfReportSearchObject input, LocalDate startShipDate, LocalDate endShipDate, LocalDate startRepairDate, LocalDate endRepairDate) {
         String rmaDate = rmaDate(input);
 
@@ -1198,10 +1193,10 @@ public class FieldPerfReportService {
             reportItem.raiseCnt();
 
 
-            List<X2MessageSearchDTO> x2s = x2MsgsPerSvcMsgId.get(msg.getId());
+            List<X2MessageFieldPerfReportDTO> x2s = x2MsgsPerSvcMsgId.get(msg.getId());
             if (CollectionUtils.isNotEmpty(x2s)) {
-                // X2MessageSearchDTO.getDefectComponent() ist Materialnummer
-                for (X2MessageSearchDTO x2 : x2s) {
+                // X2MessageFieldPerfReportDTO.getDefectComponent() ist Materialnummer
+                for (X2MessageFieldPerfReportDTO x2 : x2s) {
                     FieldPerfReportPartResultDTO subItem = reportItem.getSubItemsPerMatNr().computeIfAbsent(
                             x2.getDefectComponent(), FieldPerfReportPartResultDTO::new);
                     subItem.raiseCnt();

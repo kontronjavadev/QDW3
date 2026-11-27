@@ -1,23 +1,31 @@
 package com.kontron.qdw.boundary.service;
 
-import com.kontron.qdw.domain.service.*;
-import net.sourceforge.jbizmo.commons.search.exception.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.kontron.qdw.domain.service.X2Message;
+import com.kontron.qdw.dto.material.MaterialListDTO;
+import com.kontron.qdw.dto.material.MaterialRevisionListDTO;
+import com.kontron.qdw.dto.serial.SerialObjectListDTO;
 import com.kontron.qdw.dto.service.*;
-import jakarta.validation.ConstraintViolationException;
-import java.util.*;
-import com.kontron.qdw.dto.serial.*;
-import com.kontron.qdw.repository.service.*;
-import com.kontron.qdw.dto.material.*;
-import jakarta.inject.*;
+import com.kontron.qdw.repository.service.X2MessageRepository;
+
+import jakarta.annotation.security.PermitAll;
 import jakarta.ejb.*;
-import jakarta.annotation.security.*;
-import net.sourceforge.jbizmo.commons.search.dto.*;
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.validation.ConstraintViolationException;
 import net.sourceforge.jbizmo.commons.annotation.Generated;
+import net.sourceforge.jbizmo.commons.search.dto.SearchDTO;
+import net.sourceforge.jbizmo.commons.search.exception.GeneralSearchException;
 
 @Stateless
 public class X2MessageBoundaryService {
     @Generated
     private final X2MessageRepository repository;
+    @PersistenceContext
+    protected EntityManager em;
 
     /**
      * Default constructor
@@ -36,6 +44,24 @@ public class X2MessageBoundaryService {
     public X2MessageBoundaryService(X2MessageRepository repository) {
         this.repository = repository;
     }
+
+
+
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public List<X2MessageFieldPerfReportDTO> findAllX2MessagesForFieldPerfReport() {
+        String jpql = "select new X2MessageFieldPerfReportDTO ("
+                + X2MessageSearchDTO.SELECT_ID
+                + "," + X2MessageSearchDTO.SELECT_DEFECTCOMPONENT
+                + "," + X2MessageSearchDTO.SELECT_SERVICEMESSAGEID
+                + ") "
+                + "from X2Message a "
+                + "join a.serviceMessage i ";
+
+        return em.createQuery(jpql, X2MessageFieldPerfReportDTO.class).getResultList();
+    }
+
+
 
     /**
      * Delete existing X2 message
