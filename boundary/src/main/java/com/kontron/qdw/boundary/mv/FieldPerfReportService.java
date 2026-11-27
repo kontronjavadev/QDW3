@@ -501,8 +501,6 @@ public class FieldPerfReportService {
                 startShipDate, endShipDate, startRepairDate, endRepairDate);
     }
 
-    @PermitAll
-    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public List<MaterializedServiceMessageSearchDTO> getFieldPerformanceReportDetailData(FieldPerfReportSearchObject input) {
         LocalDate startShipDate = calculateDate(input, DateEnumeration.SHIPMENT_START);
         LocalDate endShipDate = calculateDate(input, DateEnumeration.SHIPMENT_END);
@@ -511,12 +509,12 @@ public class FieldPerfReportService {
         LocalDate endRepairDate = calculateDate(input, DateEnumeration.REPAIR_END);
 
 
-        if (input.getReturnDate() == null && input.getShipDate() == null) {
-            return performDetailStep(input, input.getSelectedAnalInterval(),
-                    startShipDate, endShipDate, startRepairDate, endRepairDate);
-        }
+        int steps = (input.getReturnDate() == null && input.getShipDate() == null)
+                ? input.getSelectedAnalInterval()
+                : 1;
 
-        return performDetailStep(input, startShipDate, endShipDate, startRepairDate, endRepairDate);
+        return performDetailStep(input, steps,
+                startShipDate, endShipDate, startRepairDate, endRepairDate);
     }
 
 
@@ -535,20 +533,8 @@ public class FieldPerfReportService {
         LocalDate endRepairDate = input.getStartDate().plusMonths(1);
 
 
-        Map<String, Integer> returnValuesMap = new HashMap<>();
-
-        for (int k = 0; k < (input.getSelectedAnalInterval() + input.getSelectedReturnInterval() - 1); k++) {
-            Map<String, Integer> tempMap = performErrorCodeStep(input, startShipDate, endShipDate, startRepairDate, endRepairDate);
-            tempMap.forEach((key, value) -> returnValuesMap.merge(key, value, Integer::sum));
-
-            startShipDate = startShipDate.plusMonths(1);
-            endShipDate = endShipDate.plusMonths(1);
-
-            startRepairDate = startRepairDate.plusMonths(1);
-            endRepairDate = endRepairDate.plusMonths(1);
-        }
-
-        return convertToRecordList(returnValuesMap);
+        int steps = input.getSelectedAnalInterval() + input.getSelectedReturnInterval() - 1;
+        return performErrorCode(input, steps, startShipDate, endShipDate, startRepairDate, endRepairDate);
     }
 
     @PermitAll
@@ -560,24 +546,11 @@ public class FieldPerfReportService {
         LocalDate startRepairDate = calculateDate(input, DateEnumeration.REPAIR_START);
         LocalDate endRepairDate = calculateDate(input, DateEnumeration.REPAIR_END);
 
-        if (input.getReturnDate() == null && input.getShipDate() == null) {
-            Map<String, Integer> returnValuesMap = new HashMap<>();
+        int steps = (input.getReturnDate() == null && input.getShipDate() == null)
+                ? input.getSelectedAnalInterval()
+                : 1;
 
-            for (int k = 0; k < input.getSelectedAnalInterval(); k++) {
-                Map<String, Integer> tempMap = performErrorCodeStep(input, startShipDate, endShipDate, startRepairDate, endRepairDate);
-                tempMap.forEach((key, value) -> returnValuesMap.merge(key, value, Integer::sum));
-
-                startShipDate = startShipDate.plusMonths(1);
-                endShipDate = endShipDate.plusMonths(1);
-
-                startRepairDate = startRepairDate.plusMonths(1);
-                endRepairDate = endRepairDate.plusMonths(1);
-            }
-
-            return convertToRecordList(returnValuesMap);
-        }
-
-        return convertToRecordList(performErrorCodeStep(input, startShipDate, endShipDate, startRepairDate, endRepairDate));
+        return performErrorCode(input, steps, startShipDate, endShipDate, startRepairDate, endRepairDate);
     }
 
 
@@ -896,39 +869,14 @@ public class FieldPerfReportService {
 
 
 
-    private List<MaterializedServiceMessageSearchDTO> performDetailStep(FieldPerfReportSearchObject input,
-            LocalDate startShipDate, LocalDate endShipDate, LocalDate startRepairDate, LocalDate endRepairDate) {
-        String rmaDate = rmaDate(input);
-
-        StringBuilder queryStatement = new StringBuilder("select distinct ").append(getMaterializedServiceMessageSearchDTOConstructor())
-                .append(" from MaterializedServiceMessage a ");
-
-        queryStatement.append("where ").append(rmaDate).append(" >= :startRepairDate and ").append(rmaDate).append(" < :endRepairDate ");
-        queryStatement.append("and a.customerShipmentDate >= :startShipDate and a.customerShipmentDate < :endShipDate ");
-
-        if (input.getSelectedRmaCntType() == RMACountingType.CLOSED_BY_ARRIVAL_DATE) {
-            queryStatement.append("and a.internalShipmentDate is not null ");
-        }
-
-        // Add standard filter criteria
-        setupFilterCriteria(queryStatement, input, false, false);
-
-        TypedQuery<MaterializedServiceMessageSearchDTO> query = em.createQuery(queryStatement.toString(), MaterializedServiceMessageSearchDTO.class);
-        query.setParameter("startShipDate", startShipDate);
-        query.setParameter("endShipDate", endShipDate);
-        query.setParameter("startRepairDate", startRepairDate);
-        query.setParameter("endRepairDate", endRepairDate);
-
-        return query.getResultList();
-    }
-
     private List<MaterializedServiceMessageSearchDTO> performDetailStep(FieldPerfReportSearchObject input, int steps,
             LocalDate startShipDate, LocalDate endShipDate, LocalDate startRepairDate, LocalDate endRepairDate) {
+        if (steps <= 0) {
+            return Collections.emptyList();
+        }
+
         LocalDate maxEndShipDate = endShipDate.plusMonths(steps - 1L);
         LocalDate maxEndRepairDate = endRepairDate.plusMonths(steps - 1L);
-
-        int minMonthDiff = monthIndex(startRepairDate) - monthIndex(endShipDate) + 1;
-        int maxMonthDiff = monthIndex(endRepairDate) - monthIndex(startShipDate) - 1;
 
         /*
          * Mit dem Monatsindex m(d) = year(d) ⋅ 12 + month(d)
@@ -949,11 +897,14 @@ public class FieldPerfReportService {
         queryStatement.append("where ").append(rmaDate).append(" >= :startRepairDate ")
                 .append("and ").append(rmaDate).append(" < :maxEndRepairDate ")
                 .append("and a.customerShipmentDate >= :startShipDate ")
-                .append("and a.customerShipmentDate < :maxEndShipDate ")
-                .append("and (")
-                .append(" year(").append(rmaDate).append(") * 12 + month(").append(rmaDate).append(")) ")
-                .append("  - (year(a.customerShipmentDate) * 12 + month(a.customerShipmentDate)) ")
-                .append(" between :minMonthDiff and :maxMonthDiff ");
+                .append("and a.customerShipmentDate < :maxEndShipDate ");
+
+        if (steps > 1) {
+            queryStatement.append("and (")
+                    .append(" year(").append(rmaDate).append(") * 12 + month(").append(rmaDate).append(")) ")
+                    .append("  - (year(a.customerShipmentDate) * 12 + month(a.customerShipmentDate)) ")
+                    .append(" between :minMonthDiff and :maxMonthDiff ");
+        }
 
         if (input.getSelectedRmaCntType() == RMACountingType.CLOSED_BY_ARRIVAL_DATE) {
             queryStatement.append("and a.internalShipmentDate is not null ");
@@ -968,13 +919,17 @@ public class FieldPerfReportService {
         query.setParameter("maxEndShipDate", maxEndShipDate);
         query.setParameter("startRepairDate", startRepairDate);
         query.setParameter("maxEndRepairDate", maxEndRepairDate);
-        query.setParameter("minMonthDiff", minMonthDiff);
-        query.setParameter("maxMonthDiff", maxMonthDiff);
+
+        if (steps > 1) {
+            // Erklärung: minMonthDiff/maxMonthDiff siehe oben
+            int minMonthDiff = monthIndex(startRepairDate) - monthIndex(endShipDate) + 1;
+            int maxMonthDiff = monthIndex(endRepairDate) - monthIndex(startShipDate) - 1;
+            query.setParameter("minMonthDiff", minMonthDiff);
+            query.setParameter("maxMonthDiff", maxMonthDiff);
+        }
 
         return query.getResultList();
     }
-
-
 
     private String getMaterializedServiceMessageSearchDTOConstructor() {
         StringBuilder statementBuilder = new StringBuilder();
@@ -1065,45 +1020,56 @@ public class FieldPerfReportService {
 
 
 
-    private Map<String, Integer> performErrorCodeStep(FieldPerfReportSearchObject input,
+    private List<FieldPerfReportCauseResultRecord> performErrorCode(FieldPerfReportSearchObject input, int steps,
             LocalDate startShipDate, LocalDate endShipDate, LocalDate startRepairDate, LocalDate endRepairDate) {
+        if (steps <= 0) {
+            return Collections.emptyList();
+        }
+
+        // Erklärung: maxEndShipDate/maxEndRepairDate/minMonthDiff/maxMonthDiff siehe performDetailStep()
+        LocalDate maxEndShipDate = endShipDate.plusMonths(steps - 1L);
+        LocalDate maxEndRepairDate = endRepairDate.plusMonths(steps - 1L);
+
         String rmaDate = rmaDate(input);
 
-        StringBuilder queryStatement = new StringBuilder("select a.errorCodeName, count(a) from MaterializedServiceMessage a ");
-        queryStatement.append("where ").append(rmaDate).append(" >= :startRepairDate and ").append(rmaDate).append(" < :endRepairDate ");
+        StringBuilder queryStatement = new StringBuilder("select new ")
+                .append(FieldPerfReportCauseResultRecord.class.getName())
+                .append("(a.errorCodeName, count(a)) ")
+                .append("from MaterializedServiceMessage a ");
+        queryStatement.append("where ").append(rmaDate).append(" >= :startRepairDate and ").append(rmaDate).append(" < :maxEndRepairDate ");
 
         if (input.getSelectedRmaCntType() == RMACountingType.CLOSED_BY_ARRIVAL_DATE) {
             queryStatement.append(" and a.internalShipmentDate is not null ");
         }
 
-        queryStatement.append("and a.customerShipmentDate >= :startShipDate and a.customerShipmentDate < :endShipDate ");
+        queryStatement.append("and a.customerShipmentDate >= :startShipDate and a.customerShipmentDate < :maxEndShipDate ");
+
+        if (steps > 1) {
+            queryStatement.append("and (year(").append(rmaDate).append(") * 12 + month(").append(rmaDate).append(")) ")
+                    .append("- (year(a.customerShipmentDate) * 12 + month(a.customerShipmentDate)) ")
+                    .append("between :minMonthDiff and :maxMonthDiff ");
+        }
 
         // Add standard filter criteria
         setupFilterCriteria(queryStatement, input, false, false);
 
         queryStatement.append("group by a.errorCodeName ");
 
-        TypedQuery<Object[]> query = em.createQuery(queryStatement.toString(), Object[].class);
+        TypedQuery<FieldPerfReportCauseResultRecord> query = em.createQuery(queryStatement.toString(), FieldPerfReportCauseResultRecord.class);
         query.setParameter("startShipDate", startShipDate);
-        query.setParameter("endShipDate", endShipDate);
+        query.setParameter("maxEndShipDate", maxEndShipDate);
         query.setParameter("startRepairDate", startRepairDate);
-        query.setParameter("endRepairDate", endRepairDate);
+        query.setParameter("maxEndRepairDate", maxEndRepairDate);
 
-        List<Object[]> result = query.getResultList();
-        Map<String, Integer> returnValuesMap = new HashMap<>();
-        result.stream()
-                .forEach(values -> {
-                    String errorCode = (String) values[0];
-                    int counter = ((Number) values[1]).intValue();
-                    returnValuesMap.put(errorCode, counter);
-                });
+        if (steps > 1) {
+            // Erklärung: maxEndShipDate/maxEndRepairDate/minMonthDiff/maxMonthDiff siehe performDetailStep()
+            int minMonthDiff = monthIndex(startRepairDate) - monthIndex(endShipDate) + 1;
+            int maxMonthDiff = monthIndex(endRepairDate) - monthIndex(startShipDate) - 1;
+            query.setParameter("minMonthDiff", minMonthDiff);
+            query.setParameter("maxMonthDiff", maxMonthDiff);
+        }
 
-        return returnValuesMap;
-    }
-
-    private List<FieldPerfReportCauseResultRecord> convertToRecordList(Map<String, Integer> map) {
-        return map.entrySet().stream()
-                .map(entry -> new FieldPerfReportCauseResultRecord(entry.getKey(), entry.getValue()))
+        return query.getResultList().stream()
                 .sorted(Comparator.comparing(FieldPerfReportCauseResultRecord::cause, Comparator.nullsLast(Comparator.naturalOrder())))
                 .collect(Collectors.toList());
     }
@@ -1116,7 +1082,7 @@ public class FieldPerfReportService {
             return Collections.emptyList();
         }
 
-        // Erklärung: siehe performDetailStep()
+        // Erklärung: maxEndShipDate/maxEndRepairDate/minMonthDiff/maxMonthDiff siehe performDetailStep()
         LocalDate maxEndShipDate = endShipDate.plusMonths(steps - 1L);
         LocalDate maxEndRepairDate = endRepairDate.plusMonths(steps - 1L);
 
@@ -1154,6 +1120,7 @@ public class FieldPerfReportService {
         query.setParameter("maxEndRepairDate", maxEndRepairDate);
 
         if (steps > 1) {
+            // Erklärung: maxEndShipDate/maxEndRepairDate/minMonthDiff/maxMonthDiff siehe performDetailStep()
             int minMonthDiff = monthIndex(startRepairDate) - monthIndex(endShipDate) + 1;
             int maxMonthDiff = monthIndex(endRepairDate) - monthIndex(startShipDate) - 1;
             query.setParameter("minMonthDiff", minMonthDiff);
@@ -1194,8 +1161,6 @@ public class FieldPerfReportService {
         return convertToSortedList(collectedResultsPerMatNr);
     }
 
-
-
     private Map<Long, List<X2MessageFieldPerfReportDTO>> loadX2Messages(List<Long> serviceMessageIds) {
         try {
             List<X2MessageFieldPerfReportDTO> x2Messages = x2Service.findX2MessagesForFieldPerfReport(serviceMessageIds); // rd. 5000 Einträge gesamt
@@ -1213,6 +1178,7 @@ public class FieldPerfReportService {
                 .sorted(Comparator.comparing(FieldPerfReportPartResultDTO::getMaterialNumber, Comparator.nullsLast(Comparator.naturalOrder())))
                 .collect(Collectors.toList());
     }
+
 
 
     /**
