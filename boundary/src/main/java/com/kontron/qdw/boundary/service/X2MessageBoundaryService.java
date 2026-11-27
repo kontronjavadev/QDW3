@@ -169,7 +169,7 @@ public class X2MessageBoundaryService {
         selectTokens.add(X2MessageSearchDTO.SELECT_REPAIRERRORCODECODE);
 
         searchObj.setFromClause(
-                "from X2Message a left join a.materialRevision d left join d.material ae left join a.faultAnalysis c left join a.repairErrorCode e left join a.repairState f left join a.repairTask g left join a.serialObject h left join a.serviceMessage i left join i.serialObject m left join i.serviceOrder n");
+                "from X2Message a left join a.materialRevision d left join d.material ae left join a.faultAnalysis c left join a.repairErrorCode e left join a.repairState f left join a.repairTask g left join a.serialObject h left join a.serviceMessage i left join i.serviceOrder n");
 
         return repository.search(searchObj, X2MessageSearchDTO.class, selectTokens);
     }
@@ -185,7 +185,7 @@ public class X2MessageBoundaryService {
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public long countAllX2Messages(SearchDTO searchObj) {
         searchObj.setFromClause(
-                "from X2Message a left join a.materialRevision d left join d.material ae left join a.faultAnalysis c left join a.repairErrorCode e left join a.repairState f left join a.repairTask g left join a.serialObject h left join a.serviceMessage i left join i.serialObject m left join i.serviceOrder n");
+                "from X2Message a left join a.materialRevision d left join d.material ae left join a.faultAnalysis c left join a.repairErrorCode e left join a.repairState f left join a.repairTask g left join a.serialObject h left join a.serviceMessage i left join i.serviceOrder n");
 
         return repository.count(searchObj);
     }
