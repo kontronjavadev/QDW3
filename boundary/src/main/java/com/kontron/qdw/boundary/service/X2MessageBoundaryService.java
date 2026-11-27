@@ -61,6 +61,23 @@ public class X2MessageBoundaryService {
         return em.createQuery(jpql, X2MessageFieldPerfReportDTO.class).getResultList();
     }
 
+    @PermitAll
+    @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+    public List<X2MessageFieldPerfReportDTO> findX2MessagesForFieldPerfReport(List<Long> serviceMessageIds) {
+        String jpql = "select new X2MessageFieldPerfReportDTO ("
+                + X2MessageSearchDTO.SELECT_ID
+                + "," + X2MessageSearchDTO.SELECT_DEFECTCOMPONENT
+                + "," + X2MessageSearchDTO.SELECT_SERVICEMESSAGEID
+                + ") "
+                + "from X2Message a "
+                + "join a.serviceMessage i "
+                + "where i.id in :serviceMessageIds ";
+
+        return em.createQuery(jpql, X2MessageFieldPerfReportDTO.class)
+                .setParameter("serviceMessageIds", serviceMessageIds)
+                .getResultList();
+    }
+
 
 
     /**

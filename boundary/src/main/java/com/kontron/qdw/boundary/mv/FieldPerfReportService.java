@@ -15,7 +15,6 @@ import com.kontron.qdw.boundary.service.X2MessageBoundaryService;
 import com.kontron.qdw.boundary.util.Constants;
 import com.kontron.qdw.domain.material.Material;
 import com.kontron.qdw.domain.material.SerialNumberSetItem;
-import com.kontron.qdw.domain.mv.MaterializedServiceMessage;
 import com.kontron.qdw.dto.base.*;
 import com.kontron.qdw.dto.mv.*;
 import com.kontron.qdw.dto.mv.report.*;
@@ -590,17 +589,6 @@ public class FieldPerfReportService {
     @PermitAll
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public List<FieldPerfReportPartResultDTO> getAllErrorPositions(FieldPerfReportSearchObject input) {
-        Map<Long, List<X2MessageFieldPerfReportDTO>> x2MsgsPerSvcMsgId;
-        try {
-            List<X2MessageFieldPerfReportDTO> x2Messages = x2Service.findAllX2MessagesForFieldPerfReport(); // rd. 5000 Einträge
-            x2MsgsPerSvcMsgId = x2Messages.stream()
-                    .collect(Collectors.groupingBy(X2MessageFieldPerfReportDTO::getServiceMessageId));
-        }
-        catch (GeneralSearchException e) {
-            logger.error("Error getting all x2 messages", e);
-            return Collections.emptyList();
-        }
-
         LocalDate startShipDate = input.getStartDate().minusMonths(input.getSelectedQualityPeriod() - 1);
         LocalDate endShipDate = input.getStartDate().plusMonths(1);
 
@@ -608,61 +596,27 @@ public class FieldPerfReportService {
         LocalDate endRepairDate = input.getStartDate().plusMonths(1);
 
 
-        Map<String, FieldPerfReportPartResultDTO> collectedResultsPerMatNr = new HashMap<>();
-
-        for (int k = 0; k < (input.getSelectedAnalInterval() + input.getSelectedReturnInterval() - 1); k++) {
-            performErrorPositionStep(collectedResultsPerMatNr, x2MsgsPerSvcMsgId, input, startShipDate, endShipDate, startRepairDate, endRepairDate);
-
-            startShipDate = startShipDate.plusMonths(1);
-            endShipDate = endShipDate.plusMonths(1);
-
-            startRepairDate = startRepairDate.plusMonths(1);
-            endRepairDate = endRepairDate.plusMonths(1);
-        }
-
-        return convertToSortedList(collectedResultsPerMatNr);
+        int steps = input.getSelectedAnalInterval() + input.getSelectedReturnInterval() - 1;
+        return performErrorPositionStep(input, steps,
+                startShipDate, endShipDate, startRepairDate, endRepairDate);
     }
 
     @PermitAll
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public List<FieldPerfReportPartResultDTO> getErrorPositionReport(FieldPerfReportSearchObject input) {
-        Map<Long, List<X2MessageFieldPerfReportDTO>> x2MsgsPerSvcMsgId;
-        try {
-            List<X2MessageFieldPerfReportDTO> x2Messages = x2Service.findAllX2MessagesForFieldPerfReport(); // rd. 5000 Einträge
-            x2MsgsPerSvcMsgId = x2Messages.stream()
-                    .collect(Collectors.groupingBy(X2MessageFieldPerfReportDTO::getServiceMessageId));
-        }
-        catch (GeneralSearchException e) {
-            logger.error("Error getting all x2 messages", e);
-            return Collections.emptyList();
-        }
-
         LocalDate startShipDate = calculateDate(input, DateEnumeration.SHIPMENT_START);
         LocalDate endShipDate = calculateDate(input, DateEnumeration.SHIPMENT_END);
+
         LocalDate startRepairDate = calculateDate(input, DateEnumeration.REPAIR_START);
         LocalDate endRepairDate = calculateDate(input, DateEnumeration.REPAIR_END);
 
 
-        Map<String, FieldPerfReportPartResultDTO> collectedResultsPerMatNr = new HashMap<>();
+        int steps = (input.getReturnDate() == null && input.getShipDate() == null)
+                ? input.getSelectedAnalInterval()
+                : 1;
 
-        if (input.getReturnDate() == null && input.getShipDate() == null) {
-            for (int k = 0; k < input.getSelectedAnalInterval(); k++) {
-                performErrorPositionStep(collectedResultsPerMatNr, x2MsgsPerSvcMsgId, input, startShipDate, endShipDate, startRepairDate,
-                        endRepairDate);
-
-                startShipDate = startShipDate.plusMonths(1);
-                endShipDate = endShipDate.plusMonths(1);
-
-                startRepairDate = startRepairDate.plusMonths(1);
-                endRepairDate = endRepairDate.plusMonths(1);
-            }
-
-            return convertToSortedList(collectedResultsPerMatNr);
-        }
-
-        performErrorPositionStep(collectedResultsPerMatNr, x2MsgsPerSvcMsgId, input, startShipDate, endShipDate, startRepairDate, endRepairDate);
-
-        return convertToSortedList(collectedResultsPerMatNr);
+        return performErrorPositionStep(input, steps,
+                startShipDate, endShipDate, startRepairDate, endRepairDate);
     }
 
 
@@ -1020,10 +974,6 @@ public class FieldPerfReportService {
         return query.getResultList();
     }
 
-    private int monthIndex(LocalDate date) {
-        return date.getYear() * 12 + date.getMonthValue();
-    }
-
 
 
     private String getMaterializedServiceMessageSearchDTOConstructor() {
@@ -1160,16 +1110,33 @@ public class FieldPerfReportService {
 
 
 
-    private void performErrorPositionStep(Map<String, FieldPerfReportPartResultDTO> collectedResultsPerMatNr,
-            Map<Long, List<X2MessageFieldPerfReportDTO>> x2MsgsPerSvcMsgId,
-            FieldPerfReportSearchObject input, LocalDate startShipDate, LocalDate endShipDate, LocalDate startRepairDate, LocalDate endRepairDate) {
+    private List<FieldPerfReportPartResultDTO> performErrorPositionStep(FieldPerfReportSearchObject input, int steps,
+            LocalDate startShipDate, LocalDate endShipDate, LocalDate startRepairDate, LocalDate endRepairDate) {
+        if (steps <= 0) {
+            return Collections.emptyList();
+        }
+
+        // Erklärung: siehe performDetailStep()
+        LocalDate maxEndShipDate = endShipDate.plusMonths(steps - 1L);
+        LocalDate maxEndRepairDate = endRepairDate.plusMonths(steps - 1L);
+
         String rmaDate = rmaDate(input);
 
         String errorCode = new PropertyService().getStringProperty(Constants.PROP_FIT_ERROR_CODE_NAME);
 
-        StringBuilder queryStatement = new StringBuilder("select a from MaterializedServiceMessage a ");
-        queryStatement.append("where ").append(rmaDate).append(" >= :startRepairDate and ").append(rmaDate).append(" < :endRepairDate ");
-        queryStatement.append("and a.customerShipmentDate >= :startShipDate and a.customerShipmentDate < :endShipDate ");
+        StringBuilder queryStatement = new StringBuilder("select new ").append(ServiceMessageFieldPerfReportDTO.class.getName())
+                .append("(a.id, a.defectComponent) ")
+                .append("from MaterializedServiceMessage a ");
+        queryStatement.append("where ").append(rmaDate).append(" >= :startRepairDate and ").append(rmaDate).append(" < :maxEndRepairDate ");
+        queryStatement.append("and a.customerShipmentDate >= :startShipDate and a.customerShipmentDate < :maxEndShipDate ");
+
+        if (steps > 1) {
+            queryStatement
+                    .append("and (")
+                    .append(" year(").append(rmaDate).append(") * 12 + month(").append(rmaDate).append(")) ")
+                    .append("  - (year(a.customerShipmentDate) * 12 + month(a.customerShipmentDate)) ")
+                    .append(" between :minMonthDiff and :maxMonthDiff ");
+        }
 
         if (input.getSelectedRmaCntType() == RMACountingType.CLOSED_BY_ARRIVAL_DATE) {
             queryStatement.append(" and a.internalShipmentDate is not null ");
@@ -1180,13 +1147,33 @@ public class FieldPerfReportService {
         // Add standard filter criteria
         setupFilterCriteria(queryStatement, input, false, false);
 
-        TypedQuery<MaterializedServiceMessage> query = em.createQuery(queryStatement.toString(), MaterializedServiceMessage.class);
+        TypedQuery<ServiceMessageFieldPerfReportDTO> query = em.createQuery(queryStatement.toString(), ServiceMessageFieldPerfReportDTO.class);
         query.setParameter("startShipDate", startShipDate);
-        query.setParameter("endShipDate", endShipDate);
+        query.setParameter("maxEndShipDate", maxEndShipDate);
         query.setParameter("startRepairDate", startRepairDate);
-        query.setParameter("endRepairDate", endRepairDate);
+        query.setParameter("maxEndRepairDate", maxEndRepairDate);
 
-        for (MaterializedServiceMessage msg : query.getResultList()) {
+        if (steps > 1) {
+            int minMonthDiff = monthIndex(startRepairDate) - monthIndex(endShipDate) + 1;
+            int maxMonthDiff = monthIndex(endRepairDate) - monthIndex(startShipDate) - 1;
+            query.setParameter("minMonthDiff", minMonthDiff);
+            query.setParameter("maxMonthDiff", maxMonthDiff);
+        }
+
+        List<ServiceMessageFieldPerfReportDTO> serviceMessages = query.getResultList();
+        if (serviceMessages.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        // X2-Meldungen erst nach der Hauptabfrage laden (und direkt auf die gefundenen IDs einschränken)
+        List<Long> serviceMessageIds = serviceMessages.stream()
+                .map(ServiceMessageFieldPerfReportDTO::getId)
+                .toList();
+        Map<Long, List<X2MessageFieldPerfReportDTO>> x2MsgsPerSvcMsgId = loadX2Messages(serviceMessageIds);
+
+        Map<String, FieldPerfReportPartResultDTO> collectedResultsPerMatNr = new HashMap<>();
+
+        for (ServiceMessageFieldPerfReportDTO msg : serviceMessages) {
             // MaterializedServiceMessage.getDefectComponent() ist Materialnummer
             FieldPerfReportPartResultDTO reportItem = collectedResultsPerMatNr.computeIfAbsent(
                     msg.getDefectComponent(), FieldPerfReportPartResultDTO::new);
@@ -1202,6 +1189,22 @@ public class FieldPerfReportService {
                     subItem.raiseCnt();
                 }
             }
+        }
+
+        return convertToSortedList(collectedResultsPerMatNr);
+    }
+
+
+
+    private Map<Long, List<X2MessageFieldPerfReportDTO>> loadX2Messages(List<Long> serviceMessageIds) {
+        try {
+            List<X2MessageFieldPerfReportDTO> x2Messages = x2Service.findX2MessagesForFieldPerfReport(serviceMessageIds); // rd. 5000 Einträge gesamt
+            return x2Messages.stream()
+                    .collect(Collectors.groupingBy(X2MessageFieldPerfReportDTO::getServiceMessageId));
+        }
+        catch (GeneralSearchException e) {
+            logger.error("Error getting all x2 messages", e);
+            return Collections.emptyMap();
         }
     }
 
@@ -1237,7 +1240,7 @@ public class FieldPerfReportService {
         else if (input.getReturnDate() != null && input.getShipDate() == null) {
             switch (date){
             case SHIPMENT_START:
-                return input.getReturnDate().plusMonths(-11);
+                return input.getReturnDate().minusMonths(input.getSelectedReturnInterval() - 1);
             case SHIPMENT_END:
                 return input.getReturnDate().plusMonths(1);
             case REPAIR_START:
@@ -1293,5 +1296,8 @@ public class FieldPerfReportService {
         return rmaDate;
     }
 
+    private int monthIndex(LocalDate date) {
+        return date.getYear() * 12 + date.getMonthValue();
+    }
 
 }

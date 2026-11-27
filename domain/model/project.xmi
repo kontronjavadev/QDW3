@@ -4296,7 +4296,7 @@
   <net.sourceforge.jbizmo.model.client:FormGroup name="Serial object" groupOrder="4" forms="/260 /266 /286 /307 /303 /625 /322 /317 /339 /384 /388 /392 /346 /380 /292 /365 /331 /352 /374 /356" panels="/606 /615 /328 /612 /609 /371 /362" roles="/0/@roles.0 /0/@roles.1" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="mv" parent="/2" javaTypes="/265 /271 /291 /316 /327 /344 /402" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="mv" parent="/1" javaTypes="/264 /270 /290 /315 /326 /343 /401" project="/0"/>
-  <net.sourceforge.jbizmo.model.java:Namespace name="mv" parent="/3" javaTypes="/263 /269 /289 /320 /325 /342 /395 /400" project="/0"/>
+  <net.sourceforge.jbizmo.model.java:Namespace name="mv" parent="/3" javaTypes="/263 /269 /289 /320 /325 /342 /395 /400 /639" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="mv" parent="/4" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="serial" parent="/2" javaTypes="/300 /619 /370 /302 /351 /361 /338" project="/0"/>
   <net.sourceforge.jbizmo.model.java:Namespace name="serial" parent="/1" javaTypes="/299 /618 /369 /301 /350 /337 /360" project="/0"/>
@@ -14048,6 +14048,15 @@
     <attributes name="serviceMessageId">
       <association xsi:type="net.sourceforge.net.model.domain:ManyToOneAssociation" href="package-service.xmi#//@domainObjects.9/@associations.7"/>
       <domainAttribute href="package-base.xmi#//@domainObjects.17/@attributes.0"/>
+    </attributes>
+  </net.sourceforge.jbizmo.model.dto:DTOBean>
+  <net.sourceforge.jbizmo.model.dto:DTOBean name="ServiceMessageFieldPerfReportDTO" comment="Instances of this class represent data transfer objects that are mapped to materialized service message domain objects" namespace="/250" standardConversion="true" createdManually="true">
+    <domainObject href="package-mv.xmi#//@domainObjects.4"/>
+    <attributes name="id">
+      <domainAttribute href="package-mv.xmi#//@domainObjects.0/@attributes.0"/>
+    </attributes>
+    <attributes name="defectComponent">
+      <domainAttribute href="package-mv.xmi#//@domainObjects.4/@attributes.12"/>
     </attributes>
   </net.sourceforge.jbizmo.model.dto:DTOBean>
 </xmi:XMI>
